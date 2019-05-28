@@ -2,102 +2,137 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C186AC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E3CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E38208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20E6208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="RQkJJHu0";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="PQsAEkEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfE1Ieb (ORCPT
+        id S1726824AbfE1Ief (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:34:31 -0400
-Received: from m9784.mail.qiye.163.com ([220.181.97.84]:51996 "EHLO
-        m9784.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfE1Iea (ORCPT
+        Tue, 28 May 2019 04:34:35 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:59488 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726557AbfE1Iee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:34:30 -0400
-Received: from localhost (unknown [120.132.1.243])
-        by m9784.mail.qiye.163.com (Hmail) with ESMTPA id A3EFD419FD;
-        Tue, 28 May 2019 16:34:22 +0800 (CST)
-Date:   Tue, 28 May 2019 02:07:43 +0800
-From:   Yao Liu <yotta.liu@ucloud.cn>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        nbd <nbd@other.debian.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH 1/3] nbd: fix connection timed out error after
- reconnecting to server
-Message-ID: <20190527180743.GA20702@192-168-150-246.7~>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+        Tue, 28 May 2019 04:34:34 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4S8WjYr016093;
+        Tue, 28 May 2019 01:34:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=IuklDDH21MYIVeuL01ZQnCZb5D6D3+lgcMFYhAzktGU=;
+ b=RQkJJHu0RUNltlRbq01PXim+lWQ5jXleq1FaMlamvxMflKLzJqBBxegg51OoVUmiM+hl
+ HMbuZ7cGD+ynTIWayj3XTqsN0cXui9FDfz6D8fjxNaKBzuoAkU2x9eCqPeaBk1GmoGci
+ CA1pTnJjSBDswXQLkUvJWK48fyq4Eanm9CQssQF0f6EcISOh5yBRxKCrlu9D9WeO9RjV
+ 7ekA0r6szWSRYV6EwaANYZB+fXZ0uerY/yUwdwnXlkMYzUC4X2FTf8UfuBJPeEBHXP/m
+ 6Dsj9LU+lfjZhmy3a06I54CWHOlkS19f71Obg2SKGJuScQDW8LrXtQxbMEbVIVF+ZvGk qw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2sr7e4dg3r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 28 May 2019 01:34:30 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 28 May
+ 2019 01:34:29 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.56) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 28 May 2019 01:34:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IuklDDH21MYIVeuL01ZQnCZb5D6D3+lgcMFYhAzktGU=;
+ b=PQsAEkEJ+qsthEVy32wjb9RSuW3wNl/yyDrSisRfGFDO1CwaBa8Zl8tWsrRvquwxN9LLSJ1LMVbO3FVz1IZjRIEm4OGwljfS3Hk1565mzHLPU4TaWNX6ocr1huix1arw7K2ZBicqMPmW92jLlazR80vKRj5MFj3DIoVRPf+M5WI=
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
+ MN2PR18MB2672.namprd18.prod.outlook.com (20.179.84.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Tue, 28 May 2019 08:34:23 +0000
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9880:2b8b:52e5:b413]) by MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9880:2b8b:52e5:b413%3]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 08:34:23 +0000
+From:   Michal Kalderon <mkalderon@marvell.com>
+To:     Colin King <colin.king@canonical.com>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH][next] qed: fix spelling mistake "inculde" ->
+ "include"
+Thread-Topic: [EXT] [PATCH][next] qed: fix spelling mistake "inculde" ->
+ "include"
+Thread-Index: AQHVFSHr8lMSvwYvE06Dm65I9JgLzaaANeoQ
+Date:   Tue, 28 May 2019 08:34:23 +0000
+Message-ID: <MN2PR18MB3182F2B217A519FA20F3427AA11E0@MN2PR18MB3182.namprd18.prod.outlook.com>
+References: <20190528065217.7311-1-colin.king@canonical.com>
+In-Reply-To: <20190528065217.7311-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [212.199.69.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9ee0233e-78de-48d5-d5df-08d6e34749c7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2672;
+x-ms-traffictypediagnostic: MN2PR18MB2672:
+x-microsoft-antispam-prvs: <MN2PR18MB2672AB82C128A3803B627620A11E0@MN2PR18MB2672.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39850400004)(366004)(396003)(376002)(199004)(189003)(74316002)(7696005)(73956011)(81166006)(14454004)(2501003)(229853002)(6506007)(305945005)(186003)(26005)(14444005)(256004)(81156014)(25786009)(66066001)(53936002)(8936002)(76116006)(11346002)(102836004)(2906002)(7736002)(76176011)(478600001)(3846002)(99286004)(6116002)(5660300002)(71190400001)(6246003)(66476007)(486006)(6436002)(8676002)(71200400001)(9686003)(33656002)(4326008)(52536014)(66556008)(66446008)(64756008)(55016002)(446003)(66946007)(110136005)(86362001)(476003)(68736007)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2672;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GJ1SR5m/XZuS+I7l7qtd1XVnDAoe4P7hg4QHdHLxJ/zXDETULp6HZRJBWO7AMbq8wHou5csJ1/qkdu8GRBBJwA9Z/46X/v55FhkFXMmfHsAGZUnwhPVlSJvt/mCqa/VM8soEJfHp1eW23ZlFtflwRB/pW2fvm27H7vkqRsKw3tuVARMuhfN15ERxSkYawaON4F1XNmuRRuUJqQg71E7N7bckvsO/OynE5f0FcbvQBtlQ0Yrrx9AxxMX4CUIx+hCVzuHz49CJDRdwH8vy/lDPFNQ4aSEZjOTXw1CNes9rJaiFeSGSyh54ztMbxDpCm0o41VqJijyS3qJdekKsW181awUdCkwLszXy2W1CMLz6qDxAhZCOxh+PLlOmdVEGdUBla9MQL25JqwAtXFvju5NDz6iE3UZhKwxv44JEAueQpM8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-HM-Spam-Status: e1kIGBQJHllBWUtVTkhJQkJCQ0pITk5NTUxKWVdZKFlBSUI3V1ktWUFJV1
-        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6Kzo5DjgwNiNJIS4dCDoN
-        P01PCjpVSlVKTk5CS0hJT01JQ0JOVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SUtVSkhJVUpVSU9IWVdZCAFZQU9KTk43Bg++
-X-HM-Tid: 0a6afd937d9b2086kuqya3efd419fd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ee0233e-78de-48d5-d5df-08d6e34749c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 08:34:23.8390
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mkalderon@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2672
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
-> On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
-> > Some I/O requests that have been sent succussfully but have not yet been
-> > replied won't be resubmitted after reconnecting because of server restart,
-> > so we add a list to track them.
-> > 
-> > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-> 
-> Nack, this is what the timeout stuff is supposed to handle.  The commands will
-> timeout and we'll resubmit them if we have alive sockets.  Thanks,
-> 
-> Josef
-> 
-
-On the one hand, if num_connections == 1 and the only sock has dead,
-then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
-nbd_xmit_timeout will not resubmit commands that have been sent
-succussfully but have not yet been replied. The log is as follows:
- 
-[270551.108746] block nbd0: Receive control failed (result -104)
-[270551.108747] block nbd0: Send control failed (result -32)
-[270551.108750] block nbd0: Request send failed, requeueing
-[270551.116207] block nbd0: Attempted send on invalid socket
-[270556.119584] block nbd0: reconnected socket
-[270581.161751] block nbd0: Connection timed out
-[270581.165038] block nbd0: shutting down sockets
-[270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
-[270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
-[270581.165580] block nbd0: Connection timed out
-[270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
-[270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
-[270581.166554] block nbd0: Connection timed out
-[270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
-[270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
-[270581.167590] block nbd0: Connection timed out
-[270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
-[270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
-[270581.168487] block nbd0: Connection timed out
-[270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
-[270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
-[270581.170540] block nbd0: Connection timed out
-[270581.173333] block nbd0: Connection timed out
-[270581.173728] block nbd0: Connection timed out
-[270581.174135] block nbd0: Connection timed out
- 
-On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
-the I/O requests will have a big delay. For example, if timeout time is 30s,
-and from sock dead to nbd_genl_reconfigure returned OK we only spend
-2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
+PiBGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IFR1
+ZXNkYXksIE1heSAyOCwgMjAxOSA5OjUyIEFNDQo+IA0KPiBFeHRlcm5hbCBFbWFpbA0KPiANCj4g
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQ0KPiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmlj
+YWwuY29tPg0KPiANCj4gVGhlcmUgaXMgYSBzcGVsbGluZyBtaXN0YWtlIGluIGEgRFBfSU5GTyBt
+ZXNzYWdlLiBGaXggaXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29s
+aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3Fs
+b2dpYy9xZWQvcWVkX2Rldi5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9xbG9naWMv
+cWVkL3FlZF9kZXYuYw0KPiBpbmRleCA2MWNhNDlhOTY3ZGYuLmE5NzE0MTg3NTVlOSAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gKysr
+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfZGV2LmMNCj4gQEAgLTM4MzYs
+NyArMzgzNiw3IEBAIHN0YXRpYyBpbnQgcWVkX2h3X2dldF9wcGZpZF9iaXRtYXAoc3RydWN0DQo+
+IHFlZF9od2ZuICpwX2h3Zm4sDQo+IA0KPiAgCWlmICghKGNkZXYtPnBwZmlkX2JpdG1hcCAmICgw
+eDEgPDwgbmF0aXZlX3BwZmlkX2lkeCkpKSB7DQo+ICAJCURQX0lORk8ocF9od2ZuLA0KPiAtCQkJ
+IkZpeCB0aGUgUFBGSUQgYml0bWFwIHRvIGluY3VsZGUgdGhlIG5hdGl2ZSBQUEZJRA0KPiBbbmF0
+aXZlX3BwZmlkX2lkeCAlaGhkLCBvcmlnX2JpdG1hcCAweCVoaHhdXG4iLA0KPiArCQkJIkZpeCB0
+aGUgUFBGSUQgYml0bWFwIHRvIGluY2x1ZGUgdGhlIG5hdGl2ZSBQUEZJRA0KPiBbbmF0aXZlX3Bw
+ZmlkX2lkeCAlaGhkLCBvcmlnX2JpdG1hcCAweCVoaHhdXG4iLA0KPiAgCQkJbmF0aXZlX3BwZmlk
+X2lkeCwgY2Rldi0+cHBmaWRfYml0bWFwKTsNCj4gIAkJY2Rldi0+cHBmaWRfYml0bWFwID0gMHgx
+IDw8IG5hdGl2ZV9wcGZpZF9pZHg7DQo+ICAJfQ0KPiAtLQ0KPiAyLjIwLjENCg0KVGhhbmtzLMKg
+DQoNCkFja2VkLWJ5OiBNaWNoYWwgS2FsZGVyb27CoDxtaWNoYWwua2FsZGVyb25AbWFydmVsbC5j
+b20+DQoNCg0K
