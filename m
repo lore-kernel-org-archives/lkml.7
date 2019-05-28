@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D063C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA5EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA59C2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F82208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfE1JEl (ORCPT
+        id S1727649AbfE1JFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:04:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57236 "EHLO huawei.com"
+        Tue, 28 May 2019 05:05:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17617 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727418AbfE1JEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:04:35 -0400
+        id S1727485AbfE1JEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:04:41 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A1990200D987D55876F3;
-        Tue, 28 May 2019 17:04:31 +0800 (CST)
+        by Forcepoint Email with ESMTP id 7F5F573EF48DCB2AC809;
+        Tue, 28 May 2019 17:04:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 28 May 2019 17:04:25 +0800
+ 14.3.439.0; Tue, 28 May 2019 17:04:28 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: fix compile warning without CONFIG_RFS_ACCEL
-Date:   Tue, 28 May 2019 17:02:51 +0800
-Message-ID: <1559034182-24737-2-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>
+Subject: [PATCH net-next 10/12] net: hns3: stop schedule reset service while unloading driver
+Date:   Tue, 28 May 2019 17:03:00 +0800
+Message-ID: <1559034182-24737-11-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,40 +46,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+When unloading driver, the reset task should not be scheduled
+anymore. If disable IRQ before cancel ongoing reset task,
+the IRQ may be re-enabled by the reset task.
 
-The ifdef condition of function hclge_add_fd_entry_by_arfs() is
-unnecessary. It may cause compile warning when CONFIG_RFS_ACCEL
-is not chosen. This patch fixes it by removing the ifdef condition.
+This patch uses HCLGE_STATE_REMOVING/HCLGEVF_STATE_REMOVING
+flag to indicate that the driver is unloading, and we should
+stop new coming reset service to be scheduled, otherwise,
+reset service will access some resource which has been freed
+by unloading.
 
-Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 1 +
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index a3fba7b..fb0dc18 100644
+index a563815..0545f38 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5682,7 +5682,6 @@ static void hclge_fd_build_arfs_rule(const struct hclge_fd_rule_tuples *tuples,
- static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 				      u16 flow_id, struct flow_keys *fkeys)
- {
--#ifdef CONFIG_RFS_ACCEL
- 	struct hclge_vport *vport = hclge_get_vport(handle);
- 	struct hclge_fd_rule_tuples new_tuples;
- 	struct hclge_dev *hdev = vport->back;
-@@ -5758,7 +5757,6 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 	}
+@@ -2427,7 +2427,8 @@ static void hclge_mbx_task_schedule(struct hclge_dev *hdev)
  
- 	return rule->location;
--#endif
+ static void hclge_reset_task_schedule(struct hclge_dev *hdev)
+ {
+-	if (!test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
++	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
++	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
+ 		schedule_work(&hdev->rst_service_task);
  }
  
- static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
+@@ -8385,6 +8386,7 @@ static void hclge_state_init(struct hclge_dev *hdev)
+ static void hclge_state_uninit(struct hclge_dev *hdev)
+ {
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
++	set_bit(HCLGE_STATE_REMOVING, &hdev->state);
+ 
+ 	if (hdev->service_timer.function)
+ 		del_timer_sync(&hdev->service_timer);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index ee1eeca..87a619d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1621,7 +1621,8 @@ static void hclgevf_get_misc_vector(struct hclgevf_dev *hdev)
+ 
+ void hclgevf_reset_task_schedule(struct hclgevf_dev *hdev)
+ {
+-	if (!test_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state)) {
++	if (!test_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state) &&
++	    !test_bit(HCLGEVF_STATE_REMOVING, &hdev->state)) {
+ 		set_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state);
+ 		schedule_work(&hdev->rst_service_task);
+ 	}
+@@ -2132,6 +2133,7 @@ static void hclgevf_state_init(struct hclgevf_dev *hdev)
+ static void hclgevf_state_uninit(struct hclgevf_dev *hdev)
+ {
+ 	set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
++	set_bit(HCLGEVF_STATE_REMOVING, &hdev->state);
+ 
+ 	if (hdev->keep_alive_timer.function)
+ 		del_timer_sync(&hdev->keep_alive_timer);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index eab1095..a7fbd38 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -130,6 +130,7 @@ enum hclgevf_states {
+ 	HCLGEVF_STATE_DOWN,
+ 	HCLGEVF_STATE_DISABLED,
+ 	HCLGEVF_STATE_IRQ_INITED,
++	HCLGEVF_STATE_REMOVING,
+ 	HCLGEVF_STATE_NIC_REGISTERED,
+ 	/* task states */
+ 	HCLGEVF_STATE_SERVICE_SCHED,
 -- 
 2.7.4
 
