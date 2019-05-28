@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6829C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20B8C282E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7043721726
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7A920989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jHDbHakQ"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XG2Xk6Qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfE1JDo (ORCPT
+        id S1727263AbfE1JDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:03:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38937 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfE1JDm (ORCPT
+        Tue, 28 May 2019 05:03:53 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37313 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727218AbfE1JDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:03:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e24so30646785edq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:41 -0700 (PDT)
+        Tue, 28 May 2019 05:03:50 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w37so30610835edw.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l8PYij8neDId3ryticKg/a8o/KS0Lg5p8XO7y5/XF6o=;
-        b=jHDbHakQeNwnznvXASvVWl7yvcYBqpw2pEJjIlODz4RNjgcrPAWF5fDWm+8CRW99mj
-         +7xQ5CZDwyO//HITpeFemyBkOaJ0JKfiLJv+ZlmHcyvjUsvZpGih+aUcSqpRGHs/pn05
-         cki+OyKVOY+239GGqpg6Av8ilLiYl6+XuyA2U=
+        bh=xdSAzTv9tDPr6PTxvMhXZVM/Er2L9zs7q0S7NNjW/ok=;
+        b=XG2Xk6QdQnFvZNtT1FJSbJRUie40rMANdM0srLaNSg5DjS2kagtuP2RFgL4VendVOT
+         BabNgErILkSIbHiZbTBTMTYqlOuoHuDBbXOVrWrUlgwpokq6/Wf0htlfVQ/vZhH8sFl9
+         dkgrYC8vItg/cnP9Ums7sqMpu0F3/0mku30MA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=l8PYij8neDId3ryticKg/a8o/KS0Lg5p8XO7y5/XF6o=;
-        b=raxsNUUjnS3qXdvaWx018sQynWzKEXBsf+AV/XonqFG06wHJP7kGA0aqo5JGOX10Vt
-         UnjNl10DsPsb6N2iBtr1nkfVo+cg6hKZvP3bTpJ0Rgq1exOto8lKFOu0DpUeK42nO+78
-         KJG6yfknhcpoffyVVyaJm5UqW72efyCVtE58X93hTuAhX9qmc6ry4wjaT2X5HmS3Fx0g
-         zP7xBIwc8veJePVZKjXim+zzxe5J73EYY+blbdeoEnDjBB0w3pIK+WbxBmgoabNYUE8Y
-         F0znp5Y18JEZiznPJRxnozn1lioN+HgJ/Zx3/QhJuK/slfqmEN3JxLalKmyQGjy54Qgb
-         dxKQ==
-X-Gm-Message-State: APjAAAVXgQ3Q5f/RP5ot2tenaxCgjzkBeLvje9+DJT/ZcYJl/I60k0bL
-        5OINdh0Rw35JAMKdzAQ4AL6LLTiu7zw=
-X-Google-Smtp-Source: APXvYqzumxJgc9HSaOSwBQskNq870ESW7zvYMn/AJyD4+7IHP8Wkq4KJBKohlJDANMT2w6DOnmCTrQ==
-X-Received: by 2002:a50:8a46:: with SMTP id i64mr126933097edi.177.1559034220244;
-        Tue, 28 May 2019 02:03:40 -0700 (PDT)
+        bh=xdSAzTv9tDPr6PTxvMhXZVM/Er2L9zs7q0S7NNjW/ok=;
+        b=P+9qdHwr8gbc4gHw+3MpiYpujRCbath22BD0GUa06l7wql0oUtd2IduLP77B09+CbR
+         sEBMjnTeDfoy9ukDXXuQKmGak/uv7WZOMOlPWUyhXSV2hWj+4F4Gl/844KWtYKQ0qLqc
+         X5Onj1GRfLNoSEobWHxTuEDv+UPxHfY1K67caCV7W3LCL6lvfDPMEKKbt6kdnnkTBN0x
+         pGe9WYigTAG/+w55b4EqnLZCppzUUZEKwzvBy+o4z4MPIjKd76tChMDZNjv3xRr7bDfr
+         ALH1Rr/dm7oLmiSDT6Wfff1y+kNE0KO/FkiMBYQGgPZKIUgKSZhWYgYvK0ZOqBKfO/aG
+         Y9zw==
+X-Gm-Message-State: APjAAAXCubrz1vPm2quCK/7wx3e8LlPyOVd+1M7Qf+g93kXdly+87vjj
+        bCpAgK54RoN+/L5f+IfhpfUHnKKHcmU=
+X-Google-Smtp-Source: APXvYqz7N+WGbx3CGIzAcTP4j/O/T91KOj5m1m+2vfXlGhtH0z7XZhnZ1uDp1ATj69H/KzvnZS3Kaw==
+X-Received: by 2002:a50:f4fb:: with SMTP id v56mr128756589edm.13.1559034228987;
+        Tue, 28 May 2019 02:03:48 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.38
+        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 02:03:39 -0700 (PDT)
+        Tue, 28 May 2019 02:03:48 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
@@ -62,131 +62,94 @@ Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Daniel Vetter <daniel.vetter@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 20/33] fbdev/sh_mob: Remove fb notifier callback
-Date:   Tue, 28 May 2019 11:02:51 +0200
-Message-Id: <20190528090304.9388-21-daniel.vetter@ffwll.ch>
+        Hans de Goede <hdegoede@redhat.com>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Peter Rosin <peda@axentia.se>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Rob Clark <robdclark@gmail.com>
+Subject: [PATCH 26/33] fbdev: remove FBINFO_MISC_USEREVENT around fb_blank
+Date:   Tue, 28 May 2019 11:02:57 +0200
+Message-Id: <20190528090304.9388-27-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This seems to be entirely defunct:
-
-- The FB_EVEN_SUSPEND/RESUME events are only sent out by
-  fb_set_suspend. Which is supposed to be called by drivers in their
-  suspend/resume hooks, and not itself call into drivers. Luckily
-  sh_mob doesn't call fb_set_suspend, so this seems to do nothing
-  useful.
-
-- The notify hook calls sh_mobile_fb_reconfig() which in turn can
-  call into the fb notifier. Or attempt too, since that would
-  deadlock.
-
-So looks like leftover hacks from when this was originally introduced
-in
-
-commit 6011bdeaa6089d49c02de69f05980da7bad314ab
-Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Date:   Wed Jul 21 10:13:21 2010 +0000
-
-    fbdev: sh-mobile: HDMI support for SH-Mobile SoCs
-
-So let's just remove it.
+With the recursion broken in the previous patch we can drop the
+FBINFO_MISC_USEREVENT flag around calls to fb_blank - recursion
+prevention was it's only job.
 
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
 Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Markus Elfring <elfring@users.sourceforge.net>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Yisheng Xie <ysxie@foxmail.com>
+Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Rob Clark <robdclark@gmail.com>
 ---
- drivers/video/fbdev/sh_mobile_lcdcfb.c | 38 --------------------------
- 1 file changed, 38 deletions(-)
+ drivers/video/fbdev/core/fbcon.c   | 5 ++---
+ drivers/video/fbdev/core/fbmem.c   | 3 ---
+ drivers/video/fbdev/core/fbsysfs.c | 2 --
+ 3 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
-index 1437695415c9..015a02a29d37 100644
---- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
-+++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
-@@ -213,7 +213,6 @@ struct sh_mobile_lcdc_priv {
- 	struct sh_mobile_lcdc_chan ch[2];
- 	struct sh_mobile_lcdc_overlay overlays[4];
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index a4617067ff24..b5ee89f16d6c 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2386,9 +2386,8 @@ static int fbcon_blank(struct vc_data *vc, int blank, int mode_switch)
+ 			fbcon_cursor(vc, blank ? CM_ERASE : CM_DRAW);
+ 			ops->cursor_flash = (!blank);
  
--	struct notifier_block notifier;
- 	int started;
- 	int forced_fourcc; /* 2 channel LCDC must share fourcc setting */
- };
-@@ -2239,37 +2238,6 @@ static const struct dev_pm_ops sh_mobile_lcdc_dev_pm_ops = {
-  * Framebuffer notifier
-  */
+-			if (!(info->flags & FBINFO_MISC_USEREVENT))
+-				if (fb_blank(info, blank))
+-					fbcon_generic_blank(vc, info, blank);
++			if (fb_blank(info, blank))
++				fbcon_generic_blank(vc, info, blank);
+ 		}
  
--/* locking: called with info->lock held */
--static int sh_mobile_lcdc_notify(struct notifier_block *nb,
--				 unsigned long action, void *data)
--{
--	struct fb_event *event = data;
--	struct fb_info *info = event->info;
--	struct sh_mobile_lcdc_chan *ch = info->par;
+ 		if (!blank)
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index d6713dce9e31..25ae466ba593 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1194,10 +1194,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 	case FBIOBLANK:
+ 		console_lock();
+ 		lock_fb_info(info);
+-		info->flags |= FBINFO_MISC_USEREVENT;
+ 		ret = fb_blank(info, arg);
+-		info->flags &= ~FBINFO_MISC_USEREVENT;
 -
--	if (&ch->lcdc->notifier != nb)
--		return NOTIFY_DONE;
--
--	dev_dbg(info->dev, "%s(): action = %lu, data = %p\n",
--		__func__, action, event->data);
--
--	switch(action) {
--	case FB_EVENT_SUSPEND:
--		sh_mobile_lcdc_display_off(ch);
--		sh_mobile_lcdc_stop(ch->lcdc);
--		break;
--	case FB_EVENT_RESUME:
--		mutex_lock(&ch->open_lock);
--		sh_mobile_fb_reconfig(info);
--		mutex_unlock(&ch->open_lock);
--
--		sh_mobile_lcdc_display_on(ch);
--		sh_mobile_lcdc_start(ch->lcdc);
--	}
--
--	return NOTIFY_OK;
--}
--
- /* -----------------------------------------------------------------------------
-  * Probe/remove and driver init/exit
-  */
-@@ -2297,8 +2265,6 @@ static int sh_mobile_lcdc_remove(struct platform_device *pdev)
- 	struct sh_mobile_lcdc_priv *priv = platform_get_drvdata(pdev);
- 	unsigned int i;
+ 		/* might again call into fb_blank */
+ 		fbcon_fb_blanked(info, arg);
+ 		unlock_fb_info(info);
+diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
+index 252d4f52d2a5..882b471d619e 100644
+--- a/drivers/video/fbdev/core/fbsysfs.c
++++ b/drivers/video/fbdev/core/fbsysfs.c
+@@ -310,9 +310,7 @@ static ssize_t store_blank(struct device *device,
  
--	fb_unregister_client(&priv->notifier);
--
- 	for (i = 0; i < ARRAY_SIZE(priv->overlays); i++)
- 		sh_mobile_lcdc_overlay_fb_unregister(&priv->overlays[i]);
- 	for (i = 0; i < ARRAY_SIZE(priv->ch); i++)
-@@ -2688,10 +2654,6 @@ static int sh_mobile_lcdc_probe(struct platform_device *pdev)
- 			goto err1;
- 	}
- 
--	/* Failure ignored */
--	priv->notifier.notifier_call = sh_mobile_lcdc_notify;
--	fb_register_client(&priv->notifier);
--
- 	return 0;
- err1:
- 	sh_mobile_lcdc_remove(pdev);
+ 	arg = simple_strtoul(buf, &last, 0);
+ 	console_lock();
+-	fb_info->flags |= FBINFO_MISC_USEREVENT;
+ 	err = fb_blank(fb_info, arg);
+-	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
+ 	/* might again call into fb_blank */
+ 	fbcon_fb_blanked(fb_info, arg);
+ 	console_unlock();
 -- 
 2.20.1
 
