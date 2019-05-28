@@ -2,110 +2,102 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D1DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5826C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314FE20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFBE2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZkwvxI+h";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DQP6RINU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfE1OaC (ORCPT
+        id S1727342AbfE1OaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:30:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36530 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfE1OaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:30:01 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 28 May 2019 10:30:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48874 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1OaH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:30:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9B23760A4E; Tue, 28 May 2019 14:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559053806;
+        bh=x73gs11UqeyquhhHifaz+Y5m6QpD+Y2yC03QFMfrKZI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ZkwvxI+hhmBeuzoh8EWA5ubIbQ2KPmdcR7iFPdi+DstAkeRPW8P7bXdAx11tqREMV
+         FZlTAknEcwAOz8wYvh+LXGgv9ufBKwkbNSqN8mFhALUl2056CNhX4PeOxuzqsrJTFP
+         4fIkMJeaY/fbGzPmcwqWUHyu5xA8R6xCnqbMBwJ0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8E7A7E42F;
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 723BE60769;
         Tue, 28 May 2019 14:30:01 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1796C10027C5;
-        Tue, 28 May 2019 14:30:00 +0000 (UTC)
-Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     Barret Rhoden <brho@google.com>, Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Arcari <darcari@redhat.com>
-References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
- <20190510184204.225451-1-brho@google.com>
- <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
- <d968a588-c43b-cfe1-6358-6c5d99f916a3@google.com>
- <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
-Message-ID: <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
-Date:   Tue, 28 May 2019 10:30:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559053803;
+        bh=x73gs11UqeyquhhHifaz+Y5m6QpD+Y2yC03QFMfrKZI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=DQP6RINU4XD0144grtyT/iVZOuRtbn5Oqo702k+QHJl6VtKdZjABNRmcw+ZnB/LFC
+         w7r9NJPwi+CHZ1J6ZcEYk58YdoKYpfmGv5g0UYVX9mk7tzP7L9IkUpV7F2CZmXh4Zb
+         +FJ8SnbljklUB0FbcXS3q8ZXDrKv99t21OgdkL9c=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 723BE60769
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>,
+        <davem@davemloft.net>, <andreyknvl@google.com>,
+        <syzkaller-bugs@googlegroups.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: Re: [PATCH] network: wireless: p54u: Fix race between disconnect and firmware loading
+References: <Pine.LNX.4.44L0.1905281014340.1564-100000@iolanthe.rowland.org>
+Date:   Tue, 28 May 2019 17:29:59 +0300
+In-Reply-To: <Pine.LNX.4.44L0.1905281014340.1564-100000@iolanthe.rowland.org>
+        (Alan Stern's message of "Tue, 28 May 2019 10:17:19 -0400 (EDT)")
+Message-ID: <875zpu4pp4.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 14:30:01 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Alan Stern <stern@rowland.harvard.edu> writes:
 
+> On Tue, 28 May 2019, Kalle Valo wrote:
+>
+>> The correct prefix is "p54:", but I can fix that during commit.
+>
+> Oh, okay, thanks.
+>
+>> > Index: usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
+>> > ===================================================================
+>> > --- usb-devel.orig/drivers/net/wireless/intersil/p54/p54usb.c
+>> > +++ usb-devel/drivers/net/wireless/intersil/p54/p54usb.c
+>> > @@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
+>> >  MODULE_FIRMWARE("isl3886usb");
+>> >  MODULE_FIRMWARE("isl3887usb");
+>> >  
+>> > +static struct usb_driver p54u_driver;
+>> 
+>> How is it safe to use static variables from a wireless driver? For
+>> example, what if there are two p54 usb devices on the host? How do we
+>> avoid a race in that case?
+>
+> There is no race.  This structure is not per-device; it refers only to
+> the driver.  In fact, the line above is only a forward declaration --
+> the actual definition of p54u_driver was already in the source file.
 
-On 5/22/19 1:08 PM, Prarit Bhargava wrote:
-> 
-> 
-> On 5/13/19 10:37 AM, Barret Rhoden wrote:
->> Hi -
->>
-> 
-> Hey Barret, my apologies for not getting back to you earlier.  I got caught up
-> in something that took me away from this issue.
-> 
->> On 5/13/19 7:23 AM, Prarit Bhargava wrote:
->> [snip]
->>> A module is loaded once for each cpu.
->>
->> Does one CPU succeed in loading the module, and the others fail with EEXIST?
->>
->>> My follow-up patch changes from wait_event_interruptible() to
->>> wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
->>> make progress on other tasks, which changes the return values from
->>> wait_event_interruptible().
->>>
->>> https://marc.info/?l=linux-kernel&m=155724085927589&w=2
->>>
->>> I believe this also takes your concern into account?
->>
->> That patch might work for me, but I think it papers over the bug where the check
->> on old->state that you make before sleeping (was COMING || UNFORMED, now !LIVE)
->> doesn't match the check to wake up in finished_loading().
->>
->> The reason the issue might not show up in practice is that your patch basically
->> polls, so the condition checks in finished_loading() are only a quicker exit.
->>
->> If you squash my patch into yours, I think it will cover that case. Though if
->> polling is the right answer here, it also raises the question of whether or not
->> we even need finished_loading().
->>
-> 
-> The more I look at this I think you're right.  Let me do some additional testing
-> with your patch + my original patch.
-> 
+Ah, I missed that. Thanks!
 
-I have done testing on arm64, s390x, ppc64le, ppc64, and x86 and have not seen
-any issues.
-
-Jessica, how would you like me to proceed?  Would you like an updated patch with
-Signed-off's from both Barret & myself?
-
-P.
-
-> P.
-> 
-> 
->> Barret
+-- 
+Kalle Valo
