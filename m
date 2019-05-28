@@ -2,53 +2,58 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9776C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F462075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825E72075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:39:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="CtfTaOVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfE1HjW (ORCPT
+        id S1727757AbfE1Hj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:39:22 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58174 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfE1HjU (ORCPT
+        Tue, 28 May 2019 03:39:29 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:50765 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfE1Hj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:39:20 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4S7cwc5064960;
-        Tue, 28 May 2019 16:38:58 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Tue, 28 May 2019 16:38:58 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4S7crXl064921
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 28 May 2019 16:38:58 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: KASAN: invalid-free in tomoyo_realpath_from_path
-To:     syzbot <syzbot+9742b1c6c7aedf18beda@syzkaller.appspotmail.com>
-References: <000000000000785e9d0589ec359a@google.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        serge@hallyn.com, syzkaller-bugs@googlegroups.com,
-        takedakn@nttdata.co.jp
-Message-ID: <fb152725-1694-3412-9757-902f550f07f1@i-love.sakura.ne.jp>
-Date:   Tue, 28 May 2019 16:38:50 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 28 May 2019 03:39:29 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by alpha.anastas.io (Postfix) with ESMTPSA id A8ABB7F8B3;
+        Tue, 28 May 2019 02:39:27 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1559029168; bh=Fm8E27RwCKRyHB6GdS6/KE0o9MjZxtwM69TG8X6NpW4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CtfTaOVZZ02Qzyf/bWNa7yYkn4XyPb4Qjiv1+rmJTRtEEq4lJ+BJ5pm+LhMAaEaC7
+         z4DSLgmo/U7gnoLbd/+3N9co1N6Li32npAS4gO35czQv0SNHgVel7BL+0LhxXVWz+r
+         VvcELTVjAfGP0d4GrqTcxvf7mNrQfQ36xMiqucHjdqGDyE5jPBNpk98PS917753lMC
+         B9gEvfZwFQZCyM6GDk40UEPmd0SXkdJqulNlzXWIUHaPb0/btm0QJkYct9Sz5xDOwc
+         bL0LS1g1ySXSkFwv5mJXMcjay6gJUg+iD+2ITnQHdSL5VO+yTWorVcaMAV1mRs644a
+         pyyYznCb+O8yw==
+Subject: Re: [PATCH v3 1/3] PCI: Introduce pcibios_ignore_alignment_request
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>, Oliver <oohall@gmail.com>
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-2-shawn@anastas.io>
+ <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
+ <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <bccfec8f-c8a4-fac1-7e96-be84113b9a73@anastas.io>
+Date:   Tue, 28 May 2019 02:39:24 -0500
 MIME-Version: 1.0
-In-Reply-To: <000000000000785e9d0589ec359a@google.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <b0a38504-24c3-77bc-b308-7b498f07760a@ozlabs.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,37 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Well, I don't think this is a TOMOYO's problem.
 
-On 2019/05/28 14:48, syzbot wrote:
-> CPU: 1 PID: 11697 Comm: syz-executor.3 Not tainted 5.2.0-rc1+ #2
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
-(...snipped...)
->  kfree+0xcf/0x220 mm/slab.c:3755
->  tomoyo_realpath_from_path+0x1de/0x7a0 security/tomoyo/realpath.c:319
-(...snipped...)
-> Allocated by task 11696:
-(...snipped...)
->  kmalloc include/linux/slab.h:552 [inline]
->  tomoyo_realpath_from_path+0xcd/0x7a0 security/tomoyo/realpath.c:277
-(...snipped...)
+
+On 5/28/19 1:27 AM, Alexey Kardashevskiy wrote:
 > 
-> Freed by task 11696:
-(...snipped...)
->  kfree+0xcf/0x220 mm/slab.c:3755
->  tomoyo_realpath_from_path+0x1de/0x7a0 security/tomoyo/realpath.c:319
+> 
+> On 28/05/2019 15:36, Oliver wrote:
+>> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
+>>>
+>>> Introduce a new pcibios function pcibios_ignore_alignment_request
+>>> which allows the PCI core to defer to platform-specific code to
+>>> determine whether or not to ignore alignment requests for PCI resources.
+>>>
+>>> The existing behavior is to simply ignore alignment requests when
+>>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
+>>> default implementation of pcibios_ignore_alignment_request.
+>>>
+>>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+>>> ---
+>>>   drivers/pci/pci.c   | 9 +++++++--
+>>>   include/linux/pci.h | 1 +
+>>>   2 files changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index 8abc843b1615..8207a09085d1 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment(void)
+>>>          return 0;
+>>>   }
+>>>
+>>> +int __weak pcibios_ignore_alignment_request(void)
+>>> +{
+>>> +       return pci_has_flag(PCI_PROBE_ONLY);
+>>> +}
+>>> +
+>>>   #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
+>>>   static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
+>>>   static DEFINE_SPINLOCK(resource_alignment_lock);
+>>> @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+>>>          p = resource_alignment_param;
+>>>          if (!*p && !align)
+>>>                  goto out;
+>>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
+>>> +       if (pcibios_ignore_alignment_request()) {
+>>>                  align = 0;
+>>> -               pr_info_once("PCI: Ignoring requested alignments (PCI_PROBE_ONLY)\n");
+>>> +               pr_info_once("PCI: Ignoring requested alignments\n");
+>>>                  goto out;
+>>>          }
+>>
+>> I think the logic here is questionable to begin with. If the user has
+>> explicitly requested re-aligning a resource via the command line then
+>> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
+>> they get to keep the pieces.
+>>
+>> That said, the real issue here is that PCI_PROBE_ONLY probably
+>> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
+>> hotplugged devices are configured by firmware before it's passed to
+>> the guest and we need to keep the FW assignments otherwise things
+>> break. QEMU however doesn't do any BAR assignments and relies on that
+>> being handled by the guest. At boot time this is done by SLOF, but
+>> Linux only keeps SLOF around until it's extracted the device-tree.
+>> Once that's done SLOF gets blown away and the kernel needs to do it's
+>> own BAR assignments. I'm guessing there's a hack in there to make it
+>> work today, but it's a little surprising that it works at all...
+> 
+> 
+> The hack is to run a modified qemu-aware "/usr/sbin/rtas_errd" in the
+> guest which receives an event from qemu (RAS_EPOW from
+> /proc/interrupts), fetches device tree chunks (and as I understand it -
+> they come with BARs from phyp but without from qemu) and writes "1" to
+> "/sys/bus/pci/rescan" which calls pci_assign_resource() eventually:
 
-Since the "buf" variable is a local variable, it cannot be shared between
-two threads. Since "buf" is assigned as
+Interesting. Does this mean that the PHYP hotplug path doesn't
+call pci_assign_resource? If so it means the patch may not
+break that platform after all, though it still may not be
+the correct way of doing things.
 
-  buf = kmalloc(buf_len, GFP_NOFS);
-
-and nobody else is reassigning "buf",
-
-  kfree(buf);
-
-can't become an invalid free.
-
-Let's wait for a reproducer...
-
+> 
+> [c000000006e6f960] [c0000000005f62d4] pci_assign_resource+0x44/0x360
+> 
+> [c000000006e6fa10] [c0000000005f8b54]
+> assign_requested_resources_sorted+0x84/0x110
+> [c000000006e6fa60] [c0000000005f9540] __assign_resources_sorted+0xd0/0x750
+> [c000000006e6fb40] [c0000000005fb2e0]
+> __pci_bus_assign_resources+0x80/0x280
+> [c000000006e6fc00] [c0000000005fb95c]
+> pci_assign_unassigned_bus_resources+0xbc/0x100
+> [c000000006e6fc60] [c0000000005e3d74] pci_rescan_bus+0x34/0x60
+> 
+> [c000000006e6fc90] [c0000000005f1ef4] rescan_store+0x84/0xc0
+> 
+> [c000000006e6fcd0] [c00000000068060c] bus_attr_store+0x3c/0x60
+> 
+> [c000000006e6fcf0] [c00000000037853c] sysfs_kf_write+0x5c/0x80
+> 
+> 
+> 
+> 
+> 
+>>
+>> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
+>> might have something to add. He's sick at the moment, but I'll ask him
+>> to take a look at this once he's back among the living
+>>
+>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>> index 4a5a84d7bdd4..47471dcdbaf9 100644
+>>> --- a/include/linux/pci.h
+>>> +++ b/include/linux/pci.h
+>>> @@ -1990,6 +1990,7 @@ static inline void pcibios_penalize_isa_irq(int irq, int active) {}
+>>>   int pcibios_alloc_irq(struct pci_dev *dev);
+>>>   void pcibios_free_irq(struct pci_dev *dev);
+>>>   resource_size_t pcibios_default_alignment(void);
+>>> +int pcibios_ignore_alignment_request(void);
+>>>
+>>>   #ifdef CONFIG_HIBERNATE_CALLBACKS
+>>>   extern struct dev_pm_ops pcibios_pm_ops;
+>>> --
+>>> 2.20.1
+>>>
+> 
