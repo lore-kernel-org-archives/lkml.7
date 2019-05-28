@@ -2,95 +2,121 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1718CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B346C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEA02081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F222081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wpd7rWQe"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Gcq2zKVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfE1M75 (ORCPT
+        id S1727348AbfE1NAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:59:57 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49922 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbfE1M75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:59:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Mime-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l65emkDB6YfIx5Ve1iueFrhApsDtoK/gPzAciJVNODE=; b=wpd7rWQeLaPU+zoeaHpc2R9x80
-        +3n5d3y2iBXjQIhbfzoz+jRn55C6z21KQ/A9RLFH59jMY6+GCMobkLkzOr6PTIbIrRMdlINMJFKaO
-        xuj5mjx1OyUKDQHVQ5D3IJ6cQ4HUQNAajZUTKTFLowP13NP8cBJBcIxZCF2kmNjSzPRGFcSPhCtO7
-        5P/Sd7W3JCL1KBX6dVxX/hV3SqnJD9af2qwwkswJ2292lg3ORsdhLYNDtsaLs7CwiKraVa4s1aF26
-        7uCWimLss7oL7zTu6Q4i27/3m08Wiue4QRox84Z+UInIVCZV7dMJQqG6JFPmaMnJpoWj1jZ2HXB0K
-        1yVSSrQQ==;
-Received: from [54.239.6.185] (helo=u9312026164465a.ant.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVbhk-0003wi-Rj; Tue, 28 May 2019 12:59:49 +0000
-Message-ID: <f8fccc5745755e92077306189577da2fe591f586.camel@infradead.org>
-Subject: Re: [PATCH] virtio_console: remove vq buf while unpluging port
-From:   Amit Shah <amit@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>, amit@kernel.org,
-        zhenwei pi <pizhenwei@bytedance.com>
-Cc:     arnd@arndb.de, virtualization@lists.linux-foundation.org,
+        Tue, 28 May 2019 09:00:20 -0400
+Received: from node.akkea.ca ([192.155.83.177]:43840 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfE1NAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:00:20 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id C5BEC4E204B; Tue, 28 May 2019 13:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1559048419; bh=DuNG9eraJBekzRo7JMy/lt3azKRg+Ejt3Pynd/LUpQw=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=Gcq2zKVu0wYuEKx1clJT+CFI/Qm8Qg193Gq70Ah2BlMkn2oz/I6TTnc0xhDdkNjT2
+         oVS0ni69EfFkHZcePiIwstfo+zNZOlrY23KjNmj0tM5GctNlBJKiLCFEZVHRwwS7pb
+         2Bh+KPihajSNbxME+mHygXhqiDjAT7m7klszc4Sk=
+To:     Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the svns power key
+X-PHP-Originating-Script: 1000:rcube.php
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 28 May 2019 06:00:19 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Date:   Tue, 28 May 2019 14:59:46 +0200
-In-Reply-To: <20190524185132.GA10695@kroah.com>
-References: <1556416204-30311-1-git-send-email-pizhenwei@bytedance.com>
-         <20190524185132.GA10695@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1559047905.4039.15.camel@pengutronix.de>
+References: <20190528124406.29730-1-angus@akkea.ca>
+ <1559047905.4039.15.camel@pengutronix.de>
+Message-ID: <9a2361a08a0b8a1be1e2f5921026661f@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-24 at 20:51 +0200, Greg KH wrote:
-> On Sun, Apr 28, 2019 at 09:50:04AM +0800, zhenwei pi wrote:
-> > A bug can be easily reproduced:
-> > Host# cat guest-agent.xml
-> > <channel type="unix">
-> >   <source mode="bind" path="/var/lib/libvirt/qemu/stretch.agent"/>
-> >   <target type="virtio" name="org.qemu.guest_agent.0"
-> > state="connected"/>
-> > </channel>
-> > Host# virsh attach-device instance guest-agent.xml
-> > Host# virsh detach-device instance guest-agent.xml
-> > Host# virsh attach-device instance guest-agent.xml
-> > 
-> > and guest report: virtio-ports vport0p1: Error allocating inbufs
-> > 
-> > The reason is that the port is unplugged and the vq buf still
-> > remained.
-> > So, fix two cases in this patch:
-> > 1, fix memory leak with attach-device/detach-device.
-> > 2, fix logic bug with attach-device/detach-device/attach-device.
+Hi Lucas,
 
-The "leak" happens because the host-side of the connection is still
-connected.  This is by design -- if a guest has written data before
-being unplugged, the port isn't released till the host connection goes
-down to ensure a host process reads all the data out of the port.
+On 2019-05-28 05:51, Lucas Stach wrote:
+> Hi Angus,
+> 
+> Am Dienstag, den 28.05.2019, 05:44 -0700 schrieb Angus Ainslie 
+> (Purism):
+>> Add the snvs power key.
+>> 
+>> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>> ---
+>>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi 
+>> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> index 45d10d8efd14..5f93fd9662ae 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+>> @@ -8,6 +8,7 @@
+>>  #include <dt-bindings/power/imx8mq-power.h>
+>>  #include <dt-bindings/reset/imx8mq-reset.h>
+>>  #include <dt-bindings/gpio/gpio.h>
+>> +#include "dt-bindings/input/input.h"
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/thermal/thermal.h>
+>>  #include "imx8mq-pinfunc.h"
+>> @@ -463,6 +464,14 @@
+>> >  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+>> >  						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>> >  				};
+>> +
+>> > +				snvs_pwrkey: snvs-powerkey {
+>> > +					compatible = "fsl,sec-v4.0-pwrkey";
+>> > +					regmap = <&snvs>;
+>> > +					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+>> > +					linux,keycode = <KEY_POWER>;
+>> +					wakeup-source;
+> 
+> Not all i.MX8MQ systems will have this functionality wired up at the
+> board level, so this node needs to be disabled by default. The existing
+>  i.MX6 and i.MX7 DTs seem to get this wrong.
+> 
 
-Can you try similar, but also disconnecting the host side and see if
-that fixes things?
+Ok I'll fix that for the next rev.
 
-> Amit, any ideas if this is valid or not and if this should be
-> applied?
+Thanks
+Angus
 
-This had indeed been missed, thanks!
-
-
-			Amit
+> Regards,
+> Lucas
+> 
+>> +				};
+>> >  			};
+>>  
+>> > >  			clk: clock-controller@30380000 {
 
