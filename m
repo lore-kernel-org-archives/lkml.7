@@ -1,149 +1,119 @@
 Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0466C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A02720989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559041937;
-	bh=fkPXlmo2tMUHV6wCswPd6uRNneYq3knd8MxUECPUh9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HH5BGHtdHTP176/Nhb/VGx23TyqFVH2EOuflNNfBMQ9Cikvg185kaBKQEntX9PF69
-	 ytI3NpQEy1lL/4NoQkfFPUILnANm5XI0laOhdBZybQXvQXHZ8ku9o3lFH7LgKAuej8
-	 whRYGwUCMFlewegug38vJuPG46FbeXmF6P7SXx0A=
+	by mail.kernel.org (Postfix) with ESMTP id 93067208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfE1LMQ (ORCPT
+        id S1726626AbfE1LOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:12:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39760 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1LMQ (ORCPT
+        Tue, 28 May 2019 07:14:23 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:44280 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbfE1LOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:12:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z26so11282085pfg.6;
-        Tue, 28 May 2019 04:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yjDDJ/2zUpUMynGNYx1IGW1H0lSoDeccz7vZj839ckk=;
-        b=BAMyLVStI/JfGQ5nZP1Aq6dmfML42NpXtmeu9rpv5EXDkgpwcdBMCj5BoUHY9SnjOr
-         yXxPTGVcm1Hx0gzDRbOROR6xHoNkDjn+8YH4KGdIS5yqGcjJ8cvw63QBO+FYInAAUo4o
-         0KURztiHWmmscsTig7NfQWSmzr3GNbCUKlczYANC0/1T5VGmOQ8Qg4G7aSkj3aFyLYsQ
-         zZpqol/Gx09xwV9+VHJCNn0Sz6/inKLr1Szw9JTeIx3fNDBJbilrdXcSAmKL/pXV54WA
-         RgyON09Us9klUuI1rvB0RNRW2Y1gYFDUh3tFWPkmUrUKehaLpn3Z2tI4BxK1tpq2Owne
-         yOeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yjDDJ/2zUpUMynGNYx1IGW1H0lSoDeccz7vZj839ckk=;
-        b=SM9G96JSW+cuqjPo7Gr9DOLsi0/mNTUJxGOe4ZP2DLum0P2AXpofEC0u/cNl2fVIIT
-         oPxGNn4Ft43w9sTzOmCqoAPrO1kzSocGmibbYwd5Q0I07dcnkFD85fHNi41ttGD0FsE0
-         xciGQ9MLl13a1JvUvvyu8pme/OncnKcY8Uac+IvCmgvmVcSZmatDMuEw4/RfmNYvWBRA
-         YW0exttmC8UcO9q2n8zB6E2oKyCbtoyEN8huCA2hAHD2htUD8WMkCGZOM8+KwWiA4l4I
-         bcV4RKMElnsCgNy0P53rkgSlOENohYytR2B6X4lLASyJFBQ6JqwD70GP23g+wolJHXpl
-         sn+A==
-X-Gm-Message-State: APjAAAWDqoLFrDLLO81hhd/5N/cdXaL6Fqs7TvsLFMYErXYvJR7dne2Z
-        wTfy2cJZr6diJBrNv4Z2Hgs=
-X-Google-Smtp-Source: APXvYqxNxlP/WY14NSuqDMVHVvQZEWNgz/oPlh3HFqtK2YOKKCKnz4314RbUCguqjl5JrhkAUkvk6g==
-X-Received: by 2002:a05:6a00:43:: with SMTP id i3mr64202949pfk.113.1559041935394;
-        Tue, 28 May 2019 04:12:15 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id f16sm6699086pja.18.2019.05.28.04.12.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 28 May 2019 04:12:14 -0700 (PDT)
-Date:   Tue, 28 May 2019 20:12:08 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528111208.GA30365@google.com>
-References: <20190527075811.GC6879@google.com>
- <20190527124411.GC1658@dhcp22.suse.cz>
- <20190528032632.GF6879@google.com>
- <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <20190528103256.GA9199@google.com>
- <20190528104117.GW1658@dhcp22.suse.cz>
+        Tue, 28 May 2019 07:14:23 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SB9FKR016551;
+        Tue, 28 May 2019 06:13:10 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2sq340k99g-1;
+        Tue, 28 May 2019 06:13:10 -0500
+Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
+        by mail1.cirrus.com (Postfix) with ESMTP id 8C146611C8C0;
+        Tue, 28 May 2019 06:13:09 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 28 May
+ 2019 12:13:08 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 28 May 2019 12:13:08 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D534745;
+        Tue, 28 May 2019 12:13:08 +0100 (BST)
+Date:   Tue, 28 May 2019 12:13:08 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     <wsa@the-dreams.de>, <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2 2/6] i2c: acpi: Use available IRQ helper functions
+Message-ID: <20190528111308.GF28362@ediswmail.ad.cirrus.com>
+References: <20190527151932.14310-1-ckeepax@opensource.cirrus.com>
+ <20190527151932.14310-2-ckeepax@opensource.cirrus.com>
+ <20190528103028.GA2781@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190528104117.GW1658@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528103028.GA2781@lahna.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=889 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
-> On Tue 28-05-19 19:32:56, Minchan Kim wrote:
-> > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
-> > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
-> > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
-> > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> > > > > > if we went with the per vma fd approach then you would get this
-> > > > > > > feature automatically because map_files would refer to file backed
-> > > > > > > mappings while map_anon could refer only to anonymous mappings.
-> > > > > >
-> > > > > > The reason to add such filter option is to avoid the parsing overhead
-> > > > > > so map_anon wouldn't be helpful.
-> > > > > 
-> > > > > Without chiming on whether the filter option is a good idea, I'd like
-> > > > > to suggest that providing an efficient binary interfaces for pulling
-> > > > > memory map information out of processes.  Some single-system-call
-> > > > > method for retrieving a binary snapshot of a process's address space
-> > > > > complete with attributes (selectable, like statx?) for each VMA would
-> > > > > reduce complexity and increase performance in a variety of areas,
-> > > > > e.g., Android memory map debugging commands.
-> > > > 
-> > > > I agree it's the best we can get *generally*.
-> > > > Michal, any opinion?
-> > > 
-> > > I am not really sure this is directly related. I think the primary
-> > > question that we have to sort out first is whether we want to have
-> > > the remote madvise call process or vma fd based. This is an important
-> > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
-> > > so far unfortunately.
-> > 
-> > With current usecase, it's per-process API with distinguishable anon/file
-> > but thought it could be easily extended later for each address range
-> > operation as userspace getting smarter with more information.
+On Tue, May 28, 2019 at 01:30:28PM +0300, Mika Westerberg wrote:
+> On Mon, May 27, 2019 at 04:19:28PM +0100, Charles Keepax wrote:
+> >  static int i2c_acpi_get_info(struct acpi_device *adev,
+> >  			     struct i2c_board_info *info,
+> >  			     struct i2c_adapter *adapter,
+> >  			     acpi_handle *adapter_handle)
+> >  {
+> >  	struct list_head resource_list;
+> > -	struct resource_entry *entry;
+> >  	struct i2c_acpi_lookup lookup;
+> > +	int irq = -ENOENT;
+> >  	int ret;
+> >  
+> >  	memset(&lookup, 0, sizeof(lookup));
+> > @@ -176,16 +187,13 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+> >  
+> >  	/* Then fill IRQ number if any */
+> >  	INIT_LIST_HEAD(&resource_list);
+> > -	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+> > +	ret = acpi_dev_get_resources(adev, &resource_list,
+> > +				     i2c_acpi_add_resource, &irq);
+> >  	if (ret < 0)
+> >  		return -EINVAL;
+> >  
+> > -	resource_list_for_each_entry(entry, &resource_list) {
+> > -		if (resource_type(entry->res) == IORESOURCE_IRQ) {
+> > -			info->irq = entry->res->start;
+> > -			break;
+> > -		}
+> > -	}
+> > +	if (irq >= 0)
 > 
-> Never design user API based on a single usecase, please. The "easily
-> extended" part is by far not clear to me TBH. As I've already mentioned
-> several times, the synchronization model has to be thought through
-> carefuly before a remote process address range operation can be
-> implemented.
+> Since 0 is not valid IRQ, I think this should be written like:
+> 
+> 	if (irg > 0)
+> 
 
-I agree with you that we shouldn't design API on single usecase but what
-you are concerning is actually not our usecase because we are resilient
-with the race since MADV_COLD|PAGEOUT is not destruptive.
-Actually, many hints are already racy in that the upcoming pattern would
-be different with the behavior you thought at the moment.
+Yeah sorry thought IRQs were like GPIOs where 0 is a valid
+number, will update the patches.
 
-If you are still concerning of address range synchronization, how about
-moving such hints to per-process level like prctl?
-Does it make sense to you?
+Thanks,
+Charles
+> > +		info->irq = irq;
+> >  
+> >  	acpi_dev_free_resource_list(&resource_list);
+> >  
+> > -- 
+> > 2.11.0
