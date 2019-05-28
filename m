@@ -2,98 +2,119 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F78C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3A6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0057D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="droyNunc"
+	by mail.kernel.org (Postfix) with ESMTP id 76CE620883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfE1L47 (ORCPT
+        id S1727082AbfE1L51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:56:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45145 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfE1L47 (ORCPT
+        Tue, 28 May 2019 07:57:27 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:41971 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726592AbfE1L51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:56:59 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w34so6186805pga.12;
-        Tue, 28 May 2019 04:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Y0nU1mnDjk5DEaEAqhn6A+e5w54A9UaAagHSxcoB+rI=;
-        b=droyNuncHFCAXk2oz9b91V/DwkejmqPm50x4ZBfqch9PSfHoEpw76fBWY+hcNLkPNG
-         cAs+EV160TX6U78yQ58egeBfws+a5Kl9Vi73WP8uPWje0+UdOI6CSy2I3oK4zn9m5OSm
-         rp0CnbvZF13HQwXk6gfgGlzeSh0pPuBWAAV3SNBT+5GvDKiWKgcqdt4Hz5LnSSLoyozn
-         OW+7OptgTqrxMQwKxrGvbDY3I21Ni6H4sSgK3k/aQj8atL5WEPs2ssJntXR7Dzo+klVf
-         Y6u8YfVBM2PbMjmlw19zeQgjjs1qsSUV3vjPyGFZqmt0zX/WNp+EuY+je7xDsFPoAcfc
-         1YpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Y0nU1mnDjk5DEaEAqhn6A+e5w54A9UaAagHSxcoB+rI=;
-        b=k4erHXWSicV/QX2pyIoZjuFxE3p6932rlB3ec8wGcNfTHSaxnrVB5uk0ddkfcZTM2p
-         Q13AAPIQJbA+A7QuoQobsU6pDsdTDnAwenP2XJHh9bIRdNSaKxfd9OLraysiB+VerZrq
-         Qw0f+vf+XH/t4J4ofgSKWp4/zgDq4nPsq6MlQtPsKKmKEx/ITOhNVlyPcQtaoSgxS0qd
-         5gseQSrN+N4MlmXrC/sJA4bJ97gaFvK9/JDmZ5MO94vJVbhrFkeI4SYNEyI19cWiC1oe
-         dGMLc9JH1JoD4BoWkhos7oF+/wvPvUy8eAXlNsemjqP8LHtx9Lxso2y/Pn3wC7n5Dfpn
-         zgHQ==
-X-Gm-Message-State: APjAAAXqP8bhESgfq74nAbDlgMBY8ddN9hnN1Z69wNAU7DnbrygnB1xs
-        hu1M+8CQY93rkuCugpq18UI=
-X-Google-Smtp-Source: APXvYqx3Up2B1eZPaaTAWMBFlw4GilIcCB4OB4SrH4CoVtGbovwboWob5c34WdwFXy9KG22xN4xmnw==
-X-Received: by 2002:a17:90a:9602:: with SMTP id v2mr5467175pjo.59.1559044618864;
-        Tue, 28 May 2019 04:56:58 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id r1sm16272313pfg.65.2019.05.28.04.56.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 28 May 2019 04:56:57 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] ixgbevf: fix possible divide by zero in ixgbevf_update_itr
-Date:   Tue, 28 May 2019 19:58:02 +0800
-Message-Id: <1559044682-23446-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 May 2019 07:57:27 -0400
+Received: from [IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae] ([IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id VajHhpTIs3qlsVajIhlBWr; Tue, 28 May 2019 13:57:25 +0200
+Subject: Re: test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux-media@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
+        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        lkft-triage@lists.linaro.org
+References: <CA+G9fYuC8dgKs04HmyCaKeQ_xwqKBxnh=zsOFjQK+3Fq7AZRyw@mail.gmail.com>
+ <5de0df37-f0d0-f54c-2eef-a7533cbe7a25@xs4all.nl>
+ <CA+G9fYtbb82EPY9gG63+U2FTVswt7f3FjHdaHMA2kibxgVvZcw@mail.gmail.com>
+ <CA+G9fYu-guJaWDrEp5=KeJsje6Teo-V=_AhFStf0gnLk-QNfzA@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <29b08b95-ae5b-2989-8f09-93fe702aef29@xs4all.nl>
+Date:   Tue, 28 May 2019 13:57:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CA+G9fYu-guJaWDrEp5=KeJsje6Teo-V=_AhFStf0gnLk-QNfzA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAf1fQ/u7BjVvRc+OXOLqg/gWVFvX8Bg76u1gFLh+Kd3bxp1C3HBEjOsgAw4E4bYOSJcycXRQCoIHuoqnsoLgat3p0ZoDyUZSSDg7jvpTpkA1zw3nALP
+ wtCkHAw2elzp683xExxFv77bw9lzvHfGTxVyHN1kfndBp4QoK8w43Tnaw55YeAqRrUgcykJEq84WrODLmwMQ9LocMMEhK5vdH11C7PnEXI8k1UyguZQkzfi/
+ h0LJWioquEDdkmBJLF9zGWpY7oIheZSQ3E9IWYFbqt/E99WBS8j9BUCfiOplsWAmr8sjcS47fzxKc51i5p5qFmaSJtDidkmQHVfdcj8m6wkw4QU5BOiSimMC
+ PMfTwj+Sxoq7fXUWgvOm4vzH9KWIe6KKtQ7AP7CqslZ1Q6YvgSrLAKuJ2KDCp1iXlCXLfZ1c/zjcgMz3H9CIrxOsKNpDRnxNMtUOm2cMAgti7iAfVjbP829N
+ N1+wJYq5irn2oVwsfwsRQs+JabCNPj2eF7eC9vVOImeRFfBY6Rc/cYmp4BOjSM1V33fx5n2n/8lUGgQCA+8sht/Gf06nptGYsjMdZHuEU1e0oGnpMv6pXA2N
+ mrVvOHJ2oAX4/Wb/Dr7dRf44X56MfWqB4RBeFAbdQqHcTOGyKjIGHaRHiASXl00kFqsZdS+eta0QdBwEJg0rBURlAd+djkzZJNB253obSEqtArSqtPuvH92T
+ C6nDVb8/qpU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The next call to ixgbevf_update_itr will continue to dynamically
-update ITR.
+On 5/28/19 12:16 PM, Naresh Kamboju wrote:
+> Hi Hans,
+> 
+> On Mon, 20 May 2019 at 19:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>
+>> Hi Hans,
+>>
+>> On Mon, 13 May 2019 at 19:08, Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>>
+>>> On 5/13/19 3:32 PM, Naresh Kamboju wrote:
+>>>> Do you see test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
+>>>> kernel branches ?
+>>>
+>>> Probably related to commit 8a7c5594c0202 (media: v4l2-ioctl: clear fields in s_parm).
+>>
+>> I have cherry-picked on stable rc 4.9 branch and tested and test got
+>> PASS on x86_64.
+> 
+> I have cherry-picked for stable -rc 4.14 and 4.9 and test got PASS.
 
-Copy from commit bdbeefe8ea8c ("ixgbe: fix possible divide by zero in
-ixgbe_update_itr")
+Just to be clear: you cherry-picked commit 8a7c5594c0202 (media: v4l2-ioctl: clear
+fields in s_parm) for both 4.9 and 4.14, right?
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+If so, feel free to post that patch to the stable mailinglist for those kernels.
+Make sure you CC me when you do that.
 
-diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-index d189ed2..d2b41f9 100644
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -1423,6 +1423,9 @@ static void ixgbevf_update_itr(struct ixgbevf_q_vector *q_vector,
- 	 */
- 	/* what was last interrupt timeslice? */
- 	timepassed_us = q_vector->itr >> 2;
-+	if (timepassed_us == 0)
-+		return;
-+
- 	bytes_perint = bytes / timepassed_us; /* bytes/usec */
- 
- 	switch (itr_setting) {
--- 
-2.7.4
+> 
+> do you want to queue this for stable rc 4.14 and 4.9 ?
+> 
+> I have tested for 4.4 with patch applied but failed with below error.
+> 
+> test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>  warn: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1237):
+> S_PARM is supported but doesn't report V4L2_CAP_TIMEPERFRAME
+>  fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1139):
+> node->has_frmintervals && !cap->capability
+> test VIDIOC_G/S_PARM: FAIL
+
+You probably need commit f63998331935 ([media] vivid: set V4L2_CAP_TIMEPERFRAME)
+and possibly commit 3f122df4a2ba (media: vivid: do not implement VIDIOC_S_PARM for output streams).
+
+Regards,
+
+	Hans
+
+> 
+> 4.4 - failed log
+> https://lkft.validation.linaro.org/scheduler/job/746548#L1678
+> 
+> ref:
+> 4.14 pass log,
+> https://lkft.validation.linaro.org/scheduler/job/739126#L1843
+> 
+> 4.9 pass log,
+> https://lkft.validation.linaro.org/scheduler/job/736243#L1744
+> 
+> - Naresh
+> 
 
