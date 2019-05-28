@@ -2,150 +2,86 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE2C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A9020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="sliMViUI"
+	by mail.kernel.org (Postfix) with ESMTP id 225B02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfE1IEw (ORCPT
+        id S1727588AbfE1IE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:04:52 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:55556 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726305AbfE1IEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:04:51 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 5733E2E0A36;
-        Tue, 28 May 2019 11:04:48 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id m59xZhNhfy-4l5i7XHm;
-        Tue, 28 May 2019 11:04:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1559030688; bh=M5GVJ5UIA7HPk8GVmrSjaHR1Kocs/6E9oStwcHVdqSs=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=sliMViUISlZv4ivdP47YUmKzIFD6JxWHzMWRPoMofXHi0Bl+gyker5cZo1ApiaRIX
-         H6vjAeJxiF3qHI6Qw4jAKpxzBRUmSPeFLWG7TV+eAlkO5pB8z9Rfxi8B4u8tLqnMnt
-         6Fk93jMvklQm1PE68ODKx+mLq0YhXEUE2EYY84v4=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 8KcqFbu0Vu-4llCBi6N;
-        Tue, 28 May 2019 11:04:47 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
- <20190527143926.GF1658@dhcp22.suse.cz>
- <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
- <20190528065153.GB1803@dhcp22.suse.cz>
- <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
- <20190528073835.GP1658@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
-Date:   Tue, 28 May 2019 11:04:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:04:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:59625 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfE1IE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:04:57 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 01:04:56 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 28 May 2019 01:04:53 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 28 May 2019 11:04:52 +0300
+Date:   Tue, 28 May 2019 11:04:52 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: ccg: fix memory leak in do_flash
+Message-ID: <20190528080452.GB7167@kuha.fi.intel.com>
+References: <20190527181050.GA31496@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190528073835.GP1658@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527181050.GA31496@embeddedor>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28.05.2019 10:38, Michal Hocko wrote:
-> On Tue 28-05-19 10:30:12, Konstantin Khlebnikov wrote:
->> On 28.05.2019 9:51, Michal Hocko wrote:
->>> On Tue 28-05-19 09:25:13, Konstantin Khlebnikov wrote:
->>>> On 27.05.2019 17:39, Michal Hocko wrote:
->>>>> On Mon 27-05-19 16:21:56, Michal Hocko wrote:
->>>>>> On Mon 27-05-19 16:12:23, Michal Hocko wrote:
->>>>>>> [Cc linux-api. Please always cc this list when proposing a new user
->>>>>>>     visible api. Keeping the rest of the email intact for reference]
->>>>>>>
->>>>>>> On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
->>>>>> [...]
->>>>>>>> This implements manual kswapd-style memory reclaim initiated by userspace.
->>>>>>>> It reclaims both physical memory and cgroup pages. It works in context of
->>>>>>>> task who calls syscall madvise thus cpu time is accounted correctly.
->>>>>>
->>>>>> I do not follow. Does this mean that the madvise always reclaims from
->>>>>> the memcg the process is member of?
->>>>>
->>>>> OK, I've had a quick look at the implementation (the semantic should be
->>>>> clear from the patch descrition btw.) and it goes all the way up the
->>>>> hierarchy and finally try to impose the same limit to the global state.
->>>>> This doesn't really make much sense to me. For few reasons.
->>>>>
->>>>> First of all it breaks isolation where one subgroup can influence a
->>>>> different hierarchy via parent reclaim.
->>>>
->>>> madvise(NULL, size, MADV_STOCKPILE) is the same as memory allocation and
->>>> freeing immediately, but without pinning memory and provoking oom.
->>>>
->>>> So, there is shouldn't be any isolation or security issues.
->>>>
->>>> At least probably it should be limited with portion of limit (like half)
->>>> instead of whole limit as it does now.
->>>
->>> I do not think so. If a process is running inside a memcg then it is
->>> a subject of a limit and that implies an isolation. What you are
->>> proposing here is to allow escaping that restriction unless I am missing
->>> something. Just consider the following setup
->>>
->>> 		root (total memory = 2G)
->>> 		 / \
->>>              (1G) A   B (1G)
->>>                      / \
->>>              (500M) C   D (500M)
->>>
->>> all of them used up close to the limit and a process inside D requests
->>> shrinking to 250M. Unless I am misunderstanding this implementation
->>> will shrink D, B root to 250M (which means reclaiming C and A as well)
->>> and then globally if that was not sufficient. So you have allowed D to
->>> "allocate" 1,75G of memory effectively, right?
->>
->> It shrinks not 'size' memory - only while usage + size > limit.
->> So, after reclaiming 250M in D all other levels will have 250M free.
+On Mon, May 27, 2019 at 01:10:50PM -0500, Gustavo A. R. Silva wrote:
+> In case memory resources for *fw* were successfully allocated,
+> release them before return.
 > 
-> Could you define the exact semantic? Ideally something for the manual
-> page please?
+> Addresses-Coverity-ID: 1445499 ("Resource leak")
+> Fixes: 5c9ae5a87573 ("usb: typec: ucsi: ccg: add firmware flashing support")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Acked-by: Heikki Krogerus <heikki.krogerus@gmail.com>
+
+> ---
+>  drivers/usb/typec/ucsi/ucsi_ccg.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> index 9d46aa9e4e35..bf63074675fc 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_ccg.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> @@ -862,8 +862,10 @@ static int do_flash(struct ucsi_ccg *uc, enum enum_flash_mode mode)
+>  
+>  not_signed_fw:
+>  	wr_buf = kzalloc(CCG4_ROW_SIZE + 4, GFP_KERNEL);
+> -	if (!wr_buf)
+> -		return -ENOMEM;
+> +	if (!wr_buf) {
+> +		err = -ENOMEM;
+> +		goto release_fw;
+> +	}
+>  
+>  	err = ccg_cmd_enter_flashing(uc);
+>  	if (err)
+> -- 
+> 2.21.0
 
-Like kswapd which works with thresholds of free memory this one reclaims
-until 'free' (i.e. memory which could be allocated without invoking
-direct recliam of any kind) is lower than passed 'size' argument.
+thanks,
 
-Thus right after madvise(NULL, size, MADV_STOCKPILE) 'size' bytes
-could be allocated in this memory cgroup without extra latency from
-reclaimer if there is no other memory consumers.
-
-Reclaimed memory is simply put into free lists in common buddy allocator,
-there is no reserves for particular task or cgroup.
-
-If overall memory allocation rate is smooth without rough spikes then
-calling MADV_STOCKPILE in loop periodically provides enough room for
-allocations and eliminates direct reclaim from all other tasks.
-As a result this eliminates unpredictable delays caused by
-direct reclaim in random places.
+-- 
+heikki
