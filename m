@@ -2,113 +2,133 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEDDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176ECC46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D72821473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jX13nGRP"
+	by mail.kernel.org (Postfix) with ESMTP id EA89420989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfE1Ixt (ORCPT
+        id S1726852AbfE1Ixx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 May 2019 04:53:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43208 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726824AbfE1Ixt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 04:53:49 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39842 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfE1Ixr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:53:47 -0400
-Received: by mail-vs1-f66.google.com with SMTP id m1so12279912vsr.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OvPyYljb7JCOrJ33Ko5bumzGJo9yaiTXxiuXC/YYxTg=;
-        b=jX13nGRPAPQI1hudE0X4kQErmhGYYfoL3HEp017zRgTTQqSLqgi4ZQek3ZoSFMxBdU
-         /yRFxKtEShA+2g/SGMrieED29wDcQdd5BGbasxRNkqmWV2wIz0TZjWrcjM7Heh2wMW+W
-         c3MKVnGHejU3lxN+pyIMTgv8eooombwckW0jjXenNUvhhB+yjrB+lCC6pS8zZWZk72JR
-         Pw77jREudMFS/UiJoYxJWClw3K5NX+ITUS4mvilMNIbIlySv9oEL1B2rkoUjaYJdxRS2
-         sfpXJ9cOPN61iuyASFipfhH5HVnpqd87PoQrboLqB8p++c//5p0Vzt3LgQsXLF6Sxpv8
-         2YhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OvPyYljb7JCOrJ33Ko5bumzGJo9yaiTXxiuXC/YYxTg=;
-        b=Vb5Iz2UcFKPmbSq9Krh9jBoNOIMvTWx2J2Mtjsyb2NTPPeDp5sX5l/SvipK016sC8j
-         lvoVJGR5d2Mu7nX5jDW3GvqQqf7norK8o7hoX3yMwFCMeQVRuCTmA/h7XLWQSGBOb9DQ
-         bH+VTDmmhseimzKyjTakO7LoEHxZ2BxUcyL5nWThuZBgaSWjaK6OQ6udTXxTO6IKbZ59
-         SYvMnHobKy/3NTR6TOoolDS4/15T4+5gDampu5LRT/0dhsbQOc1TlAfLP8fF8QnMSfrr
-         EKYPsnwNeJPkYKfL8suZAwiEpDnk2DcQJym5QwgvjppzsypVn5Kab946f2IseYboeF8+
-         DjCw==
-X-Gm-Message-State: APjAAAXYpr3dkDtPsXoqP+siAJBqRMViWw0pNcMwIBNhYHdQ5oXoMBI1
-        ekHnB0yoiqpjhysKkqxnuJ20ZZE9cAn48idPfR5fRqng
-X-Google-Smtp-Source: APXvYqxxu7B75fGza2d3hxaqgN1ayByiKBL1TJG814+ezkFuh/mzNJ5XOp9JlYbecqc4TcFNqA/1BrHCMWkm2vwSEVk=
-X-Received: by 2002:a67:7c58:: with SMTP id x85mr37940337vsc.191.1559033626532;
- Tue, 28 May 2019 01:53:46 -0700 (PDT)
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8118381E03;
+        Tue, 28 May 2019 08:53:48 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EAD97D580;
+        Tue, 28 May 2019 08:53:34 +0000 (UTC)
+Date:   Tue, 28 May 2019 10:53:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, aik@ozlabs.ru,
+        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
+        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
+        ziye.yang@intel.com, mlevitsk@redhat.com, pasic@linux.ibm.com,
+        felipe@nutanix.com, changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v3 1/2] vfio/mdev: add migration_version attribute for
+ mdev device
+Message-ID: <20190528105332.7c5a2f82.cohuck@redhat.com>
+In-Reply-To: <20190527034342.31523-1-yan.y.zhao@intel.com>
+References: <20190527034155.31473-1-yan.y.zhao@intel.com>
+        <20190527034342.31523-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190527124307.32075-1-narmstrong@baylibre.com> <20190527124307.32075-2-narmstrong@baylibre.com>
-In-Reply-To: <20190527124307.32075-2-narmstrong@baylibre.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 28 May 2019 10:53:10 +0200
-Message-ID: <CAPDyKFrDKkDO383buUzkWw_4wX15pNvexbHSvJAxHc-na4PSKw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: meson-gx: add dram-access-quirk property
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 28 May 2019 08:53:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 14:43, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
-> makes any DRAM access from the MMC controller fail.
->
-> Add the amlogic,dram-access-quirk property so signal this particular
-> controller has this bug and needs a quirk to work properly.
->
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+On Sun, 26 May 2019 23:43:42 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Applied for next, thanks!
+> migration_version attribute is used to check migration compatibility
+> between two mdev device of the same mdev type.
 
-Kind regards
-Uffe
+s/device/devices/
 
-
+> The key is that it's rw and its data is opaque to userspace.
+> 
+> Userspace reads migration_version of mdev device at source side and
+> writes the value to migration_version attribute of mdev device at target
+> side. It judges migration compatibility according to whether the read
+> and write operations succeed or fail.
+> 
+> As this attribute is under mdev_type node, userspace is able to know
+> whether two mdev devices are compatible before a mdev device is created.
+> 
+> userspace needs to check whether the two mdev devices are of the same
+> mdev type before checking the migration_version attribute. It also needs
+> to check device creation parameters if aggregation is supported in
+> future.
+> 
+>              __    userspace
+>               /\              \
+>              /                 \write
+>             / read              \
+>    ________/__________       ___\|/_____________
+>   | migration_version |     | migration_version |-->check migration
+>   ---------------------     ---------------------   compatibility
+>     mdev device A               mdev device B
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> Cc: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> Cc: Daniel P. Berrangé <berrange@redhat.com>
+> Cc: Christophe de Dinechin <dinechin@redhat.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> 
 > ---
->  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> index 13e70409e8ac..ccc5358db131 100644
-> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
-> @@ -22,6 +22,10 @@ Required properties:
->    clock rate requested by the MMC core.
->  - resets     : phandle of the internal reset line
->
-> +Optional properties:
-> +- amlogic,dram-access-quirk: set when controller's internal DMA engine cannot access the
-> +  DRAM memory, like on the G12A dedicated SDIO controller.
-> +
->  Example:
->
->         sd_emmc_a: mmc@70000 {
-> --
-> 2.21.0
->
+> v3:
+> 1. renamed version to migration_version
+> (Christophe de Dinechin, Cornelia Huck, Alex Williamson)
+> 2. let errno to be freely defined by vendor driver
+> (Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
+> 3. let checking mdev_type be prerequisite of migration compatibility
+> check. (Alex Williamson)
+> 4. reworded example usage section.
+> (most of this section came from Alex Williamson)
+> 5. reworded attribute intention section (Cornelia Huck)
+> 
+> v2:
+> 1. added detailed intent and usage
+> 2. made definition of version string completely private to vendor driver
+>    (Alex Williamson)
+> 3. abandoned changes to sample mdev drivers (Alex Williamson)
+> 4. mandatory --> optional (Cornelia Huck)
+> 5. added description for errno (Cornelia Huck)
+> ---
+>  Documentation/vfio-mediated-device.txt | 113 +++++++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+> 
+
+While I probably would have written a more compact description, your
+version is fine with me as well.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
