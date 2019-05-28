@@ -2,92 +2,135 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E3FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97986C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEBC21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A99E20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ifrXlRFW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V65J7dUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfE1JxH (ORCPT
+        id S1726661AbfE1JyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:53:07 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35936 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1JxG (ORCPT
+        Tue, 28 May 2019 05:54:07 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38326 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1JyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:53:06 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4S9r47m076427;
-        Tue, 28 May 2019 04:53:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559037184;
-        bh=4KlLJZMai6Tue5hNTSfEh3SZddxM6vMHjrc4ER6gkbs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ifrXlRFWd/7sFDyJ/dN5TV/3/r5oYSwPEcX6jVbrBnQNEgq74+qucjVLdOX3OQM1e
-         shu1Uw8xKrnAK4vCMX5GFCJ+ijWjIuDZ8GlhYOOiiPXevM4xASx7dng37XHc8QnuVZ
-         Er6XI14LWH9zU2PbL4wm65CGCc9lSPiBvkdv4AHo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4S9r402086991
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 04:53:04 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 04:53:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 04:53:04 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4S9r1IY109231;
-        Tue, 28 May 2019 04:53:02 -0500
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-To:     Mark Brown <broonie@kernel.org>, <lee.jones@linaro.org>
-CC:     <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <t-kristo@ti.com>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
-Date:   Tue, 28 May 2019 15:23:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 05:54:07 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t5so2105272wmh.3;
+        Tue, 28 May 2019 02:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wavQKAaZlm/iIjYxZKtyOMMht1yPCJBkEwO/joXQjcI=;
+        b=V65J7dUE4gePRaZXnBkmWHBHnv5WoQ6Tl2vZQKIUDSCop6Z7Qzj13xIsihBcBkNG3I
+         Izukl50QuguXCNdsUHPHFjlrJ1aV6zYd3onr/RtvnytQ46SXkXy9hkBkFcCe7axYqnfu
+         H0a5H2gM5xqMfo1lEqGB3aZHgKH+H9LOg8kAXaUVc6mcoLDryUguWRrClm6jALCDwxeR
+         jnf4TdBVe17duzSAl7ghh9Z3geGp+O6+h+UoaVun3rQhHD3LB4hSZpLCj5NNH7PsPEKU
+         Qkak847xFsCbHnsPio3rzyICfujTDTEgiVoaOK78QgyHJkTKppxaPgFq9Oqividsr5fb
+         BcUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wavQKAaZlm/iIjYxZKtyOMMht1yPCJBkEwO/joXQjcI=;
+        b=lGVEKB743dkTo04TvkdBSzBtG3ubrEWMEKJh3u6HqA3XbJU5TbhLIP2BnpfPPtf9Xc
+         SflU+3t3ucO+T9umv9v9XhevN9R21INPIavqppEs6TzKYnSk5Yvvr/Tg2AFKrSlZeUxQ
+         EcmFF+JgjuHYtfAZWUQW68Wb7/lYwT/d7qJwWaFI3NVxHzCOfJZAIY3DEPN9PiIP7fjy
+         1ld94mwuClj+U28IeqfIdeCXh8adCWWk/yPcjZaZ1Mj/x6099dItCiJeUrWZvstIb7sY
+         Uc2S1S+6Rhg7JDdZPgRvXrRCVMsB58YtgaZ2JzYrPu9RAhS5TbgVJbqWed7jSr7DPucw
+         7EAA==
+X-Gm-Message-State: APjAAAX5vU77Goztv+oxzS/kJ+c9Qmfo17wPjaN+MLhOUwJh5GYToDNv
+        Km2pxeO54vAfsYPAr4iUBEs=
+X-Google-Smtp-Source: APXvYqwJvo6vV004tGrrhhcNqruGg/IuK5BZdCuD54kucsJAJcgjfrkqIMZF1O3kS/l0cpLBfNGMeA==
+X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr2405687wma.107.1559037244888;
+        Tue, 28 May 2019 02:54:04 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id l13sm2396608wme.37.2019.05.28.02.54.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 02:54:04 -0700 (PDT)
+Date:   Tue, 28 May 2019 11:54:02 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
+        Steven Honeyman <stevenhoneyman@gmail.com>,
+        Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
+        Jochen Eisinger <jochen@penguin-breeder.org>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mario Limonciello <Mario_Limonciello@dell.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Message-ID: <20190528095402.hlnqfon6jk452one@pali>
+References: <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
+ <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+ <20180213150004.5d2v7y7wwuure4io@pali>
+ <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+ <20180213165023.xmzovx7fd3gdljxw@pali>
+ <20180226203255.lnnzipipjz5l2itz@ninjato>
+ <20190528111953.0e5415f4@endymion>
+ <20190528094132.ytsittb5hcgthoy2@pali>
+ <1559037015.6521.3.camel@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20190522153528.GG8582@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1559037015.6521.3.camel@suse.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22/05/19 9:05 PM, Mark Brown wrote:
-> On Thu, May 16, 2019 at 10:02:18AM +0530, Keerthy wrote:
->> The LP8756x family has a single output 4-phase regulator
->> configuration. Add support for the same. The control
->> lies in the master buck which is buck0 for 4-phase
->> configuration. Enable/disable/voltage set happen via
->> buck0 registers.
+On Tuesday 28 May 2019 11:50:15 Jean Delvare wrote:
+> On Tue, 2019-05-28 at 11:41 +0200, Pali Rohár wrote:
+> > This is not a problem. lis3lv02d provides two things:
+> > 
+> > 1) 3 axes accelerometer
+> > 2) optional interrupt and signal it to userspace via misc device
+> > 
+> > dell-smo8800 does not call any parts of lis2lv02d module. It just
+> > provides for userspace same misc device API as lis3lv02d.
+> > 
+> > As lis3lv02d has misc device optional, registered i2c device from
+> > i2c-i801 does not enable it.
+> > 
+> > So technically it is one device, but their functionality divided into
+> > two modules. One which reports accelerometer axes and one which signals
+> > disk fall interrupt. These two modules and functionalities does not have
+> > to interact, so it is safe to have them separated.
 > 
-> Acked-by: Mark Brown <broonie@kernel.org>
+> OK, thanks for the explanation. But assuming that we now instantiate
+> the lis2lv02d device from i2c-i801 for exactly all the same machines,
+> can't we just *enable* the freefall misc device feature of lis2lv02d
+> and kill the dell-smo8800 driver completely? Seems more simple to
+> maintain going forward.
 
-Mark/Lee,
+I though about it and I already wrote that is it not practical. For ACPI
+drivers there is easy way to get that interrupt number from ACPI tables.
+From i2c-i801 PCI driver it is hard to get interrupt number for
+particular ACPI device...
 
-This patch will come via the mfd branch?
+That is way I preferred simple solution: ACPI driver for ACPI device and
+i2c driver for i2c device.
 
-- Keerthy
-
-> 
+-- 
+Pali Rohár
+pali.rohar@gmail.com
