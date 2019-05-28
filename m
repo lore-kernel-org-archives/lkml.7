@@ -3,150 +3,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD7FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C03C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E2120B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A9820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="oP+Xs6vo";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="oZbpEOd1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GtcPmsPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfE1Wqb (ORCPT
+        id S1727376AbfE1Wr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:46:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60560 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726683AbfE1Wqb (ORCPT
+        Tue, 28 May 2019 18:47:56 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33458 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfE1Wrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:46:31 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SMeDTl022356;
-        Tue, 28 May 2019 15:45:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Dht/EQ/NW33hPf0N0sVtdqFlpzTQYlHxhyoym/GWSLw=;
- b=oP+Xs6voWwAiusXETLr3L9cA3PNnbAsuNrSsb8mIX1fkHPd5wFB297dAEVDqphX7dcHQ
- eLDqpUdQw9kDPsgboF79nVfxQSgzvYwnKa2erQEOQyLnbEWYc5nzSSwCEPsQXOmmuP+0
- bn7N98OtcoRQAUBsqATMIOfF3A3xbG3QGnw= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ss90ch6pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 28 May 2019 15:45:09 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 28 May 2019 15:45:08 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 28 May 2019 15:45:08 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 28 May 2019 15:45:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dht/EQ/NW33hPf0N0sVtdqFlpzTQYlHxhyoym/GWSLw=;
- b=oZbpEOd1sVRudzcS8ruxOCx+8m2AM+/XB5Umb3mwfYQ21qMGKGjTJO4ixstSq+KgMZBvPLqWYyYEygffjIvsYmhnV7tEJUbPMuTUFY/LFQYY6krD75dPWCVOaNPFsAqwMBAwx7xzXkOBM3Xgava9eVFIbJBAPK1inm2iEfyKfmc=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2216.namprd15.prod.outlook.com (52.135.196.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.22; Tue, 28 May 2019 22:45:05 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 22:45:05 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Tue, 28 May 2019 18:47:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so94648pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MAoBZADCEd0vPKJ49AgS6iE1e+falhQ3CjJBnG9r8fg=;
+        b=GtcPmsPKw91P6kvxeDWttl7qxUivQqZl/WB5Gh5hZdnm+5yIO2uZ2t/OSX0OmzEOCy
+         sF29tnbeJ8Wm4VkzDktqcRMz5/Pr407jXYYeK2nL1WUL/rdyKRFJ5Lb8dgxEMFjnUV1P
+         eERSQVTPegq8oQgSLIS8R6qnR18reixRSXg4k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MAoBZADCEd0vPKJ49AgS6iE1e+falhQ3CjJBnG9r8fg=;
+        b=H+t3Mxg6TVRBNoVmK2VqVDn8B93OLCglUks/jzwkpTbx8l2Enwq/exFr48VrNgDvZt
+         P14NbEswBPf6HKGCT1HmTqZQsYQhDjBwHlN8YKNDUARNCneD9VQbBPCRzyhhKftXRDr4
+         LVa5sAGX1P0uGIKQKJmw9u4IRMKqKGycdnYrtvqohogCrGXFe1kxPDhQYUVlxRdTx4TK
+         NA5f8v3BmTB4mg2Ed8D47lT+JRRsg0acIcZwN/WMUmJTuKoHPJh7svIXhl6241qsR3tt
+         ZAdMjG7KyWH2kMUcZUHP5PQKJEcIM2klXLg4MXPSHCsPgEKGyUk4IIl14vJpDwfpZhb+
+         CvgA==
+X-Gm-Message-State: APjAAAX6S7mww/wGE46w0P9ouTj2GgdMXIxOGRBw7c8zp/g9nbVSfzIy
+        LzDerOl7Edktg0CSYzqbNF0iog==
+X-Google-Smtp-Source: APXvYqw3mv+G541iuDOvP4AUa0q98ok84G11/maYW6QsZbQDV/zVxM/YOwu8VcFjLQuOGKLVHdTGXw==
+X-Received: by 2002:a17:90a:b00b:: with SMTP id x11mr8607798pjq.61.1559083674993;
+        Tue, 28 May 2019 15:47:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d4sm3450567pju.19.2019.05.28.15.47.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 15:47:54 -0700 (PDT)
+Date:   Tue, 28 May 2019 15:47:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 3/4] mm/vmap: get rid of one single unlink_va() when
- merge
-Thread-Topic: [PATCH v3 3/4] mm/vmap: get rid of one single unlink_va() when
- merge
-Thread-Index: AQHVFHAI/JciIcIEUUWzIo9i9KPWz6aBJReA
-Date:   Tue, 28 May 2019 22:45:05 +0000
-Message-ID: <20190528224501.GH27847@tower.DHCP.thefacebook.com>
-References: <20190527093842.10701-1-urezki@gmail.com>
- <20190527093842.10701-4-urezki@gmail.com>
-In-Reply-To: <20190527093842.10701-4-urezki@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1401CA0023.namprd14.prod.outlook.com
- (2603:10b6:301:4b::33) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:3dca]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b998bf86-8829-42a4-328a-08d6e3be209f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2216;
-x-ms-traffictypediagnostic: BYAPR15MB2216:
-x-microsoft-antispam-prvs: <BYAPR15MB2216D649F2D69DE087853C2EBE1E0@BYAPR15MB2216.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(366004)(39860400002)(136003)(199004)(189003)(305945005)(6916009)(86362001)(81166006)(7736002)(6116002)(81156014)(7416002)(6506007)(386003)(33656002)(25786009)(71190400001)(102836004)(476003)(52116002)(5660300002)(4326008)(4744005)(256004)(6246003)(486006)(446003)(11346002)(46003)(76176011)(71200400001)(66476007)(64756008)(1411001)(66946007)(6512007)(66446008)(68736007)(6436002)(73956011)(229853002)(66556008)(478600001)(1076003)(8676002)(2906002)(8936002)(54906003)(186003)(316002)(99286004)(6486002)(14454004)(53936002)(9686003)(26583001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2216;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CGJxwBqTXVRi3HzqT5WQvCUdUv/yPQVJJCQTfiI08BNexPiTg6dlK9SfEjWSH4KI2ShBWfWo8IwXM8m5ZXwKPvSRcXJivMTHQqNtHEVgv+YhFsWFbDsq7srhuitthw0WO18666mrr+WCo4jiI00lymu0HLO9zHsPdknMPXoAcjZbHgoocvx0n6hcGAOWJL3g4M/yQHT97lQDpR1CifXmq93ql8O6uWTb0UOSOr6/ITblfARU7PVh4dm24YMHMReD2yJCx2kNjospynp9HjGrvrZ7daNHFxLzEXUFRQfBIAtK+tmJ7t14h3tNblr+SKqLAgx8K1wfgKJmFnJSRl8lGTZtWPzvt7cYHzBVx+yQ5u1RrXK625m83hiDTaju26+YaJRBTRHjLAQrODIfNxQP9Ih9yRqNvTMHbGHtVP9z3K0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5ACA9FE83084AC42BDE0EF09E00EB164@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: lib/test_overflow.c causes WARNING and tainted kernel
+Message-ID: <201905281518.756178E7@keescook>
+References: <9fa84db9-084b-cf7f-6c13-06131efb0cfa@infradead.org>
+ <CAGXu5j+yRt_yf2CwvaZDUiEUMwTRRiWab6aeStxqodx9i+BR4g@mail.gmail.com>
+ <e2646ac0-c194-4397-c021-a64fa2935388@infradead.org>
+ <97c4b023-06fe-2ec3-86c4-bfdb5505bf6d@rasmusvillemoes.dk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b998bf86-8829-42a4-328a-08d6e3be209f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 22:45:05.2747
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2216
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=753 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280142
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97c4b023-06fe-2ec3-86c4-bfdb5505bf6d@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:38:41AM +0200, Uladzislau Rezki (Sony) wrote:
-> It does not make sense to try to "unlink" the node that is
-> definitely not linked with a list nor tree. On the first
-> merge step VA just points to the previously disconnected
-> busy area.
->=20
-> On the second step, check if the node has been merged and do
-> "unlink" if so, because now it points to an object that must
-> be linked.
->=20
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Acked-by: Hillf Danton <hdanton@sina.com>
+On Mon, May 27, 2019 at 09:53:33AM +0200, Rasmus Villemoes wrote:
+> On 25/05/2019 17.33, Randy Dunlap wrote:
+> > On 3/13/19 7:53 PM, Kees Cook wrote:
+> >> Hi!
+> >>
+> >> On Wed, Mar 13, 2019 at 2:29 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >>>
+> >>> This is v5.0-11053-gebc551f2b8f9, MAR-12 around 4:00pm PT.
+> >>>
+> >>> In the first test_kmalloc() in test_overflow_allocation():
+> >>>
+> >>> [54375.073895] test_overflow: ok: (s64)(0 << 63) == 0
+> >>> [54375.074228] WARNING: CPU: 2 PID: 5462 at ../mm/page_alloc.c:4584 __alloc_pages_nodemask+0x33f/0x540
+> >>> [...]
+> >>> [54375.079236] ---[ end trace 754acb68d8d1a1cb ]---
+> >>> [54375.079313] test_overflow: kmalloc detected saturation
+> >>
+> >> Yup! This is expected and operating as intended: it is exercising the
+> >> allocator's detection of insane allocation sizes. :)
+> >>
+> >> If we want to make it less noisy, perhaps we could add a global flag
+> >> the allocators could check before doing their WARNs?
+> >>
+> >> -Kees
+> > 
+> > I didn't like that global flag idea.  I also don't like the kernel becoming
+> > tainted by this test.
+> 
+> Me neither. Can't we pass __GFP_NOWARN from the testcases, perhaps with
+> a module parameter to opt-in to not pass that flag? That way one can
+> make the overflow module built-in (and thus run at boot) without
+> automatically tainting the kernel.
+> 
+> The vmalloc cases do not take gfp_t, would they still cause a warning?
 
-Reviewed-by: Roman Gushchin <guro@fb.com>
+They still warn, but they don't seem to taint. I.e. this patch:
+
+diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+index fc680562d8b6..c922f0d86181 100644
+--- a/lib/test_overflow.c
++++ b/lib/test_overflow.c
+@@ -486,11 +486,12 @@ static int __init test_overflow_shift(void)
+  * Deal with the various forms of allocator arguments. See comments above
+  * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
+  */
+-#define alloc010(alloc, arg, sz) alloc(sz, GFP_KERNEL)
+-#define alloc011(alloc, arg, sz) alloc(sz, GFP_KERNEL, NUMA_NO_NODE)
++#define alloc_GFP	(GFP_KERNEL | __GFP_NOWARN)
++#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
++#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
+ #define alloc000(alloc, arg, sz) alloc(sz)
+ #define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
+-#define alloc110(alloc, arg, sz) alloc(arg, sz, GFP_KERNEL)
++#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP | __GFP_NOWARN)
+ #define free0(free, arg, ptr)	 free(ptr)
+ #define free1(free, arg, ptr)	 free(arg, ptr)
+ 
+will remove the tainting behavior but is still a bit "noisy". I can't
+find a way to pass __GFP_NOWARN to a vmalloc-based allocation, though.
+
+Randy, is removing taint sufficient for you?
+
+> BTW, I noticed that the 'wrap to 8K' depends on 64 bit and
+> pagesize==4096; for 32 bit the result is 20K, while if the pagesize is
+> 64K one gets 128K and 512K for 32/64 bit size_t, respectively. Don't
+> know if that's a problem, but it's easy enough to make it independent of
+> pagesize (just make it 9*4096 explicitly), and if we use 5 instead of 9
+> it also becomes independent of sizeof(size_t) (wrapping to 16K).
+
+Ah! Yes, all excellent points. I've adjusted that too now. I'll send
+the result to Andrew.
 
 Thanks!
+
+-- 
+Kees Cook
