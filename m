@@ -2,228 +2,125 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01F9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CC6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5FF20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559044167;
-	bh=w9TzOfzunImVBQmV9avKO1WpbXxY/dUXRQg43qiXA1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xz13qbA9H9K4GHP+EZ2cpFZqufWxITGVxthBPbphp+t0yQ5K+SLYGabYSuXlwii8d
-	 GJY5SEeFJK68NEXlr/Vmz5D33Ha+Kj5pnO6xO9L4lFuN6CC8MBxaCZwbagCm2TjCaj
-	 16aSd3oup0mGsteY2glDcBVGwOopLBCBy+ESx0JU=
+	by mail.kernel.org (Postfix) with ESMTP id 5617420717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfE1Lt0 (ORCPT
+        id S1726997AbfE1Lun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:49:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53038 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726836AbfE1Lt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:49:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9723CAEF9;
-        Tue, 28 May 2019 11:49:24 +0000 (UTC)
-Date:   Tue, 28 May 2019 13:49:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528114923.GZ1658@dhcp22.suse.cz>
-References: <20190527124411.GC1658@dhcp22.suse.cz>
- <20190528032632.GF6879@google.com>
- <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <CAKOZueux3T4_dMOUK6R=ZHhCFaSSstOCPh_KSwSMCW_yp=jdSg@mail.gmail.com>
- <20190528103312.GV1658@dhcp22.suse.cz>
- <CAKOZueuRAtps+YZ1g2SOevBrDwE6tWsTuONJu1NLgvW7cpA-ug@mail.gmail.com>
+        Tue, 28 May 2019 07:50:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50298 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbfE1Lum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:50:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4317B30C0DDF;
+        Tue, 28 May 2019 11:50:38 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2E775D9CC;
+        Tue, 28 May 2019 11:50:29 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, robin.murphy@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com,
+        jean-philippe.brucker@arm.com
+Subject: [PATCH v5 0/7] RMRR related fixes and enhancements
+Date:   Tue, 28 May 2019 13:50:18 +0200
+Message-Id: <20190528115025.17194-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZueuRAtps+YZ1g2SOevBrDwE6tWsTuONJu1NLgvW7cpA-ug@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 11:50:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 04:21:44, Daniel Colascione wrote:
-> On Tue, May 28, 2019 at 3:33 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 28-05-19 02:39:03, Daniel Colascione wrote:
-> > > On Tue, May 28, 2019 at 2:08 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
-> > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
-> > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> > > > > > > if we went with the per vma fd approach then you would get this
-> > > > > > > > feature automatically because map_files would refer to file backed
-> > > > > > > > mappings while map_anon could refer only to anonymous mappings.
-> > > > > > >
-> > > > > > > The reason to add such filter option is to avoid the parsing overhead
-> > > > > > > so map_anon wouldn't be helpful.
-> > > > > >
-> > > > > > Without chiming on whether the filter option is a good idea, I'd like
-> > > > > > to suggest that providing an efficient binary interfaces for pulling
-> > > > > > memory map information out of processes.  Some single-system-call
-> > > > > > method for retrieving a binary snapshot of a process's address space
-> > > > > > complete with attributes (selectable, like statx?) for each VMA would
-> > > > > > reduce complexity and increase performance in a variety of areas,
-> > > > > > e.g., Android memory map debugging commands.
-> > > > >
-> > > > > I agree it's the best we can get *generally*.
-> > > > > Michal, any opinion?
-> > > >
-> > > > I am not really sure this is directly related. I think the primary
-> > > > question that we have to sort out first is whether we want to have
-> > > > the remote madvise call process or vma fd based. This is an important
-> > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
-> > > > so far unfortunately.
-> > >
-> > > I don't think the vma fd approach is viable. We have some processes
-> > > with a *lot* of VMAs --- system_server had 4204 when I checked just
-> > > now (and that's typical) --- and an FD operation per VMA would be
-> > > excessive.
-> >
-> > What do you mean by excessive here? Do you expect the process to have
-> > them open all at once?
-> 
-> Minchan's already done timing. More broadly, in an era with various
-> speculative execution mitigations, making a system call is pretty
-> expensive.
+Currently the Intel reserved region is attached to the
+RMRR unit and when building the list of RMRR seen by a device
+we link this unique reserved region without taking care of
+potential multiple usage of this reserved region by several devices.
 
-This is a completely separate discussion. This could be argued about
-many other syscalls. Let's make the semantic correct first before we
-even start thinking about mutliplexing. It is easier to multiplex on an
-existing and sane interface.
+Also while reading the vtd spec it is unclear to me whether
+the RMRR device scope referenced by an RMRR ACPI struct could
+be a PCI-PCI bridge, in which case I think we also need to
+check the device belongs to the PCI sub-hierarchy of the device
+referenced in the scope. This would be true for device_has_rmrr()
+and intel_iommu_get_resv_regions().
 
-Btw. Minchan concluded that multiplexing is not really all that
-important based on his numbers http://lkml.kernel.org/r/20190527074940.GB6879@google.com
+Last, the VFIO subsystem would need to compute the usable IOVA range
+by querying the iommu_get_group_resv_regions() API. This would allow,
+for instance, to report potential conflicts between the guest physical
+address space and host reserved regions.
 
-[...]
+However iommu_get_group_resv_regions() currently fails to differentiate
+RMRRs that are known safe for device assignment and RMRRs that must be
+enforced. So we introduce a new reserved memory region type (relaxable),
+reported when associated to an USB or GFX device. The last 2 patches aim
+at unblocking [1] which is stuck since 4.18.
 
-> > Is this really too much different from /proc/<pid>/map_files?
-> 
-> It's very different. See below.
-> 
-> > > > An interface to query address range information is a separate but
-> > > > although a related topic. We have /proc/<pid>/[s]maps for that right
-> > > > now and I understand it is not a general win for all usecases because
-> > > > it tends to be slow for some. I can see how /proc/<pid>/map_anons could
-> > > > provide per vma information in a binary form via a fd based interface.
-> > > > But I would rather not conflate those two discussions much - well except
-> > > > if it could give one of the approaches more justification but let's
-> > > > focus on the madvise part first.
-> > >
-> > > I don't think it's a good idea to focus on one feature in a
-> > > multi-feature change when the interactions between features can be
-> > > very important for overall design of the multi-feature system and the
-> > > design of each feature.
-> > >
-> > > Here's my thinking on the high-level design:
-> > >
-> > > I'm imagining an address-range system that would work like this: we'd
-> > > create some kind of process_vm_getinfo(2) system call [1] that would
-> > > accept a statx-like attribute map and a pid/fd parameter as input and
-> > > return, on output, two things: 1) an array [2] of VMA descriptors
-> > > containing the requested information, and 2) a VMA configuration
-> > > sequence number. We'd then have process_madvise() and other
-> > > cross-process VM interfaces accept both address ranges and this
-> > > sequence number; they'd succeed only if the VMA configuration sequence
-> > > number is still current, i.e., the target process hasn't changed its
-> > > VMA configuration (implicitly or explicitly) since the call to
-> > > process_vm_getinfo().
-> >
-> > The sequence number is essentially a cookie that is transparent to the
-> > userspace right? If yes, how does it differ from a fd (returned from
-> > /proc/<pid>/map_{anons,files}/range) which is a cookie itself and it can
-> 
-> If you want to operate on N VMAs simultaneously under an FD-per-VMA
-> model, you'd need to have those N FDs all open at the same time *and*
-> add some kind of system call that accepted those N FDs and an
-> operation to perform. The sequence number I'm proposing also applies
-> to the whole address space, not just one VMA. Even if you did have
-> these N FDs open all at once and supplied them all to some batch
-> operation, you couldn't guarantee via the FD mechanism that some *new*
-> VMA didn't appear in the address range you want to manipulate. A
-> global sequence number would catch this case. I still think supplying
-> a list of address ranges (like we already do for scatter-gather IO) is
-> less error-prone, less resource-intensive, more consistent with
-> existing practice, and equally flexible, especially if we start
-> supporting destructive cross-process memory operations, which may be
-> useful for things like checkpointing and optimizing process startup.
+[1-5] are fixes
+[6-7] are enhancements
 
-I have a strong feeling you are over optimizing here. We are talking
-about a pro-active memory management and so far I haven't heard any
-usecase where all this would happen in the fast path. There are
-essentially two usecases I have heard so far. Age/Reclaim the whole
-process (with anon/fs preferency) and do the same on a particular
-and well specified range (e.g. a garbage collector or an inactive large
-image in browsert etc...). The former doesn't really care about parallel
-address range manipulations because it can tolerate them. The later is a
-completely different story.
+The two parts can be considered separately if needed.
 
-Are there any others where saving few ms matter so much?
+References:
+[1] [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+    https://patchwork.kernel.org/patch/10425309/
 
-> Besides: process_vm_readv and process_vm_writev already work on
-> address ranges. Why should other cross-process memory APIs use a very
-> different model for naming memory regions?
+Branch: This series is available at:
+https://github.com/eauger/linux/tree/v5.2-rc2-rmrr-v5
 
-I would consider those APIs not a great example. They are racy on
-more levels (pid reuse and address space modification), and require a
-non-trivial synchronization. Do you want something similar for madvise
-on a non-cooperating remote application?
- 
-> > be used to revalidate when the operation is requested and fail if
-> > something has changed. Moreover we already do have a fd based madvise
-> > syscall so there shouldn't be really a large need to add a new set of
-> > syscalls.
-> 
-> We have various system calls that provide hints for open files, but
-> the memory operations are distinct. Modeling anonymous memory as a
-> kind of file-backed memory for purposes of VMA manipulation would also
-> be a departure from existing practice. Can you help me understand why
-> you seem to favor the FD-per-VMA approach so heavily? I don't see any
-> arguments *for* an FD-per-VMA model for remove memory manipulation and
-> I see a lot of arguments against it. Is there some compelling
-> advantage I'm missing?
+History:
 
-First and foremost it provides an easy cookie to the userspace to
-guarantee time-to-check-time-to-use consistency. It also naturally
-extend an existing fadvise interface that achieves madvise semantic on
-files. I am not really pushing hard for this particular API but I really
-do care about a programming model that would be sane. If we have a
-different means to achieve the same then all fine by me but so far I
-haven't heard any sound arguments to invent something completely new
-when we have established APIs to use. Exporting anonymous mappings via
-proc the same way we do for file mappings doesn't seem to be stepping
-outside of the current practice way too much.
+v4 -> v5:
+- remove iommu: Pass a GFP flag parameter to iommu_alloc_resv_region()
+- use dmar_global_lock instead of rcu-lock in intel_iommu_get_resv_regions
 
-All I am trying to say here is that process_madvise(fd, start, len) is
-inherently racy API and we should focus on discussing whether this is a
-sane model. And I think it would be much better to discuss that under
-the respective patch which introduces that API rather than here.
+v3 -> v4:
+- added "iommu: Fix a leak in iommu_insert_resv_region"
+- introduced device_rmrr_is_relaxable and fixed to_pci_dev call
+  without checking dev_is_pci
+- Despite Robin suggested to hide direct relaxable behind direct
+  ones, I think this would lead to a very complex implementation
+  of iommu_insert_resv_region while in general the relaxable
+  regions are going to be ignored by the caller. By the way I
+  found a leak in this function, hence the new first patch
+
+v2 -> v3:
+s/||/&& in iommu_group_create_direct_mappings
+
+v1 -> v2:
+- introduce is_downstream_to_pci_bridge() in a separate patch, change param
+  names and add kerneldoc comment
+- add 6,7
+
+
+Eric Auger (7):
+  iommu: Fix a leak in iommu_insert_resv_region
+  iommu/vt-d: Duplicate iommu_resv_region objects per device list
+  iommu/vt-d: Introduce is_downstream_to_pci_bridge helper
+  iommu/vt-d: Handle RMRR with PCI bridge device scopes
+  iommu/vt-d: Handle PCI bridge RMRR device scopes in
+    intel_iommu_get_resv_regions
+  iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE reserved memory regions
+  iommu/vt-d: Differentiate relaxable and non relaxable RMRRs
+
+ .../ABI/testing/sysfs-kernel-iommu_groups     |   9 ++
+ drivers/iommu/intel-iommu.c                   | 128 ++++++++++++------
+ drivers/iommu/iommu.c                         |  20 +--
+ include/linux/iommu.h                         |   6 +
+ 4 files changed, 115 insertions(+), 48 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
