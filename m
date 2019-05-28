@@ -4,126 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E84021473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EFA21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfE1Pqv (ORCPT
+        id S1726719AbfE1PsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:46:51 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5115 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726243AbfE1Pqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:46:50 -0400
-X-UUID: 8dfb5a0ce4274b74b434e317d5e50b7d-20190528
-X-UUID: 8dfb5a0ce4274b74b434e317d5e50b7d-20190528
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1322292173; Tue, 28 May 2019 23:46:46 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 28 May 2019 23:46:45 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 May 2019 23:46:45 +0800
-Message-ID: <1559058405.26151.6.camel@mtkswgap22>
-Subject: Re: [PATCH] arm64: mm: make CONFIG_ZONE_DMA32 configurable
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Tue, 28 May 2019 23:46:45 +0800
-In-Reply-To: <814b9bd0-38de-4b8d-92b3-d663931d90bf@arm.com>
-References: <1558973315-19655-1-git-send-email-miles.chen@mediatek.com>
-         <814b9bd0-38de-4b8d-92b3-d663931d90bf@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 28 May 2019 11:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbfE1PsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:48:24 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864E82133F;
+        Tue, 28 May 2019 15:48:23 +0000 (UTC)
+Date:   Tue, 28 May 2019 11:48:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tomas Bortoli <tomasbortoli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
+Subject: Re: [PATCH] trace: Avoid memory leak in predicate_parse()
+Message-ID: <20190528114821.2302dabd@gandalf.local.home>
+In-Reply-To: <20190528154338.29976-1-tomasbortoli@gmail.com>
+References: <20190528104400.388e4c3f@gandalf.local.home>
+        <20190528154338.29976-1-tomasbortoli@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-28 at 11:43 +0100, Robin Murphy wrote:
-> On 27/05/2019 17:08, Miles Chen wrote:
-> > This change makes CONFIG_ZONE_DMA32 defuly y and allows users
-> > to overwrite it.
-> > 
-> > For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
-> > first step to manage all available memory by a single
-> > zone(normal zone) to reduce the overhead of multiple zones.
-> > 
-> > The change also fixes a build error when CONFIG_NUMA=y and
-> > CONFIG_ZONE_DMA32=n.
-> > 
-> > arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
-> >                  max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-> > 
-> > Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> > ---
-> >   arch/arm64/Kconfig   | 3 ++-
-> >   arch/arm64/mm/init.c | 2 ++
-> >   2 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index 76f6e4765f49..9d20a736d1d1 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -260,7 +260,8 @@ config GENERIC_CALIBRATE_DELAY
-> >   	def_bool y
-> >   
-> >   config ZONE_DMA32
-> > -	def_bool y
-> > +	bool "Support DMA32 zone"
-> 
-> This probably warrants an "if EMBEDDED" or "if EXPERT", since turning it 
-> off produces a kernel which won't work at all on certain systems (I've 
-> played around with this before...)
+On Tue, 28 May 2019 17:43:38 +0200
+Tomas Bortoli <tomasbortoli@gmail.com> wrote:
 
-Thanks for your comment. 
-I'll put a "if EXPERT"  here to avoid this case.
+> In case of errors, predicate_parse() goes to the out_free label
+> to free memory and to return an error code.
+> 
+> However, predicate_parse() does not free the predicates of the
+> temporary prog_stack array, thence leaking them.
+
+Thanks, I applied this and I'm running it through my tests. But just an
+FYI, when sending updated patches please add a "v2" to the subject:
+
+ [PATCH v2] tracing: Avoid memory leak in predicate_parse()
+
+That way struggling maintainers like myself don't get confused about
+which patch to apply ;-)
+
+Thanks!
+
+-- Steve
+
 
 > 
-> > +	default y
-> >   
-> >   config HAVE_GENERIC_GUP
-> >   	def_bool y
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index d2adffb81b5d..96829ce21f99 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -191,8 +191,10 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
-> >   {
-> >   	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
-> >   
-> > +#ifdef CONFIG_ZONE_DMA32
-> >   	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+> Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
+> ---
+>  kernel/trace/trace_events_filter.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> There's no point keeping the IS_ENABLED() check when it's entirely 
-> redundant with the #ifdefs.
-
-I'll remove the IS_ENABLE() code in next patch.
-
--Miles
-> 
-> Robin.
-> 
-> >   		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
-> > +#endif
-> >   	max_zone_pfns[ZONE_NORMAL] = max;
-> >   
-> >   	free_area_init_nodes(max_zone_pfns);
-> > 
-
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 05a66493a164..ecfa6f0f1c7e 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -427,7 +427,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+>  	op_stack = kmalloc_array(nr_parens, sizeof(*op_stack), GFP_KERNEL);
+>  	if (!op_stack)
+>  		return ERR_PTR(-ENOMEM);
+> -	prog_stack = kmalloc_array(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
+> +	prog_stack = kcalloc(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
+>  	if (!prog_stack) {
+>  		parse_error(pe, -ENOMEM, 0);
+>  		goto out_free;
+> @@ -578,6 +578,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+>  out_free:
+>  	kfree(op_stack);
+>  	kfree(inverts);
+> +	for (i = 0; prog_stack[i].pred; i++)
+> +		kfree(prog_stack[i].pred);
+>  	kfree(prog_stack);
+>  	return ERR_PTR(ret);
+>  }
 
