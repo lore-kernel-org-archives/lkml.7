@@ -2,174 +2,98 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18551C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F78C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF57520989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559044573;
-	bh=+lRmGRzmPuT25pr3mTtVK5eeewnHnqqcCjsbmgGJ7EA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SfvivoDMxB2M3/JKzfBT4gMcIIX4T2T8ibw2mRycdumpIIkyfFT2BZkeXVkIFwPmi
-	 qFTa6RCFAbkmJhqCrFpLKtBrNsCMaQ1wRYs6rWeUzpEGCvSKCJhP3paI5jOEaSpUtV
-	 4kYhAtP8ELIaSKFyHpsVCrfvzRP9btshMM40Ix38=
+	by mail.kernel.org (Postfix) with ESMTP id 0057D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:57:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="droyNunc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfE1L4N (ORCPT
+        id S1727003AbfE1L47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:56:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54666 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726592AbfE1L4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:56:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2AFCEAD4A;
-        Tue, 28 May 2019 11:56:11 +0000 (UTC)
-Date:   Tue, 28 May 2019 13:56:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528115609.GA1658@dhcp22.suse.cz>
-References: <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <20190528103256.GA9199@google.com>
- <20190528104117.GW1658@dhcp22.suse.cz>
- <20190528111208.GA30365@google.com>
- <20190528112840.GY1658@dhcp22.suse.cz>
- <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 28 May 2019 07:56:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45145 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfE1L47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:56:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w34so6186805pga.12;
+        Tue, 28 May 2019 04:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y0nU1mnDjk5DEaEAqhn6A+e5w54A9UaAagHSxcoB+rI=;
+        b=droyNuncHFCAXk2oz9b91V/DwkejmqPm50x4ZBfqch9PSfHoEpw76fBWY+hcNLkPNG
+         cAs+EV160TX6U78yQ58egeBfws+a5Kl9Vi73WP8uPWje0+UdOI6CSy2I3oK4zn9m5OSm
+         rp0CnbvZF13HQwXk6gfgGlzeSh0pPuBWAAV3SNBT+5GvDKiWKgcqdt4Hz5LnSSLoyozn
+         OW+7OptgTqrxMQwKxrGvbDY3I21Ni6H4sSgK3k/aQj8atL5WEPs2ssJntXR7Dzo+klVf
+         Y6u8YfVBM2PbMjmlw19zeQgjjs1qsSUV3vjPyGFZqmt0zX/WNp+EuY+je7xDsFPoAcfc
+         1YpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y0nU1mnDjk5DEaEAqhn6A+e5w54A9UaAagHSxcoB+rI=;
+        b=k4erHXWSicV/QX2pyIoZjuFxE3p6932rlB3ec8wGcNfTHSaxnrVB5uk0ddkfcZTM2p
+         Q13AAPIQJbA+A7QuoQobsU6pDsdTDnAwenP2XJHh9bIRdNSaKxfd9OLraysiB+VerZrq
+         Qw0f+vf+XH/t4J4ofgSKWp4/zgDq4nPsq6MlQtPsKKmKEx/ITOhNVlyPcQtaoSgxS0qd
+         5gseQSrN+N4MlmXrC/sJA4bJ97gaFvK9/JDmZ5MO94vJVbhrFkeI4SYNEyI19cWiC1oe
+         dGMLc9JH1JoD4BoWkhos7oF+/wvPvUy8eAXlNsemjqP8LHtx9Lxso2y/Pn3wC7n5Dfpn
+         zgHQ==
+X-Gm-Message-State: APjAAAXqP8bhESgfq74nAbDlgMBY8ddN9hnN1Z69wNAU7DnbrygnB1xs
+        hu1M+8CQY93rkuCugpq18UI=
+X-Google-Smtp-Source: APXvYqx3Up2B1eZPaaTAWMBFlw4GilIcCB4OB4SrH4CoVtGbovwboWob5c34WdwFXy9KG22xN4xmnw==
+X-Received: by 2002:a17:90a:9602:: with SMTP id v2mr5467175pjo.59.1559044618864;
+        Tue, 28 May 2019 04:56:58 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id r1sm16272313pfg.65.2019.05.28.04.56.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 28 May 2019 04:56:57 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] ixgbevf: fix possible divide by zero in ixgbevf_update_itr
+Date:   Tue, 28 May 2019 19:58:02 +0800
+Message-Id: <1559044682-23446-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 04:42:47, Daniel Colascione wrote:
-> On Tue, May 28, 2019 at 4:28 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 28-05-19 20:12:08, Minchan Kim wrote:
-> > > On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
-> > > > On Tue 28-05-19 19:32:56, Minchan Kim wrote:
-> > > > > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
-> > > > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
-> > > > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
-> > > > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> > > > > > > > > if we went with the per vma fd approach then you would get this
-> > > > > > > > > > feature automatically because map_files would refer to file backed
-> > > > > > > > > > mappings while map_anon could refer only to anonymous mappings.
-> > > > > > > > >
-> > > > > > > > > The reason to add such filter option is to avoid the parsing overhead
-> > > > > > > > > so map_anon wouldn't be helpful.
-> > > > > > > >
-> > > > > > > > Without chiming on whether the filter option is a good idea, I'd like
-> > > > > > > > to suggest that providing an efficient binary interfaces for pulling
-> > > > > > > > memory map information out of processes.  Some single-system-call
-> > > > > > > > method for retrieving a binary snapshot of a process's address space
-> > > > > > > > complete with attributes (selectable, like statx?) for each VMA would
-> > > > > > > > reduce complexity and increase performance in a variety of areas,
-> > > > > > > > e.g., Android memory map debugging commands.
-> > > > > > >
-> > > > > > > I agree it's the best we can get *generally*.
-> > > > > > > Michal, any opinion?
-> > > > > >
-> > > > > > I am not really sure this is directly related. I think the primary
-> > > > > > question that we have to sort out first is whether we want to have
-> > > > > > the remote madvise call process or vma fd based. This is an important
-> > > > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
-> > > > > > so far unfortunately.
-> > > > >
-> > > > > With current usecase, it's per-process API with distinguishable anon/file
-> > > > > but thought it could be easily extended later for each address range
-> > > > > operation as userspace getting smarter with more information.
-> > > >
-> > > > Never design user API based on a single usecase, please. The "easily
-> > > > extended" part is by far not clear to me TBH. As I've already mentioned
-> > > > several times, the synchronization model has to be thought through
-> > > > carefuly before a remote process address range operation can be
-> > > > implemented.
-> > >
-> > > I agree with you that we shouldn't design API on single usecase but what
-> > > you are concerning is actually not our usecase because we are resilient
-> > > with the race since MADV_COLD|PAGEOUT is not destruptive.
-> > > Actually, many hints are already racy in that the upcoming pattern would
-> > > be different with the behavior you thought at the moment.
-> >
-> > How come they are racy wrt address ranges? You would have to be in
-> > multithreaded environment and then the onus of synchronization is on
-> > threads. That model is quite clear. But we are talking about separate
-> > processes and some of them might be even not aware of an external entity
-> > tweaking their address space.
-> 
-> I don't think the difference between a thread and a process matters in
-> this context. Threads race on address space operations all the time
-> --- in the sense that multiple threads modify a process's address
-> space without synchronization.
+The next call to ixgbevf_update_itr will continue to dynamically
+update ITR.
 
-I would disagree. They do have in-kernel synchronization as long as they
-do not use MAP_FIXED. If they do want to use MAP_FIXED then they better
-synchronize or the result is undefined.
+Copy from commit bdbeefe8ea8c ("ixgbe: fix possible divide by zero in
+ixgbe_update_itr")
 
-> The main reasons that these races
-> hasn't been a problem are: 1) threads mostly "mind their own business"
-> and modify different parts of the address space or use locks to ensure
-> that they don't stop on each other (e.g., the malloc heap lock), and
-> 2) POSIX mmap atomic-replacement semantics make certain classes of
-> operation (like "magic ring buffer" setup) safe even in the presence
-> of other threads stomping over an address space.
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Agreed here.
-
-[...]
-
-> From a synchronization point
-> of view, it doesn't really matter whether it's a thread within the
-> target process or a thread outside the target process that does the
-> address space manipulation. What's new is the inspection of the
-> address space before performing an operation.
-
-The fundamental difference is that if you want to achieve the same
-inside the process then your application is inherenly aware of the
-operation and use whatever synchronization is needed to achieve a
-consistency. As soon as you allow the same from outside you either
-have to have an aware target application as well or you need a mechanism
-to find out that your decision has been invalidated by a later
-unsynchronized action.
-
-> Minchan started this thread by proposing some flags that would
-> implement a few of the filtering policies I used as examples above.
-> Personally, instead of providing a few pre-built policies as flags,
-> I'd rather push the page manipulation policy to userspace as much as
-> possible and just have the kernel provide a mechanism that *in
-> general* makes these read-decide-modify operations efficient and
-> robust. I still think there's way to achieve this goal very
-> inexpensively without compromising on flexibility.
-
-Agreed here.
-
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index d189ed2..d2b41f9 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -1423,6 +1423,9 @@ static void ixgbevf_update_itr(struct ixgbevf_q_vector *q_vector,
+ 	 */
+ 	/* what was last interrupt timeslice? */
+ 	timepassed_us = q_vector->itr >> 2;
++	if (timepassed_us == 0)
++		return;
++
+ 	bytes_perint = bytes / timepassed_us; /* bytes/usec */
+ 
+ 	switch (itr_setting) {
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
