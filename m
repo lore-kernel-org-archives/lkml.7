@@ -2,77 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9EEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F77C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13462075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24EF2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:28:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LVkQuv+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfE1KZP (ORCPT
+        id S1726526AbfE1K2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:25:15 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:60057 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1KZO (ORCPT
+        Tue, 28 May 2019 06:28:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43863 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1K2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:25:14 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45CqjM1bQhz1rZ07;
-        Tue, 28 May 2019 12:25:11 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45CqjL64ZDz1qqkH;
-        Tue, 28 May 2019 12:25:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id ipmAkLzaT_pN; Tue, 28 May 2019 12:25:09 +0200 (CEST)
-X-Auth-Info: 2hslSmEGTPLoyKNKYOOmViG/Dyfm+220WIVpGrKlHlvIBaw9uFUuecR4QmL82tBJ
-Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 28 May 2019 12:25:09 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Cyril Hrubis <chrubis@suse.cz>
-Cc:     lkml <linux-kernel@vger.kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, Michal Simek <monstr@monstr.eu>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH] [RFC] Remove bdflush syscall stub
-References: <20190528101012.11402-1-chrubis@suse.cz>
-X-Yow:  I'm working under the direct orders of WAYNE NEWTON to deport
- consenting adults!
-Date:   Tue, 28 May 2019 12:25:09 +0200
-In-Reply-To: <20190528101012.11402-1-chrubis@suse.cz> (Cyril Hrubis's message
-        of "Tue, 28 May 2019 12:10:12 +0200")
-Message-ID: <mvmr28idgfu.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 28 May 2019 06:28:32 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so2680443qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 03:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xz9jNowfVrFFO0jkhxu7a5SO0l+Nom3Gou3ZN0J7IBc=;
+        b=LVkQuv+d4Z61jVunAcuoZBohB1dIA1Agnfvadw94zwI2iH3GEX56rrnbOXmuC8Cd9R
+         DwFKjSQiWb7xDz/iDu/9PwmwsG4MnzJO9WV2NnpH0Ktg4LBopjzGKClOYbrC+TXMbdr2
+         YknJlnHh3lIFmTYLr8J6FsfB19zBRr3tLjc5w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xz9jNowfVrFFO0jkhxu7a5SO0l+Nom3Gou3ZN0J7IBc=;
+        b=tv0H9b0rbEBq680qmUla+m0Ymvo2+t211QFiX1+/IZ3jNWhSBdDWLkq01Xkdgt3W43
+         fwffe+3iVgsx03fAjmXElJPCefAdkE/Zz42DWtFK/qiqTInebZY3XdBGnpd2k4szMUbc
+         SlO0lJ7lhhCR2gaMfu0mUf9Su0lgXS8knDEm6GOOOV98Plaa9viLq+/VfDAr4G5zGSHN
+         zvsnKph55BlQYxHdhlz/v/ESE3HAN1KvbcubBy40JmN4cglOlFbai4wel5S7Dn9jqvuS
+         McJ4L0LKwkL5m8w/ChqOTUb73rSMyIrrVB0EggQa9ZJd6mBFWJdIp7PsY/gKUceLZYBL
+         zj6A==
+X-Gm-Message-State: APjAAAW9UVC88xAhDvYft/dpoqV0FlaFBY9clmBKEbK0dNtGo6McIYdT
+        obzxQ+SHkmzQrrjWzK/dmWMmSIHzOAvxG+Y8h75mTA==
+X-Google-Smtp-Source: APXvYqwVkGxHWipHaEkBIORw+tvSgvbfu/oyWYIW/IKz+5lBhbE5lQGMv18OSrZexFtTZls92nSRw4gRnphaIp17YKk=
+X-Received: by 2002:a0c:e849:: with SMTP id l9mr1816939qvo.3.1559039311418;
+ Tue, 28 May 2019 03:28:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190521234148.64060-1-drinkcat@chromium.org> <11be5350-23db-6216-3c2b-1d8b161cac9b@yandex-team.ru>
+In-Reply-To: <11be5350-23db-6216-3c2b-1d8b161cac9b@yandex-team.ru>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 28 May 2019 18:28:20 +0800
+Message-ID: <CANMq1KDUCJhEKPSnjoCB=PyrvU3zF77miPC8Kqy2ttporMst8A@mail.gmail.com>
+Subject: Re: [PATCH] scripts/decode_stacktrace: Look for modules with
+ .ko.debug extension
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mai 28 2019, Cyril Hrubis <chrubis@suse.cz> wrote:
+On Tue, May 28, 2019 at 4:38 PM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> On 22.05.2019 2:41, Nicolas Boichat wrote:
+> > In Chromium OS kernel builds, we split the debug information as
+> > .ko.debug files, and that's what decode_stacktrace.sh needs to use.
+> >
+> > Relax objfile matching rule to allow any .ko* file to be matched.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> >   scripts/decode_stacktrace.sh | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+> > index bcdd45df3f5127a..c851c1eb16f9cf7 100755
+> > --- a/scripts/decode_stacktrace.sh
+> > +++ b/scripts/decode_stacktrace.sh
+> > @@ -28,7 +28,7 @@ parse_symbol() {
+> >               local objfile=${modcache[$module]}
+> >       else
+> >               [[ $modpath == "" ]] && return
+> > -             local objfile=$(find "$modpath" -name $module.ko -print -quit)
+> > +             local objfile=$(find "$modpath" -name $module.ko* -print -quit)
+>
+> Ok but should be quoted "$module.ko*" or escaped $module.ko\*
 
-> I've tested the patch on i386. Before the patch calling bdflush() with
-> attempt to tune a variable returned 0 and after the patch the syscall
-> fails with EINVAL.
+Thanks for noticing, will send a v2 right away.
 
-Should be ENOSYS, doesn't it?
-
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+> >               [[ $objfile == "" ]] && return
+> >               modcache[$module]=$objfile
+> >       fi
+> >
