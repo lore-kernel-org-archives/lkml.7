@@ -2,168 +2,99 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C418CC46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54722C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A722720883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CC02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7dq5luQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfE1HzX (ORCPT
+        id S1727564AbfE1H4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:55:23 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:14207 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726789AbfE1HzW (ORCPT
+        Tue, 28 May 2019 03:56:41 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46317 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1H4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:55:22 -0400
-X-UUID: 2c54a368901941008760f6ac2ddf19e5-20190528
-X-UUID: 2c54a368901941008760f6ac2ddf19e5-20190528
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1469220644; Tue, 28 May 2019 15:55:16 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 28 May 2019 15:55:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 28 May 2019 15:55:14 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [v3 PATCH] usb: create usb_debug_root for gadget only
-Date:   Tue, 28 May 2019 15:54:59 +0800
-Message-ID: <cffd6d75f69e4d908c8f39b8a60ddae27d6b7c88.1559028752.git.chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Tue, 28 May 2019 03:56:40 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bb3so378363plb.13;
+        Tue, 28 May 2019 00:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gYEx0O9ga7gmezM3UNZfMFOuMaxOrET+sxlSycHSkpM=;
+        b=a7dq5luQaniRgSsf0ayiW5h+fJUP4Vmxrwo6U6SNNBBFHwBpqUASrwsP+754vmwsED
+         pcC9bV90BsjkcHWVpiZmMYOXDzIXd7UMk6NaKt4y1AyvdGj2M9V6fV9M7qdP9Ebbg1wv
+         kXZs31+QMzqil0gT8AwFtEXGclS2P5x0qgMXIF/VeyG3UObSOMpACD8WdnvlyzOPWuhk
+         eze1GIBRIEICPw5YoQ9UBSQN1Wx3y380llfWB7LZCec29Q/+UyAMtjhb/bL8mW6fwOMF
+         y9R9ApRr7TVpyoDan0nm5r/CB5Wf74I5KWNTTTEohVynll7c9upaGdBlAjNj+HWcfD8U
+         NTbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gYEx0O9ga7gmezM3UNZfMFOuMaxOrET+sxlSycHSkpM=;
+        b=VKR0cHHMWaNxCy1dteY2FX8y3TQiWg3nTb49KCch/rFdY5UB0l6dEtPAng6DEVGBvR
+         LTamAoEv8DTe+dBdLh7SdrourXiUk7HUh0XZ9AxyAukxWhX+RL+xRMHHeQRK9q3JmMyW
+         JEhpnULjs1VZXUxJBgQVXan66Fz9unaSifXPwyDZnlBOy+sjqF5EBXsQegtm2TnEKe4y
+         GMUV3fOB76w4Ph8l8UPJJ08lLTPW0osSteS7aAQw570sbeAaYhoxP0Jqt1hCpmjvX/hk
+         Mi/P0WuipnW7Cn0sj9WTNnlxOENZrsVea8j2u3Wk722Y3HBr1nuQpBo2tUUDfrYwWHy3
+         OkwQ==
+X-Gm-Message-State: APjAAAWcbRax2HRi54fIdPu18IoY7a+DCs/5ioP6LUlqciL7kNVyNzB/
+        SGZVDA9XJVH5Y6XBqWVzuVqSLAn2
+X-Google-Smtp-Source: APXvYqwtJCydhoAd/g0sCuuMctnI6P+onxHmBK/HiXonWEV3tU9YsQwCts33jXs/ju9nbNwHFHEgFA==
+X-Received: by 2002:a17:902:2c43:: with SMTP id m61mr24654147plb.315.1559030199892;
+        Tue, 28 May 2019 00:56:39 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id t64sm2906920pjb.0.2019.05.28.00.56.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 28 May 2019 00:56:39 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH RESEND v2 0/3] KVM: Yield to IPI target if necessary
+Date:   Tue, 28 May 2019 15:56:32 +0800
+Message-Id: <1559030195-2872-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
-there is an issue, e.g.:
+The idea is from Xen, when sending a call-function IPI-many to vCPUs, 
+yield if any of the IPI target vCPUs was preempted. 17% performance 
+increase of ebizzy benchmark can be observed in an over-subscribe 
+environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-function 
+IPI-many since call-function is not easy to be trigged by userspace 
+workload).
 
-drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
-mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
+v1 -> v2:
+ * check map is not NULL
+ * check map->phys_map[dest_id] is not NULL
+ * make kvm_sched_yield static
+ * change dest_id to unsinged long
 
-usb_debug_root is currently only built when host is supported
-(CONFIG_USB is set), for convenience, we also want it created when
-gadget only is enabled, this patch try to support it.
+Wanpeng Li (3):
+  KVM: X86: Implement PV sched yield in linux guest
+  KVM: X86: Implement PV sched yield hypercall
+  KVM: X86: Expose PV_SCHED_YIELD CPUID feature bit to guest
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v3:
-  1. still create usb_debug_root for gadget only
-  2. abandon mtu3's change
-  3. drop acked-by Randy
+ Documentation/virtual/kvm/cpuid.txt      |  4 ++++
+ Documentation/virtual/kvm/hypercalls.txt | 11 +++++++++++
+ arch/x86/include/uapi/asm/kvm_para.h     |  1 +
+ arch/x86/kernel/kvm.c                    | 21 +++++++++++++++++++++
+ arch/x86/kvm/cpuid.c                     |  3 ++-
+ arch/x86/kvm/x86.c                       | 26 ++++++++++++++++++++++++++
+ include/uapi/linux/kvm_para.h            |  1 +
+ 7 files changed, 66 insertions(+), 1 deletion(-)
 
-v2(resend): add acked-by Randy
-
-v1: fix mtu3's build error, replace usb_debug_root by NULL;
----
- drivers/usb/core/usb.c        |  2 +-
- drivers/usb/gadget/udc/core.c | 27 +++++++++++++++++++++++++++
- include/linux/usb.h           |  1 +
- 3 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 7fcb9f782931..88b3ee03a12d 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -1190,7 +1190,7 @@ EXPORT_SYMBOL_GPL(usb_debug_root);
- 
- static void usb_debugfs_init(void)
- {
--	usb_debug_root = debugfs_create_dir("usb", NULL);
-+	usb_debug_root = debugfs_create_dir(USB_DEBUG_ROOT_NAME, NULL);
- 	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
- 			    &usbfs_devices_fops);
- }
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index 7cf34beb50df..ed45f9429e58 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/list.h>
- #include <linux/err.h>
-@@ -1587,12 +1588,37 @@ static int usb_udc_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	return 0;
- }
- 
-+/* if CONFIG_USB is set, leave USB core to create usb_debug_root */
-+#ifndef CONFIG_USB
-+struct dentry *usb_debug_root;
-+EXPORT_SYMBOL_GPL(usb_debug_root);
-+
-+static void usb_debugfs_init(void)
-+{
-+	usb_debug_root = debugfs_create_dir(USB_DEBUG_ROOT_NAME, NULL);
-+}
-+
-+static void usb_debugfs_cleanup(void)
-+{
-+	debugfs_remove_recursive(usb_debug_root);
-+}
-+#else
-+static void usb_debugfs_init(void)
-+{}
-+
-+static void usb_debugfs_cleanup(void)
-+{}
-+#endif
-+
- static int __init usb_udc_init(void)
- {
-+	usb_debugfs_init();
-+
- 	udc_class = class_create(THIS_MODULE, "udc");
- 	if (IS_ERR(udc_class)) {
- 		pr_err("failed to create udc class --> %ld\n",
- 				PTR_ERR(udc_class));
-+		usb_debugfs_cleanup();
- 		return PTR_ERR(udc_class);
- 	}
- 
-@@ -1604,6 +1630,7 @@ subsys_initcall(usb_udc_init);
- static void __exit usb_udc_exit(void)
- {
- 	class_destroy(udc_class);
-+	usb_debugfs_cleanup();
- }
- module_exit(usb_udc_exit);
- 
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index ae82d9d1112b..9c6e7b3265af 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -1994,6 +1994,7 @@ extern void usb_register_notify(struct notifier_block *nb);
- extern void usb_unregister_notify(struct notifier_block *nb);
- 
- /* debugfs stuff */
-+#define USB_DEBUG_ROOT_NAME	"usb"
- extern struct dentry *usb_debug_root;
- 
- /* LED triggers */
 -- 
-2.21.0
+2.7.4
 
