@@ -2,124 +2,123 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487BCC04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD8C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F172075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPfj5asY"
+	by mail.kernel.org (Postfix) with ESMTP id 4F1322081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfE1BWA (ORCPT
+        id S1727806AbfE1BXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:22:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38452 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfE1BV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:21:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b76so10393782pfb.5;
-        Mon, 27 May 2019 18:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=WyrVEd7Z066n8x3W3p36ZvDVCldsmbGvGU0q2zkOUWY=;
-        b=JPfj5asYw7HCuZpjdcUxtFWyEFHcmHBfYWpcQ4cmCmn01QcNRXP91gGo5EDqXK0ebD
-         yGi03pUH40J20cuiByrNO5+e2WHsEB1cGlo+knxIfa3kdjvc5aSFrbfY38H09Y9MD/XE
-         fDpB+LX6OBDNmaFUxzMNfQaxGSJeTuLYKuaQ/ihD1gRzlWNDwA1g/GKXwk6q7q4PuWGH
-         IZSRIHQV+dD2le7wFYYByLBYCm11oAeO5vEAM6i1GN0ndtqDz4qnifhYOMYizJ6iuJDk
-         nRDuDJ+0zMOWpVOtpNL4NfZ+FTwbGGSld7XcgS5vRk1TkzoL7CEf3Jxz3aNdPmhCoVAS
-         zV+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=WyrVEd7Z066n8x3W3p36ZvDVCldsmbGvGU0q2zkOUWY=;
-        b=foZCkTpH9/ignb7hIeNbTVrINpBRNWUkLuSrzPAZwxUFv3aJip0Y/uzSlqnWpfrxvN
-         Np27XY6lMkIOuAMMXMKmOkmXR62XibVgchSjrsf/5TlOW/GfVbm0so1zqKv8oW5eRIuW
-         Qxsoj+XP6apVZTIH70+P44IE+AEM13fVVcegcvWlNxdFQCgRIxe5mdDPikW8ViGXa9yc
-         A1V2v5HrDZuaOdAgONmnV47fcCYtxrGSDVtin2YhG6SNBjyIiNHKGjJSoS9anKFXuB3L
-         TSFWJ26e2tALidB4umt4VsS4LVqXmS1egp8ZYyp6UdihdWI3Bx/AgM+iEsFJwDEnEwxF
-         +POQ==
-X-Gm-Message-State: APjAAAWNsJZGizINknDxOMEtPA1wFdSUIuomkPvR9eLlB+K4RuzI/s/N
-        qOMMHbNMdQ/G5haI6bxVFFM=
-X-Google-Smtp-Source: APXvYqyW68YD00mOZxccK/5Hfm2Oq2XQwQPqlkvlJYDNTAxHBRx4vFXkEwopqCBFuWDslX1lqw7MXQ==
-X-Received: by 2002:a63:ed09:: with SMTP id d9mr12668611pgi.419.1559006518896;
-        Mon, 27 May 2019 18:21:58 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id z125sm15537156pfb.75.2019.05.27.18.21.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 18:21:57 -0700 (PDT)
-Date:   Tue, 28 May 2019 06:51:52 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     ddiss@suse.de, "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [Patch v2] target/iscsi: fix possible condition with no effect (if
- == else)
-Message-ID: <20190528012151.GA4845@hari-Inspiron-1545>
+        Mon, 27 May 2019 21:23:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54346 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727090AbfE1BXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:23:02 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6612BE665F8B3F37B701;
+        Tue, 28 May 2019 09:22:59 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
+ 2019 09:22:55 +0800
+Subject: Re: [PATCH v2] f2fs: ratelimit recovery messages
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     <linux-kernel@vger.kernel.org>
+References: <1558962655-25994-1-git-send-email-stummala@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <94025a6d-f485-3811-5521-ed5c9b4d1d77@huawei.com>
+Date:   Tue, 28 May 2019 09:23:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1558962655-25994-1-git-send-email-stummala@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below warning reported by coccicheck
+Hi Sahitya,
 
-drivers/target/iscsi/iscsi_target_nego.c:175:6-8: WARNING: possible
-condition with no effect (if == else)
+On 2019/5/27 21:10, Sahitya Tummala wrote:
+> Ratelimit the recovery logs, which are expected in case
+> of sudden power down and which could result into too
+> many prints.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
-Changes in v2: treat SRP as unsupported authtype.
-               Remove unnecessary else
-               return 2 in all unsupported cases
+FYI
 
----
----
- drivers/target/iscsi/iscsi_target_nego.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+https://lore.kernel.org/patchwork/patch/973837/
 
-diff --git a/drivers/target/iscsi/iscsi_target_nego.c b/drivers/target/iscsi/iscsi_target_nego.c
-index 8a5e8d1..92ce2fd 100644
---- a/drivers/target/iscsi/iscsi_target_nego.c
-+++ b/drivers/target/iscsi/iscsi_target_nego.c
-@@ -160,22 +160,11 @@ static u32 iscsi_handle_authentication(
- 
- 	if (strstr("None", authtype))
- 		return 1;
--#ifdef CANSRP
--	else if (strstr("SRP", authtype))
--		return srp_main_loop(conn, auth, in_buf, out_buf,
--				&in_length, out_length);
--#endif
- 	else if (strstr("CHAP", authtype))
- 		return chap_main_loop(conn, auth, in_buf, out_buf,
- 				&in_length, out_length);
--	else if (strstr("SPKM1", authtype))
--		return 2;
--	else if (strstr("SPKM2", authtype))
--		return 2;
--	else if (strstr("KRB5", authtype))
--		return 2;
--	else
--		return 2;
-+	/* SRP, SPKM1, SPKM2 and KRB5 are unsupported */
-+	return 2;
- }
- 
- static void iscsi_remove_failed_auth_entry(struct iscsi_conn *conn)
--- 
-2.7.4
+IMO, we need those logs to provide evidence during trouble-shooting of file data
+corruption or file missing problem...
 
+So I suggest we can keep log as it is in recover_dentry/recover_inode, and for
+the log in do_recover_data, we can record recovery info [isize_kept,
+recovered_count, err ...] into struct fsync_inode_entry, and print them in
+batch, how do you think?
+
+Thanks,
+
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> ---
+> v2:
+>  - fix minor formatting and add new line for printk
+> 
+>  fs/f2fs/recovery.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+> index e04f82b..60d7652 100644
+> --- a/fs/f2fs/recovery.c
+> +++ b/fs/f2fs/recovery.c
+> @@ -188,8 +188,8 @@ static int recover_dentry(struct inode *inode, struct page *ipage,
+>  		name = "<encrypted>";
+>  	else
+>  		name = raw_inode->i_name;
+> -	f2fs_msg(inode->i_sb, KERN_NOTICE,
+> -			"%s: ino = %x, name = %s, dir = %lx, err = %d",
+> +	printk_ratelimited(KERN_NOTICE
+> +			"%s: ino = %x, name = %s, dir = %lx, err = %d\n",
+>  			__func__, ino_of_node(ipage), name,
+>  			IS_ERR(dir) ? 0 : dir->i_ino, err);
+>  	return err;
+> @@ -292,8 +292,8 @@ static int recover_inode(struct inode *inode, struct page *page)
+>  	else
+>  		name = F2FS_INODE(page)->i_name;
+>  
+> -	f2fs_msg(inode->i_sb, KERN_NOTICE,
+> -		"recover_inode: ino = %x, name = %s, inline = %x",
+> +	printk_ratelimited(KERN_NOTICE
+> +			"recover_inode: ino = %x, name = %s, inline = %x\n",
+>  			ino_of_node(page), name, raw->i_inline);
+>  	return 0;
+>  }
+> @@ -642,11 +642,11 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+>  err:
+>  	f2fs_put_dnode(&dn);
+>  out:
+> -	f2fs_msg(sbi->sb, KERN_NOTICE,
+> -		"recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d",
+> -		inode->i_ino,
+> -		file_keep_isize(inode) ? "keep" : "recover",
+> -		recovered, err);
+> +	printk_ratelimited(KERN_NOTICE
+> +			"recover_data: ino = %lx (i_size: %s) recovered = %d, err = %d\n",
+> +			inode->i_ino,
+> +			file_keep_isize(inode) ? "keep" : "recover",
+> +			recovered, err);
+>  	return err;
+>  }
+>  
+> 
