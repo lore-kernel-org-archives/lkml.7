@@ -2,82 +2,98 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8E3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0D7C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B362054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E199C214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdRwG4zq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfE1Nnh (ORCPT
+        id S1727655AbfE1Nnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 28 May 2019 09:43:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44726 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfE1Nnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 09:43:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17598 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfE1Nnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:43:37 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0A76DA471E72B15A4CE6;
-        Tue, 28 May 2019 21:43:33 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 21:43:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <stern@rowland.harvard.edu>, <kgene@kernel.org>, <krzk@kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] usb: ohci-s3c2410: Remove set but not used variable 'hcd'
-Date:   Tue, 28 May 2019 21:43:05 +0800
-Message-ID: <20190528134305.10184-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Received: by mail-lj1-f193.google.com with SMTP id e13so17715613ljl.11;
+        Tue, 28 May 2019 06:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SEeFPNZj/QO+Z5ptX7FeXaKpRH7B0reByetK9LT1X/k=;
+        b=PdRwG4zq5zSdU3T15Hg5FQW72sJm9Xilyt6hLsn4kEJM4f8G9ZsQIBWFEv2q1wXmxf
+         Y5aOr1J0fpIA3Jd2t8NSj4dhuCS+9JL7vYheNSB51MfKKwb5DyGDbz5bfhgrusxESLs+
+         Azqu2GQY1yrMjlp3+aoWziNZGojdiyU+c2jRddwj7BnPjLGebPAjtJU18Sl2iFtehrAU
+         TpnbTea6rHYys21N565ODk9QGgJplKZdwgVMdNZgQSMQo5c4eR/BCk7vX4NcmxtmGTyh
+         n/1GFAyJS/uZdYr+NEI8YVU0IOP3ZKEICo36wVdDRd9t3rJ5VZ1TzAFMYWzdZVvYCt5l
+         BXXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SEeFPNZj/QO+Z5ptX7FeXaKpRH7B0reByetK9LT1X/k=;
+        b=Xe2eJL1mu0rTOPMfonJaj5bPuTSOAsw0mPCG3TExmbUeJn0xc/57ztRb+a4nV1qKLg
+         yqFMI5W786J6wXAF8MauBCT/jmciXv238Y19SVeROyxhUgiwvR/Zuy+bi61rEj5sQr8p
+         PxrGmA/N+j4VYFs+hOBoVFtVdjnRX3kL51fWjleavdly93sQK6u+byUPpLLWH4ji5rmu
+         g5rbyjIndR1U62U6qNAlFk1OezHTJgdP3qyXB6R1W4HlKTs8BLnTxXBmbk+q5ESGqcQe
+         u9EQszit/CvAU/49nRjc7ptJB/gkmR8w/MPHkvozru0gwqm1DvM7uFoyf2NyG6CoQ9qc
+         vvbQ==
+X-Gm-Message-State: APjAAAUynyAGs+fqYW5YU5bOtwmhDhJQwoBJtsZe4RSTzVVmbu3t7mYN
+        5P1Wr3zrUjVPdj1VhAh+H/E=
+X-Google-Smtp-Source: APXvYqxStbxzyJFXJ5WkJVr2tAGR2m+ZHWj82uRBpgjE1M56nMKRDyDnsDLJ98QOztN5buJ/FSk9QQ==
+X-Received: by 2002:a2e:3818:: with SMTP id f24mr38832479lja.13.1559051015719;
+        Tue, 28 May 2019 06:43:35 -0700 (PDT)
+Received: from debian-tom.home (2-111-15-75-dynamic.dk.customer.tdc.net. [2.111.15.75])
+        by smtp.gmail.com with ESMTPSA id d2sm2237177lfj.0.2019.05.28.06.43.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 06:43:35 -0700 (PDT)
+From:   Tomas Bortoli <tomasbortoli@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomas Bortoli <tomasbortoli@gmail.com>
+Subject: [PATCH] Bluetooth: hci_bcsp: Fix memory leak in rx_skb
+Date:   Tue, 28 May 2019 15:42:58 +0200
+Message-Id: <20190528134258.3743-1-tomasbortoli@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Syzkaller found that it is possible to provoke a memory leak by
+never freeing rx_skb in struct bcsp_struct.
 
-drivers/usb/host/ohci-s3c2410.c: In function s3c2410_hcd_oc:
-drivers/usb/host/ohci-s3c2410.c:296:18: warning: variable hcd set but not used [-Wunused-but-set-variable]
+Fix by freeing in bcsp_close()
 
-It is never used, so can be removed.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com
 ---
- drivers/usb/host/ohci-s3c2410.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/bluetooth/hci_bcsp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/host/ohci-s3c2410.c b/drivers/usb/host/ohci-s3c2410.c
-index 4511e27e9da8..d961097c90f0 100644
---- a/drivers/usb/host/ohci-s3c2410.c
-+++ b/drivers/usb/host/ohci-s3c2410.c
-@@ -293,7 +293,6 @@ static int ohci_s3c2410_hub_control(
- static void s3c2410_hcd_oc(struct s3c2410_hcd_info *info, int port_oc)
- {
- 	struct s3c2410_hcd_port *port;
--	struct usb_hcd *hcd;
- 	unsigned long flags;
- 	int portno;
+diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
+index 1a7f0c82fb36..550ab5b4c8be 100644
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -759,6 +759,10 @@ static int bcsp_close(struct hci_uart *hu)
+ 	skb_queue_purge(&bcsp->rel);
+ 	skb_queue_purge(&bcsp->unrel);
  
-@@ -301,7 +300,6 @@ static void s3c2410_hcd_oc(struct s3c2410_hcd_info *info, int port_oc)
- 		return;
- 
- 	port = &info->port[0];
--	hcd = info->hcd;
- 
- 	local_irq_save(flags);
- 
++	if (bcsp->rx_skb) {
++		kfree_skb(bcsp->rx_skb); bcsp->rx_skb = NULL;
++	}
++
+ 	kfree(bcsp);
+ 	return 0;
+ }
 -- 
-2.17.1
-
+2.11.0
 
