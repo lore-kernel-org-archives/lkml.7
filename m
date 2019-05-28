@@ -2,102 +2,97 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296AEC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07720C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093DF214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3F52133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfE1PEC (ORCPT
+        id S1726910AbfE1PDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:04:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58932 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727055AbfE1PD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:03:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F24E169E;
-        Tue, 28 May 2019 08:03:57 -0700 (PDT)
-Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0060D3F5AF;
-        Tue, 28 May 2019 08:03:55 -0700 (PDT)
-From:   Raphael Gault <raphael.gault@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC 7/7] Documentation: arm64: Document PMU counters access from userspace
-Date:   Tue, 28 May 2019 16:03:20 +0100
-Message-Id: <20190528150320.25953-8-raphael.gault@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190528150320.25953-1-raphael.gault@arm.com>
-References: <20190528150320.25953-1-raphael.gault@arm.com>
+        Tue, 28 May 2019 11:03:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45366 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726693AbfE1PDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:03:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E1B5AACC4;
+        Tue, 28 May 2019 15:03:47 +0000 (UTC)
+Date:   Tue, 28 May 2019 17:03:45 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+Message-ID: <20190528150345.di2knfzmqfbwro3y@pathway.suse.cz>
+References: <20190528002412.1625-1-dima@arista.com>
+ <20190528041500.GB26865@jagdpanzerIV>
+ <20190528044619.GA3429@jagdpanzerIV>
+ <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+ <e564ee00-6a93-defd-4eab-e306bbfe8b01@i-love.sakura.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e564ee00-6a93-defd-4eab-e306bbfe8b01@i-love.sakura.ne.jp>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation file to describe the access to the pmu hardware
-counters from userspace
+On Tue 2019-05-28 23:21:17, Tetsuo Handa wrote:
+> On 2019/05/28 22:42, Petr Mladek wrote:
+> >> Ahh.. OK, now I sort of remember why I gave up on this idea (see [1]
+> >> at the bottom, when it comes to uv_nmi_dump_state()) - printk_NMI and
+> >> printk-safe redirections.
+> >>
+> >> 	NMI
+> >> 		loglevel = NEW
+> >> 		printk -> printk_safe_nmi
+> >> 		loglevel = OLD
+> >>
+> >> 	iret
+> >>
+> >> 	IRQ
+> >> 		flush printk_safe_nmi -> printk
+> >> 		// At this point we don't remember about
+> >> 		// loglevel manipulation anymore
+> >> 	iret
+> > 
+> > printk_safe buffer preserves KERN_* headers. It should be
+> > possible to insert KERN_UNSUPPRESSED there.
+> 
+> But is context dependent buffer large enough to hold SysRq-t output?
+> I think that only main logbuf can become large enough to hold SysRq-t output.
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
----
- .../arm64/pmu_counter_user_access.txt         | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+SysRq messages are stored directly into the main log buffer.
 
-diff --git a/Documentation/arm64/pmu_counter_user_access.txt b/Documentation/arm64/pmu_counter_user_access.txt
-new file mode 100644
-index 000000000000..6788b1107381
---- /dev/null
-+++ b/Documentation/arm64/pmu_counter_user_access.txt
-@@ -0,0 +1,42 @@
-+Access to PMU hardware counter from userspace
-+=============================================
-+
-+Overview
-+--------
-+The perf user-space tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 pmuv3 which makes sure that the access to the pmu
-+registers is enable and that the userspace have access to the relevent
-+information in order to use them.
-+
-+In order to have access to the hardware counter it is necessary to open the event
-+using the perf tool interface: the sys_perf_event_open syscall returns a fd which
-+can subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event.
-+The PMU driver uses this page to expose to the user the hardware counter's
-+index. Using this index enables the user to access the PMU registers using the
-+`mrs` instruction.
-+
-+Have a look `at tools/perf/arch/arm64/tests/user-events.c` for an example. It can be
-+run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+./perf test -v
-+
-+About chained events
-+--------------------
-+When the user requests for an event to be counted on 64 bits, two hardware
-+counters are used and need to be combined to retrieve the correct value:
-+
-+val = read_counter(idx);
-+if ((event.attr.config1 & 0x1))
-+	val = (val << 32) | read_counter(idx - 1);
--- 
-2.17.1
+The limited per-CPU buffers are needed only in printk_safe
+and NMI context. We discussed it here because KERN_UNSUPPRESSED
+allows to pass the information even from this context.
 
+> We can add KERN_UNSUPPRESSED to SysRq's header line. But I don't think
+> that we can automatically add KERN_UNSUPPRESSED to SysRq's body lines
+> based on some context information. If we want to avoid manipulating
+> console_loglevel, we need to think about how to make sure that
+> KERN_UNSUPPRESSED is added to all lines from such context without
+> overflowing capacity of that buffer.
+
+We could set this context in printk_context per-CPU variable.
+
+Then we could easily add the set per-message flag in
+vprintk_store() for the normal/atomic context. And we
+could store an extra KERN_UNSUPPRESSED in printk_safe_log_store()
+for printk_safe and NMI context.
+
+Best Regards,
+Petr
