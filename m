@@ -2,103 +2,119 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BEDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A72A20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:19:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wyn34Lvv"
+	by mail.kernel.org (Postfix) with ESMTP id B144020989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559067615;
+	bh=SxoqYfaNaJRTdNgPM5E5ZBuEpYoMTnN6R0PyU0t+Fqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0RnQp77/nR6NGz6gc82ZDhn68JvisKueYw1HoOKr9oXqJ3iHRpzkbu4AI2JURBnh5
+	 GuLhrdOr5hnfTZGkLMCGXp4zCgZDEjEZlCpjbxpDOTFbzXBKKTBglmdwCwiwynIkv5
+	 ghzs6jHpfo1cHvil65RJuENSL2W50yv4JrPG4F0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfE1STT (ORCPT
+        id S1727968AbfE1SUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:19:19 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48044 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbfE1STS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:19:18 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SIJDN0049819;
-        Tue, 28 May 2019 13:19:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559067553;
-        bh=FHBxN25oKeInyBYHIzdz2Mbx2pen9sGOw8A9sYUQEPA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wyn34Lvv7tRksgPniyeCYM+lRAS6+HPlciStbaJeE2fr7kY1DAYG8FB8csBn/+8Y5
-         QEHRg9bhze1xLHslEfD38Nmp/ZFc7jqFPlW1ICByn7SUJUzncmFos3YhZNp13Hoppk
-         QuwjX1JyFQB+hsfeUVPClUkwcFr7VcUaxW4bZ69k=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SIJDus038031
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 13:19:13 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 13:19:12 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 13:19:12 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SIJCbT074115;
-        Tue, 28 May 2019 13:19:12 -0500
-Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-2-dmurphy@ti.com>
- <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
- <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
- <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e54d9d29-5daa-fd3a-a5a9-ebd2450882ee@ti.com>
-Date:   Tue, 28 May 2019 13:19:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 14:20:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52220 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727428AbfE1SUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 14:20:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C0B88ACBA;
+        Tue, 28 May 2019 18:20:12 +0000 (UTC)
+Date:   Tue, 28 May 2019 20:20:11 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Barret Rhoden <brho@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@elte.hu>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
+ boot
+Message-ID: <20190528182011.GG1658@dhcp22.suse.cz>
+References: <20190512054829.11899-1-cai@lca.pw>
+ <20190513124112.GH24036@dhcp22.suse.cz>
+ <1557755039.6132.23.camel@lca.pw>
+ <20190513140448.GJ24036@dhcp22.suse.cz>
+ <1557760846.6132.25.camel@lca.pw>
+ <20190513153143.GK24036@dhcp22.suse.cz>
+ <CAFgQCTt9XA9_Y6q8wVHkE9_i+b0ZXCAj__zYU0DU9XUkM3F4Ew@mail.gmail.com>
+ <20190522111655.GA4374@dhcp22.suse.cz>
+ <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTuKVif9gPTsbNdAqLGQyQpQ+gC2D1BQT99d0yDYHj4_mA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+[Sorry for a late reply]
 
-On 5/28/19 12:44 PM, Jacek Anaszewski wrote:
-> Dan,
+On Thu 23-05-19 11:58:45, Pingfan Liu wrote:
+> On Wed, May 22, 2019 at 7:16 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Wed 22-05-19 15:12:16, Pingfan Liu wrote:
+[...]
+> > > But in fact, we already have for_each_node_state(nid, N_MEMORY) to
+> > > cover this purpose.
+> >
+> > I do not really think we want to spread N_MEMORY outside of the core MM.
+> > It is quite confusing IMHO.
+> > .
+> But it has already like this. Just git grep N_MEMORY.
+
+I might be wrong but I suspect a closer review would reveal that the use
+will be inconsistent or dubious so following the existing users is not
+the best approach.
+
+> > > Furthermore, changing the definition of online may
+> > > break something in the scheduler, e.g. in task_numa_migrate(), where
+> > > it calls for_each_online_node.
+> >
+> > Could you be more specific please? Why should numa balancing consider
+> > nodes without any memory?
+> >
+> As my understanding, the destination cpu can be on a memory less node.
+> BTW, there are several functions in the scheduler facing the same
+> scenario, task_numa_migrate() is an example.
+
+Even if the destination node is memoryless then any migration would fail
+because there is no memory. Anyway I still do not see how using online
+node would break anything.
+
+> > > By keeping the node owning cpu as online, Michal's patch can avoid
+> > > such corner case and keep things easy. Furthermore, if needed, the
+> > > other patch can use for_each_node_state(nid, N_MEMORY) to replace
+> > > for_each_online_node is some space.
+> >
+> > Ideally no code outside of the core MM should care about what kind of
+> > memory does the node really own. The external code should only care
+> > whether the node is online and thus usable or offline and of no
+> > interest.
 >
-> On 5/28/19 7:32 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> Thank you for the update.
->>>
->>> One thing is missing here - we need to document how legacy brightness
->>> levels map to the sub-LED color levels, i.e. what you do in
->>> multicolor_set_brightness().
->>
->>
->> Ok so i will need to document the algorithm that is used to determine 
->> the color LED brightness.
->
-> Right, and please send just an update of that single patch.
->
+> Yes, but maybe it will pay great effort on it.
 
-So you are asking for v4 with only this patch updated.
-
-
-Dan
-
+Even if that is the case it would be preferable because the current
+situation is just not sustainable wrt maintenance cost. It is just too
+simple to break the existing logic as this particular report outlines.
+-- 
+Michal Hocko
+SUSE Labs
