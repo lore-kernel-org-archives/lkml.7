@@ -2,45 +2,42 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF99C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17150C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4F820989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D468E20989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WmcwXPva"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XTzm6meg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfE1XJB (ORCPT
+        id S1727743AbfE1XJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:09:01 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9103 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbfE1XJB (ORCPT
+        Tue, 28 May 2019 19:09:07 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:11197 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfE1XJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:09:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cedbf8b0000>; Tue, 28 May 2019 16:08:59 -0700
+        Tue, 28 May 2019 19:09:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cedbf850002>; Tue, 28 May 2019 16:08:53 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 28 May 2019 16:08:59 -0700
+  Tue, 28 May 2019 16:09:01 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 28 May 2019 16:08:59 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL108.nvidia.com
+        by hqpgpgate101.nvidia.com on Tue, 28 May 2019 16:09:01 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL108.nvidia.com
  (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:08:59 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 May
- 2019 23:08:58 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 28 May 2019 23:08:58 +0000
+ 2019 23:09:01 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 28 May 2019 23:09:01 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.86]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cedbf8a0000>; Tue, 28 May 2019 16:08:58 -0700
+        id <B5cedbf8d0001>; Tue, 28 May 2019 16:09:01 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -53,87 +50,132 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V2 00/12] LP0 entry and exit support for Tegra210
-Date:   Tue, 28 May 2019 16:08:44 -0700
-Message-ID: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V2 12/12] soc/tegra: pmc: configure tegra deep sleep control settings
+Date:   Tue, 28 May 2019 16:08:56 -0700
+Message-ID: <1559084936-4610-13-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559084939; bh=2b+AWpz2HgNUfsfdegjeMuOpOlMUMPBF8kt06/8Whxg=;
+        t=1559084933; bh=AXgFaKaMRanL7gj3q6RZdV0zOpoPQUiMedbJEKLsx0Q=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=WmcwXPvawBckbzm/c86tcyg78+pLBn37oIG96jrkb0qfyiLK15R1mGS4NOgHtIOmv
-         1FdH6CEG+YV0q0nmBt55XzpIEGcYVN5vnqXsla97HUSfKCN5BZA5MAlihZhewnyLo1
-         UOtFDNw3Sn8CGaT+RG//2JDbc1anUNJ7oML2SoXVYhgvh4oFX5VMkmxCx2wrQzUJJB
-         0o5ge373yp+KktSfKIJD9QyKdGZbLN/yacasRQ1BIYMaNvGGFdJzMKYfJ35Yzcy+qx
-         TjU2xDGLN8UN7BFHguutxfliOELqr1BThk8kpY0I5j4//BhcYP7TLUiXQAHQt6+QoQ
-         KTFjGc2UczfZA==
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=XTzm6megZhIPYrjJQ0OTfTwKhiyWA+Qq+M53wuFpyVvHTlMNJo/ELpD/CrbCw9kLq
+         jVzQqC67ksnVg2AQ46qt78iCJcmInX7Hto7hUXFb78f5gpNAQcbUd+EuO50jySz8n7
+         WUkiQKft6BBj0kL/UvgZ3JyP6HwaecEsy1Pdlmb+9RhDvj1hCw1JJu1r174D05fr4e
+         rK3Dq1IQWwKW+aZjBlc1w/w90FkrwGPZmMhrjr7ux+fnzKXrDioXjI+BBzYgaXHL4n
+         LgESPathjq/JDigo9cEeb6GO1+vO6W0M+MHMVwjDZB7Vjqu/DKflSrjRQb9pa+qoXb
+         /ZynPU+L7n/xA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series includes Tegra210 deepsleep/LP0 support with
-deep sleep exit through RTC alarm wake and power button wake events.
+Tegra210 and prior Tegra chips have power request signal polarity,
+deep sleep entry and wake related timings which are platform specific
+that should be configured before entering into deep sleep.
 
-Note: Wake on power button is through gpio-keys node in device tree.
+Below are the timings specific configurations for deep sleep and wake.
+- Core rail power-on stabilization timer
+- OSC clock stabilization timer after SOC rail power is stabilized.
+- Core power off time is the minimum wake delay to keep the system
+in deep sleep state irrespective of any quick wake event.
 
-This series also includes save and restore of PLLs, clocks, OSC contexts
-for basic LP0 exit.
+These values depends on the discharge time of regulators and turn OFF
+time of the PMIC to allow the complete system to finish entering into
+deep sleep state.
 
-This patch series doesn't support 100% suspend/resume to allow fully
-functional state upon resume and we are working on some more drivers suspend
-and resume implementations.
+These values vary based on the platform design and are specified
+through the device tree.
 
-[V2] : V1 feedback fixes
-	Patch 0002: This version still using syscore. Thierry suggest not to
-	use syscore and waiting on suggestion from Linux Walleij for any better
-	way of storing current state of pins before suspend entry and restoring
-	them on resume at very early stage. So left this the same way as V1 and
-	will address once I get more feedback on this.
-	Also need to findout and implement proper way of forcing resume order
-	between pinctrl and gpio driver.
+This patch has implementation to configure these configurations which
+are must to have for deep sleep state.
 
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |  7 +++++++
+ drivers/soc/tegra/pmc.c                        | 18 ++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-Sowjanya Komatineni (12):
-  irqchip: tegra: do not disable COP IRQ during suspend
-  pinctrl: tegra: add suspend and resume support
-  clk: tegra: save and restore PLLs state for system
-  clk: tegra: add support for peripheral clock suspend and resume
-  clk: tegra: add support for OSC clock resume
-  clk: tegra: add suspend resume support for DFLL clock
-  clk: tegra: support for Tegra210 clocks suspend-resume
-  soc/tegra: pmc: allow support for more tegra wake models
-  soc/tegra: pmc: add pmc wake support for tegra210
-  gpio: tegra: implement wake event support for Tegra210 and prior GPIO
-  arm64: tegra: enable wake from deep sleep on RTC alarm.
-  soc/tegra: pmc: configure tegra deep sleep control settings
-
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
- drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
- drivers/clk/tegra/clk-dfll.h                   |   2 +
- drivers/clk/tegra/clk-divider.c                |  19 ++
- drivers/clk/tegra/clk-pll-out.c                |  25 ++
- drivers/clk/tegra/clk-pll.c                    |  99 +++++--
- drivers/clk/tegra/clk-tegra-fixed.c            |  16 ++
- drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++++++++
- drivers/clk/tegra/clk.c                        |  74 ++++-
- drivers/clk/tegra/clk.h                        |  13 +
- drivers/gpio/gpio-tegra.c                      | 116 +++++++-
- drivers/irqchip/irq-tegra.c                    |  22 +-
- drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
- drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
- drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
- drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
- drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
- drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
- drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
- drivers/soc/tegra/pmc.c                        | 150 +++++++++-
- 21 files changed, 1053 insertions(+), 35 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 4dcd0d36189a..7ac5e55a30aa 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -266,6 +266,13 @@
+ 
+ 	pmc@7000e400 {
+ 		nvidia,invert-interrupt;
++		nvidia,suspend-mode = <0>;
++		nvidia,cpu-pwr-good-time = <0>;
++		nvidia,cpu-pwr-off-time = <0>;
++		nvidia,core-pwr-good-time = <4587 3876>;
++		nvidia,core-pwr-off-time = <39065>;
++		nvidia,core-power-req-active-high;
++		nvidia,sys-clock-req-active-high;
+ 	};
+ 
+ 	/* eMMC */
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 54dc8409e353..d7e0f5057f16 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -66,6 +66,7 @@
+ #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
+ #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+ #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
++#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
+ #define  PMC_CNTRL_MAIN_RST		BIT(4)
+ #define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+ 
+@@ -98,6 +99,8 @@
+ 
+ #define PMC_CPUPWRGOOD_TIMER		0xc8
+ #define PMC_CPUPWROFF_TIMER		0xcc
++#define PMC_COREPWRGOOD_TIMER		0x3c
++#define PMC_COREPWROFF_TIMER		0xe0
+ 
+ #define PMC_PWR_DET_VALUE		0xe4
+ 
+@@ -2285,6 +2288,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
+ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+ {
+ 	u32 value;
++	unsigned long osc, pmu, off;
+ 
+ 	/* Always enable CPU power request */
+ 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+@@ -2298,6 +2302,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+ 	else
+ 		value |= PMC_CNTRL_SYSCLK_POLARITY;
+ 
++	if (pmc->corereq_high)
++		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
++	else
++		value |= PMC_CNTRL_PWRREQ_POLARITY;
++
+ 	/* configure the output polarity while the request is tristated */
+ 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+ 
+@@ -2305,6 +2314,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+ 	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+ 	value |= PMC_CNTRL_SYSCLK_OE;
+ 	tegra_pmc_writel(pmc, value, PMC_CNTRL);
++
++	osc = DIV_ROUND_UP_ULL(pmc->core_osc_time * 8192, 1000000);
++	pmu = DIV_ROUND_UP_ULL(pmc->core_pmu_time * 32768, 1000000);
++	off = DIV_ROUND_UP_ULL(pmc->core_off_time * 32768, 1000000);
++	if (osc && pmu)
++		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
++				 PMC_COREPWRGOOD_TIMER);
++	if (off)
++		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
+ }
+ 
+ static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
 -- 
 2.7.4
 
