@@ -2,157 +2,146 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79106C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55499C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F95620B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E96F20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoUGc1ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfE1TYN (ORCPT
+        id S1727838AbfE1T1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:24:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727291AbfE1TYK (ORCPT
+        Tue, 28 May 2019 15:27:05 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35247 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfE1T1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:24:10 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJO81L132649
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:24:08 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss8w3nhbv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:23:59 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 28 May 2019 20:23:30 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 20:23:25 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJNOSg34275810
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 19:23:24 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59697AE05C;
-        Tue, 28 May 2019 19:23:24 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8BF17AE060;
-        Tue, 28 May 2019 19:23:20 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.218.160])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 May 2019 19:23:20 +0000 (GMT)
-References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-10-bauerman@linux.ibm.com> <1557442868.10635.87.camel@linux.ibm.com>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v10 09/12] ima: Implement support for module-style appended signatures
-In-reply-to: <1557442868.10635.87.camel@linux.ibm.com>
-Date:   Tue, 28 May 2019 16:23:16 -0300
+        Tue, 28 May 2019 15:27:05 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t1so11581106pgc.2;
+        Tue, 28 May 2019 12:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xe88rAERhIcClUtIYYLdUcTXLi7UODZokIaGblwAr7s=;
+        b=CoUGc1riuI5y7RU6MLiZ4kGMYmyME4qYlStwlZfualUUcgGd6Vmrm0jvToE9vzKTke
+         ej8UwnRgUxxbsw2Vj3bbYkrIzfeP1PbgJmUvqIldgsPusgD5gQfOf+mVLU/4fqWueDcw
+         RqhteZ6ZzWuLJw0mYLV4Cr2gAxKkhCy4OKx/ay9v9eb0Mh3FZuz12501mgQnInOTSQGo
+         4tpr2/MK6B4d2cjwgZ5JlwO0iIwsVf2RasJHHVDndAvVPA+ftH9rBjCezfWg+i59J7Tn
+         V5o/i3Ec6I2OvpegKRc1jDPwSncc9KMvv+nRvYci/5Lctl9FEQNB02M6C1hDZb4caYNR
+         ePDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xe88rAERhIcClUtIYYLdUcTXLi7UODZokIaGblwAr7s=;
+        b=LavCMdxinMh60CmaNMxjBM+x3RYnGyfglO6lVSzLlFSQN9Rfwe5Ykpm0u3E5jIM7+X
+         5q5Nrypmt+oMJ0r+hUjrEsu0IqAu263HlF2CIK7r9LtRzdoEXMzuMgvO3qR/1hVxdSbv
+         JGJwA9fRC6aG9ye9qxsX0btErpanuXRtuIxKT3Usj3bQHxCsin4VTlXHN5zKzKh+9p/E
+         RBLa4QomzGV2SzO9GvfNqXUCv/EhqpjyjVjE9B5bXdQoWYquGM3uItA5u2FOgLupbE7M
+         NO1RJZUnXHzMJOe26LMOp5/qRiAMCgpCEV/lWUadPQuj0ZYIlcqS4tdzbpwiTDEfa64O
+         wMZg==
+X-Gm-Message-State: APjAAAXO7lkrLtimxiz9xoUNimJNn/+qk7LovhZm/b3R2eV6VQ0WtAV+
+        Mn92DCKPxCt043cRG2IeWdBC/0tT
+X-Google-Smtp-Source: APXvYqx8tCWj7JEqV7YpDaDKH+lUnilfA4UH8oEOmJynC2Hy4jABa6MkhlAIj4La3KLQqQGw8XEL8g==
+X-Received: by 2002:a62:386:: with SMTP id 128mr121183450pfd.10.1559071624383;
+        Tue, 28 May 2019 12:27:04 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l1sm16345613pgi.91.2019.05.28.12.27.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 12:27:03 -0700 (PDT)
+Date:   Tue, 28 May 2019 12:27:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] watchdog: jz4740: Avoid starting watchdog in
+ set_timeout
+Message-ID: <20190528192702.GB24853@roeck-us.net>
+References: <20190521155313.19326-1-paul@crapouillou.net>
+ <20190521155313.19326-2-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19052819-0060-0000-0000-00000348F66C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209920; UDB=6.00635634; IPR=6.00990949;
- MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:23:29
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052819-0061-0000-0000-000049888DD2
-Message-Id: <87zhn65qor.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521155313.19326-2-paul@crapouillou.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 21, 2019 at 05:53:11PM +0200, Paul Cercueil wrote:
+> Previously the jz4740_wdt_set_timeout() function was starting the timer
+> unconditionally, even if it was stopped when that function was entered.
+> 
+> Now, the timer will be restarted only if it was already running before
+> this function is called.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-Mimi Zohar <zohar@linux.ibm.com> writes:
+Comment inline, but not worth a respin (and I don't have a good idea how to
+improve it).
 
-> Hi Thiago,
->
->> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
->> index fca7a3f23321..a7a20a8c15c1 100644
->> --- a/security/integrity/ima/ima_policy.c
->> +++ b/security/integrity/ima/ima_policy.c
->> @@ -1144,6 +1144,12 @@ void ima_delete_rules(void)
->>  	}
->>  }
->>
->> +#define __ima_hook_stringify(str)	(#str),
->> +
->> +const char *const func_tokens[] = {
->> +	__ima_hooks(__ima_hook_stringify)
->> +};
->> +
->>  #ifdef	CONFIG_IMA_READ_POLICY
->>  enum {
->>  	mask_exec = 0, mask_write, mask_read, mask_append
->> @@ -1156,12 +1162,6 @@ static const char *const mask_tokens[] = {
->>  	"MAY_APPEND"
->>  };
->>
->> -#define __ima_hook_stringify(str)	(#str),
->> -
->> -static const char *const func_tokens[] = {
->> -	__ima_hooks(__ima_hook_stringify)
->> -};
->> -
->>  void *ima_policy_start(struct seq_file *m, loff_t *pos)
->>  {
->>  	loff_t l = *pos;
->
-> Is moving this something left over from previous versions or there is
-> a need for this change?
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Well, it's not a strong need, but it's still relevant in the current
-version. I use func_tokens in ima_read_modsig() in order to be able to
-mention the hook name in mod_check_sig()'s error message:
+> ---
+>  drivers/watchdog/jz4740_wdt.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+> index 51be321c775a..f970a7a53084 100644
+> --- a/drivers/watchdog/jz4740_wdt.c
+> +++ b/drivers/watchdog/jz4740_wdt.c
+> @@ -77,6 +77,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  	unsigned int rtc_clk_rate;
+>  	unsigned int timeout_value;
+>  	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
+> +	u8 tcer;
+>  
+>  	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
+>  
+> @@ -92,6 +93,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  		clock_div += (1 << TCU_TCSR_PRESCALE_LSB);
+>  	}
+>  
+> +	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
+>  	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
+>  	writew(clock_div, drvdata->base + TCU_REG_WDT_TCSR);
+>  
+> @@ -99,7 +101,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  	writew(0x0, drvdata->base + TCU_REG_WDT_TCNT);
+>  	writew(clock_div | JZ_WDT_CLOCK_RTC, drvdata->base + TCU_REG_WDT_TCSR);
+>  
+> -	writeb(0x1, drvdata->base + TCU_REG_WDT_TCER);
+> +	writeb(tcer & TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
 
-In ima_read_modsig():
+This unnecessarily writes 0 if the timer is not running.
 
-	rc = mod_check_sig(sig, buf_len, func_tokens[func]);
+>  
+>  	wdt_dev->timeout = new_timeout;
+>  	return 0;
+> @@ -107,8 +109,11 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  
+>  static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
+>  {
+> +	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+> +
+>  	jz4740_timer_enable_watchdog();
+>  	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
+> +	writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
 
-And in mod_check_sig():
+This unnecessarily enables the timer even if it is already enabled (that should not
+happen, but does if the watchdog is already running at boot).
 
-		pr_err("%s: Module is not signed with expected PKCS#7 message\n",
-		       name);
-
-If you think it's not worth it to expose func_tokens, I can make
-ima_read_modsig() pass a more generic const string such as "IMA modsig"
-for example.
-
-> Other than this, the patch looks good.
-
-Nice!
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.21.0.593.g511ec345e18
+> 
