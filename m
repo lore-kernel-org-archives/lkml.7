@@ -2,199 +2,153 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DB0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DFEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A757208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZ9ELxRT"
+	by mail.kernel.org (Postfix) with ESMTP id CF505208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfE1Usv (ORCPT
+        id S1727728AbfE1Uuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:48:51 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34597 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfE1Usv (ORCPT
+        Tue, 28 May 2019 16:50:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726683AbfE1Uub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:48:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j24so258364ljg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 13:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k3l55ECOd6G49lDcW/Ub9navCGchmZ/ngyO7S9XQJ6c=;
-        b=PZ9ELxRTP+rOjmudehGgkfrpzwB+tYb4J+9NuSIsIIjunFAET6NcKYWgV5I6CLjV7N
-         VPaDjyoROvcKhuB5n8kymbXQ5WTHYJoFxONFsy/U9SrmTdwwfaF+E/gpvu8vd/TjhgZq
-         tCFXX7774TErU6adjntnnasvvstKbpibjWPX+HbII1k39SvMa6hmGf1lxP2qpb5WdqC/
-         LmG6HoS/8Fpq/W5kt68w73bcOphbIluSIqmeUcQqlCMJ6sypSS/os04PKi22d9MDGCKv
-         tnMiDBuLNybYX8rGbpJgulObucTNte2fk7nLGfCmyBqiVcEDO4IyzA8leAwoHWsYAjWT
-         rCnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=k3l55ECOd6G49lDcW/Ub9navCGchmZ/ngyO7S9XQJ6c=;
-        b=rxKaMG7w4FH3Jr+6h8oxzbM6lHS5Z5O2f122NNTZG5NErB8BaSRQQ4794qirJY3+AX
-         7NWhmIQxkyX82xqixLY+/cU1whVLSLqdEFnwB2nSnwdr33f6wFbFXWWTyBK3HHkjo8NV
-         QSdZmPCaQs+PkZzHPZub4ryxmsG16j+kMZ9HwxwQeW2x4/WizulmTt4KmNdPnofUB4BI
-         yuh6XitAmwthF4mKW8o5GNOtZksbso2KIINwzJufnkVjO4BD0c0QaeXNKPthYnFxIz+A
-         Iu/yBHHM9Z+JudAd1PbxkjNoxALMA1XfTQwu7565phVWTljsG0ZLR0h2vAambWcKP3GL
-         mcMA==
-X-Gm-Message-State: APjAAAWFT7smwy4g4iDqDfWhEK7m1HVlb1M15/vneipBOPqnigheL8/X
-        HgJLE/ACDpzYOFwrcqNQq8g=
-X-Google-Smtp-Source: APXvYqzw7CcoKlp8zwkC53mptuXYf4zU7bsAIhPIaXXg1nNLTdDO0HLi/VhmQqwLaXJJ2CZ8zPkCDA==
-X-Received: by 2002:a2e:9742:: with SMTP id f2mr32737091ljj.184.1559076528334;
-        Tue, 28 May 2019 13:48:48 -0700 (PDT)
-Received: from [192.168.1.15] (2-111-15-75-dynamic.dk.customer.tdc.net. [2.111.15.75])
-        by smtp.gmail.com with ESMTPSA id d20sm3111879lja.32.2019.05.28.13.48.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 13:48:47 -0700 (PDT)
-Subject: Re: [PATCH] trace: Avoid memory leak in predicate_parse()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
-References: <20190528104400.388e4c3f@gandalf.local.home>
- <20190528154338.29976-1-tomasbortoli@gmail.com>
- <20190528163104.67763762@gandalf.local.home>
-From:   Tomas Bortoli <tomasbortoli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tomasbortoli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <77f8591e-6230-7341-7bb3-0599c16bea92@gmail.com>
-Date:   Tue, 28 May 2019 22:48:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 16:50:31 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SKg3ht094539
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:50:30 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ssayqbmst-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:50:29 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 28 May 2019 21:50:27 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 21:50:26 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SKoPvi30933374
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 20:50:25 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59191B2065;
+        Tue, 28 May 2019 20:50:25 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D4B9B2066;
+        Tue, 28 May 2019 20:50:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 May 2019 20:50:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id EDBA416C8E8A; Tue, 28 May 2019 13:50:30 -0700 (PDT)
+Date:   Tue, 28 May 2019 13:50:30 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     bigeasy@linutronix.de
+Cc:     linux-kernel@vger.kernel.org
+Subject: Review of RCU-related patches in -rt
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-In-Reply-To: <20190528163104.67763762@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052820-0052-0000-0000-000003C81555
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209949; UDB=6.00635652; IPR=6.00990978;
+ MB=3.00027091; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 20:50:27
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052820-0053-0000-0000-00006114D164
+Message-Id: <20190528205030.GA27149@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 10:31 PM, Steven Rostedt wrote:
-> On Tue, 28 May 2019 17:43:38 +0200
-> Tomas Bortoli <tomasbortoli@gmail.com> wrote:
-> 
->> @@ -578,6 +578,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->>  out_free:
->>  	kfree(op_stack);
->>  	kfree(inverts);
->> +	for (i = 0; prog_stack[i].pred; i++)
->> +		kfree(prog_stack[i].pred);
->>  	kfree(prog_stack);
->>  	return ERR_PTR(ret);
->>  }
-> 
-> I should have caught this, but thanks to the zero day bot, it found it
-> first:
-> 
->  kernel/trace/trace_events_filter.c:582:27-31: ERROR: prog_stack is NULL but dereferenced.
-> 
-> I changed the patch with the following:
-> 
-> From dfb4a6f2191a80c8b790117d0ff592fd712d3296 Mon Sep 17 00:00:00 2001
-> From: Tomas Bortoli <tomasbortoli@gmail.com>
-> Date: Tue, 28 May 2019 17:43:38 +0200
-> Subject: [PATCH] tracing: Avoid memory leak in predicate_parse()
-> 
-> In case of errors, predicate_parse() goes to the out_free label
-> to free memory and to return an error code.
-> 
-> However, predicate_parse() does not free the predicates of the
-> temporary prog_stack array, thence leaking them.
-> 
-> Link: http://lkml.kernel.org/r/20190528154338.29976-1-tomasbortoli@gmail.com
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 80765597bc587 ("tracing: Rewrite filter logic to be simpler and faster")
-> Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
-> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-> [ Added protection around freeing prog_stack[i].pred ]
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_events_filter.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index d3e59312ef40..5079d1db3754 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -428,7 +428,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->  	op_stack = kmalloc_array(nr_parens, sizeof(*op_stack), GFP_KERNEL);
->  	if (!op_stack)
->  		return ERR_PTR(-ENOMEM);
-> -	prog_stack = kmalloc_array(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
-> +	prog_stack = kcalloc(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
->  	if (!prog_stack) {
->  		parse_error(pe, -ENOMEM, 0);
->  		goto out_free;
-> @@ -579,7 +579,11 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->  out_free:
->  	kfree(op_stack);
->  	kfree(inverts);
-> -	kfree(prog_stack);
-> +	if (prog_stack) {
-> +		for (i = 0; prog_stack[i].pred; i++)
-> +			kfree(prog_stack[i].pred);
-> +		kfree(prog_stack);
-> +	}
->  	return ERR_PTR(ret);
->  }
->  
-> 
+Hello, Sebastian,
 
-Oops again, I should have been more careful.
+Finally getting around to taking another look:
 
-Thanks.
+c7e07056a108 EXP rcu: skip the workqueue path on RT
+
+	This one makes sense given the later commit setting the
+	rcu_normal_after_boot kernel parameter.  Otherwise, it is
+	slowing down expedited grace periods for no reason.  But
+	should the check also include rcu_normal_after_boot and
+	rcu_normal?  For example:
+
+		if ((IS_ENABLED(CONFIG_PREEMPT_RT_FULL) &&
+		     (rcu_normal || rcu_normal_after_boot) ||
+		    !READ_ONCE(rcu_par_gp_wq) ||
+		    rcu_scheduler_active != RCU_SCHEDULER_RUNNING ||
+		    rcu_is_last_leaf_node(rnp)) {
+
+	Alternatively, one approach would be to take the kernel
+	parameters out in -rt:
+
+		static int rcu_normal_after_boot = IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
+		#ifndef CONFIG_PREEMPT_RT_FULL
+		module_param(rcu_normal_after_boot, int, 0);
+		#endif
+
+	And similar for rcu_normal and rcu_expedited.
+
+	Or is there some reason to allow run-time expedited grace
+	periods in CONFIG_PREEMPT_RT_FULL=y kernels?
+
+d1f52391bd8a rcu: Disable RCU_FAST_NO_HZ on RT
+
+	Looks good.  More complexity could be added if too many people
+	get themselves in trouble via "select RCU_FAST_NO_HZ".
+
+42b346870326 rcu: make RCU_BOOST default on RT
+
+	To avoid complaints about this showing up when people don't
+	expected, could you please instead "select RCU_BOOST" in
+	the Kconfig definition of PREEMPT_RT_FULL?
+
+	Or do people really want to be able to disable boosting?
+
+457c1b0d9c0e sched: Do not account rcu_preempt_depth on RT in might_sleep()
+
+	The idea behind this one is to avoid false-positive complaints
+	about -rt's sleeping spinlocks, correct?
+
+7ee13e640b01 rbtree: don't include the rcu header
+c9b0c9b87081 rtmutex: annotate sleeping lock context
+
+	No specific comments.
+
+7912d002ebf9 rcu: Eliminate softirq processing from rcutree
+
+	This hasn't caused any problems in -rcu from what I can see.
+	I am therefore planning to submit the -rcu variant of this to
+	mainline during the next merge window.
+
+f06d34ebdbbb srcu: Remove srcu_queue_delayed_work_on()
+
+	Looks plausible.  I will check more carefully for mainline.
+
+aeb04e894cc9 srcu: replace local_irqsave() with a locallock
+e48989b033ad irqwork: push most work into softirq context
+
+	These look to still be -rt only.
+
+							Thanx, Paul
+
