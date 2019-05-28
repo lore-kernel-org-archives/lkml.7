@@ -4,62 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37483C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F9AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5BC2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16362075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eylaPdfE"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yqFzMuaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfE1VaV (ORCPT
+        id S1728004AbfE1Vag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:30:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57419 "EHLO
+        Tue, 28 May 2019 17:30:36 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50499 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727379AbfE1VaU (ORCPT
+        with ESMTP id S1727144AbfE1Vaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:30:20 -0400
+        Tue, 28 May 2019 17:30:35 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLT0ME2240691
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4SLUQSV2241056
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 28 May 2019 14:29:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLT0ME2240691
+        Tue, 28 May 2019 14:30:26 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4SLUQSV2241056
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559078941;
-        bh=tQNsMs0TRa8lDs2oQqcZTf0IymSwdCblBMJnjnLXlWE=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=eylaPdfEeZG0FBijKssapop7ZdiwiiTyVP950jC4Rz3b0ulQzHoeeSzvpXecCg7Vi
-         OtPAtI+uL6cSRv8R5NnkEaMiBEN83nBY4cY1wNvNGp87hzFpqQuZ5dKj+B67/Z38g1
-         Bem5mCFnw9Jhqk/XyoXMGsxHyMr9f4fyw+8kOLwKr/2qhEXuuf8Z+jtp0nyJmMpq7C
-         NOePNs6HJ0cHf+elvoNCo5KJ+Ry6ZhUbzbbJosbtLXtvc4uf76FuLGqHTNZp4vGuHd
-         XM5qAWIJ9VeTMKehwJflR6S9pRcdS9sLA3aH+U9F4/2rXQgdOz4hnAIj6ucJ1conu4
-         xFZgMCTzSdeaw==
+        s=2019051801; t=1559079026;
+        bh=WMY9e1Hmdj3BEHeJW4NnRb/RYti1H2T4KQ1xQJTxRNU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=yqFzMuaPum2/RnatIpymLHwLJi/hec75esQQt6qulrFpX7MUcENMU1boz+uZ32QXr
+         A+0FaFVCShLPXjWU5Rd4uoOEt0vUWNDYRyvKpHQBs0ulDsAM4B/11+YVkOMKnhx6yP
+         O/Ja/x7h5/XTAouEGWjoIfX9krhC+iga0q+sz7veGhxqzeysph3E3JmBMJzxOcC8yA
+         cF3OuhNCCQm37CaISlxkXlxwBvidHrBTwh/1hl4LReaVJthz6Bmj5qQRWszQL4mTOC
+         jF58g0MGBSDiG8sdmOFidP3LuB1bA8AG5dYTn680WdJYr39PSEUMe/SKyePGUA7qMY
+         VB7U0J627t7dw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLT0382240688;
-        Tue, 28 May 2019 14:29:00 -0700
-Date:   Tue, 28 May 2019 14:29:00 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4SLUPtA2241053;
+        Tue, 28 May 2019 14:30:25 -0700
+Date:   Tue, 28 May 2019 14:30:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-qfwuih8cvmk9doh7k5k244eq@git.kernel.org>
-Cc:     peterz@infradead.org, namhyung@kernel.org, acme@redhat.com,
-        ak@linux.intel.com, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        tmricht@linux.ibm.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, alexander.shishkin@linux.intel.com,
-        mingo@kernel.org, tglx@linutronix.de, sdf@google.com, hpa@zytor.com
-Reply-To: jolsa@kernel.org, tmricht@linux.ibm.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, ak@linux.intel.com,
-          acme@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-          hpa@zytor.com, tglx@linutronix.de, sdf@google.com,
-          alexander.shishkin@linux.intel.com, mingo@kernel.org,
-          songliubraving@fb.com
+From:   tip-bot for Thomas Richter <tipbot@zytor.com>
+Message-ID: <tip-6738028dd57df064b969d8392c943ef3b3ae705d@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, brueckner@linux.ibm.com,
+        tmricht@linux.ibm.com, linux-kernel@vger.kernel.org,
+        heiko.carstens@de.ibm.com, acme@redhat.com, hpa@zytor.com
+Reply-To: mingo@kernel.org, tglx@linutronix.de, brueckner@linux.ibm.com,
+          heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org,
+          tmricht@linux.ibm.com, acme@redhat.com, hpa@zytor.com
+In-Reply-To: <20190522144601.50763-4-tmricht@linux.ibm.com>
+References: <20190522144601.50763-4-tmricht@linux.ibm.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf test vmlinux-kallsyms: Ignore aliases to
- _etext when searching on kallsyms
-Git-Commit-ID: 93f678b9ae8feb7f7cec29c2dcbb5756ad22d9a1
+Subject: [tip:perf/urgent] perf record: Fix s390 missing module symbol and
+ warning for non-root users
+Git-Commit-ID: 6738028dd57df064b969d8392c943ef3b3ae705d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,55 +70,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  93f678b9ae8feb7f7cec29c2dcbb5756ad22d9a1
-Gitweb:     https://git.kernel.org/tip/93f678b9ae8feb7f7cec29c2dcbb5756ad22d9a1
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 24 May 2019 15:39:00 -0300
+Commit-ID:  6738028dd57df064b969d8392c943ef3b3ae705d
+Gitweb:     https://git.kernel.org/tip/6738028dd57df064b969d8392c943ef3b3ae705d
+Author:     Thomas Richter <tmricht@linux.ibm.com>
+AuthorDate: Wed, 22 May 2019 16:46:01 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 09:52:23 -0300
 
-perf test vmlinux-kallsyms: Ignore aliases to _etext when searching on kallsyms
+perf record: Fix s390 missing module symbol and warning for non-root users
 
-No need to search for aliases for the symbol that marks the end of the
-kernel text segment, the following patch will make such symbols not to
-be found when searching in the kallsyms maps causing this test to fail.
+Command 'perf record' and 'perf report' on a system without kernel
+debuginfo packages uses /proc/kallsyms and /proc/modules to find
+addresses for kernel and module symbols. On x86 this works for root and
+non-root users.
 
-So as a prep patch to avoid breaking bisection, ignore such symbols.
+On s390, when invoked as non-root user, many of the following warnings
+are shown and module symbols are missing:
 
-Tested-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Link: https://lkml.kernel.org/n/tip-qfwuih8cvmk9doh7k5k244eq@git.kernel.org
+    proc/{kallsyms,modules} inconsistency while looking for
+        "[sha1_s390]" module!
+
+Command 'perf record' creates a list of module start addresses by
+parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
+record for the kernel and each module. The following function call
+sequence is executed:
+
+  machine__create_kernel_maps
+    machine__create_module
+      modules__parse
+        machine__create_module --> for each line in /proc/modules
+          arch__fix_module_text_start
+
+Function arch__fix_module_text_start() is s390 specific. It opens
+file /sys/module/<name>/sections/.text to extract the module's .text
+section start address. On s390 the module loader prepends a header
+before the first section, whereas on x86 the module's text section
+address is identical the the module's load address.
+
+However module section files are root readable only. For non-root the
+read operation fails and machine__create_module() returns an error.
+Command perf record does not generate any PERF_RECORD_MMAP record
+for loaded modules. Later command perf report complains about missing
+module maps.
+
+To fix this function arch__fix_module_text_start() always returns
+success. For root users there is no change, for non-root users
+the module's load address is used as module's text start address
+(the prepended header then counts as part of the text section).
+
+This enable non-root users to use module symbols and avoid the
+warning when perf report is executed.
+
+Output before:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+
+Output after:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
+  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
+  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/vmlinux-kallsyms.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/arch/s390/util/machine.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 7691980b7df1..f101576d1c72 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -161,9 +161,16 @@ next_pair:
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index 0b2054007314..a19690a17291 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -5,16 +5,19 @@
+ #include "util.h"
+ #include "machine.h"
+ #include "api/fs/fs.h"
++#include "debug.h"
  
- 				continue;
- 			}
--		} else
-+		} else if (mem_start == kallsyms.vmlinux_map->end) {
-+			/*
-+			 * Ignore aliases to _etext, i.e. to the end of the kernel text area,
-+			 * such as __indirect_thunk_end.
-+			 */
-+			continue;
-+		} else {
- 			pr_debug("ERR : %#" PRIx64 ": %s not on kallsyms\n",
- 				 mem_start, sym->name);
-+		}
+ int arch__fix_module_text_start(u64 *start, const char *name)
+ {
++	u64 m_start = *start;
+ 	char path[PATH_MAX];
  
- 		err = -1;
- 	}
+ 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
+ 				(int)strlen(name) - 2, name + 1);
+-
+-	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
+-		return -1;
++	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
++		pr_debug2("Using module %s start:%#lx\n", path, m_start);
++		*start = m_start;
++	}
+ 
+ 	return 0;
+ }
