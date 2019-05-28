@@ -2,84 +2,155 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B7EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABB6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A360321670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559087893;
-	bh=2/9Fxe21+aSpbnetaRujBaWdJtuoEjDDkYN8K88SIFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d9gvVjddpW/9+Rolldva6w52nJ8l3AVJDEpMIIPIV8ewVOaDz821fqvT5AYMvk1kG
-	 CkHy4CvBJTcRnBs8Wq+FdzwzOYok4qX69Pyui2qD4sAiET3GNj6QDdfaNTPt9a/Bzc
-	 MmCOS9f7eDYSce7OOz5/hYvuYAwLgW/L35Lk40Oc=
+	by mail.kernel.org (Postfix) with ESMTP id 48774206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:58:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ/A94UI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfE1X6N (ORCPT
+        id S1727250AbfE1X6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:58:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfE1X6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:58:12 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D2D206A2;
-        Tue, 28 May 2019 23:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559087891;
-        bh=2/9Fxe21+aSpbnetaRujBaWdJtuoEjDDkYN8K88SIFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WG2LdxJyprEyxX57qo3pc4GeSrD1bjohQDzHZ8JGZCCCb8p9opJf8UZTn/Als63Ww
-         gIYK+hmpYUySg112uWTnR9XNdYTs1yGdVoC3jca2USk9yRLvoboFFb69J08kMjYXgp
-         JkJlpiZsacDuiWEYHJ6WhxvIP9kjs+62ZS7qqayI=
-Date:   Tue, 28 May 2019 16:58:10 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
-Message-ID: <20190528235810.GA5776@kroah.com>
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Tue, 28 May 2019 19:58:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42934 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1X63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 19:58:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l2so338641wrb.9;
+        Tue, 28 May 2019 16:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wBV1CSR3vVyHfNto7yRouBVz1R8yuynnCNl8Neb34NM=;
+        b=IJ/A94UIsDCM8xWC56JjA3JO1ZE1NUzlU2+UcQNYajTtNbBlDz3qDeeAPfq5/jnuRO
+         MhcP1EjvO1bNX80Nj9wRoK1Fdf2mzQkNhSyHztT/hwnZwirsGMAfmrdplWdQdMBeI4WA
+         ZcQkAJ8HaF1Hx2veNcmySLGK2ShHy2h6Y9mJwjCP74pm4M0kfe+BixR0DIJkYJdKUqle
+         k1u7KTB9MwQhrXsgNPJAHxVh8eCB9EtzckF8fw/1zV8nYmBtY7S+NVltfkc7vJa2iewB
+         Ixtbh/4J39RBNxpOSH77L5mi0+g0fUap9RdVw8h/UKBSSAGr3JNLuzSyrMiLt0YMFpf5
+         MbPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wBV1CSR3vVyHfNto7yRouBVz1R8yuynnCNl8Neb34NM=;
+        b=EzMGAvo/gGDGAy5K71DkTq8EhPnpH4nQr6XD9Km0EPtlA1LIezNt5jzhNpxayIQyrV
+         Wfcct63fgAFTg8TAV1umowR7tlr5qWNO83z7KRzYmxOH5l7PIJb7WIBiiQWmf9qfAsbH
+         YzDL2XJwaSPYQtENr5EqxfKbpKgrT91ROvmuwbl8yUnh+1f/X6fVJT8h9I98lT2WhqAr
+         rJ0iCLSEmCOncrWUKoiqvPFly1EsS0v3KSHWLJnQy9/PzE8tV9j2BHvLIy0rRSmcr7/s
+         EC/t2unJSsLlW26w93IWsdkQhcNAedSyT9t2ySG3mQiSrasaWVcPrmUvGgCZqHdNx5sG
+         lAig==
+X-Gm-Message-State: APjAAAUB+GdIU8VypZQHnFQPjnIjhrp7n1n7kYeStkv43N1jYAeRDYjs
+        5SdJw8250TSOKJWLgnnbSJM=
+X-Google-Smtp-Source: APXvYqzzwZVUPlF+z3R0vmOrg/BfKllRyS5AJlWrc0w6Fnjgg6XoYMtWQscS/t7L8PSAUA0Wqvr6JQ==
+X-Received: by 2002:adf:a749:: with SMTP id e9mr11524121wrd.64.1559087907529;
+        Tue, 28 May 2019 16:58:27 -0700 (PDT)
+Received: from localhost.localdomain ([86.121.27.188])
+        by smtp.gmail.com with ESMTPSA id f3sm1207505wre.93.2019.05.28.16.58.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 16:58:26 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net, richardcochran@gmail.com,
+        john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+Date:   Wed, 29 May 2019 02:56:22 +0300
+Message-Id: <20190528235627.1315-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 05:01:47PM +0100, David Howells wrote:
-> Things I want to avoid:
-> 
->  (1) Introducing features that make the core VFS dependent on the network
->      stack or networking namespaces (ie. usage of netlink).
-> 
->  (2) Dumping all this stuff into dmesg and having a daemon that sits there
->      parsing the output and distributing it as this then puts the
->      responsibility for security into userspace and makes handling
->      namespaces tricky.  Further, dmesg might not exist or might be
->      inaccessible inside a container.
-> 
->  (3) Letting users see events they shouldn't be able to see.
+This patchset adds the following:
 
-How are you handling namespaces then?  Are they determined by the
-namespace of the process that opened the original device handle, or the
-namespace that made the new syscall for the events to "start flowing"?
+ - A timecounter/cyclecounter based PHC for the free-running
+   timestamping clock of this switch.
 
-Am I missing the logic that determines this in the patches, or is that
-not implemented yet?
+ - A state machine implemented in the DSA tagger for SJA1105, which
+   keeps track of metadata follow-up Ethernet frames (the switch's way
+   of transmitting RX timestamps).
 
-thanks,
+ - Some common-sense on whether or not frames should be timestamped was
+   taken out of the mv88e6xxx driver (the only other DSA driver with PTP
+   support) and moved to the generic framework.  An option was also
+   added for drivers to override these common-sense decisions, and
+   timestamp some more frames.  This was the path of least resistance
+   after implementing the aforementioned state machine - metadata
+   follow-up frames need to be tracked anyway even if only to discard
+   them and not pass them up the network stack.  And since the switch
+   can't just be told to timestamp only what the kernel wants (PTP
+   frames), simply use all the timestamps it provides.
 
-greg k-h
+ - A generic helper in the timecounter/cyclecounter code for
+   reconstructing partial PTP timestamps, such as those generated by the
+   SJA1105.
+
+Not all is rosy, though.
+
+PTP timestamping will only work when the ports are bridged. Otherwise,
+the metadata follow-up frames holding RX timestamps won't be received
+because they will be blocked by the master port's MAC filter. Linuxptp
+tries to put the net device in ALLMULTI/PROMISC mode, but DSA doesn't
+pass this on to the master port, which does the actual reception.
+The master port is put in promiscous mode when the slave ports are
+enslaved to a bridge.
+
+Also, even with software-corrected timestamps, one can observe a
+negative path delay reported by linuxptp:
+
+ptp4l[55.600]: master offset          8 s2 freq  +83677 path delay     -2390
+ptp4l[56.600]: master offset         17 s2 freq  +83688 path delay     -2391
+ptp4l[57.601]: master offset          6 s2 freq  +83682 path delay     -2391
+ptp4l[58.601]: master offset         -1 s2 freq  +83677 path delay     -2391
+
+Without investigating too deeply, this appears to be introduced by the
+correction applied by linuxptp to t4 (t4c: corrected master rxtstamp)
+during the path delay estimation process (removing the correction makes
+the path delay positive).  This does not appear to have an obvious
+negative effect upon the synchronization.
+
+Lastly, clock manipulations on the actual hardware PTP clock will have
+to be implemented anyway, for the TTEthernet block and the time-based
+ingress policer.
+
+Vladimir Oltean (5):
+  timecounter: Add helper for reconstructing partial timestamps
+  net: dsa: sja1105: Add support for the PTP clock
+  net: dsa: mv88e6xxx: Let taggers specify a can_timestamp function
+  net: dsa: sja1105: Add support for PTP timestamping
+  net: dsa: sja1105: Increase priority of CPU-trapped frames
+
+ drivers/net/dsa/mv88e6xxx/hwtstamp.c          |  25 +-
+ drivers/net/dsa/mv88e6xxx/hwtstamp.h          |   4 +-
+ drivers/net/dsa/sja1105/Kconfig               |   7 +
+ drivers/net/dsa/sja1105/Makefile              |   1 +
+ drivers/net/dsa/sja1105/sja1105.h             |  30 ++
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  |   2 +
+ drivers/net/dsa/sja1105/sja1105_main.c        | 272 ++++++++++++-
+ drivers/net/dsa/sja1105/sja1105_ptp.c         | 357 ++++++++++++++++++
+ drivers/net/dsa/sja1105/sja1105_ptp.h         |  48 +++
+ drivers/net/dsa/sja1105/sja1105_spi.c         |  28 ++
+ .../net/dsa/sja1105/sja1105_static_config.c   |  59 +++
+ .../net/dsa/sja1105/sja1105_static_config.h   |  10 +
+ include/linux/dsa/sja1105.h                   |  15 +
+ include/linux/timecounter.h                   |   7 +
+ include/net/dsa.h                             |   6 +-
+ kernel/time/timecounter.c                     |  33 ++
+ net/dsa/dsa.c                                 |  25 +-
+ net/dsa/slave.c                               |  20 +-
+ net/dsa/tag_sja1105.c                         | 135 ++++++-
+ 19 files changed, 1043 insertions(+), 41 deletions(-)
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_ptp.c
+ create mode 100644 drivers/net/dsa/sja1105/sja1105_ptp.h
+
+-- 
+2.17.1
+
