@@ -2,85 +2,83 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A917AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B8EC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AE9208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BPVaEybw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VtnzKg2w"
+	by mail.kernel.org (Postfix) with ESMTP id 40B0020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559047117;
+	bh=FwJ305qcCDT2qEfKhuJoOjhdYgfIw+CZ3Rkals6Walg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=db/uj4n5AA3zZmCcpqspqULzPa0xWXSW7orEkl4L5MasZ39BdAc/JPM/AAI3BtqiO
+	 35AoZTD/cIbpA1dFw9Q/mNiTJ6NPtk1waQaO9yj/h4aieal6Mg1IWJlHW+0QvYv1Je
+	 RIq7jxfay2ssXZvHmxL5ok3DFavQ+wzqvuI6gP7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfE1Mi2 (ORCPT
+        id S1727388AbfE1Mig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:38:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48864 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfE1Mi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:38:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 729F16070D; Tue, 28 May 2019 12:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559047107;
-        bh=mizDFRaVoA1mbgxe7i0WEaL04QzUW2dApqTQldnf7o0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=BPVaEybwexgzyWEQCkMWRGdWybllPvcQ5lYH714eSQZ6cz8QiFMZHPBdPIv26L4YE
-         xzugIAgt0OwN1ha/57R1eeX0cqId3oL2LszWfFzFgaSi22L0/qDYFzZXVRUtFOqZ0H
-         6NHzrc0feRrHYGEmQVJ4TBusTnHdlgNIFgP+Q3x0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8731B6034D;
-        Tue, 28 May 2019 12:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559047107;
-        bh=mizDFRaVoA1mbgxe7i0WEaL04QzUW2dApqTQldnf7o0=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=VtnzKg2w9GSsbCCOhG+xdUZ5LqmmAU8idYgs8XfwtTJzRMcrRa3GvCP3VhCO7gdr9
-         DwAaaHLH276U4IMUqX2bqPpTcQ5Op3xShCzyxC1sekkKk2oCgs0KvZAskvugKCgDSr
-         kAfVKJYMnGxevtpVy7vRb6MVM6MJv07tw0POVEwg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8731B6034D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 May 2019 08:38:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37230 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726933AbfE1Mif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:38:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D83D5AE86;
+        Tue, 28 May 2019 12:38:33 +0000 (UTC)
+Date:   Tue, 28 May 2019 14:38:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528123832.GD1658@dhcp22.suse.cz>
+References: <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
+ <20190528111208.GA30365@google.com>
+ <20190528112840.GY1658@dhcp22.suse.cz>
+ <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
+ <20190528115609.GA1658@dhcp22.suse.cz>
+ <CAKOZuesnXGAsQgkB45n=jqwDRQ4_aoPiydmZxfxPmzO2p=cTow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: btcoex: remove unused function
- exhalbtc_stack_operation_notify
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190525144844.16976-1-yuehaibing@huawei.com>
-References: <20190525144844.16976-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <pkshih@realtek.com>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190528123827.729F16070D@smtp.codeaurora.org>
-Date:   Tue, 28 May 2019 12:38:27 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuesnXGAsQgkB45n=jqwDRQ4_aoPiydmZxfxPmzO2p=cTow@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
+On Tue 28-05-19 05:18:48, Daniel Colascione wrote:
+[...]
+> The important requirement, I think, is that we need to support
+> managing "memory-naive" uncooperative tasks (perhaps legacy ones
+> written before cross-process memory management even became possible),
+> and I think that the cooperative-vs-uncooperative distinction matters
+> a lot more than the tgid of the thread doing the memory manipulation.
+> (Although in our case, we really do need a separate tgid. :-))
 
-> There is no callers in tree, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-dfbe36197dbc rtlwifi: btcoex: remove unused function exhalbtc_stack_operation_notify
-
+Agreed here and that requires some sort of revalidation and failure on
+"object has changed" in one form or another IMHO.
 -- 
-https://patchwork.kernel.org/patch/10960845/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Michal Hocko
+SUSE Labs
