@@ -2,229 +2,825 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BD4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB8CC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77DF20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48B020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rX/5Do4C"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="1CIpSnLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfE1Kxg (ORCPT
+        id S1726566AbfE1K4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:53:36 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36610 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfE1Kxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:53:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s7Qw7kQV3M0frNbNWezoUvaapeqqE6aYTrGr7FdZM5c=; b=rX/5Do4CZpbXbTJOC7kJolbxR
-        4IgEzkBAK8yyKiy3C5V2bt7VoYIzRKFHNPCDqeIcwRKvhgtHkS1b7QCE3qz6R9kQW0q798ze192DZ
-        n0wHeYCmiTD5pYfKoPY3MQ2gPXu9SnE4nCuYPUbUgZn434qeHqCrAMTKYpN0/CTN/q3MbCUCAPt/5
-        XpJJgkCgcMkNR9H6kMxdqFCURTBkPKqtcxjlQ8yKfXcPWM8Jm0c4KkCZ/kRgBj6nT5pD9cuu1ee8z
-        uE9ejfd+XN17eqsrVPLs5vG8mWfO5iRgekI993vaE3llOCPqlh9m3ORvotmh+teH6sRpWhZptLfJ3
-        fsBonmyvQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52672)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hVZjT-0005FX-O9; Tue, 28 May 2019 11:53:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hVZjP-0003Yf-J9; Tue, 28 May 2019 11:53:23 +0100
-Date:   Tue, 28 May 2019 11:53:23 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     mika.westerberg@linux.intel.com, wsa@the-dreams.de, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        xe-linux-external@cisco.com
-Subject: Re: [net-next,v3 2/2] net: phy: sfp: enable i2c-bus detection on
- ACPI based systems
-Message-ID: <20190528105323.ty6pxxvsh6ccz2l6@shell.armlinux.org.uk>
-References: <20190528032213.19839-1-ruslan@babayev.com>
- <20190528032213.19839-3-ruslan@babayev.com>
+        Tue, 28 May 2019 06:56:18 -0400
+Received: from mail-eopbgr810047.outbound.protection.outlook.com ([40.107.81.47]:65519
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbfE1K4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:56:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0MlYqkdu4CK6COuN9VgEnepNG4xCivT1a6zBwJTp/FU=;
+ b=1CIpSnLiQR0eQTzRPke+gsom7UzVflAxJbwusfA/rzwsCZbK4YxLKuhrRheFYhPctbXTlMylJ2a0H+2DJHXL+AH7bzt+x7tm+3r84uEYisSVqMwqmA/KRg7lTFmxfIBTZtznNK5QFH7bNAt0avhwtSsajQKJXWzkNvPqDE497uA=
+Received: from DM3PR03CA0016.namprd03.prod.outlook.com (2603:10b6:0:50::26) by
+ MWHPR03MB3133.namprd03.prod.outlook.com (2603:10b6:301:3c::26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Tue, 28 May 2019 10:56:01 +0000
+Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::201) by DM3PR03CA0016.outlook.office365.com
+ (2603:10b6:0:50::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16 via Frontend
+ Transport; Tue, 28 May 2019 10:56:01 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.55)
+ smtp.mailfrom=analog.com; gmx.de; dkim=none (message not signed)
+ header.d=none;gmx.de; dmarc=bestguesspass action=none header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1922.16
+ via Frontend Transport; Tue, 28 May 2019 10:56:00 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4SAtxmS004400
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 28 May 2019 03:55:59 -0700
+Received: from linux.ad.analog.com (10.50.1.179) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 28 May 2019
+ 06:55:58 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <stefan.popa@analog.com>
+Subject: [PATCH v3 1/2] iio: frequency: adf4371: Add support for ADF4371 PLL
+Date:   Tue, 28 May 2019 13:55:51 +0300
+Message-ID: <1559040951-13723-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528032213.19839-3-ruslan@babayev.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(2980300002)(199004)(189003)(85664002)(316002)(70586007)(26005)(70206006)(6916009)(5820100001)(186003)(7636002)(2870700001)(47776003)(6306002)(50466002)(77096007)(5660300002)(305945005)(44832011)(426003)(476003)(14444005)(8676002)(7696005)(36756003)(336012)(2616005)(486006)(72206003)(478600001)(50226002)(246002)(8936002)(23676004)(4326008)(966005)(126002)(30864003)(54906003)(2351001)(6666004)(356004)(2906002)(107886003)(106002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB3133;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 78eef75c-d2a7-4481-e3bb-08d6e35b127b
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709054)(1401327)(2017052603328);SRVR:MWHPR03MB3133;
+X-MS-TrafficTypeDiagnostic: MWHPR03MB3133:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <MWHPR03MB31337FCF033BCCC5F3EC40BB9D1E0@MWHPR03MB3133.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-Forefront-PRVS: 00514A2FE6
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: bfq+08A4wYU5YdUy0RfHE8AU8XCHrqwgMuycJPPBJk7SjYp4g5FlmsH2jIEcJlfZ2JWB5tS+ahn3jyGG1fq/GITGoszwnFYmAubz+f5yJ0diy36/Ag/aNudZcpWtC5r4tIt9ECRyisBRTYvWjIKbVpK8klDMw/CngE+wxrfxaZHnu5krmDbSPW6X9sSj3VR7f2KNk6bSTUZ2lIlDG1lK9Jgsh75lO18PbTTFwytPotjlnyib3vDGO5elf/xusVSRGOVYNo93C9V6XsMiqffp+TU8Y8UAYSoJXdM5XA0e9fJou0JjEWRyuDiCcvTAQYbSCLjZce8isNZGyCLUIZGK2GaiYTW8+MKkxufw7h7mPtuSdZeeglR/dnx9S050wOk9f+9lZmLzm47ratU2asyF0RVC9X25ZZ9SLjl5l7NBrNA=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2019 10:56:00.5727
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78eef75c-d2a7-4481-e3bb-08d6e35b127b
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB3133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 08:22:13PM -0700, Ruslan Babayev wrote:
-> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-> systems similar to how it's done with DT.
-> 
-> An example DSD describing an SFP on an ACPI based system:
-> 
-> Device (SFP0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_CRS, ResourceTemplate()
->     {
->         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
->                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
->             { 0, 1, 2, 3, 4 }
->     })
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "sff,sfp" },
->             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
->             Package () { "maximum-power-milliwatt", 1000 },
->             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
->             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
->             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
->             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
->             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
->         },
->     })
-> }
-> 
-> Device (PHY0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
->             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
->             Package () { "managed", "in-band-status" },
->             Package () { "phy-mode", "sgmii" },
->         },
->     })
-> }
-> 
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
+The ADF4371 is a frequency synthesizer with an integrated voltage
+controlled oscillator (VCO) for phase-locked loops (PLLs). The ADF4371
+has an integrated VCO with a fundamental output frequency ranging from
+4000 MHz to 8000 MHz. In addition, the VCO frequency is connected to
+divide by 1, 2, 4, 8, 16, 32, or 64 circuits that allows the user to
+generate radio frequency (RF) output frequencies as low as 62.5 MHz at
+RF8x. A frequency multiplier at RF16x generates from 8 GHz to 16 GHz. A
+frequency quadrupler generates frequencies from 16 GHz to 32 GHz at RF32x.
+RFAUX8x duplicates the frequency range of RF8x or permits direct access to
+the VCO output.
 
-Looks mostly fine to me, thanks.  A few comments below, mostly minor.
-The way we handle the non-DT and non-ACPI case needs addressing though.
+The driver takes the reference input frequency from the device tree and
+uses it to calculate and maximize the PFD frequency (frequency of the phase
+frequency detector). The PFD frequency is further used to calculate the
+timeouts: synthesizer lock, VCO band selection, automatic level
+calibration (ALC) and PLL settling time.
 
-> ---
->  drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-> index d4635c2178d1..7a6c8df8899b 100644
-> --- a/drivers/net/phy/sfp.c
-> +++ b/drivers/net/phy/sfp.c
-> @@ -9,6 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/of.h>
-> +#include <linux/acpi.h>
->  #include <linux/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/rtnetlink.h>
+This initial driver exposes the attributes for setting the frequency and
+enabling/disabling the different adf4371 channels.
 
-These includes are arranged in alphabetical order, is there a reason
-why we need acpi.h out of order here?
+Datasheet:
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
 
-> @@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
->  {
->  	const struct sff_data *sff;
->  	struct sfp *sfp;
-> +	struct i2c_adapter *i2c = NULL;
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- Added a new sysfs-bus-iio-frequency-adf4371 file which documents the ABI
+	  changes.
+	- Modified the ADF4371_REG() macro to take the reg values in hex as params
+	- ADF4371_MAX_MODULUS2 macro is now defined as BIT(14)
+	- regmap_bulk_write() can do DMA directly, so the buffer was forced into
+	  it's own cacheline.
+	- Fixed the multi line comment style.
+Changes in v3:
+	- out_altvoltageY_frequency and out_altvoltageY_powerdown attributes are
+	  treated as normal indexed channels.
+	- out_altvoltageY_name attribute was added, from which the datasheet names
+	  of the channels can be read.
+	- Added more information in the documentation.
+	- Documented the use of mutex lock.
+	- As part of adf4371_write(), used a bool variable for power down and a
+	  64 bit variable for the frequency.
 
-Please move this one line above, I think that will be neater.
+ .../ABI/testing/sysfs-bus-iio-frequency-adf4371    |  44 ++
+ drivers/iio/frequency/Kconfig                      |  10 +
+ drivers/iio/frequency/Makefile                     |   1 +
+ drivers/iio/frequency/adf4371.c                    | 591 +++++++++++++++++++++
+ 4 files changed, 646 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4371
+ create mode 100644 drivers/iio/frequency/adf4371.c
 
-I'm also debating whether we should have it initialised to null - see
-below.
-
->  	bool poll = false;
->  	int irq, err, i;
->  
-> @@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
->  	if (pdev->dev.of_node) {
->  		struct device_node *node = pdev->dev.of_node;
->  		const struct of_device_id *id;
-> -		struct i2c_adapter *i2c;
->  		struct device_node *np;
->  
->  		id = of_match_node(sfp_of_match, node);
-> @@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
->  
->  		i2c = of_find_i2c_adapter_by_node(np);
->  		of_node_put(np);
-> -		if (!i2c)
-> -			return -EPROBE_DEFER;
-> -
-> -		err = sfp_i2c_configure(sfp, i2c);
-> -		if (err < 0) {
-> -			i2c_put_adapter(i2c);
-> -			return err;
-> +	} else if (ACPI_COMPANION(&pdev->dev)) {
-> +		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
-> +		struct fwnode_reference_args args;
-> +		struct acpi_handle *acpi_handle;
-> +		int ret;
-> +
-> +		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
-> +		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
-> +			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
-> +			return -ENODEV;
->  		}
-> +
-> +		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
-> +		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
-> +	}
-
-If we don't have DT, and we don't have ACPI, there isn't a way that
-we can find the I2C adapter, so I think we probably ought to fail the
-probe here, rather than...
-
-> +
-> +	if (!i2c)
-> +		return -EPROBE_DEFER;
-
-deferring in that case.  So, basically:
-
-	struct i2c_adapter *i2c;
-
-	if (pdev->dev.of_node) {
-		...
-	} else if (ACPI_COMPANION(&pdev->dev)) {
-		...
-	} else {
-		return -EINVAL;
-	}
-
-	if (!i2c)
-		return -EPROBE_DEFER;
-
-> +
-> +	err = sfp_i2c_configure(sfp, i2c);
-> +	if (err < 0) {
-> +		i2c_put_adapter(i2c);
-> +		return err;
->  	}
->  
->  	for (i = 0; i < GPIO_MAX; i++)
-> -- 
-> 2.19.2
-> 
-> 
-
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4371 b/Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4371
+new file mode 100644
+index 0000000..f380bbf
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4371
+@@ -0,0 +1,44 @@
++What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_frequency
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Stores the PLL frequency in Hz for channel Y.
++		Reading returns the actual frequency in Hz.
++		The ADF4371 has an integrated VCO with fundamendal output
++		frequency ranging from 4000000000 Hz 8000000000 Hz.
++
++		out_altvoltage0_frequency:
++			A divide by 1, 2, 4, 8, 16, 32 or circuit generates
++			frequencies from 62500000 Hz to 8000000000 Hz.
++		out_altvoltage1_frequency:
++			A frequency doubler generates frequencies from
++			8000000000 Hz to 16000000000 Hz.
++		out_altvoltage2_frequency:
++			A frequency quadrupler generates frequencies from
++			16000000000 Hz to 32000000000 Hz.
++		out_altvoltage3_frequency:
++			This channel duplicates the channel 0 frequency
++
++		Note: writes to one of the channels will affect the frequency of
++		all the other channels, since it involves changing the VCO
++		fundamental output frequency.
++
++What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_name
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Reading returns the datasheet name for channel Y:
++
++		out_altvoltage0_name: RF8x
++		out_altvoltage1_name: RF16x
++		out_altvoltage2_name: RF32x
++		out_altvoltage3_name: RFAUX8x
++
++What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_powerdown
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		This attribute allows the user to power down the PLL and it's
++		RFOut buffers.
++		Writing 1 causes the specified channel to power down.
++		Clearing returns to normal operation.
+diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
+index dc5e0b7..e4a921f 100644
+--- a/drivers/iio/frequency/Kconfig
++++ b/drivers/iio/frequency/Kconfig
+@@ -38,5 +38,15 @@ config ADF4350
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called adf4350.
+ 
++config ADF4371
++	tristate "Analog Devices ADF4371 Wideband Synthesizer"
++	depends on SPI
++	select REGMAP_SPI
++	help
++	  Say yes here to build support for Analog Devices  ADF4371
++	  Wideband Synthesizer. The driver provides direct access via sysfs.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called adf4371.
+ endmenu
+ endmenu
+diff --git a/drivers/iio/frequency/Makefile b/drivers/iio/frequency/Makefile
+index 2bca03f..2ddda77 100644
+--- a/drivers/iio/frequency/Makefile
++++ b/drivers/iio/frequency/Makefile
+@@ -5,3 +5,4 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_AD9523) += ad9523.o
+ obj-$(CONFIG_ADF4350) += adf4350.o
++obj-$(CONFIG_ADF4371) += adf4371.o
+diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
+new file mode 100644
+index 0000000..5f1becc
+--- /dev/null
++++ b/drivers/iio/frequency/adf4371.c
+@@ -0,0 +1,591 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Analog Devices ADF4371 SPI Wideband Synthesizer driver
++ *
++ * Copyright 2019 Analog Devices Inc.
++ */
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gcd.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/sysfs.h>
++#include <linux/spi/spi.h>
++
++#include <linux/iio/iio.h>
++
++/* Registers address macro */
++#define ADF4371_REG(x)			(x)
++
++/* ADF4371_REG0 */
++#define ADF4371_ADDR_ASC_MSK		BIT(2)
++#define ADF4371_ADDR_ASC(x)		FIELD_PREP(ADF4371_ADDR_ASC_MSK, x)
++#define ADF4371_ADDR_ASC_R_MSK		BIT(5)
++#define ADF4371_ADDR_ASC_R(x)		FIELD_PREP(ADF4371_ADDR_ASC_R_MSK, x)
++#define ADF4371_RESET_CMD		0x81
++
++/* ADF4371_REG17 */
++#define ADF4371_FRAC2WORD_L_MSK		GENMASK(7, 1)
++#define ADF4371_FRAC2WORD_L(x)		FIELD_PREP(ADF4371_FRAC2WORD_L_MSK, x)
++#define ADF4371_FRAC1WORD_MSK		BIT(0)
++#define ADF4371_FRAC1WORD(x)		FIELD_PREP(ADF4371_FRAC1WORD_MSK, x)
++
++/* ADF4371_REG18 */
++#define ADF4371_FRAC2WORD_H_MSK		GENMASK(6, 0)
++#define ADF4371_FRAC2WORD_H(x)		FIELD_PREP(ADF4371_FRAC2WORD_H_MSK, x)
++
++/* ADF4371_REG1A */
++#define ADF4371_MOD2WORD_MSK		GENMASK(5, 0)
++#define ADF4371_MOD2WORD(x)		FIELD_PREP(ADF4371_MOD2WORD_MSK, x)
++
++/* ADF4371_REG24 */
++#define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
++#define ADF4371_RF_DIV_SEL(x)		FIELD_PREP(ADF4371_RF_DIV_SEL_MSK, x)
++
++/* ADF4371_REG32 */
++#define ADF4371_TIMEOUT_MSK		GENMASK(1, 0)
++#define ADF4371_TIMEOUT(x)		FIELD_PREP(ADF4371_TIMEOUT_MSK, x)
++
++/* ADF4371_REG34 */
++#define ADF4371_VCO_ALC_TOUT_MSK	GENMASK(4, 0)
++#define ADF4371_VCO_ALC_TOUT(x)		FIELD_PREP(ADF4371_VCO_ALC_TOUT_MSK, x)
++
++/* Specifications */
++#define ADF4371_MIN_VCO_FREQ		4000000000ULL /* 4000 MHz */
++#define ADF4371_MAX_VCO_FREQ		8000000000ULL /* 8000 MHz */
++#define ADF4371_MAX_OUT_RF8_FREQ	ADF4371_MAX_VCO_FREQ /* Hz */
++#define ADF4371_MIN_OUT_RF8_FREQ	(ADF4371_MIN_VCO_FREQ / 64) /* Hz */
++#define ADF4371_MAX_OUT_RF16_FREQ	(ADF4371_MAX_VCO_FREQ * 2) /* Hz */
++#define ADF4371_MIN_OUT_RF16_FREQ	(ADF4371_MIN_VCO_FREQ * 2) /* Hz */
++#define ADF4371_MAX_OUT_RF32_FREQ	(ADF4371_MAX_VCO_FREQ * 4) /* Hz */
++#define ADF4371_MIN_OUT_RF32_FREQ	(ADF4371_MIN_VCO_FREQ * 4) /* Hz */
++
++#define ADF4371_MAX_FREQ_PFD		250000000UL /* Hz */
++#define ADF4371_MAX_FREQ_REFIN		600000000UL /* Hz */
++
++/* MOD1 is a 24-bit primary modulus with fixed value of 2^25 */
++#define ADF4371_MODULUS1		33554432ULL
++/* MOD2 is the programmable, 14-bit auxiliary fractional modulus */
++#define ADF4371_MAX_MODULUS2		BIT(14)
++
++#define ADF4371_CHECK_RANGE(freq, range) \
++	((freq > ADF4371_MAX_ ## range) || (freq < ADF4371_MIN_ ## range))
++
++enum {
++	ADF4371_FREQ,
++	ADF4371_POWER_DOWN,
++	ADF4371_CHANNEL_NAME
++};
++
++enum {
++	ADF4371_CH_RF8,
++	ADF4371_CH_RF16,
++	ADF4371_CH_RF32,
++	ADF4371_CH_RFAUX8
++};
++
++struct adf4371_pwrdown {
++	unsigned int reg;
++	unsigned int bit;
++};
++
++static const char * const adf4371_ch_names[] = {
++	"RF8x", "RF16x", "RF32x", "RFAUX8x"
++};
++
++static const struct adf4371_pwrdown adf4371_pwrdown_ch[4] = {
++	[ADF4371_CH_RF8] = { ADF4371_REG(0x25), 2 },
++	[ADF4371_CH_RF16] = { ADF4371_REG(0x25), 3 },
++	[ADF4371_CH_RF32] = { ADF4371_REG(0x25), 4 },
++	[ADF4371_CH_RFAUX8] = { ADF4371_REG(0x72), 3 }
++};
++
++static const struct reg_sequence adf4371_reg_defaults[] = {
++	{ ADF4371_REG(0x0),  0x18 },
++	{ ADF4371_REG(0x12), 0x40 },
++	{ ADF4371_REG(0x1E), 0x48 },
++	{ ADF4371_REG(0x20), 0x14 },
++	{ ADF4371_REG(0x22), 0x00 },
++	{ ADF4371_REG(0x23), 0x00 },
++	{ ADF4371_REG(0x24), 0x80 },
++	{ ADF4371_REG(0x25), 0x07 },
++	{ ADF4371_REG(0x27), 0xC5 },
++	{ ADF4371_REG(0x28), 0x83 },
++	{ ADF4371_REG(0x2C), 0x44 },
++	{ ADF4371_REG(0x2D), 0x11 },
++	{ ADF4371_REG(0x2E), 0x12 },
++	{ ADF4371_REG(0x2F), 0x94 },
++	{ ADF4371_REG(0x32), 0x04 },
++	{ ADF4371_REG(0x35), 0xFA },
++	{ ADF4371_REG(0x36), 0x30 },
++	{ ADF4371_REG(0x39), 0x07 },
++	{ ADF4371_REG(0x3A), 0x55 },
++	{ ADF4371_REG(0x3E), 0x0C },
++	{ ADF4371_REG(0x3F), 0x80 },
++	{ ADF4371_REG(0x40), 0x50 },
++	{ ADF4371_REG(0x41), 0x28 },
++	{ ADF4371_REG(0x47), 0xC0 },
++	{ ADF4371_REG(0x52), 0xF4 },
++	{ ADF4371_REG(0x70), 0x03 },
++	{ ADF4371_REG(0x71), 0x60 },
++	{ ADF4371_REG(0x72), 0x32 },
++};
++
++static const struct regmap_config adf4371_regmap_config = {
++	.reg_bits = 16,
++	.val_bits = 8,
++	.read_flag_mask = BIT(7),
++};
++
++struct adf4371_state {
++	struct spi_device *spi;
++	struct regmap *regmap;
++	struct clk *clkin;
++	/*
++	 * Lock for accessing device registers. Some operations require
++	 * multiple consecutive R/W operations, during which the device
++	 * shouldn't be interrupted. The buffers are also shared across
++	 * all operations so need to be protected on stand alone reads and
++	 * writes.
++	 */
++	struct mutex lock;
++	unsigned long clkin_freq;
++	unsigned long fpfd;
++	unsigned int integer;
++	unsigned int fract1;
++	unsigned int fract2;
++	unsigned int mod2;
++	unsigned int rf_div_sel;
++	unsigned int ref_div_factor;
++	u8 buf[10] ____cacheline_aligned;
++};
++
++static unsigned long long adf4371_pll_fract_n_get_rate(struct adf4371_state *st,
++						       u32 channel)
++{
++	unsigned long long val, tmp;
++	unsigned int ref_div_sel;
++
++	val = (((u64)st->integer * ADF4371_MODULUS1) + st->fract1) * st->fpfd;
++	tmp = (u64)st->fract2 * st->fpfd;
++	do_div(tmp, st->mod2);
++	val += tmp + ADF4371_MODULUS1 / 2;
++
++	if (channel == ADF4371_CH_RF8 || channel == ADF4371_CH_RFAUX8)
++		ref_div_sel = st->rf_div_sel;
++	else
++		ref_div_sel = 0;
++
++	do_div(val, ADF4371_MODULUS1 * (1 << ref_div_sel));
++
++	if (channel == ADF4371_CH_RF16)
++		val <<= 1;
++	else if (channel == ADF4371_CH_RF32)
++		val <<= 2;
++
++	return val;
++}
++
++static void adf4371_pll_fract_n_compute(unsigned long long vco,
++				       unsigned long long pfd,
++				       unsigned int *integer,
++				       unsigned int *fract1,
++				       unsigned int *fract2,
++				       unsigned int *mod2)
++{
++	unsigned long long tmp;
++	u32 gcd_div;
++
++	tmp = do_div(vco, pfd);
++	tmp = tmp * ADF4371_MODULUS1;
++	*fract2 = do_div(tmp, pfd);
++
++	*integer = vco;
++	*fract1 = tmp;
++
++	*mod2 = pfd;
++
++	while (*mod2 > ADF4371_MAX_MODULUS2) {
++		*mod2 >>= 1;
++		*fract2 >>= 1;
++	}
++
++	gcd_div = gcd(*fract2, *mod2);
++	*mod2 /= gcd_div;
++	*fract2 /= gcd_div;
++}
++
++static int adf4371_set_freq(struct adf4371_state *st, unsigned long long freq,
++			    unsigned int channel)
++{
++	u32 cp_bleed;
++	u8 int_mode = 0;
++	int ret;
++
++	switch (channel) {
++	case ADF4371_CH_RF8:
++	case ADF4371_CH_RFAUX8:
++		if (ADF4371_CHECK_RANGE(freq, OUT_RF8_FREQ))
++			return -EINVAL;
++
++		st->rf_div_sel = 0;
++
++		while (freq < ADF4371_MIN_VCO_FREQ) {
++			freq <<= 1;
++			st->rf_div_sel++;
++		}
++		break;
++	case ADF4371_CH_RF16:
++		/* ADF4371 RF16 8000...16000 MHz */
++		if (ADF4371_CHECK_RANGE(freq, OUT_RF16_FREQ))
++			return -EINVAL;
++
++		freq >>= 1;
++		break;
++	case ADF4371_CH_RF32:
++		/* ADF4371 RF32 16000...32000 MHz */
++		if (ADF4371_CHECK_RANGE(freq, OUT_RF32_FREQ))
++			return -EINVAL;
++
++		freq >>= 2;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	adf4371_pll_fract_n_compute(freq, st->fpfd, &st->integer, &st->fract1,
++				    &st->fract2, &st->mod2);
++	st->buf[0] = st->integer >> 8;
++	st->buf[1] = 0x40; /* REG12 default */
++	st->buf[2] = 0x00;
++	st->buf[3] = st->fract2 & 0xFF;
++	st->buf[4] = st->fract2 >> 7;
++	st->buf[5] = st->fract2 >> 15;
++	st->buf[6] = ADF4371_FRAC2WORD_L(st->fract2 & 0x7F) |
++		     ADF4371_FRAC1WORD(st->fract1 >> 23);
++	st->buf[7] = ADF4371_FRAC2WORD_H(st->fract2 >> 7);
++	st->buf[8] = st->mod2 & 0xFF;
++	st->buf[9] = ADF4371_MOD2WORD(st->mod2 >> 8);
++
++	ret = regmap_bulk_write(st->regmap, ADF4371_REG(0x11), st->buf, 10);
++	if (ret < 0)
++		return ret;
++	/*
++	 * The R counter allows the input reference frequency to be
++	 * divided down to produce the reference clock to the PFD
++	 */
++	ret = regmap_write(st->regmap, ADF4371_REG(0x1F), st->ref_div_factor);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_update_bits(st->regmap, ADF4371_REG(0x24),
++				 ADF4371_RF_DIV_SEL_MSK,
++				 ADF4371_RF_DIV_SEL(st->rf_div_sel));
++	if (ret < 0)
++		return ret;
++
++	cp_bleed = DIV_ROUND_UP(400 * 1750, st->integer * 375);
++	cp_bleed = clamp(cp_bleed, 1U, 255U);
++	ret = regmap_write(st->regmap, ADF4371_REG(0x26), cp_bleed);
++	if (ret < 0)
++		return ret;
++	/*
++	 * Set to 1 when in INT mode (when FRAC1 = FRAC2 = 0),
++	 * and set to 0 when in FRAC mode.
++	 */
++	if (st->fract1 == 0 && st->fract2 == 0)
++		int_mode = 0x01;
++
++	ret = regmap_write(st->regmap, ADF4371_REG(0x2B), int_mode);
++	if (ret < 0)
++		return ret;
++
++	return regmap_write(st->regmap, ADF4371_REG(0x10), st->integer & 0xFF);
++}
++
++static ssize_t adf4371_read(struct iio_dev *indio_dev,
++			    uintptr_t private,
++			    const struct iio_chan_spec *chan,
++			    char *buf)
++{
++	struct adf4371_state *st = iio_priv(indio_dev);
++	unsigned long long val = 0;
++	unsigned int readval, reg, bit;
++	int ret;
++
++	switch ((u32)private) {
++	case ADF4371_FREQ:
++		val = adf4371_pll_fract_n_get_rate(st, chan->channel);
++		ret = regmap_read(st->regmap, ADF4371_REG(0x7C), &readval);
++		if (ret < 0)
++			break;
++
++		if (readval == 0x00) {
++			dev_dbg(&st->spi->dev, "PLL un-locked\n");
++			ret = -EBUSY;
++		}
++		break;
++	case ADF4371_POWER_DOWN:
++		reg = adf4371_pwrdown_ch[chan->channel].reg;
++		bit = adf4371_pwrdown_ch[chan->channel].bit;
++
++		ret = regmap_read(st->regmap, reg, &readval);
++		if (ret < 0)
++			break;
++
++		val = !(readval & BIT(bit));
++		break;
++	case ADF4371_CHANNEL_NAME:
++		return sprintf(buf, "%s\n", adf4371_ch_names[chan->channel]);
++	default:
++		ret = -EINVAL;
++		val = 0;
++		break;
++	}
++
++	return ret < 0 ? ret : sprintf(buf, "%llu\n", val);
++}
++
++static ssize_t adf4371_write(struct iio_dev *indio_dev,
++			     uintptr_t private,
++			     const struct iio_chan_spec *chan,
++			     const char *buf, size_t len)
++{
++	struct adf4371_state *st = iio_priv(indio_dev);
++	unsigned long long freq;
++	bool power_down;
++	unsigned int bit, readval, reg;
++	int ret;
++
++	mutex_lock(&st->lock);
++	switch ((u32)private) {
++	case ADF4371_FREQ:
++		ret = kstrtoull(buf, 10, &freq);
++		if (ret)
++			break;
++
++		ret = adf4371_set_freq(st, freq, chan->channel);
++		break;
++	case ADF4371_POWER_DOWN:
++		ret = kstrtobool(buf, &power_down);
++		if (ret)
++			break;
++
++		reg = adf4371_pwrdown_ch[chan->channel].reg;
++		bit = adf4371_pwrdown_ch[chan->channel].bit;
++		ret = regmap_read(st->regmap, reg, &readval);
++		if (ret < 0)
++			break;
++
++		readval &= ~BIT(bit);
++		readval |= (!power_down << bit);
++
++		ret = regmap_write(st->regmap, reg, readval);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	mutex_unlock(&st->lock);
++
++	return ret ? ret : len;
++}
++#define _ADF4371_EXT_INFO(_name, _ident) { \
++		.name = _name, \
++		.read = adf4371_read, \
++		.write = adf4371_write, \
++		.private = _ident, \
++		.shared = IIO_SEPARATE, \
++}
++
++static const struct iio_chan_spec_ext_info adf4371_ext_info[] = {
++	/*
++	 * Ideally we use IIO_CHAN_INFO_FREQUENCY, but there are
++	 * values > 2^32 in order to support the entire frequency range
++	 * in Hz. Using scale is a bit ugly.
++	 */
++	_ADF4371_EXT_INFO("frequency", ADF4371_FREQ),
++	_ADF4371_EXT_INFO("powerdown", ADF4371_POWER_DOWN),
++	_ADF4371_EXT_INFO("name", ADF4371_CHANNEL_NAME),
++	{ },
++};
++
++#define ADF4371_CHANNEL(index) { \
++		.type = IIO_ALTVOLTAGE, \
++		.output = 1, \
++		.channel = index, \
++		.ext_info = adf4371_ext_info, \
++		.indexed = 1, \
++	}
++
++static const struct iio_chan_spec adf4371_chan[] = {
++	ADF4371_CHANNEL(ADF4371_CH_RF8),
++	ADF4371_CHANNEL(ADF4371_CH_RF16),
++	ADF4371_CHANNEL(ADF4371_CH_RF32),
++	ADF4371_CHANNEL(ADF4371_CH_RFAUX8),
++};
++
++static int adf4371_reg_access(struct iio_dev *indio_dev,
++			      unsigned int reg,
++			      unsigned int writeval,
++			      unsigned int *readval)
++{
++	struct adf4371_state *st = iio_priv(indio_dev);
++
++	if (readval)
++		return regmap_read(st->regmap, reg, readval);
++	else
++		return regmap_write(st->regmap, reg, writeval);
++}
++
++static const struct iio_info adf4371_info = {
++	.debugfs_reg_access = &adf4371_reg_access,
++};
++
++static int adf4371_setup(struct adf4371_state *st)
++{
++	unsigned int synth_timeout = 2, timeout = 1, vco_alc_timeout = 1;
++	unsigned int vco_band_div, tmp;
++	int ret;
++
++	/* Perform a software reset */
++	ret = regmap_write(st->regmap, ADF4371_REG(0x0), ADF4371_RESET_CMD);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_multi_reg_write(st->regmap, adf4371_reg_defaults,
++				     ARRAY_SIZE(adf4371_reg_defaults));
++	if (ret < 0)
++		return ret;
++
++	/* Set address in ascending order, so the bulk_write() will work */
++	ret = regmap_update_bits(st->regmap, ADF4371_REG(0x0),
++				 ADF4371_ADDR_ASC_MSK | ADF4371_ADDR_ASC_R_MSK,
++				 ADF4371_ADDR_ASC(1) | ADF4371_ADDR_ASC_R(1));
++	if (ret < 0)
++		return ret;
++	/*
++	 * Calculate and maximize PFD frequency
++	 * fPFD = REFIN × ((1 + D)/(R × (1 + T)))
++	 * Where D is the REFIN doubler bit, T is the reference divide by 2,
++	 * R is the reference division factor
++	 * TODO: it is assumed D and T equal 0.
++	 */
++	do {
++		st->ref_div_factor++;
++		st->fpfd = st->clkin_freq / st->ref_div_factor;
++	} while (st->fpfd > ADF4371_MAX_FREQ_PFD);
++
++	/* Calculate Timeouts */
++	vco_band_div = DIV_ROUND_UP(st->fpfd, 2400000U);
++
++	tmp = DIV_ROUND_CLOSEST(st->fpfd, 1000000U);
++	do {
++		timeout++;
++		if (timeout > 1023) {
++			timeout = 2;
++			synth_timeout++;
++		}
++	} while (synth_timeout * 1024 + timeout <= 20 * tmp);
++
++	do {
++		vco_alc_timeout++;
++	} while (vco_alc_timeout * 1024 - timeout <= 50 * tmp);
++
++	st->buf[0] = vco_band_div;
++	st->buf[1] = timeout & 0xFF;
++	st->buf[2] = ADF4371_TIMEOUT(timeout >> 8) | 0x04;
++	st->buf[3] = synth_timeout;
++	st->buf[4] = ADF4371_VCO_ALC_TOUT(vco_alc_timeout);
++
++	return regmap_bulk_write(st->regmap, ADF4371_REG(0x30), st->buf, 5);
++}
++
++static void adf4371_clk_disable(void *data)
++{
++	struct adf4371_state *st = data;
++
++	clk_disable_unprepare(st->clkin);
++}
++
++static int adf4371_probe(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev;
++	struct adf4371_state *st;
++	struct regmap *regmap;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	regmap = devm_regmap_init_spi(spi, &adf4371_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&spi->dev, "Error initializing spi regmap: %ld\n",
++			PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	st = iio_priv(indio_dev);
++	spi_set_drvdata(spi, indio_dev);
++	st->regmap = regmap;
++	mutex_init(&st->lock);
++
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->info = &adf4371_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = adf4371_chan;
++	indio_dev->num_channels = ARRAY_SIZE(adf4371_chan);
++
++	st->clkin = devm_clk_get(&spi->dev, "clkin");
++	if (IS_ERR(st->clkin))
++		return PTR_ERR(st->clkin);
++
++	ret = clk_prepare_enable(st->clkin);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_add_action_or_reset(&spi->dev, adf4371_clk_disable, st);
++	if (ret)
++		return ret;
++
++	st->clkin_freq = clk_get_rate(st->clkin);
++
++	ret = adf4371_setup(st);
++	if (ret < 0) {
++		dev_err(&spi->dev, "ADF4371 setup failed\n");
++		return ret;
++	}
++
++	return devm_iio_device_register(&spi->dev, indio_dev);
++}
++
++static const struct spi_device_id adf4371_id_table[] = {
++	{ "adf4371", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(spi, adf4371_id_table);
++
++static const struct of_device_id adf4371_of_match[] = {
++	{ .compatible = "adi,adf4371" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, adf4371_of_match);
++
++static struct spi_driver adf4371_driver = {
++	.driver = {
++		.name = "adf4371",
++		.of_match_table = adf4371_of_match,
++	},
++	.probe = adf4371_probe,
++	.id_table = adf4371_id_table,
++};
++module_spi_driver(adf4371_driver);
++
++MODULE_AUTHOR("Stefan Popa <stefan.popa@analog.com>");
++MODULE_DESCRIPTION("Analog Devices ADF4371 SPI PLL");
++MODULE_LICENSE("GPL");
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.7.4
+
