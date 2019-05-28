@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0744AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E37E2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83132075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfE1WJW (ORCPT
+        id S1728167AbfE1WJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 18:09:22 -0400
+        Tue, 28 May 2019 18:09:28 -0400
 Received: from mga01.intel.com ([192.55.52.88]:11133 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfE1WJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 18:09:16 -0400
+        id S1727684AbfE1WJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 18:09:14 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 15:09:16 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 15:09:13 -0700
 X-ExtLoop1: 1
 Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by orsmga002.jf.intel.com with ESMTP; 28 May 2019 15:09:16 -0700
+  by orsmga002.jf.intel.com with ESMTP; 28 May 2019 15:09:13 -0700
 From:   kan.liang@linux.intel.com
 To:     mingo@kernel.org, acme@redhat.com, peterz@infradead.org,
         vincent.weaver@maine.edu, linux-kernel@vger.kernel.org
 Cc:     alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         jolsa@redhat.com, eranian@google.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 5/5] perf regs x86: Use PERF_REG_EXTENDED_MASK
-Date:   Tue, 28 May 2019 15:08:34 -0700
-Message-Id: <1559081314-9714-5-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V3 3/5] perf/x86: Clean up PEBS_XMM_REGS
+Date:   Tue, 28 May 2019 15:08:32 -0700
+Message-Id: <1559081314-9714-3-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559081314-9714-1-git-send-email-kan.liang@linux.intel.com>
 References: <1559081314-9714-1-git-send-email-kan.liang@linux.intel.com>
@@ -45,67 +45,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Use the macro defined in kernel ABI header to replace the local name.
-
-No functional change.
+Use generic macro PERF_REG_EXTENDED_MASK to replace PEBS_XMM_REGS to
+avoid duplication.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
-Changes since V2:
-- Rename PERF_REG_NON_GENERIC_MASK to PERF_REG_EXTENDED_MASK
+New for V3
 
- tools/arch/x86/include/uapi/asm/perf_regs.h | 3 +++
- tools/perf/arch/x86/include/perf_regs.h     | 1 -
- tools/perf/arch/x86/util/perf_regs.c        | 4 ++--
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/events/core.c       |  4 ++--
+ arch/x86/events/intel/ds.c   |  2 +-
+ arch/x86/events/perf_event.h | 18 ------------------
+ 3 files changed, 3 insertions(+), 21 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
-index ac67bbe..7c9d2bb 100644
---- a/tools/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
-@@ -52,4 +52,7 @@ enum perf_event_x86_regs {
- 	/* These include both GPRs and XMMX registers */
- 	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
- };
-+
-+#define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
-+
- #endif /* _ASM_X86_PERF_REGS_H */
-diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
-index b7cd91a..b732133 100644
---- a/tools/perf/arch/x86/include/perf_regs.h
-+++ b/tools/perf/arch/x86/include/perf_regs.h
-@@ -9,7 +9,6 @@
- void perf_regs_load(u64 *regs);
- 
- #define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
--#define PERF_XMM_REGS_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
- #ifndef HAVE_ARCH_X86_64_SUPPORT
- #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
- #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 7886ca5..3666c00 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -277,7 +277,7 @@ uint64_t arch__intr_reg_mask(void)
- 		.type			= PERF_TYPE_HARDWARE,
- 		.config			= PERF_COUNT_HW_CPU_CYCLES,
- 		.sample_type		= PERF_SAMPLE_REGS_INTR,
--		.sample_regs_intr	= PERF_XMM_REGS_MASK,
-+		.sample_regs_intr	= PERF_REG_EXTENDED_MASK,
- 		.precise_ip		= 1,
- 		.disabled 		= 1,
- 		.exclude_kernel		= 1,
-@@ -293,7 +293,7 @@ uint64_t arch__intr_reg_mask(void)
- 	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
- 	if (fd != -1) {
- 		close(fd);
--		return (PERF_XMM_REGS_MASK | PERF_REGS_MASK);
-+		return (PERF_REG_EXTENDED_MASK | PERF_REGS_MASK);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f315425..7708a6f 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -561,13 +561,13 @@ int x86_pmu_hw_config(struct perf_event *event)
  	}
  
- 	return PERF_REGS_MASK;
+ 	/* sample_regs_user never support XMM registers */
+-	if (unlikely(event->attr.sample_regs_user & PEBS_XMM_REGS))
++	if (unlikely(event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK))
+ 		return -EINVAL;
+ 	/*
+ 	 * Besides the general purpose registers, XMM registers may
+ 	 * be collected in PEBS on some platforms, e.g. Icelake
+ 	 */
+-	if (unlikely(event->attr.sample_regs_intr & PEBS_XMM_REGS)) {
++	if (unlikely(event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK)) {
+ 		if (x86_pmu.pebs_no_xmm_regs)
+ 			return -EINVAL;
+ 
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index f860cdd..e6a0fa9 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -987,7 +987,7 @@ static u64 pebs_update_adaptive_cfg(struct perf_event *event)
+ 		pebs_data_cfg |= PEBS_DATACFG_GP;
+ 
+ 	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+-	    (attr->sample_regs_intr & PEBS_XMM_REGS))
++	    (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK))
+ 		pebs_data_cfg |= PEBS_DATACFG_XMMS;
+ 
+ 	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a6ac2f4..d3b6e90 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -121,24 +121,6 @@ struct amd_nb {
+ 	 (1ULL << PERF_REG_X86_R14)   | \
+ 	 (1ULL << PERF_REG_X86_R15))
+ 
+-#define PEBS_XMM_REGS                   \
+-	((1ULL << PERF_REG_X86_XMM0)  | \
+-	 (1ULL << PERF_REG_X86_XMM1)  | \
+-	 (1ULL << PERF_REG_X86_XMM2)  | \
+-	 (1ULL << PERF_REG_X86_XMM3)  | \
+-	 (1ULL << PERF_REG_X86_XMM4)  | \
+-	 (1ULL << PERF_REG_X86_XMM5)  | \
+-	 (1ULL << PERF_REG_X86_XMM6)  | \
+-	 (1ULL << PERF_REG_X86_XMM7)  | \
+-	 (1ULL << PERF_REG_X86_XMM8)  | \
+-	 (1ULL << PERF_REG_X86_XMM9)  | \
+-	 (1ULL << PERF_REG_X86_XMM10) | \
+-	 (1ULL << PERF_REG_X86_XMM11) | \
+-	 (1ULL << PERF_REG_X86_XMM12) | \
+-	 (1ULL << PERF_REG_X86_XMM13) | \
+-	 (1ULL << PERF_REG_X86_XMM14) | \
+-	 (1ULL << PERF_REG_X86_XMM15))
+-
+ /*
+  * Per register state.
+  */
 -- 
 2.7.4
 
