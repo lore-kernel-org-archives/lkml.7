@@ -2,93 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6EC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75513C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5687D2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F26520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Nv9/uVBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfE1IU3 (ORCPT
+        id S1726560AbfE1IUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:20:29 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51756 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfE1IU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:20:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82DCE341;
-        Tue, 28 May 2019 01:20:28 -0700 (PDT)
-Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B8A83F59C;
-        Tue, 28 May 2019 01:20:24 -0700 (PDT)
-Subject: Re: [PATCH 3/4] arm64/kprobes: set VM_FLUSH_RESET_PERMS on kprobe
- instruction pages
-To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
- <20190523102256.29168-4-ard.biesheuvel@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <e10f0e6c-2669-8e1e-1b28-ed7816e0b248@arm.com>
-Date:   Tue, 28 May 2019 13:50:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190523102256.29168-4-ard.biesheuvel@arm.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 May 2019 04:20:34 -0400
+Received: from mail-eopbgr00075.outbound.protection.outlook.com ([40.107.0.75]:43398
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbfE1IUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:20:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TylURNC/HEKHBhkttdDRp+LsGMfvjUcou9kPlsazCXA=;
+ b=Nv9/uVBdiQWw0Mq6JNVUTe02mn5pM5nfCK5MAG2qLi8R1R8ckGI6oJPqEWJmdwSU1inRXvOfxKl12UgHSpBKJzPgROpZRbiT1xz2NJKr0+bhRxIY2dZ5cfurijS6mrPYBdg8MvRdSPVcTCV6vUs99qXS/RTEm2NjBMw6uZHJTHQ=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3840.eurprd04.prod.outlook.com (52.134.16.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.21; Tue, 28 May 2019 08:20:29 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 08:20:29 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v1 08/15] crypto: talitos - Do not modify req->cryptlen on
+ decryption.
+Thread-Topic: [PATCH v1 08/15] crypto: talitos - Do not modify req->cryptlen
+ on decryption.
+Thread-Index: AQHVD9njMUF7ft0BM0m68K66eI1bNg==
+Date:   Tue, 28 May 2019 08:20:29 +0000
+Message-ID: <VI1PR0402MB348519D7E3927482A894F276981E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1558445259.git.christophe.leroy@c-s.fr>
+ <1ad8020c8140da1b4f818220e130ed0074c37fe1.1558445259.git.christophe.leroy@c-s.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a44333a3-2280-4130-f9d1-08d6e345589d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3840;
+x-ms-traffictypediagnostic: VI1PR0402MB3840:
+x-microsoft-antispam-prvs: <VI1PR0402MB3840AF6B069EDCD443373728981E0@VI1PR0402MB3840.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(39860400002)(376002)(136003)(199004)(189003)(26005)(81166006)(81156014)(102836004)(186003)(53546011)(8676002)(25786009)(6506007)(76176011)(2906002)(8936002)(99286004)(68736007)(14454004)(33656002)(86362001)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(478600001)(76116006)(305945005)(7696005)(7736002)(71190400001)(6246003)(71200400001)(52536014)(44832011)(486006)(66066001)(9686003)(476003)(55016002)(3846002)(5660300002)(54906003)(53936002)(256004)(6116002)(446003)(4326008)(229853002)(110136005)(6436002)(4744005)(316002)(74316002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3840;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5JioKxmm9amMVF/gnfjA9MsdG+UNzUKciWYpfmj6xh3iWPC7RNY1pUIasEvjllxIdc/22QmPtIoBga2t0NxI51gMRMktN1TTfEXfb1qy4MggBT7CCYJwN2t1kX2/D40TEYUv2fxEVcQu3bys5BvAMzFv+nkNJuzXUIlrPH72KZtEMwyt5aqj/Yvjq/wFEyKxBOiGMSTv54EB2imu8cFDUJ16Se0vgJzjMIA5uJwjK4xlyXqebgYNEccNvga0qm3dwteeT40e+jxfvD2Eofs+KkggFjO07JXx3horNLE0I4jvAn2HgLj/BOQu06cV1Nm7LjMqAKVoFg8e+4uPXBxs0JXrtPrc7SGFrMIJuNHhgw/tQ3Oa04BK5wLJyp0fF6Wp422EjVil+31S58RHPZKjGhBbD90fNN30+y241nKGxuI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a44333a3-2280-4130-f9d1-08d6e345589d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 08:20:29.7800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3840
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/23/2019 03:52 PM, Ard Biesheuvel wrote:
-> In order to avoid transient inconsistencies where freed code pages
-> are remapped writable while stale TLB entries still exist on other
-> cores, mark the kprobes text pages with the VM_FLUSH_RESET_PERMS
-> attribute. This instructs the core vmalloc code not to defer the
-> TLB flush when this region is unmapped and returned to the page
-> allocator.
-
-Makes sense.
-
-> 
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-> ---
->  arch/arm64/kernel/probes/kprobes.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index 2509fcb6d404..036cfbf9682a 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -131,8 +131,10 @@ void *alloc_insn_page(void)
->  	void *page;
->  
->  	page = vmalloc_exec(PAGE_SIZE);
-> -	if (page)
-> +	if (page) {
->  		set_memory_ro((unsigned long)page, 1);
-> +		set_vm_flush_reset_perms(page);
-> +	}
-
-Looks good. It seems there might be more users who would like to set
-VM_FLUSH_RESET_PERMS right after their allocation for the same reason.
-Hence would not it help to have a variant like vmalloc_exec_reset() or
-such which will tag vm_struct->flags with VM_FLUSH_RESET_PERMS right
-after it's allocation without requiring the caller to do the same.
+On 5/21/2019 4:34 PM, Christophe Leroy wrote:=0A=
+> For decrypt, req->cryptlen includes the size of the authentication=0A=
+> part while all functions of the driver expect cryptlen to be=0A=
+> the size of the encrypted data.=0A=
+> =0A=
+> As it is not expected to change req->cryptlen, this patch=0A=
+> implements local calculation of cryptlen.=0A=
+> =0A=
+An alternative would be to restore req->cryptlen in the *_done() callback.=
+=0A=
+It would be easier to implement, though probably less intuitive.=0A=
+=0A=
+Horia=0A=
