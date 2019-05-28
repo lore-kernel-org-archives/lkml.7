@@ -2,166 +2,167 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D01C282E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D007C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1D820989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C6B208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CIbPu/nn"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="vbdw2kfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfE1FTo (ORCPT
+        id S1727447AbfE1FTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:19:44 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46173 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfE1FTl (ORCPT
+        Tue, 28 May 2019 01:19:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46057 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfE1FTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:19:41 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CC198365B;
-        Tue, 28 May 2019 17:19:39 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1559020779;
-        bh=Md+kfHQvYU4R2pwLTQr8PVHqDby+lPOcFeVVqE3Sp7g=;
-        h=From:To:CC:Subject:Date:References;
-        b=CIbPu/nnuB65zWU1C/OyKhTyAy4nvn6bdu1zfgSV1TAYc1rO0/YswtGvSpqAGbx60
-         OIz2qwl2RNm4eS7RifmOfPUYsIkJNxdLRA6J/OOX1J4wYZIqAcJ1fS4D3fTrLIMND0
-         ld3MP28ggRjNAX3AvO7EYg3j4Ac39ZJF2BjcKHvStw1SzkRwSH1+BCIbAHGZPVeMio
-         M+wQn5ZKVQqluYwb5Hyja/rpNohBt750AAPB7z9WReIj6HbcsJnpn4UNBOGbQFg5ru
-         ZvIxuotAna5H7Dlxoh4THo6FwT1KqzecoNiE+2u7R+EDpSf3BC3aBHSvyG665J5Xt+
-         wgF6Qk6kBt+HQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cecc4eb0001>; Tue, 28 May 2019 17:19:39 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Tue, 28 May 2019 17:19:38 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 28 May 2019 17:19:38 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
-CC:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: MIPS r4k cache operations with SMP enabled
-Thread-Topic: MIPS r4k cache operations with SMP enabled
-Thread-Index: AQHVFQB0Z16/xM5TvUKYi9+2ojSGNw==
-Date:   Tue, 28 May 2019 05:19:37 +0000
-Message-ID: <1109cb84e36e483fb22c30a60ab4a6ff@svr-chch-ex1.atlnz.lc>
-References: <d87063da1d104af8a040f5f25a588638@svr-chch-ex1.atlnz.lc>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 28 May 2019 01:19:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id s11so10708109pfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 22:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Pjs+SKKxwsbAECDYSiJjntgAxkrMGaxQdTe+f2oaXzA=;
+        b=vbdw2kfiuuVu/iK1KRrWmOpzZzpelJGsznZT59GImYpnT8VRZmOT40OZyjHKCzY4Ld
+         OcJ5J8IOtu/ulckS5LLcNgVzyygOYMJk+wl+2rh/jGYgATrICI+AoHHagdtKruTaLPgK
+         H4iVaVYJfr3R6Y7njuNkWTSDA3Eojil6qLl+A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Pjs+SKKxwsbAECDYSiJjntgAxkrMGaxQdTe+f2oaXzA=;
+        b=Ff6iIqEMyxEGkrCe5kxnY4yDeRXFEgr+QD06zXZbHNQ+/ZJV5abmLz2vyhFBJW/r/u
+         mcFSznwisxdYSrHSitXi4xsGrmhPktIRaOiuqQ84KG+knxXCBb3Drm7Wjb/Hlc3KJjo7
+         88hZuHqT93rglnS0ngrAdIH5JTvNP6nIo+Rm+DpdRjJAUoQm8iZnilUxDwTHuJQx1siS
+         sJ9oGnUCg3INjSSj/iqKSmRjQ2tiYFIhG1akRSdZAgt/tBnTVhpFk8560GitzTAYSa2m
+         QTaWnv8CPijcvwUo5t6pgvwyhUQvmaEvut727Ck0P/9OYqVt4EYk9Fd6kHVnP75iruGe
+         bDwA==
+X-Gm-Message-State: APjAAAXHYoyqjyqhlc/VwZXUA3Q6CJ+alRrxx01Ozzty8VFf2IhcrzLp
+        PbVkp2ZRszshfGGwEWvF37qS4g==
+X-Google-Smtp-Source: APXvYqyOzNS+Jfc0QhW5Y0oHKcvuUOPye4unhuhwkSA1xrTl2ZmkQ9b1IOBKfBxFIZ4CLpt43Cd/aA==
+X-Received: by 2002:a63:dc09:: with SMTP id s9mr90195227pgg.425.1559020793656;
+        Mon, 27 May 2019 22:19:53 -0700 (PDT)
+Received: from [10.0.1.19] (S010620c9d00fc332.vf.shawcable.net. [70.71.167.160])
+        by smtp.gmail.com with ESMTPSA id h3sm12098133pfq.66.2019.05.27.22.19.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 22:19:52 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
+Date:   Mon, 27 May 2019 22:19:51 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+Message-Id: <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
+ <20190523210651.80902-5-fklassen@appneta.com>
+ <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
+ <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com>
+ <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
+ <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com>
+ <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/19 2:52 PM, Chris Packham wrote:=0A=
-> Hi,=0A=
-> =0A=
-> I'm trying to port a fairly old Broadcom integrated chip (BCM6818) to=0A=
-> the latest Linux kernel using the mips/bmips support.=0A=
-> =0A=
-> The chip has a BMIPS4355 core. This has two "thread processors" (cpu=0A=
-> cores) with separate I-caches but a shared D-cache.=0A=
-> =0A=
-> I've got things booting but I encounter the following BUG()=0A=
-> =0A=
-> BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0/1=
-=0A=
-> caller is blast_dcache16+0x24/0x154=0A=
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-at1 #5=0A=
-> Stack : 00000036 8008d0d0 806a0000 807c0000 80754e10 0000000b 80754684=0A=
-> 8f831c8c=0A=
->           80900000 8f828424 807986e7 8071348c 00000000 10008f00 8f831c30=
-=0A=
-> 7fb69e2a=0A=
->           00000000 00000000 80920000 00000056 00002335 00000000 807a0000=
-=0A=
-> 00000000=0A=
->           6d6d3a20 00000000 00000056 73776170 00000000 ffffffff 10008f01=
-=0A=
-> 807c0000=0A=
->           80790000 00002cc2 ffffffff 80900000 00000010 8f83198c 00000000=
-=0A=
-> 80900000=0A=
->           ...=0A=
-> Call Trace:=0A=
-> [<8001c208>] show_stack+0x30/0x100=0A=
-> [<8063282c>] dump_stack+0x9c/0xd0=0A=
-> [<802f1cec>] debug_smp_processor_id+0xfc/0x110=0A=
-> [<8002e274>] blast_dcache16+0x24/0x154=0A=
-> [<80122978>] map_vm_area+0x58/0x70=0A=
-> [<80123888>] __vmalloc_node_range+0x1fc/0x2b4=0A=
-> [<80123b54>] vmalloc+0x44/0x50=0A=
-> [<807d15d0>] jffs2_zlib_init+0x24/0x94=0A=
-> [<807d1354>] jffs2_compressors_init+0x10/0x30=0A=
-> [<807d151c>] init_jffs2_fs+0x68/0xf8=0A=
-> [<8001016c>] do_one_initcall+0x7c/0x1f0=0A=
-> [<807bee30>] kernel_init_freeable+0x17c/0x258=0A=
-> [<80650d1c>] kernel_init+0x10/0xf8=0A=
-> [<80015e6c>] ret_from_kernel_thread+0x14/0x1c=0A=
-> =0A=
-> In blast_dcache16 current_cpu_data is used which invokes=0A=
-> smp_processor_id() triggering the BUG(). I can fix this by sprinkling=0A=
-> preempt_disable/preempt_enable through arch/mips/mm/c-r4k.c but that=0A=
-> seems kind of wrong. Does anyone have any suggestion as to the right way=
-=0A=
-> to avoid this BUG()?=0A=
-> =0A=
-> Thanks,=0A=
-> Chris=0A=
-=0A=
-I think the following might do the trick=0A=
-=0A=
----- 8< ----=0A=
-diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c=0A=
-index 5166e38cd1c6..1fa7f093b59c 100644=0A=
---- a/arch/mips/mm/c-r4k.c=0A=
-+++ b/arch/mips/mm/c-r4k.c=0A=
-@@ -559,14 +559,19 @@ static inline int has_valid_asid(const struct =0A=
-mm_struct *mm, unsigned int type)=0A=
-         return 0;=0A=
-  }=0A=
-=0A=
--static void r4k__flush_cache_vmap(void)=0A=
-+static inline void local_r4k_flush_cache(void *args)=0A=
-  {=0A=
-         r4k_blast_dcache();=0A=
-  }=0A=
-=0A=
-+void r4k__flush_cache_vmap(void)=0A=
-+{=0A=
-+       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
-+}=0A=
-+=0A=
-  static void r4k__flush_cache_vunmap(void)=0A=
-  {=0A=
--       r4k_blast_dcache();=0A=
-+       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
-  }=0A=
-=0A=
-  /*=0A=
-@@ -1758,6 +1763,43 @@ static int __init cca_setup(char *str)=0A=
-         return 0;=0A=
-  }=0A=
----- 8< ----=0A=
-=0A=
-The rest of the call sites for r4k_blast_dcache() already run with =0A=
-preemption disabled.=0A=
+
+
+> On May 27, 2019, at 6:15 PM, Willem de Bruijn =
+<willemdebruijn.kernel@gmail.com> wrote:
+>> I wanted to discuss whether or not to attach a buffer to the
+>> recvmsg(fd, &msg, MSG_ERRQUEUE). Without it, I have
+>> MSG_TRUNC errors in my msg_flags. Either I have to add
+>> a buffer, or ignore that error flag.
+>=20
+> Either sounds reasonable. It is an expected and well understood
+> message if underprovisioning the receive data buffer.
+>=20
+
+I=E2=80=99ll stick with setting up buffers. It will fail if there are =
+any bugs=20
+introduced in buffer copy routines.
+
+>=20
+> The netdev list is archived and available through various websites,
+> like lore.kernel.org/netdev . As well as the patches with comments at
+> patchwork.ozlabs.org/project/netdev/list
+>=20
+
+Much better. Sure beats hunting down lost emails.
+
+
+>> I have been wondering about xmit_more
+>> myself. I don=E2=80=99t think it changes anything for software =
+timestamps,
+>> but it may with hardware timestamps.
+>=20
+> It arguably makes the software timestamp too early if taken on the
+> first segment, as the NIC is only informed of all the new descriptors
+> when the last segment is written and the doorbell is rung.
+>=20
+
+Totally makes sense. Possibly this can be improved software TX
+timestamps by delaying until just before ring buffer is advanced.
+It would have to be updated in each driver. I may have a look at
+this once I am complete this patch. Hopefully that one will be a bit
+smoother.=20
+
+>>> Can you elaborate on this suspected memory leak?
+>>=20
+>> A user program cannot free a zerocopy buffer until it is reported as =
+free.
+>> If zerocopy events are not reported, that could be a memory leak.
+>>=20
+>> I may have a fix. I have added a -P option when I am running an =
+audit.
+>> It doesn=E2=80=99t appear to affect performance, and since =
+implementing it I have
+>> received all error messages expected for both timestamp and zerocopy.
+>>=20
+>> I am still testing.
+>=20
+> I see, a userspace leak from lack of completion notification.
+>=20
+> If the issue is a few missing notifications at the end of the run,
+> then perhaps cfg_waittime_ms is too short.
+>=20
+
+I=E2=80=99ll get back to you when I have tested this more thoroughly. =
+Early results
+suggest that adding the -P poll() option has fixed it without any =
+appreciable
+performance hit. I=E2=80=99ll share raw results with you, and we can =
+make a final
+decision together.
+
+>> Should the test have failed at this point? I did return an error(), =
+but
+>> the script kept running.
+>=20
+> This should normally be cause for test failure, I think yes. Though
+> it's fine to send the code for review and possibly even merge, so that
+> I can take a look.
+>=20
+
+Sounds like udpgso_bench.sh needs a =E2=80=99set -e=E2=80=99 to ensure =
+it stops on
+first error.
+
