@@ -2,176 +2,128 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44288C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494B9206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265ED206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfE1POD (ORCPT
+        id S1727968AbfE1POH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:14:03 -0400
-Received: from foss.arm.com ([217.140.101.70]:59276 "EHLO foss.arm.com"
+        Tue, 28 May 2019 11:14:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35143 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfE1POB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:14:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EEB880D;
-        Tue, 28 May 2019 08:14:00 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A49ED3F59C;
-        Tue, 28 May 2019 08:13:58 -0700 (PDT)
-Date:   Tue, 28 May 2019 16:13:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Message-ID: <20190528151330.GA28649@redmoon>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-2-bjorn.andersson@linaro.org>
- <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+        id S1727921AbfE1POG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:14:06 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7F468301988B;
+        Tue, 28 May 2019 15:14:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-65.rdu2.redhat.com [10.10.125.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29E44C087F;
+        Tue, 28 May 2019 15:14:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 21/25] fsinfo: pstore - add sb operation fsinfo() [ver #13]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mszeredi@redhat.com
+Date:   Tue, 28 May 2019 16:14:04 +0100
+Message-ID: <155905644440.1662.3745883327641806605.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 28 May 2019 15:14:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 12:14:04PM +0300, Stanimir Varbanov wrote:
-> Hi Bjorn,
-> 
-> On 5/2/19 3:19 AM, Bjorn Andersson wrote:
-> > Before introducing the QCS404 platform, which uses the same PCIe
-> > controller as IPQ4019, migrate this to use the bulk clock API, in order
-> > to make the error paths slighly cleaner.
-> > 
-> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v2:
-> > - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
-> > 
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
-> >  1 file changed, 14 insertions(+), 35 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d560e3..d740cbe0e56d 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
-> >  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
-> >  };
-> >  
-> > +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
-> >  struct qcom_pcie_resources_2_4_0 {
-> > -	struct clk *aux_clk;
-> > -	struct clk *master_clk;
-> > -	struct clk *slave_clk;
-> > +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
-> > +	int num_clks;
-> >  	struct reset_control *axi_m_reset;
-> >  	struct reset_control *axi_s_reset;
-> >  	struct reset_control *pipe_reset;
-> > @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
-> >  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
-> >  	struct dw_pcie *pci = pcie->pci;
-> >  	struct device *dev = pci->dev;
-> > +	int ret;
-> >  
-> > -	res->aux_clk = devm_clk_get(dev, "aux");
-> > -	if (IS_ERR(res->aux_clk))
-> > -		return PTR_ERR(res->aux_clk);
-> > +	res->clks[0].id = "aux";
-> > +	res->clks[1].id = "master_bus";
-> > +	res->clks[2].id = "slave_bus";
-> >  
-> > -	res->master_clk = devm_clk_get(dev, "master_bus");
-> > -	if (IS_ERR(res->master_clk))
-> > -		return PTR_ERR(res->master_clk);
-> > +	res->num_clks = 3;
-> 
-> Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
-> 
-> >  
-> > -	res->slave_clk = devm_clk_get(dev, "slave_bus");
-> > -	if (IS_ERR(res->slave_clk))
-> > -		return PTR_ERR(res->slave_clk);
-> > +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-> > +	if (ret < 0)
-> > +		return ret;
-> >  
-> >  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
-> >  	if (IS_ERR(res->axi_m_reset))
-> > @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
-> >  	reset_control_assert(res->axi_m_sticky_reset);
-> >  	reset_control_assert(res->pwr_reset);
-> >  	reset_control_assert(res->ahb_reset);
-> > -	clk_disable_unprepare(res->aux_clk);
-> > -	clk_disable_unprepare(res->master_clk);
-> > -	clk_disable_unprepare(res->slave_clk);
-> > +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
-> >  }
-> >  
-> >  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> > @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> >  
-> >  	usleep_range(10000, 12000);
-> >  
-> > -	ret = clk_prepare_enable(res->aux_clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot prepare/enable iface clock\n");
-> > +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-> > +	if (ret)
-> >  		goto err_clk_aux;
-> 
-> Maybe you have to change the name of the label too?
-> 
-> > -	}
-> > -
-> > -	ret = clk_prepare_enable(res->master_clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot prepare/enable core clock\n");
-> > -		goto err_clk_axi_m;
-> > -	}
-> > -
-> > -	ret = clk_prepare_enable(res->slave_clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot prepare/enable phy clock\n");
-> > -		goto err_clk_axi_s;
-> > -	}
-> >  
-> >  	/* enable PCIe clocks and resets */
-> >  	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > @@ -891,10 +874,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> >  
-> >  	return 0;
-> >  
-> > -err_clk_axi_s:
-> > -	clk_disable_unprepare(res->master_clk);
-> > -err_clk_axi_m:
-> > -	clk_disable_unprepare(res->aux_clk);
-> >  err_clk_aux:
-> >  	reset_control_assert(res->ahb_reset);
-> >  err_rst_ahb:
+From: Ian Kent <raven@themaw.net>
 
-Hi Bjorn, Stanimir,
+The new fsinfo() system call adds a new super block operation
+->fsinfo() which is used by file systems to provide file
+system specific information for fsinfo() requests.
 
-can I merge the series as-is or we need a v4 for the requested
-updates ? Please let me know.
+The fsinfo() request FSINFO_ATTR_PARAMETERS provides the same
+function as sb operation ->show_options() so it needs to be
+implemented by any file system that provides ->show_options()
+as a minimum.
 
-Thanks,
-Lorenzo
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/pstore/inode.c |   31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 4640debf8755..44f4ffc4436e 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -36,6 +36,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/uaccess.h>
++#include <linux/fsinfo.h>
+ 
+ #include "internal.h"
+ 
+@@ -281,6 +282,33 @@ static int pstore_show_options(struct seq_file *m, struct dentry *root)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_FSINFO
++/*
++ * Get filesystem information.
++ */
++static int pstore_fsinfo(struct path *path, struct fsinfo_kparams *params)
++{
++	struct fsinfo_capabilities *caps;
++
++	switch (params->request) {
++	case FSINFO_ATTR_CAPABILITIES:
++		caps = params->buffer;
++		fsinfo_set_cap(caps, FSINFO_CAP_IS_FLASH_FS);
++		fsinfo_set_cap(caps, FSINFO_CAP_HAS_CTIME);
++		fsinfo_set_cap(caps, FSINFO_CAP_HAS_MTIME);
++		return sizeof(*caps);
++
++	case FSINFO_ATTR_PARAMETERS:
++		if (kmsg_bytes != PSTORE_DEFAULT_KMSG_BYTES)
++			fsinfo_note_paramf(params, "kmsg_bytes", "%lu", kmsg_bytes);
++		return params->usage;
++
++	default:
++		return generic_fsinfo(path, params);
++	}
++}
++#endif /* CONFIG_FSINFO */
++
+ static int pstore_reconfigure(struct fs_context *fc)
+ {
+ 	sync_filesystem(fc->root->d_sb);
+@@ -293,6 +321,9 @@ static const struct super_operations pstore_ops = {
+ 	.drop_inode	= generic_delete_inode,
+ 	.evict_inode	= pstore_evict_inode,
+ 	.show_options	= pstore_show_options,
++#ifdef CONFIG_FSINFO
++	.fsinfo		= pstore_fsinfo,
++#endif
+ };
+ 
+ static struct super_block *pstore_sb;
+
