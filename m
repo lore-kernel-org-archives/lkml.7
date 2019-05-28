@@ -2,100 +2,132 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A807C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2948FC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB2420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pd06yysC"
+	by mail.kernel.org (Postfix) with ESMTP id 102C920717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfE1TDz (ORCPT
+        id S1727553AbfE1TFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:03:55 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44197 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfE1TDy (ORCPT
+        Tue, 28 May 2019 15:05:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51180 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1TFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:03:54 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so5989823lfm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xNIfN8iP61jt3zQccTc9JxOkZ8J4CEm1u7qbNWzRMOM=;
-        b=Pd06yysCLBSycRTXjmvKdW4Y+phHo573v+/6jzUP+xP3ps/hunOO1mtGrJzymmotMx
-         7zR1oU8ZhbJj6VR78NkwLbJCmbgDlR7RA9b9wJIKnVnlN5jzcYV8+ATU/fkJ7tc8ab7w
-         /+hb4CRqYA40DegwtV/SFf/6I8uHmFQixBD+OW25ggCJjCc/O1z+7TaZwvyE+BSibKBd
-         v93/MxXRvgdq3Jkw7MhzduiRY55JyN6o3S0bwW10eo6Jd0abP542DYqBvpjnY3ssA5md
-         rH5mrArbilaSYpjmru+39iJLPZupA8VX4KmPS+PI8UW6HiWd17rLGY9+/NKCIy47WG2d
-         lNbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xNIfN8iP61jt3zQccTc9JxOkZ8J4CEm1u7qbNWzRMOM=;
-        b=bp6VZrzSCyXI7od1JUfG2kviK/HB8v92qB/jZp3GGDqkGRzHAPQVPbGOOLcVBjveAx
-         zdcVftqwtP8O259J7z7DLap5omXmAhQ0+RStQ5UHagI1M7FeGXzYqqUxB1+sQiHKP4uO
-         mMTneQEERehP7mxxasmWR4VQHTuFsIeUjz5gAtyVxy6N/CfxJ2xLEIpIQoiNaCrImLpN
-         g/5oiDaI/jC16ChwM6ikJoZutwsa6DEY20Zwtm5Olwvg6vqgTA5yrgoyBfksWmAe5jL8
-         MRMa7xGkumoQZl4JS+OJiL8oOIOlgaHPoij+0TMtycgQ9EMhbUoA+qJeNtyFwUfJyoJ4
-         S+DQ==
-X-Gm-Message-State: APjAAAUxGXa2Z2NmQ9xZ4e4oW4XpOMEEdDLB8CR1gICLHHgSNO+3XdEi
-        ZrQKGCNH1Cu0Yo3vd/lqR4fjgfHTIeVi6Oyqdn0=
-X-Google-Smtp-Source: APXvYqxOnR1QAtlj4QPyaxK/bP27aOlkgoiK+XMInOl7nujBMV3IZ3Lpodwe6l5EmMlVNYQnEc9yesNbk20aP1l6zrU=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr2369750lfn.165.1559070232676;
- Tue, 28 May 2019 12:03:52 -0700 (PDT)
+        Tue, 28 May 2019 15:05:47 -0400
+Received: from static-50-53-34-51.bvtn.or.frontiernet.net ([50.53.34.51] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1hVhPs-0003DX-Gn; Tue, 28 May 2019 19:05:44 +0000
+Subject: Re: [PATCH] apparmor: enforce nullbyte at end of tag string
+To:     Jann Horn <jannh@google.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190528153226.248785-1-jannh@google.com>
+From:   John Johansen <john.johansen@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <25ad5770-2ab3-10d0-8d51-62d7c5f9aeda@canonical.com>
+Date:   Tue, 28 May 2019 12:05:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558366258-3808-1-git-send-email-jrdr.linux@gmail.com>
- <20190521085547.58e1650c@erd987> <CAFqt6zZA32QA-6VtaKcrEtq=qkoGLHpirSvXb5wt7-wd_-74hQ@mail.gmail.com>
- <CANiq72nd5i4ADU1GbEt1Dkhp-5YkC9ip-h4a0G64oN+b95wAXA@mail.gmail.com>
- <CANiq72=zCD7AAE-OBzDYm5GXenoF48SdzwO1LunWSfexqBuH7A@mail.gmail.com> <CAFqt6zaUhPJYozmq-m_BjJTh5EUmsQoE4yZ+Ovv6F-ymns+JGA@mail.gmail.com>
-In-Reply-To: <CAFqt6zaUhPJYozmq-m_BjJTh5EUmsQoE4yZ+Ovv6F-ymns+JGA@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 28 May 2019 21:03:41 +0200
-Message-ID: <CANiq72miwcM8Jt1pFeCKs=rstbSB70wyPGPSiC7Mgf3f=Z44Lg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     Robin van der Gracht <robin@protonic.nl>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190528153226.248785-1-jannh@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 8:07 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> > > Taking a quick look now, by the way, why does vm_map_pages_zero() (and
-> > > __vm_map_pages() etc.) get a pointer to an array instead of a pointer
-> > > to the first element?
->
-> For this particular driver, one page is getting mapped into vma. But
-> there are other
-> places where a entire page array ( with more than one pages) mapped into
-> vma. That's the reason to pass pointer to an array and do rest of the operations
-> inside __vm_map_pages().
+On 5/28/19 8:32 AM, Jann Horn wrote:
+> A packed AppArmor policy contains null-terminated tag strings that are read
+> by unpack_nameX(). However, unpack_nameX() uses string functions on them
+> without ensuring that they are actually null-terminated, potentially
+> leading to out-of-bounds accesses.
+> 
+> Make sure that the tag string is null-terminated before passing it to
+> strcmp().
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Ah, "pointer to array of source kernel pages" made me think the actual
-`struct page`s were the ones consecutive in memory, not the pointers.
-Maybe "array of page pointers" is more clear.
+gah! yes!
 
-> > Also, in __vm_map_pages(), semantically w.r.t. to the comment,
-> > shouldn't the first check test for equality too? (i.e. for vm_pgoff ==
-> > num)? (even if such case fails in the second test anyway).
->
-> Sorry, didn't get it. Do you mean there should be a separate check for
-> *vm_pgoff == num* ?
+Acked-by: John Johansen <john.johansen@canonical.com>
 
-No, that the first check should be widened. I will send a patch.
 
-Cheers,
-Miguel
+> ---
+> Warning: The existence of this bug has not been verified at runtime, and
+> the patch is compile-tested only. I noticed this while browsing through
+> the code, but didn't want to spend the time necessary to figure out how
+> to actually test this at runtime.
+> 
+> 
+>  security/apparmor/policy_unpack.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
+> index f6c2bcb2ab14..33041c4fb69f 100644
+> --- a/security/apparmor/policy_unpack.c
+> +++ b/security/apparmor/policy_unpack.c
+> @@ -276,7 +276,7 @@ static bool unpack_nameX(struct aa_ext *e, enum aa_code code, const char *name)
+>  		char *tag = NULL;
+>  		size_t size = unpack_u16_chunk(e, &tag);
+>  		/* if a name is specified it must match. otherwise skip tag */
+> -		if (name && (!size || strcmp(name, tag)))
+> +		if (name && (!size || tag[size-1] != '\0' || strcmp(name, tag)))
+>  			goto fail;
+>  	} else if (name) {
+>  		/* if a name is specified and there is no name tag fail */
+> 
+
