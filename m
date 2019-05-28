@@ -2,73 +2,107 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9AFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1588C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBDE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C589208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:17:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FJV+vbNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfE1JQO (ORCPT
+        id S1726795AbfE1JR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:16:14 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55099 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbfE1JQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:16:14 -0400
-Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VYDLhh7WDsDWyVYDMhcQrR; Tue, 28 May 2019 11:16:12 +0200
-Subject: Re: [RFCv1 07/12] media: mtk-vcodec: abstract firmware interface
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190528055635.12109-1-acourbot@chromium.org>
- <20190528055635.12109-8-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b4320740-a016-4a0e-b9ae-e042fd305b12@xs4all.nl>
-Date:   Tue, 28 May 2019 11:16:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190528055635.12109-8-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 28 May 2019 05:17:56 -0400
+Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:5764
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbfE1JR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:17:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AWj5naSzV0ySCY1ZNrovPMjNnQtCqGhYnXGehj0aWog=;
+ b=FJV+vbNnNMhJZJmUnGDbo8Kf7dY5d1wX0nBDeOkRsGlftG7UdrnCBn6bkrun7sJ+h5TwRKwLyWHL6xClLAZV827pXKTIkxN5GOEiZa2C3PLR+gOqChPsCZr2zBqMW9mC+6G62MYazs23NUNTsyfGALSDNcBqkxzqXWZXvrnumkA=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3885.eurprd04.prod.outlook.com (52.134.17.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Tue, 28 May 2019 09:17:52 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 09:17:52 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v1 00/15] Fixing selftests failure on Talitos driver
+Thread-Topic: [PATCH v1 00/15] Fixing selftests failure on Talitos driver
+Thread-Index: AQHVD9neuB3rF5DbdU6FGGdK8ciL0Q==
+Date:   Tue, 28 May 2019 09:17:52 +0000
+Message-ID: <VI1PR0402MB34850975FDD8F5F1CE366A9C981E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1558445259.git.christophe.leroy@c-s.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHQtOX5MADbrSc0BgR3Xf4uWHabvx/iNsQfFjPfE1Hf9KtO+FwUZN9IsdsogUKl6uB7HAuflCzsZ3lukkMA0xM4v976x9GK4kn5ZkOCn2KflZQjmqe6N
- t9aZc5owBO9OFgzn2FvpSVErPNkgx3dBFKtjxg4QcQ0hiMKQ5zAlAsDNXpwja9aOG9iq8kXlQc0Il1NXLyHuDjNobyi4w44pall/sd8cciHEdRqbI64Q8Fpd
- 1DpnKdVTuH7mWd25wXMObFc+eLQ/iqIFyA+JptP0h6ZI+sQcv47lLsxTLxAtEXxM8lPGbJCos5fLIN0QydR1vSYScr4qNxVwxdirIO2pArsRdPhQjZb1UgPg
- f92vGuWQi5naaIqboo45SRDEO69J21avyhJjd9VprAfVMpb3F7lEkYPt7Fr7eJ8T4lvofRYhVTucYQklvWhSF+z128KPPAu+iFKJDISsHkpRciZjVoovNJjN
- C0YmXMtHZapVfZ5+aHTVIZ5zxZ9P0xGpIclS5wECvZnrp6xHxBlL6eCBTcZvzzlQZehFOeyE2gsu2fpy
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6462515-2c1f-44c4-b3cd-08d6e34d5cd4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3885;
+x-ms-traffictypediagnostic: VI1PR0402MB3885:
+x-microsoft-antispam-prvs: <VI1PR0402MB3885CA9DEAB69658D6DE6EE9981E0@VI1PR0402MB3885.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(366004)(136003)(189003)(199004)(68736007)(486006)(476003)(4326008)(186003)(446003)(53936002)(6246003)(9686003)(5660300002)(55016002)(66066001)(76176011)(478600001)(4744005)(316002)(74316002)(26005)(66946007)(76116006)(73956011)(52536014)(25786009)(66446008)(66476007)(66556008)(64756008)(6506007)(14444005)(14454004)(99286004)(8676002)(81156014)(256004)(81166006)(110136005)(6116002)(3846002)(54906003)(33656002)(71190400001)(53546011)(44832011)(71200400001)(7696005)(305945005)(7736002)(102836004)(2906002)(6436002)(8936002)(229853002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3885;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dRJv2WAxvIzDvLYch559MunUOf5sxswNfkQ6O4ceognW7o5TCBPliiPn3i/0jvJ5VoYTGyDDy1MTqumAjBwEx7FOKaautF4t2bsy+BIZI2Y+ghEywTcK/IRf+Zw7zUrFOSJisrqyaIey8eJzh3IIb0pjv2NLD6qDh/DgRTllCW8YuGgZM3AW1a/ENj53/vTLShbS/WAWg4O3tbcI1GrJNmJy80W1nW+fWcWidYCvYkr+XeZcgQ92vVtSWywSidPIfa9BKUn7+Uo5IGEXeyRCfm65mof4vfcijT+omLQFJ0BZnMURy32FE4+KZjSxYBs5sChvvU593IEMPjYlJyIIHNvMDR+TGjM2cQRcZmmeums0uNQ5u0+Vl2ovb1EBLNEbOiO2srX55paaVlrinQgy4WFat6lqrlM+d/VN08p6cko=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6462515-2c1f-44c4-b3cd-08d6e34d5cd4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 09:17:52.7205
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3885
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 7:56 AM, Alexandre Courbot wrote:
-> From: Yunfei Dong <yunfei.dong@mediatek.com>
-> 
-> MT8183's codec firwmare is run by a different remote processor from
-> MT8173. While the firmware interface is basically the same, the way to
-> invoke it differs. Abstract all firmware calls under a layer that will
-> allow us to handle both firmware types transparently.
-> 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> [acourbot: refactor, cleanup and split]
-
-High-level question: is the mt8183 firmware different from the MT8173?
-And if so, is or will that firmware be part of linux-firmware?
-
-Regards,
-
-	Hans
+On 5/21/2019 4:34 PM, Christophe Leroy wrote:=0A=
+> Several test failures have popped up following recent changes to crypto=
+=0A=
+> selftests.=0A=
+> =0A=
+> This series fixes (most of) them.=0A=
+> =0A=
+> The last three patches are trivial cleanups.=0A=
+> =0A=
+Thanks Christophe.=0A=
+=0A=
+For the series:=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Have you validated the changes also on SEC 2.x+?=0A=
+Asking since IIRC you mentioned having only HW with SEC 1 and changes in pa=
+tch=0A=
+"crypto: talitos - fix AEAD processing." look quite complex.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
+=0A=
