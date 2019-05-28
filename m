@@ -2,116 +2,154 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC61C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA112C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C6121670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F97F21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+ijoieu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfE1Urn (ORCPT
+        id S1727597AbfE1UsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:47:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50142 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfE1Urm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:47:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8C8317FDCA;
-        Tue, 28 May 2019 20:47:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 57DB3600C1;
-        Tue, 28 May 2019 20:47:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] Smack: Restore the smackfsdef mount option and add missing
- prefixes
-From:   David Howells <dhowells@redhat.com>
-To:     casey@schaufler-ca.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 28 May 2019 21:47:40 +0100
-Message-ID: <155907646050.25083.16573974978890009010.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 28 May 2019 16:48:03 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:40233 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfE1UsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:48:02 -0400
+Received: by mail-it1-f196.google.com with SMTP id h11so6208193itf.5;
+        Tue, 28 May 2019 13:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LFTmISDOpToJAYI9xiYodY0/ymmT3aFnC+eXeyWSay0=;
+        b=m+ijoieuI2Q5AoznyEWu7Ah+4dfaAshTJOVihWAKBwpkDxbw3Np5wBgBGNN1TqSNhP
+         v8dmA2qSIOm3pkPK920nRHvFOvF+xAUaq6D/TP1qqICC2mFGnDevbuseJhui0woW80bZ
+         qgnbi2YBfPdokAAFdDMA1f9eN9T3CY3OBDnSO4vy6cZc/EVVrcTMjtyYTULGHVIXc3x2
+         tCcBoozlZJWLoKUzz+WrRLBNyjlSFfsPeYSmuptqufdR4eiKjA6Ejkn5mXut97vUyaq7
+         GcF/lYLbdYW2RGpYFVwDTyNuXXO6zgRF1mmWC8aUvszugl/d2tk/ShyKCMObLsOpq8sh
+         oYSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LFTmISDOpToJAYI9xiYodY0/ymmT3aFnC+eXeyWSay0=;
+        b=DO2pszPn359/Fu5/pQunQSTR2CBw/zjnysiz39elDxZ1TVKp8jGKPavmxp5yt0kaUq
+         rJfkku8gnB9jRDki8TNxuE2bVBcvGyJyv8Lh99zALQ49CNi4lQgAhlNFcagEf31SG7X0
+         ZOj8ulk9Oiw8RjVhsgLD8JN5oBkQ+fDP++ojIuctnDBRk0aEAxvH+ScwgEuB8G41GKEd
+         HVhYCoJ+kd3WppUQ/lp1cexNnkqCw8QulB371kyW3C5W8ZO9saM9sCNiYIscJgZNoYxR
+         jiLOw4ERChjXIra8RBviiSnF+UgOiODp2azJhtal3wPppDXZcTsw/290GTijfa5/iUrM
+         ZCJw==
+X-Gm-Message-State: APjAAAWH9Ri3ZPrISxUwu2JoX8226VQb3VfoBLNf7/oX9DZC0MdjTUXQ
+        JddGIGWENpbu9CbCxCplvGNgFUwVxNvKUaw84oM=
+X-Google-Smtp-Source: APXvYqwCstUVHiNHKuq+B8xRc5Ddii2BYUzoNbtcVsxHyYISvQQtSxAjQvX9Y0VQICv+bOsXrBQCwl3alKglk8D5b+c=
+X-Received: by 2002:a24:e084:: with SMTP id c126mr4522175ith.124.1559076481674;
+ Tue, 28 May 2019 13:48:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 20:47:42 +0000 (UTC)
+References: <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com> <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com> <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+ <20190524141054.GB2655@redhat.com> <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
+ <20190524163310.GG2655@redhat.com> <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
+ <20190527150409.GA8961@redhat.com>
+In-Reply-To: <20190527150409.GA8961@redhat.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 28 May 2019 13:47:28 -0700
+Message-ID: <CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Casey Schaufler <casey@schaufler-ca.com>
+On Mon, May 27, 2019 at 8:04 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Deepa,
+>
+> it seems that we both are saying the same things again and again, and we
+> simply can't understand each other.
 
-The 5.1 mount system rework changed the smackfsdef mount option
-to smackfsdefault. This fixes the regression by making smackfsdef
-treated the same way as smackfsdefault.
+Oleg, I'm sorry for the confusion.  Maybe I should point out what I
+agree with also.
 
-Also fix the smack_param_specs[] to have "smack" prefixes on all the names.
-This isn't visible to a user unless they either:
+I agree that signal handller being called and return value not being
+altered is an issue with other syscalls also. I was just wondering if
+some userspace code assumption would be assuming this. This is not a
+kernel bug.
 
- (a) Try to mount a filesystem that's converted to the internal mount API
-     and that implements the ->parse_monolithic() context operation - and
-     only then if they call security_fs_context_parse_param() rather than
-     security_sb_eat_lsm_opts().
+But, I do not think we have an understanding of what was wrong in
+854a6ed56839a anymore since you pointed out that my assumption was not
+correct that the signal handler being called without errno being set
+is wrong.
 
-     There are no examples of this upstream yet, but nfs will probably want
-     to do this for nfs2 or nfs3.
+One open question: this part of epoll_pwait was already broken before
+854a6ed56839a. Do you agree?
 
- (b) Use fsconfig() to configure the filesystem - in which case
-     security_fs_context_parse_param() will be called.
+if (err == -EINTR) {
+                   memcpy(&current->saved_sigmask, &sigsaved,
+                          sizeof(sigsaved));
+                    set_restore_sigmask();
+  } else
+                   set_current_blocked(&sigsaved);
 
-This issue is that smack_sb_eat_lsm_opts() checks for the "smack" prefix on
-the options, but smack_fs_context_parse_param() does not.
+What to do next?
+We could just see if your optimization patch resolves Eric's issue.
+Or, I could revert the signal_pending() check and provide a fix
+something like below(not a complete patch) since mainline has this
+regression. Eric had tested something like this works also. And, I can
+continue to look at what was wrong with 854a6ed56839a in the first
+place. Let me know what you prefer:
 
-Fixes: c3300aaf95fb ("smack: get rid of match_token()")
-Fixes: 2febd254adc4 ("smack: Implement filesystem context security hooks")
-Cc: stable@vger.kernel.org
-Reported-by: Jose Bollo <jose.bollo@iot.bzh>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
++int restore_user_sigmask(const void __user *usigmask, sigset_t
+*sigsaved, int sig_pending)
+ {
 
- security/smack/smack_lsm.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+        if (!usigmask)
+               return;
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 0de725f88bed..d99450b4f511 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -68,6 +68,7 @@ static struct {
- 	int len;
- 	int opt;
- } smk_mount_opts[] = {
-+	{"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
- 	A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
- };
- #undef A
-@@ -682,11 +683,12 @@ static int smack_fs_context_dup(struct fs_context *fc,
- }
- 
- static const struct fs_parameter_spec smack_param_specs[] = {
--	fsparam_string("fsdefault",	Opt_fsdefault),
--	fsparam_string("fsfloor",	Opt_fsfloor),
--	fsparam_string("fshat",		Opt_fshat),
--	fsparam_string("fsroot",	Opt_fsroot),
--	fsparam_string("fstransmute",	Opt_fstransmute),
-+	fsparam_string("smackfsdef",		Opt_fsdefault),
-+	fsparam_string("smackfsdefault",	Opt_fsdefault),
-+	fsparam_string("smackfsfloor",		Opt_fsfloor),
-+	fsparam_string("smackfshat",		Opt_fshat),
-+	fsparam_string("smackfsroot",		Opt_fsroot),
-+	fsparam_string("smackfstransmute",	Opt_fstransmute),
- 	{}
- };
- 
+        /*
+         * When signals are pending, do not restore them here.
+         * Restoring sigmask here can lead to delivering signals that the above
+         * syscalls are intended to block because of the sigmask passed in.
+         */
++       if (sig_pending) {
+                current->saved_sigmask = *sigsaved;
+                set_restore_sigmask();
+               return;
+           }
 
+@@ -2330,7 +2330,8 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
+epoll_event __user *, events,
+
+        error = do_epoll_wait(epfd, events, maxevents, timeout);
+
+-       restore_user_sigmask(sigmask, &sigsaved);
++       signal_detected = restore_user_sigmask(sigmask, &sigsaved,
+error == -EINTR);
+
+-Deepa
