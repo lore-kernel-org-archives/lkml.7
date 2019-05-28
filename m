@@ -2,150 +2,227 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B018C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF9C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541892081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C84208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559042590;
+	bh=xCTbSkA9E2ZK9Qb5B/KmXzjAxM64rKW0LvN/KmsTp44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n7H8pfGQs5UQRCDPpoImUC+ThJOc6N7IHco06awGR/JpPIDjkyxx9l1MKpz1CdupY
+	 8B2HI6gXx9S3svu+8HVfWCpLLSEq9KuZewT499G5ZzXYCxt27xwKdi0uNSvlPKBXyX
+	 xz5KhNdu4AlUvPgY1v5C1LF/Y/1+W8zRszvPro8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfE1LWv (ORCPT
+        id S1726761AbfE1LXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:22:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47650 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726313AbfE1LWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:22:50 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6471B81126;
-        Tue, 28 May 2019 11:22:40 +0000 (UTC)
-Received: from kasong-rh-laptop.pek2.redhat.com (wlc-trust-154.pek2.redhat.com [10.72.3.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 980967C0B4;
-        Tue, 28 May 2019 11:22:32 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>
-Subject: [PATCH v4] vmcore: Add a kernel parameter novmcoredd
-Date:   Tue, 28 May 2019 19:18:56 +0800
-Message-Id: <20190528111856.7276-1-kasong@redhat.com>
+        Tue, 28 May 2019 07:23:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726313AbfE1LXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:23:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1EFA0AF42;
+        Tue, 28 May 2019 11:23:07 +0000 (UTC)
+Date:   Tue, 28 May 2019 13:23:05 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
+        dan.j.williams@intel.com, keith.busch@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
+        thomas.lendacky@amd.com, ying.huang@intel.com,
+        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
+        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
+        david@redhat.com
+Subject: Re: [v6 2/3] mm/hotplug: make remove_memory() interface useable
+Message-ID: <20190528112305.GX1658@dhcp22.suse.cz>
+References: <20190517215438.6487-1-pasha.tatashin@soleen.com>
+ <20190517215438.6487-3-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 28 May 2019 11:22:50 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517215438.6487-3-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 2724273e8fd0 ("vmcore: add API to collect hardware dump in
-second kernel"), drivers is allowed to add device related dump data to
-vmcore as they want by using the device dump API. This have a potential
-issue, the data is stored in memory, drivers may append too much data
-and use too much memory. The vmcore is typically used in a kdump kernel
-which runs in a pre-reserved small chunk of memory. So as a result it
-will make kdump unusable at all due to OOM issues.
+On Fri 17-05-19 17:54:37, Pavel Tatashin wrote:
+> As of right now remove_memory() interface is inherently broken. It tries
+> to remove memory but panics if some memory is not offline. The problem
+> is that it is impossible to ensure that all memory blocks are offline as
+> this function also takes lock_device_hotplug that is required to
+> change memory state via sysfs.
+> 
+> So, between calling this function and offlining all memory blocks there
+> is always a window when lock_device_hotplug is released, and therefore,
+> there is always a chance for a panic during this window.
+> 
+> Make this interface to return an error if memory removal fails. This way
+> it is safe to call this function without panicking machine, and also
+> makes it symmetric to add_memory() which already returns an error.
 
-So introduce new 'novmcoredd' command line option. User can disable
-device dump to reduce memory usage. This is helpful if device dump is
-using too much memory, disabling device dump could make sure a regular
-vmcore without device dump data is still available.
+I was about to object because of the acpi hotremove but looking closer
+acpi_memory_remove_memory and few others already do use __remove_memory
+instead of remove_memory so this is good to go. I really hate how we had
+to BUG in remove_memory as well so this is definitely a good change.
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
----
- Update from V3:
-  - Use novmcoredd instead of vmcore_device_dump. Use
-    vmcore_device_dump and make it off by default is confusing,
-    novmcoredd is a cleaner way to let user space be able to disable
-    device dump to save memory.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
- Update from V2:
-  - Improve related docs
+> ---
+>  include/linux/memory_hotplug.h |  8 +++--
+>  mm/memory_hotplug.c            | 64 +++++++++++++++++++++++-----------
+>  2 files changed, 49 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index ae892eef8b82..988fde33cd7f 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -324,7 +324,7 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
+>  extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
+>  extern void try_offline_node(int nid);
+>  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+> -extern void remove_memory(int nid, u64 start, u64 size);
+> +extern int remove_memory(int nid, u64 start, u64 size);
+>  extern void __remove_memory(int nid, u64 start, u64 size);
+>  
+>  #else
+> @@ -341,7 +341,11 @@ static inline int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+>  	return -EINVAL;
+>  }
+>  
+> -static inline void remove_memory(int nid, u64 start, u64 size) {}
+> +static inline int remove_memory(int nid, u64 start, u64 size)
+> +{
+> +	return -EBUSY;
+> +}
+> +
+>  static inline void __remove_memory(int nid, u64 start, u64 size) {}
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>  
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 328878b6799d..ace2cc614da4 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1735,9 +1735,10 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
+>  		endpa = PFN_PHYS(section_nr_to_pfn(mem->end_section_nr + 1))-1;
+>  		pr_warn("removing memory fails, because memory [%pa-%pa] is onlined\n",
+>  			&beginpa, &endpa);
+> -	}
+>  
+> -	return ret;
+> +		return -EBUSY;
+> +	}
+> +	return 0;
+>  }
+>  
+>  static int check_cpu_on_node(pg_data_t *pgdat)
+> @@ -1820,19 +1821,9 @@ static void __release_memory_resource(resource_size_t start,
+>  	}
+>  }
+>  
+> -/**
+> - * remove_memory
+> - * @nid: the node ID
+> - * @start: physical address of the region to remove
+> - * @size: size of the region to remove
+> - *
+> - * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+> - * and online/offline operations before this call, as required by
+> - * try_offline_node().
+> - */
+> -void __ref __remove_memory(int nid, u64 start, u64 size)
+> +static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>  {
+> -	int ret;
+> +	int rc = 0;
+>  
+>  	BUG_ON(check_hotplug_memory_range(start, size));
+>  
+> @@ -1840,13 +1831,13 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+>  
+>  	/*
+>  	 * All memory blocks must be offlined before removing memory.  Check
+> -	 * whether all memory blocks in question are offline and trigger a BUG()
+> +	 * whether all memory blocks in question are offline and return error
+>  	 * if this is not the case.
+>  	 */
+> -	ret = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
+> -				check_memblock_offlined_cb);
+> -	if (ret)
+> -		BUG();
+> +	rc = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
+> +			       check_memblock_offlined_cb);
+> +	if (rc)
+> +		goto done;
+>  
+>  	/* remove memmap entry */
+>  	firmware_map_remove(start, start + size, "System RAM");
+> @@ -1858,14 +1849,45 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+>  
+>  	try_offline_node(nid);
+>  
+> +done:
+>  	mem_hotplug_done();
+> +	return rc;
+>  }
+>  
+> -void remove_memory(int nid, u64 start, u64 size)
+> +/**
+> + * remove_memory
+> + * @nid: the node ID
+> + * @start: physical address of the region to remove
+> + * @size: size of the region to remove
+> + *
+> + * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+> + * and online/offline operations before this call, as required by
+> + * try_offline_node().
+> + */
+> +void __remove_memory(int nid, u64 start, u64 size)
+> +{
+> +
+> +	/*
+> +	 * trigger BUG() is some memory is not offlined prior to calling this
+> +	 * function
+> +	 */
+> +	if (try_remove_memory(nid, start, size))
+> +		BUG();
+> +}
+> +
+> +/*
+> + * Remove memory if every memory block is offline, otherwise return -EBUSY is
+> + * some memory is not offline
+> + */
+> +int remove_memory(int nid, u64 start, u64 size)
+>  {
+> +	int rc;
+> +
+>  	lock_device_hotplug();
+> -	__remove_memory(nid, start, size);
+> +	rc  = try_remove_memory(nid, start, size);
+>  	unlock_device_hotplug();
+> +
+> +	return rc;
+>  }
+>  EXPORT_SYMBOL_GPL(remove_memory);
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+> -- 
+> 2.21.0
+> 
 
- Update from V1:
-  - Use bool parameter to turn it on/off instead of letting user give
-    the size limit. Size of device dump is hard to determine.
-
- Documentation/admin-guide/kernel-parameters.txt | 11 +++++++++++
- fs/proc/Kconfig                                 |  3 ++-
- fs/proc/vmcore.c                                |  8 ++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b2e2..1b900d262680 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2872,6 +2872,17 @@
- 			/sys/module/printk/parameters/console_suspend) to
- 			turn on/off it dynamically.
- 
-+	novmcoredd	[KNL,KDUMP]
-+			Disable device dump. Device dump allows drivers to
-+			append dump data to vmcore so you can collect driver
-+			specified debug info. The drivers could append the
-+			data without any limit, and the data is stored in
-+			memory, this may bring a significant memory stress.
-+			Disable device dump can help save memory but driver
-+			debug data will be no longer available.
-+			Only available when CONFIG_PROC_VMCORE_DEVICE_DUMP
-+			is set.
-+
- 	noaliencache	[MM, NUMA, SLAB] Disables the allocation of alien
- 			caches in the slab allocator.  Saves per-node memory,
- 			but will impact performance.
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index 817c02b13b1d..62b19162d198 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -57,7 +57,8 @@ config PROC_VMCORE_DEVICE_DUMP
- 	  snapshot.
- 
- 	  If you say Y here, the collected device dumps will be added
--	  as ELF notes to /proc/vmcore.
-+	  as ELF notes to /proc/vmcore. You can still disabled device
-+	  dump by command line option 'novmcoredd'.
- 
- config PROC_SYSCTL
- 	bool "Sysctl support (/proc/sys)" if EXPERT
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 3fe90443c1bb..e815fd035fc0 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
- /* Device Dump list and mutex to synchronize access to list */
- static LIST_HEAD(vmcoredd_list);
- static DEFINE_MUTEX(vmcoredd_mutex);
-+
-+static bool vmcoredd_disabled;
-+core_param(novmcoredd, vmcoredd_disabled, bool, 0);
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- /* Device Dump Size */
-@@ -1451,6 +1454,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
- 	size_t data_size;
- 	int ret;
- 
-+	if (vmcoredd_disabled) {
-+		pr_err_once("Device dump is disabled\n");
-+		return -EINVAL;
-+	}
-+
- 	if (!data || !strlen(data->dump_name) ||
- 	    !data->vmcoredd_callback || !data->size)
- 		return -EINVAL;
 -- 
-2.21.0
-
+Michal Hocko
+SUSE Labs
