@@ -2,124 +2,107 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF87C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F07C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715242081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C808B2081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBxXRNMY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ovKbcedl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfE1AqE (ORCPT
+        id S1727631AbfE1Arm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 20:46:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35972 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfE1AqE (ORCPT
+        Mon, 27 May 2019 20:47:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34496 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfE1Arm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 20:46:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so9865644pgb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 17:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=iByH5cRdkrBlU0cWCYNL4Lwn5aV82NXZYp0iP2XtmzY=;
-        b=lBxXRNMYOFCEom2dMcyQiJUOVpIkLoT2tAh7sb5qJ5bOohLO+bNISPUIw+OvXKpKoq
-         CI7ulyPrFR1MfYBdwHyCg54Bg69ny/rD3474/QtVgmY5bJSPSFIC1pzGRsCvmjuzZTWl
-         AHNzX97JCup841KDy4hyEVRgTeXoF5TWZp8e+yFUT2sAWOwKPqGMqh2Xa9mIcLXB6mfS
-         +x4Vqi5rsLhLM0ujnpH7XtniTDpYuJ/xyW2J3h+R+xV+SEIsXQB1j5djFnQkzkN9P0Ff
-         nh9IG02q3MyY9xh6zdSZbXqkcEug+nXsbblqOfFgU/R0hDw1zYtSnHQAPRdulPuNbsQY
-         ZNKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=iByH5cRdkrBlU0cWCYNL4Lwn5aV82NXZYp0iP2XtmzY=;
-        b=UeNneWEZEa0+XKvVCxGUsORzlqj4UFhe2O5uwNnjzow9jfHDPZFL4xNKR2QlWwQ9Ko
-         3LmkxvA1w9v20run13aBZ80gwE88yzujI03pKXzIZHm9h1cprCq4LmB5sBgm+MZyzCuA
-         wcPrlEjSRwnF2de8fFOC21znuuq3BrWFI+eFD0OFQONcbzWMZYT6bSydpj/T7TCGUzPu
-         3UZ65t3dZmw1934WQsYaoxcRlmvVuBVNAZcplabc54ojSYvFIoXpTrpbJQpWyTShY66W
-         +dD867+P5fpDJOmVpzlL1wiAfUG/NumxPAuv1DbCJdRwJer3D897zaBAALfMIupBGX8D
-         F9HA==
-X-Gm-Message-State: APjAAAXfOOBkfcN43PFcIsaOnM2GJGrKOXa2R3SK7efXJzpSZbTDIopa
-        YicpFn1BBpX/+wamK5LkkigKu9Fw
-X-Google-Smtp-Source: APXvYqygVq7XUqI2HwHaWKnh1r6W9Hhj3+NiQsCCaNTVkp9JXotrql3EePYzwvpYc4B4Yv/CSYqUNA==
-X-Received: by 2002:a62:81c1:: with SMTP id t184mr136612246pfd.221.1559004363670;
-        Mon, 27 May 2019 17:46:03 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id x16sm11868577pff.30.2019.05.27.17.45.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 17:46:03 -0700 (PDT)
-Date:   Tue, 28 May 2019 08:45:29 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com, nico@fluxnic.net,
-        kilobyte@angband.pl, textshell@uchuujin.de, mpatocka@redhat.com,
-        daniel.vetter@ffwll.ch
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3] vt: Fix a missing-check bug in con_init()
-Message-ID: <20190528004529.GA12388@zhanggen-UX430UQ>
+        Mon, 27 May 2019 20:47:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4S0lcS6058548;
+        Mon, 27 May 2019 19:47:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559004458;
+        bh=2gmAOoHDeD++Du38nkxhcnSPLpCrkGFuL8FipVC7j0w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ovKbcedlmAPESOFUVymVfva8u0NI/yktjCAWKyLRzXa24bttPmdh3rjpycQYtgfmW
+         pY3Ncb4a7/0zterJ7GvRNU3de9PNoR1PsVr1U0p/gK/ox/PSTKqVy/sTLOXglRHBnO
+         oXzV3V2QxHzaBM3pHMpC1qCXchKDvlLCApxROots=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4S0lcI3080761
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 May 2019 19:47:38 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 27
+ May 2019 19:47:38 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 27 May 2019 19:47:37 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4S0lcWb113887;
+        Mon, 27 May 2019 19:47:38 -0500
+Subject: Re: [PATCH v3 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     Rob Herring <robh@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-8-dmurphy@ti.com> <20190524205022.GA9518@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <fd075387-8b54-ed48-f480-bd673df88ac3@ti.com>
+Date:   Mon, 27 May 2019 19:47:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190524205022.GA9518@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-vc->vc_screenbuf is allocated by kzalloc(). And they are used in the 
-following codes. However, kzalloc() returns NULL when fails, and null 
-pointer dereference may happen. And it will cause the kernel to crash. 
-Therefore, we should check the return value and handle the error.
+Rob
 
-Further, since the allcoation is in a loop, we should free all the 
-allocated memory in a loop.
+On 5/24/19 3:50 PM, Rob Herring wrote:
+> On Thu, 23 May 2019 14:08:18 -0500, Dan Murphy wrote:
+>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and
+>> LP5018 RGB LED device driver.  The LP5036/30/24/18 can control RGB LEDs
+>> individually or as part of a control bank group.  These devices have the ability
+>> to adjust the mixing control for the RGB LEDs to obtain different colors
+>> independent of the overall brightness of the LED grouping.
+>>
+>> Datasheet:
+>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
+>>   1 file changed, 142 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
----
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index fdd12f8..d50f68f 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3350,10 +3350,14 @@ static int __init con_init(void)
- 
- 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
- 		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-+		if (!vc)
-+			goto fail1;
- 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 		tty_port_init(&vc->port);
- 		visual_init(vc, currcons, 1);
- 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-+		if (!vc->vc_screenbuf)
-+			goto fail2;
- 		vc_init(vc, vc->vc_rows, vc->vc_cols,
- 			currcons || !vc->vc_sw->con_save_screen);
- 	}
-@@ -3375,6 +3379,16 @@ static int __init con_init(void)
- 	register_console(&vt_console_driver);
- #endif
- 	return 0;
-+fail1:
-+	while (currcons > 0) {
-+		currcons--;
-+		kfree(vc_cons[currcons].d->vc_screenbuf);
-+fail2:
-+		kfree(vc_cons[currcons].d);
-+		vc_cons[currcons].d = NULL;
-+	}
-+	console_unlock();
-+	return -ENOMEM;
- }
- console_initcall(con_init);
- 
----
+I usually provide the tags but in my cover letter I did indicate that 
+these patchsets have changed pretty dramatically so I did not feel right 
+about pulling in anyones tags.
+
+Adding your reviewed by on a binding that changed did not seem right to me.
+
+Dan
+
