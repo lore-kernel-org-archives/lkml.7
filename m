@@ -2,204 +2,144 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353E2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3487C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97ED216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9860A21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MTfPdb6p"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BkLP17KB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfE1PxL (ORCPT
+        id S1726964AbfE1Pxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:53:11 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38099 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfE1PxK (ORCPT
+        Tue, 28 May 2019 11:53:34 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47812 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1Pxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:53:10 -0400
-Received: by mail-it1-f195.google.com with SMTP id i63so4685906ita.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3yVdiZtGBSBGlDhvB9DOUwLNsyFEwKkKgPF73cZCVKg=;
-        b=MTfPdb6pXHJ22ny1QjP9IcsZ6jIajezQz03fP5a1+DhtEyj+LcZNfl/lerD7qIvYSP
-         +NTBFf/Oz1bqFosS83DKD81vdhlUu6Rgz1Jik50pMX4R+86cQIxxiG0mf29lJkOTPxYD
-         WglGBl4seph3kXUxws4K9NyQ6xiI8px0/QdkWEZBKd/VQnXdxx7NOYg0Briq8ndmGs6U
-         R8mic1lvMYtU8tN53jRHbJsyJrRaR6nbiMZMOCloJwaNIZ1hU/yIeJEHNPqRl6XnuNKx
-         aUxLBsFYdoY/tJjkAM/Zl7O+UBoU+k7pIM8n16Po6XAeH2FYQucT/1aGU5rcAtkEYkkL
-         FnVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3yVdiZtGBSBGlDhvB9DOUwLNsyFEwKkKgPF73cZCVKg=;
-        b=Jh1AD4Bn8NKYO8ASEvFNWWfuEULYET5BklxNGfu9kQCCH3SqUnaBlMLqbkgaf3ptwK
-         i4Esvr5JkH95VcHMYHjwJyhlptDracNb2O40UhlTq5Ng07GN2eIuWCepS0UbX2bVhD0C
-         TRU6/u8Dj4QKsGV//I4gNIxvTj99ciq++r70MEsnsVByUph7eH11dtRzCCBFOrsswzGJ
-         /UqVsXyyQjb3puk/ugxAeEZPQ9Y/s1f61ClKhF4YAYp59Ok8v0aaAyAOsO3faGHX+UBz
-         QDMoPwjy+5fu54i5m3QUAvSVv2GCc2USl1y11hnp8fbzb3IDlt2StUPHp4si1z32A5Hp
-         IbAg==
-X-Gm-Message-State: APjAAAW9EYQvtzFI7S7yrV7pYtIkbcemaujGmGMPecElISk3q2y8OSjz
-        qCVJ3hO9vY/DuOeIVJ2APR06nopyROqImlzTWALzFw==
-X-Google-Smtp-Source: APXvYqyAR9Zt4qe/vlIFOhbxEirAD96v9PPrA79GaYHwcdMz6fZ1NH3FCjjhf21FaWW4P/xls31tGJG1dXDvkEy8Z5A=
-X-Received: by 2002:a02:a1cd:: with SMTP id o13mr40365144jah.57.1559058789160;
- Tue, 28 May 2019 08:53:09 -0700 (PDT)
+        Tue, 28 May 2019 11:53:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SFrG9C033264;
+        Tue, 28 May 2019 10:53:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559058796;
+        bh=dbyhM/5u8MgwcqC/5H5+1C0pbVLxubC8LxcCgplQU3s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BkLP17KBtfHl8j4s3xLOfNc7vfI0pyEY0m3ajgyj69SgO5Um3JejD0pWLW+66wr4T
+         /u0Soykj5nSiQ1xxpCJsdQ93psmexkmIndoATW1CDbHV5O/d38F8L1w4C/hcn/eam3
+         w7uzCOUGgpMC9L0e3fVLsXE6sQFDYHt3lwv4MASA=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SFrGK2128483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 May 2019 10:53:16 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
+ May 2019 10:53:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 28 May 2019 10:53:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SFrBCb060219;
+        Tue, 28 May 2019 10:53:12 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Adam Ford <aford173@gmail.com>
+CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+Date:   Tue, 28 May 2019 18:53:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190521090306.28113-1-brgl@bgdev.pl>
-In-Reply-To: <20190521090306.28113-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 28 May 2019 17:52:58 +0200
-Message-ID: <CAMRc=MdJoO602kLfP_Hw9-0pB25CeUMxfqBUYhC7CB3Aw+5O4A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: max732x: use i2c_new_dummy_device()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 21 maj 2019 o 11:03 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> We now have a resource managed version of i2c_new_dummy_device() that
-> also returns an actual error code instead of a NULL-pointer. Use it
-> in the max732x GPIO driver and simplify code in the process.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+Hi,
 
-If there are no objections I'll apply it by the end of this week.
+On 28/05/2019 18:09, Adam Ford wrote:
+> On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>
+>> Hi,
+>>
+>> On 10/05/2019 22:42, Adam Ford wrote:
+>>> Currently the source code is compiled using hard-coded values
+>>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+>>> clock divider value to be moved to the device tree and be changed
+>>> without having to recompile the kernel.
+>>>
+>>> Signed-off-by: Adam Ford <aford173@gmail.com>
+>>
+>> I understand why you want to do this, but I'm not sure it's a good idea.
+>> It's really something the driver should figure out, and if we add it to
+>> the DT, it effectively becomes an ABI.
+>>
+>> That said... I'm not sure how good of a job the driver could ever do, as
+>> it can't know the future scaling needs of the userspace at the time it
+>> is configuring the clock. And so, I'm not nacking this patch, but I
+>> don't feel very good about this patch...
+>>
+>> The setting also affects all outputs (exluding venc), which may not be
+>> what the user wants. Then again, I think this setting is really only
+>> needed on OMAP2 & 3, which have only a single output. But that's the
+>> same with the current kconfig option, of course.
+>>
+>> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
+>> opinion, and moving it to DT makes it a worse hack =). But I don't have
+>> any good suggestions either.
+> 
+> As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
+> Torpedo) require this to be hard coded to 4 or it hangs during start.
+> This is the case for all versions 4.2+.  I haven't tested it with
+> older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
+> issue to me. I told him to set that value to 4 to make it not hang.
+> He asked that I move it to the DT to avoid custom kernels.  I agree
+> it's a hack, but if it's create a customized defconfig file for 4
+> boards or modify the device tree, it seems like the device tree
+> approach is less intrusive.
 
-Bart
+Ok, well, I think that's a separate thing from its intended use. The 
+point of the kconfig option is to ensure that the fclk/pclk ratio stays 
+under a certain number to allow enough scaling range. It should never 
+affect a basic non-scaling use case, unless you set it to a too high 
+value, which prevents finding any pclk.
 
->  drivers/gpio/gpio-max732x.c | 37 ++++++++++++++-----------------------
->  1 file changed, 14 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> index f03cb0ba7726..7fd1bdfe00e5 100644
-> --- a/drivers/gpio/gpio-max732x.c
-> +++ b/drivers/gpio/gpio-max732x.c
-> @@ -652,12 +652,12 @@ static int max732x_probe(struct i2c_client *client,
->         case 0x60:
->                 chip->client_group_a =3D client;
->                 if (nr_port > 8) {
-> -                       c =3D i2c_new_dummy(client->adapter, addr_b);
-> -                       if (!c) {
-> +                       c =3D devm_i2c_new_dummy_device(&client->dev,
-> +                                                     client->adapter, ad=
-dr_b);
-> +                       if (IS_ERR(c)) {
->                                 dev_err(&client->dev,
->                                         "Failed to allocate I2C device\n"=
-);
-> -                               ret =3D -ENODEV;
-> -                               goto out_failed;
-> +                               return PTR_ERR(c);
->                         }
->                         chip->client_group_b =3D chip->client_dummy =3D c=
-;
->                 }
-> @@ -665,12 +665,12 @@ static int max732x_probe(struct i2c_client *client,
->         case 0x50:
->                 chip->client_group_b =3D client;
->                 if (nr_port > 8) {
-> -                       c =3D i2c_new_dummy(client->adapter, addr_a);
-> -                       if (!c) {
-> +                       c =3D devm_i2c_new_dummy_device(&client->dev,
-> +                                                     client->adapter, ad=
-dr_a);
-> +                       if (IS_ERR(c)) {
->                                 dev_err(&client->dev,
->                                         "Failed to allocate I2C device\n"=
-);
-> -                               ret =3D -ENODEV;
-> -                               goto out_failed;
-> +                               return PTR_ERR(c);
->                         }
->                         chip->client_group_a =3D chip->client_dummy =3D c=
-;
->                 }
-> @@ -678,36 +678,34 @@ static int max732x_probe(struct i2c_client *client,
->         default:
->                 dev_err(&client->dev, "invalid I2C address specified %02x=
-\n",
->                                 client->addr);
-> -               ret =3D -EINVAL;
-> -               goto out_failed;
-> +               return -EINVAL;
->         }
->
->         if (nr_port > 8 && !chip->client_dummy) {
->                 dev_err(&client->dev,
->                         "Failed to allocate second group I2C device\n");
-> -               ret =3D -ENODEV;
-> -               goto out_failed;
-> +               return -ENODEV;
->         }
->
->         mutex_init(&chip->lock);
->
->         ret =3D max732x_readb(chip, is_group_a(chip, 0), &chip->reg_out[0=
-]);
->         if (ret)
-> -               goto out_failed;
-> +               return ret;
->         if (nr_port > 8) {
->                 ret =3D max732x_readb(chip, is_group_a(chip, 8), &chip->r=
-eg_out[1]);
->                 if (ret)
-> -                       goto out_failed;
-> +                       return ret;
->         }
->
->         ret =3D gpiochip_add_data(&chip->gpio_chip, chip);
->         if (ret)
-> -               goto out_failed;
-> +               return ret;
->
->         ret =3D max732x_irq_setup(chip, id);
->         if (ret) {
->                 gpiochip_remove(&chip->gpio_chip);
-> -               goto out_failed;
-> +               return ret;
->         }
->
->         if (pdata && pdata->setup) {
-> @@ -719,10 +717,6 @@ static int max732x_probe(struct i2c_client *client,
->
->         i2c_set_clientdata(client, chip);
->         return 0;
-> -
-> -out_failed:
-> -       i2c_unregister_device(chip->client_dummy);
-> -       return ret;
->  }
->
->  static int max732x_remove(struct i2c_client *client)
-> @@ -744,9 +738,6 @@ static int max732x_remove(struct i2c_client *client)
->
->         gpiochip_remove(&chip->gpio_chip);
->
-> -       /* unregister any dummy i2c_client */
-> -       i2c_unregister_device(chip->client_dummy);
-> -
->         return 0;
->  }
->
-> --
-> 2.21.0
->
+Has anyone debugged why the hang is happening?
+
+If we can't fix the bug itself, rather than adding a DT option, we could 
+change add a min_fck_per_pck field (as you do), keep the kconfig option, 
+and set the min_fck_per_pck based on the kconfig option, _or_ in case of 
+those affected SoCs, set the min_fck_per_pck even without the kconfig 
+option.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
