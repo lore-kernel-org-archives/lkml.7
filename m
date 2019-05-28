@@ -2,91 +2,94 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2FAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F01FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B200217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C50B20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 22:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N1rRezHY"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UZzU4SeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfE1V5p (ORCPT
+        id S1727896AbfE1WAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:57:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36969 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfE1V5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:57:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45D74P3fWJz9s5c;
-        Wed, 29 May 2019 07:57:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559080661;
-        bh=X63D2HiDSSgYemceoeABbUEoxHvV1nckjW17ym5koUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N1rRezHYgSVQJQU1Z4AkEw3DUYoHztFPCxCs0Xpv2CvwoKPl/+MDn5IFWS7+CpKu7
-         5suDMFE+6a5yHgI8Zy9Y54h5B8/dRveNtuyRGZxSOBOky1HpRITQ+FGaawX20BrFr4
-         PuYqFdlttU9KX3VCQNySIa8z4SRHLPXGmDMZsMgQZhMrKHSPo2TqLXDessV/JX346h
-         frV+RFQoi2hVzNG4cxWBgpdsiUxiUQSbYj6ST3vAV/LWQwlFT4Vq/IrE2e3nRjV03z
-         AlGZHMwQn+Sc1rzGBFt60LViW16sD2tnC3YD8ZCnNtSMsAxOKZ9SOx0DY8gKM4UWR0
-         z+Zql1pT6B13Q==
-Date:   Wed, 29 May 2019 07:57:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Libin Yang <libin.yang@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Subject: Re: linux-next: Fixes tags need some work in the sound-asoc tree
-Message-ID: <20190529075740.3bffa68e@canb.auug.org.au>
-In-Reply-To: <20190529075614.150b1877@canb.auug.org.au>
-References: <20190529075614.150b1877@canb.auug.org.au>
+        Tue, 28 May 2019 18:00:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33973 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfE1WAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 18:00:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h2so27951pgg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zz3efGRJMkCi9u1FMXnDOgSGtU0NK8c6CTTxYaLRlUk=;
+        b=UZzU4SeJuNsj1RuhrcyrwW4MS5X4kGC8Ge0T2obb1h/h/CTewhMxNkcfTqUtxV7Ybt
+         l9JJno+dbcn1nkV0bH46Xhs3idLMJ4T/k55B/bpWBy9ryQnadZtrxLIcchZWxAkYBAbu
+         fbhRFIDfo0/NnrAyNaE2ecYXcWho1QdaI0s/85/A+X7r9AK+tHFK+6aNWEpQy9HQs8Bb
+         Li6LBCRaI75me6R17Qp1LTHnXDTPmx2UWK0vuWad9yeDuO3j4ni9wGrrdVO0l8uqGxHW
+         8Dsgz6ec6+oz4dmuhnZIKpxAgp6jx6+atPwCgm0WJQwwyg81bncpkILNj4fcw8WBEp02
+         G2HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zz3efGRJMkCi9u1FMXnDOgSGtU0NK8c6CTTxYaLRlUk=;
+        b=OQrJ+BDP1HOjW30+d3he1m46mwM+Dzj/kuDly4hL/+ozR6WBwsc2ukqiyXJgiMAbCF
+         u1tGDvSfjlqzETNZ7TDY1mjsoc+7z670/8EvNY4Yzxo6pTXnNzbzrWR4C5ccKiilBHN0
+         AEn5x/Nrlme5QEe2UbEyvWE6IywrPXF3Yz1uxNZM8q4q6ZwNMV2o3f0diMRGzWtFgBk6
+         2GLD8Ph+5AoAr8tgrYd1GLe9jAafWBcYMnk/n/ZCWubKfpmElUUOhk/52biqG3ERJ8Vs
+         kZixPoBtih6SYWgcHK4rpwFLW1Im/DMG48ywf62bYWkrZQrWGQVtKm1/e1YbImuTLP90
+         QMKQ==
+X-Gm-Message-State: APjAAAVygti0oHq1fYZTqR7qh+RpJk7tjW++94oxhmvRQ/h1AVRXHJfr
+        F7/wVrswNOhRYxQSwf4pHSkJGQ==
+X-Google-Smtp-Source: APXvYqzcjXyIC37ZtNb/BvRceiRze2ZuMVZOqei3nfqsf/GzOqhW1pZLQ48briznsQGYnG3llCRAQA==
+X-Received: by 2002:aa7:8c1a:: with SMTP id c26mr146120273pfd.25.1559080831650;
+        Tue, 28 May 2019 15:00:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:77ab])
+        by smtp.gmail.com with ESMTPSA id i3sm8919865pfa.175.2019.05.28.15.00.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 15:00:30 -0700 (PDT)
+Date:   Tue, 28 May 2019 18:00:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 4/7] mm: unify SLAB and SLUB page accounting
+Message-ID: <20190528220028.GB26614@cmpxchg.org>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-5-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qH529Lk_BOdN1y00vVOLvmz"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521200735.2603003-5-guro@fb.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qH529Lk_BOdN1y00vVOLvmz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 21, 2019 at 01:07:32PM -0700, Roman Gushchin wrote:
+> Currently the page accounting code is duplicated in SLAB and SLUB
+> internals. Let's move it into new (un)charge_slab_page helpers
+> in the slab_common.c file. These helpers will be responsible
+> for statistics (global and memcg-aware) and memcg charging.
+> So they are replacing direct memcg_(un)charge_slab() calls.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Christoph Lameter <cl@linux.com>
 
-Hi Mark,
-
-This should have referred to the sound-asoc-fixes tree, sorry.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qH529Lk_BOdN1y00vVOLvmz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlztrtQACgkQAVBC80lX
-0GyRggf+I3JxPVuptmsSMb4YYn37Lqc0iPeYevJ69ggmjuqoW016svAyvQChlZix
-Jp+4blIaadmbp/gu9pDZTDGaQrCA7Q7Lj98xD7Fpnpin82smwI188nR1+bxUQLxj
-KM7ZcbnJQL9mBW/BeDQ6dVDhVFPGJ+ZjaguCuFvj4yq0iDsWrGVxpG4pd9z7R1pb
-UPtJ7MKqZOjZoSMrpmLuqzmzDycb+j1bvxCGRu5vw8CPJOtixBAHJQrjpSYqKt6b
-n/pB+eKMLChNiPBcroDUZrVUPpmeqF8JUmSx5hhJZYf0YYOcFefJLw1p680G8kYT
-zjAPSyoN8IvO74zMRUyca9QUNXp8Sg==
-=J4eU
------END PGP SIGNATURE-----
-
---Sig_/qH529Lk_BOdN1y00vVOLvmz--
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
