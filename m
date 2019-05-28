@@ -2,196 +2,97 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BA5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694E8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B932E20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3794C20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BXFLwGPC"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="qG03h26g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfE1V4V (ORCPT
+        id S1728100AbfE1V4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:56:21 -0400
-Received: from ozlabs.org ([203.11.71.1]:45347 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfE1V4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:56:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45D72m3p7Vz9s5c;
-        Wed, 29 May 2019 07:56:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559080577;
-        bh=LrX/cyFpcdg2iUnZm9VFg2gXW9OqU4FqAiPt8bY6SyQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BXFLwGPCnmVxcvOSSmPm4LvmTFmMwJzOYcPocUJuuL76FCW0i/P2OPW1/auY9yG+S
-         EZSbb9PTy9td9qyGXvRzdBPwf0Jllj58O6ln1LOcFO0c/W3Jmr3e5mBqVlgYLcA/FD
-         gfUxdF+5B100Zs0B3LYj9DS3xIpp4TRMw9KNxk6bMiB4WhoWWdMrHh6lic1yFGZhqH
-         D1nNy9Z//ecS2o6074Vq8gQAUTAlGXMnK0w55fgRwy/jIzAj3AsEFRy2+oTkrboClS
-         edBWPX+/Asx10TQ8m8KjY5oHEwFY2vdoDdlTghKDmm09cIvxlsXojKihv7OhaS+A8L
-         +fpiVNjSblLyg==
-Date:   Wed, 29 May 2019 07:56:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Libin Yang <libin.yang@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Subject: linux-next: Fixes tags need some work in the sound-asoc tree
-Message-ID: <20190529075614.150b1877@canb.auug.org.au>
+        Tue, 28 May 2019 17:56:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40966 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfE1V4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:56:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q17so136305pfq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 14:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bTzfa4MPBlCsa2uhQknRd/UBV4ojcryy1ZVgr46O0Y0=;
+        b=qG03h26gMGgX2CIkJTJdgFwW1fdUGvwM+12oszmGpSYZILYYex8mUqUYB6umJaX2Ge
+         BPs7imkNRty6RvcxCTTiaTmPe5Xa7U8IH4yrqIXzMGTxxoN84iWr7xdRxHP+vD9H1P5p
+         dq8iGcLIIIWikZqSc6UFy/+0zDb72gN/C0xjf1mr/a9yQaKT749fFHtZt2jdLd6q74oz
+         9cto1oQA1PS9VLo2TFd0bDJmnEuDFf3JyqvvRgun2EM123fVGo3KtW0SHC90c8aDUUbG
+         aNfTXaIBezA+iAftELYk80T9oTBtjgPINgmGAHwOZWxXxPIIrCx20PddZ/3IOb8uvPvy
+         ZI7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bTzfa4MPBlCsa2uhQknRd/UBV4ojcryy1ZVgr46O0Y0=;
+        b=rUUEd9Fss5UfVbKaicur5ebkUvDHgg4zlLE9hdf/Fp9G6yHbvXlvJ9I2HfvaX8r6Yr
+         5G5TOwktaZtPiUe5dwTyM5ueoWaIqKnSjUruuEBNG64lflWlZ/dZqdtrI9AmQc9jt+a7
+         kzxXU9ak31ByDeMlhcw3wAvgnAnStBJRDdfQZuZeiY90f9z/GAhpKFtirv1MGQT4mwZa
+         nOyjDL0MyrAAGfYxZ4J2HIo1cmGmSxEBD5bc1wHqF/Xk08dKZs2upkJJBQEulPe1n2go
+         Fy9wKzCIUsn6BaJhY7cnT0GQByCJ7VnOJy3uOg42iXBRhiDt6oRBLmUhZISFXWsUkDCd
+         ttWg==
+X-Gm-Message-State: APjAAAW9+IbFrvmnu9RiJoOoyBTa/h4peK9K5VeUWFNTD939Ux4MQ6Le
+        ODP4exe4dHea4j/q+F263R6gGg==
+X-Google-Smtp-Source: APXvYqznXt8OYMnBy3Azq3tIojg91yQzx9R1e6BJtkRAhSjpY+ySRhViNsQx7rAzPfZ+zrQXA+VJhg==
+X-Received: by 2002:a63:d347:: with SMTP id u7mr135250092pgi.254.1559080600401;
+        Tue, 28 May 2019 14:56:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:77ab])
+        by smtp.gmail.com with ESMTPSA id x23sm14860815pfn.160.2019.05.28.14.56.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 14:56:39 -0700 (PDT)
+Date:   Tue, 28 May 2019 17:56:37 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 1/7] mm: postpone kmem_cache memcg pointer
+ initialization to memcg_link_cache()
+Message-ID: <20190528215637.GA26614@cmpxchg.org>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-2-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/eDmfDfBWBHbIHswnSV_47HK"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521200735.2603003-2-guro@fb.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eDmfDfBWBHbIHswnSV_47HK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 21, 2019 at 01:07:29PM -0700, Roman Gushchin wrote:
+> Initialize kmem_cache->memcg_params.memcg pointer in
+> memcg_link_cache() rather than in init_memcg_params().
+> 
+> Once kmem_cache will hold a reference to the memory cgroup,
+> it will simplify the refcounting.
+> 
+> For non-root kmem_caches memcg_link_cache() is always called
+> before the kmem_cache becomes visible to a user, so it's safe.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Hi all,
-
-In commit
-
-  be1b577d0178 ("ASoC: SOF: Intel: hda: fix the hda init chip")
-
-Fixes tag
-
-  Fixes: 8a300c8fb17 ("ASoC: SOF: Intel: Add HDA controller for Intel DSP")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  1183e9a634db ("ASoC: SOF: ipc: fix a race, leading to IPC timeouts")
-
-Fixes tag
-
-  Fixes: 53e0c72d98b ("ASoC: SOF: Add support for IPC IO between DSP and Ho=
-st")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  5661ad9490ee ("ASoC: SOF: control: correct the copy size for bytes kcontr=
-ol put")
-
-Fixes tag
-
-  Fixes: c3078f53970 ("ASoC: SOF: Add Sound Open Firmware KControl support")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  fab4edf42d2d ("ASoC: SOF: pcm: remove warning - initialize workqueue on o=
-pen")
-
-Fixes tag
-
-  Fixes: e2803e610ae ("ASoC: SOF: PCM: add period_elapsed work to fix
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-Please do not split Fixes tags over more than one line.
-
-In commit
-
-  04ea642ff62a ("ASoC: SOF: pcm: clear hw_params_upon_resume flag correctly=
-")
-
-Fixes tag
-
-  Fixes: 868bd00f495 ("ASoC: SOF: Add PCM operations support")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  0bce512e784d ("ASoC: SOF: core: fix error handling with the probe workque=
-ue")
-
-Fixes tag
-
-  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  13931ae31b67 ("ASoC: SOF: core: remove snd_soc_unregister_component in ca=
-se of error")
-
-Fixes tag
-
-  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-In commit
-
-  b85459aafae6 ("ASoC: SOF: core: remove DSP after unregistering machine dr=
-iver")
-
-Fixes tag
-
-  Fixes: c16211d6226 ("ASoC: SOF: Add Sound Open Firmware driver core")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-
-Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/eDmfDfBWBHbIHswnSV_47HK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlztrn4ACgkQAVBC80lX
-0GxqHgf/Yq/rkW3q0vgeiMRe4oU0VQiOar6RSlvfA2ZXM8x0CrTHxnO2PrBPMmR2
-uy0wkIM8cxaVf+C9wvDT1kobn4JNL0TBd8cEIAV0yL1NiCFGU4trhQBd1h7OIF21
-HA52u2PmXJ69PCjfHcHHbGMQ/eJZou3n+zXKmhJDSRTJtNvHoYJhfOELrtO50U4l
-06eciKHtzLKA30aq082YV8JEkJljh+i6TvgzpXok6+M8PQlj5vMgJZ4u97XneDij
-H2kleKZb7j8jB4h1EnskiOLuACvjHe/59lCF0XiYRmjGRWjtrJj2W2So3+BUHTXR
-SKdzCRBVDjszafrCE+ZnixVADs97bA==
-=tdQC
------END PGP SIGNATURE-----
-
---Sig_/eDmfDfBWBHbIHswnSV_47HK--
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
