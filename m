@@ -2,79 +2,143 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20A7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949C4C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C2720645
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779F0214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfE1O0S (ORCPT
+        id S1726614AbfE1O3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:26:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:6133 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727194AbfE1O0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:26:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 07:26:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,523,1549958400"; 
-   d="scan'208";a="179219799"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 28 May 2019 07:26:17 -0700
-Received: from [10.254.95.162] (kliang2-mobl.ccr.corp.intel.com [10.254.95.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 77AC3580372;
-        Tue, 28 May 2019 07:26:16 -0700 (PDT)
-Subject: Re: [PATCH V2 1/3] perf/x86: Disable non generic regs for
- software/probe events
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, acme@redhat.com, vincent.weaver@maine.edu,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        ak@linux.intel.com, jolsa@redhat.com, eranian@google.com
-References: <1558984077-7773-1-git-send-email-kan.liang@linux.intel.com>
- <20190528085601.GL2623@hirez.programming.kicks-ass.net>
- <7c8d8998-4722-e059-d378-b8517193e32f@linux.intel.com>
- <20190528140518.GU2623@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <1151b99d-6e08-9943-346c-38dc1b32e15a@linux.intel.com>
-Date:   Tue, 28 May 2019 10:26:15 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 28 May 2019 10:29:24 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:32804 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbfE1O3Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:29:24 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SEOm1L028654;
+        Tue, 28 May 2019 09:29:02 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sq24q3d7r-1;
+        Tue, 28 May 2019 09:29:01 -0500
+Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
+        by mail3.cirrus.com (Postfix) with ESMTP id A49FB61429A9;
+        Tue, 28 May 2019 09:29:42 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 28 May
+ 2019 15:29:00 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 28 May 2019 15:29:00 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7832B2A1;
+        Tue, 28 May 2019 15:29:00 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
+CC:     <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH v3 3/6] i2c: acpi: Factor out getting the IRQ from ACPI
+Date:   Tue, 28 May 2019 15:28:57 +0100
+Message-ID: <20190528142900.24147-3-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
+References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528140518.GU2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=930 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905280094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In preparation for future refactoring factor out the fetch of the IRQ
+into its own helper function.
 
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-On 5/28/2019 10:05 AM, Peter Zijlstra wrote:
-> On Tue, May 28, 2019 at 09:33:40AM -0400, Liang, Kan wrote:
->> Uncore PMU doesn't support sampling. It will return -EINVAL.
->> There is no regs support for counting. The request will be ignored.
->>
->> I think current check for uncore is good enough.
-> 
-> breakpoints then.. There's also no guarantee you covered all software
-> events, and the core rewrite will allow other per-task/sampling PMUs
-> too.
-> 
-> The approach you take is just not complete, don't do that.
-> 
-
-OK. I will send V3 base on your proposed patches.
+Changes since v2:
+ - Don't consider zero to be a valid IRQ number
 
 Thanks,
-Kan
+Charles
+
+ drivers/i2c/i2c-core-acpi.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index bc82b44f85860..c107f260e252f 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -148,14 +148,30 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+ 	return 1; /* No need to add resource to the list */
+ }
+ 
++static int i2c_acpi_get_irq(struct acpi_device *adev)
++{
++	struct list_head resource_list;
++	int irq = -ENOENT;
++	int ret;
++
++	INIT_LIST_HEAD(&resource_list);
++
++	ret = acpi_dev_get_resources(adev, &resource_list,
++				     i2c_acpi_add_resource, &irq);
++	if (ret < 0)
++		return -EINVAL;
++
++	acpi_dev_free_resource_list(&resource_list);
++
++	return irq;
++}
++
+ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 			     struct i2c_board_info *info,
+ 			     struct i2c_adapter *adapter,
+ 			     acpi_handle *adapter_handle)
+ {
+-	struct list_head resource_list;
+ 	struct i2c_acpi_lookup lookup;
+-	int irq = -ENOENT;
+ 	int ret;
+ 
+ 	memset(&lookup, 0, sizeof(lookup));
+@@ -186,16 +202,9 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+ 		*adapter_handle = lookup.adapter_handle;
+ 
+ 	/* Then fill IRQ number if any */
+-	INIT_LIST_HEAD(&resource_list);
+-	ret = acpi_dev_get_resources(adev, &resource_list,
+-				     i2c_acpi_add_resource, &irq);
+-	if (ret < 0)
+-		return -EINVAL;
+-
+-	if (irq > 0)
+-		info->irq = irq;
+-
+-	acpi_dev_free_resource_list(&resource_list);
++	ret = i2c_acpi_get_irq(adev);
++	if (ret > 0)
++		info->irq = ret;
+ 
+ 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+ 			  sizeof(info->type));
+-- 
+2.11.0
+
