@@ -2,112 +2,108 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D7BC04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68579C04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EDB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DE82081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 00:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ixSWdT8p"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nso+2l6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfE1Afq (ORCPT
+        id S1727565AbfE1Apm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 20:35:46 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:46349 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbfE1Afp (ORCPT
+        Mon, 27 May 2019 20:45:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34284 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfE1Apm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 20:35:45 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x4S0ZMSm021349;
-        Tue, 28 May 2019 09:35:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4S0ZMSm021349
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559003723;
-        bh=ZrnfQGP3U7n4WOAOji/GRy+OIeHaMp/+iXRai5SU7wQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ixSWdT8ppBAChw6vM/HosZZcEyU8b/NAGH5YZO7j/vhhIRJnxnQkpg7HAWR2B1ojN
-         bkFytrQtIBPkdxCEH1GQ3F9F9VA/J6TCuiAoPln6jWRA7hhoBiFikMDjwp5RHJh7Q5
-         AioOyO9CDKG3fLqhJmRo1GlTtWOzGQsfjQyld1ZF/zxTcUACfruBWI/LuKQ67r/2fF
-         +l9lpO/7HSGwi8tVUQuVyWZ2crudqRhKCEWmrFIcgAolgWuQEV8VV+P4vwbJbqc0qo
-         A/6gXdCe1hbcPqLudyyUoVV8W/fpNoXD/XsBdNdUWSgVgibQNmaMr+bIvW/fcv/+Z1
-         6zscD3UI3egwA==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id e9so7141612uar.9;
-        Mon, 27 May 2019 17:35:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWkQ+KK2f/gMTzZxKzxMDGebzf+4BaG+YdbPsbS+ZZy6xI697nK
-        Oa2oJbELUin43e15ORUsD69QUnN11gBAnKj9DYY=
-X-Google-Smtp-Source: APXvYqy8LV8t35Sn6WgYDnkjgZXIO1Pit+u3Tt/SpuNlp6FdfPNgoFxm+nPXEG1meBCQnWztRia8dlXY40a9Z+X0P4g=
-X-Received: by 2002:a9f:366b:: with SMTP id s40mr23027906uad.121.1559003722296;
- Mon, 27 May 2019 17:35:22 -0700 (PDT)
+        Mon, 27 May 2019 20:45:42 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4S0jaiX058237;
+        Mon, 27 May 2019 19:45:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559004336;
+        bh=1JnGHZvHyL2VOmJQfXsquvMDTMdCkBKneNCnKVBEnjo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nso+2l6CVVL2pmQd0wDtsjoc63heTFxs8fkPdAhYcKGPkzK3MKjpCn4ODoS9a+tuE
+         xfCWJv8AVjI5SPcIVG/bpYZHMFKgbhuY31e2mh6Z2gFo2awLVBGTNHVJn33mi5qGsW
+         Gnwa/gWy8Ev0Bmot+JdTfSUBlaAqxFIvQhwZQxFg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4S0jaDH110968
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 May 2019 19:45:36 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 27
+ May 2019 19:45:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 27 May 2019 19:45:36 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4S0jZuM037366;
+        Mon, 27 May 2019 19:45:35 -0500
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com> <20190527103355.GA5287@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <522728b0-147b-3708-fea1-88a895491e05@ti.com>
+Date:   Mon, 27 May 2019 19:45:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190525114919.26188-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190525114919.26188-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 28 May 2019 09:34:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATQCpNp4azKE4YJDpC-gSTRBYe6Lj7dTX+1N=7iqKsMXw@mail.gmail.com>
-Message-ID: <CAK7LNATQCpNp4azKE4YJDpC-gSTRBYe6Lj7dTX+1N=7iqKsMXw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: tests: fix recursive inclusion unit test
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190527103355.GA5287@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 8:49 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Adding SPDX license identifier is pretty safe; however, here is one
-> exception.
->
-> Since commit ec8f24b7faaf ("treewide: Add SPDX license identifier -
-> Makefile/Kconfig"), "make testconfig" would not pass.
->
-> When Kconfig detects a circular file inclusion, it displays error
-> messages with a file name and a line number prefixed to each line.
->
-> The unit test checks if Kconfig emits the error messages correctly
-> (this also checks the line number correctness).
->
-> Now that the test input has the SPDX license identifier at the very top,
-> the line numbers in the expected stderr should be incremented by 1.
->
-> Fixes: ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+Pavel
 
-Applied to linux-kbuild/fixes.
-
-
->
->  scripts/kconfig/tests/err_recursive_inc/expected_stderr | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/kconfig/tests/err_recursive_inc/expected_stderr b/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-> index 6b582eee2176..b070a31fdfeb 100644
-> --- a/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-> +++ b/scripts/kconfig/tests/err_recursive_inc/expected_stderr
-> @@ -1,6 +1,6 @@
->  Recursive inclusion detected.
->  Inclusion path:
->    current file : Kconfig.inc1
-> -  included from: Kconfig.inc3:1
-> -  included from: Kconfig.inc2:3
-> -  included from: Kconfig.inc1:4
-> +  included from: Kconfig.inc3:2
-> +  included from: Kconfig.inc2:4
-> +  included from: Kconfig.inc1:5
-> --
-> 2.17.1
+On 5/27/19 5:33 AM, Pavel Machek wrote:
+> On Thu 2019-05-23 14:08:12, Dan Murphy wrote:
+>> Add a documentation of LED Multicolor LED class specific
+>> sysfs attributes.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    | 57 +++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..2f102ede258b
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,57 @@
+>> +What:		/sys/class/leds/<led>/colors/sync_enable
+>> +Date:		April 2019
+> I believe I suggested more reasonable interface. Why not use that?
 >
 
+Can you please provide the reference to your interface?
 
--- 
-Best Regards
-Masahiro Yamada
+These patchsets have been around for a while (Decemeber 2018) and I 
+cannot seem to find the reference to your suggestion.
+
+The suggestion may have been mired in the brightness model discussions.
+
+So I don't want to over look what you suggested as it may be more 
+reasonable then what I have implemented.
+
+Dan
+
