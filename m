@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4996C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD3EC04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752282075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597D02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559056050;
-	bh=z9IelA3lu+9vD3rOQrgeMaRJSMRr5Vu0HS3PZvnyOvw=;
+	s=default; t=1559056051;
+	bh=SjDfk4b6ZIyq5mO98uC2sB8lDk4Lqdbl+ieY+/ZnpAs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=iAjwWdiwfsED1ShVW4e1c78LPmfM9EpC2tvR0AICwtrwMfbHMaKIhaD3sz4wSALa2
-	 rnKHGijWi5DIISR4dMiUl8Yp0lSyW9Z2IneAuIRiJi3lGbtI1GS9zoIX/EXLS4Kbyx
-	 iTNdd4DGuqaZqo1IdrFARaXqfNz89/AicazKrsqI=
+	b=GF/rxG9MtgB3WJ9WmW/yRSxwjc95uT1hhUUZLlDqrsr8MOGYuhwuQcPLs2/I7UBWR
+	 bthMm5dTQoWV7lw3DUJ33neOOcmkQmMrl7HwZdnyCGEqCE2ccvyzXm1doBWl0pmGDo
+	 MAwgMyGOX1oeqj2vmhvtMvaY/5QgNZZmcnOeuli0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfE1PH3 (ORCPT
+        id S1727345AbfE1PHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:07:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43490 "EHLO
+        Tue, 28 May 2019 11:07:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43550 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1PH1 (ORCPT
+        with ESMTP id S1727296AbfE1PH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:07:27 -0400
+        Tue, 28 May 2019 11:07:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=0+E2u/R03c5rPCMEH9eEWAg7IhEIFC7wRcCvovhk0TE=; b=xpZgTG8H0HVB
-        /crTj5heZptBCg1c+uDaPw0D4ABriLSifu2LzuBjsQ7Ifz2g/q/FVsacgY/zfNY4eTJzK5seXaOF5
-        NMoC07kQMX9WclvvAZHLkCqPyM582pY33E743KIHg0yvTRpN9/hEK3Sa+JXJFsSSrrVQsyfIow4Gv
-        4im+U=;
+        List-Archive; bh=LoZEWGcak24f+2R8BSnDVZaJoSe5u7tIU54xxb61pjk=; b=lVMVifvy8qRU
+        HQ36W9DZRRRfMc6MRaTrRKwZKo++pYkdrUF7BX8C01jv7YIVGLalDRUwvpG7qnRNv9AuDDbRLbeHQ
+        iTUyVEbHQAQPXM48oOmiyLp8bBI/NYZJAck+xkpSofr45TfxAVjpLQS5SWTn3EUo9i1aWjmus4eVR
+        5UTxM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hVdhD-0002qS-5Y; Tue, 28 May 2019 15:07:23 +0000
+        id 1hVdhE-0002qV-3i; Tue, 28 May 2019 15:07:24 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 8F921440046; Tue, 28 May 2019 16:07:22 +0100 (BST)
+        id 46DD7440046; Tue, 28 May 2019 16:07:23 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     broonie@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-meson-spifc: update with SPDX Licence identifier" to the spi tree
-In-Reply-To: <20190527134124.3034-1-narmstrong@baylibre.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Applied "spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()" to the spi tree
+In-Reply-To: <20190527121935.5370-1-geert+renesas@glider.be>
 X-Patchwork-Hint: ignore
-Message-Id: <20190528150722.8F921440046@finisterre.sirena.org.uk>
-Date:   Tue, 28 May 2019 16:07:22 +0100 (BST)
+Message-Id: <20190528150723.46DD7440046@finisterre.sirena.org.uk>
+Date:   Tue, 28 May 2019 16:07:23 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-meson-spifc: update with SPDX Licence identifier
+   spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()
 
 has been applied to the spi tree at
 
@@ -87,43 +88,48 @@ to this mail.
 Thanks,
 Mark
 
-From 891100dfa2d6eeca6913b45c883b72efee7c229b Mon Sep 17 00:00:00 2001
-From: Neil Armstrong <narmstrong@baylibre.com>
-Date: Mon, 27 May 2019 15:41:24 +0200
-Subject: [PATCH] spi: spi-meson-spifc: update with SPDX Licence identifier
+From 635bdb7a3e1fe1531573ff87b92c2506adafe7f7 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 27 May 2019 14:19:35 +0200
+Subject: [PATCH] spi: sh-msiof: Reduce delays in sh_msiof_modify_ctr_wait()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+While the Hardware User Manual does not document the maximum time needed
+for modifying bits in the MSIOF Control Register, experiments on R-Car
+Gen2/Gen3 and SH-Mobile AG5 revealed the following typical modification
+times for the various bits:
+  - CTR.TXE and CTR.RXE: no delay,
+  - CTR.TSCKE: less than 10 ns,
+  - CTR.TFSE: up to a few hundred ns (depending on SPI transfer clock,
+    i.e. less for faster transfers).
+There are no reasons to believe these figures are different for
+SH-MobileR2 SoCs (SH7723/SH7724).
+
+Hence the minimum busy-looping delay of 10 µs is excessive.
+Reduce the delay per loop iteration from 10 to 1 us, and the maximum
+delay from 1000 to 100 µs.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-meson-spifc.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/spi/spi-sh-msiof.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-meson-spifc.c b/drivers/spi/spi-meson-spifc.c
-index 616566e793c6..f7fe9b13d122 100644
---- a/drivers/spi/spi-meson-spifc.c
-+++ b/drivers/spi/spi-meson-spifc.c
-@@ -1,15 +1,9 @@
--/*
-- * Driver for Amlogic Meson SPI flash controller (SPIFC)
-- *
-- * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program. If not, see <http://www.gnu.org/licenses/>.
-- */
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Driver for Amlogic Meson SPI flash controller (SPIFC)
-+//
-+// Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-+//
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index 6aab7b2136db..b50bdbc27e58 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -229,7 +229,7 @@ static int sh_msiof_modify_ctr_wait(struct sh_msiof_spi_priv *p,
+ 	sh_msiof_write(p, CTR, data);
  
- #include <linux/clk.h>
- #include <linux/delay.h>
+ 	return readl_poll_timeout_atomic(p->mapbase + CTR, data,
+-					 (data & mask) == set, 10, 1000);
++					 (data & mask) == set, 1, 100);
+ }
+ 
+ static irqreturn_t sh_msiof_spi_irq(int irq, void *data)
 -- 
 2.20.1
 
