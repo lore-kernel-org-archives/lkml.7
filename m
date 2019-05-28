@@ -2,122 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96EDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1EB216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3AD216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfE1QuZ (ORCPT
+        id S1727358AbfE1Qun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:50:25 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:42012 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726512AbfE1QuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:50:25 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SGYITS002904;
-        Tue, 28 May 2019 11:50:21 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2sq340kq11-1;
-        Tue, 28 May 2019 11:50:21 -0500
-Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
-        by mail2.cirrus.com (Postfix) with ESMTP id D321D605A6A9;
-        Tue, 28 May 2019 11:50:20 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 28 May
- 2019 17:50:20 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 28 May 2019 17:50:20 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 23D9244;
-        Tue, 28 May 2019 17:50:20 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>
-CC:     <myungjoo.ham@samsung.com>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] extcon: arizona: Correct error handling on regmap_update_bits_check
-Date:   Tue, 28 May 2019 17:50:20 +0100
-Message-ID: <20190528165020.10320-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 28 May 2019 12:50:43 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32960 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbfE1Qum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:50:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27DBB341;
+        Tue, 28 May 2019 09:50:42 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3200F3F59C;
+        Tue, 28 May 2019 09:50:39 -0700 (PDT)
+Date:   Tue, 28 May 2019 17:50:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marco Elver <elver@google.com>
+Cc:     peterz@infradead.org, aryabinin@virtuozzo.com, dvyukov@google.com,
+        glider@google.com, andreyknvl@google.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, arnd@arndb.de, jpoimboe@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH 3/3] asm-generic, x86: Add bitops instrumentation for
+ KASAN
+Message-ID: <20190528165036.GC28492@lakrids.cambridge.arm.com>
+References: <20190528163258.260144-1-elver@google.com>
+ <20190528163258.260144-3-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905280106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528163258.260144-3-elver@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensure the case when regmap_update_bits_check fails and the change
-variable is not updated is handled correctly.
+On Tue, May 28, 2019 at 06:32:58PM +0200, Marco Elver wrote:
+> This adds a new header to asm-generic to allow optionally instrumenting
+> architecture-specific asm implementations of bitops.
+> 
+> This change includes the required change for x86 as reference and
+> changes the kernel API doc to point to bitops-instrumented.h instead.
+> Rationale: the functions in x86's bitops.h are no longer the kernel API
+> functions, but instead the arch_ prefixed functions, which are then
+> instrumented via bitops-instrumented.h.
+> 
+> Other architectures can similarly add support for asm implementations of
+> bitops.
+> 
+> The documentation text has been copied/moved, and *no* changes to it
+> have been made in this patch.
+> 
+> Tested: using lib/test_kasan with bitops tests (pre-requisite patch).
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198439
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  Documentation/core-api/kernel-api.rst     |   2 +-
+>  arch/x86/include/asm/bitops.h             | 210 ++++----------
+>  include/asm-generic/bitops-instrumented.h | 327 ++++++++++++++++++++++
+>  3 files changed, 380 insertions(+), 159 deletions(-)
+>  create mode 100644 include/asm-generic/bitops-instrumented.h
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/extcon/extcon-arizona.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+[...]
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 9327479c719c2..ba2d16de161f8 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -335,10 +335,12 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
- 
- 	arizona_extcon_pulse_micbias(info);
- 
--	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
--				 ARIZONA_MICD_ENA, ARIZONA_MICD_ENA,
--				 &change);
--	if (!change) {
-+	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				       ARIZONA_MICD_ENA, ARIZONA_MICD_ENA,
-+				       &change);
-+	if (ret < 0) {
-+		dev_err(arizona->dev, "Failed to enable micd: %d\n", ret);
-+	} else if (!change) {
- 		regulator_disable(info->micvdd);
- 		pm_runtime_put_autosuspend(info->dev);
- 	}
-@@ -350,12 +352,14 @@ static void arizona_stop_mic(struct arizona_extcon_info *info)
- 	const char *widget = arizona_extcon_get_micbias(info);
- 	struct snd_soc_dapm_context *dapm = arizona->dapm;
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(dapm);
--	bool change;
-+	bool change = false;
- 	int ret;
- 
--	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
--				 ARIZONA_MICD_ENA, 0,
--				 &change);
-+	ret = regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				       ARIZONA_MICD_ENA, 0,
-+				       &change);
-+	if (ret < 0)
-+		dev_err(arizona->dev, "Failed to disable micd: %d\n", ret);
- 
- 	ret = snd_soc_component_disable_pin(component, widget);
- 	if (ret != 0)
-@@ -1726,7 +1730,7 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
--	bool change;
-+	bool change = false;
- 
- 	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
- 				 ARIZONA_MICD_ENA, 0,
--- 
-2.11.0
+> +#if !defined(BITOPS_INSTRUMENT_RANGE)
+> +/*
+> + * This may be defined by an arch's bitops.h, in case bitops do not operate on
+> + * single bytes only. The default version here is conservative and assumes that
+> + * bitops operate only on the byte with the target bit.
+> + */
+> +#define BITOPS_INSTRUMENT_RANGE(addr, nr)                                  \
+> +	(const volatile char *)(addr) + ((nr) / BITS_PER_BYTE), 1
+> +#endif
 
+I was under the impression that logically, all the bitops operated on
+the entire long the bit happend to be contained in, so checking the
+entire long would make more sense to me.
+
+FWIW, arm64's atomic bit ops are all implemented atop of atomic_long_*
+functions, which are instrumented, and always checks at the granularity
+of a long. I haven't seen splats from that when fuzzing with Syzkaller.
+
+Are you seeing bugs without this?
+
+Thanks,
+Mark.
