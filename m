@@ -2,106 +2,121 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B93BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD19C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAE6208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA272081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fB0H+7YM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="epXRGH2n"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QIfoVyy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfE1Ldw (ORCPT
+        id S1726795AbfE1Le4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:33:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52374 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfE1Ldw (ORCPT
+        Tue, 28 May 2019 07:34:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45862 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfE1Lez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:33:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 44BE460388; Tue, 28 May 2019 11:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559043231;
-        bh=L1NbZxiLtq3rlmMS9o/rSgkfR5rPEvxTXSc6OnbhHco=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=fB0H+7YMCFozgKGcSbatyDncJKV7Veu0X1mHZ8K39Jq+kugmwUFfgZQNqIBTx8ZVN
-         IJ05O3cEnl5jGYg3yHO5lfV5gTCgYObImstmFD6XTRFwFP6f1P/LVME/Nnf4rs4B7B
-         Hh2jjmEOuU5AsGHE4GjjCrOPmWCYQVpKXG0hEPzg=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45EA360E5A;
-        Tue, 28 May 2019 11:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559043228;
-        bh=L1NbZxiLtq3rlmMS9o/rSgkfR5rPEvxTXSc6OnbhHco=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=epXRGH2nFWQAVz/MQJzPp7tO1NHsMRRmGiIUHfBrmUov29KtEeATI6exYBp0Vez7J
-         DESnJG4ayMktH1rOIKkPYAJBZ6eHKgimEi7bLOO3WFcByq4JOvVVUeMbjR8Qshp931
-         egX9WxpIzpV3njFlKh3C2wLfxNhTQm0ZdwkzGW28=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 45EA360E5A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 May 2019 07:34:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SBYoRP099127;
+        Tue, 28 May 2019 06:34:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559043290;
+        bh=P5KVIiZh3Nun0m+9PqwCu28xvWWa75LyAqbjIU0ZS74=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=QIfoVyy88eGvEv3Y6yfq8GFY/mwrZ/ioUsL0RpdqGiACEPymZ0gcg1WAQyMxEEEWD
+         K8lOu2uDCJ3pbRerxtYkxDloAXJy1fGBij0MCCzQHO1DtHi3R1kOaTvGiQYKLuaVf0
+         LRw+juTFQbFsXU0i3N1WLHZiMrtf/mSwuyVmaUJM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SBYnGN124533
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 May 2019 06:34:50 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
+ May 2019 06:34:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 28 May 2019 06:34:49 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SBYmh8069662;
+        Tue, 28 May 2019 06:34:48 -0500
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com> <20190527103355.GA5287@amd>
+ <522728b0-147b-3708-fea1-88a895491e05@ti.com>
+Message-ID: <34dbfab0-0dd4-cf9a-ed86-a74363981077@ti.com>
+Date:   Tue, 28 May 2019 06:34:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 5.2] rsi: Properly initialize data in rsi_sdio_ta_reset
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190523153007.112231-1-natechancellor@gmail.com>
-References: <20190523153007.112231-1-natechancellor@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190528113351.44BE460388@smtp.codeaurora.org>
-Date:   Tue, 28 May 2019 11:33:50 +0000 (UTC)
+In-Reply-To: <522728b0-147b-3708-fea1-88a895491e05@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Chancellor <natechancellor@gmail.com> wrote:
+Pavel
 
-> When building with -Wuninitialized, Clang warns:
-> 
-> drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
-> is uninitialized when used here [-Wuninitialized]
->         put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
->                                                  ^~~~
-> drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
-> variable 'data' to silence this warning
->         u8 *data;
->                 ^
->                  = NULL
-> 1 warning generated.
-> 
-> Using Clang's suggestion of initializing data to NULL wouldn't work out
-> because data will be dereferenced by put_unaligned_le32. Use kzalloc to
-> properly initialize data, which matches a couple of other places in this
-> driver.
-> 
-> Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/464
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On 5/27/19 7:45 PM, Dan Murphy wrote:
+> Pavel
+>
+> On 5/27/19 5:33 AM, Pavel Machek wrote:
+>> On Thu 2019-05-23 14:08:12, Dan Murphy wrote:
+>>> Add a documentation of LED Multicolor LED class specific
+>>> sysfs attributes.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   .../ABI/testing/sysfs-class-led-multicolor    | 57 
+>>> +++++++++++++++++++
+>>>   1 file changed, 57 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/ABI/testing/sysfs-class-led-multicolor
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
+>>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> new file mode 100644
+>>> index 000000000000..2f102ede258b
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> @@ -0,0 +1,57 @@
+>>> +What:        /sys/class/leds/<led>/colors/sync_enable
+>>> +Date:        April 2019
+>> I believe I suggested more reasonable interface. Why not use that?
+>>
+>
+> Can you please provide the reference to your interface?
+>
+I think I found the suggestion [0].  Assuming that was the suggestion it 
+violates the kernel 1 value/file and there was agreement that this 
+interface had value. In testing the interface, it made sense to be able 
+to setup a color after writing each color brightness file and then 
+syncing the color LEDs with the new brightness levels.  It also provides 
+flexibility to be able to set a single LED color without writing sync.  
+The decision to do either or should really be a user space decision.   
+If I have referenced the wrong thread please let me know which thread 
+you are referring to.
 
-Patch applied to wireless-drivers.git, thanks.
+[0] https://lore.kernel.org/patchwork/patch/1057044/
 
-f57b5d85ed58 rsi: Properly initialize data in rsi_sdio_ta_reset
+<snip>
 
--- 
-https://patchwork.kernel.org/patch/10958063/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Dan
 
