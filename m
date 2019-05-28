@@ -2,98 +2,90 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8011C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19705C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982F420B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2001208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZXsDC13"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BvlVraSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfE1Ib0 (ORCPT
+        id S1726735AbfE1Ib7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:31:26 -0400
-Received: from mail-vs1-f54.google.com ([209.85.217.54]:41520 "EHLO
-        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfE1IbZ (ORCPT
+        Tue, 28 May 2019 04:31:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54614 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfE1Ib6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:31:25 -0400
-Received: by mail-vs1-f54.google.com with SMTP id w19so12239156vsw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nDpCbodGGyTl/G0ilhTF0HY0iZvF6dtHic3QCj90ipM=;
-        b=oZXsDC139BFCteWhHBnBHACBOyQMeYRAOrZf/VJ9wS/tQrz+S5esMvP0w8pm449GB0
-         cmPfZW9ULRdT8n87/iMLMqbXXoNT2419ayfmemKqxIJh/KqXliDTTIoDy/JJkTCzYryx
-         iIlEjh1oNEoJ4CStLL3ikYedgGLSj31O/YU1e5WlFayKAu5dl4Cfe9sAOMTSo6ok56dv
-         SscPem+FZ6pZKojuqiPTl9gCzY8bvmH3jPqX75TAYNEMn8ednqktRfMImHunEbKtoRUv
-         Lf1i1JxgNOSbcFvnNzWMo0/z3X2u7Op2IXl1Rdo2AYwyzRhLvuUtMZjXo6ABqCq7Hxjt
-         u1EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nDpCbodGGyTl/G0ilhTF0HY0iZvF6dtHic3QCj90ipM=;
-        b=NyuGtkO4Lo7EHo1DvDTsmw5+A2VtsgbZ9LG3bsJuouD+YfIfbjtuWR9HowzXyM9FCN
-         v322aWF823HnhtYbvLQX5vVOFm6bpIIfeCaImkugHEq+d2vMUvERpXhil5NP6SATLJoa
-         rpGaXG4rNFL19RATnjTHC5DJyAS01xZiLiP1TOiOlUsmk35b0nsEVqLMWlYwToeYrOFv
-         nKGMnSofOulUCAyxJV3yj6WRk0FBYnTm87pjjKIcgkB5pG+kng9UR7ew8MSLXn5+1/Lp
-         yzKiwgXEJzKfUgXZXtfRK/NOAs7npLFio9s23NicQkYlQrnmWU7bJsv5HsV6CVcl4GqD
-         gNOA==
-X-Gm-Message-State: APjAAAXBLF8Gh0hBmwrT2zAGKkXcFyz5xdsJmzk0tT6e/wbGB6X6zkEB
-        zLjtrp+eWSDHoeBAfqwoh8hGBN7lKpzZeex7FOeKzA==
-X-Google-Smtp-Source: APXvYqzE8QewMLUeXU4DZglD7H5qffJkLV6mdCsxLIk1a1dGSRHlmjrRoO/5otC9dc45/lQq+x8myk+C/2zbJELkiOo=
-X-Received: by 2002:a67:e1d3:: with SMTP id p19mr60303726vsl.183.1559032284339;
- Tue, 28 May 2019 01:31:24 -0700 (PDT)
+        Tue, 28 May 2019 04:31:58 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4S8Vumh056178;
+        Tue, 28 May 2019 03:31:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559032316;
+        bh=gy0+MpIjsHBi+VjtC+KdgiXRcp0cL4FeX5nZ37esCuY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BvlVraSUdGqPuKpKrzWv3wORwC80YMWEJC7yTYyNlcY5UlRHPWrb62NZxbyxMCMS5
+         krf62cec1PNbzv78ssEV0dV81ZJ6UgS6bZ9QzGzVkf17dPCAbYUXp48apcwdWCQ/98
+         MNnBcVhyiIvIpbgH2JUkLHusZ5HPFWU//r4rifm4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4S8VuXb120052
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 May 2019 03:31:56 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
+ May 2019 03:31:55 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 28 May 2019 03:31:55 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4S8Vp6d072132;
+        Tue, 28 May 2019 03:31:52 -0500
+Subject: Re: [PATCH v2 3/3] mmc: sdhci_am654: Fix SLOTTYPE write
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>
+References: <20190510034228.32211-1-faiz_abbas@ti.com>
+ <20190510034228.32211-4-faiz_abbas@ti.com>
+ <0662a705-1991-e854-21a4-4ff6b5533f13@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <68fd3e6e-666e-2ebf-04c9-8cb310f1404a@ti.com>
+Date:   Tue, 28 May 2019 14:02:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190520035254.57579-1-minchan@kernel.org> <20190520035254.57579-8-minchan@kernel.org>
- <20190520092801.GA6836@dhcp22.suse.cz> <20190521025533.GH10039@google.com>
- <20190521062628.GE32329@dhcp22.suse.cz> <20190527075811.GC6879@google.com>
- <20190527124411.GC1658@dhcp22.suse.cz> <20190528032632.GF6879@google.com>
- <20190528062947.GL1658@dhcp22.suse.cz> <20190528081351.GA159710@google.com>
-In-Reply-To: <20190528081351.GA159710@google.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 28 May 2019 01:31:13 -0700
-Message-ID: <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0662a705-1991-e854-21a4-4ff6b5533f13@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> if we went with the per vma fd approach then you would get this
-> > feature automatically because map_files would refer to file backed
-> > mappings while map_anon could refer only to anonymous mappings.
->
-> The reason to add such filter option is to avoid the parsing overhead
-> so map_anon wouldn't be helpful.
+Hi Adrian,
 
-Without chiming on whether the filter option is a good idea, I'd like
-to suggest that providing an efficient binary interfaces for pulling
-memory map information out of processes.  Some single-system-call
-method for retrieving a binary snapshot of a process's address space
-complete with attributes (selectable, like statx?) for each VMA would
-reduce complexity and increase performance in a variety of areas,
-e.g., Android memory map debugging commands.
+On 10/05/19 11:28 AM, Adrian Hunter wrote:
+> On 10/05/19 6:42 AM, Faiz Abbas wrote:
+>> In the call to regmap_update_bits() for SLOTTYPE, the mask and value
+>> fields are exchanged. Fix this. This didn't have any affect on the
+>> driver because this was a NOP and it was taking the correct value from
+>> the bootloader.
+>>
+>> Cc: stable <stable@vger.kernel.org>
+> 
+> Except that it doesn't apply to stable because of patch 1.  Maybe make this
+> the first patch.
+> 
+
+Ok. Sending v3 with this as first patch.
+
+Thanks,
+Faiz
