@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6537BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09870C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DDD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7C920B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ibl6oEES"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="D/Qm2B4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfE1JDm (ORCPT
+        id S1727143AbfE1JDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:03:42 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36005 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfE1JDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 05:03:40 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a8so30639687edx.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:38 -0700 (PDT)
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41402 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfE1JDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:03:36 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m4so30616768edd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 02:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eHI5IVXk6rbiogxAf4+pmXRYOJ0Nr3KoY/dH7aae4Ec=;
-        b=Ibl6oEES5fVamIiSNWf16iUWxfJctOaeOQ5rpCQdNoJugNugOKwDZ1MekFe5TE2l8z
-         XhRPIQH4qsuRcK75/K3tWSWDApqhZxftrVa6ChZqf+TY0Yzecg3SvB+F5l2KyJ+dHG2S
-         HAOJPMxwQWK9Kp7/OsiRluCDPlH0dhRu2M4XM=
+        bh=qp8gYAWJCiDOhrz1RfuOYXHHnFuqBtMXvmbENgYp7nA=;
+        b=D/Qm2B4Nwv9VOkhXwW2zqWA9R6pO/8mljnKNDoMbQqwe10J4DIpCovISBE10ZfmIiz
+         DUfZs/QewB0L/nMLc+4gH29xMFxS8TlJqHQOMPNMiOtE5d5W6SGFISi4qVJuzIvKRILw
+         UsMDYJ37BMOxsF4thN3vvqssEwWctti5fq1Os=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eHI5IVXk6rbiogxAf4+pmXRYOJ0Nr3KoY/dH7aae4Ec=;
-        b=QNKmDPQCHivQYKgmeEhp+Vxj42jV5fRIUpHhFIPQ/9NkuTmdPn9gPZ5iiLTmBZkSgA
-         96Gvgj104TQYy8nwjh87/nHEec7p3f19xCl6U931aH6lAEYACfze9//HOdz77EdA0zkH
-         /nJY9DN5WqndsdELIRBH1/FlxkPvJbnZoi/qeLTJuJ/JuoGpgka8fQN2dgoKNT7ZDzSi
-         0PZSiDKbDwJFkeRape8QcK7lV9QVDehDWGjY5MoGhk56EksmKZgqVMb6kpWDdPxMnevV
-         Ksfz3NZ+J7emHP9LGBUqfZjeu6kxnXl+XSpW2OJsvgIJVzmMjxF6g9X32zVdHuHR+eYJ
-         X/LA==
-X-Gm-Message-State: APjAAAW/sdWIBtsC8Ta42/lGgy5xptQhfMrZAue0rBSPK3TL+TpoIkoE
-        JrYjyu+wVvRgg6IvmGEd/2jkNMTa3mo=
-X-Google-Smtp-Source: APXvYqxugSDC57A7rPd1r24SAQm6AVxtazuuZ58on72+1pvHZZEIZnYLrALq7Zz4fkvM/USoATjllw==
-X-Received: by 2002:aa7:d6d3:: with SMTP id x19mr127434171edr.67.1559034217704;
-        Tue, 28 May 2019 02:03:37 -0700 (PDT)
+        bh=qp8gYAWJCiDOhrz1RfuOYXHHnFuqBtMXvmbENgYp7nA=;
+        b=qCHIEagAW9IDu0UR+jcfdqsOxeso9uZdJgxwXMgNXZprh4g4HCaKz+hBGIjKTVBVd1
+         jAqfYsOmo8KS9ndunUWqHpoNdlSvHwKa3wAzEma5TlteZnC+1gckSAIywzEHE1lyZkkj
+         eZp4oTGAYLi2zwwn/574gAkKNi2ErUFONre3hja2uagNbsMJ4dhAx7g4KchAnH30Bt7X
+         DI3C5ew4FcpM116AHbgZDNucd4haOHMmVal0GFcfqzRcGgn8Z2MqC102fRjXz60RtSDu
+         twLVL5UMmA7gY52ZfonB/YT2fkKH+dCM0WVSd5PfZkf8BAyZky9By7E9i06t4tuOX9+6
+         waSQ==
+X-Gm-Message-State: APjAAAVyuoIRfOWR9dj2G+RMvkrRbPzlBt5Ny2aF8KCiEcgWAhPpJ3Wp
+        MAQzV5oUKdy7FZsYoR28KOWkfj6UDPc=
+X-Google-Smtp-Source: APXvYqxWwkOmq1B5WlNL4LZsiFHjKy9tx1xdx2Sqd/9u6FMIp/LEyZi1VfAxiFE3W+jJaainnSnkzA==
+X-Received: by 2002:a17:906:491b:: with SMTP id b27mr33967503ejq.234.1559034215068;
+        Tue, 28 May 2019 02:03:35 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.36
+        by smtp.gmail.com with ESMTPSA id x49sm4072656edm.25.2019.05.28.02.03.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 02:03:37 -0700 (PDT)
+        Tue, 28 May 2019 02:03:34 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
@@ -64,13 +64,17 @@ Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
         Daniel Vetter <daniel.vetter@intel.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Peter Rosin <peda@axentia.se>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH 18/33] fbdev: make unregister/unlink functions not fail
-Date:   Tue, 28 May 2019 11:02:49 +0200
-Message-Id: <20190528090304.9388-19-daniel.vetter@ffwll.ch>
+        Yisheng Xie <ysxie@foxmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Peter Rosin <peda@axentia.se>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 16/33] fbdev: lock_fb_info cannot fail
+Date:   Tue, 28 May 2019 11:02:47 +0200
+Message-Id: <20190528090304.9388-17-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
 References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
@@ -82,296 +86,313 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Except for driver bugs (which we'll catch with a WARN_ON) this is only
-to report failures of the new driver taking over the console. There's
-nothing the outgoing driver can do about that, and no one ever
-bothered to actually look at these return values. So remove them all.
+Ever since
 
-v2: fixup unregister_framebuffer in savagefb, fbtft, ivtvfb, and neofb
-drivers, reported by kbuild.
+commit c47747fde931c02455683bd00ea43eaa62f35b0e
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed May 11 14:58:34 2011 -0700
+
+    fbmem: make read/write/ioctl use the frame buffer at open time
+
+fbdev has gained proper refcounting for the fbinfo attached to any
+open files, which means that the backing driver (stored in
+fb_info->fbops) cannot untimely disappear anymore.
+
+The only thing that can happen is that the entire device just outright
+disappears and gets unregistered, but file_fb_info does check for
+that. Except that it's racy - it only checks once at the start of a
+file_ops, there's no guarantee that the underlying fbdev won't
+untimely disappear. Aside: A proper way to fix that race is probably
+to replicate the srcu trickery we've rolled out in drm.
+
+But given that this race has existed since forever it's probably not
+one we need to fix right away. do_unregister_framebuffer also nowhere
+clears fb_info->fbops, hence the check in lock_fb_info can't possible
+catch a disappearing fbdev later on.
+
+Long story short: Ever since the above commit the fb_info->fbops
+checks have essentially become dead code. Remove this all.
+
+Aside from the file_ops callbacks, and stuff called from there
+there's only register/unregister code left. If that goes wrong a driver
+managed to register/unregister a device instance twice or in the wrong
+order.  That's just a driver bug.
+
+v2:
+- fb_mmap had an open-coded version of the fbinfo->fops check, because
+  it doesn't need the fbinfo->lock. Delete that too.
+- Use the wrapper function in fb_open/release now, since no difference
+  anymore.
 
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
-Cc: Peter Rosin <peda@axentia.se>
 Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Yisheng Xie <ysxie@foxmail.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: "Noralf Trønnes" <noralf@tronnes.org>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
 Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Cc: linux-fbdev@vger.kernel.org
 ---
- drivers/media/pci/ivtv/ivtvfb.c              |  6 +-
- drivers/staging/fbtft/fbtft-core.c           |  4 +-
- drivers/video/fbdev/core/fbmem.c             | 73 ++++++--------------
- drivers/video/fbdev/neofb.c                  |  9 +--
- drivers/video/fbdev/savage/savagefb_driver.c |  9 +--
- include/linux/fb.h                           |  4 +-
- 6 files changed, 31 insertions(+), 74 deletions(-)
+ drivers/video/fbdev/core/fbcmap.c |  6 +--
+ drivers/video/fbdev/core/fbcon.c  |  3 +-
+ drivers/video/fbdev/core/fbmem.c  | 73 +++++++------------------------
+ include/linux/fb.h                |  5 ++-
+ 4 files changed, 23 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/media/pci/ivtv/ivtvfb.c b/drivers/media/pci/ivtv/ivtvfb.c
-index cfd21040d0e3..6435c72ff58e 100644
---- a/drivers/media/pci/ivtv/ivtvfb.c
-+++ b/drivers/media/pci/ivtv/ivtvfb.c
-@@ -1258,11 +1258,7 @@ static int ivtvfb_callback_cleanup(struct device *dev, void *p)
- 	struct osd_info *oi = itv->osd_info;
+diff --git a/drivers/video/fbdev/core/fbcmap.c b/drivers/video/fbdev/core/fbcmap.c
+index 2811c4afde01..e5ae33c1a8e8 100644
+--- a/drivers/video/fbdev/core/fbcmap.c
++++ b/drivers/video/fbdev/core/fbcmap.c
+@@ -285,11 +285,7 @@ int fb_set_user_cmap(struct fb_cmap_user *cmap, struct fb_info *info)
+ 		goto out;
+ 	}
+ 	umap.start = cmap->start;
+-	if (!lock_fb_info(info)) {
+-		rc = -ENODEV;
+-		goto out;
+-	}
+-
++	lock_fb_info(info);
+ 	rc = fb_set_cmap(&umap, info);
+ 	unlock_fb_info(info);
+ out:
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 5a9fe0c0dd3c..a7e2d5b88914 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2364,8 +2364,7 @@ static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
+ 	}
  
- 	if (itv->v4l2_cap & V4L2_CAP_VIDEO_OUTPUT) {
--		if (unregister_framebuffer(&itv->osd_info->ivtvfb_info)) {
--			IVTVFB_WARN("Framebuffer %d is in use, cannot unload\n",
--				       itv->instance);
--			return 0;
--		}
-+		unregister_framebuffer(&itv->osd_info->ivtvfb_info);
- 		IVTVFB_INFO("Unregister framebuffer %d\n", itv->instance);
- 		itv->ivtvfb_restore = NULL;
- 		ivtvfb_blank(FB_BLANK_VSYNC_SUSPEND, &oi->ivtvfb_info);
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 9b07badf4c6c..7cbc1bdd2d8a 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -891,7 +891,9 @@ int fbtft_unregister_framebuffer(struct fb_info *fb_info)
- 	if (par->fbtftops.unregister_backlight)
- 		par->fbtftops.unregister_backlight(par);
- 	fbtft_sysfs_exit(par);
--	return unregister_framebuffer(fb_info);
-+	unregister_framebuffer(fb_info);
-+
-+	return 0;
- }
- EXPORT_SYMBOL(fbtft_unregister_framebuffer);
  
+-	if (!lock_fb_info(info))
+-		return;
++	lock_fb_info(info);
+ 	event.info = info;
+ 	event.data = &blank;
+ 	fb_notifier_call_chain(FB_EVENT_CONBLANK, &event);
 diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index f3fc2e5b193c..f3bcad30d3ba 100644
+index bed7698ad18a..d73762324ca2 100644
 --- a/drivers/video/fbdev/core/fbmem.c
 +++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1590,13 +1590,13 @@ static bool fb_do_apertures_overlap(struct apertures_struct *gena,
- 	return false;
+@@ -80,17 +80,6 @@ static void put_fb_info(struct fb_info *fb_info)
+ 		fb_info->fbops->fb_destroy(fb_info);
  }
  
--static int do_unregister_framebuffer(struct fb_info *fb_info);
-+static void do_unregister_framebuffer(struct fb_info *fb_info);
- 
- #define VGA_FB_PHYS 0xA0000
--static int do_remove_conflicting_framebuffers(struct apertures_struct *a,
--					      const char *name, bool primary)
-+static void do_remove_conflicting_framebuffers(struct apertures_struct *a,
-+					       const char *name, bool primary)
- {
--	int i, ret;
-+	int i;
- 
- 	/* check all firmware fbs and kick off if the base addr overlaps */
- 	for_each_registered_fb(i) {
-@@ -1612,13 +1612,9 @@ static int do_remove_conflicting_framebuffers(struct apertures_struct *a,
- 
- 			printk(KERN_INFO "fb%d: switching to %s from %s\n",
- 			       i, name, registered_fb[i]->fix.id);
--			ret = do_unregister_framebuffer(registered_fb[i]);
--			if (ret)
--				return ret;
-+			do_unregister_framebuffer(registered_fb[i]);
- 		}
- 	}
+-int lock_fb_info(struct fb_info *info)
+-{
+-	mutex_lock(&info->lock);
+-	if (!info->fbops) {
+-		mutex_unlock(&info->lock);
+-		return 0;
+-	}
+-	return 1;
+-}
+-EXPORT_SYMBOL(lock_fb_info);
 -
--	return 0;
- }
+ /*
+  * Helpers
+  */
+@@ -1121,8 +1110,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
  
- static bool lockless_register_fb;
-@@ -1634,11 +1630,9 @@ static int do_register_framebuffer(struct fb_info *fb_info)
- 	if (fb_check_foreignness(fb_info))
- 		return -ENOSYS;
+ 	switch (cmd) {
+ 	case FBIOGET_VSCREENINFO:
+-		if (!lock_fb_info(info))
+-			return -ENODEV;
++		lock_fb_info(info);
+ 		var = info->var;
+ 		unlock_fb_info(info);
  
--	ret = do_remove_conflicting_framebuffers(fb_info->apertures,
--						 fb_info->fix.id,
--						 fb_is_primary_device(fb_info));
--	if (ret)
--		return ret;
-+	do_remove_conflicting_framebuffers(fb_info->apertures,
-+					   fb_info->fix.id,
-+					   fb_is_primary_device(fb_info));
- 
- 	if (num_registered_fb == FB_MAX)
- 		return -ENXIO;
-@@ -1714,32 +1708,25 @@ static int do_register_framebuffer(struct fb_info *fb_info)
- 	return ret;
- }
- 
--static int unbind_console(struct fb_info *fb_info)
-+static void unbind_console(struct fb_info *fb_info)
+@@ -1132,10 +1120,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		if (copy_from_user(&var, argp, sizeof(var)))
+ 			return -EFAULT;
+ 		console_lock();
+-		if (!lock_fb_info(info)) {
+-			console_unlock();
+-			return -ENODEV;
+-		}
++		lock_fb_info(info);
+ 		info->flags |= FBINFO_MISC_USEREVENT;
+ 		ret = fb_set_var(info, &var);
+ 		info->flags &= ~FBINFO_MISC_USEREVENT;
+@@ -1145,8 +1130,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 			ret = -EFAULT;
+ 		break;
+ 	case FBIOGET_FSCREENINFO:
+-		if (!lock_fb_info(info))
+-			return -ENODEV;
++		lock_fb_info(info);
+ 		fix = info->fix;
+ 		if (info->flags & FBINFO_HIDE_SMEM_START)
+ 			fix.smem_start = 0;
+@@ -1162,8 +1146,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 	case FBIOGETCMAP:
+ 		if (copy_from_user(&cmap, argp, sizeof(cmap)))
+ 			return -EFAULT;
+-		if (!lock_fb_info(info))
+-			return -ENODEV;
++		lock_fb_info(info);
+ 		cmap_from = info->cmap;
+ 		unlock_fb_info(info);
+ 		ret = fb_cmap_to_user(&cmap_from, &cmap);
+@@ -1172,10 +1155,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		if (copy_from_user(&var, argp, sizeof(var)))
+ 			return -EFAULT;
+ 		console_lock();
+-		if (!lock_fb_info(info)) {
+-			console_unlock();
+-			return -ENODEV;
+-		}
++		lock_fb_info(info);
+ 		ret = fb_pan_display(info, &var);
+ 		unlock_fb_info(info);
+ 		console_unlock();
+@@ -1192,8 +1172,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 			return -EINVAL;
+ 		con2fb.framebuffer = -1;
+ 		event.data = &con2fb;
+-		if (!lock_fb_info(info))
+-			return -ENODEV;
++		lock_fb_info(info);
+ 		event.info = info;
+ 		fb_notifier_call_chain(FB_EVENT_GET_CONSOLE_MAP, &event);
+ 		unlock_fb_info(info);
+@@ -1214,10 +1193,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		}
+ 		event.data = &con2fb;
+ 		console_lock();
+-		if (!lock_fb_info(info)) {
+-			console_unlock();
+-			return -ENODEV;
+-		}
++		lock_fb_info(info);
+ 		event.info = info;
+ 		ret = fb_notifier_call_chain(FB_EVENT_SET_CONSOLE_MAP, &event);
+ 		unlock_fb_info(info);
+@@ -1225,10 +1201,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		break;
+ 	case FBIOBLANK:
+ 		console_lock();
+-		if (!lock_fb_info(info)) {
+-			console_unlock();
+-			return -ENODEV;
+-		}
++		lock_fb_info(info);
+ 		info->flags |= FBINFO_MISC_USEREVENT;
+ 		ret = fb_blank(info, arg);
+ 		info->flags &= ~FBINFO_MISC_USEREVENT;
+@@ -1236,8 +1209,7 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+ 		console_unlock();
+ 		break;
+ 	default:
+-		if (!lock_fb_info(info))
+-			return -ENODEV;
++		lock_fb_info(info);
+ 		fb = info->fbops;
+ 		if (fb->fb_ioctl)
+ 			ret = fb->fb_ioctl(info, cmd, arg);
+@@ -1357,8 +1329,7 @@ static int fb_get_fscreeninfo(struct fb_info *info, unsigned int cmd,
  {
- 	int i = fb_info->node;
+ 	struct fb_fix_screeninfo fix;
  
--	if (i < 0 || i >= FB_MAX || registered_fb[i] != fb_info)
--		return -EINVAL;
-+	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
-+		return;
+-	if (!lock_fb_info(info))
+-		return -ENODEV;
++	lock_fb_info(info);
+ 	fix = info->fix;
+ 	if (info->flags & FBINFO_HIDE_SMEM_START)
+ 		fix.smem_start = 0;
+@@ -1418,8 +1389,6 @@ fb_mmap(struct file *file, struct vm_area_struct * vma)
+ 	if (!info)
+ 		return -ENODEV;
+ 	fb = info->fbops;
+-	if (!fb)
+-		return -ENODEV;
+ 	mutex_lock(&info->mm_lock);
+ 	if (fb->fb_mmap) {
+ 		int res;
+@@ -1483,7 +1452,7 @@ __releases(&info->lock)
+ 	if (IS_ERR(info))
+ 		return PTR_ERR(info);
+ 
+-	mutex_lock(&info->lock);
++	lock_fb_info(info);
+ 	if (!try_module_get(info->fbops->owner)) {
+ 		res = -ENODEV;
+ 		goto out;
+@@ -1499,7 +1468,7 @@ __releases(&info->lock)
+ 		fb_deferred_io_open(info, inode, file);
+ #endif
+ out:
+-	mutex_unlock(&info->lock);
++	unlock_fb_info(info);
+ 	if (res)
+ 		put_fb_info(info);
+ 	return res;
+@@ -1512,11 +1481,11 @@ __releases(&info->lock)
+ {
+ 	struct fb_info * const info = file->private_data;
+ 
+-	mutex_lock(&info->lock);
++	lock_fb_info(info);
+ 	if (info->fbops->fb_release)
+ 		info->fbops->fb_release(info,1);
+ 	module_put(info->fbops->owner);
+-	mutex_unlock(&info->lock);
++	unlock_fb_info(info);
+ 	put_fb_info(info);
+ 	return 0;
+ }
+@@ -1734,14 +1703,10 @@ static int do_register_framebuffer(struct fb_info *fb_info)
+ 		console_lock();
+ 	else
+ 		atomic_inc(&ignore_console_lock_warning);
+-	if (!lock_fb_info(fb_info)) {
+-		ret = -ENODEV;
+-		goto unlock_console;
+-	}
+-
++	lock_fb_info(fb_info);
+ 	ret = fbcon_fb_registered(fb_info);
+ 	unlock_fb_info(fb_info);
+-unlock_console:
++
+ 	if (!lockless_register_fb)
+ 		console_unlock();
+ 	else
+@@ -1759,11 +1724,7 @@ static int unbind_console(struct fb_info *fb_info)
+ 		return -EINVAL;
  
  	console_lock();
- 	lock_fb_info(fb_info);
- 	fbcon_fb_unbind(fb_info);
+-	if (!lock_fb_info(fb_info)) {
+-		console_unlock();
+-		return -ENODEV;
+-	}
+-
++	lock_fb_info(fb_info);
+ 	event.info = fb_info;
+ 	ret = fb_notifier_call_chain(FB_EVENT_FB_UNBIND, &event);
  	unlock_fb_info(fb_info);
- 	console_unlock();
--
--	return 0;
- }
- 
--static int __unlink_framebuffer(struct fb_info *fb_info);
-+static void __unlink_framebuffer(struct fb_info *fb_info);
- 
--static int do_unregister_framebuffer(struct fb_info *fb_info)
-+static void do_unregister_framebuffer(struct fb_info *fb_info)
- {
--	int ret;
--
--	ret = unbind_console(fb_info);
--
--	if (ret)
--		return -EINVAL;
-+	unbind_console(fb_info);
- 
- 	pm_vt_switch_unregister(fb_info->dev);
- 
-@@ -1764,36 +1751,27 @@ static int do_unregister_framebuffer(struct fb_info *fb_info)
- 
- 	/* this may free fb info */
- 	put_fb_info(fb_info);
--	return 0;
- }
- 
--static int __unlink_framebuffer(struct fb_info *fb_info)
-+static void __unlink_framebuffer(struct fb_info *fb_info)
- {
- 	int i;
- 
- 	i = fb_info->node;
--	if (i < 0 || i >= FB_MAX || registered_fb[i] != fb_info)
--		return -EINVAL;
-+	if (WARN_ON(i < 0 || i >= FB_MAX || registered_fb[i] != fb_info))
-+		return;
- 
- 	if (fb_info->dev) {
- 		device_destroy(fb_class, MKDEV(FB_MAJOR, i));
- 		fb_info->dev = NULL;
- 	}
--
--	return 0;
- }
- 
--int unlink_framebuffer(struct fb_info *fb_info)
-+void unlink_framebuffer(struct fb_info *fb_info)
- {
--	int ret;
--
--	ret = __unlink_framebuffer(fb_info);
--	if (ret)
--		return ret;
-+	__unlink_framebuffer(fb_info);
- 
- 	unbind_console(fb_info);
--
--	return 0;
- }
- EXPORT_SYMBOL(unlink_framebuffer);
- 
-@@ -1810,7 +1788,6 @@ EXPORT_SYMBOL(unlink_framebuffer);
- int remove_conflicting_framebuffers(struct apertures_struct *a,
- 				    const char *name, bool primary)
- {
--	int ret;
- 	bool do_free = false;
- 
- 	if (!a) {
-@@ -1824,13 +1801,13 @@ int remove_conflicting_framebuffers(struct apertures_struct *a,
- 	}
- 
- 	mutex_lock(&registration_lock);
--	ret = do_remove_conflicting_framebuffers(a, name, primary);
-+	do_remove_conflicting_framebuffers(a, name, primary);
- 	mutex_unlock(&registration_lock);
- 
- 	if (do_free)
- 		kfree(a);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL(remove_conflicting_framebuffers);
- 
-@@ -1927,16 +1904,12 @@ EXPORT_SYMBOL(register_framebuffer);
-  *      that the driver implements fb_open() and fb_release() to
-  *      check that no processes are using the device.
-  */
--int
-+void
- unregister_framebuffer(struct fb_info *fb_info)
- {
--	int ret;
--
- 	mutex_lock(&registration_lock);
--	ret = do_unregister_framebuffer(fb_info);
-+	do_unregister_framebuffer(fb_info);
- 	mutex_unlock(&registration_lock);
--
--	return ret;
- }
- EXPORT_SYMBOL(unregister_framebuffer);
- 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index 5d3a444083f7..b770946a0920 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -2122,14 +2122,7 @@ static void neofb_remove(struct pci_dev *dev)
- 	DBG("neofb_remove");
- 
- 	if (info) {
--		/*
--		 * If unregister_framebuffer fails, then
--		 * we will be leaving hooks that could cause
--		 * oopsen laying around.
--		 */
--		if (unregister_framebuffer(info))
--			printk(KERN_WARNING
--			       "neofb: danger danger!  Oopsen imminent!\n");
-+		unregister_framebuffer(info);
- 
- 		neo_unmap_video(info);
- 		fb_destroy_modedb(info->monspecs.modedb);
-diff --git a/drivers/video/fbdev/savage/savagefb_driver.c b/drivers/video/fbdev/savage/savagefb_driver.c
-index 47b78f0138c3..512789f5f884 100644
---- a/drivers/video/fbdev/savage/savagefb_driver.c
-+++ b/drivers/video/fbdev/savage/savagefb_driver.c
-@@ -2333,14 +2333,7 @@ static void savagefb_remove(struct pci_dev *dev)
- 	DBG("savagefb_remove");
- 
- 	if (info) {
--		/*
--		 * If unregister_framebuffer fails, then
--		 * we will be leaving hooks that could cause
--		 * oopsen laying around.
--		 */
--		if (unregister_framebuffer(info))
--			printk(KERN_WARNING "savagefb: danger danger! "
--			       "Oopsen imminent!\n");
-+		unregister_framebuffer(info);
- 
- #ifdef CONFIG_FB_SAVAGE_I2C
- 		savagefb_delete_i2c_busses(info);
 diff --git a/include/linux/fb.h b/include/linux/fb.h
-index b6ce041d9e13..b90cf7d56bd8 100644
+index 288175fafaf6..aa8f18163151 100644
 --- a/include/linux/fb.h
 +++ b/include/linux/fb.h
-@@ -634,8 +634,8 @@ extern ssize_t fb_sys_write(struct fb_info *info, const char __user *buf,
+@@ -663,7 +663,10 @@ extern struct class *fb_class;
+ 	for (i = 0; i < FB_MAX; i++)		\
+ 		if (!registered_fb[i]) {} else
  
- /* drivers/video/fbmem.c */
- extern int register_framebuffer(struct fb_info *fb_info);
--extern int unregister_framebuffer(struct fb_info *fb_info);
--extern int unlink_framebuffer(struct fb_info *fb_info);
-+extern void unregister_framebuffer(struct fb_info *fb_info);
-+extern void unlink_framebuffer(struct fb_info *fb_info);
- extern int remove_conflicting_pci_framebuffers(struct pci_dev *pdev, int res_id,
- 					       const char *name);
- extern int remove_conflicting_framebuffers(struct apertures_struct *a,
+-extern int lock_fb_info(struct fb_info *info);
++static inline void lock_fb_info(struct fb_info *info)
++{
++	mutex_lock(&info->lock);
++}
+ 
+ static inline void unlock_fb_info(struct fb_info *info)
+ {
 -- 
 2.20.1
 
