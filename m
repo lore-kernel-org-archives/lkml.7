@@ -2,155 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC40C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8205CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0BC2081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="au44pDeg"
+	by mail.kernel.org (Postfix) with ESMTP id 57C02206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfE1Ovc (ORCPT
+        id S1726706AbfE1OyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:51:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46683 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbfE1Ova (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:51:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bb3so827140plb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4htO74nlZTTjjSOZRb+2oGEss+Qcefe+hGWQCyYkWoQ=;
-        b=au44pDegu6gwO+Cf4teDgSVrwJlkGNEtG6C7VatYjseuou/yAacTS7Evb5615xq3g+
-         CQ2KSL3YZAs5nW/Lu1FAkoZiLAg//aOMW1cai/0fWPB//zHyX7fonkQudab87mrGCWwO
-         0rAlaXMI0UCuAAOuwoDiVWHn7Jp4SbacA+da05vZMNGzDhCnvgcFBtasTYz547ybOgq/
-         dp0EQrHKeo1v1ougIdh51QKOB/otNfr9UrlhpwTdNPvZgTPKXs9VgQ5f1CloYbiU1dV2
-         Rw7OzaW0syjJt2WODgNPxMcD1qxAm00CSJVg/dNu4RKe8HOo+iZW0uMPI8Ate3xRG+Zt
-         WZhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4htO74nlZTTjjSOZRb+2oGEss+Qcefe+hGWQCyYkWoQ=;
-        b=hSFBgysqS6UGF+mP8dL6FxbW/drc85xcaPF7Avviz0Bpofq7lV/CVafJgMehh63TgQ
-         4gWR2tnJFenUvAOzQB7fVKiT0OSqqgKvAh6POnZU/3gTJF0iqqzpOmQx5x6PBRW+uFyI
-         EILATL+VrLC8M2TxrFKpZi0HmYHhAknEX8gWt2ujK/5Ixwu6Sa01pe7SIgz94TiIi7aR
-         Pqo8/pwXtpdSHgDPgK/Mo2GBg90mGDK8JXzEsIpX7pA5NJ4D0Oc4CnX7CjP6jEPxbaif
-         5x35oqPeR/wQ0e6G/8oNT2RvsFjjh61WgY5gfCHqoXQLtXyaB76f6BjENNxKPk6eL74r
-         PZDg==
-X-Gm-Message-State: APjAAAUlsIfsX/cbFKr/rw1kK7TO5zmqhLtKekFw4KiQAbs/F2kKOvpP
-        SiDHLk8E7it8yg6nE1kNOZdW9g==
-X-Google-Smtp-Source: APXvYqy3PNdTZipQ9Cj8tf7D5aG0YpWARynwkOVz5AcSSOfamZYs+WVN/eD3PulYkH/LJp02pSfptg==
-X-Received: by 2002:a17:902:760f:: with SMTP id k15mr60674375pll.125.1559055089555;
-        Tue, 28 May 2019 07:51:29 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m1sm2701885pjv.22.2019.05.28.07.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 07:51:28 -0700 (PDT)
-Date:   Tue, 28 May 2019 08:51:26 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-Message-ID: <20190528145126.GA20714@xps15>
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
- <20190528051924.GA19112@leoy-ThinkPad-X240s>
+        Tue, 28 May 2019 10:54:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58716 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbfE1OyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:54:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F18CC80D;
+        Tue, 28 May 2019 07:54:13 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 689083F5AF;
+        Tue, 28 May 2019 07:54:13 -0700 (PDT)
+Date:   Tue, 28 May 2019 15:54:11 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190528145411.GA709@e119886-lin.cambridge.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190527143719.GA59948@MBP.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528051924.GA19112@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190527143719.GA59948@MBP.local>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good day,
-
-On Tue, May 28, 2019 at 01:19:24PM +0800, Leo Yan wrote:
-> Hi Suzuki,
+On Mon, May 27, 2019 at 03:37:20PM +0100, Catalin Marinas wrote:
+> On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > pass tagged user pointers (with the top byte set to something else other
+> > than 0x00) as syscall arguments.
+> > 
+> > This patch allows tagged pointers to be passed to the following memory
+> > syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
+> > mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
+> > remap_file_pages, shmat and shmdt.
+> > 
+> > This is done by untagging pointers passed to these syscalls in the
+> > prologues of their handlers.
+> > 
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 > 
-> On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
-> > This series adds the support for CoreSight devices on ACPI based
-> > platforms. The device connections are encoded as _DSD graph property[0],
-> > with CoreSight specific extensions to indicate the direction of data
-> > flow as described in [1]. Components attached to CPUs are listed
-> > as child devices of the corresponding CPU, removing explicit links
-> > to the CPU like we do in the DT.
-> > 
-> > The majority of the series cleans up the driver and prepares the subsystem
-> > for platform agnostic firwmare probing, naming scheme, searching etc.
-> > 
-> > We introduce platform independent helpers to parse the platform supplied
-> > information. Thus we rename the platform handling code from:
-> > 	of_coresight.c  => coresight-platform.c
-> > 
-> > The CoreSight driver creates shadow devices that appear on the Coresight
-> > bus, in addition to the real devices (e.g, AMBA bus devices). The name
-> > of these devices match the real device. This makes the device name
-> > a bit cryptic for ACPI platform. So this series also introduces a generic
-> > platform agnostic device naming scheme for the shadow Coresight devices.
-> > Towards this we also make changes to the way we lookup devices to resolve
-> > the connections, as we can't use the names to identify the devices. So,
-> > we use the "fwnode_handle" of the real device for the device lookups.
-> > Towards that we clean up the drivers to keep track of the "CoreSight"
-> > device rather than the "real" device. However, all real operations,
-> > like DMA allocation, Power management etc. must be performed on
-> > the real device which is the parent of the shadow device.
-> > 
-> > Finally we add the support for parsing the ACPI platform data. The power
-> > management support is missing in the ACPI (and this is not specific to
-> > CoreSight). The firmware must ensure that the respective power domains
-> > are turned on.
-> > 
-> > Applies on v5.2-rc1
-> > 
-> > Tested on a Juno-r0 board with ACPI bindings patch (Patch 31/30) added on
-> > top of [2]. You would need to make sure that the debug power domain is
-> > turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
-> > Juno board while at UEFI). arm32 code is only compile tested.
-> 
-> After I applied this patch set, I found all device names under
-> '/sys/bus/event_source/devices/cs_etm/sinks/' have been changed as
-> below on my DB410c board:
-> # ls /sys/bus/event_source/devices/cs_etm/sinks/
-> tmc_etf0  tmc_etr0  tpiu0
+> Actually, I don't think any of these wrappers get called (have you
+> tested this patch?). Following commit 4378a7d4be30 ("arm64: implement
+> syscall wrappers"), I think we have other macro names for overriding the
+> sys_* ones.
 
-Yes, that is the expected behavior.
+What is the value in adding these wrappers?
+
+The untagged_addr macro is defined for all in linux/mm.h and these patches
+already use untagged_addr in generic code. Thus adding a few more
+untagged_addr in the generic syscall handlers (which turn to a nop for most)
+is surely better than adding wrappers?
+
+Even if other architectures implement untagged_addr in the future it would
+be more consistent if they untagged in the same places and thus not adding
+these wrappers enforces that.
+
+Thanks,
+
+Andrew Murray
 
 > 
-> This leads to below command failure when open PMU device:
-> # perf record -e cs_etm/@826000.etr/ --per-thread uname
-> failed to set sink "826000.etr" on event cs_etm/@826000.etr/ with 2 (No such file or directory)
-
-Correct.
-
+> -- 
+> Catalin
 > 
-> I must use below command so that perf can match string with the
-> device name under '/sys/bus/event_source/devices/cs_etm/sinks/':
-> # perf record -e cs_etm/@tmc_etr0/ --per-thread uname
-
-Correct.
-
-> 
-> Seems to me, this is an unexpected change and when I worked on the
-> patch set v2, IIRC that version still can use '826000.etr' to open PMU
-> device.
-
-Correct - v2 did not address the new naming convention for devices present under
-'event_source', something that was corrected in v3.
-
- 
-> Please help confirm for this.  Thanks!
-> 
-> Leo.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
