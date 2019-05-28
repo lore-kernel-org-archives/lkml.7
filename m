@@ -2,132 +2,118 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2662C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2921DC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB9D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033B120B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="jALHoOYb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kU/g9Xjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfE1UcV (ORCPT
+        id S1727571AbfE1UfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:32:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41743 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfE1UcV (ORCPT
+        Tue, 28 May 2019 16:35:15 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45197 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfE1UfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:32:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q17so6157pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 13:32:21 -0700 (PDT)
+        Tue, 28 May 2019 16:35:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a5so137pls.12;
+        Tue, 28 May 2019 13:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6BVjplRJjVAtzerMfL/A1WtErQukGLzsV7QIdL5tHLg=;
-        b=jALHoOYbd78sWqXXZgYaR8eLxuPF63IYkarb8Baf2n7TaE6XnnepYOIMqCLibAQqG/
-         0ZJcwCe35su/Un1bvTKr+H9yfbCkChIWYtLnHoLbFPQ+U51SOhGPOu4PDiNGWKDyuQHL
-         0/Bh3Wz253mmN/utA/8DiIGX5r6qBJPfGgk2oct7Uvpyn5Aq64Mj1G8+uxa7XdNfHW+L
-         8fhCvz7JKJm3Xx8NvpGLGFD4eU7BVn/g6ehW/Z+dcsnVXOV+p0CbvsIyL5hTi4cc4/M+
-         4pbItZvCXZDDcetGaQGkGh6Bfg4tzcbzzSbFPSqysI8fYYPgfmUXhZy7tlj2NzsFGGpx
-         tXyw==
+        bh=aaxYwob8ojeK4vx5PzzDahXRFmqjdVXWsrOuEKNA0DQ=;
+        b=kU/g9XjvqkKf73URzdLKKwOdGl+647hKFs2XQqYIAzhwUcIj6TdexIvjLYJGOcPzIm
+         3fvFvcREeLeaGxX/FSST4+dEdPWYX2UvfC8zm8Ucc6lqmfQVH4P3pCpOoa/cocMd6/hs
+         7QJJykiV5Cp8W5hnXNnXhgXhX4dEiJZ3Wp70E3JcLZUzl87q8BEQJs/rMLDj1eXTUxXV
+         yoDbNl8ldiF6kb6wUtK+2OEteKpI3XFWEB+2MrvvbiuGdD+01R7rmZ989p0ACYgFZG0c
+         5c9YTobz4kWOgaba+Q7sHeW1BPSHAgmW2O2mrrJ57eIgamxmjI8hQEy+mAJXptlYT6o3
+         icAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6BVjplRJjVAtzerMfL/A1WtErQukGLzsV7QIdL5tHLg=;
-        b=lqlNkLMBuNLBsaNgwUS7c1MC03+foKxyUZKpt8NJt7gkvnK+uaYxGBDQCMjrDSd4R2
-         d8B9QEnEI7xupQcyW6Itsk2rIaO04oQgltMv0YVXLrk4/xvyD7OS4u62Pp3Ty+lOBVul
-         skPX+VofjKWAkqf+qzMqngrBsMY6DvGH1XwWKT7zFFOs+KK+ppas7Pt/dInqf5XovY/V
-         8dcC05gR5RVRWMCHT51vdQFcUz1Jn0hSE5Lf6P0TqitQZJExd4fvj6jlceC2utkHVRbf
-         Y1O5x6FOVFqYXvT4p4aezL6tRAQVPQ8oZTIV9birVFL4l58FqpDpF0hHy7QAZgboFWho
-         a7Xg==
-X-Gm-Message-State: APjAAAXalpEGWFWVDPc7ROZLjjDrkHUUAt/7SIXsQlWm521mCPn5LVC2
-        PNXml/pDAqE5t7sFKEmrxbim0Q==
-X-Google-Smtp-Source: APXvYqw0vMIiMqx3gefPlogq+TldEzNcR68Fc/ANu9jAbQ2F1nOLyVOiuJNwa6AgdrcS475hYpQKwQ==
-X-Received: by 2002:a63:4f07:: with SMTP id d7mr83629540pgb.77.1559075540928;
-        Tue, 28 May 2019 13:32:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:6316])
-        by smtp.gmail.com with ESMTPSA id c15sm15664515pfi.172.2019.05.28.13.32.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 13:32:20 -0700 (PDT)
-Date:   Tue, 28 May 2019 16:32:18 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel test robot <rong.a.chen@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Subject: Re: [PATCH] mm: memcontrol: don't batch updates of local VM stats
- and events
-Message-ID: <20190528203218.GA20452@cmpxchg.org>
-References: <20190520063534.GB19312@shao2-debian>
- <20190520215328.GA1186@cmpxchg.org>
- <20190521134646.GE19312@shao2-debian>
- <20190521151647.GB2870@cmpxchg.org>
- <CALvZod5KFJvfBfTZKWiDo_ux_OkLKK-b6sWtnYeFCY2ARiiKwQ@mail.gmail.com>
- <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aaxYwob8ojeK4vx5PzzDahXRFmqjdVXWsrOuEKNA0DQ=;
+        b=d7MzjVoZyqauBrA+eNUp3BWL11a6ptq3tvh+GxIATwmWxpZTmOVTprmNiNqFmh338p
+         HXIIxCN2LwroVstIltLKRF5t8gzBpL1zmD6b4jfdASGRO0LRAIN2ruKMUxGuJP3/eLTl
+         VYLzCqfVjE/M8yNxHMLOPLo71dSp+tcMGVwdjttpUhTwMiHHrKx/Ph8i17fKsBgM6ssy
+         oXI2LdmF8jc6mLa7N9UwWL7vqIfz50UmEVcgEAgLPIsCgrfx5Pcpepu/DvSeXVLeIpS6
+         g4dhaOybX6hCssjEEgQ6dFsgOTv9CtZLwqMr2d7Y8sA/j1KCuTOBVe/LytqkweBu7+K9
+         cCWA==
+X-Gm-Message-State: APjAAAXDfFddb0+XPUyWXgqWDCMzxRDMTptBdpDx4gC8mUxR5nT/Z4wV
+        Pg/X5T0tcybaIy4hXk3mK9UuHOrj
+X-Google-Smtp-Source: APXvYqwx3DhB771I8an+dHWcIOZ1aLaPjoLMcizU8AriPnovDNWtPBOxsd1ApMTyKTQ7HXpYNhYOVA==
+X-Received: by 2002:a17:902:e60a:: with SMTP id cm10mr126506971plb.316.1559075714609;
+        Tue, 28 May 2019 13:35:14 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g19sm12582193pgj.75.2019.05.28.13.35.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 13:35:13 -0700 (PDT)
+Date:   Tue, 28 May 2019 13:35:12 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (tc654) Update to use SPDX-License-Identifier
+Message-ID: <20190528203512.GA29505@roeck-us.net>
+References: <20190515031508.30206-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgaLQjZ8AZj76_cwvk_wLPJjr+Dc=Qvac_vHY2RruuBww@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190515031508.30206-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:37:15AM -0700, Linus Torvalds wrote:
-> On Tue, May 28, 2019 at 9:00 AM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > I was suspecting the following for-loop+atomic-add for the regression.
+On Wed, May 15, 2019 at 03:15:08PM +1200, Chris Packham wrote:
+> Add the SPDX-License-Identifier to the top of the file and remove the
+> old license boilerplate.
 > 
-> If I read the kernel test robot reports correctly, Johannes' fix patch
-> does fix the regression (well - mostly. The original reported
-> regression was 26%, and with Johannes' fix patch it was 3% - so still
-> a slight performance regression, but not nearly as bad).
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+
+Applied to hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
 > 
-> > Why the above atomic-add is the culprit?
+> Notes:
+>     I've gone with GPL-2.0+ because that matches the old text. As the author I
+>     don't mind switching to GPL-2.0 if people want that.
 > 
-> I think the problem with that one is that it's cross-cpu statistics,
-> so you end up with lots of cacheline bounces on the local counts when
-> you have lots of load.
-
-In this case, that's true for both of them. The workload runs at the
-root cgroup level, so per definition the local and the recursive
-counters at that level are identical and written to at the same
-rate. Adding the new counter obviously caused the regression, but
-they're contributing equally to the cost, and we could
-remove/per-cpuify either of them for the fix.
-
-So why did I unshare the old counter instead of the new one? Well, the
-old counter *used* to be unshared for the longest time, and was only
-made into a shared one to make recursive aggregation cheaper - before
-there was a dedicated recursive counter. But now that we have that
-recursive counter, there isn't much reason to keep the local counter
-shared and bounce it around on updates.
-
-Essentially, this fix-up is a revert of a983b5ebee57 ("mm: memcontrol:
-fix excessive complexity in memory.stat reporting") since the problem
-described in that patch is now solved from the other end.
-
-> But yes, the recursive updates still do show a small regression,
-> probably because there's still some overhead from the looping up in
-> the hierarchy. You still get *those* cacheline bounces, but now they
-> are limited to the upper hierarchies that only get updated at batch
-> time.
-
-Right, I reduce the *shared* data back to how it was before the patch,
-but it still adds a second (per-cpu) counter that needs to get bumped,
-and the loop adds a branch as well.
-
-But while I would expect that to show up in a case like will-it-scale,
-I'd be surprised if the remaining difference would be noticeable for
-real workloads that actually work with the memory they allocate.
+>  drivers/hwmon/tc654.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/drivers/hwmon/tc654.c b/drivers/hwmon/tc654.c
+> index 81dd229d7db4..8d0acbf8fbfc 100644
+> --- a/drivers/hwmon/tc654.c
+> +++ b/drivers/hwmon/tc654.c
+> @@ -1,17 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   * tc654.c - Linux kernel modules for fan speed controller
+>   *
+>   * Copyright (C) 2016 Allied Telesis Labs NZ
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by
+> - * the Free Software Foundation; either version 2 of the License, or
+> - * (at your option) any later version.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+>   */
+>  
+>  #include <linux/bitops.h>
