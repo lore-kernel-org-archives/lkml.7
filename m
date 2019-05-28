@@ -2,85 +2,162 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CAFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D534C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F2220883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PpvBwG42"
+	by mail.kernel.org (Postfix) with ESMTP id CB1C921473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559045178;
+	bh=di0ykFL+r3XcdhiNio+FPJ40QyIf9YeeM1/axWJugnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X0crtAWzw2saPjG4VU+jgDXESzOaFX03IBOUBkKVqlktIjR/ILpcuW5olMpdJDRzw
+	 GcMw5vVH5ljBJM9MyExO+X2qp5GF/r5sBMyoc6socgSQS2I0NvJ7nzDGnMQKG61b8F
+	 I2ik9UFoUn+DujQyZK93d9PeeGA2t9YfOpGzLhDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfE1MFk (ORCPT
+        id S1726974AbfE1MGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:05:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49136 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfE1MFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:05:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ftNsAuf2ZIGaGmzJ8tp0H6vv9flP6yOPkxjrapmoDHQ=; b=PpvBwG42pyiuVFoap759dYsMq
-        oj5RxxPGDtf1+0QaQRXh06yBpFdxZNByut+WFQ+uoDKdY0Gsc4xaN2qPusaYL/Fkz6ibyD4Cet7jW
-        acci7FNmSReo3OMN4dTCjn52ykzEjfsm9EPa71Y49tekrHF2JUwLuqmCYx5i4VHOCJcMyEvVxJREG
-        ccK9CefDEd0OC7fp0XQpWAK5OkVnUh9raEM34VPX5BITXFGkt19Dy/1+Y+w4j0TBAAJUwZ+Q5C27O
-        6e5fXuWdytGGe6vAqRg62rBvpTTklSmbowOxdYhEYz3KHH9fkbkVTD73SjnX3HGKx1/RBgHGeZME8
-        6uKseOd0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVarC-0003Ei-Ci; Tue, 28 May 2019 12:05:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 954652074C650; Tue, 28 May 2019 14:05:28 +0200 (CEST)
-Date:   Tue, 28 May 2019 14:05:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 2/9] perf/x86/intel: Basic support for metrics counters
-Message-ID: <20190528120528.GR2606@hirez.programming.kicks-ass.net>
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-3-kan.liang@linux.intel.com>
+        Tue, 28 May 2019 08:06:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57476 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726620AbfE1MGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:06:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D27DAEF9;
+        Tue, 28 May 2019 12:06:15 +0000 (UTC)
+Date:   Tue, 28 May 2019 14:06:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528120614.GB1658@dhcp22.suse.cz>
+References: <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
+ <20190528111208.GA30365@google.com>
+ <20190528112840.GY1658@dhcp22.suse.cz>
+ <20190528114436.GB30365@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521214055.31060-3-kan.liang@linux.intel.com>
+In-Reply-To: <20190528114436.GB30365@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:40:48PM -0700, kan.liang@linux.intel.com wrote:
-> From: Andi Kleen <ak@linux.intel.com>
+On Tue 28-05-19 20:44:36, Minchan Kim wrote:
+> On Tue, May 28, 2019 at 01:28:40PM +0200, Michal Hocko wrote:
+> > On Tue 28-05-19 20:12:08, Minchan Kim wrote:
+> > > On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
+> > > > On Tue 28-05-19 19:32:56, Minchan Kim wrote:
+> > > > > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> > > > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > > > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > > > > > > if we went with the per vma fd approach then you would get this
+> > > > > > > > > > feature automatically because map_files would refer to file backed
+> > > > > > > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > > > > > > >
+> > > > > > > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > > > > > > so map_anon wouldn't be helpful.
+> > > > > > > > 
+> > > > > > > > Without chiming on whether the filter option is a good idea, I'd like
+> > > > > > > > to suggest that providing an efficient binary interfaces for pulling
+> > > > > > > > memory map information out of processes.  Some single-system-call
+> > > > > > > > method for retrieving a binary snapshot of a process's address space
+> > > > > > > > complete with attributes (selectable, like statx?) for each VMA would
+> > > > > > > > reduce complexity and increase performance in a variety of areas,
+> > > > > > > > e.g., Android memory map debugging commands.
+> > > > > > > 
+> > > > > > > I agree it's the best we can get *generally*.
+> > > > > > > Michal, any opinion?
+> > > > > > 
+> > > > > > I am not really sure this is directly related. I think the primary
+> > > > > > question that we have to sort out first is whether we want to have
+> > > > > > the remote madvise call process or vma fd based. This is an important
+> > > > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> > > > > > so far unfortunately.
+> > > > > 
+> > > > > With current usecase, it's per-process API with distinguishable anon/file
+> > > > > but thought it could be easily extended later for each address range
+> > > > > operation as userspace getting smarter with more information.
+> > > > 
+> > > > Never design user API based on a single usecase, please. The "easily
+> > > > extended" part is by far not clear to me TBH. As I've already mentioned
+> > > > several times, the synchronization model has to be thought through
+> > > > carefuly before a remote process address range operation can be
+> > > > implemented.
+> > > 
+> > > I agree with you that we shouldn't design API on single usecase but what
+> > > you are concerning is actually not our usecase because we are resilient
+> > > with the race since MADV_COLD|PAGEOUT is not destruptive.
+> > > Actually, many hints are already racy in that the upcoming pattern would
+> > > be different with the behavior you thought at the moment.
+> > 
+> > How come they are racy wrt address ranges? You would have to be in
+> > multithreaded environment and then the onus of synchronization is on
+> > threads. That model is quite clear. But we are talking about separate
 > 
-> Metrics counters (hardware counters containing multiple metrics)
-> are modeled as separate registers for each TopDown metric events,
-> with an extra reg being used for coordinating access to the
-> underlying register in the scheduler.
+> Think about MADV_FREE. Allocator would think the chunk is worth to mark
+> "freeable" but soon, user of the allocator asked the chunk - ie, it's not
+> freeable any longer once user start to use it.
+
+That is not a race in the address space, right. The underlying object
+hasn't changed. It has been declared as freeable and since that moment
+nobody can rely on the content because it might have been discarded.
+Or put simply, the content is undefined. It is responsibility of the
+madvise caller to make sure that the object is not in active use while
+it is marking it.
+
+> My point is that kinds of *hints* are always racy so any synchronization
+> couldn't help a lot. That's why I want to restrict hints process_madvise
+> supports as such kinds of non-destruptive one at next respin.
+
+I agree that a non-destructive operations are safer against paralel
+modifications because you just get a annoying and unexpected latency at
+worst case. But we should discuss whether this assumption is sufficient
+for further development. I am pretty sure once we open remote madvise
+people will find usecases for destructive operations or even new madvise
+modes we haven't heard of. What then?
+
+> > processes and some of them might be even not aware of an external entity
+> > tweaking their address space.
+> > 
+> > > If you are still concerning of address range synchronization, how about
+> > > moving such hints to per-process level like prctl?
+> > > Does it make sense to you?
+> > 
+> > No it doesn't. How is prctl any relevant to any address range
+> > operations.
 > 
-> This patch adds the basic infrastructure to separate the scheduler
-> register indexes from the actual hardware register indexes. In
-> most cases the MSR address is already used correctly, but for
-> code using indexes we need a separate reg_idx field in the event
-> to indicate the correct underlying register.
+> "whether we want to have the remote madvise call process or vma fd based."
 
-That doesn't parse. What exactly is the difference between reg_idx and
-idx? AFAICT there is a fixed relation like:
-
-  reg_idx = is_metric_idx(idx) ? INTEL_PMC_IDX_FIXED_SLOTS : idx;
-
-Do we really need a variable for that?
-
-Also, why do we need that whole enabled_events[] array. Do we really not
-have that information elsewhere?
-
-I shouldn've have to reverse engineer patches :/
+Still not following. So you want to have a prctl (one of the worst API
+we have along with ioctl) to tell the semantic? This sounds like a
+terrible idea to me.
+-- 
+Michal Hocko
+SUSE Labs
