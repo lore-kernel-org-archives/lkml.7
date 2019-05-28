@@ -2,182 +2,86 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5989AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2CDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F791208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2303208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfE1JHJ (ORCPT
+        id S1727689AbfE1JHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:07:09 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:39617 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726557AbfE1JHI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:07:08 -0400
-Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VY4Whh3TBsDWyVY4YhcNp2; Tue, 28 May 2019 11:07:06 +0200
-Subject: Re: [RFCv1 04/12] media: mtk-vcodec: fix copyright indent
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190528055635.12109-1-acourbot@chromium.org>
- <20190528055635.12109-5-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fa11a504-071e-f786-8564-cb7e95248f64@xs4all.nl>
-Date:   Tue, 28 May 2019 11:07:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 05:07:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17595 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727322AbfE1JHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:07:11 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 86761B8F878AA4309DF5;
+        Tue, 28 May 2019 17:07:08 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 17:07:01 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bfields@fieldses.org>, <jlayton@kernel.org>,
+        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] lockd: Make two symbols static
+Date:   Tue, 28 May 2019 17:06:52 +0800
+Message-ID: <20190528090652.13288-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190528055635.12109-5-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNgP3bKa8S2uESOwLT0GPUnLycNeowjEr5Lggzem4wfMEaDIBq7m4Zg6V5IkvWrB5sEVohwm2tLybYHYAPBWGs5mTvILdj7wZ8LeJJIpshmsM+ff6IXR
- LgFWaFhA/KldlsvLQ7wY78oBn3xOFJPgxrYdlVbmOuGekUR502TT14QrD5cCO/mFn1AdD6zCt8daTwSthQbhitomrG5YHiL+fUxtVpYOWzLfRqgFxL+knYVC
- hcFcYAa8qVog3BP21OOwxeAjs3Nk4lYFWpxhLmoWOTb8Vh1x5/1IBHttdGzHVatK+GVvGowRiseoZ6Upzezwzny5onfYJzsOekUpHrOL3TZ1H81orKKUc6EZ
- lQecz5n9TNReOGU9EftN3TP6f6sjUBVKzt+uBI/x3+xmO/Z34l8CV/b20hf0TyaTU6HD/m6A7lg2uCrVlAOsoKNJGDN1GqR0f9gOsijsiuCL4R1ouA1JsKPB
- wzMGhkyGOogDwsbc8acyXRK02oQ/OyVAZOKB70o8LI9d2qZW/AJzkMV+YxP8q5AVsU1N2BCeOsW0SnNRjq9dmHCmdaFkKPsxfM2LABkvoUSS9seRGnQ5SWPD
- Q5Q=
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 7:56 AM, Alexandre Courbot wrote:
-> From: Yunfei Dong <yunfei.dong@mediatek.com>
-> 
-> Minor identation fix for copyright notice in a few source files.
+Fix sparse warnings:
 
-How about converting to using SPDX as well?
+fs/lockd/clntproc.c:57:6: warning: symbol 'nlmclnt_put_lockowner' was not declared. Should it be static?
+fs/lockd/svclock.c:409:35: warning: symbol 'nlmsvc_lock_ops' was not declared. Should it be static?
 
-Regards,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/lockd/clntproc.c | 2 +-
+ fs/lockd/svclock.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-	Hans
+diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
+index 0ff8ad4..b11f2af 100644
+--- a/fs/lockd/clntproc.c
++++ b/fs/lockd/clntproc.c
+@@ -54,7 +54,7 @@ nlmclnt_get_lockowner(struct nlm_lockowner *lockowner)
+ 	return lockowner;
+ }
+ 
+-void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
++static void nlmclnt_put_lockowner(struct nlm_lockowner *lockowner)
+ {
+ 	if (!refcount_dec_and_lock(&lockowner->count, &lockowner->host->h_lock))
+ 		return;
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index 5f9f19b..61d3cc2 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -406,7 +406,7 @@ static void nlmsvc_locks_release_private(struct file_lock *fl)
+ 	nlmsvc_put_lockowner((struct nlm_lockowner *)fl->fl_owner);
+ }
+ 
+-const struct file_lock_operations nlmsvc_lock_ops = {
++static const struct file_lock_operations nlmsvc_lock_ops = {
+ 	.fl_copy_lock = nlmsvc_locks_copy_lock,
+ 	.fl_release_private = nlmsvc_locks_release_private,
+ };
+-- 
+2.7.4
 
-> 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> [acourbot: refactor, cleanup and split]
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> ---
->  .../platform/mtk-vcodec/mtk_vcodec_drv.h      | 26 +++++++++----------
->  .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 26 +++++++++----------
->  .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   | 24 ++++++++---------
->  3 files changed, 38 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> index 109c7578a8b2..76905e2d56a7 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> @@ -1,17 +1,17 @@
->  /*
-> -* Copyright (c) 2016 MediaTek Inc.
-> -* Author: PC Chen <pc.chen@mediatek.com>
-> -*         Tiffany Lin <tiffany.lin@mediatek.com>
-> -*
-> -* This program is free software; you can redistribute it and/or modify
-> -* it under the terms of the GNU General Public License version 2 as
-> -* published by the Free Software Foundation.
-> -*
-> -* This program is distributed in the hope that it will be useful,
-> -* but WITHOUT ANY WARRANTY; without even the implied warranty of
-> -* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> -* GNU General Public License for more details.
-> -*/
-> + * Copyright (c) 2016 MediaTek Inc.
-> + * Author: PC Chen <pc.chen@mediatek.com>
-> + *         Tiffany Lin <tiffany.lin@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
->  
->  #ifndef _MTK_VCODEC_DRV_H_
->  #define _MTK_VCODEC_DRV_H_
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-> index 2d5a61c06287..32d8ce9c8f6e 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-> @@ -1,17 +1,17 @@
->  /*
-> -* Copyright (c) 2016 MediaTek Inc.
-> -* Author: PC Chen <pc.chen@mediatek.com>
-> -*         Tiffany Lin <tiffany.lin@mediatek.com>
-> -*
-> -* This program is free software; you can redistribute it and/or modify
-> -* it under the terms of the GNU General Public License version 2 as
-> -* published by the Free Software Foundation.
-> -*
-> -* This program is distributed in the hope that it will be useful,
-> -* but WITHOUT ANY WARRANTY; without even the implied warranty of
-> -* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> -* GNU General Public License for more details.
-> -*/
-> + * Copyright (c) 2016 MediaTek Inc.
-> + * Author: PC Chen <pc.chen@mediatek.com>
-> + *         Tiffany Lin <tiffany.lin@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
->  
->  #include <media/v4l2-event.h>
->  #include <media/v4l2-mem2mem.h>
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> index 39375b8ea27c..2fdae50173be 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> @@ -1,16 +1,16 @@
->  /*
-> -* Copyright (c) 2016 MediaTek Inc.
-> -* Author: Tiffany Lin <tiffany.lin@mediatek.com>
-> -*
-> -* This program is free software; you can redistribute it and/or modify
-> -* it under the terms of the GNU General Public License version 2 as
-> -* published by the Free Software Foundation.
-> -*
-> -* This program is distributed in the hope that it will be useful,
-> -* but WITHOUT ANY WARRANTY; without even the implied warranty of
-> -* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> -* GNU General Public License for more details.
-> -*/
-> + * Copyright (c) 2016 MediaTek Inc.
-> + * Author: Tiffany Lin <tiffany.lin@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
->  
->  #include <linux/clk.h>
->  #include <linux/of_address.h>
-> 
 
