@@ -2,165 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2467BC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C360DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26492075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DD32075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhj2Vx1i"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cF9thtS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfE1RHl (ORCPT
+        id S1727413AbfE1RHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:07:41 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38669 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfE1RHk (ORCPT
+        Tue, 28 May 2019 13:07:49 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:40346 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726526AbfE1RHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:07:40 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g13so3028946edu.5;
-        Tue, 28 May 2019 10:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EawqU93wBmalRygPCmmYPRgZMHIPT8D1mdZZr6KiEKY=;
-        b=nhj2Vx1i0Sq8qyT/sIo07FZj3Z1C0bHaXH8QQIO0r2l6a92zBMRGnH3udmM9AuuEGV
-         /6rWaqxv5AWQ97tj+Nhfk5gvq0RbZtbnM/fEWG/mlifCiCMIVQYSe90V6lsVWl5A5Zga
-         iNKXrdfoSAWlmrnoxyXFJ4wtFY5B8p6YHrodvdBAfucW78a5iS55F6Uh8XyrwRoJSwAR
-         yEQsroh2LNFH6Ui8TtgT8H/1NIqL7yohBdmt5TYmKG78+0jp24jMw4NuSKOnZX5AICdV
-         KPzMugPhWPfU11qoomKOvXFmPw+8hYpsXtFjXd3l30jmAuHx09ixxCsyQKIuH8seILT1
-         Q2XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EawqU93wBmalRygPCmmYPRgZMHIPT8D1mdZZr6KiEKY=;
-        b=KDEXT54tUBZGSnmYF3KR8g9vH9vqF1ARvCfNxY6u03pRVwsXuerBh+zg4zTgs4uCfb
-         N7/SL2+L6sJ5FUMmrUd0LTTl4o9/4qLtDWZbFxkyDNMqJCTjGNF9ajQkXK9SYvNcI9D8
-         31Ej/v5fkQbE4uX8mgSojiZJC7GUga3x9qREGL4ahwoCA5sGPrzBHWmwPHy+HsDOU9Aw
-         o7VWlmWmW0CC+UyQGWb928gwwdYNF2cNLjVcW8afNc1lnPyq0flRa5AOnyCCedOpEfnN
-         VT4RhBni7L1Eujbh037GpYXAXpBITUQRnYazjHIWHCBEOAYBvdWZH0tHw4plPW4rNh6j
-         ff5w==
-X-Gm-Message-State: APjAAAV3bxjDRMsxpfiWY17DfGr7XHBbD3cuRBF0obwJ9RICHLmGBdw/
-        c8bfLjq3Sf/xM6jHx3mMbEyYq7DILOdTu4RQBW8=
-X-Google-Smtp-Source: APXvYqzMu93c7mxwnEgvrMgl6w83ROBii/WctkX9znMwVCaRLXkjfVvgtxzLp/rsbkbxTJ59wo+X1JwxvkdpkAzA58o=
-X-Received: by 2002:a17:906:aacb:: with SMTP id kt11mr89438361ejb.246.1559063258733;
- Tue, 28 May 2019 10:07:38 -0700 (PDT)
+        Tue, 28 May 2019 13:07:48 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C6C22C1F2D;
+        Tue, 28 May 2019 17:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559063251; bh=HQFlB6wWsoHascRl7I0I8D3IbjU6HHZtxO2cUHqrjb4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=cF9thtS+7ZquOKmx/BBfIcayztI8/ddIooebD8jB6jdxxy8Y0N8Kp/HW/ERp5lSCz
+         eMe2cRdEci+4EAzVWe7sCf33yUFMx/NA5qGQBbc5UzXJF6B1hLro6PQFxi6lDvFdSh
+         EQycywZZu9yigqbs7TSSuxEEdRtM3c3yL+bYLIabVRFqhuyIftE2JcJnmf7VuduyGL
+         SYBip0IlAvjScAKvyaF+Fpk4amE0Vb7dEYRgtR9t0YZfYEGZaHOiE2u/g49FBEwVqQ
+         +FL18p+c+DGN5ylvO7ZdpINJOjgJNqbVEjBzmULX3KzNhjsRy4cjKop5fJhluySGRs
+         u0Hnx69VB55rQ==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id E61CFA005D;
+        Tue, 28 May 2019 17:07:46 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 10:07:46 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 22:37:43 +0530
+Received: from [10.13.182.230] (10.13.182.230) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 22:37:55 +0530
+Subject: Re: [PATCH] ARC: [plat-hsdk]: enable creg-gpio controller
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        <linux-snps-arc@lists.infradead.org>
+CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        <linux-kernel@vger.kernel.org>
+Newsgroups: gmane.linux.kernel.arc,gmane.linux.kernel
+References: <20190528094052.2393-1-Eugeniy.Paltsev@synopsys.com>
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vgupta@synopsys.com; keydata=
+ mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
+ B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
+ lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
+ zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
+ cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
+ 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
+ nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
+ dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
+ JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
+ F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
+ dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
+ jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
+ xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
+ NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
+ HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
+ djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
+ XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
+ hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
+ d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
+ cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
+ tf3ClCidHNaGky9KcNSQ
+Message-ID: <af7a920d-341b-7361-ba4d-17e0ec88fa09@synopsys.com>
+Date:   Tue, 28 May 2019 10:07:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
- <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com> <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
- <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com> <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
- <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com> <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
- <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com>
-In-Reply-To: <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 28 May 2019 13:07:02 -0400
-Message-ID: <CAF=yD-KcX-zCgZFVVVMU7JFy+gJwRpUoViA_mWdM4QtHNr685g@mail.gmail.com>
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190528094052.2393-1-Eugeniy.Paltsev@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.13.182.230]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:57 PM Fred Klassen <fklassen@appneta.com> wrote:
->
->
->
-> > On May 28, 2019, at 8:08 AM, Willem de Bruijn <willemdebruijn.kernel@gm=
-ail.com> wrote:
-> >
->
-> I will push up latest patches soon.
->
-> I did some testing and discovered that only TCP audit tests failed. They
-> failed much less often when enabling poll.  Once in about 20 runs
-> still failed. Therefore I commented out the TCP audit tests.
+On 5/28/19 2:40 AM, Eugeniy Paltsev wrote:
+> HSDK SOC has CREG GPIO controller which can be used to control
+> SPI chip select lines.
+> Enable it in preparation of enabling SPI peripherals.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-Sounds good, thanks.
+Added to for-curr
 
-> You may be interested that I reduced test lengths from 4 to 3 seconds,
-> but I am still getting 3 reports per test. I picked up the extra report b=
-y
-> changing 'if (tnow > treport)=E2=80=99 to 'if (tnow >=3D treport)=E2=80=
-=99
-
-Nice!
-
-> > The only issue specific to GSO is that xmit_more can forego this
-> > doorbell until the last segment. We want to complicate this logic with
-> > a special case based on tx_flags. A process that cares should either
-> > not use GSO, or the timestamp should be associated with the last
-> > segment as I've been arguing so far.
->
-> This is the area I was thinking of looking into. I=E2=80=99m not sure it =
-will work
-> or that it will be too messy. It may be worth a little bit of digging to
-> see if there is anything there. That will be down the road a bu
-
-Sorry, I meant  we [do not (!)] want to complicate this logic. And
-definitely don't want to read skb_shinfo where that cacheline isn't
-accessed already.
-
-Given xmit_more, do you still find the first segment the right one to
-move the timestamp tx_flags to in __udp_gso_segment?
-
->
-> >>
-> >> I=E2=80=99ll get back to you when I have tested this more thoroughly. =
-Early results
-> >> suggest that adding the -P poll() option has fixed it without any appr=
-eciable
-> >> performance hit. I=E2=80=99ll share raw results with you, and we can m=
-ake a final
-> >> decision together.
-> >
-> > In the main loop? It still is peculiar that notifications appear to go
-> > missing unless the process blocks waiting for them. Nothing in
-> > sock_zerocopy_callback or the queueing onto the error queue should
-> > cause drops, as far as I know.
-> >
->
-> Now that I know the issue is only in TCP, I can speculate that all bytes =
-are
-> being reported, but done with fewer messages. It may warrant some
-> investigation in case there is some kind of bug.
-
-This would definitely still be a bug and should not happen. We have
-quite a bit of experience with TCP zerocopy and I have not run into
-this in practice, so I do think that it is somehow a test artifact.
-
-> > Indeed. Ideally even run all tests, but return error if any failed,
-> > like this recent patch
-> >
-> >  selftests/bpf: fail test_tunnel.sh if subtests fail
-> >  https://patchwork.ozlabs.org/patch/1105221/
-> >
-> > but that may be a lot of code churn and better left to a separate patch=
-.
->
-> I like it. I have it coded up, and it seems to work well. I=E2=80=99ll ma=
-ke a
-> separate commit in the patch set so we can yank it out if you feel
-> it is too much
-
-Great. Yes, it sounds like an independent improvement, in which case
-it is easier to review as a separate patch. If you already have it, by
-all means send it as part of the larger patchset.
+Thx,
+-Vineet
