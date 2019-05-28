@@ -2,130 +2,111 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484B9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942E2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22300208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DB3208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfE1SZh (ORCPT
+        id S1728110AbfE1S2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:25:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16427 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbfE1SZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:25:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 11:25:36 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 28 May 2019 11:25:36 -0700
-Received: from [10.254.95.162] (kliang2-mobl.ccr.corp.intel.com [10.254.95.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 850E6580372;
-        Tue, 28 May 2019 11:25:35 -0700 (PDT)
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH 7/9] perf/x86/intel: Disable sampling read slots and
- topdown
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-8-kan.liang@linux.intel.com>
- <20190528135224.GS2623@hirez.programming.kicks-ass.net>
-Message-ID: <27190331-6df7-239a-9ce7-f2e0a8c5d387@linux.intel.com>
-Date:   Tue, 28 May 2019 14:25:34 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 28 May 2019 14:28:08 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51206 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbfE1S2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 14:28:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id i20so16435687ioo.18
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:28:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wStfY5SxDIxZd91+yxT/nL82TSXTHhm/NMlB2xHEX/A=;
+        b=ighvUrIgRBzZ22b+ylkvZjLViUutjjdfhGXjSwONNPFI5LvmcWxcOR1XGPh4HUuU2I
+         xL6pIJRSDblMZMOgsZXZeydbfGQp5naZLfOFFTtquSAuhfJyfwsyWcQSqb/hsDVTeRt5
+         xRjQfXmL3sjPE5psEU8byDJGSXXlFksMfnCINiM0d6BBdQANDIi3+lHPUY5zEA/5qtY6
+         aKflE+1jQ6KHi3I3V183RtHXQywL2VZKEGUkScSUqRBprHOFsbrP4tpjbNZJIHW7Loyy
+         Ri8Ej9zrIq5JslmNvJxCyXSWqf1zXj+pA+UZmGcM9rHC2Q6sr3T0/2NrBUXYdiZcvgpQ
+         nX+w==
+X-Gm-Message-State: APjAAAUe8ULItmk6WK4HHD+FV6zBfOX5Kl86xdwqhq3zZfDCnNo2f3A6
+        g6YEsrP28PBAMit6E6lx7bsQ0Sm2py/Hev7Z7eMC/V58ilgp
+X-Google-Smtp-Source: APXvYqyXhAH/FRlDsdV97oRkUMOUekf3d8E19Vn9d1A4DEaa/dY9SeQWsHwrz1YafFdfImJuz4kIZNK3hQK9A4y2zGfX7MsNM/ts
 MIME-Version: 1.0
-In-Reply-To: <20190528135224.GS2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a24:1455:: with SMTP id 82mr4455130itg.59.1559068085434;
+ Tue, 28 May 2019 11:28:05 -0700 (PDT)
+Date:   Tue, 28 May 2019 11:28:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000069c3140589f6d3b7@google.com>
+Subject: memory leak in sctp_get_port_local
+From:   syzbot <syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    cd6c84d8 Linux 5.2-rc2
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=101a184aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=64479170dcaf0e11
+dashboard link: https://syzkaller.appspot.com/bug?extid=079bf326b38072f849d9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b5dbbca00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1038444aa00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
+
+: Permanently added '10.128.0.127' (ECDSA) to the list of known hosts.
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff8881288ca380 (size 64):
+   comm "softirq", pid 0, jiffies 4294944468 (age 13.410s)
+   hex dump (first 32 bytes):
+     21 4e 00 00 00 00 00 00 00 00 00 00 00 00 00 00  !N..............
+     28 ae 85 23 81 88 ff ff 00 00 00 00 00 00 00 00  (..#............
+   backtrace:
+     [<0000000054ece54d>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:55 [inline]
+     [<0000000054ece54d>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<0000000054ece54d>] slab_alloc mm/slab.c:3326 [inline]
+     [<0000000054ece54d>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
+     [<00000000d992ea84>] sctp_bucket_create net/sctp/socket.c:8395 [inline]
+     [<00000000d992ea84>] sctp_get_port_local+0x189/0x5b0  
+net/sctp/socket.c:8142
+     [<0000000099206d90>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+     [<00000000b8795757>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+     [<00000000672a44aa>] inet6_bind+0x40/0xb7 net/ipv6/af_inet6.c:445
+     [<0000000001400e1c>] __sys_bind+0x11c/0x140 net/socket.c:1659
+     [<00000000e69e8036>] __do_sys_bind net/socket.c:1670 [inline]
+     [<00000000e69e8036>] __se_sys_bind net/socket.c:1668 [inline]
+     [<00000000e69e8036>] __x64_sys_bind+0x1e/0x30 net/socket.c:1668
+     [<000000001644bb1f>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000199a1ea2>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-On 5/28/2019 9:52 AM, Peter Zijlstra wrote:
-> On Tue, May 21, 2019 at 02:40:53PM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> To get correct PERF_METRICS value, the fixed counter 3 must start from
->> 0. It would bring problems when sampling read slots and topdown events.
->> For example,
->>          perf record -e '{slots, topdown-retiring}:S'
->> The slots would not overflow if it starts from 0.
->>
->> Add specific validate_group() support to reject the case and error out
->> for Icelake.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   arch/x86/events/core.c       |  2 ++
->>   arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
->>   arch/x86/events/perf_event.h |  2 ++
->>   3 files changed, 24 insertions(+)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 07ecfe75f0e6..a7eb842f8651 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -2065,6 +2065,8 @@ static int validate_group(struct perf_event *event)
->>   	fake_cpuc->n_events = 0;
->>   	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
->>   
->> +	if (x86_pmu.validate_group)
->> +		ret = x86_pmu.validate_group(fake_cpuc, n);
->>   out:
->>   	free_fake_cpuc(fake_cpuc);
->>   	return ret;
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 79e9d05e047d..2bb90d652a35 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -4410,6 +4410,25 @@ static int icl_set_period(struct perf_event *event)
->>   	return 1;
->>   }
->>   
->> +static int icl_validate_group(struct cpu_hw_events *cpuc, int n)
->> +{
->> +	bool has_sampling_slots = false, has_metrics = false;
->> +	struct perf_event *e;
->> +	int i;
->> +
->> +	for (i = 0; i < n; i++) {
->> +		e = cpuc->event_list[i];
->> +		if (is_slots_event(e) && is_sampling_event(e))
->> +			has_sampling_slots = true;
->> +
->> +		if (is_perf_metrics_event(e))
->> +			has_metrics = true;
->> +	}
->> +	if (unlikely(has_sampling_slots && has_metrics))
->> +		return -EINVAL;
->> +	return 0;
->> +}
-> 
-> Why this special hack, why not disallow sampling on SLOTS on creation?
 
-You mean unconditionally disable SLOTS sampling?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The SLOTS doesn't have to be with Topdown metrics event.
-I think users may want to only sampling slot events. We should allow 
-this usage.
-
-Thanks,
-Kan
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
