@@ -2,95 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B700C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EFA21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C46216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mMTWIHmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfE1PsY (ORCPT
+        id S1726802AbfE1Psv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbfE1PsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:48:24 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864E82133F;
-        Tue, 28 May 2019 15:48:23 +0000 (UTC)
-Date:   Tue, 28 May 2019 11:48:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tomas Bortoli <tomasbortoli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] trace: Avoid memory leak in predicate_parse()
-Message-ID: <20190528114821.2302dabd@gandalf.local.home>
-In-Reply-To: <20190528154338.29976-1-tomasbortoli@gmail.com>
-References: <20190528104400.388e4c3f@gandalf.local.home>
-        <20190528154338.29976-1-tomasbortoli@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 28 May 2019 11:48:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44468 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1Psv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:48:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c5so8507185pll.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=2ksREyYQk7jUAmxjj6kKAaOfKzWITL2u9MpABedwwuE=;
+        b=mMTWIHmtpHW/kCfVi7P/cdu0cX26em5nK45r/zhOOcmUvWoS6ny5gdVUjARVj1qqNK
+         4+4OFcJ5R228v+wDVhBxn94cnE44EABCId0UFIwIP5SDEzNR6bv9isp3KRyTQTY/A2As
+         GpyW8tWMC2sAGjRODK86Fqrn7XUvEVXYfts90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=2ksREyYQk7jUAmxjj6kKAaOfKzWITL2u9MpABedwwuE=;
+        b=JjnnTqTudGOhuhbZI+UfDInAl995oNHjszu+yzmoc4Gpk27H0RuVJ3crjHTbcb96BB
+         QX+Tw+mbQRV51YhBmM3V3avQ83c9t8mrK0cFwIdDRIOH/8jbxikPeCKhdkKaFL3gNvzj
+         1rcnbN6ZJVC0cu7eOrbTU7x3ATiuuW9VQMWXErXGfPcrSgaPyHseKmPkerGG3vwZM/2r
+         skVK2B7rusVr7TrKQ+pkLnqFeOwOiYoSqxYPzFEyCbRhJejDu0FBcXCp6OB6fOoCKyss
+         4iNwUEtCySOItLrsLzZMXH545U46AIjw4GDIDAhaMD9092s8MnwiCGG4A2n62Mbxus3x
+         v1Sw==
+X-Gm-Message-State: APjAAAVYzhQG4E1kehcP4m9eY6XmRw9z22zYrafGTsHaIKR16Fp9OGTx
+        nqufmuIcLVewQ4DodDmnM/wvpQ==
+X-Google-Smtp-Source: APXvYqw9Crknxqe7+aih5W//k5MSZWoQ/ebigbuqf3onineoNwCYYi5TbTQA2Zp87VlgT8TB+Rekmg==
+X-Received: by 2002:a17:902:2aa6:: with SMTP id j35mr55060624plb.189.1559058530522;
+        Tue, 28 May 2019 08:48:50 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 206sm14582069pfy.90.2019.05.28.08.48.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 08:48:49 -0700 (PDT)
+Message-ID: <5ced5861.1c69fb81.956d8.5fb2@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190527043336.112854-1-hsinyi@chromium.org>
+References: <20190527043336.112854-1-hsinyi@chromium.org>
+Subject: Re: [PATCH v5 1/3] arm64: map FDT as RW for early_init_dt_scan()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+User-Agent: alot/0.8.1
+Date:   Tue, 28 May 2019 08:48:48 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 17:43:38 +0200
-Tomas Bortoli <tomasbortoli@gmail.com> wrote:
-
-> In case of errors, predicate_parse() goes to the out_free label
-> to free memory and to return an error code.
-> 
-> However, predicate_parse() does not free the predicates of the
-> temporary prog_stack array, thence leaking them.
-
-Thanks, I applied this and I'm running it through my tests. But just an
-FYI, when sending updated patches please add a "v2" to the subject:
-
- [PATCH v2] tracing: Avoid memory leak in predicate_parse()
-
-That way struggling maintainers like myself don't get confused about
-which patch to apply ;-)
-
-Thanks!
-
--- Steve
-
-
-> 
-> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-> Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
+Quoting Hsin-Yi Wang (2019-05-26 21:33:34)
+> Currently in arm64, FDT is mapped to RO before it's passed to
+> early_init_dt_scan(). However, there might be some codes
+> (eg. commit "fdt: add support for rng-seed") that need to modify FDT
+> during init. Map FDT to RO after early fixups are done.
+>=20
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 > ---
->  kernel/trace/trace_events_filter.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 05a66493a164..ecfa6f0f1c7e 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -427,7 +427,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->  	op_stack = kmalloc_array(nr_parens, sizeof(*op_stack), GFP_KERNEL);
->  	if (!op_stack)
->  		return ERR_PTR(-ENOMEM);
-> -	prog_stack = kmalloc_array(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
-> +	prog_stack = kcalloc(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
->  	if (!prog_stack) {
->  		parse_error(pe, -ENOMEM, 0);
->  		goto out_free;
-> @@ -578,6 +578,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
->  out_free:
->  	kfree(op_stack);
->  	kfree(inverts);
-> +	for (i = 0; prog_stack[i].pred; i++)
-> +		kfree(prog_stack[i].pred);
->  	kfree(prog_stack);
->  	return ERR_PTR(ret);
->  }
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
