@@ -2,166 +2,98 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDC6C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E583C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68568217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559125928;
-	bh=tSyB8R9LSCvDZM0gfCgG+2cjclheMogFDxE5DrDOEOk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=o3A1LtkkQ6bY7auXRHmikkoOClFaKPzO3oz5H6GSu+Ty5Iry0KtJ08IX05hCghVyc
-	 1aMWI8jzpPZNZz+l8om5OdqnUAJJwTfDQehIVweS/wiOxAJ8qNcJe2Ry0nLftLDCCe
-	 K+mz4StrW2rjT5hsV2bOzBLFm+gyu5GOxUG9OeHY=
+	by mail.kernel.org (Postfix) with ESMTP id 5161020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfE2KcH (ORCPT
+        id S1726716AbfE2Kcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:32:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfE2KcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:32:07 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0787421721;
-        Wed, 29 May 2019 10:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559125926;
-        bh=tSyB8R9LSCvDZM0gfCgG+2cjclheMogFDxE5DrDOEOk=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=P5l7mvrYQpdnqXe/9pQu4/3eUvCtSn1lisXJrdp4GmIP/xBunN5o33lLawdTA3QrG
-         ITgdZHdfivXS6ZTG2JSf6ozrCLQo03I+JsYTEK8D/FqHjGkkywNXkC8918sRRSpBOa
-         X6ohzL8SBf2QZTTB9eJB5VZon2Tk34Hqhi3R/9PI=
-Date:   Wed, 29 May 2019 12:32:02 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        Wed, 29 May 2019 06:32:41 -0400
+Received: from m97179.mail.qiye.163.com ([220.181.97.179]:6940 "EHLO
+        m97179.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfE2Kcl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:32:41 -0400
+Received: from localhost (unknown [120.132.1.243])
+        by m97179.mail.qiye.163.com (Hmail) with ESMTPA id 1966BE01AC1;
+        Wed, 29 May 2019 18:32:33 +0800 (CST)
+Date:   Wed, 29 May 2019 04:05:54 +0800
+From:   Yao Liu <yotta.liu@ucloud.cn>
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/power: Fix 'nosmt' vs. hibernation triple fault during
- resume
-In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+Subject: Re: [PATCH 2/3] nbd: notify userland even if nbd has already
+ disconnected
+Message-ID: <20190528200554.GA21633@192-168-150-246.7~>
+References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
+ <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
+ <20190524130856.zod5agp7hk74pcnr@MacBook-Pro-91.local.dhcp.thefacebook.com>
+ <20190527182323.GB20702@192-168-150-246.7~>
+ <5CED6385.3000802@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5CED6385.3000802@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01JQkJCQ05NT0xJS0pOWVdZKFlBSUI3V1ktWUFJV1
+        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6USo*Vjg0OiI9KgoSPyhD
+        OBNPCzhVSlVKTk5CSklOQk5ISUtIVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
+        SUtVSkhJVUpVSU9IWVdZCAFZQUhOTk83Bg++
+X-HM-Tid: 0a6b03260a5320bdkuqy1966be01ac1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+On Tue, May 28, 2019 at 11:36:21AM -0500, Mike Christie wrote:
+> On 05/27/2019 01:23 PM, Yao Liu wrote:
+> > On Fri, May 24, 2019 at 09:08:58AM -0400, Josef Bacik wrote:
+> >> On Fri, May 24, 2019 at 05:43:55PM +0800, Yao Liu wrote:
+> >>> Some nbd client implementations have a userland's daemon, so we should
+> >>> inform client daemon to clean up and exit.
+> >>>
+> >>> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+> >>
+> >> Except the nbd_disconnected() check is for the case that the client told us
+> >> specifically to disconnect, so we don't want to send the notification to
+> >> re-connect because we've already been told we want to tear everything down.
+> >> Nack to this as well.  Thanks,
+> >>
+> >> Josef
+> >>
+> > 
+> > But in userland, client daemon process and process which send disconnect
+> > command are not same process, so they are not clear to each other, so
+> > client daemon expect driver inform it to exit.
+> > In addition, client daemon will get nbd status with nbd_genl_status interface
+> > after it get notified and it should not re-connect if status connected == 0
+> > 
+> 
+> When using the netlink interface you get the NBD_CMD_LINK_DEAD first
+> then the configs_refs goes to zero right?
+> 
+> nbd_disconnect_and_put -> sock_shutdown -> nbd_mark_nsock_dead
+> 
+> then later we do the final nbd_config_put?
+> 
+> Maybe it would be best to add a new netlink event to signal what has
+> happened, because the above nl and stat algorithm seems like a pain. The
+> NBD_CMD_LINK_DEAD will be sent, then userspace has to possibly poll the
+> status to check if this was caused due to nbd_genl_disconnect instead of
+> a downed link due to something like a command timeout, because the
+> refcount may not be down when userspace gets the NL event.
+> 
+> Or, I guess the admin/tool process could just send a msg to the daemon
+> process to tell it to do the netlink disconnect request.
+> 
 
-As explained in
-
-	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-
-we always, no matter what, have to bring up x86 HT siblings during boot at 
-least once in order to avoid first MCE bringing the system to its knees.
-
-That means that whenever 'nosmt' is supplied on the kernel command-line, 
-all the HT siblings are as a result sitting in mwait or cpudile after 
-going through the online-offline cycle at least once.
-
-This causes a serious issue though when a kernel, which saw 'nosmt' on its 
-commandline, is going to perform resume from hibernation: if the resume 
-from the hibernated image is successful, cr3 is flipped in order to point 
-to the address space of the kernel that is being resumed, which in turn 
-means that all the HT siblings are all of a sudden mwaiting on address 
-which is no longer valid.
-
-That results in triple fault shortly after cr3 is switched, and machine 
-reboots.
-
-Fix this by always waking up all the SMT siblings before initiating the 
-'restore from hibernation' process; this guarantees that all the HT 
-siblings will be properly carried over to the resumed kernel waiting in 
-resume_play_dead(), and acted upon accordingly afterwards, based on the 
-target kernel configuration.
-
-Cc: stable@vger.kernel.org # v4.19+
-Debugged-by: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
----
-
-v1 -> v2:
-	restructure error handling as suggested by peterz
-	add Rafael's ack
-
- arch/x86/power/cpu.c | 10 ++++++++++
- include/linux/cpu.h  |  2 ++
- kernel/cpu.c         |  2 +-
- 3 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index a7d966964c6f..513ce09e9950 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable(void)
- 	 * address in its instruction pointer may not be possible to resolve
- 	 * any more at that point (the page tables used by it previously may
- 	 * have been overwritten by hibernate image data).
-+	 *
-+	 * First, make sure that we wake up all the potentially disabled SMT
-+	 * threads which have been initially brought up and then put into
-+	 * mwait/cpuidle sleep.
-+	 * Those will be put to proper (not interfering with hibernation
-+	 * resume) sleep afterwards, and the resumed kernel will decide itself
-+	 * what to do with them.
- 	 */
-+	ret = cpuhp_smt_enable();
-+	if (ret)
-+		return ret;
- 	smp_ops.play_dead = resume_play_dead;
- 	ret = disable_nonboot_cpus();
- 	smp_ops.play_dead = play_dead;
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 3813fe45effd..b5523552a607 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -201,10 +201,12 @@ enum cpuhp_smt_control {
- extern enum cpuhp_smt_control cpu_smt_control;
- extern void cpu_smt_disable(bool force);
- extern void cpu_smt_check_topology(void);
-+extern int cpuhp_smt_enable(void);
- #else
- # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
- static inline void cpu_smt_disable(bool force) { }
- static inline void cpu_smt_check_topology(void) { }
-+static inline int cpuhp_smt_enable(void) { return 0; }
- #endif
- 
- /*
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index f2ef10460698..3ff5ce0e4132 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
- 	return ret;
- }
- 
--static int cpuhp_smt_enable(void)
-+int cpuhp_smt_enable(void)
- {
- 	int cpu, ret = 0;
- 
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Adding a new netlink event sames good.
