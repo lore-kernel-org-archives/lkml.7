@@ -3,188 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC830C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5312C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45B820717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986AE204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfE1TCx (ORCPT
+        id S1726998AbfE1TDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:02:53 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:41170 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbfE1TCx (ORCPT
+        Tue, 28 May 2019 15:03:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60838 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726600AbfE1TDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:02:53 -0400
-Received: by mail-vk1-f193.google.com with SMTP id l73so4995530vkl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:02:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QaUbD1k3WeGIlCfs1lHmeou+m5jZqshP1fny+ubHw14=;
-        b=ris5ra8k/6L/OeA+vsIjqyU8ARJ7S9iZ4nuXekC4HA7Y9OrNm7YroaOOZRzFEtmhZf
-         uH6StZzXZG2WWT7jQuYGA6P8WJEcHBMbEFxbjVuHX6olgsgCb8Ys2HPsIJ0jisRTss5m
-         lT1Hfd3hRnUOdrqBnXdZ84OJMz7LuiGClywTCajNiOOnCFH5S3yaNlyrMNJUNNCV1dZg
-         sDNACMqz0sCCbAGzJyykaKjKNAhaPAzjFet7RRMWYVmDoTuoIxxHSmF4/K9rMSbkWkMq
-         xMaVFy7FpZcxQ67lnIGZ4c8bcjZBmPesyKrafYpL8SMalFgR0i/VWpXoH+BKBSNWtq0v
-         sjYw==
-X-Gm-Message-State: APjAAAVrLI2evpFPvTlV1CA4kHMsYpaWKzOoVb9p+rhwnkuq8xTGFbF9
-        kKZRxJBewGAwqlTD9goXdSkbbw==
-X-Google-Smtp-Source: APXvYqy6x5OxBBWw9OwOA+NSda4IRbVfzCZX1cN8Kutel+ftttEGwp2wymufe7CSdHNRgvzb+bNG+w==
-X-Received: by 2002:a1f:1102:: with SMTP id 2mr27364526vkr.90.1559070171574;
-        Tue, 28 May 2019 12:02:51 -0700 (PDT)
-Received: from ?IPv6:2601:543:8101:1d87::b0a3? ([2601:543:8101:1d87::b0a3])
-        by smtp.gmail.com with ESMTPSA id 126sm6060970vkt.14.2019.05.28.12.02.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 12:02:50 -0700 (PDT)
-Subject: Re: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "Winkler, Tomas" <tomas.winkler@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Phil Baker <baker1tex@gmail.com>,
-        Craig Robson <craig@zhatt.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-References: <20190401190607.GA23795@beast>
- <20190401234625.GA29016@linux.intel.com>
- <20190402164057.GA4544@linux.intel.com>
- <5B8DA87D05A7694D9FA63FD143655C1B9DAE2759@hasmsx108.ger.corp.intel.com>
- <20190403175207.GC13396@linux.intel.com>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <bfcb58ef-98b3-a663-c249-3940ec9a39d3@redhat.com>
-Date:   Tue, 28 May 2019 15:02:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 15:03:32 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJ2tce086861
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:03:32 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss95cv5sj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:03:31 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 28 May 2019 20:03:30 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 28 May 2019 20:03:25 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJ3OtQ34996472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 May 2019 19:03:24 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F409AC059;
+        Tue, 28 May 2019 19:03:24 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8FD62AC064;
+        Tue, 28 May 2019 19:03:20 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.218.160])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 May 2019 19:03:20 +0000 (GMT)
+References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-2-bauerman@linux.ibm.com> <1557416528.10635.62.camel@linux.ibm.com>
+User-agent: mu4e 1.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v10 01/12] MODSIGN: Export module signature definitions
+In-reply-to: <1557416528.10635.62.camel@linux.ibm.com>
+Date:   Tue, 28 May 2019 16:03:15 -0300
 MIME-Version: 1.0
-In-Reply-To: <20190403175207.GC13396@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19052819-0064-0000-0000-000003E60CE6
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01209913; UDB=6.00635630; IPR=6.00990943;
+ MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:03:29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052819-0065-0000-0000-00003DA623F4
+Message-Id: <875zpu766k.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905280119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 1:52 PM, Jarkko Sakkinen wrote:
-> On Tue, Apr 02, 2019 at 07:13:52PM +0000, Winkler, Tomas wrote:
->>
->>
->>> On Tue, Apr 02, 2019 at 02:46:25AM +0300, Jarkko Sakkinen wrote:
->>>> On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
->>>>> A "get random" may fail with a TPM error, but those codes were
->>>>> returned as-is to the caller, which assumed the result was the
->>>>> number of bytes that had been written to the target buffer, which
->>>>> could lead to a kernel heap memory exposure and over-read.
->>>>>
->>>>> This fixes tpm1_get_random() to mask positive TPM errors into -EIO,
->>>>> as before.
->>>>>
->>>>> [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get
->>> random
->>>>> [   18.092106] usercopy: Kernel memory exposure attempt detected from
->>> SLUB object 'kmalloc-64' (offset 0, size 379)!
->>>>>
->>>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
->>>>> Reported-by: Phil Baker <baker1tex@gmail.com>
->>>>> Reported-by: Craig Robson <craig@zhatt.com>
->>>>> Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using
->>>>> tpm_buf structure")
->>>>> Cc: Laura Abbott <labbott@redhat.com>
->>>>> Cc: Tomas Winkler <tomas.winkler@intel.com>
->>>>> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>>> Cc: stable@vger.kernel.org
->>>>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>>>> ---
->>>>> v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
->>>>> v2: also fix tpm2 implementation (Jason Gunthorpe)
->>>>> ---
->>>>>   drivers/char/tpm/tpm1-cmd.c | 7 +++++--
->>>>> drivers/char/tpm/tpm2-cmd.c | 7 +++++--
->>>>>   2 files changed, 10 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/char/tpm/tpm1-cmd.c
->>>>> b/drivers/char/tpm/tpm1-cmd.c index 85dcf2654d11..faacbe1ffa1a
->>>>> 100644
->>>>> --- a/drivers/char/tpm/tpm1-cmd.c
->>>>> +++ b/drivers/char/tpm/tpm1-cmd.c
->>>>> @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
->>>>>    *
->>>>>    * Return:
->>>>>    * *  number of bytes read
->>>>> - * * -errno or a TPM return code otherwise
->>>>> + * * -errno (positive TPM return codes are masked to -EIO)
->>>>>    */
->>>>>   int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
->>>>> @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8
->>>>> *dest, size_t max)
->>>>>
->>>>>   		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
->>>>>   				      "attempting get random");
->>>>> -		if (rc)
->>>>> +		if (rc) {
->>>>> +			if (rc > 0)
->>>>> +				rc = -EIO;
->>>>>   			goto out;
->>>>> +		}
->>>>>
->>>>>   		out = (struct tpm1_get_random_out
->>> *)&buf.data[TPM_HEADER_SIZE];
->>>>>
->>>>> diff --git a/drivers/char/tpm/tpm2-cmd.c
->>>>> b/drivers/char/tpm/tpm2-cmd.c index e74c5b7b64bf..8ffa6af61580
->>>>> 100644
->>>>> --- a/drivers/char/tpm/tpm2-cmd.c
->>>>> +++ b/drivers/char/tpm/tpm2-cmd.c
->>>>> @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
->>>>>    *
->>>>>    * Return:
->>>>>    *   size of the buffer on success,
->>>>> - *   -errno otherwise
->>>>> + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
->>>>>    */
->>>>>   int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
->>>>> @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8
->>> *dest, size_t max)
->>>>>   				       offsetof(struct tpm2_get_random_out,
->>>>>   						buffer),
->>>>>   				       "attempting get random");
->>>>> -		if (err)
->>>>> +		if (err) {
->>>>> +			if (err > 0)
->>>>> +				err = -EIO;
->>>>>   			goto out;
->>>>> +		}
->>>>>
->>>>>   		out = (struct tpm2_get_random_out *)
->>>>>   			&buf.data[TPM_HEADER_SIZE];
->>>>> --
->>>>> 2.17.1
->>>>>
->>>>>
->>>>> --
->>>>> Kees Cook
->>>>
->>>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>
->>> Applied to my master branch. Jason, Tomas, do you want me to add reviewed-
->>> by's?
->> Sure, it fixes my patch.
-> 
-> Great, I'll add it. Thank you. Just want to be explicit with these
-> things as I consider them as if I was asking a signature from someone
-> :-)
-> 
-> /Jarkko
-> 
-Was this intended to go in for 5.2? I still don't see it in the tree.
 
-Thanks,
-Laura
+Mimi Zohar <zohar@linux.ibm.com> writes:
+
+> On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+>> IMA will use the module_signature format for append signatures, so export
+>> the relevant definitions and factor out the code which verifies that the
+>> appended signature trailer is valid.
+>> 
+>> Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
+>> and be able to use mod_check_sig() without having to depend on either
+>> CONFIG_MODULE_SIG or CONFIG_MODULES.
+>> 
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>> Cc: Jessica Yu <jeyu@kernel.org>
+>
+> Just a couple minor questions/comments below.
+>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
+Thanks for your review and your comments!
+
+>> diff --git a/init/Kconfig b/init/Kconfig
+>> index 4592bf7997c0..a71019553ee1 100644
+>> --- a/init/Kconfig
+>> +++ b/init/Kconfig
+>> @@ -1906,7 +1906,7 @@ config MODULE_SRCVERSION_ALL
+>>  config MODULE_SIG
+>>  	bool "Module signature verification"
+>>  	depends on MODULES
+>> -	select SYSTEM_DATA_VERIFICATION
+>> +	select MODULE_SIG_FORMAT
+>>  	help
+>>  	  Check modules for valid signatures upon load: the signature
+>>  	  is simply appended to the module. For more information see
+>> @@ -2036,6 +2036,10 @@ config TRIM_UNUSED_KSYMS
+>>  
+>>  endif # MODULES
+>>  
+>> +config MODULE_SIG_FORMAT
+>> +	def_bool n
+>> +	select SYSTEM_DATA_VERIFICATION
+>
+> Normally Kconfigs, in the same file, are defined before they are used.
+>  I'm not sure if that is required or just a convention.
+
+I think it's a convention, because it seemed to work in the current way.
+For the next version I moved the config MODULE_SIG_FORMAT definition to
+just before "menuconfig MODULES"
+
+>> diff --git a/kernel/module_signature.c b/kernel/module_signature.c
+>> new file mode 100644
+>> index 000000000000..6d5e59f27f55
+>> --- /dev/null
+>> +++ b/kernel/module_signature.c
+>> @@ -0,0 +1,45 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Module signature checker
+>> + *
+>> + * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
+>> + * Written by David Howells (dhowells@redhat.com)
+>> + */
+>> +
+>> +#include <linux/errno.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/module_signature.h>
+>> +#include <asm/byteorder.h>
+>> +
+>> +/**
+>> + * mod_check_sig - check that the given signature is sane
+>> + *
+>> + * @ms:		Signature to check.
+>> + * @file_len:	Size of the file to which @ms is appended.
+>
+> "name" is missing.
+
+Fixed.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
