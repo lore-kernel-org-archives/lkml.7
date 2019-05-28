@@ -2,67 +2,153 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EAC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E25C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF350208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7783208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Yj+KkVBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfE1QJF (ORCPT
+        id S1727090AbfE1QJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:09:05 -0400
-Received: from relay.sw.ru ([185.231.240.75]:38258 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfE1QJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:09:05 -0400
-Received: from [172.16.25.169] (helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hVeet-0005lz-4x; Tue, 28 May 2019 19:09:03 +0300
-Subject: [PATCH] mm: Fix recent_rotated history
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
-        mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        ktkhai@virtuozzo.com
-Date:   Tue, 28 May 2019 19:09:02 +0300
-Message-ID: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
-User-Agent: StGit/0.18
+        Tue, 28 May 2019 12:09:24 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38564 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfE1QJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:09:23 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g13so2762543edu.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 09:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=vRk13UBuyghmarVtMoNipwKyhaNgI5UNFGabtsK6EmA=;
+        b=Yj+KkVBDDnZ/8AIrhCHLvON4pXXCjGtHPQEEoz8vJKL4kIw6tZM7+98BwwKEPq9FXc
+         etAAdMu8UNml1JLKYqAsmy5Nos+w6uoFPRMqYeXDGpAPKgYVsKUSwKcjt+G7pfRPnZDa
+         6FHHHI+ccxt0J39FNntur+/ef6vR55E+EF5d8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=vRk13UBuyghmarVtMoNipwKyhaNgI5UNFGabtsK6EmA=;
+        b=mNC1xDbbevWRgxn1zh5MOg7ZTvHD9vFNHvS1lWSojOBip0CdbQiwO9UfrHtqWgxUIB
+         9bE1kCtAlTxB1OulsIMH0p4S2b8Bv/d/G1zbL4WqUdvZc0Fx/EhYOzHr//pgAw2SMIMQ
+         WD0iUXiSF9RYfjOJCFvxrJAZjSv2s1JbmJzAbaK32KXmEPUEEKTpkwLlqw4I7zYplkyC
+         oMOyNbvi3xccyPwIH3FPlSxkcD7Y5/BOjrIIYBqA/aa3Cbw0FxG0iNobdbd0IOqL73EH
+         DQN1u4/FycCtRl8kCemOD8htTu0QKYmNILpvYq61kmL/A42y8axijRV4shDOkI6IbxpF
+         jQNw==
+X-Gm-Message-State: APjAAAXNIxLc46I311O2G5SRZ46pgRSYWBG631SyK2teLdMO3pYWrCCk
+        weoaY3N5Ba6vfnd6LJDUu59u+vZ31HlF7m2b
+X-Google-Smtp-Source: APXvYqwe2ChVgm/bVKPGBtODYBSt/7WwWY5djEtxSUGcNmr9IvNbLckoqL7DhwjmZsR7FQA8nMCQBw==
+X-Received: by 2002:aa7:cccc:: with SMTP id y12mr2546618edt.124.1559059761737;
+        Tue, 28 May 2019 09:09:21 -0700 (PDT)
+Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
+        by smtp.gmail.com with ESMTPSA id u47sm4347734edm.86.2019.05.28.09.09.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 28 May 2019 09:09:21 -0700 (PDT)
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+To:     Doug Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+CC:     Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        "Chi-Hsien Lin" <chi-hsien.lin@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        "linux-wireless" <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        <brcm80211-dev-list@cypress.com>,
+        Double Lo <double.lo@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>
+Date:   Tue, 28 May 2019 18:09:16 +0200
+Message-ID: <16aff33f3e0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+References: <20190517225420.176893-2-dianders@chromium.org>
+ <20190528121833.7D3A460A00@smtp.codeaurora.org>
+ <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+User-Agent: AquaMail/1.20.0-1451 (build: 102000001)
+Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes pointed that after commit 886cf1901db9
-we lost all zone_reclaim_stat::recent_rotated
-history. This commit fixes that.
+On May 28, 2019 5:52:10 PM Doug Anderson <dianders@chromium.org> wrote:
 
-Fixes: 886cf1901db9 "mm: move recent_rotated pages calculation to shrink_inactive_list()"
-Reported-by: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- mm/vmscan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi,
+>
+> On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Douglas Anderson <dianders@chromium.org> wrote:
+>>
+>> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
+>> > sdio_aos") we disabled something called "command decode in sdio_aos"
+>> > for a whole bunch of Broadcom SDIO WiFi parts.
+>> >
+>> > After that patch landed I find that my kernel log on
+>> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+>> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+>> >
+>> > This seems to happen every time the Broadcom WiFi transitions out of
+>> > sleep mode.  Reverting the part of the commit that affects the WiFi on
+>> > my boards fixes the problem for me, so that's what this patch does.
+>> >
+>> > Note that, in general, the justification in the original commit seemed
+>> > a little weak.  It looked like someone was testing on a SD card
+>> > controller that would sometimes die if there were CRC errors on the
+>> > bus.  This used to happen back in early days of dw_mmc (the controller
+>> > on my boards), but we fixed it.  Disabling a feature on all boards
+>> > just because one SD card controller is broken seems bad.  ...so
+>> > instead of just this patch possibly the right thing to do is to fully
+>> > revert the original commit.
+>> >
+>> > Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
+>> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>
+>> I don't see patch 2 in patchwork and I assume discussion continues.
+>
+> Apologies.  I made sure to CC you individually on all the patches but
+> didn't think about the fact that you use patchwork to manage and so
+> didn't ensure all patches made it to all lists (by default each patch
+> gets recipients individually from get_maintainer).  I'll make sure to
+> fix for patch set #2.  If you want to see all the patches, you can at
+> least find them on lore.kernel.org linked from the cover:
+>
+> https://lore.kernel.org/patchwork/cover/1075373/
+>
+>
+>> Please resend if/when I need to apply something.
+>>
+>> 2 patches set to Changes Requested.
+>>
+>> 10948785 [1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
+>
+> As per Arend I'll change patch #1 to a full revert instead of a
+> partial revert.  Arend: please yell if you want otherwise.
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d9c3e873eca6..1d49329a4d7d 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1953,8 +1953,8 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	if (global_reclaim(sc))
- 		__count_vm_events(item, nr_reclaimed);
- 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
--	reclaim_stat->recent_rotated[0] = stat.nr_activate[0];
--	reclaim_stat->recent_rotated[1] = stat.nr_activate[1];
-+	reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
-+	reclaim_stat->recent_rotated[1] += stat.nr_activate[1];
- 
- 	move_pages_to_lru(lruvec, &page_list);
- 
+No yelling here. If any it is expected from Cypress. Maybe good to add them 
+specifically in Cc:
+
+Regards,
+Arend
+
 
