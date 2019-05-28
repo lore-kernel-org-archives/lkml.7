@@ -2,94 +2,141 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0C7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912A1C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B30420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746EF2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfE1K64 (ORCPT
+        id S1726688AbfE1LAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:58:56 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33642 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfE1K64 (ORCPT
+        Tue, 28 May 2019 07:00:05 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5043 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726305AbfE1LAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:58:56 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id AFACC8035B; Tue, 28 May 2019 12:58:43 +0200 (CEST)
-Date:   Tue, 28 May 2019 12:58:53 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Theodore Ts'o <tytso@mit.edu>, walter harms <wharms@bfs.de>,
-        Aung <aung.aungkyawsoe@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: need company for kernel upgrade
-Message-ID: <20190528105853.GA21111@amd>
-References: <5CE53BA9.4070906@bfs.de>
- <CABC7EG8NiiPycthdfb7Ng3MsxTvmmxk_LjcosM8ZD1F0CnuDFw@mail.gmail.com>
- <5CE64BC7.4010803@bfs.de>
- <20190524050116.GI2532@mit.edu>
+        Tue, 28 May 2019 07:00:04 -0400
+X-UUID: 37ca587f27c944d28c789b064b80d225-20190528
+X-UUID: 37ca587f27c944d28c789b064b80d225-20190528
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1074950528; Tue, 28 May 2019 18:59:58 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 28 May 2019 18:59:56 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 28 May 2019 18:59:56 +0800
+Message-ID: <1559041196.12867.3.camel@mtkswgap22>
+Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
+ support
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <peter.wang@mediatek.com>, <kuohong.wang@mediatek.com>,
+        <jg_poxu@mediatek.com>, <stanley.chu@mediatek.com>
+Date:   Tue, 28 May 2019 18:59:56 +0800
+In-Reply-To: <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
+         <20190518113527.5210b0bf@archlinux> <1558332205.11080.6.camel@mtkswgap22>
+         <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-In-Reply-To: <20190524050116.GI2532@mit.edu>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Matthias:
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  Thanks for your suggestion, I think device_links is a good way to
+make dependency of module's suspend/resume order.
 
-On Fri 2019-05-24 01:01:16, Theodore Ts'o wrote:
-> On Thu, May 23, 2019 at 09:29:11AM +0200, walter harms wrote:
-> >=20
-> > No,
-> > the company i am working for has a custom build arm-board.
-> > We bought the kernel from the assembler but found it has
-> > some problems that need fixing.
-> > Basically we want to improve the linux-kernel so it can run
-> > native on our boards.
-> >=20
-> > >> Hi developers,
-> > >> i am in search of a company that can help upgrading
-> > >> a running linux-kernel on custom hardware.
-> > >> Est. time 10 days.
->=20
-> Have you tried contacting Linutronix (https://linutronix.de) or
-> Collabora (https://collabora.com)?
->=20
-> Both have EU offices --- well Collabora does for now, until Brexit
-> happens.  :-)
+Hi Jonathan:
 
-www.denx.de is another option.
+  Is it ok to keep using late_suspend and early_resume, or do you think
+it's better to use device_links?
 
-									Pavel
+Thanks,
+Chun-Hung
+On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
+> 
+> On 20/05/2019 08:03, Chun-Hung Wu wrote:
+> > Hi Jonathan:
+> > 
+> >   Thanks for the prompt reply,
+> > 
+> > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:
+> >> On Thu, 16 May 2019 16:10:46 +0800
+> >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> >>
+> >>>   Move suspend/resume to late_suspend and
+> >>> early_resume to gurantee users can use auxadc
+> >> guarantee
+> >>
+> > will fix it in next version.
+> >>> driver at suspend/resume stage.
+> >> No problem with the patch content, but we need a reason why they may
+> >> want to do so?
+> > Our thermal drivers uses auxadc at suspend/resume stage.
+> > In order to avoid auxadc suspended prior to thermal driver,
+> > we move auxadc to late_suspend and early_resume.
+> > 
+> 
+> That sounds like a user of device_links [1] to me.
+> 
+> [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+> 
+> > Thanks,
+> > Chun-Hung
+> >>
+> >> Thanks,
+> >>
+> >> Jonathan
+> >>>
+> >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> >>> ---
+> >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
+> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> >>> index e1bdcc0..58d7cb2 100644
+> >>> --- a/drivers/iio/adc/mt6577_auxadc.c
+> >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
+> >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> >>>  	return 0;
+> >>>  }
+> >>>  
+> >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+> >>> -			 mt6577_auxadc_suspend,
+> >>> -			 mt6577_auxadc_resume);
+> >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
+> >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
+> >>> +				     mt6577_auxadc_resume)
+> >>> +};
+> >>>  
+> >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
+> >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},
+> >>
+> > 
+> > 
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlztFGwACgkQMOfwapXb+vJQQwCfUaLlYmrmpHFmhnoWAWelVhMW
-LWYAnjN/qvBL6orvceQ/lxjhRw08XtA4
-=yGBx
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
