@@ -2,139 +2,85 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F321C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6C6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7CF214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789B920645
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tRxTW6Fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfE1NrJ (ORCPT
+        id S1727372AbfE1NtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:47:09 -0400
-Received: from foss.arm.com ([217.140.101.70]:58010 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfE1NrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:47:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56D3F80D;
-        Tue, 28 May 2019 06:47:08 -0700 (PDT)
-Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 22C303F5AF;
-        Tue, 28 May 2019 06:47:06 -0700 (PDT)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     will.deacon@arm.com, catalin.marinas@arm.com,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3.1 4/4] arm64: mm: Implement pte_devmap support
-Date:   Tue, 28 May 2019 14:46:59 +0100
-Message-Id: <13026c4e64abc17133bbfa07d7731ec6691c0bcd.1559050949.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.21.0.dirty
-In-Reply-To: <817d92886fc3b33bcbf6e105ee83a74babb3a5aa.1558547956.git.robin.murphy@arm.com>
-References: <cover.1558547956.git.robin.murphy@arm.com> <817d92886fc3b33bcbf6e105ee83a74babb3a5aa.1558547956.git.robin.murphy@arm.com>
+        Tue, 28 May 2019 09:49:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:50440 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfE1Ns7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:48:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qgTnBXEzwmfX6lbLKAn+6i4FK+YKb4F4c1v8oOpqOnQ=; b=tRxTW6FbPmzoq52/Y2rIsSGM1
+        7XlUyuEkXMaawJG9xRNbo5MvuUf24kGtHSJub61k9DjaNEpLYMRC2pC2x1BC41OxMSQ+kZtgWESqH
+        WLHri6asNVqcZjWpye7Y32ZoEWyemGQTNTvxJphIK2DUbiDUrIvHq2W7OIH6nHpGfSibSOLOga4R1
+        78RjMJj80fAyDqt0xU4Amr8B4AXdlHUedpjjMowRu43ypsc6pRJe7ddW/LaEi3aw8hn3qSxWdeKuH
+        qql772bBRILsbs6QrnSXvZ+CGDamzZ7XrawT3K2c6RFJgEbtqZ6dwU1Ly6+slaaH82Sjhc0DbnggU
+        Ma70lJ5KA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVcT8-0004Ky-Ns; Tue, 28 May 2019 13:48:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 818C420756A00; Tue, 28 May 2019 15:48:45 +0200 (CEST)
+Date:   Tue, 28 May 2019 15:48:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190528134845.GQ2623@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-5-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order for things like get_user_pages() to work on ZONE_DEVICE memory,
-we need a software PTE bit to identify device-backed PFNs. Hook this up
-along with the relevant helpers to join in with ARCH_HAS_PTE_DEVMAP.
+On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index b980b9e95d2a..0d7081434d1d 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -133,6 +133,11 @@ struct hw_perf_event {
+>  
+>  			struct hw_perf_event_extra extra_reg;
+>  			struct hw_perf_event_extra branch_reg;
+> +
+> +			u64		saved_metric;
+> +			u64		saved_slots;
+> +			u64		last_slots;
+> +			u64		last_metric;
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+This is really sad, and I'm thinking much of that really isn't needed
+anyway, due to how you're not using some of the other fields.
 
-Fix to build correctly under all combinations of
-CONFIG_PGTABLE_LEVELS and CONFIG_TRANSPARENT_HUGEPAGE.
-
- arch/arm64/Kconfig                    |  1 +
- arch/arm64/include/asm/pgtable-prot.h |  1 +
- arch/arm64/include/asm/pgtable.h      | 21 +++++++++++++++++++++
- 3 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 4780eb7af842..b5a4611fa4c6 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -23,6 +23,7 @@ config ARM64
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-+	select ARCH_HAS_PTE_DEVMAP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SETUP_DMA_OPS
- 	select ARCH_HAS_SET_MEMORY
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index 986e41c4c32b..af0b372d15e5 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -28,6 +28,7 @@
- #define PTE_WRITE		(PTE_DBM)		 /* same as DBM (51) */
- #define PTE_DIRTY		(_AT(pteval_t, 1) << 55)
- #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
-+#define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
- #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
- 
- #ifndef __ASSEMBLY__
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 2c41b04708fe..7a2cf6939311 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -90,6 +90,7 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
- #define pte_write(pte)		(!!(pte_val(pte) & PTE_WRITE))
- #define pte_user_exec(pte)	(!(pte_val(pte) & PTE_UXN))
- #define pte_cont(pte)		(!!(pte_val(pte) & PTE_CONT))
-+#define pte_devmap(pte)		(!!(pte_val(pte) & PTE_DEVMAP))
- 
- #define pte_cont_addr_end(addr, end)						\
- ({	unsigned long __boundary = ((addr) + CONT_PTE_SIZE) & CONT_PTE_MASK;	\
-@@ -217,6 +218,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
- 	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
- }
- 
-+static inline pte_t pte_mkdevmap(pte_t pte)
-+{
-+	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
-+}
-+
- static inline void set_pte(pte_t *ptep, pte_t pte)
- {
- 	WRITE_ONCE(*ptep, pte);
-@@ -381,6 +387,11 @@ static inline int pmd_protnone(pmd_t pmd)
- 
- #define pmd_mkhuge(pmd)		(__pmd(pmd_val(pmd) & ~PMD_TABLE_BIT))
- 
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
-+#endif
-+#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
-+
- #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
- #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
- #define pmd_pfn(pmd)		((__pmd_to_phys(pmd) & PMD_MASK) >> PAGE_SHIFT)
-@@ -666,6 +677,16 @@ static inline int pmdp_set_access_flags(struct vm_area_struct *vma,
- {
- 	return ptep_set_access_flags(vma, address, (pte_t *)pmdp, pmd_pte(entry), dirty);
- }
-+
-+static inline int pud_devmap(pud_t pud)
-+{
-+	return 0;
-+}
-+
-+static inline int pgd_devmap(pgd_t pgd)
-+{
-+	return 0;
-+}
- #endif
- 
- /*
--- 
-2.21.0.dirty
-
+>  		};
+>  		struct { /* software */
+>  			struct hrtimer	hrtimer;
+> -- 
+> 2.14.5
+> 
