@@ -2,118 +2,65 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56172C46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77FAC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386AE2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69AF2081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfE1Kjl (ORCPT
+        id S1726723AbfE1KkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:39:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3818 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbfE1Kjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:39:41 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 03:39:40 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 28 May 2019 03:39:36 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 28 May 2019 13:39:36 +0300
-Date:   Tue, 28 May 2019 13:39:36 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     wsa@the-dreams.de, linux@armlinux.org.uk, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        xe-linux-external@cisco.com
-Subject: Re: [net-next,v3 1/2] i2c: acpi: export
- i2c_acpi_find_adapter_by_handle
-Message-ID: <20190528103936.GD2781@lahna.fi.intel.com>
-References: <20190528032213.19839-1-ruslan@babayev.com>
- <20190528032213.19839-2-ruslan@babayev.com>
+        Tue, 28 May 2019 06:40:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40240 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726334AbfE1KkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:40:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 06D2BAF2B;
+        Tue, 28 May 2019 10:40:18 +0000 (UTC)
+Date:   Tue, 28 May 2019 12:40:18 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, Michal Simek <monstr@monstr.eu>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH] [RFC] Remove bdflush syscall stub
+Message-ID: <20190528104017.GA11969@rei>
+References: <20190528101012.11402-1-chrubis@suse.cz>
+ <mvmr28idgfu.fsf@linux-m68k.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528032213.19839-2-ruslan@babayev.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <mvmr28idgfu.fsf@linux-m68k.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 08:22:12PM -0700, Ruslan Babayev wrote:
-> This allows drivers to lookup i2c adapters on ACPI based systems similar to
-> of_get_i2c_adapter_by_node() with DT based systems.
+Hi!
+> > I've tested the patch on i386. Before the patch calling bdflush() with
+> > attempt to tune a variable returned 0 and after the patch the syscall
+> > fails with EINVAL.
 > 
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
-> ---
->  drivers/i2c/i2c-core-acpi.c | 3 ++-
->  include/linux/i2c.h         | 6 ++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 272800692088..964687534754 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -337,7 +337,7 @@ static int i2c_acpi_find_match_device(struct device *dev, void *data)
->  	return ACPI_COMPANION(dev) == data;
->  }
->  
-> -static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-> +struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
->  {
->  	struct device *dev;
->  
-> @@ -345,6 +345,7 @@ static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
->  			      i2c_acpi_find_match_adapter);
->  	return dev ? i2c_verify_adapter(dev) : NULL;
->  }
-> +EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
->  
->  static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
->  {
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 1308126fc384..9808993f5fd5 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -21,6 +21,7 @@
->  #include <linux/rtmutex.h>
->  #include <linux/irqdomain.h>		/* for Host Notify IRQ */
->  #include <linux/of.h>		/* for struct device_node */
-> +#include <linux/acpi.h>		/* for acpi_handle */
->  #include <linux/swab.h>		/* for swab16 */
->  #include <uapi/linux/i2c.h>
->  
-> @@ -981,6 +982,7 @@ bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
->  u32 i2c_acpi_find_bus_speed(struct device *dev);
->  struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
->  				       struct i2c_board_info *info);
-> +struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
->  #else
->  static inline bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
->  					     struct acpi_resource_i2c_serialbus **i2c)
-> @@ -996,6 +998,10 @@ static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
->  {
->  	return NULL;
->  }
-> +static inline struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle h)
+> Should be ENOSYS, doesn't it?
 
-You should use the same argument naming as with the non-stubbed one:
+My bad, the LTP syscall wrapper handles ENOSYS and produces skipped
+results based on that.
 
-static inline struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
+EINVAL is what you get for not yet implemented syscalls, i.e. new
+syscall on old kernel.
 
-Anyway looks good to me,
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+-- 
+Cyril Hrubis
+chrubis@suse.cz
