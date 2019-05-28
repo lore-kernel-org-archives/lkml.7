@@ -2,122 +2,143 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39200C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F74420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7fyQeV7"
+	by mail.kernel.org (Postfix) with ESMTP id 357D420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfE1PTn (ORCPT
+        id S1727702AbfE1PTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:19:43 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:42695 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfE1PTm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:19:42 -0400
-Received: by mail-qk1-f175.google.com with SMTP id b18so17244063qkc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AgIhMjtQNDDLn24P5b2RW+PI0xzMqgCFH6A7C0wsOiI=;
-        b=m7fyQeV7CZ6ZSShPV+qHLYPEyovT0Pf1jg9sUYkXEGGGuQHlUcqvStoublnPJRGznl
-         f9N5qiUBxw3wM8fPfbs2QheWVQHb82/A0Yw7an8Xzpey7H3vb4si0MxsMA2oZT+vf+o0
-         LOrWeyd60+5oofoNbhC60aUrvy9WnZ+FeygDKJ3zJI3mr6G58NFWSDLvGKQ2g777kEkD
-         JShm/3o1wN4kV9AR2iCWi0e7ZwVAB60aNMii47BN/2PD5xvA2kAQEhYx6o/jocvPzxGm
-         l7k+n9GkiT6wNe4/67lGFjx2FCuaw+gWzqyKY7xhnfw2vFMJgPK7R0qq8BuIJYTFeCXk
-         +TMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AgIhMjtQNDDLn24P5b2RW+PI0xzMqgCFH6A7C0wsOiI=;
-        b=SP/jOnVncow3W9tnsJv/itfWbEwSj5foQ09U63dqSoLCzUrMHtAkVJ1Gbmo+tBZY1U
-         N3bduG3ndl8P6VUYm9HwkaiXWiWTjYI4zbKhp7Ne9X6L7v5HoRQC7IGJSb048vRFR3Fu
-         8ADbn8DJy/PSQgIXll260pqfV3spsN+mCr4DU+ebcEQXZRsZirAm9jCuVCER3Rpcgznl
-         5EzwhSqhWVPknQG43eFY4LNUkm8hiHSeORidDfscSZieA0mYlXr4KomI43R/Ut7Sf6L+
-         RT8jmrbJTZqmgTuPytuZQKGITWusL2OuHIp5jkAJXAEiEvt8efxKzEFO+4tIfLFjMq45
-         eSrg==
-X-Gm-Message-State: APjAAAUXUD1OZKydLOfByafs/BvAM3YqQzsF2DZ4VZzLbzM7fTF92hFN
-        rK3Tbk8fV8rMhQ9+mwyVoYU=
-X-Google-Smtp-Source: APXvYqypvW8CIf8Szln6z6gT7Hd5MCneaucTQoe3QXTh/l4QZR2vPpDxb3LhXgbFxDXNuZpg696+0w==
-X-Received: by 2002:ac8:4442:: with SMTP id m2mr8678987qtn.107.1559056781293;
-        Tue, 28 May 2019 08:19:41 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id 39sm6552033qtx.71.2019.05.28.08.19.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 28 May 2019 08:19:40 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4491841149; Tue, 28 May 2019 12:19:38 -0300 (-03)
-Date:   Tue, 28 May 2019 12:19:38 -0300
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mark.rutland@arm.com
-Subject: Re: [RFC 1/7] perf: arm64: Compile tests unconditionally
-Message-ID: <20190528151938.GC13830@kernel.org>
-References: <20190528150320.25953-1-raphael.gault@arm.com>
- <20190528150320.25953-2-raphael.gault@arm.com>
+        Tue, 28 May 2019 11:19:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34302 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfE1PTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:19:51 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 15D143002513;
+        Tue, 28 May 2019 15:19:51 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-65.rdu2.redhat.com [10.10.125.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EC2D78579;
+        Tue, 28 May 2019 15:12:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 11/25] hugetlbfs: Add support for fsinfo() [ver #13]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mszeredi@redhat.com
+Date:   Tue, 28 May 2019 16:12:33 +0100
+Message-ID: <155905635365.1662.16642890243994690650.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528150320.25953-2-raphael.gault@arm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 28 May 2019 15:19:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 28, 2019 at 04:03:14PM +0100, Raphael Gault escreveu:
-> In order to subsequently add more tests for the arm64 architecture
-> we compile the tests target for arm64 systematically.
+Add support for fsinfo().
 
-Humm, the subject doesn't match the description? I.e. it _was_
-unconditionally built, now it is only built if CONFIG_DWARF_UNWIND is
-set to 'y'.
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-- Arnaldo
+ fs/hugetlbfs/inode.c |   56 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 1dcc57189382..e6ecebd9ebc2 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -28,6 +28,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/pagevec.h>
+ #include <linux/fs_parser.h>
++#include <linux/fsinfo.h>
+ #include <linux/mman.h>
+ #include <linux/slab.h>
+ #include <linux/dnotify.h>
+@@ -958,6 +959,58 @@ static int hugetlbfs_show_options(struct seq_file *m, struct dentry *root)
+ 	return 0;
+ }
  
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->  tools/perf/arch/arm64/Build       | 2 +-
->  tools/perf/arch/arm64/tests/Build | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm64/Build b/tools/perf/arch/arm64/Build
-> index 36222e64bbf7..a7dd46a5b678 100644
-> --- a/tools/perf/arch/arm64/Build
-> +++ b/tools/perf/arch/arm64/Build
-> @@ -1,2 +1,2 @@
->  perf-y += util/
-> -perf-$(CONFIG_DWARF_UNWIND) += tests/
-> +perf-y += tests/
-> diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-> index 41707fea74b3..a61c06bdb757 100644
-> --- a/tools/perf/arch/arm64/tests/Build
-> +++ b/tools/perf/arch/arm64/tests/Build
-> @@ -1,4 +1,4 @@
->  perf-y += regs_load.o
-> -perf-y += dwarf-unwind.o
-> +perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
->  
->  perf-y += arch-tests.o
-> -- 
-> 2.17.1
++#ifdef CONFIG_FSINFO
++static int hugetlbfs_fsinfo(struct path *path, struct fsinfo_kparams *params)
++{
++	struct dentry *dentry = path->dentry;
++	struct hugetlbfs_sb_info *sbinfo = HUGETLBFS_SB(dentry->d_sb);
++	struct hugepage_subpool *spool = sbinfo->spool;
++	unsigned long hpage_size = huge_page_size(sbinfo->hstate);
++	unsigned hpage_shift = huge_page_shift(sbinfo->hstate);
++	char mod;
++
++	switch (params->request) {
++	case FSINFO_ATTR_PARAMETERS:
++		if (!uid_eq(sbinfo->uid, GLOBAL_ROOT_UID))
++			fsinfo_note_paramf(params, "uid", "%u",
++					   from_kuid_munged(&init_user_ns,
++							    sbinfo->uid));
++
++		if (!gid_eq(sbinfo->gid, GLOBAL_ROOT_GID))
++			fsinfo_note_paramf(params, "gid", "%u",
++					   from_kgid_munged(&init_user_ns,
++							    sbinfo->gid));
++
++		if (spool && spool->max_hpages != -1)
++			fsinfo_note_paramf(params, "size", "%llu",
++					   (unsigned long long)spool->max_hpages << hpage_shift);
++
++		if (spool && spool->min_hpages != -1)
++			fsinfo_note_paramf(params, "min_size", "%llu",
++					   (unsigned long long)spool->min_hpages << hpage_shift);
++
++		hpage_size /= 1024;
++		mod = 'K';
++		if (hpage_size >= 1024) {
++			hpage_size /= 1024;
++			mod = 'M';
++		}
++		fsinfo_note_paramf(params, "pagesize", "%lu%c", hpage_size, mod);
++
++		if (sbinfo->mode != 0755)
++			fsinfo_note_paramf(params, "mode", "%o", sbinfo->mode);
++
++		if (sbinfo->max_inodes != -1)
++			fsinfo_note_paramf(params, "nr_inodes", "%lu",
++					   sbinfo->max_inodes);
++		return params->usage;
++
++	default:
++		return generic_fsinfo(path, params);
++	}
++}
++#endif /* CONFIG_FSINFO */
++
+ static int hugetlbfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+ {
+ 	struct hugetlbfs_sb_info *sbinfo = HUGETLBFS_SB(dentry->d_sb);
+@@ -1116,6 +1169,9 @@ static const struct super_operations hugetlbfs_ops = {
+ 	.statfs		= hugetlbfs_statfs,
+ 	.put_super	= hugetlbfs_put_super,
+ 	.show_options	= hugetlbfs_show_options,
++#ifdef CONFIG_FSINFO
++	.fsinfo		= hugetlbfs_fsinfo,
++#endif
+ };
+ 
+ /*
 
--- 
-
-- Arnaldo
