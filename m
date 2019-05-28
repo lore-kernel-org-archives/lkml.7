@@ -2,122 +2,145 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97633C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3AAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4192075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:15:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf+VYvwO"
+	by mail.kernel.org (Postfix) with ESMTP id 0AC3B2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfE1EPF (ORCPT
+        id S1727240AbfE1ESf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 00:15:05 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35193 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfE1EPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 00:15:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d126so8431767pfd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 21:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b50zMGTOCc0fwRDaXhdX+Sowx0oH+oWPSMB5/jqWRtM=;
-        b=Jf+VYvwOtZiS0/PGjs7HbiDMtvfu2MLrx0Z5DuC69eabsbASuUr4g+RTrej3zgmdok
-         RkeuW4uIPWY203T4B+03N0RJwooy/qW2XsvzX2MdNPO56S60Cyl3uJTihw5xPPvuL5M0
-         6IzniUwTAh8cyBofYYOb1d8AdqfvcC97SGIyjqZZSCEC9DNUy0onEW3mXTjovw4J26Oj
-         ImA9I2d9r+DMAn26HnGCbhyFki2sz8tpJZS2KSZkhKjRmI/TQvjkZHPxo17eHRHOBTVL
-         EjZwyxoYhdC46CXfUC14KHUq8LKL9Vp9q8nSAh+dKdZ0STnBHFcluQzOi7xY2a2TX/ti
-         0uIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b50zMGTOCc0fwRDaXhdX+Sowx0oH+oWPSMB5/jqWRtM=;
-        b=D4t6236xoMRWKUx4K5a5FyvraiIbEQPecDvYVlB/NnShtgKyVGuQrmFsjW1M5cZL/m
-         S4syfutqIqXNN/jgvfTjEtiJ2Uy146iJmUKjdMCVP8QGeZ+cUgsVl0iqVcpjynUPekKP
-         77JT1kZT9MP3ebj8FZMFWRrnUun+z6ByCUPVxNi/HywDXJBHs4XSAE0ZbBk7PKf47hgq
-         LjURuYLa97TY9U55Sxnf/CHGiwRrqSAC/FDyzyeUVxyWA1HLPDzj4D1PkqJqx36K2f+U
-         BaBEY5jLdJXfClULpfBOH3w9ZMSppK7vsi1uj7NbMc2M1Inoc66Ye6jjGt/3aOJKfq9k
-         mdng==
-X-Gm-Message-State: APjAAAUldRT48rd+56if58CfsbKMq8WOiPPBo1/4f0nv/c64M8vAajRz
-        QpVEJOtiKgW+uYBtCT2Mm9E=
-X-Google-Smtp-Source: APXvYqwsGsVlg0TXsoL/yvdeiXQXBN0QQogKvzjwA7G7Y4xc3Ey3QzXYWw5r56CCfmDhi/pgsA4Cxg==
-X-Received: by 2002:a17:90a:9a8a:: with SMTP id e10mr2954564pjp.109.1559016904379;
-        Mon, 27 May 2019 21:15:04 -0700 (PDT)
-Received: from localhost ([175.223.45.124])
-        by smtp.gmail.com with ESMTPSA id q7sm980578pjb.0.2019.05.27.21.15.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 21:15:03 -0700 (PDT)
-Date:   Tue, 28 May 2019 13:15:00 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-Message-ID: <20190528041500.GB26865@jagdpanzerIV>
-References: <20190528002412.1625-1-dima@arista.com>
+        Tue, 28 May 2019 00:18:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40358 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbfE1ESe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 00:18:34 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 533EBC049E23;
+        Tue, 28 May 2019 04:18:34 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A0A31001DD7;
+        Tue, 28 May 2019 04:18:31 +0000 (UTC)
+Date:   Mon, 27 May 2019 22:18:31 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Zhang, Tina" <tina.zhang@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
+Subject: Re: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
+Message-ID: <20190527221831.71bddcc5@x1.home>
+In-Reply-To: <237F54289DF84E4997F34151298ABEBC87620FF2@SHSMSX101.ccr.corp.intel.com>
+References: <20190527084312.8872-1-tina.zhang@intel.com>
+        <20190527084312.8872-2-tina.zhang@intel.com>
+        <20190527080430.28f40888@x1.home>
+        <237F54289DF84E4997F34151298ABEBC87620FF2@SHSMSX101.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528002412.1625-1-dima@arista.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 28 May 2019 04:18:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/28/19 01:24), Dmitry Safonov wrote:
-[..]
-> While handling sysrq the console_loglevel is bumped to default to print
-> sysrq headers. It's done to print sysrq messages with WARNING level for
-> consumers of /proc/kmsg, though it sucks by the following reasons:
-> - changing console_loglevel may produce tons of messages (especially on
->   bloated with debug/info prints systems)
-> - it doesn't guarantee that the message will be printed as printk may
->   deffer the actual console output from buffer (see the comment near
->   printk() in kernel/printk/printk.c)
-> 
-> Provide KERN_UNSUPPRESSED printk() annotation for such legacy places.
-> Make sysrq print the headers unsuppressed instead of changing
-> console_loglevel.
+On Tue, 28 May 2019 01:42:57 +0000
+"Zhang, Tina" <tina.zhang@intel.com> wrote:
 
-I've been thinking about this a while ago... So what I thought back
-then was that affected paths are atomic: sysrq, irqs, NMI, etc. Well
-at leasted it seemed to be so. Hence we can use per-CPU flag to tell
-printk that whatever comes from this-CPU is important and printk should
-eventually print it (next time it hits console_unlock()). One candidate
-for such per-CPU flag was this_cpu(printk_context). We can steal high
-bit (next to NMI printk_safe bit). So the intended use case was something
-like this
+> > -----Original Message-----
+> > From: intel-gvt-dev [mailto:intel-gvt-dev-bounces@lists.freedesktop.org] On
+> > Behalf Of Alex Williamson
+> > Sent: Monday, May 27, 2019 10:05 PM
+> > To: Zhang, Tina <tina.zhang@intel.com>
+> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > zhenyuw@linux.intel.com; Yuan, Hang <hang.yuan@intel.com>;
+> > kraxel@redhat.com; intel-gvt-dev@lists.freedesktop.org; Lv, Zhiyuan
+> > <zhiyuan.lv@intel.com>
+> > Subject: Re: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
+> > 
+> > On Mon, 27 May 2019 16:43:11 +0800
+> > Tina Zhang <tina.zhang@intel.com> wrote:
+> >   
+> > > Add VFIO_DEVICE_SET_GFX_FLIP_EVENTFD ioctl command to set eventfd
+> > > based signaling mechanism to deliver vGPU framebuffer page flip event
+> > > to userspace.
+> > >
+> > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > > ---
+> > >  include/uapi/linux/vfio.h | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > index 02bb7ad6e986..27300597717f 100644
+> > > --- a/include/uapi/linux/vfio.h
+> > > +++ b/include/uapi/linux/vfio.h
+> > > @@ -696,6 +696,18 @@ struct vfio_device_ioeventfd {
+> > >
+> > >  #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE +  
+> > 16)  
+> > >
+> > > +/**
+> > > + * VFIO_DEVICE_SET_GFX_FLIP_EVENTFD - _IOW(VFIO_TYPE, VFIO_BASE  
+> > + 17,  
+> > > +__s32)
+> > > + *
+> > > + * Set eventfd based signaling mechanism to deliver vGPU framebuffer
+> > > +page
+> > > + * flip event to userspace. A value of -1 is used to stop the page
+> > > +flip
+> > > + * delivering.
+> > > + *
+> > > + * Return: 0 on success, -errno on failure.
+> > > + */
+> > > +
+> > > +#define VFIO_DEVICE_SET_GFX_FLIP_EVENTFD _IO(VFIO_TYPE,  
+> > VFIO_BASE +  
+> > > +17)
+> > > +
+> > >  /* -------- API for Type1 VFIO IOMMU -------- */
+> > >
+> > >  /**  
+> > 
+> > Why can't we use VFIO_DEVICE_SET_IRQS for this?  We can add a capability
+> > to vfio_irq_info in the same way that we did for regions to describe device
+> > specific IRQ support.  Thanks,  
+> Add a new kind of index, like this?
+> enum {
+>         VFIO_PCI_INTX_IRQ_INDEX,
+>         VFIO_PCI_MSI_IRQ_INDEX,
+>         VFIO_PCI_MSIX_IRQ_INDEX,
+>         VFIO_PCI_ERR_IRQ_INDEX,
+>         VFIO_PCI_REQ_IRQ_INDEX,
+> +      VFIO_PCI_GFX_FLIP_EVENT_INDEX,
+>         VFIO_PCI_NUM_IRQS
+> };
+> Perhaps this is what we don't want. This
+> VFIO_PCI_GFX_FLIP_EVENT_INDEX is specific to graphics card and it's
+> actually an event which is reported by INTX/MSI/ MSIX IRQ. Thanks.
 
-	sysrq/etc  /* atomic context */
-	{
-		printk_blah_enter();
+Right, that is not what I'm suggesting.  What I'm looking for is a
+similar conversion to what we did for regions, where we extended the
+data returned in GET_REGION_INFO to include capabilities
+(c84982adb23b), capped the number of regions we define with fixed
+indexes (c7bb4cb40f89), and added device specific regions, such as IGD
+OpRegion (5846ff54e87d) and IGD host and LPC bridges (f572a960a15e).
+The same thing should happen here, the current value of
+VFIO_PCI_NUM_IRQS becomes fixed and part of the vfio-pci ABI,
+vfio_irq_info is extended with capability support following the same
+mechanism, headers, and helpers we use for regions, then the mdev device
+simply exposes the extended (and backwards compatible) API without
+requiring a device specific ioctl.  Thanks,
 
-		for (...)
-			printk();
-		...
-		dump_bar();
-
-		prinkt_blah_exit();
-	}
-
-printk_blah_enter() would set that special - printk_safe_mask_blah - bit,
-and prinkt_blah_exit() would clear it. Whenever prinkt->vprintk_store()
-would see printk_safe_mask_blah bit set it would mark the log_stored message
-as "important, always print!", and console_unlock() would always print those
-"important" messages.
-
-	-ss
+Alex
