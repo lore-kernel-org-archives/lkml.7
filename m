@@ -2,120 +2,128 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D316C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F1CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C0520823
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FD321530
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GwZ/vVL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfE1BnA (ORCPT
+        id S1727836AbfE1Bnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:43:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3308 "EHLO mga06.intel.com"
+        Mon, 27 May 2019 21:43:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34285 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727271AbfE1BnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:43:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 18:42:59 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2019 18:42:59 -0700
-Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 27 May 2019 18:42:58 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 27 May 2019 18:42:58 -0700
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.129]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.150]) with mapi id 14.03.0415.000;
- Tue, 28 May 2019 09:42:57 +0800
-From:   "Zhang, Tina" <tina.zhang@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
-Subject: RE: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
-Thread-Topic: [PATCH 1/2] vfio: ABI for setting mdev display flip eventfd
-Thread-Index: AQHVFGkBZrgUKUW3hkmSal0+smAhlaZ+e0YAgAFF88A=
-Date:   Tue, 28 May 2019 01:42:57 +0000
-Message-ID: <237F54289DF84E4997F34151298ABEBC87620FF2@SHSMSX101.ccr.corp.intel.com>
-References: <20190527084312.8872-1-tina.zhang@intel.com>
- <20190527084312.8872-2-tina.zhang@intel.com>
- <20190527080430.28f40888@x1.home>
-In-Reply-To: <20190527080430.28f40888@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDQwMTZkZTEtMWVlOC00OTdkLTkzZGEtNjE3M2M3Zjc4MWQ1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidXpaRkw3MVpkR1l3Tk0yVjU0NERYREI2SUVpdnRGcHl1QVJHeE1DbDFTbXBaKzRoNXcrY2lhcEEwc0xyNUJ5ZiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1727271AbfE1Bnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:43:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Cc7X5srfz9s3Z;
+        Tue, 28 May 2019 11:43:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559007817;
+        bh=oSAUCdsXrwBpxO6SXoSycFX+BjSh/Yzn/OxmM7fGB78=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GwZ/vVL9ghZoFBUQHhe/lcKFf7m8mU0IFT9HQ2+OXPxBw/oaP5uRwGapAOOTdfb4h
+         7dNSVUcGC7BY4KDTbWs07J9bXMoSrAarXxXD69xUthjiYQlNcwautFdSHWac6Y9i1e
+         wJ8yino+sHKHfaE6HloY06TkgXAhk51f22bYStVSWXKMKtyMedH6ztRgt7OvNrCKC9
+         kXn316729q/iykpupwitOKdQqhjoyYQsq6Q8RVAF/Edv+o2p6tuC3r6Zjc+NXM3tEN
+         z/F7qGcC5yVoXnp7Fo3qDokyjlYVp2VA3Gwgj73uOo1ook91IRjme/DHwmCM+smPn/
+         sHSzHjqJ0tgcg==
+Date:   Tue, 28 May 2019 11:43:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: linux-next: manual merge of the scsi tree with Linus' tree
+Message-ID: <20190528114320.30637398@canb.auug.org.au>
+In-Reply-To: <20190522100808.66994f6b@canb.auug.org.au>
+References: <20190522100808.66994f6b@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ibMx_bKOKGX3xtWWDe/Ioda"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaW50ZWwtZ3Z0LWRldiBb
-bWFpbHRvOmludGVsLWd2dC1kZXYtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmddIE9uDQo+
-IEJlaGFsZiBPZiBBbGV4IFdpbGxpYW1zb24NCj4gU2VudDogTW9uZGF5LCBNYXkgMjcsIDIwMTkg
-MTA6MDUgUE0NCj4gVG86IFpoYW5nLCBUaW5hIDx0aW5hLnpoYW5nQGludGVsLmNvbT4NCj4gQ2M6
-IGt2bUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IHpo
-ZW55dXdAbGludXguaW50ZWwuY29tOyBZdWFuLCBIYW5nIDxoYW5nLnl1YW5AaW50ZWwuY29tPjsN
-Cj4ga3JheGVsQHJlZGhhdC5jb207IGludGVsLWd2dC1kZXZAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-OyBMdiwgWmhpeXVhbg0KPiA8emhpeXVhbi5sdkBpbnRlbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMS8yXSB2ZmlvOiBBQkkgZm9yIHNldHRpbmcgbWRldiBkaXNwbGF5IGZsaXAgZXZlbnRm
-ZA0KPiANCj4gT24gTW9uLCAyNyBNYXkgMjAxOSAxNjo0MzoxMSArMDgwMA0KPiBUaW5hIFpoYW5n
-IDx0aW5hLnpoYW5nQGludGVsLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEFkZCBWRklPX0RFVklDRV9T
-RVRfR0ZYX0ZMSVBfRVZFTlRGRCBpb2N0bCBjb21tYW5kIHRvIHNldCBldmVudGZkDQo+ID4gYmFz
-ZWQgc2lnbmFsaW5nIG1lY2hhbmlzbSB0byBkZWxpdmVyIHZHUFUgZnJhbWVidWZmZXIgcGFnZSBm
-bGlwIGV2ZW50DQo+ID4gdG8gdXNlcnNwYWNlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogVGlu
-YSBaaGFuZyA8dGluYS56aGFuZ0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIGluY2x1ZGUvdWFw
-aS9saW51eC92ZmlvLmggfCAxMiArKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEy
-IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgv
-dmZpby5oIGIvaW5jbHVkZS91YXBpL2xpbnV4L3ZmaW8uaA0KPiA+IGluZGV4IDAyYmI3YWQ2ZTk4
-Ni4uMjczMDA1OTc3MTdmIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvdWFwaS9saW51eC92Zmlv
-LmgNCj4gPiArKysgYi9pbmNsdWRlL3VhcGkvbGludXgvdmZpby5oDQo+ID4gQEAgLTY5Niw2ICs2
-OTYsMTggQEAgc3RydWN0IHZmaW9fZGV2aWNlX2lvZXZlbnRmZCB7DQo+ID4NCj4gPiAgI2RlZmlu
-ZSBWRklPX0RFVklDRV9JT0VWRU5URkQJCV9JTyhWRklPX1RZUEUsIFZGSU9fQkFTRSArDQo+IDE2
-KQ0KPiA+DQo+ID4gKy8qKg0KPiA+ICsgKiBWRklPX0RFVklDRV9TRVRfR0ZYX0ZMSVBfRVZFTlRG
-RCAtIF9JT1coVkZJT19UWVBFLCBWRklPX0JBU0UNCj4gKyAxNywNCj4gPiArX19zMzIpDQo+ID4g
-KyAqDQo+ID4gKyAqIFNldCBldmVudGZkIGJhc2VkIHNpZ25hbGluZyBtZWNoYW5pc20gdG8gZGVs
-aXZlciB2R1BVIGZyYW1lYnVmZmVyDQo+ID4gK3BhZ2UNCj4gPiArICogZmxpcCBldmVudCB0byB1
-c2Vyc3BhY2UuIEEgdmFsdWUgb2YgLTEgaXMgdXNlZCB0byBzdG9wIHRoZSBwYWdlDQo+ID4gK2Zs
-aXANCj4gPiArICogZGVsaXZlcmluZy4NCj4gPiArICoNCj4gPiArICogUmV0dXJuOiAwIG9uIHN1
-Y2Nlc3MsIC1lcnJubyBvbiBmYWlsdXJlLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNkZWZpbmUg
-VkZJT19ERVZJQ0VfU0VUX0dGWF9GTElQX0VWRU5URkQgX0lPKFZGSU9fVFlQRSwNCj4gVkZJT19C
-QVNFICsNCj4gPiArMTcpDQo+ID4gKw0KPiA+ICAvKiAtLS0tLS0tLSBBUEkgZm9yIFR5cGUxIFZG
-SU8gSU9NTVUgLS0tLS0tLS0gKi8NCj4gPg0KPiA+ICAvKioNCj4gDQo+IFdoeSBjYW4ndCB3ZSB1
-c2UgVkZJT19ERVZJQ0VfU0VUX0lSUVMgZm9yIHRoaXM/ICBXZSBjYW4gYWRkIGEgY2FwYWJpbGl0
-eQ0KPiB0byB2ZmlvX2lycV9pbmZvIGluIHRoZSBzYW1lIHdheSB0aGF0IHdlIGRpZCBmb3IgcmVn
-aW9ucyB0byBkZXNjcmliZSBkZXZpY2UNCj4gc3BlY2lmaWMgSVJRIHN1cHBvcnQuICBUaGFua3Ms
-DQpBZGQgYSBuZXcga2luZCBvZiBpbmRleCwgbGlrZSB0aGlzPw0KZW51bSB7DQogICAgICAgIFZG
-SU9fUENJX0lOVFhfSVJRX0lOREVYLA0KICAgICAgICBWRklPX1BDSV9NU0lfSVJRX0lOREVYLA0K
-ICAgICAgICBWRklPX1BDSV9NU0lYX0lSUV9JTkRFWCwNCiAgICAgICAgVkZJT19QQ0lfRVJSX0lS
-UV9JTkRFWCwNCiAgICAgICAgVkZJT19QQ0lfUkVRX0lSUV9JTkRFWCwNCisgICAgICBWRklPX1BD
-SV9HRlhfRkxJUF9FVkVOVF9JTkRFWCwNCiAgICAgICAgVkZJT19QQ0lfTlVNX0lSUVMNCn07DQpQ
-ZXJoYXBzIHRoaXMgaXMgd2hhdCB3ZSBkb24ndCB3YW50LiBUaGlzIFZGSU9fUENJX0dGWF9GTElQ
-X0VWRU5UX0lOREVYIGlzIHNwZWNpZmljIHRvIGdyYXBoaWNzIGNhcmQgYW5kIGl0J3MgYWN0dWFs
-bHkgYW4gZXZlbnQgd2hpY2ggaXMgcmVwb3J0ZWQgYnkgSU5UWC9NU0kvIE1TSVggSVJRLg0KVGhh
-bmtzLg0KDQpCUiwNClRpbmENCj4gDQo+IEFsZXgNCj4gX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18NCj4gaW50ZWwtZ3Z0LWRldiBtYWlsaW5nIGxpc3QNCj4g
-aW50ZWwtZ3Z0LWRldkBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4gaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9pbnRlbC1ndnQtZGV2DQo=
+--Sig_/ibMx_bKOKGX3xtWWDe/Ioda
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Wed, 22 May 2019 10:08:34 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the scsi tree got conflicts in:
+>=20
+>   drivers/scsi/hosts.c
+>   drivers/scsi/libsas/sas_task.c
+>   drivers/scsi/scsi.c
+>   drivers/scsi/scsi_error.c
+>   drivers/scsi/scsi_ioctl.c
+>   drivers/scsi/scsi_lib.c
+>   drivers/scsi/scsi_pm.c
+>   drivers/scsi/scsi_sysfs.c
+>   drivers/scsi/sd.c
+>   drivers/scsi/sr.c
+>   drivers/scsi/st.c
+>=20
+> between commits:
+>=20
+>   457c89965399 ("treewide: Add SPDX license identifier for missed files")
+>   09c434b8a004 ("treewide: Add SPDX license identifier for more missed fi=
+les")
+>=20
+> from Linus' tree and commits:
+>=20
+>   026104bfa591 ("scsi: core: add SPDX tags to scsi midlayer files missing=
+ licensing information")
+>   5502239e73e6 ("scsi: libsas: add a SPDX tag to sas_task.c")
+>   5897b844b7f9 ("scsi: sd: add a SPDX tag to sd.c")
+>   95b04a2ff9c7 ("scsi: sr: add a SPDX tag to sr.c")
+>   50a1ea5bebbc ("scsi: st: add a SPDX tag to st.c")
+
+I have now got more of these conflicts in
+
+drivers/scsi/libsas/sas_init.c
+drivers/scsi/libsas/sas_internal.h
+drivers/scsi/libsas/sas_scsi_host.c
+drivers/scsi/sg.c
+include/scsi/libsas.h
+include/scsi/sas.h
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ibMx_bKOKGX3xtWWDe/Ioda
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzskjgACgkQAVBC80lX
+0GyXSAf+Pf763d98+SPy9OOkwWytZPNe3WTxdCOWUbqZJcYLCjVCy1HcVqHf+h30
+G/jnXEmqJpGKNL8+GJ186i55eAq6anTwZm4FgFgNyAU5WSnmq2xNpoqgoY+oFkK/
+QKHmcJQzBu8Rtb6uKAGaE17eaY6XP8Fjvrqjo2aECNZ20QCOLZUEkTuJcNYN3f+s
+0KVe2+e28rF75cw1Ue46F6BC21vWOu4DdZlLulSpcJW//w7U0UkS5IwvKSCWQJ7R
+EeorzmTa32dt4av3iPZMNjYIpS4+R4skxDJPUsdSjox7dtJacS2f4QndFBVth+VQ
+mHkJwmW+x+u8AmpyG9x6or6SZGTgiA==
+=0fj2
+-----END PGP SIGNATURE-----
+
+--Sig_/ibMx_bKOKGX3xtWWDe/Ioda--
