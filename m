@@ -2,86 +2,126 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197A0C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D571C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6B620989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DE12166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:55:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZnZ12hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfE1Syd (ORCPT
+        id S1727159AbfE1Szh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:54:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48174 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfE1Syd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:54:33 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B13EFF9E8B;
-        Tue, 28 May 2019 18:54:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE6785D6A9;
-        Tue, 28 May 2019 18:54:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <43e3de52-13d7-8089-11cf-a384662401aa@schaufler-ca.com>
-References: <43e3de52-13d7-8089-11cf-a384662401aa@schaufler-ca.com> <9191ef31-a022-cdc4-9bed-ff225e4179bb@schaufler-ca.com> <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com> <11440.1559046181@warthog.procyon.org.uk> <9330.1559060541@warthog.procyon.org.uk>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, jose.bollo@iot.bzh,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option
+        Tue, 28 May 2019 14:55:37 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34123 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfE1Szg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 14:55:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j24so18754852ljg.1;
+        Tue, 28 May 2019 11:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z7OOVvI8Ey+rnG7udPCtpGE+elQQfpsLoYRPaWdaqvo=;
+        b=sZnZ12hgMrnbJJiyGJxwjDn8ZGRsO5eLpJZLeiFCbMilukST9exCPSOrckih25w1cZ
+         yNR4yCjnJX7bzsLnoe5l+54xRd/uMe43ufc+t4NL5JaLF2DzyTe5XKJhDZodeGi/Qnlr
+         /7FDFgGROff3N/3ui3bRFPydof7LMNZd83vdpjbZRCUJIdb36xqyOp0pSefcfQ19yKZ+
+         NbruhAdAj0SzwJHz3T61vwqsqas27A2PPAGCL6hzYzf3zg8/xBZoZ6bmO4FJ5I4fxoVD
+         nkt65Hto6wJ664T/Sv/820JLn4jVABFqlLAi8UsbhffWPquPzuEjZ0Z+OTfdY0/rcDdN
+         Qwdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z7OOVvI8Ey+rnG7udPCtpGE+elQQfpsLoYRPaWdaqvo=;
+        b=cDDLBLPwzASbpL4U4YiNgjFE8aJq4lMaYrtkSNRFvzHNBuMp9m8+Xq/1u/z7LufFbN
+         yuRpKjYvaRZHORcZgLJ/8Jgdp7oJrb3eJqKRxxO63dTGd77DsSbmylkW0iX5eQJWrPng
+         gOcjbvATKgDJel3c0OyJjzBL9AHgBad/vF1RFYU0MfKrpiX/H2j4v9B0JzA0zhiuHqDm
+         pi0cSxsLoB3NZB+/DNRUjDe+Z04jcYK6+E8a4vBM7WzDvt04r0bNBOhzhyLk4fhrpY5B
+         IUvYWFwKqISO8gK/FaxvC5JHZPEDw3uSrRB6MMiT1bTh2RDskdtR3pFSDdRlYq+WNKxu
+         xxtQ==
+X-Gm-Message-State: APjAAAXr2RfgGz1hLcbQmLpTzUuI4u+9CfqQukmFvxZTeNjw4Vd2W2we
+        lCn+2x75ZCQWNAxspZ7O/ia/7sHj
+X-Google-Smtp-Source: APXvYqwxeXuHx774Ybt8+VVCDljiDWR6aiH7KirjGQj3/ICiJnH7lMaxFST4KELexMRLZu14zE8Wpw==
+X-Received: by 2002:a2e:9742:: with SMTP id f2mr32429404ljj.184.1559069734544;
+        Tue, 28 May 2019 11:55:34 -0700 (PDT)
+Received: from [192.168.1.17] (cis152.neoplus.adsl.tpnet.pl. [83.31.42.152])
+        by smtp.gmail.com with ESMTPSA id x16sm3071055lji.3.2019.05.28.11.55.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 11:55:33 -0700 (PDT)
+Subject: cross-merges with MFD tree (was: Re: GFS2: Pull Request)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
+ <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <61f6987a-5502-f119-6595-fc6badb864fb@gmail.com>
+Date:   Tue, 28 May 2019 20:55:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9985.1559069658.1@warthog.procyon.org.uk>
-Date:   Tue, 28 May 2019 19:54:18 +0100
-Message-ID: <9986.1559069658@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 18:54:32 +0000 (UTC)
+In-Reply-To: <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
+Hi Linus,
 
-> > Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >
-> >>> Also, should all of these be prefixed with "smack"?  So:
-> >>>
-> >>>   	fsparam_string("smackfsdef",	Opt_fsdefault),
-> >>>   	fsparam_string("smackfsfloor",	Opt_fsfloor),
-> >>>   	fsparam_string("smackfshat",	Opt_fshat),	
-> >> No. smack_fs_parameters takes care of that.
-> > It does?  *Blink*.
+On 5/8/19 7:55 PM, Linus Torvalds wrote:
+> On Wed, May 8, 2019 at 4:49 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
+>>
+>> There was a conflict with commit 2b070cfe582b ("block: remove the i
+>> argument to bio_for_each_segment_all") on Jens's block layer changes
+>> which you've already merged. I've resolved that by merging those block
+>> layer changes; please let me know if you want this done differently.
 > 
-> Well, something does. I can't say that I 100% understand all
-> of how the new mount code handles the mount options. Y'all made
-> sweeping changes, and the code works the way it used to except
-> for the awkward change from smackfsdef to smackfsdefault. It
-> took no small amount of head scratching and experimentation to
-> convince myself that the fix I proposed was correct.
+> PLEASE.
+> 
+> I say this to somebody pretty much every single merge window: don't do
+> merges for me.
+> 
+> You are actually just hurting, not helping. I want to know what the
+> conflicts are, not by being told after-the-fact, but by just seeing
+> them and resolving them.
+> 
+> Yes, I like being _warned_ ahead of time - partly just as a heads up
+> to me, but partly also to show that the maintainers are aware of the
+> notifications from linux-next, and that linux-next is working as
+> intended, and people aren't just ignoring what it reports.
+> 
+> But I do *NOT* want to see maintainers cross-merging each others trees.
 
-Ah...  I suspect the issue is that smack_sb_eat_lsm_opts() strips the prefix
-for an unconverted filesystem, but smack_fs_context_parse_param() doesn't
-(which it shouldn't).
+I would like to clarify if this applies to immutable integration
+branches that are usually created for MFD subsystem. That subsystem
+is somehow specific since changes made to MFD drivers are often a part
+of bigger patch sets that add drivers of MFD cells to the other
+subsystems.
 
-Can you try grabbing my mount-api-viro branch from:
+Like in my area of interest an addition of a driver for LED cell
+of MFD device must be followed by addition of a corresponding entry to
+struct mfd_cell array in the related MFD driver.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+And sometimes even another subsystem is involved, like e.g. regulator
+framework in case of recent extension of ti-lmu driver.
 
-and testing setting smack options on a tmpfs filesystem?
+So far you haven't complained about this specific workflow, but I'd like
+to make sure how you see it.
 
-You might need to try modifying samples/vfs/test-fsmount.c to make it mount a
-trmpfs filesystem through the new mount UAPI.
-
-David
+-- 
+Best regards,
+Jacek Anaszewski
