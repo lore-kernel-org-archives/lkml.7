@@ -2,147 +2,171 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E51C282E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F1FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3561F2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738392075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ug3p+80+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G5vlq0fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfE1HkJ (ORCPT
+        id S1727569AbfE1Hlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:40:09 -0400
-Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:63759
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727853AbfE1HkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:40:05 -0400
+        Tue, 28 May 2019 03:41:44 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35019 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfE1Hln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:41:43 -0400
+Received: by mail-vs1-f68.google.com with SMTP id q13so12183285vso.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 00:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EVygfSY8hqy/DBUvsHRCgGvieeoiCENlb8QcgTW8Qa0=;
- b=ug3p+80+pta3QSOyYVopWCIPknnTa/9XApeIFW+44+SXRahs8pvbg98CvxDZWD2q7UoHIhgUD6Sn7ZbGyOWHdj4WAzkhg9cumlMLts6dyltoEMjlw9eglOAVG8lj96mIW2ArwyzQcb/gVfwCJxWUUom9Q8RHLT+KaOaucx79tQQ=
-Received: from BN3PR03CA0110.namprd03.prod.outlook.com (2603:10b6:400:4::28)
- by BLUPR03MB552.namprd03.prod.outlook.com (2a01:111:e400:883::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.22; Tue, 28 May
- 2019 07:39:58 +0000
-Received: from SN1NAM02FT022.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::202) by BN3PR03CA0110.outlook.office365.com
- (2603:10b6:400:4::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1943.16 via Frontend
- Transport; Tue, 28 May 2019 07:39:58 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; lists.freedesktop.org; dkim=none (message not
- signed) header.d=none;lists.freedesktop.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT022.mail.protection.outlook.com (10.152.72.148) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1922.16
- via Frontend Transport; Tue, 28 May 2019 07:39:57 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4S7duOZ023275
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 28 May 2019 00:39:56 -0700
-Received: from saturn.analog.com (10.50.1.244) by NWD2HUBCAS7.ad.analog.com
- (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 28 May 2019
- 03:39:56 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-ide@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-usb@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <alsa-devel@alsa-project.org>
-CC:     <heikki.krogerus@linux.intel.com>, <gregkh@linuxfoundation.org>,
-        <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3][V2] lib: re-introduce new match_string() helper/macro
-Date:   Tue, 28 May 2019 10:39:32 +0300
-Message-ID: <20190528073932.25365-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190528073932.25365-1-alexandru.ardelean@analog.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
- <20190528073932.25365-1-alexandru.ardelean@analog.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1vGN/kzzR5Fvs1V+frWiaUjVK/pSpV0oxUQjIS8ijsM=;
+        b=G5vlq0fAtwDVkOkfBP2QoDt1YEgVybU9XYwYxfr77EwtQYmXJtwF0Se2SLiRbWygug
+         uweyGlm3MM63NmP5XYWc+1VIg3lu323ebw2/DD+PrGK2L/sfswbJSxYn3bR9+2N+GV6G
+         6p/AnLDq35nD5IMEQRiGZ8u/KM2daatFWSiTTW+GSngTXp52QXv4a5CMi4hc1VEnVJfo
+         ynMmhOxfxGdLOBBBTkYnnuNJE5ynQcUmjA/h2bACdpqdKcXvRKmYxKZvI2E397mWj9eE
+         nHTSH6OkcRYNz+6lSyCvTogEJ4o9LrsCqPFdZDvCssza0sBLgzG/s3H/knojtFphR3kS
+         sxkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1vGN/kzzR5Fvs1V+frWiaUjVK/pSpV0oxUQjIS8ijsM=;
+        b=kZGaLQw12CO2EKYqarH8erlokI2N0Jd6jkFcgc+t1ovZyzKq7O3wHY68TTKJUEMiWo
+         y0psTqxITPoqA3hzH8LBhfk5ppFVM7z5Xsg85w02cgWXiiGjNf2scE4njBeQDJzlzvfQ
+         IOMnTVLI+WZQKBDQNRlZ3Z8Xe5G3wxQs06iE5K4H1Ii1zX8XGi4wF8C9rs7D8pVMieGd
+         wJrODMZUgyGo6bqkTOUOobTG+30oFkfyf0nQ3xxqg7Y71eV7PSXYPea1jUJqhgFfGHeR
+         f18VhmKtZ81bkoBLzHllQLqQ2SM9KovItq0LuJTz367vSpuUyO8rHfFjUUD1Eqs+9N3v
+         qyKA==
+X-Gm-Message-State: APjAAAVZdyliyfIznEzequ6x0Dnq36YlGizroUlHq7ETn6BW3XVcOHhU
+        FrMJlzHxcm+1TcaKM02/Fr9tPFDVxDWnwUptpLVS1A==
+X-Google-Smtp-Source: APXvYqwjgGJ9xI1ypM5cwafmspEINThHEkUuBleRNr6hXc3OObAFYQky7TEHIC6X7c81UilG4iahZhy/s5LJJdgQVqo=
+X-Received: by 2002:a67:ebc5:: with SMTP id y5mr71189644vso.34.1559029302928;
+ Tue, 28 May 2019 00:41:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(136003)(39860400002)(346002)(396003)(376002)(2980300002)(199004)(189003)(126002)(2441003)(86362001)(44832011)(5660300002)(2201001)(478600001)(446003)(476003)(2616005)(53416004)(47776003)(316002)(11346002)(2870700001)(2906002)(6666004)(356004)(50226002)(51416003)(7696005)(7416002)(76176011)(48376002)(4326008)(305945005)(70586007)(70206006)(336012)(26005)(77096007)(186003)(1076003)(7636002)(246002)(486006)(426003)(7406005)(110136005)(54906003)(106002)(107886003)(50466002)(36756003)(8936002)(8676002)(921003)(83996005)(1121003)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BLUPR03MB552;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9f7495c6-88de-4750-c0e9-08d6e33faf63
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709054)(1401327)(2017052603328);SRVR:BLUPR03MB552;
-X-MS-TrafficTypeDiagnostic: BLUPR03MB552:
-X-Microsoft-Antispam-PRVS: <BLUPR03MB5526A3F85F374B6EF9329F1F91E0@BLUPR03MB552.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-Forefront-PRVS: 00514A2FE6
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: MswgKhZP9m+ZsGUEhWl3phwXCL8yuqzj7xcxpK+dGlJBf9m5zMl51gqC3LUtKdWQ8Os49FCltfeNbu6Phw/B8l5WNlH00oAhRzdjikewQHYUEmLqJ6/urfczkkAV7S6v3P1UMtUMTOYDySCPLD3RO66kjwZftNeRvVV3dsDqCax4qYOjNj2PWP5gkM5PjRZmJWiCQ5YjWYviSRnNrXmzdalwSZTQ416f6pMfl95WCkKeJFuhdayQMWJGsRNhTOHuxm5bGOp4NnJa6ZTV5K+ilvVE4Xb082rHyJdnAOFnjmjlMMgU1yiCJ2yKYrrmhTGSsWl7mABejle5Gq03Z59rpn0+AbER3kkbBxVnYXW8nX3mrHd8Gqzr89K0YpmuIcGMyscsEWrsfpd9tI6dbYg4W4+zRy2MwWGNPPr9JWXwDBM=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2019 07:39:57.3627
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f7495c6-88de-4750-c0e9-08d6e33faf63
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLUPR03MB552
+References: <20190501175457.195855-1-rrangel@chromium.org> <20190501175457.195855-2-rrangel@chromium.org>
+In-Reply-To: <20190501175457.195855-2-rrangel@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 28 May 2019 09:41:07 +0200
+Message-ID: <CAPDyKFq8T0kdJsPfk6ue2OaQUO9L_oOwnxDw=-FVboZRyKJPdA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] mmc: sdhci: Quirk for AMD SDHC Device 0x7906
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change re-introduces `match_string()` as a macro that uses
-ARRAY_SIZE() to compute the size of the array.
+On Wed, 1 May 2019 at 19:55, Raul E Rangel <rrangel@chromium.org> wrote:
+>
+> AMD SDHC 0x7906 requires a hard reset to clear all internal state.
+> Otherwise it can get into a bad state where the DATA lines are always
+> read as zeros.
+>
+> This change requires firmware that can transition the device into
+> D3Cold for it to work correctly. If the firmware does not support
+> transitioning to D3Cold then the power state transitions are a no-op.
+>
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
-After this change, work can start on migrating subsystems to use this new
-helper. Since the original helper is pretty used, migrating to this new one
-will take a while, and will be reviewed by each subsystem.
+Does this also solve the problem you tried to fix in patch1, without patch1?
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- include/linux/string.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Should this have a stable tag?
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 7149fcdf62df..34491b075449 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -198,6 +198,15 @@ static inline int strtobool(const char *s, bool *res)
- int __match_string(const char * const *array, size_t n, const char *string);
- int __sysfs_match_string(const char * const *array, size_t n, const char *s);
- 
-+/**
-+ * match_string - matches given string in an array
-+ * @_a: array of strings
-+ * @_s: string to match with
-+ *
-+ * Helper for __match_string(). Calculates the size of @a automatically.
-+ */
-+#define match_string(_a, _s) __match_string(_a, ARRAY_SIZE(_a), _s)
-+
- /**
-  * sysfs_match_string - matches given string in an array
-  * @_a: array of strings
--- 
-2.20.1
+Kind regards
+Uffe
 
+> ---
+>
+>  drivers/mmc/host/sdhci-pci-core.c | 51 ++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+> index 99b0fec2836b..532fbcbd373b 100644
+> --- a/drivers/mmc/host/sdhci-pci-core.c
+> +++ b/drivers/mmc/host/sdhci-pci-core.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/gpio.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/mmc/slot-gpio.h>
+> @@ -1498,11 +1499,59 @@ static int amd_probe(struct sdhci_pci_chip *chip)
+>         return 0;
+>  }
+>
+> +static u32 sdhci_read_present_state(struct sdhci_host *host)
+> +{
+> +       return sdhci_readl(host, SDHCI_PRESENT_STATE);
+> +}
+> +
+> +void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +       struct sdhci_pci_slot *slot = sdhci_priv(host);
+> +       struct pci_dev *pdev = slot->chip->pdev;
+> +       u32 present_state;
+> +
+> +       /*
+> +        * SDHC 0x7906 requires a hard reset to clear all internal state.
+> +        * Otherwise it can get into a bad state where the DATA lines are always
+> +        * read as zeros.
+> +        */
+> +       if (pdev->device == 0x7906 && (mask & SDHCI_RESET_ALL)) {
+> +               pci_clear_master(pdev);
+> +
+> +               pci_save_state(pdev);
+> +
+> +               pci_set_power_state(pdev, PCI_D3cold);
+> +               pr_debug("%s: power_state=%u\n", mmc_hostname(host->mmc),
+> +                       pdev->current_state);
+> +               pci_set_power_state(pdev, PCI_D0);
+> +
+> +               pci_restore_state(pdev);
+> +
+> +               /*
+> +                * SDHCI_RESET_ALL says the card detect logic should not be
+> +                * reset, but since we need to reset the entire controller
+> +                * we should wait until the card detect logic has stabilized.
+> +                *
+> +                * This normally takes about 40ms.
+> +                */
+> +               readx_poll_timeout(
+> +                       sdhci_read_present_state,
+> +                       host,
+> +                       present_state,
+> +                       present_state & SDHCI_CD_STABLE,
+> +                       10000,
+> +                       100000
+> +               );
+> +       }
+> +
+> +       return sdhci_reset(host, mask);
+> +}
+> +
+>  static const struct sdhci_ops amd_sdhci_pci_ops = {
+>         .set_clock                      = sdhci_set_clock,
+>         .enable_dma                     = sdhci_pci_enable_dma,
+>         .set_bus_width                  = sdhci_set_bus_width,
+> -       .reset                          = sdhci_reset,
+> +       .reset                          = amd_sdhci_reset,
+>         .set_uhs_signaling              = sdhci_set_uhs_signaling,
+>  };
+>
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
