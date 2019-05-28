@@ -2,145 +2,106 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA76BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B93BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963782081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DAE6208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gp3O9MMh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fB0H+7YM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="epXRGH2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfE1LdR (ORCPT
+        id S1726780AbfE1Ldw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:33:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45795 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1LdR (ORCPT
+        Tue, 28 May 2019 07:33:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52374 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfE1Ldw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:33:17 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r76so6551781lja.12
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 04:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MABWQ31ON0TR0IpKjWED0HazwKzgQ/WMHokiAHc03aw=;
-        b=gp3O9MMh8feHVMlWj5VYKJcykIPIicL9qftBC/g9U0fwewHKMqLl/MofGdBtVkNQkn
-         IVMlKW8Hg9P4j1I/cAMJa9HrB4mM0IErnXAPx5uimKXNozFbkOZjW9Pd6yh7lq5cNuXf
-         doEylPmDq6h3Idyz947RnLdOZ827Ft3PUcSi4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MABWQ31ON0TR0IpKjWED0HazwKzgQ/WMHokiAHc03aw=;
-        b=temy441mgyLHJ2ks8rkjI5qkCQ07yTkQ2QYCuF2t/g33CryBlzdGj+RDnZf3fR2yHZ
-         SGyP91puN3B1kmz/8/AdKB2YRvXTfr9IbB9OTj5mlAv9DLuyqoxQHqNISIsTQZqpcBiI
-         fhQoIJ2aoSzwc3hzLCgPKbXhcx1qTpSnA19OARb+kfEUnL9h11NT4i0aFup0wnI6QN29
-         cuAK89LQSl0LFPNwgQp+wRhCQwAbWkqjim7fdL2imPfOsRftqvudod+B7QVJsWNXVleR
-         X/lYnbi79dvNwAxQlqB+hePbd3kSjADudfizmqS+44xhf2PU1JNDPjqUIABX41IF3opR
-         8Mxw==
-X-Gm-Message-State: APjAAAU3KV4P/fQ+Atg/uTtwyy91XjcK3xWHmZFQaTDqFyqW23Jq9stz
-        ROWwPWjnUtlKNxYN72FrtgF3mw==
-X-Google-Smtp-Source: APXvYqzAlj8nXBkXY9tXvwNZyhuuVjUcaz9St3nOjjKOjPyJt3ZdpGQUcyp52yMvVHPwvG4kJ/5Sbw==
-X-Received: by 2002:a2e:12ce:: with SMTP id 75mr35464957ljs.7.1559043194790;
-        Tue, 28 May 2019 04:33:14 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id d2sm2177643lfj.0.2019.05.28.04.33.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 04:33:13 -0700 (PDT)
-Subject: Re: LZ4 decompressor broken on ARM due to missing strchrnul() string
- traverse in cpumask_parse"
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Yury Norov <ynorov@marvell.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190528110412.gg66fl67yahtwb6i@linutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ffc779fe-3735-9665-8ee2-6a3ff1a7dd83@rasmusvillemoes.dk>
-Date:   Tue, 28 May 2019 13:33:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 07:33:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 44BE460388; Tue, 28 May 2019 11:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559043231;
+        bh=L1NbZxiLtq3rlmMS9o/rSgkfR5rPEvxTXSc6OnbhHco=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=fB0H+7YMCFozgKGcSbatyDncJKV7Veu0X1mHZ8K39Jq+kugmwUFfgZQNqIBTx8ZVN
+         IJ05O3cEnl5jGYg3yHO5lfV5gTCgYObImstmFD6XTRFwFP6f1P/LVME/Nnf4rs4B7B
+         Hh2jjmEOuU5AsGHE4GjjCrOPmWCYQVpKXG0hEPzg=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45EA360E5A;
+        Tue, 28 May 2019 11:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559043228;
+        bh=L1NbZxiLtq3rlmMS9o/rSgkfR5rPEvxTXSc6OnbhHco=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=epXRGH2nFWQAVz/MQJzPp7tO1NHsMRRmGiIUHfBrmUov29KtEeATI6exYBp0Vez7J
+         DESnJG4ayMktH1rOIKkPYAJBZ6eHKgimEi7bLOO3WFcByq4JOvVVUeMbjR8Qshp931
+         egX9WxpIzpV3njFlKh3C2wLfxNhTQm0ZdwkzGW28=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 45EA360E5A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190528110412.gg66fl67yahtwb6i@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 5.2] rsi: Properly initialize data in rsi_sdio_ta_reset
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190523153007.112231-1-natechancellor@gmail.com>
+References: <20190523153007.112231-1-natechancellor@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190528113351.44BE460388@smtp.codeaurora.org>
+Date:   Tue, 28 May 2019 11:33:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/2019 13.04, Sebastian Andrzej Siewior wrote:
-> |  CC      arch/arm/boot/compressed/decompress.o
-> |In file included from include/linux/mm_types_task.h:14,
-> |                 from include/linux/mm_types.h:5,
-> |                 from include/linux/mmzone.h:21,
-> |                 from include/linux/gfp.h:6,
-> |                 from include/linux/umh.h:4,
-> |                 from include/linux/kmod.h:22,
-> |                 from include/linux/module.h:13,
-> |                 from arch/arm/boot/compressed/../../../../lib/lz4/lz4_decompress.c:39,
-> |                 from arch/arm/boot/compressed/../../../../lib/decompress_unlz4.c:13,
-> |                 from arch/arm/boot/compressed/decompress.c:55:
-> |include/linux/cpumask.h: In function ‘cpumask_parse’:
-> |include/linux/cpumask.h:636:21: error: implicit declaration of function ‘strchrnul’; did you mean ‘strchr’? [-Werror=implicit-function-declaration]
-> |  unsigned int len = strchrnul(buf, '\n') - buf;
-> |                     ^~~~~~~~~
-> |                     strchr
-> |include/linux/cpumask.h:636:42: error: invalid operands to binary - (have ‘int’ and ‘const char *’)
-> |  unsigned int len = strchrnul(buf, '\n') - buf;
-> |                     ~~~~~~~~~~~~~~~~~~~~ ^
-> |cc1: some warnings being treated as errors
+Nathan Chancellor <natechancellor@gmail.com> wrote:
+
+> When building with -Wuninitialized, Clang warns:
 > 
-> 3713a4e1fdb8da86f96a3e770b08e278d97529b4 is the first bad commit
-> commit 3713a4e1fdb8da86f96a3e770b08e278d97529b4
-> Author: Yury Norov <ynorov@marvell.com>
-> Date:   Tue May 14 15:44:46 2019 -0700
+> drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
+> is uninitialized when used here [-Wuninitialized]
+>         put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+>                                                  ^~~~
+> drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
+> variable 'data' to silence this warning
+>         u8 *data;
+>                 ^
+>                  = NULL
+> 1 warning generated.
 > 
->     include/linux/cpumask.h: fix double string traverse in cpumask_parse
+> Using Clang's suggestion of initializing data to NULL wouldn't work out
+> because data will be dereferenced by put_unaligned_le32. Use kzalloc to
+> properly initialize data, which matches a couple of other places in this
+> driver.
 > 
->     cpumask_parse() finds first occurrence of either or strchr() and
->     strlen().  We can do it better with a single call of strchrnul().
-> 
->     [akpm@linux-foundation.org: remove unneeded cast]
->     Link: http://lkml.kernel.org/r/20190409204208.12190-1-ynorov@marvell.com
->     Signed-off-by: Yury Norov <ynorov@marvell.com>
->     Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> 
-> :040000 040000 f20d8a9ec1755b3981520ecf015248f6a0d9f116 db67caf64f99a9be808cd73e413c106c5aee15b7 M      include
-> 
-> This commit is v5.2-rc1~62^2~49.
-> How do we deal with this one?
+> Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/464
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Urgh. The problem is really in arch/arm/boot/compressed/decompress.c
-which does
+Patch applied to wireless-drivers.git, thanks.
 
-#define _LINUX_STRING_H_
+f57b5d85ed58 rsi: Properly initialize data in rsi_sdio_ta_reset
 
-preventing linux/string.h from providing strchrnul. It also #includes
-asm/string.h, which for arm has a declaration of strchr(), explaining
-why this didn't use to fail.
+-- 
+https://patchwork.kernel.org/patch/10958063/
 
-However, the solution is also in the same file, it already has a section
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-/* Not needed, but used in some headers pulled in by decompressors */
-extern char * strstr(const char * s1, const char *s2);
-extern size_t strlen(const char *s);
-extern int memcmp(const void *cs, const void *ct, size_t count);
-
-so just add another declaration to that list - I strongly assume we
-won't get a link failure since I find it hard to believe the
-decompressor would actually call cpumask_parse...
-
-I'm wondering why this wasn't caught by 0day and/or while in -next?
-
-Rasmus
