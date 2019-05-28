@@ -2,119 +2,64 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ADAC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD766C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC8D21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B586B206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfE1QFN (ORCPT
+        id S1726693AbfE1QHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:05:13 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:58882 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1QFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:05:13 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 6F41B25AD7D;
-        Wed, 29 May 2019 02:05:11 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 51FA5E212E7; Tue, 28 May 2019 18:05:09 +0200 (CEST)
-Date:   Tue, 28 May 2019 18:05:09 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Oleksandr Tyshchenko <olekstysh@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH V5] ARM: mach-shmobile: Don't init CNTVOFF/counter if
- PSCI is available
-Message-ID: <20190528160509.5vunuxxxcjduobpb@verge.net.au>
-References: <1558087093-22113-1-git-send-email-olekstysh@gmail.com>
- <CAMuHMdVC=aNQTZ0r+7qpiWEyEaoQ587pm1FxhWqR3pwHwv2ARg@mail.gmail.com>
+        Tue, 28 May 2019 12:07:46 -0400
+Received: from relay.sw.ru ([185.231.240.75]:38226 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbfE1QHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 12:07:45 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hVedY-0005la-Dm; Tue, 28 May 2019 19:07:40 +0300
+Subject: Re: [PATCH REBASED 1/4] mm: Move recent_rotated pages calculation to
+ shrink_inactive_list()
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <155290113594.31489.16711525148390601318.stgit@localhost.localdomain>
+ <155290127956.31489.3393586616054413298.stgit@localhost.localdomain>
+ <20190528155134.GA14663@cmpxchg.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <3c081218-0dc9-54f2-839e-00adca089831@virtuozzo.com>
+Date:   Tue, 28 May 2019 19:07:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVC=aNQTZ0r+7qpiWEyEaoQ587pm1FxhWqR3pwHwv2ARg@mail.gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190528155134.GA14663@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:27:56AM +0200, Geert Uytterhoeven wrote:
-> Hi Oleksandr,
+On 28.05.2019 18:51, Johannes Weiner wrote:
+> On Mon, Mar 18, 2019 at 12:27:59PM +0300, Kirill Tkhai wrote:
+>> @@ -1945,6 +1942,8 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+>>  		count_memcg_events(lruvec_memcg(lruvec), PGSTEAL_DIRECT,
+>>  				   nr_reclaimed);
+>>  	}
+>> +	reclaim_stat->recent_rotated[0] = stat.nr_activate[0];
+>> +	reclaim_stat->recent_rotated[1] = stat.nr_activate[1];
 > 
-> On Fri, May 17, 2019 at 11:58 AM Oleksandr Tyshchenko
-> <olekstysh@gmail.com> wrote:
-> > From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> >
-> > If PSCI is available then most likely we are running on PSCI-enabled
-> > U-Boot which, we assume, has already taken care of resetting CNTVOFF
-> > and updating counter module before switching to non-secure mode
-> > and we don't need to.
-> >
-> > As the psci_smp_available() helper always returns false if CONFIG_SMP
-> > is disabled, it can't be used safely as an indicator of PSCI usage.
-> > For that reason, we check for the mandatory PSCI operation to be
-> > available.
-> >
-> > Please note, an extra check to prevent secure_cntvoff_init() from
-> > being called for secondary CPUs in headsmp-apmu.S is not needed,
-> > as SMP code for APMU based system is not executed if PSCI is in use.
-> >
-> > Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+> Surely this should be +=, right?
 > 
-> >    Changes in v5:
-> >       - Check for psci_ops.cpu_on if CONFIG_ARM_PSCI_FW is defined
-> 
-> Thanks for the update!
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Two cosmetic comments below. I'll leave it to Simon to ignore them for
-> applying ;-)
+> Otherwise we maintain essentially no history of page rotations and
+> that wreaks havoc on the page cache vs. swapping reclaim balance.
 
-Oleksandr, could I trouble you to respin with the
-changes suggested by Geert?
+Sure, thanks.
 
-> 
-> > @@ -62,6 +63,21 @@ void __init rcar_gen2_timer_init(void)
-> >  {
-> >         void __iomem *base;
-> >         u32 freq;
-> > +       bool need_update = true;
-> 
-> Some people like reverse Xmas tree declaration order...
-> 
-> > +
-> > +       /*
-> > +        * If PSCI is available then most likely we are running on PSCI-enabled
-> > +        * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-> > +        * and updating counter module before switching to non-secure mode
-> > +        * and we don't need to.
-> > +        */
-> > +#if defined(CONFIG_ARM_PSCI_FW)
-> 
-> #ifdef CONFIG_ARM_PSCI_FW ?
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+Kirill
