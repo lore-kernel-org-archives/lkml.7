@@ -2,77 +2,146 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A4CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0049C04E84
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4329208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A358D208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfE1HoR (ORCPT
+        id S1727650AbfE1Hp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:44:17 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:40800 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbfE1HoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:44:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id E9277201DB;
-        Tue, 28 May 2019 09:44:14 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dTKhhgUGSkYu; Tue, 28 May 2019 09:44:10 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id BD51F200BA;
-        Tue, 28 May 2019 09:44:10 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
- 09:44:11 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 4722B31804FB;
- Tue, 28 May 2019 09:44:10 +0200 (CEST)
-Date:   Tue, 28 May 2019 09:44:10 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Anirudh Gupta <anirudhrudr@gmail.com>,
-        Anirudh Gupta <anirudh.gupta@sophos.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] xfrm: Fix xfrm sel prefix length validation
-Message-ID: <20190528074410.GD14601@gauss3.secunet.de>
-References: <20190521152947.75014-1-anirudh.gupta@sophos.com>
- <20190522031700.ynp6ctodqlztybb2@gondor.apana.org.au>
+        Tue, 28 May 2019 03:45:59 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33410 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfE1Hp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:45:59 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w1so16734984ljw.0;
+        Tue, 28 May 2019 00:45:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AqCbj+PvdF23UrKqSJAv31hwd4U45LJaqwM+eNLDJ3M=;
+        b=nMji94foU88CwozI5MqZAp75FohaMXC/RQMGAFKxXkyls2EQCwtkGHu8WybWQwFHyk
+         szM7HghMNBGWaTGQh6FDNs7uCRmEiEA+hYXxm7BjJo+VJVIpsHW+lSujfjDCAg4HWBWy
+         9QKm/+AITn1eiPas7WbJGk/vXlgXkYVqT9xOMKidaXesbNZi/KjRKhao1xkprQ9maaDz
+         sO4fslFKKYc9ZGuqzWlNxLXdgcN4v6FdxI8lV8SeUuuLsNqHqizhS16qdk4X5cjCprJG
+         EVlfpt41zFTlwbYq1CT4geu78uqw02osYUeKtpGPNSwTuHDCQ4havRCmzsn2Qn+9G8T8
+         5naA==
+X-Gm-Message-State: APjAAAVknhqNYYXBeS7UFrh3hZlRIetapErfHBAVF3uIIsyxe0iaQ3LV
+        G4Ie0iL3Xpch4/BOo87pmIpYSoeF644G2UyrDUI=
+X-Google-Smtp-Source: APXvYqwnoCo6SJTjNhrqM6Tn9L0kCkH7psfShIb3MEMqL6q3sprsI8Mw18tbRD01Q1Glqdb0OIELkMMx9S+RytEI1MM=
+X-Received: by 2002:a2e:9185:: with SMTP id f5mr34080351ljg.51.1559029557096;
+ Tue, 28 May 2019 00:45:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190522031700.ynp6ctodqlztybb2@gondor.apana.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com> <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
+In-Reply-To: <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 28 May 2019 09:45:45 +0200
+Message-ID: <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
+Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on rk3288-veyron-jaq
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:17:00AM +0800, Herbert Xu wrote:
-> On Tue, May 21, 2019 at 08:59:47PM +0530, Anirudh Gupta wrote:
-> > Family of src/dst can be different from family of selector src/dst.
-> > Use xfrm selector family to validate address prefix length,
-> > while verifying new sa from userspace.
-> > 
-> > Validated patch with this command:
-> > ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-> > reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-> > 0x1111016400000000000000000000000044440001 128 \
-> > sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
-> > 
-> > Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-> > Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
-> 
-> Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Hi Guillaume,
 
-Patch applied, thanks everyone!
+On Tue, May 28, 2019 at 9:13 AM Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
+> On 28/05/2019 00:38, kernelci.org bot wrote:
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > * This automated bisection report was sent to you on the basis  *
+> > * that you may be involved with the breaking commit it has      *
+> > * found.  No manual investigation has been done to verify it,   *
+> > * and the root cause of the problem may be somewhere else.      *
+> > * Hope this helps!                                              *
+> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> >
+> > linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on rk3288-veyron-jaq
+> >
+> > Summary:
+> >   Start:      73a790c68d7e Merge branch 'devel' into for-next
+> >   Details:    https://kernelci.org/boot/id/5cebf03d59b514dd627a3629
+> >   Plain log:  https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
+> >   HTML log:   https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
+> >   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting error
+> >
+> > Checks:
+> >   revert:     PASS
+> >   verify:     PASS
+> >
+> > Parameters:
+> >   Tree:       linusw
+> >   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/
+> >   Branch:     for-next
+> >   Target:     rk3288-veyron-jaq
+> >   CPU arch:   arm
+> >   Lab:        lab-collabora
+> >   Compiler:   gcc-8
+> >   Config:     multi_v7_defconfig
+> >   Test suite: boot
+> >
+> > Breaking commit found:
+> >
+> > -------------------------------------------------------------------------------
+> > commit 28694e009e512451ead5519dd801f9869acb1f60
+> > Author: Elaine Zhang <zhangqing@rock-chips.com>
+> > Date:   Tue Apr 30 18:09:44 2019 +0800
+> >
+> >     thermal: rockchip: fix up the tsadc pinctrl setting error
+>
+> This commit has now been reverted in mainline.  Would it be OK
+> for you to rebase your for-next branch on v5.2-rc2 or cherry-pick
+> the revert to avoid recurring bisections?
+>
+> Ideally this should have been fixed or reverted in mainline
+> before v5.2-rc1 was released, or even earlier when this was first
+> found in -next on 13th May.  Unfortunately it was overlooked and
+> then spread to other branches like yours.
+
+I'm afraid it's gonna spread to even more for-next branches, as most
+subsystem maintainers base their for-next branch on the previous rc1
+release.  Typically maintainers do not rebase their for-next branches,
+and do not cherry-pick fixes, unless they are critical for their
+subsystem.  So you can expect this to show up in e.g. the m68k for-next
+branch soon...
+
+Can't you mark this as a known issue, to prevent spending cycles on the
+same bisection, and sending out more bisection reports for the same
+issue?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
