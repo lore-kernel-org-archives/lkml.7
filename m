@@ -2,227 +2,129 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31F7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F1E2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dTx5iUnH"
+	by mail.kernel.org (Postfix) with ESMTP id B2CE22075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfE1IxR (ORCPT
+        id S1726748AbfE1Ixb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:53:17 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:32867 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfE1IxQ (ORCPT
+        Tue, 28 May 2019 04:53:31 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54814 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726702AbfE1Ixa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:53:16 -0400
-Received: by mail-vs1-f68.google.com with SMTP id y6so12298310vsb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 01:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6DOKZZBuQ4FIK7BFhI7zXJDJCYNb+EAsV49etM5Qw9E=;
-        b=dTx5iUnHM/CY9J8aWugKpVrabCL/wQnfT4iMvXtQvLqdukV5bMttr04yeu8LBwLeWt
-         WezYDrZAWZKOkwhj05aQ7cZdjzEkItKVpPpW09nsvEgl7gVfv3Oa/zDrGAMUqloDAtuL
-         aISBEVB2/kZjuUrikfpL7wjqqvROQ45cXGcJEAJLH8oXMO/brzwkk9lJO0SUNDPi/yPp
-         OK6Y25R3e3t4KlQEXl15ODbujKaLkxSQUQeGt6UIluKXCOKz/rKberoFA7swcNT0fkFf
-         c2f8q1nktBqGEYHP3UVoJGm8Yc8mMcSZIXXlB06UE0chLRK0DC3NYWG/RSZr4QjtW+xo
-         1TYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6DOKZZBuQ4FIK7BFhI7zXJDJCYNb+EAsV49etM5Qw9E=;
-        b=HeWppA298EXgXTTvdALN7+JQb4bQKbQkH3HYgjwDWhMiT2ay3pONceOJEaya7dABNR
-         RpD7AFWhQphOrHUWeRRw4ciT17aCxqO746M0S79iGGHlhc2uXQeIXQW0XrEHxcWVKVXW
-         y/gYHxwDnlYFzqG+sRInxIT8kkMnMDD/pjHjtKZujW7hXo5CocGEgUiTKBBX+aG0jJee
-         8IFT7K6TC+/5eY7IbgrLq0Rm6aZjjP6hgLQUXYIOss+xAIJIviHJaan0WMxZnYNua8Cf
-         ic6RO7rl1WIVmC1v4vvnrdjx3MujxLkqSThD7eDn5HiQL/dIZdrzt9KtfdlB7CIdDGfp
-         31/g==
-X-Gm-Message-State: APjAAAVmvdXeqHYpQQe5lYDJI/jmDphz72tNmPrSLpURGjkBQi2/o7Fh
-        gGaqHQJTvvhSWenMB1rUyNyWDiZHHrIEjn8y/mM98Q==
-X-Google-Smtp-Source: APXvYqyt1Oz/elOHJJHAbCdWazjC8Ws+luiU4VvF3+goqXkou1XWl5bSM5jGjiPpsuYuWWGfyOR4xd5YGC++/cob+z0=
-X-Received: by 2002:a67:7c58:: with SMTP id x85mr37939407vsc.191.1559033595375;
- Tue, 28 May 2019 01:53:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557258749-29009-1-git-send-email-kamlesh.gurudasani@gmail.com>
-In-Reply-To: <1557258749-29009-1-git-send-email-kamlesh.gurudasani@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 28 May 2019 10:52:39 +0200
-Message-ID: <CAPDyKFpbYWdLfecru4+Y9zRrdpnzgwwMmCbqDZUwaXoei5o28Q@mail.gmail.com>
-Subject: Re: [PATCH] mmc: android-goldfish: Drop pointer to mmc_host from goldfish_mmc_host
-To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Lockwood <lockwood@android.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Gustavo A . R . Silva" <garsilva@embeddedor.com>
+        Tue, 28 May 2019 04:53:30 -0400
+X-UUID: 3bf0cdba7e454cf191ca3bdb5d6ffc8c-20190528
+X-UUID: 3bf0cdba7e454cf191ca3bdb5d6ffc8c-20190528
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 919406679; Tue, 28 May 2019 16:53:07 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 28 May
+ 2019 16:53:06 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 28 May 2019 16:53:06 +0800
+Message-ID: <1559033586.5141.3.camel@mtksdaap41>
+Subject: Re: [PATCH v3] gpu/drm: mediatek: call mtk_dsi_stop() after
+ mtk_drm_crtc_atomic_disable()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 28 May 2019 16:53:06 +0800
+In-Reply-To: <20190528073908.633-1-hsinyi@chromium.org>
+References: <20190528073908.633-1-hsinyi@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 May 2019 at 21:53, Kamlesh Gurudasani
-<kamlesh.gurudasani@gmail.com> wrote:
->
-> The driver for android-goldfish uses a pointer to get from the private
-> goldfish_mmc_host structure to the generic mmc_host structure.
-> However the latter is always immediately preceding the former in
-> memory, so compute its address with a subtraction (which is cheaper than a
-> dereference) and drop the superfluous pointer.
->
-> No functional change intended.
->
-> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Hi, Hsin-Yi:
 
-Applied for next, thanks!
+On Tue, 2019-05-28 at 15:39 +0800, Hsin-Yi Wang wrote:
+> mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+> ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+> ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+> irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+> happens sometimes when turning off the screen.
+> 
+> In drm_atomic_helper.c#disable_outputs(),
+> the calling sequence when turning off the screen is:
+> 
+> 1. mtk_dsi_encoder_disable()
+>      --> mtk_output_dsi_disable()
+>        --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+>        --> mtk_dsi_poweroff();
+> 2. mtk_drm_crtc_atomic_disable()
+>      --> drm_crtc_wait_one_vblank();
+>      ...
+>        --> mtk_dsi_ddp_stop()
+>          --> mtk_dsi_poweroff();
+> 
+> mtk_dsi_poweroff() has reference count design, change to make mtk_dsi_stop()
+> called in mtk_dsi_poweroff() when refcount is 0.
+> 
+> Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> change log v2->v3:
+> * remove unnecessary codes in unbind
+> * based on discussion in v2, if we move mtk_dsi_start() to mtk_dsi_poweron(),
+> in order to make mtk_dsi_start() and mtk_dsi_stop() symmetric, will results in
+> no irq for panel with bridge. So we keep mtk_dsi_start() in original place.
 
-Kind regards
-Uffe
+I think we've already discussed in [1]. I need a reason to understand
+this is hardware behavior or software bug. If this is a software bug, we
+need to fix the bug and code could be symmetric.
 
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2019-March/018423.html
+
+Regards,
+CK
 
 > ---
->  drivers/mmc/host/android-goldfish.c | 31 +++++++++++++++----------------
->  1 file changed, 15 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/mmc/host/android-goldfish.c b/drivers/mmc/host/android-goldfish.c
-> index 61e4e2a..f6334c2 100644
-> --- a/drivers/mmc/host/android-goldfish.c
-> +++ b/drivers/mmc/host/android-goldfish.c
-> @@ -113,7 +113,6 @@ struct goldfish_mmc_host {
->         struct mmc_request      *mrq;
->         struct mmc_command      *cmd;
->         struct mmc_data         *data;
-> -       struct mmc_host         *mmc;
->         struct device           *dev;
->         unsigned char           id; /* 16xx chips have 2 MMC blocks */
->         void                    *virt_base;
-> @@ -175,7 +174,7 @@ goldfish_mmc_start_command(struct goldfish_mmc_host *host, struct mmc_command *c
->                 resptype = 3;
->                 break;
->         default:
-> -               dev_err(mmc_dev(host->mmc),
-> +               dev_err(mmc_dev(mmc_from_priv(host)),
->                         "Invalid response type: %04x\n", mmc_resp_type(cmd));
->                 break;
->         }
-> @@ -221,8 +220,8 @@ static void goldfish_mmc_xfer_done(struct goldfish_mmc_host *host,
->                                         data->sg->length);
->                 }
->                 host->data->bytes_xfered += data->sg->length;
-> -               dma_unmap_sg(mmc_dev(host->mmc), data->sg, host->sg_len,
-> -                            dma_data_dir);
-> +               dma_unmap_sg(mmc_dev(mmc_from_priv(host)), data->sg,
-> +                            host->sg_len, dma_data_dir);
->         }
->
->         host->data = NULL;
-> @@ -236,7 +235,7 @@ static void goldfish_mmc_xfer_done(struct goldfish_mmc_host *host,
->
->         if (!data->stop) {
->                 host->mrq = NULL;
-> -               mmc_request_done(host->mmc, data->mrq);
-> +               mmc_request_done(mmc_from_priv(host), data->mrq);
->                 return;
->         }
->
-> @@ -278,7 +277,7 @@ static void goldfish_mmc_cmd_done(struct goldfish_mmc_host *host,
->
->         if (host->data == NULL || cmd->error) {
->                 host->mrq = NULL;
-> -               mmc_request_done(host->mmc, cmd->mrq);
-> +               mmc_request_done(mmc_from_priv(host), cmd->mrq);
->         }
->  }
->
-> @@ -313,7 +312,7 @@ static irqreturn_t goldfish_mmc_irq(int irq, void *dev_id)
->                 struct mmc_request *mrq = host->mrq;
->                 mrq->cmd->error = -ETIMEDOUT;
->                 host->mrq = NULL;
-> -               mmc_request_done(host->mmc, mrq);
-> +               mmc_request_done(mmc_from_priv(host), mrq);
->         }
->
->         if (end_command)
-> @@ -339,12 +338,13 @@ static irqreturn_t goldfish_mmc_irq(int irq, void *dev_id)
->                 u32 state = GOLDFISH_MMC_READ(host, MMC_STATE);
->                 pr_info("%s: Card detect now %d\n", __func__,
->                         (state & MMC_STATE_INSERTED));
-> -               mmc_detect_change(host->mmc, 0);
-> +               mmc_detect_change(mmc_from_priv(host), 0);
->         }
->
->         if (!end_command && !end_transfer && !state_changed && !cmd_timeout) {
->                 status = GOLDFISH_MMC_READ(host, MMC_INT_STATUS);
-> -               dev_info(mmc_dev(host->mmc),"spurious irq 0x%04x\n", status);
-> +               dev_info(mmc_dev(mmc_from_priv(host)), "spurious irq 0x%04x\n",
-> +                        status);
->                 if (status != 0) {
->                         GOLDFISH_MMC_WRITE(host, MMC_INT_STATUS, status);
->                         GOLDFISH_MMC_WRITE(host, MMC_INT_ENABLE, 0);
-> @@ -383,7 +383,7 @@ static void goldfish_mmc_prepare_data(struct goldfish_mmc_host *host,
->
->         dma_data_dir = mmc_get_dma_dir(data);
->
-> -       host->sg_len = dma_map_sg(mmc_dev(host->mmc), data->sg,
-> +       host->sg_len = dma_map_sg(mmc_dev(mmc_from_priv(host)), data->sg,
->                                   sg_len, dma_data_dir);
->         host->dma_done = 0;
->         host->dma_in_use = 1;
-> @@ -461,7 +461,6 @@ static int goldfish_mmc_probe(struct platform_device *pdev)
->         }
->
->         host = mmc_priv(mmc);
-> -       host->mmc = mmc;
->
->         pr_err("mmc: Mapping %lX to %lX\n", (long)res->start, (long)res->end);
->         host->reg_base = ioremap(res->start, resource_size(res));
-> @@ -508,8 +507,7 @@ static int goldfish_mmc_probe(struct platform_device *pdev)
->
->         ret = device_create_file(&pdev->dev, &dev_attr_cover_switch);
->         if (ret)
-> -               dev_warn(mmc_dev(host->mmc),
-> -                        "Unable to create sysfs attributes\n");
-> +               dev_warn(mmc_dev(mmc), "Unable to create sysfs attributes\n");
->
->         GOLDFISH_MMC_WRITE(host, MMC_SET_BUFFER, host->phys_base);
->         GOLDFISH_MMC_WRITE(host, MMC_INT_ENABLE,
-> @@ -525,7 +523,7 @@ static int goldfish_mmc_probe(struct platform_device *pdev)
->  dma_alloc_failed:
->         iounmap(host->reg_base);
->  ioremap_failed:
-> -       mmc_free_host(host->mmc);
-> +       mmc_free_host(mmc);
->  err_alloc_host_failed:
->         return ret;
->  }
-> @@ -533,14 +531,15 @@ static int goldfish_mmc_probe(struct platform_device *pdev)
->  static int goldfish_mmc_remove(struct platform_device *pdev)
->  {
->         struct goldfish_mmc_host *host = platform_get_drvdata(pdev);
-> +       struct mmc_host *mmc = mmc_from_priv(host);
->
->         BUG_ON(host == NULL);
->
-> -       mmc_remove_host(host->mmc);
-> +       mmc_remove_host(mmc);
->         free_irq(host->irq, host);
->         dma_free_coherent(&pdev->dev, BUFFER_SIZE, host->virt_base, host->phys_base);
->         iounmap(host->reg_base);
-> -       mmc_free_host(host->mmc);
-> +       mmc_free_host(mmc);
->         return 0;
->  }
->
-> --
-> 2.7.4
->
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index b00eb2d2e086..b7f829ecd3ad 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -630,6 +630,8 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+>  	if (--dsi->refcount != 0)
+>  		return;
+>  
+> +	mtk_dsi_stop(dsi);
+> +
+>  	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+>  		if (dsi->panel) {
+>  			if (drm_panel_unprepare(dsi->panel)) {
+> @@ -696,7 +698,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+>  		}
+>  	}
+>  
+> -	mtk_dsi_stop(dsi);
+>  	mtk_dsi_poweroff(dsi);
+>  
+>  	dsi->enabled = false;
+
+
