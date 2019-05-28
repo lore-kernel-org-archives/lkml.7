@@ -2,107 +2,93 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F49C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10135C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385A22070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98022070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:42:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nj8Y8SnP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XBEEU4W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfE1Lkl (ORCPT
+        id S1726856AbfE1LmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:40:41 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47589 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfE1Lkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:40:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 28 May 2019 07:42:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59732 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfE1LmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:42:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4275460A50; Tue, 28 May 2019 11:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559043726;
+        bh=MHkc4Q+Ua/ipwQsrGjiqtzVzC/Fa0jKvnftGnfpruS4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=nj8Y8SnPzLatGKnAwSYd7f0EePv9DTETXIU6WU9xXJzWhF2+emWDwRNceydtDhqXt
+         6igeX9sz7Sz6WSVYAW6AjnVd+zfGIzI+yGOFwHlvfJw6+XRfFW658D5tqmDp6KH5zn
+         ovJMLHOi8T9cEyvLA8BPdcaKzKMotNRddoRfwgbg=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45CsNQ1V3qz9s5c;
-        Tue, 28 May 2019 21:40:38 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/32: sstep: Move variable `rc` within CONFIG_PPC64 sentinels
-In-Reply-To: <20190312212318.17822-1-malat@debian.org>
-References: <20190312202008.29681-1-malat@debian.org> <20190312212318.17822-1-malat@debian.org>
-Date:   Tue, 28 May 2019 21:40:34 +1000
-Message-ID: <87d0k2q025.fsf@concordia.ellerman.id.au>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1ACD160DA8;
+        Tue, 28 May 2019 11:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559043725;
+        bh=MHkc4Q+Ua/ipwQsrGjiqtzVzC/Fa0jKvnftGnfpruS4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=XBEEU4W3ilj2YzOEF6z3Tkk7zWxbXEOBFzGBbw3YNYo+Dc69+Kdbl6tJ+DSLoBQtu
+         wn6JFsOAhkOTT2eDY+sDIputj7T1rBn9K3i3fpQtPMG8tOAivrNGzRkQoafIASZAyx
+         CQDfUHCMZefcbbO4opswt5/Zp1xv6yw66slaiY7M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1ACD160DA8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtw88: Make some symbols static
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190504103224.27524-1-yuehaibing@huawei.com>
+References: <20190504103224.27524-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <yhchuang@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190528114206.4275460A50@smtp.codeaurora.org>
+Date:   Tue, 28 May 2019 11:42:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mathieu Malaterre <malat@debian.org> writes:
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-> Fix warnings treated as errors with W=1:
->
->   arch/powerpc/lib/sstep.c:1172:31: error: variable 'rc' set but not used [-Werror=unused-but-set-variable]
->
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v2: as suggested prefer CONFIG_PPC64 sentinel instead of unused keyword
+> Fix sparse warnings:
+> 
+> drivers/net/wireless/realtek/rtw88/phy.c:851:4: warning: symbol 'rtw_cck_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/phy.c:852:4: warning: symbol 'rtw_ofdm_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/phy.c:853:4: warning: symbol 'rtw_ht_1s_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/phy.c:854:4: warning: symbol 'rtw_ht_2s_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/phy.c:855:4: warning: symbol 'rtw_vht_1s_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/phy.c:856:4: warning: symbol 'rtw_vht_2s_size' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/fw.c:11:6: warning: symbol 'rtw_fw_c2h_cmd_handle_ext' was not declared. Should it be static?
+> drivers/net/wireless/realtek/rtw88/fw.c:50:6: warning: symbol 'rtw_fw_send_h2c_command' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I'd rather avoid adding more ifdefs if we can.
+Patch applied to wireless-drivers.git, thanks.
 
-I think this works?
+6aca09771db4 rtw88: Make some symbols static
 
-cheers
+-- 
+https://patchwork.kernel.org/patch/10929669/
 
-diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
-index 3d33fb509ef4..600b036ddfda 100644
---- a/arch/powerpc/lib/sstep.c
-+++ b/arch/powerpc/lib/sstep.c
-@@ -1169,7 +1169,7 @@ static nokprobe_inline int trap_compare(long v1, long v2)
- int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
- 		  unsigned int instr)
- {
--	unsigned int opcode, ra, rb, rc, rd, spr, u;
-+	unsigned int opcode, ra, rb, rd, spr, u;
- 	unsigned long int imm;
- 	unsigned long int val, val2;
- 	unsigned int mb, me, sh;
-@@ -1292,7 +1292,6 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
- 	rd = (instr >> 21) & 0x1f;
- 	ra = (instr >> 16) & 0x1f;
- 	rb = (instr >> 11) & 0x1f;
--	rc = (instr >> 6) & 0x1f;
- 
- 	switch (opcode) {
- #ifdef __powerpc64__
-@@ -1307,10 +1306,14 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
- 		return 1;
- 
- #ifdef __powerpc64__
--	case 4:
-+	case 4: {
-+		unsigned int rc;
-+
- 		if (!cpu_has_feature(CPU_FTR_ARCH_300))
- 			return -1;
- 
-+		rc = (instr >> 6) & 0x1f;
-+
- 		switch (instr & 0x3f) {
- 		case 48:	/* maddhd */
- 			asm volatile(PPC_MADDHD(%0, %1, %2, %3) :
-@@ -1336,6 +1339,7 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
- 		 * primary opcode which do not have emulation support yet.
- 		 */
- 		return -1;
-+	}
- #endif
- 
- 	case 7:		/* mulli */
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
