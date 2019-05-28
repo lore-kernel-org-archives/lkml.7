@@ -2,109 +2,98 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE063C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC34420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Oy9FRep8";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Oy9FRep8"
+	by mail.kernel.org (Postfix) with ESMTP id ED7EF208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfE1MoP (ORCPT
+        id S1727564AbfE1Moq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:44:15 -0400
-Received: from node.akkea.ca ([192.155.83.177]:43058 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbfE1MoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:44:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id E243F4E204D;
-        Tue, 28 May 2019 12:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1559047454; bh=QN+qfKJcn+iv1NFE027lzE+60Gd7OUBp8PBwf368hi8=;
-        h=From:To:Cc:Subject:Date;
-        b=Oy9FRep8jiYbF4jTd69IGkP9IGgMBqpY3UZZJFMP+XDZ3fyJxL955yZWPDnGcdu2M
-         Rg8y7rcdRF/t540YZGn5wCWnQf0T/Gs7dfsrbFmi4QkaIhGAdqGb9AUEdfDr4ctaLT
-         m5vxS/3uQUUiAfvV8+QLEocdB0vHGP4RJpGnGec4=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lTtIYmYKCoKZ; Tue, 28 May 2019 12:44:14 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id EE1D04E204B;
-        Tue, 28 May 2019 12:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1559047454; bh=QN+qfKJcn+iv1NFE027lzE+60Gd7OUBp8PBwf368hi8=;
-        h=From:To:Cc:Subject:Date;
-        b=Oy9FRep8jiYbF4jTd69IGkP9IGgMBqpY3UZZJFMP+XDZ3fyJxL955yZWPDnGcdu2M
-         Rg8y7rcdRF/t540YZGn5wCWnQf0T/Gs7dfsrbFmi4QkaIhGAdqGb9AUEdfDr4ctaLT
-         m5vxS/3uQUUiAfvV8+QLEocdB0vHGP4RJpGnGec4=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Carlo Caione <ccaione@baylibre.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Tue, 28 May 2019 08:44:46 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:52268 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727209AbfE1Mop (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:44:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TStMl0v_1559047475;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TStMl0v_1559047475)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 28 May 2019 20:44:42 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        shakeelb@google.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the svns power key
-Date:   Tue, 28 May 2019 05:44:06 -0700
-Message-Id: <20190528124406.29730-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
+Subject: [RFC PATCH 0/3] Make deferred split shrinker memcg aware
+Date:   Tue, 28 May 2019 20:44:21 +0800
+Message-Id: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the snvs power key.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I got some reports from our internal application team about memcg OOM.
+Even though the application has been killed by oom killer, there are
+still a lot THPs reside, page reclaim doesn't reclaim them at all.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 45d10d8efd14..5f93fd9662ae 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/reset/imx8mq-reset.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include "dt-bindings/input/input.h"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
-@@ -463,6 +464,14 @@
- 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
- 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 				};
-+
-+				snvs_pwrkey: snvs-powerkey {
-+					compatible = "fsl,sec-v4.0-pwrkey";
-+					regmap = <&snvs>;
-+					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+					linux,keycode = <KEY_POWER>;
-+					wakeup-source;
-+				};
- 			};
- 
- 			clk: clock-controller@30380000 {
--- 
-2.17.1
+Some investigation shows they are on deferred split queue, memcg direct
+reclaim can't shrink them since THP deferred split shrinker is not memcg
+aware, this may cause premature OOM in memcg.  The issue can be
+reproduced easily by the below test:
 
+$ cgcreate -g memory:thp
+$ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+$ cgexec -g memory:thp ./transhuge-stress 4000
+
+transhuge-stress comes from kernel selftest.
+
+It is easy to hit OOM, but there are still a lot THP on the deferred split
+queue, memcg direct reclaim can't touch them since the deferred split
+shrinker is not memcg aware.
+
+Convert deferred split shrinker memcg aware by introducing per memcg deferred
+split queue.  The THP should be on either per node or per memcg deferred
+split queue if it belongs to a memcg.  When the page is immigrated to the
+other memcg, it will be immigrated to the target memcg's deferred split queue
+too.
+
+And, move deleting THP from deferred split queue in page free before memcg
+uncharge so that the page's memcg information is available.
+
+Reuse the second tail page's deferred_list for per memcg list since the same
+THP can't be on multiple deferred split queues at the same time.
+
+Remove THP specific destructor since it is not used anymore with memcg aware
+THP shrinker (Please see the commit log of patch 2/3 for the details).
+
+Make deferred split shrinker not depend on memcg kmem since it is not slab.
+It doesn't make sense to not shrink THP even though memcg kmem is disabled.
+
+With the above change the test demonstrated above doesn't trigger OOM anymore
+even though with cgroup.memory=nokmem.
+
+
+Yang Shi (3):
+      mm: thp: make deferred split shrinker memcg aware
+      mm: thp: remove THP destructor
+      mm: shrinker: make shrinker not depend on memcg kmem
+
+ include/linux/huge_mm.h    |  24 +++++++++
+ include/linux/memcontrol.h |   6 +++
+ include/linux/mm.h         |   3 --
+ include/linux/mm_types.h   |   7 ++-
+ include/linux/shrinker.h   |   3 +-
+ mm/huge_memory.c           | 181 ++++++++++++++++++++++++++++++++++++++++++++++++-------------------
+ mm/memcontrol.c            |  20 ++++++++
+ mm/page_alloc.c            |   3 --
+ mm/swap.c                  |   4 ++
+ mm/vmscan.c                |  27 +++-------
+ 10 files changed, 198 insertions(+), 80 deletions(-)
