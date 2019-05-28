@@ -2,241 +2,134 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4067C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC9CC282E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652252075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 03:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683512075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 04:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="oZlJBcFb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYxqyHL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfE1D5K (ORCPT
+        id S1726921AbfE1EBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 23:57:10 -0400
-Received: from mail-eopbgr00043.outbound.protection.outlook.com ([40.107.0.43]:27529
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727320AbfE1D5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 23:57:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rNTTpDaBV+L1WQDFqkLzktRT4PA6c+zW4ENTFpr/QHo=;
- b=oZlJBcFbwt+CPWEb4WHfJx4KEPNQKhuU5XhLQiVi5tm7XwFLLxHvXXdSP0sX3N8zr1soDap2cil1YfncCT/LdzIXQ/vIKygtYKyDF8mI+gJhDfhvYzT6+JOru3oh5eRJuoevzIUQpjz1AXano/Z2AwtUpvXP7XDCOWzuwJPxTeg=
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
- DB7PR08MB3580.eurprd08.prod.outlook.com (20.177.120.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Tue, 28 May 2019 03:57:05 +0000
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6]) by DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6%5]) with mapi id 15.20.1943.016; Tue, 28 May 2019
- 03:57:05 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH v3 2/2] drm/komeda: Adds limitation check for AFBC wide block
- not support Rot90
-Thread-Topic: [PATCH v3 2/2] drm/komeda: Adds limitation check for AFBC wide
- block not support Rot90
-Thread-Index: AQHVFQlp8DSCdMwQwU+BK11BmdEQSw==
-Date:   Tue, 28 May 2019 03:57:05 +0000
-Message-ID: <1559015784-18998-3-git-send-email-lowry.li@arm.com>
-References: <1559015784-18998-1-git-send-email-lowry.li@arm.com>
-In-Reply-To: <1559015784-18998-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0197.apcprd02.prod.outlook.com
- (2603:1096:201:21::33) To DB7PR08MB3530.eurprd08.prod.outlook.com
- (2603:10a6:10:49::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 038a82eb-c56a-46e8-67d8-08d6e3208c12
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR08MB3580;
-x-ms-traffictypediagnostic: DB7PR08MB3580:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <DB7PR08MB3580A8BFF6F7486566E96A589F1E0@DB7PR08MB3580.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(366004)(39860400002)(136003)(189003)(199004)(8936002)(6486002)(2501003)(81166006)(81156014)(6436002)(71200400001)(6512007)(86362001)(305945005)(5660300002)(486006)(66066001)(36756003)(478600001)(7736002)(8676002)(71190400001)(50226002)(53936002)(2201001)(316002)(6636002)(2906002)(54906003)(66476007)(66556008)(66446008)(2616005)(73956011)(186003)(26005)(68736007)(446003)(476003)(256004)(25786009)(3846002)(6116002)(11346002)(99286004)(52116002)(386003)(6506007)(102836004)(55236004)(72206003)(76176011)(14454004)(66946007)(110136005)(64756008)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3580;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BGkpDZHmYt9CV4WD9pC+AKzTE30c2QNyKbWQbXiH3sl73DmZXzUr0/NjmSd0Iju0hcsl85FaW9Ufy/Icq7bb9FduRoxTPlRbrKpaIiRjSURtctN8gl4xOagMFUUQq7RJkQK7XNMLpKI4nKoVZBYz8O14RcNRHIyCNx/ANn055Qo598CTAJMyRie0u+FEYJxne4lJ9dW5A/+ObSx8MBenJRNHmZCbTG6ur0F0K4T8obxuBnpPrKw3htrODM2O9GDq1eM1LYjTsy2OhnLQdtxP2Tik5QQCvbe6qrqOXdEVsEycaGsSKgWXx/5L388O8414AmBD6OGefQUNtbDy1hLROOBI3otliclC0zHm4QdEz0L+gwwsBgGSDHdZNQZq6Hmcj/75P8lqEFNiwMBMieY03sdgeHQOIcXBa50G7gSH4ww=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 28 May 2019 00:01:37 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50822 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfE1EBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 00:01:37 -0400
+Received: by mail-it1-f195.google.com with SMTP id a186so2083412itg.0;
+        Mon, 27 May 2019 21:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zjUv3nPJ7HnSKnPAy37kFrlpSs1ndqPhpkQ4GDIU1O0=;
+        b=dYxqyHL+477TUHLXPK+2QfGw9r+JCnOqa53WiAbkxKKaEMeuwCy/UPmSB6nmb1Yj0u
+         KYlMf472gcxrD/BVM+E2Fw1j8twcWAr6KH847JOZEM7CdQjxVZqk+UwHwcydvYTQihHw
+         1eVUzMCebp70Z3chp9dNlI37XG0C+K6IbUIlCjUErvNo30/rcTpaPWU2X/hepgupxX9v
+         eg0qbdtPpVcsCP0ubWSPUBAR9tvlRdwNEOj571H0dbSa9GGc8KLVlmOjHMACTls76zB2
+         M/vkSGTkAXLQRonpLVck6/RXxbouWdn+7Hq+OiYEo5bSBMlgnTHA8YBIL2QwuOFKzivq
+         aOCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zjUv3nPJ7HnSKnPAy37kFrlpSs1ndqPhpkQ4GDIU1O0=;
+        b=j6JRXss75a6aDllzdaQy+UElvPZLmp+LrMlAfKwDljyiF7tSGEk3VCV9NGnQ2W171j
+         qQNNDFHkxqsyQk8XSwjRTMDUjhYKIJbgaQgkWTQm2mcyp9roeyX7ASh3WGzaeQHBGCEu
+         TM++F2OOQu0EWgn4Y4pipS5hnjxHwt62tEtlwNm+yTEQMCCWlgCK+R/dpI6r7C8HR1Bw
+         d71E/uCyJjrne2pkCaDTks6hr9SyoSpzfX5MYv7WKhBumPsHXYL3WZmmJYOljaH6he8d
+         BMx9EiuMlpUC/qmiQS23G1Pgju8Gb8UATUW0x+t6VLpEwpmLb5fURtLk+mVG7fSHWr9n
+         WBUw==
+X-Gm-Message-State: APjAAAX4ykW2D14htVs8OKLsOytv23wrDdpd6oW/jQk61rdBMowAeQ72
+        EcPQTHQHYe5JUdrQ6uxKNPBrO02SlCuWQn31DWs=
+X-Google-Smtp-Source: APXvYqy1mxn99so8vKfCz+Sf4gW32dGBxlzGt3ZTO7PZqd3wa9GEtU6jcUUCHFFmtBRz/O38JAC4wzmV/MuC9K94Zcw=
+X-Received: by 2002:a24:190e:: with SMTP id b14mr1588278itb.15.1559016096130;
+ Mon, 27 May 2019 21:01:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 038a82eb-c56a-46e8-67d8-08d6e3208c12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 03:57:05.0127
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3580
+References: <20190527225521.5884-1-shawn@anastas.io>
+In-Reply-To: <20190527225521.5884-1-shawn@anastas.io>
+From:   Oliver <oohall@gmail.com>
+Date:   Tue, 28 May 2019 14:01:24 +1000
+Message-ID: <CAOSf1CFFyz0YNqdpd5r44MaBV449yoK3WOMBZ1mpgZ=judNfDQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/3] Allow custom PCI resource alignment on pseries
+To:     Shawn Anastasio <shawn@anastas.io>
+Cc:     linux-pci@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        xyjxie@linux.vnet.ibm.com, rppt@linux.ibm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkxvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkiIDxMb3dyeS5MaUBhcm0uY29t
-Pg0KDQpLb21lZGEgc2VyaWVzIGhhcmR3YXJlIGRvZXNuJ3Qgc3VwcG9ydCBSb3Q5MCBmb3IgQUZC
-QyB3aWRlIGJsb2NrLiBTbw0KYWRkIGxpbWl0YXRpb24gY2hlY2sgdG8gcmVqZWN0IGl0IGlmIHN1
-Y2ggY29uZmlndXJhdGlvbiBoYXMgYmVlbiBwb3N0ZWQuDQoNClNpZ25lZC1vZmYtYnk6IExvd3J5
-IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGxvd3J5LmxpQGFybS5jb20+DQotLS0NCiBkcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgICAgICAgfCAxNSAr
-KysrKysrKysrKysrKysNCiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Zv
-cm1hdF9jYXBzLmMgICAgfCAgNyArKysrKystDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
-ZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5oICAgIHwgIDggKysrKysrKy0NCiAuLi4vZ3B1L2RybS9h
-cm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMgICAgfCAxOCArKysrKysrKyst
-LS0tLS0tLS0NCiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVm
-ZmVyLmggICAgfCAgNSArKystLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
-ZGFfcGlwZWxpbmVfc3RhdGUuYyB8ICA4ICsrKysrKystDQogZHJpdmVycy9ncHUvZHJtL2FybS9k
-aXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYyAgICAgIHwgIDIgKy0NCiA3IGZpbGVzIGNoYW5n
-ZWQsIDQ4IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2Rldi5jIGIvZHJpdmVycy9n
-cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2Rldi5jDQppbmRleCAxYzkxNGY4Li40
-NTYzYzJhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9k
-NzEvZDcxX2Rldi5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3
-MS9kNzFfZGV2LmMNCkBAIC00OTQsMTEgKzQ5NCwyNiBAQCBzdGF0aWMgaW50IGQ3MV9lbnVtX3Jl
-c291cmNlcyhzdHJ1Y3Qga29tZWRhX2RldiAqbWRldikNCiAJe19fSFdfSUQoNiwgNyksCTAvKkRS
-TV9GT1JNQVRfWVVWNDIwXzEwQklUKi8sIDEsCVJJQ0gsCVJvdF9BTExfSF9WLAlMWVRfTk0sIEFG
-Ql9USH0sDQogfTsNCiANCitzdGF0aWMgYm9vbCBkNzFfZm9ybWF0X21vZF9zdXBwb3J0ZWQoY29u
-c3Qgc3RydWN0IGtvbWVkYV9mb3JtYXRfY2FwcyAqY2FwcywNCisJCQkJICAgICB1MzIgbGF5ZXJf
-dHlwZSwgdTY0IG1vZGlmaWVyLCB1MzIgcm90KQ0KK3sNCisJdWludDY0X3QgbGF5b3V0ID0gbW9k
-aWZpZXIgJiBBRkJDX0ZPUk1BVF9NT0RfQkxPQ0tfU0laRV9NQVNLOw0KKw0KKwlpZiAoKGxheW91
-dCA9PSBBRkJDX0ZPUk1BVF9NT0RfQkxPQ0tfU0laRV8zMng4KSAmJg0KKwkgICAgZHJtX3JvdGF0
-aW9uXzkwX29yXzI3MChyb3QpKSB7DQorCQlEUk1fREVCVUdfQVRPTUlDKCJENzEgZG9lc24ndCBz
-dXBwb3J0IFJPVDkwIGZvciBXQi1BRkJDLlxuIik7DQorCQlyZXR1cm4gZmFsc2U7DQorCX0NCisN
-CisJcmV0dXJuIHRydWU7DQorfQ0KKw0KIHN0YXRpYyB2b2lkIGQ3MV9pbml0X2ZtdF90Ymwoc3Ry
-dWN0IGtvbWVkYV9kZXYgKm1kZXYpDQogew0KIAlzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBzX3Rh
-YmxlICp0YWJsZSA9ICZtZGV2LT5mbXRfdGJsOw0KIA0KIAl0YWJsZS0+Zm9ybWF0X2NhcHMgPSBk
-NzFfZm9ybWF0X2NhcHNfdGFibGU7DQorCXRhYmxlLT5mb3JtYXRfbW9kX3N1cHBvcnRlZCA9IGQ3
-MV9mb3JtYXRfbW9kX3N1cHBvcnRlZDsNCiAJdGFibGUtPm5fZm9ybWF0cyA9IEFSUkFZX1NJWkUo
-ZDcxX2Zvcm1hdF9jYXBzX3RhYmxlKTsNCiB9DQogDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZm9ybWF0X2NhcHMuYyBiL2RyaXZlcnMvZ3B1
-L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Zvcm1hdF9jYXBzLmMNCmluZGV4IGIyMTk1
-MTQuLmNkNGQ5ZjUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
-ZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
-YXkva29tZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5jDQpAQCAtNzQsNyArNzQsOCBAQA0KIH07DQog
-DQogYm9vbCBrb21lZGFfZm9ybWF0X21vZF9zdXBwb3J0ZWQoc3RydWN0IGtvbWVkYV9mb3JtYXRf
-Y2Fwc190YWJsZSAqdGFibGUsDQotCQkJCSB1MzIgbGF5ZXJfdHlwZSwgdTMyIGZvdXJjYywgdTY0
-IG1vZGlmaWVyKQ0KKwkJCQkgdTMyIGxheWVyX3R5cGUsIHUzMiBmb3VyY2MsIHU2NCBtb2RpZmll
-ciwNCisJCQkJIHUzMiByb3QpDQogew0KIAljb25zdCBzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBz
-ICpjYXBzOw0KIA0KQEAgLTg1LDYgKzg2LDEwIEBAIGJvb2wga29tZWRhX2Zvcm1hdF9tb2Rfc3Vw
-cG9ydGVkKHN0cnVjdCBrb21lZGFfZm9ybWF0X2NhcHNfdGFibGUgKnRhYmxlLA0KIAlpZiAoIShj
-YXBzLT5zdXBwb3J0ZWRfbGF5ZXJfdHlwZXMgJiBsYXllcl90eXBlKSkNCiAJCXJldHVybiBmYWxz
-ZTsNCiANCisJaWYgKHRhYmxlLT5mb3JtYXRfbW9kX3N1cHBvcnRlZCkNCisJCXJldHVybiB0YWJs
-ZS0+Zm9ybWF0X21vZF9zdXBwb3J0ZWQoY2FwcywgbGF5ZXJfdHlwZSwgbW9kaWZpZXIsDQorCQkJ
-CQkJICAgcm90KTsNCisNCiAJcmV0dXJuIHRydWU7DQogfQ0KIA0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Zvcm1hdF9jYXBzLmggYi9kcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mb3JtYXRfY2Fwcy5oDQppbmRl
-eCA5NmRlMjJlLi4zODFlODczIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
-bGF5L2tvbWVkYS9rb21lZGFfZm9ybWF0X2NhcHMuaA0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2Fy
-bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZm9ybWF0X2NhcHMuaA0KQEAgLTcxLDEwICs3MSwxNSBA
-QCBzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBzIHsNCiAgKg0KICAqIEBuX2Zvcm1hdHM6IHRoZSBz
-aXplIG9mIGZvcm1hdF9jYXBzIGxpc3QuDQogICogQGZvcm1hdF9jYXBzOiBmb3JtYXRfY2FwcyBs
-aXN0Lg0KKyAqIEBmb3JtYXRfbW9kX3N1cHBvcnRlZDogT3B0aW9uYWwuIFNvbWUgSFcgbWF5IGhh
-dmUgc3BlY2lhbCByZXF1aXJlbWVudHMgb3INCisgKiBsaW1pdGF0aW9ucyB3aGljaCBjYW4gbm90
-IGJlIGRlc2NyaWJlZCBieSBmb3JtYXRfY2FwcywgdGhpcyBmdW5jIHN1cHBseSBIVw0KKyAqIHRo
-ZSBhYmlsaXR5IHRvIGRvIHRoZSBmdXJ0aGVyIEhXIHNwZWNpZmljIGNoZWNrLg0KICAqLw0KIHN0
-cnVjdCBrb21lZGFfZm9ybWF0X2NhcHNfdGFibGUgew0KIAl1MzIgbl9mb3JtYXRzOw0KIAljb25z
-dCBzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBzICpmb3JtYXRfY2FwczsNCisJYm9vbCAoKmZvcm1h
-dF9tb2Rfc3VwcG9ydGVkKShjb25zdCBzdHJ1Y3Qga29tZWRhX2Zvcm1hdF9jYXBzICpjYXBzLA0K
-KwkJCQkgICAgIHUzMiBsYXllcl90eXBlLCB1NjQgbW9kaWZpZXIsIHUzMiByb3QpOw0KIH07DQog
-DQogZXh0ZXJuIHU2NCBrb21lZGFfc3VwcG9ydGVkX21vZGlmaWVyc1tdOw0KQEAgLTEwMCw2ICsx
-MDUsNyBAQCB1MzIgKmtvbWVkYV9nZXRfbGF5ZXJfZm91cmNjX2xpc3Qoc3RydWN0IGtvbWVkYV9m
-b3JtYXRfY2Fwc190YWJsZSAqdGFibGUsDQogdm9pZCBrb21lZGFfcHV0X2ZvdXJjY19saXN0KHUz
-MiAqZm91cmNjX2xpc3QpOw0KIA0KIGJvb2wga29tZWRhX2Zvcm1hdF9tb2Rfc3VwcG9ydGVkKHN0
-cnVjdCBrb21lZGFfZm9ybWF0X2NhcHNfdGFibGUgKnRhYmxlLA0KLQkJCQkgdTMyIGxheWVyX3R5
-cGUsIHUzMiBmb3VyY2MsIHU2NCBtb2RpZmllcik7DQorCQkJCSB1MzIgbGF5ZXJfdHlwZSwgdTMy
-IGZvdXJjYywgdTY0IG1vZGlmaWVyLA0KKwkJCQkgdTMyIHJvdCk7DQogDQogI2VuZGlmDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVi
-dWZmZXIuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1l
-YnVmZmVyLmMNCmluZGV4IGQwZTcxM2EuLjVmNjNkZWMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5jDQorKysgYi9kcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5jDQpAQCAt
-MjQwLDIwICsyNDAsMjAgQEAgc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqDQogfQ0KIA0KIC8qIGlm
-IHRoZSBmYiBjYW4gYmUgc3VwcG9ydGVkIGJ5IGEgc3BlY2lmaWMgbGF5ZXIgKi8NCi1ib29sIGtv
-bWVkYV9mYl9pc19sYXllcl9zdXBwb3J0ZWQoc3RydWN0IGtvbWVkYV9mYiAqa2ZiLCB1MzIgbGF5
-ZXJfdHlwZSkNCitib29sIGtvbWVkYV9mYl9pc19sYXllcl9zdXBwb3J0ZWQoc3RydWN0IGtvbWVk
-YV9mYiAqa2ZiLCB1MzIgbGF5ZXJfdHlwZSwNCisJCQkJICB1MzIgcm90KQ0KIHsNCiAJc3RydWN0
-IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSAma2ZiLT5iYXNlOw0KIAlzdHJ1Y3Qga29tZWRhX2RldiAq
-bWRldiA9IGZiLT5kZXYtPmRldl9wcml2YXRlOw0KLQljb25zdCBzdHJ1Y3Qga29tZWRhX2Zvcm1h
-dF9jYXBzICpjYXBzOw0KIAl1MzIgZm91cmNjID0gZmItPmZvcm1hdC0+Zm9ybWF0Ow0KIAl1NjQg
-bW9kaWZpZXIgPSBmYi0+bW9kaWZpZXI7DQorCWJvb2wgc3VwcG9ydGVkOw0KIA0KLQljYXBzID0g
-a29tZWRhX2dldF9mb3JtYXRfY2FwcygmbWRldi0+Zm10X3RibCwgZm91cmNjLCBtb2RpZmllcik7
-DQotCWlmICghY2FwcykNCi0JCXJldHVybiBmYWxzZTsNCisJc3VwcG9ydGVkID0ga29tZWRhX2Zv
-cm1hdF9tb2Rfc3VwcG9ydGVkKCZtZGV2LT5mbXRfdGJsLCBsYXllcl90eXBlLA0KKwkJCQkJCWZv
-dXJjYywgbW9kaWZpZXIsIHJvdCk7DQorCWlmICghc3VwcG9ydGVkKQ0KKwkJRFJNX0RFQlVHX0FU
-T01JQygiTGF5ZXIgVFlQRTogJWQgZG9lc24ndCBzdXBwb3J0IGZiIEZNVDogJXMuXG4iLA0KKwkJ
-CWxheWVyX3R5cGUsIGtvbWVkYV9nZXRfZm9ybWF0X25hbWUoZm91cmNjLCBtb2RpZmllcikpOw0K
-IA0KLQlpZiAoIShjYXBzLT5zdXBwb3J0ZWRfbGF5ZXJfdHlwZXMgJiBsYXllcl90eXBlKSkNCi0J
-CXJldHVybiBmYWxzZTsNCi0NCi0JcmV0dXJuIHRydWU7DQorCXJldHVybiBzdXBwb3J0ZWQ7DQog
-fQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRh
-X2ZyYW1lYnVmZmVyLmggYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9mcmFtZWJ1ZmZlci5oDQppbmRleCBlM2JhYjBkLi42Y2JiMmY2IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuaA0KKysr
-IGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIu
-aA0KQEAgLTM1LDkgKzM1LDEwIEBAIHN0cnVjdCBrb21lZGFfZmIgew0KIA0KIHN0cnVjdCBkcm1f
-ZnJhbWVidWZmZXIgKg0KIGtvbWVkYV9mYl9jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRldiwg
-c3RydWN0IGRybV9maWxlICpmaWxlLA0KLQkJIGNvbnN0IHN0cnVjdCBkcm1fbW9kZV9mYl9jbWQy
-ICptb2RlX2NtZCk7DQorCQljb25zdCBzdHJ1Y3QgZHJtX21vZGVfZmJfY21kMiAqbW9kZV9jbWQp
-Ow0KIGRtYV9hZGRyX3QNCiBrb21lZGFfZmJfZ2V0X3BpeGVsX2FkZHIoc3RydWN0IGtvbWVkYV9m
-YiAqa2ZiLCBpbnQgeCwgaW50IHksIGludCBwbGFuZSk7DQotYm9vbCBrb21lZGFfZmJfaXNfbGF5
-ZXJfc3VwcG9ydGVkKHN0cnVjdCBrb21lZGFfZmIgKmtmYiwgdTMyIGxheWVyX3R5cGUpOw0KK2Jv
-b2wga29tZWRhX2ZiX2lzX2xheWVyX3N1cHBvcnRlZChzdHJ1Y3Qga29tZWRhX2ZiICprZmIsIHUz
-MiBsYXllcl90eXBlLA0KKwkJdTMyIHJvdCk7DQogDQogI2VuZGlmDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRl
-LmMNCmluZGV4IDM0NzM3YzAuLjA0MmQ0ZDcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-YXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQorKysgYi9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQpAQCAt
-Mjc0LDYgKzI3NCwxMSBAQCBzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lX3N0YXRlICoNCiAJCSAgICAg
-ICBzdHJ1Y3Qga29tZWRhX3BsYW5lX3N0YXRlICprcGxhbmVfc3QsDQogCQkgICAgICAgc3RydWN0
-IGtvbWVkYV9kYXRhX2Zsb3dfY2ZnICpkZmxvdykNCiB7DQorCXN0cnVjdCBrb21lZGFfZmIgKmtm
-YiA9IHRvX2tmYihrcGxhbmVfc3QtPmJhc2UuZmIpOw0KKw0KKwlpZiAoIWtvbWVkYV9mYl9pc19s
-YXllcl9zdXBwb3J0ZWQoa2ZiLCBsYXllci0+bGF5ZXJfdHlwZSwgZGZsb3ctPnJvdCkpDQorCQly
-ZXR1cm4gLUVJTlZBTDsNCisNCiAJaWYgKCFpbl9yYW5nZSgmbGF5ZXItPmhzaXplX2luLCBkZmxv
-dy0+aW5fdykpIHsNCiAJCURSTV9ERUJVR19BVE9NSUMoInNyY193OiAlZCBpcyBvdXQgb2YgcmFu
-Z2UuXG4iLCBkZmxvdy0+aW5fdyk7DQogCQlyZXR1cm4gLUVJTlZBTDsNCkBAIC0zNTksNyArMzY0
-LDggQEAgc3RydWN0IGtvbWVkYV9waXBlbGluZV9zdGF0ZSAqDQogCXN0cnVjdCBrb21lZGFfbGF5
-ZXJfc3RhdGUgKnN0Ow0KIAlpbnQgaTsNCiANCi0JaWYgKCFrb21lZGFfZmJfaXNfbGF5ZXJfc3Vw
-cG9ydGVkKGtmYiwgd2JfbGF5ZXItPmxheWVyX3R5cGUpKQ0KKwlpZiAoIWtvbWVkYV9mYl9pc19s
-YXllcl9zdXBwb3J0ZWQoa2ZiLCB3Yl9sYXllci0+bGF5ZXJfdHlwZSwNCisJCQkJCSAgZGZsb3ct
-PnJvdCkpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCiAJY19zdCA9IGtvbWVkYV9jb21wb25lbnRf
-Z2V0X3N0YXRlX2FuZF9zZXRfdXNlcigmd2JfbGF5ZXItPmJhc2UsDQpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYyBiL2RyaXZlcnMv
-Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMNCmluZGV4IGM5ZjM3ZmYu
-Ljc5OGVlMjQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
-L2tvbWVkYV9wbGFuZS5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
-L2tvbWVkYV9wbGFuZS5jDQpAQCAtMjE2LDcgKzIxNiw3IEBAIHN0YXRpYyB2b2lkIGtvbWVkYV9w
-bGFuZV9yZXNldChzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSkNCiAJdTMyIGxheWVyX3R5cGUgPSBr
-cGxhbmUtPmxheWVyLT5sYXllcl90eXBlOw0KIA0KIAlyZXR1cm4ga29tZWRhX2Zvcm1hdF9tb2Rf
-c3VwcG9ydGVkKCZtZGV2LT5mbXRfdGJsLCBsYXllcl90eXBlLA0KLQkJCQkJICAgZm9ybWF0LCBt
-b2RpZmllcik7DQorCQkJCQkgICBmb3JtYXQsIG1vZGlmaWVyLCAwKTsNCiB9DQogDQogc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkcm1fcGxhbmVfZnVuY3Mga29tZWRhX3BsYW5lX2Z1bmNzID0gew0KLS0g
-DQoxLjkuMQ0KDQo=
+On Tue, May 28, 2019 at 8:56 AM Shawn Anastasio <shawn@anastas.io> wrote:
+>
+> Hello all,
+>
+> This patch set implements support for user-specified PCI resource
+> alignment on the pseries platform for hotplugged PCI devices.
+> Currently on pseries, PCI resource alignments specified with the
+> pci=resource_alignment commandline argument are ignored, since
+> the firmware is in charge of managing the PCI resources. In the
+> case of hotplugged devices, though, the kernel is in charge of
+> configuring the resources and should obey alignment requirements.
+
+Are you using hotplug to work around SLOF (the OF we use under qemu)
+not aligning BARs to 64K? It looks like there is a commit in SLOF to
+fix that (https://git.qemu.org/?p=SLOF.git;a=commit;f=board-qemu/slof/pci-phb.fs;h=1903174472f8800caf50c959b304501b4c01153c).
+
+> The current behavior of ignoring the alignment for hotplugged devices
+> results in sub-page BARs landing between page boundaries and
+> becoming un-mappable from userspace via the VFIO framework.
+> This issue was observed on a pseries KVM guest with hotplugged
+> ivshmem devices.
+
+> With these changes, users can specify an appropriate
+> pci=resource_alignment argument on boot for devices they wish to use
+> with VFIO.
+>
+> In the future, this could be extended to provide page-aligned
+> resources by default for hotplugged devices, similar to what is done
+> on powernv by commit 382746376993 ("powerpc/powernv: Override
+> pcibios_default_alignment() to force PCI devices to be page aligned").
+
+Can we make aligning the BARs to PAGE_SIZE the default behaviour? The
+BAR assignment process is complex enough as-is so I'd rather we didn't
+add another platform hack into the mix.
+
+> Feedback is appreciated.
+>
+> Thanks,
+> Shawn
+>
+> Shawn Anastasio (3):
+>   PCI: Introduce pcibios_ignore_alignment_request
+>   powerpc/64: Enable pcibios_after_init hook on ppc64
+>   powerpc/pseries: Allow user-specified PCI resource alignment after
+>     init
+>
+>  arch/powerpc/include/asm/machdep.h     |  6 ++++--
+>  arch/powerpc/kernel/pci-common.c       |  9 +++++++++
+>  arch/powerpc/kernel/pci_64.c           |  4 ++++
+>  arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
+>  drivers/pci/pci.c                      |  9 +++++++--
+>  5 files changed, 46 insertions(+), 4 deletions(-)
+>
+> --
+> 2.20.1
+>
