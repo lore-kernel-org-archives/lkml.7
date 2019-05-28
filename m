@@ -2,121 +2,112 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE64C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A487C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 998DC21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3978A21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABzrEBdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfE1HRv (ORCPT
+        id S1727422AbfE1HSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:17:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56130 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfE1HRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:17:51 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8EA04D05DC1A8EE71882;
-        Tue, 28 May 2019 15:17:31 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 28 May
- 2019 15:17:25 +0800
-Subject: Re: [PATCH v2 2/2] staging: erofs: fix i_blocks calculation
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190528023147.94117-2-gaoxiang25@huawei.com>
- <20190528023602.178923-1-gaoxiang25@huawei.com>
- <fe0ff7bb-b576-f949-d57a-2892d116b22f@huawei.com>
- <20190528065709.GY31203@kadam>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <cfcdc928-f9c4-a172-15a2-2faeca62f826@huawei.com>
-Date:   Tue, 28 May 2019 15:16:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Tue, 28 May 2019 03:18:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40860 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1HS3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:18:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 15so1534443wmg.5;
+        Tue, 28 May 2019 00:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hsG2/zYumWx3hY65ej4oXZediJF1qu78qDJMfDhrSGM=;
+        b=ABzrEBdweesg7BndzuAEo0nRLZOwj9lrM8O2hMPb5IyDAUcr5cI47/l4dpwMOUH9RP
+         bAun4ymYEC4R44X4AtZKm1T/W31PqbaUBsgrxMBKADhYOI/m7491GD+/fcBM4atMBbtX
+         293wyUp+c9wpzcRbj+g5hGbjI7sn9hhMLk+DNrBrk8H6Q5XhrvML0BIPygVlxQUv7Sv0
+         oSf6Ntgs9YfYWBagnLgfF6mUBTtrYjkTW823DZJgcvM/5vQRj73RYk/XkH0Jpw+fC2L2
+         JOxsbbWzkCrRGvKreMOUljtEXWp04YvUNoufxVLio4+lfQ7ok213KAmJ/FX0caJeNJPu
+         dzFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hsG2/zYumWx3hY65ej4oXZediJF1qu78qDJMfDhrSGM=;
+        b=l/V6VjawoNQ2vesOMX7TEXhbyQwZrUNgDg829M3NtgIgb9tfOMstSmX4l7CW95f0Pc
+         TK9qwUw5HK5e9Sd4XtCShlr1U45ZNOU5/zzLH/Yzhj3+Y00GVlWWeaN35IhIYnvkRKqW
+         ob7d8h0CZwQ2S4B3uVhJvjWyjE3wtDobAkeJDBy7FDCP65BQfmsk+CmX2AnzyMsVUAmS
+         SXUTu9FQQJon9EUGcdk6afFpcsCur4n7yTpL33YIcX+D8kpns/bN0+dHOAZFBoU03OQm
+         l2rrLbSKnvZAWCXrNeO0rFY0coxlABFDZbpXEOnYNlWK6722UEor8NDO6fPFHgFqjS1Q
+         45pw==
+X-Gm-Message-State: APjAAAUKHeBmO2Dd0lqbfXfvFAFFgqNfRJlEOfLxp/djOUEELPVVxBSm
+        NXlPT5WvVfhDJMiitkzhcaQ=
+X-Google-Smtp-Source: APXvYqwcijxLmR34ejs007LYXyjQMcx72BLEgwp53GTb5X+Liw4tP86uPu+aLBOoYHfwCZqd7XT+Xw==
+X-Received: by 2002:a1c:f102:: with SMTP id p2mr1901471wmh.126.1559027907362;
+        Tue, 28 May 2019 00:18:27 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b18sm11810751wrx.75.2019.05.28.00.18.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 00:18:25 -0700 (PDT)
+Date:   Tue, 28 May 2019 09:18:24 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+Cc:     XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= input: alps-fix
+ the issue alps cs19 trackstick do not work.
+Message-ID: <20190528071824.jimhixhtsynzwixe@pali>
+References: <20190527094422.7558-1-sliuuxiaonxiao@gmail.com>
+ <20190527100913.sgxrjrmphsjfmcdb@pali>
+ <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528065709.GY31203@kadam>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OSBPR01MB4855F61AE28B883CDD87F781DA1E0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-
-On 2019/5/28 14:57, Dan Carpenter wrote:
-> On Tue, May 28, 2019 at 11:02:12AM +0800, Chao Yu wrote:
->> On 2019/5/28 10:36, Gao Xiang wrote:
->>> For compressed files, i_blocks should not be calculated
->>> by using i_size. i_u.compressed_blocks is used instead.
->>>
->>> In addition, i_blocks was miscalculated for non-compressed
->>> files previously, fix it as well.
->>>
->>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
->>> ---
->>> change log v2:
->>>  - fix description in commit message
->>>  - fix to 'inode->i_blocks = nblks << LOG_SECTORS_PER_BLOCK'
->>>
->>> Thanks,
->>> Gao Xiang
->>>
->>>  drivers/staging/erofs/inode.c | 14 ++++++++++++--
->>>  1 file changed, 12 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
->>> index 8da144943ed6..6e67e018784e 100644
->>> --- a/drivers/staging/erofs/inode.c
->>> +++ b/drivers/staging/erofs/inode.c
->>> @@ -20,6 +20,7 @@ static int read_inode(struct inode *inode, void *data)
->>>  	struct erofs_vnode *vi = EROFS_V(inode);
->>>  	struct erofs_inode_v1 *v1 = data;
->>>  	const unsigned int advise = le16_to_cpu(v1->i_advise);
->>> +	erofs_blk_t nblks = 0;
->>>  
->>>  	vi->data_mapping_mode = __inode_data_mapping(advise);
->>>  
->>> @@ -60,6 +61,10 @@ static int read_inode(struct inode *inode, void *data)
->>>  			le32_to_cpu(v2->i_ctime_nsec);
->>>  
->>>  		inode->i_size = le64_to_cpu(v2->i_size);
->>> +
->>> +		/* total blocks for compressed files */
->>> +		if (vi->data_mapping_mode == EROFS_INODE_LAYOUT_COMPRESSION)
->>> +			nblks = v2->i_u.compressed_blocks;
->>
->> Xiang,
->>
->> It needs to use le32_to_cpu(). ;)
->>
+On Tuesday 28 May 2019 01:37:14 Xiaoxiao Liu wrote:
+> Add Saito-san.
 > 
-> I wonder it the kbuild bot is going to send an email about that...
+> Hi Hui,
+> Does it mean that your device (reported to kernel) sends only trackstick packets and not touchpad?
+>    	-> Yes.
 
-Not yet, and v3 fixes it. I have no idea whether kbuild checks all version
-or just the latest version...
+Ok, I think this answers all questions.
 
-> Hopefully these sorts of bugs get detected with Sparse CF=-D__CHECK_ENDIAN__
+So your patch is not correct as it registers "fake" touchpad device even
+there is no touchpad at all.
 
-Yes, I missed this case by mistake.
-These two patches are small, I didn't do too many static checking expect for checkpatch.pl.
-v3 seems fine and I will take care later, Thanks for kindly suggestion. :)
+You should fix your patch to not register touchpad input device, in your
+case it should register only trackstick device. I suggest to add some
+flag which would indicate such device (e.g. ALPS_ONLY_TRACKSTICK).
 
-Thanks,
-Gao Xiang
+Also currently kernel exports following names when device has both
+trackstick and touchpad: "DualPoint Stick" and "DualPoint TouchPad".
+And it exports name "GlidePoint" for touchpad-only device. So to be
+consistent you need to also modify this code for trackstick-only device.
 
-> 
-> regards,
-> dan carpenter
-> 
+-- 
+Pali Rohár
+pali.rohar@gmail.com
