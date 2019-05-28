@@ -1,127 +1,131 @@
 Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0192C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57066C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A247E2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:32:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="teL/Qmkd"
+	by mail.kernel.org (Postfix) with ESMTP id 27C3F21726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559039586;
+	bh=SEpCZqrY7Uczo6uQKWN9Jm6Cnozp+DZUsUBrRuMBkZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fc3+g8u8LBPurhkzsvpdINrqVhqpiY0LA8bzRxI1hPLsuXQALU6sCT8zRDnDz+vyS
+	 osJ33Q5eWALaxoiZ7bEEt80X3h9mL4M7Nsr0liqCKZl/lmONAclXxyN60E0SY41u51
+	 MH2LqdlU2FyXH7FD2ll2FgKRe9UOSfdcn4EnS6+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfE1Kc6 (ORCPT
+        id S1726682AbfE1KdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:32:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34426 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfE1Kc5 (ORCPT
+        Tue, 28 May 2019 06:33:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32787 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfE1KdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:32:57 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SAWir0024513;
-        Tue, 28 May 2019 05:32:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559039564;
-        bh=McxG6qXOV6aRVRHUHTwTeJqgXjBwYLgFzusvSu8toTI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=teL/QmkddaZ+JzvBP0kX3Zm+hUB2eEut+CxRyf1eliUYVy2PPqICzksu1aHHx7X2O
-         Fk4/Aanx/SAHDeW89PaVQ3q7A+XPnUWEp/I9coniBud2KIaEQO7WNpW9KfghmQ7NHn
-         JOfGXAu1q/V2yvRu7cxIdjt6xOETDdqQDOoiSKR0=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SAWiAY015404
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 05:32:44 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 05:32:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 05:32:43 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SAWfN4034016;
-        Tue, 28 May 2019 05:32:41 -0500
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
- <20190527112122.GJ5447@atomide.com>
- <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
- <20190528093952.GM5447@atomide.com>
- <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
- <20190528101847.GN5447@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <c2eaee25-a0d3-2632-fdea-3a81ac7085af@ti.com>
-Date:   Tue, 28 May 2019 13:32:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 06:33:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so11224446pfk.0;
+        Tue, 28 May 2019 03:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=krgMSnEVy69yoxUL6+FT3pw/Wcuo2yl9vll0sSUGOww=;
+        b=fvqIxpSuquyR4BpSeT5rFWP7ErwjkwJUnGWEyfvDGxz5/uVzNBZyAiZUKtfnK9WSVm
+         H92bdTd0JQq+meoxC/A7cAvM+LRpEpouDQA/Ac2uSJKJPNOzcy4CzGpjewrZGPEG8LHo
+         QASLekxEG4UQqoj3JFCRy87xxphDAuDtN6Oti3uuco3K8+nygGPwAroVtyo+eM4hURtU
+         7CKlX+ZoGV4ttxIBpBpa2Bh1pNKOMsk2eIWVef+vUVuyz6yF4SY+KQkJXIyCcdZc0eFm
+         hCLhXnKVp4N6ZqzWkdxWMrxBHfFRe0MCOaSf3xL6YVgnU31InTxQImkkGN5E4ypIlJXY
+         YTGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=krgMSnEVy69yoxUL6+FT3pw/Wcuo2yl9vll0sSUGOww=;
+        b=j0TkbW6r7Wjap+iM8ApUgWr7NdH3eBffSj8/WSZGSou7MJtsMKNNDKjQx1KKmNSR8F
+         hUBPTCAErCttntXaeIE7fUxzKkKpx0ov0p4MmxsLFxaGYvxezGhjibFcK0SyaXegka8k
+         3VGFgWg1jZqZsvG4YIHSxPAtVPrrLEHRXCz+pc0NvPvuDaKr66mzJtE43DofzZaxBp3r
+         GvhnnpHNviaW13YOl87xtXHQ/veEKGbm76Vcss3FPIiqBZHZO5qvWmwTMfu+K3VUBm/V
+         qOLygQz8vqIEBKc6jpXu/J9blEXQZgxNTK/PRrJVZ9+53YSOdv02sI1sHUnL7JaMKkrU
+         F1sA==
+X-Gm-Message-State: APjAAAV0XSewLXRyiMGcwjEAuboD6pa/wZKblJO/RVtuR2VHHi/EdO6I
+        tIEUPPhKcIH6010YIkbod2Y=
+X-Google-Smtp-Source: APXvYqxc+D0LEa1va91F68TbeYEmhMPMKJQZ9LgkOR5KNw+jdrb9GAAsS0CDZJbmp0XQkrYEFbL5rA==
+X-Received: by 2002:a62:2c17:: with SMTP id s23mr112033131pfs.51.1559039583555;
+        Tue, 28 May 2019 03:33:03 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id m7sm8226184pff.44.2019.05.28.03.32.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 28 May 2019 03:33:02 -0700 (PDT)
+Date:   Tue, 28 May 2019 19:32:56 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528103256.GA9199@google.com>
+References: <20190521025533.GH10039@google.com>
+ <20190521062628.GE32329@dhcp22.suse.cz>
+ <20190527075811.GC6879@google.com>
+ <20190527124411.GC1658@dhcp22.suse.cz>
+ <20190528032632.GF6879@google.com>
+ <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190528101847.GN5447@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528090821.GU1658@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/2019 13:18, Tony Lindgren wrote:
-
->> This change lets me boot. I don't know that's the correct place, though:
->>
->> diff --git a/arch/arm/boot/dts/am5728.dtsi b/arch/arm/boot/dts/am5728.dtsi
->> index 82e5427ef6a9..c778f9a86b3a 100644
->> --- a/arch/arm/boot/dts/am5728.dtsi
->> +++ b/arch/arm/boot/dts/am5728.dtsi
->> @@ -31,3 +31,7 @@
->> &atl_tm {
->>         status = "disabled";
->> };
->> +
->> +&timer12 {
->> +       status = "disabled";
->> +};
+On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > if we went with the per vma fd approach then you would get this
+> > > > > feature automatically because map_files would refer to file backed
+> > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > >
+> > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > so map_anon wouldn't be helpful.
+> > > 
+> > > Without chiming on whether the filter option is a good idea, I'd like
+> > > to suggest that providing an efficient binary interfaces for pulling
+> > > memory map information out of processes.  Some single-system-call
+> > > method for retrieving a binary snapshot of a process's address space
+> > > complete with attributes (selectable, like statx?) for each VMA would
+> > > reduce complexity and increase performance in a variety of areas,
+> > > e.g., Android memory map debugging commands.
+> > 
+> > I agree it's the best we can get *generally*.
+> > Michal, any opinion?
 > 
-> OK we should disable it at the target-module level though. Interesting
-> that reading the revision register works with the above, or maybe you
-> still get some warning?
+> I am not really sure this is directly related. I think the primary
+> question that we have to sort out first is whether we want to have
+> the remote madvise call process or vma fd based. This is an important
+> distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> so far unfortunately.
 
-I don't see anything odd in the boot log with the above change. At least 
-no kernel WARNs, nor anything with grepping "timer", "err", or "warn".
-
-I just verified with clean 5.2-rc2, that it doesn't boot, and with the 
-above change, boots.
-
->> My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
->> config.
-> 
-> Strange that this is not affecting other x15? I think timer12 would
-> be blocked on HS devices though?
-
-I don't know... I can't believe my x15 would be unique =). Can it be 
-something in the kernel config? u-boot?
-
-Peter should have the same A3. Peter, can you try with my config?
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+With current usecase, it's per-process API with distinguishable anon/file
+but thought it could be easily extended later for each address range
+operation as userspace getting smarter with more information.
