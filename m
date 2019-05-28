@@ -2,93 +2,91 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023CFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BECC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61512075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D47120883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfE1IFu (ORCPT
+        id S1727702AbfE1IGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:05:50 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59121 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726305AbfE1IFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:05:50 -0400
-Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VX7Dhgcf2sDWyVX7Ehc36i; Tue, 28 May 2019 10:05:48 +0200
-Subject: Re: [PATCH v7 1/3] media: cec: expose HDMI connector to CEC dev
- mapping
-To:     Dariusz Marcinkiewicz <darekm@google.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190521105203.154043-1-darekm@google.com>
- <16889839-b4e9-9984-2e36-5f07ceb7d7f2@xs4all.nl>
- <CALFZZQH7-mzRZbji1w-UwRLdw6c8+CThn0e96oG8E2Eq1ivANQ@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8e575d0b-4765-ae54-019e-0fab522fe1d5@xs4all.nl>
-Date:   Tue, 28 May 2019 10:05:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:06:17 -0400
+Received: from mga14.intel.com ([192.55.52.115]:43455 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfE1IGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:06:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 01:06:15 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 28 May 2019 01:06:12 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 28 May 2019 11:06:12 +0300
+Date:   Tue, 28 May 2019 11:06:12 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ajay Gupta <ajayg@nvidia.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: ccg: fix memory leak in do_flash
+Message-ID: <20190528080612.GC7167@kuha.fi.intel.com>
+References: <20190527181050.GA31496@embeddedor>
+ <20190528080452.GB7167@kuha.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CALFZZQH7-mzRZbji1w-UwRLdw6c8+CThn0e96oG8E2Eq1ivANQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfI0zvfm6RKxnUHwaDkefRQt5vwHDdDDmoCixtWbm0IBhnZfpUCNXMA/QPOHKUnNfBG3JPyE/VCOe722VEDiFBEEXIZ6Tgb+vDqJs/J4tYtu+04oASdlw
- +ftguDsGm49XsUWVyyhcoYf3TFKARSYRiNbQKfK0mNVlekk+DQyCYnSnDLVqaU3cXg/16wHpcDRPz53Mvt6Dp0/iEx5YaK36EyvfFyyjRjFf3gpZxuPLKHOT
- k2vzUlFDjeBrhOhjUZKsHRRtJJU2+g+EBpKtaHMiozRfq5StoHXGFnSs8NwefHUKq1QHI7RkoiUVNVcbADq9vE6m6Get+QBOP+3ELcA0CZkuwSZLULhcE/uN
- 8tkVGtMo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528080452.GB7167@kuha.fi.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 9:53 AM, Dariusz Marcinkiewicz wrote:
-> On Fri, May 24, 2019 at 11:21 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> Hi Dariusz,
->>
->> I did some more testing with the Khadas VIM2 and found another problem,
->> something that will, unfortunately, require some redesign.
->>
-> ...
->>
->> The other problem is in the CEC driver: it creates the CEC device as
->> soon as the HDMI device is found (cec_notifier_parse_hdmi_phandle).
->>
->> But that doesn't mean that the HDMI device also had registered itself
->> as a CEC notifier.
->>
->> Until now that never mattered: as long as the HDMI device was found
->> the CEC adapter would function fine, it would just have no physical
->> address until so notified by the HDMI device once it registered its
->> CEC notifier.
->>
->> But if we want to have valid connector info during the lifetime of
->> the CEC adapter, then this no longer works.
->>
->> I'm not entirely sure how to handle this.
->>
->> Another issue here is that when the HDMI driver removes the notifier,
->> then it should also zero the connector info. Remember that both the
->> HDMI and the CEC drivers can be loaded and unloaded independently from
->> one another.
->>
-> Given all of the above, what do you think about coming back to the v1
-> of the patch, where a connector info could be set on an adapter at any
-> time and an event was used to notify userland when that happened? That
-> approach seems to cover all the scenarios mentioned above.
+On Tue, May 28, 2019 at 11:04:52AM +0300, Heikki Krogerus wrote:
+> On Mon, May 27, 2019 at 01:10:50PM -0500, Gustavo A. R. Silva wrote:
+> > In case memory resources for *fw* were successfully allocated,
+> > release them before return.
+> > 
+> > Addresses-Coverity-ID: 1445499 ("Resource leak")
+> > Fixes: 5c9ae5a87573 ("usb: typec: ucsi: ccg: add firmware flashing support")
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Acked-by: Heikki Krogerus <heikki.krogerus@gmail.com>
 
-That's just hiding the real problems :-)
+That email address does not actually exist :-/. Sorry.
 
-I hope to spend some time on CEC tomorrow and I'll get back to you then.
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Regards,
 
-	Hans
+> > ---
+> >  drivers/usb/typec/ucsi/ucsi_ccg.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> > index 9d46aa9e4e35..bf63074675fc 100644
+> > --- a/drivers/usb/typec/ucsi/ucsi_ccg.c
+> > +++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
+> > @@ -862,8 +862,10 @@ static int do_flash(struct ucsi_ccg *uc, enum enum_flash_mode mode)
+> >  
+> >  not_signed_fw:
+> >  	wr_buf = kzalloc(CCG4_ROW_SIZE + 4, GFP_KERNEL);
+> > -	if (!wr_buf)
+> > -		return -ENOMEM;
+> > +	if (!wr_buf) {
+> > +		err = -ENOMEM;
+> > +		goto release_fw;
+> > +	}
+> >  
+> >  	err = ccg_cmd_enter_flashing(uc);
+> >  	if (err)
+> > -- 
+> > 2.21.0
+
+-- 
+heikki
