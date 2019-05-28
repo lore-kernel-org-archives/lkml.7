@@ -2,108 +2,253 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C9C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B36C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523F12075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9C32075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfE1JAX (ORCPT
+        id S1726749AbfE1JCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:00:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48568 "EHLO mx1.redhat.com"
+        Tue, 28 May 2019 05:02:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56828 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfE1JAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:00:23 -0400
+        id S1726418AbfE1JCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:02:06 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 089A67EBDC;
-        Tue, 28 May 2019 09:00:23 +0000 (UTC)
-Received: from krava (unknown [10.43.17.32])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 82835611B1;
-        Tue, 28 May 2019 09:00:21 +0000 (UTC)
-Date:   Tue, 28 May 2019 11:00:20 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com
-Subject: Re: [PATCH 2/3] perf stat: Support per-die aggregation
-Message-ID: <20190528090020.GG27906@krava>
-References: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
- <1558644081-17738-2-git-send-email-kan.liang@linux.intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3AF07C05D266;
+        Tue, 28 May 2019 09:01:55 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A1815611BB;
+        Tue, 28 May 2019 09:01:38 +0000 (UTC)
+Date:   Tue, 28 May 2019 11:01:35 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, aik@ozlabs.ru,
+        Zhengxiao.zx@alibaba-inc.com, shuangtai.tst@alibaba-inc.com,
+        qemu-devel@nongnu.org, eauger@redhat.com, yi.l.liu@intel.com,
+        ziye.yang@intel.com, mlevitsk@redhat.com, pasic@linux.ibm.com,
+        felipe@nutanix.com, changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v3 2/2] drm/i915/gvt: export migration_version to mdev
+ sysfs for Intel vGPU
+Message-ID: <20190528110135.222aa24e.cohuck@redhat.com>
+In-Reply-To: <20190527034437.31594-1-yan.y.zhao@intel.com>
+References: <20190527034155.31473-1-yan.y.zhao@intel.com>
+        <20190527034437.31594-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558644081-17738-2-git-send-email-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 09:00:23 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 28 May 2019 09:02:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:41:20PM -0700, kan.liang@linux.intel.com wrote:
+On Sun, 26 May 2019 23:44:37 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-SNIP
+> This feature implements the migration_version attribute for Intel's vGPU
+> mdev devices.
+> 
+> migration_version attribute is rw.
+> It's used to check migration compatibility for two mdev devices of the
+> same mdev type.
+> migration_version string is defined by vendor driver and opaque to
+> userspace.
+> 
+> For Intel vGPU of gen8 and gen9, the format of migration_version string
+> is:
+>   <vendor id>-<device id>-<vgpu type>-<software version>.
+> 
+> For future platforms, the format of migration_version string is to be
+> expanded to include more meta data to identify Intel vGPUs for live
+> migration compatibility check
+> 
+> For old platforms, and for GVT not supporting vGPU live migration
+> feature, -ENODEV is returned on read(2)/write(2) of migration_version
+> attribute.
+> For vGPUs running old GVT who do not expose migration_version
+> attribute, live migration is regarded as not supported for those vGPUs.
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> c: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> 
+> ---
+> v3:
+> 1. renamed version to migration_version
+> (Christophe de Dinechin, Cornelia Huck, Alex Williamson)
+> 2. instead of generating migration version strings each time, storing
+> them in vgpu types generated during initialization.
+> (Zhenyu Wang, Cornelia Huck)
+> 3. replaced multiple snprintf to one big snprintf in
+> intel_gvt_get_vfio_migration_version()
+> (Dr. David Alan Gilbert)
+> 4. printed detailed error log
+> (Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
+> 5. incorporated <software version> into migration_version string
+> (Alex Williamson)
+> 6. do not use ifndef macro to switch off migration_version attribute
+> (Zhenyu Wang)
+> 
+> v2:
+> 1. removed 32 common part of version string
+> (Alex Williamson)
+> 2. do not register version attribute for GVT not supporting live
+> migration.(Cornelia Huck)
+> 3. for platforms out of gen8, gen9, return -EINVAL --> -ENODEV for
+> incompatible. (Cornelia Huck)
+> ---
+>  drivers/gpu/drm/i915/gvt/Makefile            |   2 +-
+>  drivers/gpu/drm/i915/gvt/gvt.c               |  39 +++++
+>  drivers/gpu/drm/i915/gvt/gvt.h               |   5 +
+>  drivers/gpu/drm/i915/gvt/migration_version.c | 167 +++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/vgpu.c              |  13 +-
+>  5 files changed, 223 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/gpu/drm/i915/gvt/migration_version.c
+> 
 
->  		if (cpu_map__build_core_map(evsel_list->cpus, &stat_config.aggr_map)) {
->  			perror("cannot build core map");
-> @@ -936,21 +957,41 @@ static int perf_env__get_socket(struct cpu_map *map, int idx, void *data)
->  	return cpu == -1 ? -1 : env->cpu[cpu].socket_id;
+(...)
+
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
+> index 43f4242062dd..be2980e8ac75 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.c
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
+> @@ -105,14 +105,53 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
+>  		       type->weight);
 >  }
 >  
-> +static int perf_env__get_die(struct cpu_map *map, int idx, void *data)
+> +static ssize_t migration_version_show(struct kobject *kobj, struct device *dev,
+> +		char *buf)
+
+Indentation looks a bit odd? (Also below.)
+
 > +{
-> +	struct perf_env *env = data;
-> +	int die = -1, cpu = perf_env__get_cpu(env, map, idx);
+> +	struct intel_vgpu_type *type;
+> +	void *gvt = kdev_to_i915(dev)->gvt;
 > +
-> +	if (cpu != -1) {
-> +		/*
-> +		 * Encode socket in upper 8 bits
-> +		 * die_id is relative to socket,
-> +		 * we need a global id. So we combine
-> +		 * socket + die id
-> +		 */
-> +		die = (env->cpu[cpu].socket_id << 8) |
-> +		      (env->cpu[cpu].die_id & 0xff);
+> +	type = intel_gvt_find_vgpu_type(gvt, kobject_name(kobj));
+> +	if (!type || !type->migration_version) {
+> +		gvt_err("Does not support migraion on type %s. Please search previous detailed log\n",
+
+s/migraion/migration/ (also below)
+
+Or reword to "Migration not supported on type %s."?
+
+> +				kobject_name(kobj));
+> +		return -ENODEV;
 > +	}
 > +
-> +	return die;
+> +	return snprintf(buf, strlen(type->migration_version) + 2,
+> +			"%s\n", type->migration_version);
 > +}
 > +
->  static int perf_env__get_core(struct cpu_map *map, int idx, void *data)
->  {
->  	struct perf_env *env = data;
->  	int core = -1, cpu = perf_env__get_cpu(env, map, idx);
+> +static ssize_t migration_version_store(struct kobject *kobj, struct device *dev,
+> +		const char *buf, size_t count)
+> +{
+> +	int ret = 0;
+> +	struct intel_vgpu_type *type;
+> +	void *gvt = kdev_to_i915(dev)->gvt;
+> +
+> +	type = intel_gvt_find_vgpu_type(gvt, kobject_name(kobj));
+> +	if (!type || !type->migration_version) {
+> +		gvt_err("Does not support migraion on type %s. Please search previous detailed log\n",
+> +				kobject_name(kobj));
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = intel_gvt_check_vfio_migration_version(gvt,
+> +			type->migration_version, buf);
+> +
+> +	return (ret < 0 ? ret : count);
+> +}
+> +
+>  static MDEV_TYPE_ATTR_RO(available_instances);
+>  static MDEV_TYPE_ATTR_RO(device_api);
+>  static MDEV_TYPE_ATTR_RO(description);
+> +static MDEV_TYPE_ATTR_RW(migration_version);
 >  
->  	if (cpu != -1) {
-> -		int socket_id = env->cpu[cpu].socket_id;
-> -
->  		/*
-> -		 * Encode socket in upper 16 bits
-> -		 * core_id is relative to socket, and
-> +		 * Encode socket in upper 24 bits
-> +		 * encode die id in upper 16 bits
-> +		 * core_id is relative to socket and die,
->  		 * we need a global id. So we combine
-> -		 * socket + core id.
-> +		 * socket + die id + core id
->  		 */
-> -		core = (socket_id << 16) | (env->cpu[cpu].core_id & 0xffff);
-> +		core = (env->cpu[cpu].socket_id << 24) |
-> +		       (env->cpu[cpu].die_id << 16) |
-> +		       (env->cpu[cpu].core_id & 0xffff);
+>  static struct attribute *gvt_type_attrs[] = {
+>  	&mdev_type_attr_available_instances.attr,
+>  	&mdev_type_attr_device_api.attr,
+>  	&mdev_type_attr_description.attr,
+> +	&mdev_type_attr_migration_version.attr,
+>  	NULL,
+>  };
 
-I guess we're still safe with 1 byte for socket and die id,
-but could we still check the size fits, and warn and bail
-out otherwise?
+(...)
 
-thanks,
-jirka
+> +char *
+> +intel_gvt_get_vfio_migration_version(struct intel_gvt *gvt,
+> +		const char *vgpu_type)
+> +{
+> +	int cnt = 0;
+> +	struct drm_i915_private *dev_priv = gvt->dev_priv;
+> +	char *version = NULL;
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9)) {
+> +		gvt_err("Local hardware does not support migration on %d\n",
+> +				INTEL_INFO(dev_priv)->gen);
+> +		return NULL;
+> +	}
+> +
+> +	if (GVT_VFIO_MIGRATION_SOFTWARE_VERSION == INV_SOFTWARE_VERSION) {
+> +		gvt_err("Local GVT does not support migration\n");
+> +		return NULL;
+> +	}
+> +
+> +	version = kzalloc(MIGRATION_VERSION_TOTAL_LEN, GFP_KERNEL);
+> +
+> +	if (unlikely(!version)) {
+> +		gvt_err("memory allocation failed when get local migraiton version\n");
+
+s/migraiton/migration/
+
+Or "cannot allocate memory for local migration version"?
+
+> +		return NULL;
+> +	}
+> +
+> +	/* vendor id + device id + vgpu type + software version */
+> +	cnt = snprintf(version, MIGRATION_VERSION_TOTAL_LEN, PRINTF_FORMAT,
+> +			PCI_VENDOR_ID_INTEL,
+> +			INTEL_DEVID(dev_priv),
+> +			vgpu_type,
+> +			GVT_VFIO_MIGRATION_SOFTWARE_VERSION);
+> +
+> +	if (cnt)
+> +		return version;
+> +
+> +	gvt_err("string generation failed when get local migration version\n");
+> +	return NULL;
+> +}
+
+(...)
+
+Only some nitpicks from me, but I'm not really familiar with this
+driver. Overall, this looks sane to me, so have an
+
+Acked-by: Cornelia Huck <cohuck@redhat.com>
