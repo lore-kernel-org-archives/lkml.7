@@ -2,114 +2,112 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51A1C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865EEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5BB2081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559056923;
-	bh=PalDUvKBMeq6uuZipz24GPUGFzG5XkO+thRy1zun59M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hW1p440S8/i+0SyFDvv/KD/kr8KzvhC2hxJOKMPeMH1iyFhIkjTtTR0Xf7+b5qu/H
-	 owNMDPAIAx9kXkhN/Y3fUCm77L9sl4xLyGKuDkrZ0AsSNW0mFMe8ikE6Vz4obiywAJ
-	 GXxJBoxOYuTMirHO25+kmsyOKUK8WFlzSFcN9YNk=
+	by mail.kernel.org (Postfix) with ESMTP id 6312B20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfE1PWC (ORCPT
+        id S1727470AbfE1PX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbfE1PWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:22:02 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8697220665;
-        Tue, 28 May 2019 15:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559056921;
-        bh=PalDUvKBMeq6uuZipz24GPUGFzG5XkO+thRy1zun59M=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=VziaK6AGw22sF91IPVjUlLI7s8SEbHlbbR1CSpa1YqBT8UxDZoOWojiMM3382H+JT
-         +MZcVPm1TwlQSpEFl0F1+rKWz7a9M3QCnT8QhNJXNH6pAr0zp3c4xRsuQ4szoKw6Am
-         aaStj644mgDbJhWmtR/8ipXC9RtNt1dVev24xfLI=
-Date:   Tue, 28 May 2019 17:21:56 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: "nosmt" breaks resuming from hibernation (was Re: [5.2-rc1 regression]:
- nvme vs. hibernation)
-In-Reply-To: <nycvar.YFH.7.76.1905271126480.1962@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.1905281709130.1962@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1905241706280.1962@cbobk.fhfr.pm> <20190524154429.GE15192@localhost.localdomain> <nycvar.YFH.7.76.1905250023380.1962@cbobk.fhfr.pm> <92a15981-dfdc-0ac9-72ee-920555a3c1a4@oracle.com>
- <nycvar.YFH.7.76.1905271126480.1962@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 28 May 2019 11:23:29 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:59407 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfE1PX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:23:29 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hVdwk-0005LO-Ez; Tue, 28 May 2019 09:23:26 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hVdwj-0000nk-MF; Tue, 28 May 2019 09:23:26 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian@brauner.io>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
+        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
+References: <20190526102612.6970-1-christian@brauner.io>
+Date:   Tue, 28 May 2019 10:23:21 -0500
+In-Reply-To: <20190526102612.6970-1-christian@brauner.io> (Christian Brauner's
+        message of "Sun, 26 May 2019 12:26:11 +0200")
+Message-ID: <87ef4i7gd2.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-XM-SPF: eid=1hVdwj-0000nk-MF;;;mid=<87ef4i7gd2.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX192bua1YZy3Dbuv7XOFCoNXo6ZmQQ/qw3c=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/2] fork: add clone6
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019, Jiri Kosina wrote:
+Christian Brauner <christian@brauner.io> writes:
 
-> > Looks this has been discussed in the past.
-> > 
-> > http://lists.infradead.org/pipermail/linux-nvme/2019-April/023234.html
-> > 
-> > I created a fix for a case but not good enough.
-> > 
-> > http://lists.infradead.org/pipermail/linux-nvme/2019-April/023277.html
-> 
-> That removes the warning, but I still seem to have ~1:1 chance of reboot 
-> (triple fault?) immediately after hibernation image is read from disk. 
+> This adds the clone6 system call.
+>
+> As mentioned several times already (cf. [7], [8]) here's the promised
+> patchset for clone6().
+>
+> We recently merged the CLONE_PIDFD patchset (cf. [1]). It took the last
+> free flag from clone().
+>
+> Independent of the CLONE_PIDFD patchset a time namespace has been discussed
+> at Linux Plumber Conference last year and has been sent out and reviewed
+> (cf. [5]). It is expected that it will go upstream in the not too distant
+> future. However, it relies on the addition of the CLONE_NEWTIME flag to
+> clone(). The only other good candidate - CLONE_DETACHED - is currently not
+> recycable as we have identified at least two large or widely used codebases
+> that currently pass this flag (cf. [2], [3], and [4]). Given that we
+> grabbed the last clone() flag we effectively blocked the time namespace
+> patchset. It just seems right that we unblock it again.
 
-[ some x86/PM folks added ]
+I am not certain just extending clone is the right way to go.
 
-I isolated this to 'nosmt' being present in the "outer" (resuming) kernel, 
-and am still not sure whether this is x86 issue or nvme/PCI/blk-mq issue.
+- Last I looked glibc does not support calling clone without creating
+  a stack first.  Which makes it unpleasant to support clone as a fork
+  with extra flags as container runtimes would appreciate.
 
-For the newcomers to this thread: on my thinkpad x270, 'nosmt' reliably 
-breaks resume from hibernation; after the image is read out from disk and 
-attempt is made to jump to the old kernel, machine reboots.
+- Tying namespace creation to process creation is unnecessary.
+  I admit both the time and the pid namespace actually need a new
+  process before you can use them, but the trick of having a namespace
+  for children and a namespace the current process uses seems to handle
+  that case nicely.
 
-I verified that it succesfully makes it to the point where restore_image() 
-is called from swsusp_arch_resume() (and verified that only BSP is alive 
-at that time), but the old kernel never comes back and triplefault-like 
-reboot happens.
+- There is cruft in clone current runtimes do not use.
+  The entire CSIGNAL mask. Also: CLONE_PARENT, CLONE_DETACHED.  And
+  probably one or two other bits that I am not remembering right now.
 
-It's sufficient to remove "nosmt" from the *resuming* kernel, and that 
-makes the issue go away (and we resume to the old kernel that has SMT 
-correctly disabled). So it has something to do with enabling & disabling 
-the siblings before we do the CR3 dance and jump to the old kernel.
+  It would probably make sense to make all of the old linux-thread
+  support optional so we can compile it out, and in a decade or two
+  get rid of it as unused code.
 
-I haven't yet been able to isolate this to being (or not being) relevant 
-to the pending nvme CQS warning above.
+Maybe some of this is time critical and doing everything in a single
+system call makes sense.  But I don't a few extra microseconds matters
+in container creation.  It feels to me like the road to better
+maintenance of the kernel would just be to move work out of clone.
 
-Any ideas how to debug this welcome. I haven't been able to reproduce it 
-in a VM, so it's either something specific to that machine in general, or 
-to nvme specifically.
+It certainly feels like we could implement all of the current
+clone functionality on top of a simpler clone that I have described.
 
-Dongli Zhang, could you please try hibernation with "nosmt" on the system 
-where you originally saw the initial pending CQS warning? Are you by any 
-chance seeing the issue as well?
+Perhaps we want sys_createns that like setns works on a single
+namespace at a time.
 
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Eric
