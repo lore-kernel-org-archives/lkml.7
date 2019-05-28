@@ -2,100 +2,130 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B0C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DA1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44302075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559026894;
-	bh=9OgRPFORAAbPUitsEkycLVF20n4Sq84GANMTevJR5fU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xn2KRtfXPpfG2XlWTdlYtDZeS/ymIfP6XhXQ+GeojT7oj0Eze8PSNW4ObJlKLMKSn
-	 Nq3oJV71niixwWG3l7Q0OP6lJA6PHQqyDmPF5qvi97Nb7cpxBf5melUZ+6TM2mErwj
-	 onqK1Q690GDMb6/We6R1iCttalkz84SrOZ0iQUVE=
+	by mail.kernel.org (Postfix) with ESMTP id C94A7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="BPOq3hZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfE1HBd (ORCPT
+        id S1727578AbfE1HCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:01:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50106 "EHLO mx1.suse.de"
+        Tue, 28 May 2019 03:02:10 -0400
+Received: from mail-eopbgr680077.outbound.protection.outlook.com ([40.107.68.77]:20708
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfE1HBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:01:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ACA3EAD7E;
-        Tue, 28 May 2019 07:01:31 +0000 (UTC)
-Date:   Tue, 28 May 2019 09:01:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v5 0/7] mm: reparent slab memory on cgroup removal
-Message-ID: <20190528070128.GM1658@dhcp22.suse.cz>
-References: <20190521200735.2603003-1-guro@fb.com>
- <20190522214347.GA10082@tower.DHCP.thefacebook.com>
- <20190522145906.60c9e70ac0ed7ee3918a124c@linux-foundation.org>
- <20190522222254.GA5700@castle>
+        id S1726203AbfE1HCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:02:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AxdnGrTkHNOZgkBxgA0glW5ekbVIta1MIx8jjVGV09U=;
+ b=BPOq3hZ6ml9Zr+9aXM+K+k2KIaI+GQkfO8BzH9s4MxuIQBZTD5vvpJmk/yzkwH64ghJJjMrvrAAKSRKdOM18hMXv6K1nAQl9AvGPWbVHGhHAx15sFng7TZwQwd1Nbg2p5yexnaPl67id6/TuJKGgs2nwEWpNEy8KS9Bk0vUPjCs=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3560.namprd03.prod.outlook.com (52.135.213.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.20; Tue, 28 May 2019 07:02:07 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
+ 07:02:07 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: stmmac: use dev_info() before netdev is
+ registered
+Thread-Topic: [PATCH net-next] net: stmmac: use dev_info() before netdev is
+ registered
+Thread-Index: AQHVFSNDwZ9fWQ9KOEG6EbFP/Z0S5Q==
+Date:   Tue, 28 May 2019 07:02:07 +0000
+Message-ID: <20190528145253.21b8abbc@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY1PR01CA0201.jpnprd01.prod.outlook.com (2603:1096:403::31)
+ To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e56f1351-25c6-47aa-2a32-08d6e33a657b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3560;
+x-ms-traffictypediagnostic: BYAPR03MB3560:
+x-microsoft-antispam-prvs: <BYAPR03MB356077961C059714EF5286B2ED1E0@BYAPR03MB3560.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1122;
+x-forefront-prvs: 00514A2FE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39850400004)(376002)(199004)(189003)(73956011)(5660300002)(66946007)(66476007)(1076003)(71190400001)(66556008)(478600001)(64756008)(66446008)(476003)(66066001)(2906002)(72206003)(54906003)(110136005)(71200400001)(14454004)(6436002)(81166006)(316002)(6486002)(86362001)(68736007)(305945005)(6512007)(81156014)(52116002)(7736002)(486006)(26005)(8676002)(99286004)(4326008)(186003)(53936002)(25786009)(50226002)(386003)(6506007)(3846002)(256004)(9686003)(6116002)(8936002)(102836004)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3560;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9u2giS+oMkZS8Mw5tJ3UYNsfna6lDBy3yEyXnYUFn3u0M0eVLoaOiP1ejfbQTmiWmDaEH+aoRCOfAq+/mk0taZLpAiYifzRtZOYKpS5dSwnZ3PTMDOQyL3aUHCwC+3qdo/AoW6pmAorZMTHI2ahU0jEvdlB8XsalWwefsx6Rit2NkTtNfo5wjrZI9fFiRAJE+a55iutveNnbd/IigXM+e5mANe+HSylhEKx34QK1Q1PIWdR4ty9Tr1DwZAFfiN16nQMaRstdQdElOj1+xOCl/WxSd70QScgikvjsEl2NCBtl1nB+C/WwvZYnb8AG67PgGPVA5uEUsuvJFhnuf/yL7vOkiYLUbS0LtUYA7Tt5fFzJ/pX/91rG8PGiERBl+uRrPR7NGItrTvwPapXQucXdKpU1taOjX/bbn5QuHsk8EHg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <377D233A793EE04789DE5F86CED96582@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522222254.GA5700@castle>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e56f1351-25c6-47aa-2a32-08d6e33a657b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 07:02:07.2381
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3560
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-05-19 22:23:01, Roman Gushchin wrote:
-> On Wed, May 22, 2019 at 02:59:06PM -0700, Andrew Morton wrote:
-> > On Wed, 22 May 2019 21:43:54 +0000 Roman Gushchin <guro@fb.com> wrote:
-> > 
-> > > Is this patchset good to go? Or do you have any remaining concerns?
-> > > 
-> > > It has been carefully reviewed by Shakeel; and also Christoph and Waiman
-> > > gave some attention to it.
-> > > 
-> > > Since commit 172b06c32b94 ("mm: slowly shrink slabs with a relatively")
-> > > has been reverted, the memcg "leak" problem is open again, and I've heard
-> > > from several independent people and companies that it's a real problem
-> > > for them. So it will be nice to close it asap.
-> > > 
-> > > I suspect that the fix is too heavy for stable, unfortunately.
-> > > 
-> > > Please, let me know if you have any issues that preventing you
-> > > from pulling it into the tree.
-> > 
-> > I looked, and put it on ice for a while, hoping to hear from
-> > mhocko/hannes.  Did they look at the earlier versions?
-> 
-> Johannes has definitely looked at one of early versions of the patchset,
-> and one of the outcomes was his own patchset about pushing memcg stats
-> up by the tree, which eliminated the need to deal with memcg stats
-> on kmem_cache reparenting.
-> 
-> The problem and the proposed solution have been discussed on latest LSFMM,
-> and I didn't hear any opposition. So I assume that Michal is at least
-> not against the idea in general. A careful code review is always welcome,
-> of course.
+Before the netdev is registered, calling netdev_info() will emit
+something as "(unnamed net device) (uninitialized)", looks confusing.
 
-I didn't get to review this properly (ETOOBUSY). This is a tricky area
-so a careful review is definitely due. I would really appreciate if
-Vladimir could have a look. I understand he is busy with other stuff but
-a highlevel review from him would be really helpful.
--- 
-Michal Hocko
-SUSE Labs
+Before this patch:
+[    3.155028] stmmaceth f7b60000.ethernet (unnamed net_device) (uninitiali=
+zed): device MAC address 52:1a:55:18:9e:9d
+
+After this patch:
+[    3.155028] stmmaceth f7b60000.ethernet: device MAC address 52:1a:55:18:=
+9e:9d
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/ne=
+t/ethernet/stmicro/stmmac/stmmac_main.c
+index 08022fbcb67a..7af083c29b36 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2167,8 +2167,8 @@ static void stmmac_check_ether_addr(struct stmmac_pri=
+v *priv)
+ 		stmmac_get_umac_addr(priv, priv->hw, priv->dev->dev_addr, 0);
+ 		if (!is_valid_ether_addr(priv->dev->dev_addr))
+ 			eth_hw_addr_random(priv->dev);
+-		netdev_info(priv->dev, "device MAC address %pM\n",
+-			    priv->dev->dev_addr);
++		dev_info(priv->device, "device MAC address %pM\n",
++			 priv->dev->dev_addr);
+ 	}
+ }
+=20
+--=20
+2.20.1
+
