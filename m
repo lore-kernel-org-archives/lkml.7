@@ -2,76 +2,91 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A4C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5CFC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8951C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559085842;
-	bh=cjihyfNS4yCB2h/Z4NzAtgFe9LPb9n/+Q0q+iL6WSXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xselDL/Rat62+sRof9j1CZgwxSM/fdDZNrXWJktwzhmYhs25+0skyhBFkKPcCpKYv
-	 WorZgePrYu+e73c2QCNTWxrPQGB0dSVpiMoF/6M6eKzMoxHtZynzz8kUDVmMBtVNfx
-	 YWAdW1rN0f2Y0K5o76jUFSh5jNf33gGhGHgAn5X4=
+	by mail.kernel.org (Postfix) with ESMTP id 66CEB20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ot3EWkd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfE1XYB (ORCPT
+        id S1727158AbfE1XYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfE1XYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:24:01 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC18C20B1F;
-        Tue, 28 May 2019 23:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559085840;
-        bh=cjihyfNS4yCB2h/Z4NzAtgFe9LPb9n/+Q0q+iL6WSXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cLpx3nCWUeMZyl1eVXl6udKfNsH8FmhlZZT/cXaMR2pc1o6lIagaM3Lj3qch/Ar1M
-         xA4yTgNkGZj78ynLOWPdHHpPyZ0YzDQ3NAH+G70otMatrG0GnClmgYoX5YSb4wLIpk
-         ant71oq3pIv8415gvM8x6l5E44ZtKgvrwOvBQvWs=
-Date:   Tue, 28 May 2019 16:24:00 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     richard.gong@linux.intel.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
-        atull@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sen.li@intel.com,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv4 2/4] firmware: add Intel Stratix10 remote system update
- driver
-Message-ID: <20190528232400.GB29225@kroah.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+        Tue, 28 May 2019 19:24:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45846 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbfE1XYE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 19:24:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t24so135834otl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 16:24:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HGPN9OjlN0u2vkYT7lUEXn5/y2a9ZsC+Dfozs38xwo0=;
+        b=Ot3EWkd25DfNtyqQZi2lKoCMywsWj1GEkyVsamx8IhpKmMYoQlNVtFXDsN5kzZ6ztV
+         G0G4l+Yn9BT/91zveLip+MqoiQ9WY7KdLEeUnxKqsGaf/8a6P6TCdXsDzggmJbd8BC7j
+         j7g/1ER+6QZ5ydhZ3Bf+DMekuCVU7XQ2krnuSQI+4HCJgoVYtDwKLQjR3UkiqRBl2ZBC
+         Hbgfr4g8WcFCgwSmqfiyN+oPogiE52ZKR9MwXWkiESYTJsOEtnnzFKKAjkloisXxqBPE
+         +CTyleolaoiiIlj62zgtnI49WL88oeZM7ei1tnil/DaLguKbl4ERfII14rmEY0DmU5Lo
+         55/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HGPN9OjlN0u2vkYT7lUEXn5/y2a9ZsC+Dfozs38xwo0=;
+        b=BYQPlaW8tBSYTY+bsUWEFCGBvy2qZWUjcxkHlopOqx8rFD+Nj0snEQvCmQf6nFRcYa
+         yk97cneq1UXVRy2tm7GO6mZd2LEFl0IH0xfovgxNmjN6OMmmmEzbT3p2eRRiKM49WRSU
+         vGHKvak6vBaNJOQHaHrADy9tn9ZdlaDz7GgoENoBKM4whHDtqLLwmZlWa2zgb38L5f10
+         hZ5VwvJ21vHIuruBnYAjgcTsxifS1XebxKZGwHKIMGPDJEfUshyrELGcBgNunZ6qeXsZ
+         eku4zYHFO9RRW1gLlFkWPlK4oPh1JMX6erMNNpyZJO9grY/BXEqYf+qJ5+lx08ry8rnK
+         gYqw==
+X-Gm-Message-State: APjAAAXSixCpGjJO7xbdy7u+7y5gHZrvCnD1PrJnJ/19h7Gn6BnGWldN
+        PCDDh1EdLL//I9CRMAsWcawmjOzagJFuypDpgUUSEw==
+X-Google-Smtp-Source: APXvYqzRVCXeGxin0Tw+MDHx9N4J9nIhwON+HiBvCivgZkw6Vu0lhpKmb1+NRC/UKwUe3iqj0TpzPBIsvDgNEbU7wmE=
+X-Received: by 2002:a9d:7f8b:: with SMTP id t11mr5793otp.110.1559085842981;
+ Tue, 28 May 2019 16:24:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+ <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <10418.1559084686@warthog.procyon.org.uk>
+In-Reply-To: <10418.1559084686@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 29 May 2019 01:23:36 +0200
+Message-ID: <CAG48ez2SAKbPeChAf06GMazMPPThFM+OR00abRZafAP7v+ptKw@mail.gmail.com>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com wrote:
-> +static int rsu_send_msg(struct stratix10_rsu_priv *priv,
-> +			enum stratix10_svc_command_code command,
-> +	unsigned long arg,
-> +	void (*callback)(struct stratix10_svc_client *client,
-> +			 struct stratix10_svc_cb_data *data))
+On Wed, May 29, 2019 at 1:04 AM David Howells <dhowells@redhat.com> wrote:
+> Jann Horn <jannh@google.com> wrote:
+> > It might make sense to redesign this stuff so that watches don't hold
+> > references on the object being watched.
+>
+> I explicitly made it hold a reference so that if you place a watch on an
+> automounted mount it stops it from expiring.
+>
+> Further, if I create a watch on something, *should* it be unmountable, just as
+> if I had a file open there or had chdir'd into there?
 
-Odd indentation for arg, and then callback.
-
-Why isn't callback a typedef to make this simpler to use?
-
-thanks,
-
-greg k-h
+I don't really know. I guess it depends on how it's being used? If
+someone decides to e.g. make a file browser that installs watches for
+a bunch of mountpoints for some fancy sidebar showing the device
+mounts on the system, or something like that, that probably shouldn't
+inhibit unmounting... I don't know if that's a realistic use case.
