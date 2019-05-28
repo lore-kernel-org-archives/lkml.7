@@ -2,110 +2,142 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5970DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F9DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345E3206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7EFA2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfE1PgD (ORCPT
+        id S1726852AbfE1PlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:36:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:52361 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfE1PgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:36:03 -0400
-Received: from excalibur.cnev.de ([194.8.209.98]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mr9O4-1greUz32BS-00oJRo; Tue, 28 May 2019 17:35:43 +0200
-Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
-        (envelope-from <merker@debian.org>)
-        id 1hVe8c-0001uJ-Ri; Tue, 28 May 2019 17:35:42 +0200
-Date:   Tue, 28 May 2019 17:35:42 +0200
-From:   Karsten Merker <merker@debian.org>
-To:     Loys Ollivier <lollivier@baylibre.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Testing the recent RISC-V DT patchsets
-Message-ID: <20190528153542.jfkkwycyc3vu6hld@excalibur.cnev.de>
-References: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com>
- <alpine.DEB.2.21.9999.1905280105110.20842@viisi.sifive.com>
- <86o93mpqbx.fsf@baylibre.com>
+        Tue, 28 May 2019 11:41:08 -0400
+Received: from foss.arm.com ([217.140.101.70]:59592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfE1PlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 11:41:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE9D7341;
+        Tue, 28 May 2019 08:41:06 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 027FD3F59C;
+        Tue, 28 May 2019 08:41:00 -0700 (PDT)
+Date:   Tue, 28 May 2019 16:40:58 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190528154057.GD32006@arrakis.emea.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190527143719.GA59948@MBP.local>
+ <20190528145411.GA709@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86o93mpqbx.fsf@baylibre.com>
-X-No-Archive: yes
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:q1RFbpS43fZk0cIEvnP3mp71E4gqF5+PmQXoFepr6Zzd9xwJRNx
- XZlPVk5Bwiu22vHbMzOpVPGOlsIrjuhRDwTzHdGXKQaOIM+P6XiM+enH/QqmGPecYntTJZU
- z2z9VpYwKAEn1BtqxRd0egnxVe42ZHuc8KoLlERu3/FPIyd452Mw16S7vIUwT6lVKXuXQfs
- Y2WXpbet5ildzafT72g2A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MlSVCLPxWJk=:iSdZjF3rN3lUWzuNAX4hpC
- 8E41MTvMzjQ7s71CIfK26w6NemSFWsZEsnJRGyurrm9IR8X34vRhgo+s8otFU3uPvmkd7N2Ia
- lcszkOZX8exczPdKO5Po9suy7YghTDfUGW6Lr5FItX1k8UClIRtz0/PUvUpaGzPMAYTh3hzWZ
- 8ji5iwfDOYxx529YKvy1oultMOtBaiaqtGXdwHYkD2UPRgUD6xZwuduYxxErGAKVSuz49T2do
- a5z9wSuDHJJV9XDPBaNQolGoGHuyZrYYngQLfgMOKDqlIRfBbBJZ7FnDCu8TWP7uqK/TdgKIQ
- ASEgjt1HRnPpCuZzn6Fskp2dyKCHnHwG5m+GHfUo7L0V9v1vPSvfQ8mc0q82/YNMlHQbg3qgI
- 5+Oqir23QukEHvrzwCTzaIyAffRtftp0+tQiYiokYU1T5Dm3LE5vxzN2XyzeNBF3o2++dWBxz
- bkX3jJ/tVrSK6n2tziepoMQQTKrL2eGSIIRr5LAdch82gGxF3w6OTA4h9cCd3TYRduwwcV/2W
- CWFMZg+NNYHXqbGtXy8sytP5+Y/WWsZ6ZOdpXCMc+djyY4/BRiqEnBq5xsRBqaS7ngyiknnG+
- zvfrWZvjfQv/0IumXrjQFytH2p2GP5KUXlLn0blz0/0QjrFjsH32t10+nEX9IDm0k2vzFo3rn
- H+vImuXSBqkBs5JCB1N9WSHfyLQqZpGGC8CXjTT/73qiWTWSs0EWrmkVWMnlp/6nKWn4wq12e
- T4eTtyxL15bq4VfHxXGvrHfvuW+8ClK0PzkOPg==
+In-Reply-To: <20190528145411.GA709@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 05:10:42PM +0200, Loys Ollivier wrote:
-> On Tue 28 May 2019 at 01:32, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On Tue, May 28, 2019 at 03:54:11PM +0100, Andrew Murray wrote:
+> On Mon, May 27, 2019 at 03:37:20PM +0100, Catalin Marinas wrote:
+> > On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
+> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > > pass tagged user pointers (with the top byte set to something else other
+> > > than 0x00) as syscall arguments.
+> > > 
+> > > This patch allows tagged pointers to be passed to the following memory
+> > > syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
+> > > mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
+> > > remap_file_pages, shmat and shmdt.
+> > > 
+> > > This is done by untagging pointers passed to these syscalls in the
+> > > prologues of their handlers.
+> > > 
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > 
+> > Actually, I don't think any of these wrappers get called (have you
+> > tested this patch?). Following commit 4378a7d4be30 ("arm64: implement
+> > syscall wrappers"), I think we have other macro names for overriding the
+> > sys_* ones.
 > 
-> > An update for those testing RISC-V patches: here's a new branch of 
-> > riscv-pk/bbl that doesn't try to read or modify the DT data at all, which 
-> > should be useful until U-Boot settles down.
-[...]
-> > Here is an Linux kernel branch with updated DT data that can be booted 
-> > with the above bootloader:
-> >
-> >    https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1-experimental
-> >
-> > A sample boot log follows, using a 'defconfig' build from that branch.  
-> 
-> Thanks Paul, I can confirm that it works.
-> 
-> Something is still unclear to myself.
-> Using FSBL + riscv-pk/bbl the linux kernel + device tree boots.
-> Neither FSBL nor riscv-pk/bbl are modifying the DT.
-> 
-> Using FSBL + OpenSBI + U-Boot the same kernel + device tree hangs on
-> running /init.
-> 
-> Would you have any pointer on what riscv-pk does that OpenSBI/U-boot doesn't ?
-> Or maybe it is the other way around - OpenSBI/U-boot does something that
-> extra that should not happen.
+> What is the value in adding these wrappers?
 
-Hello,
+Not much value, initially proposed just to keep the core changes small.
+I'm fine with moving them back in the generic code (but see below).
 
-I don't know which version of OpenSBI you are using, but there is
-a problem with the combination of kernel 5.2-rc1 and OpenSBI
-versions before commit
+I think another aspect is how we define the ABI. Is allowing tags to
+mlock() for example something specific to arm64 or would sparc ADI need
+the same? In the absence of other architectures defining such ABI, my
+preference would be to keep the wrappers in the arch code.
 
-  https://github.com/riscv/opensbi/commit/4e2cd478208531c47343290f15b577d40c82649c
+Assuming sparc won't implement untagged_addr(), we can place the macros
+back in the generic code but, as per the review here, we need to be more
+restrictive on where we allow tagged addresses. For example, if mmap()
+gets a tagged address with MAP_FIXED, is it expected to return the tag?
 
-that can result in a hang on executing init, so in case you
-should be using an older OpenSBI build that might be the source
-of the problem that you are experiencing.
+My thoughts on allowing tags (quick look):
 
-Regards,
-Karsten
+brk - no
+get_mempolicy - yes
+madvise - yes
+mbind - yes
+mincore - yes
+mlock, mlock2, munlock - yes
+mmap - no (we may change this with MTE but not for TBI)
+mmap_pgoff - not used on arm64
+mprotect - yes
+mremap - yes for old_address, no for new_address (on par with mmap)
+msync - yes
+munmap - probably no (mmap does not return tagged ptrs)
+remap_file_pages - no (also deprecated syscall)
+shmat, shmdt - shall we allow tagged addresses on shared memory?
+
+The above is only about the TBI ABI while ignoring hardware MTE. For the
+latter, we may want to change the mmap() to allow pre-colouring on page
+fault which means that munmap()/mprotect() should also support tagged
+pointers. Possibly mremap() as well but we need to decide whether it
+should allow re-colouring the page (probably no, in which case
+old_address and new_address should have the same tag). For some of these
+we'll end up with arm64 specific wrappers again, unless sparc ADI adopts
+exactly the same ABI restrictions.
+
 -- 
-Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
-Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
-sowie der Markt- oder Meinungsforschung.
+Catalin
