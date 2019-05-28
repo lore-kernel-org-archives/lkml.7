@@ -3,48 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF88C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C17E20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5687D2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfE1IS0 (ORCPT
+        id S1726526AbfE1IU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:18:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51710 "EHLO
+        Tue, 28 May 2019 04:20:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51756 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfE1IS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:18:26 -0400
+        id S1726425AbfE1IU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:20:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA68C341;
-        Tue, 28 May 2019 01:18:25 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 149EB3F59C;
-        Tue, 28 May 2019 01:18:22 -0700 (PDT)
-Subject: Re: [PATCH v2 07/15] arm64: KVM: split debug save restore across
- vm/traps activation
-To:     Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.cs.columbia.edu,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82DCE341;
+        Tue, 28 May 2019 01:20:28 -0700 (PDT)
+Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B8A83F59C;
+        Tue, 28 May 2019 01:20:24 -0700 (PDT)
+Subject: Re: [PATCH 3/4] arm64/kprobes: set VM_FLUSH_RESET_PERMS on kprobe
+ instruction pages
+To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         James Morse <james.morse@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-References: <20190523103502.25925-1-sudeep.holla@arm.com>
- <20190523103502.25925-8-sudeep.holla@arm.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <84eba64a-899f-e231-0873-c3ccfeb2201d@arm.com>
-Date:   Tue, 28 May 2019 09:18:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
+ <20190523102256.29168-4-ard.biesheuvel@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <e10f0e6c-2669-8e1e-1b28-ed7816e0b248@arm.com>
+Date:   Tue, 28 May 2019 13:50:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190523103502.25925-8-sudeep.holla@arm.com>
+In-Reply-To: <20190523102256.29168-4-ard.biesheuvel@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,93 +55,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
 
-On 23/05/2019 11:34, Sudeep Holla wrote:
-> If we enable profiling buffer controls at EL1 generate a trap exception
-> to EL2, it also changes profiling buffer to use EL1&0 stage 1 translation
-> regime in case of VHE. To support SPE both in the guest and host, we
-> need to first stop profiling and flush the profiling buffers before
-> we activate/switch vm or enable/disable the traps.
+
+On 05/23/2019 03:52 PM, Ard Biesheuvel wrote:
+> In order to avoid transient inconsistencies where freed code pages
+> are remapped writable while stale TLB entries still exist on other
+> cores, mark the kprobes text pages with the VM_FLUSH_RESET_PERMS
+> attribute. This instructs the core vmalloc code not to defer the
+> TLB flush when this region is unmapped and returned to the page
+> allocator.
+
+Makes sense.
+
 > 
-> In prepartion to do that, lets split the debug save restore functionality
-> into 4 steps:
-> 1. debug_save_host_context - saves the host context
-> 2. debug_restore_guest_context - restore the guest context
-> 3. debug_save_guest_context - saves the guest context
-> 4. debug_restore_host_context - restores the host context
-> 
-> Lets rename existing __debug_switch_to_{host,guest} to make sure it's
-> aligned to the above and just add the place holders for new ones getting
-> added here as we need them to support SPE in guests.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
 > ---
->  arch/arm64/include/asm/kvm_hyp.h |  6 ++++--
->  arch/arm64/kvm/hyp/debug-sr.c    | 25 ++++++++++++++++---------
->  arch/arm64/kvm/hyp/switch.c      | 12 ++++++++----
->  3 files changed, 28 insertions(+), 15 deletions(-)
+>  arch/arm64/kernel/probes/kprobes.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-> index 782955db61dd..1c5ed80fcbda 100644
-> --- a/arch/arm64/include/asm/kvm_hyp.h
-> +++ b/arch/arm64/include/asm/kvm_hyp.h
-> @@ -164,8 +164,10 @@ void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt);
->  void __sysreg32_save_state(struct kvm_vcpu *vcpu);
->  void __sysreg32_restore_state(struct kvm_vcpu *vcpu);
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> index 2509fcb6d404..036cfbf9682a 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+> @@ -131,8 +131,10 @@ void *alloc_insn_page(void)
+>  	void *page;
 >  
-> -void __debug_switch_to_guest(struct kvm_vcpu *vcpu);
-> -void __debug_switch_to_host(struct kvm_vcpu *vcpu);
-> +void __debug_save_host_context(struct kvm_vcpu *vcpu);
-> +void __debug_restore_guest_context(struct kvm_vcpu *vcpu);
-> +void __debug_save_guest_context(struct kvm_vcpu *vcpu);
-> +void __debug_restore_host_context(struct kvm_vcpu *vcpu);
->  
->  void __fpsimd_save_state(struct user_fpsimd_state *fp_regs);
->  void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
-> diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-> index fa51236ebcb3..618884df1dc4 100644
-> --- a/arch/arm64/kvm/hyp/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/debug-sr.c
-> @@ -149,20 +149,13 @@ static void __hyp_text __debug_restore_state(struct kvm_vcpu *vcpu,
->  	write_sysreg(ctxt->sys_regs[MDCCINT_EL1], mdccint_el1);
->  }
->  
-> -void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-> +void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_cpu_context *host_ctxt;
->  	struct kvm_cpu_context *guest_ctxt;
->  	struct kvm_guest_debug_arch *host_dbg;
->  	struct kvm_guest_debug_arch *guest_dbg;
->  
-> -	/*
-> -	 * Non-VHE: Disable and flush SPE data generation
-> -	 * VHE: The vcpu can run, but it can't hide.
-> -	 */
-> -	if (!has_vhe())
-> -		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
-> -
->  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
->  		return;
->  
-> @@ -175,7 +168,7 @@ void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
->  	__debug_restore_state(vcpu, guest_dbg, guest_ctxt);
->  }
->  
-> -void __hyp_text __debug_switch_to_host(struct kvm_vcpu *vcpu)
-> +void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+>  	page = vmalloc_exec(PAGE_SIZE);
+> -	if (page)
+> +	if (page) {
+>  		set_memory_ro((unsigned long)page, 1);
+> +		set_vm_flush_reset_perms(page);
+> +	}
 
-In the current state of the sources, __debug_switch_to_host() seems to
-save the guest debug state before restoring the host's:
-
-	__debug_save_state(vcpu, guest_dbg, guest_ctxt);
-
-Since you're splitting the switch_to into save/restore operations, it
-feels like this would fit better __debug_save_guest_context() (currently
-empty) rather than __debug_restore_host_context().
-
-Cheers,
-
--- 
-Julien Thierry
+Looks good. It seems there might be more users who would like to set
+VM_FLUSH_RESET_PERMS right after their allocation for the same reason.
+Hence would not it help to have a variant like vmalloc_exec_reset() or
+such which will tag vm_struct->flags with VM_FLUSH_RESET_PERMS right
+after it's allocation without requiring the caller to do the same.
