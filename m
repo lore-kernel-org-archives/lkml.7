@@ -2,131 +2,96 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85047C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801D3C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA9220883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD3220883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfE1KLg (ORCPT
+        id S1726619AbfE1KQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:11:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54176 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfE1KLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:11:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E041341;
-        Tue, 28 May 2019 03:11:35 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B45033F59C;
-        Tue, 28 May 2019 03:11:33 -0700 (PDT)
-Date:   Tue, 28 May 2019 11:11:31 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [kvmtool PATCH v10 5/5] KVM: arm/arm64: Add a vcpu feature for
- pointer authentication
-Message-ID: <20190528101128.GB28398@e103592.cambridge.arm.com>
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-6-git-send-email-amit.kachhap@arm.com>
- <20190423154625.GP3567@e103592.cambridge.arm.com>
- <3b7bafc9-5d6a-7845-ef1f-577ea59000e2@arm.com>
- <20190424134120.GW3567@e103592.cambridge.arm.com>
+        Tue, 28 May 2019 06:16:00 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59231 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfE1KQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:16:00 -0400
+Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4SAFvSC051587;
+        Tue, 28 May 2019 19:15:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
+ Tue, 28 May 2019 19:15:57 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4SAFknH051539
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 28 May 2019 19:15:57 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190528002412.1625-1-dima@arista.com>
+ <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
+ <20190528042208.GD26865@jagdpanzerIV>
+ <90a22327-922d-6415-538a-6a3fcbe9f3e1@i-love.sakura.ne.jp>
+ <20190528084825.GA9676@jagdpanzerIV>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
+Date:   Tue, 28 May 2019 19:15:43 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424134120.GW3567@e103592.cambridge.arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190528084825.GA9676@jagdpanzerIV>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 02:41:21PM +0100, Dave Martin wrote:
-> On Wed, Apr 24, 2019 at 12:32:22PM +0530, Amit Daniel Kachhap wrote:
-> > Hi,
-> > 
-> > On 4/23/19 9:16 PM, Dave Martin wrote:
-
-[...]
-
-> > >>diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
-> > >>index 7780251..acd1d5f 100644
-> > >>--- a/arm/kvm-cpu.c
-> > >>+++ b/arm/kvm-cpu.c
-> > >>@@ -68,6 +68,18 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
-> > >>  		vcpu_init.features[0] |= (1UL << KVM_ARM_VCPU_PSCI_0_2);
-> > >>  	}
-> > >>+	/* Check Pointer Authentication command line arguments. */
-> > >>+	if (kvm->cfg.arch.enable_ptrauth && kvm->cfg.arch.disable_ptrauth)
-> > >>+		die("Both enable-ptrauth and disable-ptrauth option cannot be present");
-> > >
-> > >Preferably, print the leading dashes, the same as the user would see
-> > >on the command line (e.g., --enable-ptrauth, --disable-ptrauth).
-> > >
-> > >For brevity, we could write something like:
-> > >
-> > >		die("--enable-ptrauth conflicts with --disable-ptrauth");
-
-[...]
-
-> > >>@@ -106,8 +118,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
-> > >>  			die("Unable to find matching target");
-> > >>  	}
-> > >>-	if (err || target->init(vcpu))
-> > >>-		die("Unable to initialise vcpu");
-> > >>+	if (err || target->init(vcpu)) {
-> > >>+		if (kvm->cfg.arch.enable_ptrauth)
-> > >>+			die("Unable to initialise vcpu with pointer authentication feature");
-> > >
-> > >We don't special-case this error message for any other feature yet:
-> > >there are a variety of reasons why we might have failed, so suggesting
-> > >that the failure is something to do with ptrauth may be misleading to
-> > >the user.
-> > >
-> > >If we want to be more informative, we could do something like the
-> > >following:
-> > >
-> > >	bool supported;
-> > >
-> > >	supported = kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
-> > >		    kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC);
-> > >
-> > >	if (kvm->cfg.arch.enable_ptrauth && !supported)
-> > >		die("--enable-ptrauth not supported on this host");
-> > >
-> > >	if (supported && !kvm->cfg.arch.disable_ptrauth)
-> > >		vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
-> > >
-> > >	/* ... */
-> > >
-> > >	if (err || target->init(vcpu))
-> > >		die("Unable to initialise vcpu");
-> > >
-> > >We don't do this for any other feature today, but since it helps the
-> > >user to understand what went wrong it's probably a good idea.
-> > Yes this is more clear. As Mark has picked the core guest ptrauth patches. I
-> > will post this changes as standalone.
+On 2019/05/28 17:51, Sergey Senozhatsky wrote:
+>> You are trying to omit passing KERN_UNSUPPRESSED by utilizing implicit printk
+>> context information. But doesn't such attempt resemble find_printk_buffer() ?
 > 
-> Sounds good.  (I also need to do that separately for SVE...)
+> Adding KERN_UNSUPPRESSED to all printks down the op_p->handler()
+> line is hardly possible. At the same time I'd really prefer not
+> to have buffering for sysrq.
 
-Were you planning to repost this?
+I don't think it is hardly possible. And I really prefer having
+deferred printing for SysRq.
 
-Alternatively, I can fix up the diagnostic messages discussed here and
-post it together with the SVE support.  I'll do that locally for now,
-but let me know what you plan to do.  I'd like to get the SVE support
-posted soon so that people can test it.
+SysRq is triggered by writing to /proc/sysrq-trigger or typing special keys
+on the keyboard. This means that SysRq can be triggered by administrator's
+will, and SysRq can be repeated/retried by administrator's will. Therefore,
+allowing SysRq-t to write to consoles after leaving the atomic context is
+an improvement. My proposal allows deferred printing for SysRq, dump_header()
+and warn_alloc(). We can try to wake up console_writer kernel thread upon
+leaving the atomic context. If the kernel is unhealthy enough to make
+console_writer kernel thread defunctional, administrator can issue other
+SysRq in order to forcibly write to consoles.
 
-Cheers
----Dave
+Is the attempt of making printk() completely asynchronous going to be resumed?
+I think that "automatically asynchronous" won't be accepted, and I think that
+at best "explicitly asynchronous" (by allowing the caller to explicitly say
+it using printk() argument) is possible. (Maybe "asynchronous by default" and
+"explicitly synchronous" is possible. But "explicitly synchronous" would be
+told by using printk() argument rather than by implicit/global printk context
+information...)
+
+Anyway, forcing SysRq output to apply ignore_loglevel will be doable using
+printk() argument.
+
