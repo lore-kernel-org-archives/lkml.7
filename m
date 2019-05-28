@@ -7,139 +7,96 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3487C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0937BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9860A21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBF32182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BkLP17KB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H/tDQsto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfE1Pxe (ORCPT
+        id S1727021AbfE1Pxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:53:34 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47812 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1Pxd (ORCPT
+        Tue, 28 May 2019 11:53:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34848 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1Pxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:53:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SFrG9C033264;
-        Tue, 28 May 2019 10:53:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559058796;
-        bh=dbyhM/5u8MgwcqC/5H5+1C0pbVLxubC8LxcCgplQU3s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BkLP17KBtfHl8j4s3xLOfNc7vfI0pyEY0m3ajgyj69SgO5Um3JejD0pWLW+66wr4T
-         /u0Soykj5nSiQ1xxpCJsdQ93psmexkmIndoATW1CDbHV5O/d38F8L1w4C/hcn/eam3
-         w7uzCOUGgpMC9L0e3fVLsXE6sQFDYHt3lwv4MASA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SFrGK2128483
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 10:53:16 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
- May 2019 10:53:14 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 28 May 2019 10:53:14 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SFrBCb060219;
-        Tue, 28 May 2019 10:53:12 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
-Date:   Tue, 28 May 2019 18:53:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 11:53:51 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t1so11251055pgc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=gZdVe4KYsQOsjAdrlH5pjQLw2I8u7ZqIj2eBsmzs94M=;
+        b=H/tDQsto+r3bnOsQ2Dr3G9DPtN6VFJ21sEuBJ25/pR8vNxEeLnmJnk/0c9YuW8bkDe
+         b5W3NUIWMGHJCKZiVPs+K+9bO3xF+nnc6gxysYXLoxJtPhNQwYf8eD8U9JBxqFz0r8pv
+         GDmox1lVt5VuEkJhsEpbB7no06+vFaqML/62g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=gZdVe4KYsQOsjAdrlH5pjQLw2I8u7ZqIj2eBsmzs94M=;
+        b=k/5j2LY2GgpMLqSoZrBGbEvEm3+GXVEGxwVGMRN2zNowTL4c6P5QNnKF3tPg17UrsJ
+         kJ3bauUUdiWDIHBTDqmyd/U9uF8rQwm1CcXo51dOyWFJK3mAa6OH1djQbOfNMuKpMkYa
+         YQSo+9ofzKmikQRIXdCa7RFwrQINUrZuGHBoCklrkuCcL6X7kx7+KYW1OoThGIJ0ezHf
+         Gu1CBRPX5C3UBcirpyMVUGRrgQ0eXeDwiCbh+KVxjwUKJ9FTiFDKDGBWencp3wQyFgrK
+         dDS58t7i2+EVUXdy2CevFYyXa7uhWYIEQ2TYgOJuog5uYXl3Vh8Txoz0vTwtjY9bp4MM
+         RHkw==
+X-Gm-Message-State: APjAAAXSYo/yYyT6KVRD1b/de0JNi4QW0+fHhJWgm32Ez8cbScZl1TcH
+        2uI0gAMH3M9jXibkfWow8XPF+w==
+X-Google-Smtp-Source: APXvYqw6/Wgo8S4X+4IdRoxCALLE8MCP8dhzdasnJiMxFjFHV3zRdny03KvOcEq5wVUfOwMG+APqMw==
+X-Received: by 2002:a17:90a:17ca:: with SMTP id q68mr6883350pja.104.1559058830791;
+        Tue, 28 May 2019 08:53:50 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f17sm13153090pgv.16.2019.05.28.08.53.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 08:53:49 -0700 (PDT)
+Message-ID: <5ced598d.1c69fb81.dabd8.339d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190527043336.112854-2-hsinyi@chromium.org>
+References: <20190527043336.112854-1-hsinyi@chromium.org> <20190527043336.112854-2-hsinyi@chromium.org>
+Subject: Re: [PATCH v5 2/3] fdt: add support for rng-seed
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+User-Agent: alot/0.8.1
+Date:   Tue, 28 May 2019 08:53:48 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Quoting Hsin-Yi Wang (2019-05-26 21:33:35)
+> Introducing a chosen node, rng-seed, which is an entropy that can be
+> passed to kernel called very early to increase initial device
+> randomness. Bootloader should provide this entropy and the value is
+> read from /chosen/rng-seed in DT.
+>=20
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
 
-On 28/05/2019 18:09, Adam Ford wrote:
-> On Tue, May 28, 2019 at 4:11 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->>
->> Hi,
->>
->> On 10/05/2019 22:42, Adam Ford wrote:
->>> Currently the source code is compiled using hard-coded values
->>> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
->>> clock divider value to be moved to the device tree and be changed
->>> without having to recompile the kernel.
->>>
->>> Signed-off-by: Adam Ford <aford173@gmail.com>
->>
->> I understand why you want to do this, but I'm not sure it's a good idea.
->> It's really something the driver should figure out, and if we add it to
->> the DT, it effectively becomes an ABI.
->>
->> That said... I'm not sure how good of a job the driver could ever do, as
->> it can't know the future scaling needs of the userspace at the time it
->> is configuring the clock. And so, I'm not nacking this patch, but I
->> don't feel very good about this patch...
->>
->> The setting also affects all outputs (exluding venc), which may not be
->> what the user wants. Then again, I think this setting is really only
->> needed on OMAP2 & 3, which have only a single output. But that's the
->> same with the current kconfig option, of course.
->>
->> So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my
->> opinion, and moving it to DT makes it a worse hack =). But I don't have
->> any good suggestions either.
-> 
-> As it stands the Logic PD OMAP35 and AM37/DM37 boards (SOM-LV and
-> Torpedo) require this to be hard coded to 4 or it hangs during start.
-> This is the case for all versions 4.2+.  I haven't tested it with
-> older stuff.  Tony has a DM3730 Torpedo kit and reported the hanging
-> issue to me. I told him to set that value to 4 to make it not hang.
-> He asked that I move it to the DT to avoid custom kernels.  I agree
-> it's a hack, but if it's create a customized defconfig file for 4
-> boards or modify the device tree, it seems like the device tree
-> approach is less intrusive.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Ok, well, I think that's a separate thing from its intended use. The 
-point of the kconfig option is to ensure that the fclk/pclk ratio stays 
-under a certain number to allow enough scaling range. It should never 
-affect a basic non-scaling use case, unless you set it to a too high 
-value, which prevents finding any pclk.
-
-Has anyone debugged why the hang is happening?
-
-If we can't fix the bug itself, rather than adding a DT option, we could 
-change add a min_fck_per_pck field (as you do), keep the kconfig option, 
-and set the min_fck_per_pck based on the kconfig option, _or_ in case of 
-those affected SoCs, set the min_fck_per_pck even without the kconfig 
-option.
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
