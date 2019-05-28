@@ -2,120 +2,144 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D43C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA72C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A49C2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559054829;
-	bh=vSyJqkwYTRKiEH0VlhA88IIdg2wVZfMrGoZmJeJjoWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=knNsL5tPd5W/hHunu4qOpXBtl58nCa7vfiRt8FOabUHO3Vqn8cSCjxLP/BWhYUgil
-	 wgNltCSasP5AA8IuoE9kb82SXd0ERE6utGhiucyg/030rX4oMwV9e7zszEJkZmqA/v
-	 ao4mKp3NyBrGxjoGqx25M3WEjlfev8VJh/k0w6YA=
+	by mail.kernel.org (Postfix) with ESMTP id 440162081C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPNPgMzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE1OrI (ORCPT
+        id S1726688AbfE1Oto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfE1OrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:47:07 -0400
-Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2DCC20679;
-        Tue, 28 May 2019 14:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559054826;
-        bh=vSyJqkwYTRKiEH0VlhA88IIdg2wVZfMrGoZmJeJjoWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IVm8rsqPESoCyUlxGj7NPlEu91jfMqIp1E94FykZjnsPEbwo4/CxtpMXg/k6D0/rr
-         7tHn6UwbqvnicCYZFB9oS1t0h7hjKtGtQV2oxV575GIqaIm3Sw4AxvJHbnoXoOB1Az
-         LBT05XRlncjF+eqExz3g5NI6hXmj9xb4Ewv9IS8o=
-Date:   Tue, 28 May 2019 16:47:02 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     Barret Rhoden <brho@google.com>, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Arcari <darcari@redhat.com>
-Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
-Message-ID: <20190528144702.GA3459@linux-8ccs>
-References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
- <20190510184204.225451-1-brho@google.com>
- <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
- <d968a588-c43b-cfe1-6358-6c5d99f916a3@google.com>
- <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
- <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
+        Tue, 28 May 2019 10:49:44 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:41176 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfE1Oto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:49:44 -0400
+Received: by mail-ua1-f67.google.com with SMTP id l14so7996123uah.8
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ZsZglD+dtH05T0KC8c89LwXbA5cgi/yGq9/fSIjPic=;
+        b=oPNPgMzyo5ONNyNCaq8WUbB5Vn1GA7mO4dahDdFIuHDRWc5checpqZWQUDTJ4PSAdQ
+         4A1jWu60o+TJmTR5BocDnvvoRrAjA1T+d7dMiXqhApTEFJsU7k7F/DB1DVA6RcoW9K8l
+         7YkVoTLCb0KW4ANvSmle47r4S3MUay/a+5OLVTK/sKuLhsuqnh/mCWnZsqjOJH68OZ+H
+         2TDgBez/A25N9EboF84p5SfPGfThBg/LNOm/ZHEen1WCCLSkrJCrfnDW9tlhMu40vRLx
+         YsVMtz3EW1H+JMx7tuHeqznPmmSv1Gt5t6dQRXZ26r1GO8wtIQkKPSi57+8iracsPvfc
+         dKpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ZsZglD+dtH05T0KC8c89LwXbA5cgi/yGq9/fSIjPic=;
+        b=l/UXJCR4YOoR7S1t0qM5QuaVln8BPWMwyoj4AqlVeAOxfE+JtVsjHoRjPCP2C+IBOg
+         c4/9aGle1JridIAV6met3Oq+HdmEvue8QZtF/WLo892M7s0Rmh40EGHL59NM5Djg9B1H
+         Kf+IwxHIDz3A/aQCAFIQuErj9b4U57gh2mo/JmOpVkhQ5P+7NibFuxD3IMqt/izgDh5n
+         gBCvZUNkOJt0EFxQ5RGRrHrAf6ayMa+ms9GQgw+9pnpJi7eB4wWPrBzgt5lPH2ibG4oY
+         tqognYk/cI/aO8qiuQLf+0qG6Yku2LW0Wti0WdD0rEoTZsM/yUwqJywrwSQC6kOarMsv
+         Upww==
+X-Gm-Message-State: APjAAAXuCzdau5LghmGJ6Af6vN7cWwY3KN6NPmrn1RNy7RwBHothLF0X
+        2wenz6sasHgi4+Vk6ZXkc4b7KHveL7irkm048Zk=
+X-Google-Smtp-Source: APXvYqwHZ6XcMqEweV9vnRuX/F2evgDZcu+D7adtwtba3RgERl+kp3mZGEiSYK4ucwP0xvZEgfqH5CQ8H5UpULpic8E=
+X-Received: by 2002:ab0:16d6:: with SMTP id g22mr24384530uaf.14.1559054983290;
+ Tue, 28 May 2019 07:49:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1559047634-24397-1-git-send-email-92siuyang@gmail.com> <9c6d3fe3-4d7b-f105-62b5-f9d4221543fb@redhat.com>
+In-Reply-To: <9c6d3fe3-4d7b-f105-62b5-f9d4221543fb@redhat.com>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Tue, 28 May 2019 22:49:04 +0800
+Message-ID: <CAKgHYH0kSkirQDTQh7iP0kJRUShTW4Q6b-+gPr-K2GcZFM6SgQ@mail.gmail.com>
+Subject: Re: [PATCH] vboxguest: check for private_data before trying to close it.
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Prarit Bhargava [28/05/19 10:30 -0400]:
->
->
->On 5/22/19 1:08 PM, Prarit Bhargava wrote:
->>
->>
->> On 5/13/19 10:37 AM, Barret Rhoden wrote:
->>> Hi -
->>>
->>
->> Hey Barret, my apologies for not getting back to you earlier.  I got caught up
->> in something that took me away from this issue.
->>
->>> On 5/13/19 7:23 AM, Prarit Bhargava wrote:
->>> [snip]
->>>> A module is loaded once for each cpu.
->>>
->>> Does one CPU succeed in loading the module, and the others fail with EEXIST?
->>>
->>>> My follow-up patch changes from wait_event_interruptible() to
->>>> wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
->>>> make progress on other tasks, which changes the return values from
->>>> wait_event_interruptible().
->>>>
->>>> https://marc.info/?l=linux-kernel&m=155724085927589&w=2
->>>>
->>>> I believe this also takes your concern into account?
->>>
->>> That patch might work for me, but I think it papers over the bug where the check
->>> on old->state that you make before sleeping (was COMING || UNFORMED, now !LIVE)
->>> doesn't match the check to wake up in finished_loading().
->>>
->>> The reason the issue might not show up in practice is that your patch basically
->>> polls, so the condition checks in finished_loading() are only a quicker exit.
->>>
->>> If you squash my patch into yours, I think it will cover that case. Though if
->>> polling is the right answer here, it also raises the question of whether or not
->>> we even need finished_loading().
->>>
->>
->> The more I look at this I think you're right.  Let me do some additional testing
->> with your patch + my original patch.
->>
->
->I have done testing on arm64, s390x, ppc64le, ppc64, and x86 and have not seen
->any issues.
->
->Jessica, how would you like me to proceed?  Would you like an updated patch with
->Signed-off's from both Barret & myself?
+Based on your explanation, file->private_data can not be NULL before
+call vbg_core_close_session method all the time, since
+file->private_data is always set.
+Am I right?
 
-Hi Prarit,
+On Tue, May 28, 2019 at 9:19 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 28-05-19 14:47, Young Xiao wrote:
+> > vbg_misc_device_close doesn't check that filp->private_data is non-NULL
+> > before trying to close_session, where vbg_core_close_session uses pointer
+> > session whithout checking, too. That can cause an oops in certain error
+> > conditions that can occur on open or lookup before the private_data is set.
+> >
+> > This vulnerability is similar to CVE-2011-1771.
+>
+> How is this in anyway related to CVE-2011-1771 ????
+>
+> That CVE is about a filesystems lookup method including a direct open
+> of the file for performance reasons and if that direct open fails, doing
+> a fput, which is how it ends up with a file with private_date being NULL,
+> see:
+>
+> https://bugzilla.redhat.com/show_bug.cgi?id=703016
+>
+> "the problem is that CIFS doesn't do O_DIRECT at all, so when you try to open a file with it you get back -EINVAL. CIFS can also do open on lookup in some cases. In that case, fput will be called on the filp, which has not yet had its private_data set."
+>
+> The vboxguest code on the other hand is not a filessystem and as such
+> does not have a dentry lookup method at all!
+>
+> It's close method is part of the file_operations struct for a character
+> device using the misc_device framework which guarantees that private_data
+> is always set.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>
+> >
+> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> > ---
+> >   drivers/virt/vboxguest/vboxguest_linux.c | 6 ++++--
+> >   1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/virt/vboxguest/vboxguest_linux.c b/drivers/virt/vboxguest/vboxguest_linux.c
+> > index 6e8c0f1..b03c16f 100644
+> > --- a/drivers/virt/vboxguest/vboxguest_linux.c
+> > +++ b/drivers/virt/vboxguest/vboxguest_linux.c
+> > @@ -88,8 +88,10 @@ static int vbg_misc_device_user_open(struct inode *inode, struct file *filp)
+> >    */
+> >   static int vbg_misc_device_close(struct inode *inode, struct file *filp)
+> >   {
+> > -     vbg_core_close_session(filp->private_data);
+> > -     filp->private_data = NULL;
+> > +     if (file->private_data != NULL) {
+> > +             vbg_core_close_session(filp->private_data);
+> > +             filp->private_data = NULL;
+> > +     }
+> >       return 0;
+> >   }
+> >
+> >
 
-A freshly sent patch with the squashed changes and Signed-off's would
-be great. Thank you both for testing and looking into this!
 
-Jessica
+
+-- 
+Best regards!
+
+Young
+-----------------------------------------------------------
