@@ -2,144 +2,123 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4969C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A55CC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914CC20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164A520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="KxfdITFl"
+	dkim=pass (2048-bit key) header.d=osandov-com.20150623.gappssmtp.com header.i=@osandov-com.20150623.gappssmtp.com header.b="kJXW1iPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfE1Sr0 (ORCPT
+        id S1726820AbfE1SvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:47:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43794 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbfE1SrX (ORCPT
+        Tue, 28 May 2019 14:51:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36092 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfE1SvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:47:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn7so8676187plb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:47:22 -0700 (PDT)
+        Tue, 28 May 2019 14:51:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so8714214plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 11:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yB3ItIPtEUw2eZGEY3aSVErHK6RTuXYR3P9ZM9krb4k=;
-        b=KxfdITFlLCIgGVWepRp7OKNXZdvFHywQLRda+kG7t19ksHD/JbG6XFA4HJJt+6/f0F
-         3qYtCcGU0S/m6PU87YB75X3E5Q7ulwHeA7uGoy+dTcTNHW4ozb/xWQELfuejmOKUrbkp
-         9MTfNddkNEW/6wik0fkf6q8vmcOiS6VGhxOgY=
+        d=osandov-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lf1AnB62qhw98+618ZGhLajUkR17f9jQjLMbh4Rz9FI=;
+        b=kJXW1iPNTRcAE9Q9c+VH9v1aGEM2iCTBz5wN+z65UUimrkHePkXEv0b0l1oY+anN4l
+         WIsHpNLC3mTITPs6iksgTo9vXGR7iiVtMgupJnyesqRdsCU7XksSIfRX6SkUDr9Ua0NT
+         6AlMO9VI9Z+gbyDrgMlrmb6zTJHLo4RwNbIMbpWdkvcgq+abFWdy2ljeukAmGlyZajgd
+         zkAemVggg2YN9e3RhMvUvBcU6gibx35AyMsE+/MWTuxHtwWM2cBccZWOC2sQ3gt6mG5W
+         86BQVnqAvexCPVBnKG/IbNWS4udQRaIMj+RnmDtF1wANiK65u4qnneGcmQ1X/LK36tIw
+         AyjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yB3ItIPtEUw2eZGEY3aSVErHK6RTuXYR3P9ZM9krb4k=;
-        b=aEzjytMIJftgvHfw+CyzMk9lcYcoEepiMMNi/Aa7gHx4DEocleO8teZMBz07+yYlU8
-         vW0c+M91j+LXBzMLLIPry/iz58I3SehtjgtkOClFyVgr5dgjTHBcU3BK95ZRZtle9GnM
-         GQNu6flzVoRnUDmSjCvV4alJafd2Pi7d3vbvn0FKqwaOYcTtg+r81gW7pFKEbcIZ/sdi
-         WT0x1gnLtl869C54MC8Sj5Ewmu04YadihXI246dWrkFD/VNbTA85llZfzSLWfKTI+NQ1
-         6ii/jWnHzn0PFj3jPQkOgFmpQPBZ4Qr/Jbov1+NwI7r0A25IctOKCqyk8RgaZfQuthf3
-         4FIg==
-X-Gm-Message-State: APjAAAX7sMqT075XNUEPZq/eNnc2Fzdy/I99Ed/18qr6+HXUDTk6Ah7k
-        4aP9RFO9Jrc6viiCbejpDZ5z9A==
-X-Google-Smtp-Source: APXvYqw07DmvgaH6rrcnS2lswuSNUkH6uQSFP/SqouoWhuk3rcBu+8I4JrKW31+eYDYJLrgSeCteqA==
-X-Received: by 2002:a17:902:14e:: with SMTP id 72mr91727811plb.36.1559069242561;
-        Tue, 28 May 2019 11:47:22 -0700 (PDT)
-Received: from linux-net-fred.jaalam.net ([2001:4958:15a0:24:5054:ff:fecb:7a95])
-        by smtp.googlemail.com with ESMTPSA id m6sm3323766pjl.18.2019.05.28.11.47.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 11:47:21 -0700 (PDT)
-From:   Fred Klassen <fklassen@appneta.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Cc:     Fred Klassen <fklassen@appneta.com>
-Subject: [PATCH net-next v2 2/3] net/udpgso_bench.sh add UDP GSO audit tests
-Date:   Tue, 28 May 2019 11:47:07 -0700
-Message-Id: <20190528184708.16516-3-fklassen@appneta.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190528184708.16516-1-fklassen@appneta.com>
-References: <20190528184708.16516-1-fklassen@appneta.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lf1AnB62qhw98+618ZGhLajUkR17f9jQjLMbh4Rz9FI=;
+        b=HpIxu9VS962xjxjNIJ8fikoONJMShC8mHLZ2lOcxKreVzCB9RSBa+GaS764T6ThPPx
+         U4McKnyAfRvZuBHmTGdmIivdXSYvAz8NYPgitC66kKDQTbuR2KvC1XBIrPirL6k0dGo/
+         FzevLLIcIOZXJdZZe3MXeM4X0/Pi6bJfkKlzGvXB9f8jva9SZ/7xxPNcLRIcsBpAgWew
+         CMOVKzgDhPVJfKT+uPts41WdQZGS2sqe5ua/BIP6g/Akn9ddGcJK5TeYSKIig5hxvCV2
+         Ft7q7MvsYFcbBN6EJ5It5XcNqwZjRauEg64oh3LynfIOKs+WOZm94yJVrxX9WoXJ5Mzi
+         TeSQ==
+X-Gm-Message-State: APjAAAWYfjyA2Xeg6yBqob7CC8hlfJB/xeJqJl2FlRmx7aXCjOFiJjin
+        bJQNAjVMB53lNBhQfqovdE1q1g==
+X-Google-Smtp-Source: APXvYqzvnaB3xomsPWJIxIOMgQ7SOE8O+VgQEpFlys1d3ApVfYJPufOQP6OgNmLxk/I7PpRdHvAZTQ==
+X-Received: by 2002:a17:902:a982:: with SMTP id bh2mr32098325plb.224.1559069460961;
+        Tue, 28 May 2019 11:51:00 -0700 (PDT)
+Received: from vader ([2620:10d:c090:200::3:6f81])
+        by smtp.gmail.com with ESMTPSA id i7sm15109099pfo.19.2019.05.28.11.50.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 28 May 2019 11:51:00 -0700 (PDT)
+Date:   Tue, 28 May 2019 11:50:59 -0700
+From:   Omar Sandoval <osandov@osandov.com>
+To:     Peng Wang <wangpeng15@xiaomi.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
+Subject: Re: [PATCH] block: use KMEM_CACHE macro
+Message-ID: <20190528185059.GB25022@vader>
+References: <20190527114835.2071-1-wangpeng15@xiaomi.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527114835.2071-1-wangpeng15@xiaomi.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Audit tests count the total number of messages sent and compares
-with total number of CMSG received on error queue. Example:
+On Mon, May 27, 2019 at 07:48:35PM +0800, Peng Wang wrote:
+> From: Peng Wang <rocking@whu.edu.cn>
+> 
+> Use the preferred KMEM_CACHE helper for brevity.
 
-    udp gso zerocopy timestamp audit
-    udp rx:   1599 MB/s  1166414 calls/s
-    udp tx:   1615 MB/s    27395 calls/s  27395 msg/s
-    udp rx:   1634 MB/s  1192261 calls/s
-    udp tx:   1633 MB/s    27699 calls/s  27699 msg/s
-    udp rx:   1633 MB/s  1191358 calls/s
-    udp tx:   1631 MB/s    27678 calls/s  27678 msg/s
-    Summary over 4.000 seconds...
-    sum udp tx:   1665 MB/s      82772 calls (27590/s)      82772 msgs (27590/s)
-    Tx Timestamps:               82772 received                 0 errors
-    Zerocopy acks:               82772 received                 0 errors
+Reviewed-by: Omar Sandoval <osandov@fb.com>
 
-Errors are thrown if CMSG count does not equal send count,
-example:
+> Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+> ---
+>  block/blk-core.c | 3 +--
+>  block/blk-ioc.c  | 3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 1bf83a0df0f6..841bf0b12755 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1789,8 +1789,7 @@ int __init blk_dev_init(void)
+>  	if (!kblockd_workqueue)
+>  		panic("Failed to create kblockd\n");
+>  
+> -	blk_requestq_cachep = kmem_cache_create("request_queue",
+> -			sizeof(struct request_queue), 0, SLAB_PANIC, NULL);
+> +	blk_requestq_cachep = KMEM_CACHE(request_queue, SLAB_PANIC);
+>  
+>  #ifdef CONFIG_DEBUG_FS
+>  	blk_debugfs_root = debugfs_create_dir("block", NULL);
+> diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+> index 5ed59ac6ae58..58c79aeca955 100644
+> --- a/block/blk-ioc.c
+> +++ b/block/blk-ioc.c
+> @@ -408,8 +408,7 @@ struct io_cq *ioc_create_icq(struct io_context *ioc, struct request_queue *q,
+>  
+>  static int __init blk_ioc_init(void)
+>  {
+> -	iocontext_cachep = kmem_cache_create("blkdev_ioc",
+> -			sizeof(struct io_context), 0, SLAB_PANIC, NULL);
+> +	iocontext_cachep = KMEM_CACHE(io_context, SLAB_PANIC);
 
-    Summary over 4.000 seconds...
-    sum tcp tx:   7451 MB/s     493706 calls (123426/s)     493706 msgs (123426/s)
-    ./udpgso_bench_tx: Unexpected number of Zerocopy completions:    493706 expected    493704 received
+This will change the name of the slab in slabinfo, but I can't imagine
+that matters.
 
-Also reduce individual test time from 4 to 3 seconds so that
-overall test time does not increase significantly.
-
-Signed-off-by: Fred Klassen <fklassen@appneta.com>
----
- tools/testing/selftests/net/udpgso_bench.sh | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/net/udpgso_bench.sh b/tools/testing/selftests/net/udpgso_bench.sh
-index 5670a9ffd8eb..89c7de97b832 100755
---- a/tools/testing/selftests/net/udpgso_bench.sh
-+++ b/tools/testing/selftests/net/udpgso_bench.sh
-@@ -38,6 +38,18 @@ run_udp() {
- 
- 	echo "udp gso zerocopy"
- 	run_in_netns ${args} -S 0 -z
-+
-+	echo "udp gso timestamp"
-+	run_in_netns ${args} -S 0 -T
-+
-+	echo "udp gso zerocopy audit"
-+	run_in_netns ${args} -S 0 -z -a
-+
-+	echo "udp gso timestamp audit"
-+	run_in_netns ${args} -S 0 -T -a
-+
-+	echo "udp gso zerocopy timestamp audit"
-+	run_in_netns ${args} -S 0 -T -z -a
- }
- 
- run_tcp() {
-@@ -48,10 +60,14 @@ run_tcp() {
- 
- 	echo "tcp zerocopy"
- 	run_in_netns ${args} -t -z
-+
-+	# excluding for now because test fails intermittently
-+	#echo "tcp zerocopy audit"
-+	#run_in_netns ${args} -t -z -P -a
- }
- 
- run_all() {
--	local -r core_args="-l 4"
-+	local -r core_args="-l 3"
- 	local -r ipv4_args="${core_args} -4 -D 127.0.0.1"
- 	local -r ipv6_args="${core_args} -6 -D ::1"
- 
--- 
-2.11.0
-
+>  	return 0;
+>  }
+>  subsys_initcall(blk_ioc_init);
+> -- 
+> 2.19.1
+> 
