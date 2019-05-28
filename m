@@ -2,55 +2,197 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13219C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22008C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB78E21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB13208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 20:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="M2ft+CH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfE1UmA (ORCPT
+        id S1727556AbfE1UmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 16:42:00 -0400
-Received: from namei.org ([65.99.196.166]:34896 "EHLO namei.org"
+        Tue, 28 May 2019 16:42:19 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:43768 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbfE1UmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 16:42:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x4SKfiYc004893;
-        Tue, 28 May 2019 20:41:44 GMT
-Date:   Wed, 29 May 2019 06:41:44 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     David Howells <dhowells@redhat.com>
-cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] keys: Break bits out of key_unlink()
-In-Reply-To: <155856411142.10428.16280282329908085391.stgit@warthog.procyon.org.uk>
-Message-ID: <alpine.LRH.2.21.1905290641310.31297@namei.org>
-References: <155856408314.10428.17035328117829912815.stgit@warthog.procyon.org.uk> <155856411142.10428.16280282329908085391.stgit@warthog.procyon.org.uk>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1726492AbfE1UmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 16:42:18 -0400
+Received: from [192.168.1.6] (hst-221-77.medicom.bg [84.238.221.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 7CF61CE7C;
+        Tue, 28 May 2019 23:42:15 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1559076135; bh=sGsg/qLXUK4RWVjSX2z2nrH/IEOd2T0BBE97JwegLYk=;
+        h=Subject:To:Cc:From:Date:From;
+        b=M2ft+CH5DGzAV8OAppNWlqZK0d/9EMwBrlIc8Ys0f2nuc/F9nvROwzpNs9H+biPAA
+         mOSHDXZsHc44EZH0QZpNmdmZgy/whmxYV+jBLKlz7k+XIRj7CVGUUzIzVi+Ca/H0WB
+         yo+v1xY1BvaWtxzXfPe3dw7BQPemjq4y/isKgSWFdqmjkhNaAi0idh2cQ8KSffNKBe
+         sKKK+NnfmYtmMlm4sKX17jtJ1C6+EM0ddHWrNPvW9SG3rsghw9f9N+3Mo0RT3Ke6Eq
+         f0ZMwMjycwLLT9nnw0WjkrOy/n6kZhxbi+Knr6m1CbDbfPfsf4D2k9Y6AIOYsmOoyx
+         ezC+2Gar88H/A==
+Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+ <20190502001955.10575-2-bjorn.andersson@linaro.org>
+ <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+ <20190528151330.GA28649@redmoon>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <89e9be83-a91c-510c-87cf-b5db9c6e1b23@mm-sol.com>
+Date:   Tue, 28 May 2019 23:42:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190528151330.GA28649@redmoon>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, David Howells wrote:
+Hi Lorenzo,
 
-> Break bits out of key_unlink() into helper functions so that they can be
-> used in implementing key_move().
+On 28.05.19 г. 18:13 ч., Lorenzo Pieralisi wrote:
+> On Thu, May 16, 2019 at 12:14:04PM +0300, Stanimir Varbanov wrote:
+>> Hi Bjorn,
+>>
+>> On 5/2/19 3:19 AM, Bjorn Andersson wrote:
+>>> Before introducing the QCS404 platform, which uses the same PCIe
+>>> controller as IPQ4019, migrate this to use the bulk clock API, in order
+>>> to make the error paths slighly cleaner.
+>>>
+>>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+>>> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>> ---
+>>>
+>>> Changes since v2:
+>>> - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
+>>>
+>>>   drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
+>>>   1 file changed, 14 insertions(+), 35 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> index 0ed235d560e3..d740cbe0e56d 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
+>>>   	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>>>   };
+>>>   
+>>> +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
+>>>   struct qcom_pcie_resources_2_4_0 {
+>>> -	struct clk *aux_clk;
+>>> -	struct clk *master_clk;
+>>> -	struct clk *slave_clk;
+>>> +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+>>> +	int num_clks;
+>>>   	struct reset_control *axi_m_reset;
+>>>   	struct reset_control *axi_s_reset;
+>>>   	struct reset_control *pipe_reset;
+>>> @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>>>   	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>>>   	struct dw_pcie *pci = pcie->pci;
+>>>   	struct device *dev = pci->dev;
+>>> +	int ret;
+>>>   
+>>> -	res->aux_clk = devm_clk_get(dev, "aux");
+>>> -	if (IS_ERR(res->aux_clk))
+>>> -		return PTR_ERR(res->aux_clk);
+>>> +	res->clks[0].id = "aux";
+>>> +	res->clks[1].id = "master_bus";
+>>> +	res->clks[2].id = "slave_bus";
+>>>   
+>>> -	res->master_clk = devm_clk_get(dev, "master_bus");
+>>> -	if (IS_ERR(res->master_clk))
+>>> -		return PTR_ERR(res->master_clk);
+>>> +	res->num_clks = 3;
+>>
+>> Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
+>>
+>>>   
+>>> -	res->slave_clk = devm_clk_get(dev, "slave_bus");
+>>> -	if (IS_ERR(res->slave_clk))
+>>> -		return PTR_ERR(res->slave_clk);
+>>> +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>>   
+>>>   	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+>>>   	if (IS_ERR(res->axi_m_reset))
+>>> @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+>>>   	reset_control_assert(res->axi_m_sticky_reset);
+>>>   	reset_control_assert(res->pwr_reset);
+>>>   	reset_control_assert(res->ahb_reset);
+>>> -	clk_disable_unprepare(res->aux_clk);
+>>> -	clk_disable_unprepare(res->master_clk);
+>>> -	clk_disable_unprepare(res->slave_clk);
+>>> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>>>   }
+>>>   
+>>>   static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>> @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>>   
+>>>   	usleep_range(10000, 12000);
+>>>   
+>>> -	ret = clk_prepare_enable(res->aux_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable iface clock\n");
+>>> +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+>>> +	if (ret)
+>>>   		goto err_clk_aux;
+>>
+>> Maybe you have to change the name of the label too?
+>>
+>>> -	}
+>>> -
+>>> -	ret = clk_prepare_enable(res->master_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable core clock\n");
+>>> -		goto err_clk_axi_m;
+>>> -	}
+>>> -
+>>> -	ret = clk_prepare_enable(res->slave_clk);
+>>> -	if (ret) {
+>>> -		dev_err(dev, "cannot prepare/enable phy clock\n");
+>>> -		goto err_clk_axi_s;
+>>> -	}
+>>>   
+>>>   	/* enable PCIe clocks and resets */
+>>>   	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+>>> @@ -891,10 +874,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>>>   
+>>>   	return 0;
+>>>   
+>>> -err_clk_axi_s:
+>>> -	clk_disable_unprepare(res->master_clk);
+>>> -err_clk_axi_m:
+>>> -	clk_disable_unprepare(res->aux_clk);
+>>>   err_clk_aux:
+>>>   	reset_control_assert(res->ahb_reset);
+>>>   err_rst_ahb:
 > 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+> Hi Bjorn, Stanimir,
+> 
+> can I merge the series as-is or we need a v4 for the requested
+> updates ? Please let me know.
 
+I'm fine with either way:
 
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-
--- 
-James Morris
-<jmorris@namei.org>
-
+regards,
+Stan
