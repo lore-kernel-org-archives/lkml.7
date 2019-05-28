@@ -2,175 +2,100 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5312C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A807C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986AE204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB2420717
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pd06yysC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfE1TDd (ORCPT
+        id S1727366AbfE1TDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:03:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726600AbfE1TDc (ORCPT
+        Tue, 28 May 2019 15:03:55 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44197 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfE1TDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:03:32 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJ2tce086861
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:03:32 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss95cv5sj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:03:31 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 28 May 2019 20:03:30 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 20:03:25 +0100
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJ3OtQ34996472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 19:03:24 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F409AC059;
-        Tue, 28 May 2019 19:03:24 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8FD62AC064;
-        Tue, 28 May 2019 19:03:20 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.218.160])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 May 2019 19:03:20 +0000 (GMT)
-References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-2-bauerman@linux.ibm.com> <1557416528.10635.62.camel@linux.ibm.com>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v10 01/12] MODSIGN: Export module signature definitions
-In-reply-to: <1557416528.10635.62.camel@linux.ibm.com>
-Date:   Tue, 28 May 2019 16:03:15 -0300
+        Tue, 28 May 2019 15:03:54 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r15so5989823lfm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xNIfN8iP61jt3zQccTc9JxOkZ8J4CEm1u7qbNWzRMOM=;
+        b=Pd06yysCLBSycRTXjmvKdW4Y+phHo573v+/6jzUP+xP3ps/hunOO1mtGrJzymmotMx
+         7zR1oU8ZhbJj6VR78NkwLbJCmbgDlR7RA9b9wJIKnVnlN5jzcYV8+ATU/fkJ7tc8ab7w
+         /+hb4CRqYA40DegwtV/SFf/6I8uHmFQixBD+OW25ggCJjCc/O1z+7TaZwvyE+BSibKBd
+         v93/MxXRvgdq3Jkw7MhzduiRY55JyN6o3S0bwW10eo6Jd0abP542DYqBvpjnY3ssA5md
+         rH5mrArbilaSYpjmru+39iJLPZupA8VX4KmPS+PI8UW6HiWd17rLGY9+/NKCIy47WG2d
+         lNbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xNIfN8iP61jt3zQccTc9JxOkZ8J4CEm1u7qbNWzRMOM=;
+        b=bp6VZrzSCyXI7od1JUfG2kviK/HB8v92qB/jZp3GGDqkGRzHAPQVPbGOOLcVBjveAx
+         zdcVftqwtP8O259J7z7DLap5omXmAhQ0+RStQ5UHagI1M7FeGXzYqqUxB1+sQiHKP4uO
+         mMTneQEERehP7mxxasmWR4VQHTuFsIeUjz5gAtyVxy6N/CfxJ2xLEIpIQoiNaCrImLpN
+         g/5oiDaI/jC16ChwM6ikJoZutwsa6DEY20Zwtm5Olwvg6vqgTA5yrgoyBfksWmAe5jL8
+         MRMa7xGkumoQZl4JS+OJiL8oOIOlgaHPoij+0TMtycgQ9EMhbUoA+qJeNtyFwUfJyoJ4
+         S+DQ==
+X-Gm-Message-State: APjAAAUxGXa2Z2NmQ9xZ4e4oW4XpOMEEdDLB8CR1gICLHHgSNO+3XdEi
+        ZrQKGCNH1Cu0Yo3vd/lqR4fjgfHTIeVi6Oyqdn0=
+X-Google-Smtp-Source: APXvYqxOnR1QAtlj4QPyaxK/bP27aOlkgoiK+XMInOl7nujBMV3IZ3Lpodwe6l5EmMlVNYQnEc9yesNbk20aP1l6zrU=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr2369750lfn.165.1559070232676;
+ Tue, 28 May 2019 12:03:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19052819-0064-0000-0000-000003E60CE6
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209913; UDB=6.00635630; IPR=6.00990943;
- MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:03:29
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052819-0065-0000-0000-00003DA623F4
-Message-Id: <875zpu766k.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280119
+References: <1558366258-3808-1-git-send-email-jrdr.linux@gmail.com>
+ <20190521085547.58e1650c@erd987> <CAFqt6zZA32QA-6VtaKcrEtq=qkoGLHpirSvXb5wt7-wd_-74hQ@mail.gmail.com>
+ <CANiq72nd5i4ADU1GbEt1Dkhp-5YkC9ip-h4a0G64oN+b95wAXA@mail.gmail.com>
+ <CANiq72=zCD7AAE-OBzDYm5GXenoF48SdzwO1LunWSfexqBuH7A@mail.gmail.com> <CAFqt6zaUhPJYozmq-m_BjJTh5EUmsQoE4yZ+Ovv6F-ymns+JGA@mail.gmail.com>
+In-Reply-To: <CAFqt6zaUhPJYozmq-m_BjJTh5EUmsQoE4yZ+Ovv6F-ymns+JGA@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 28 May 2019 21:03:41 +0200
+Message-ID: <CANiq72miwcM8Jt1pFeCKs=rstbSB70wyPGPSiC7Mgf3f=Z44Lg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] auxdisplay/ht16k33.c: Convert to use vm_map_pages_zero()
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     Robin van der Gracht <robin@protonic.nl>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Mimi Zohar <zohar@linux.ibm.com> writes:
-
-> On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
->> IMA will use the module_signature format for append signatures, so export
->> the relevant definitions and factor out the code which verifies that the
->> appended signature trailer is valid.
->> 
->> Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
->> and be able to use mod_check_sig() without having to depend on either
->> CONFIG_MODULE_SIG or CONFIG_MODULES.
->> 
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> Cc: Jessica Yu <jeyu@kernel.org>
+On Fri, May 24, 2019 at 8:07 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
 >
-> Just a couple minor questions/comments below.
+> > > Taking a quick look now, by the way, why does vm_map_pages_zero() (and
+> > > __vm_map_pages() etc.) get a pointer to an array instead of a pointer
+> > > to the first element?
 >
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> For this particular driver, one page is getting mapped into vma. But
+> there are other
+> places where a entire page array ( with more than one pages) mapped into
+> vma. That's the reason to pass pointer to an array and do rest of the operations
+> inside __vm_map_pages().
 
-Thanks for your review and your comments!
+Ah, "pointer to array of source kernel pages" made me think the actual
+`struct page`s were the ones consecutive in memory, not the pointers.
+Maybe "array of page pointers" is more clear.
 
->> diff --git a/init/Kconfig b/init/Kconfig
->> index 4592bf7997c0..a71019553ee1 100644
->> --- a/init/Kconfig
->> +++ b/init/Kconfig
->> @@ -1906,7 +1906,7 @@ config MODULE_SRCVERSION_ALL
->>  config MODULE_SIG
->>  	bool "Module signature verification"
->>  	depends on MODULES
->> -	select SYSTEM_DATA_VERIFICATION
->> +	select MODULE_SIG_FORMAT
->>  	help
->>  	  Check modules for valid signatures upon load: the signature
->>  	  is simply appended to the module. For more information see
->> @@ -2036,6 +2036,10 @@ config TRIM_UNUSED_KSYMS
->>  
->>  endif # MODULES
->>  
->> +config MODULE_SIG_FORMAT
->> +	def_bool n
->> +	select SYSTEM_DATA_VERIFICATION
+> > Also, in __vm_map_pages(), semantically w.r.t. to the comment,
+> > shouldn't the first check test for equality too? (i.e. for vm_pgoff ==
+> > num)? (even if such case fails in the second test anyway).
 >
-> Normally Kconfigs, in the same file, are defined before they are used.
->  I'm not sure if that is required or just a convention.
+> Sorry, didn't get it. Do you mean there should be a separate check for
+> *vm_pgoff == num* ?
 
-I think it's a convention, because it seemed to work in the current way.
-For the next version I moved the config MODULE_SIG_FORMAT definition to
-just before "menuconfig MODULES"
+No, that the first check should be widened. I will send a patch.
 
->> diff --git a/kernel/module_signature.c b/kernel/module_signature.c
->> new file mode 100644
->> index 000000000000..6d5e59f27f55
->> --- /dev/null
->> +++ b/kernel/module_signature.c
->> @@ -0,0 +1,45 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Module signature checker
->> + *
->> + * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
->> + * Written by David Howells (dhowells@redhat.com)
->> + */
->> +
->> +#include <linux/errno.h>
->> +#include <linux/printk.h>
->> +#include <linux/module_signature.h>
->> +#include <asm/byteorder.h>
->> +
->> +/**
->> + * mod_check_sig - check that the given signature is sane
->> + *
->> + * @ms:		Signature to check.
->> + * @file_len:	Size of the file to which @ms is appended.
->
-> "name" is missing.
-
-Fixed.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Cheers,
+Miguel
