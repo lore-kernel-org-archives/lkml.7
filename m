@@ -4,61 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7244AC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E96C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460392173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881D921726
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KSglKfj0"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZuoI4pQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfE1RIu (ORCPT
+        id S1727090AbfE1RKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:08:50 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:40408 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726452AbfE1RIu (ORCPT
+        Tue, 28 May 2019 13:10:33 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37146 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbfE1RKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:08:50 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        Tue, 28 May 2019 13:10:33 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EB9E8C1F2D;
-        Tue, 28 May 2019 17:08:32 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BBDB7C0B37;
+        Tue, 28 May 2019 17:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559063313; bh=1k8P5Qd46Ycl7mOHtTVI5tAA/ZKzjUkfAL7u1HmV3rs=;
+        t=1559063441; bh=LchI2eWfLBDHMLZRyfaGiC/saqLcWbp3hOs/bfvfbrY=;
         h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=KSglKfj06MVk+zqhiDdChS7efuF1/uv8QzX4WjP6mjcsPQcGJmkWP15pawzV6d9+v
-         bfKN4NrQOzh3RV2MYcbQcXS3Ui2VyIEFtY/ECgysrkRW0xLt0UgIHLD0zaO70KBtXO
-         w/HreM3vWNT4RY3azsa95zdRG4u0wYGyuBkLrQ76j3EYe/nFoSzrKDo4vKD1EvG/uP
-         EyE74sV9on8QNs+nTQxhkwSOLUheEI6F26SW6+Tdn99bpqwKTgT+WGW2wcSpYj6rQT
-         IETSMyL08/EeZSQNLFhJ43eCsLfHnvY4TTkF3E+C8S4Hm7MD/47EfzRooO6YPMhNKF
-         2oDu6a7iBmziQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        b=ZuoI4pQ4ItVFWgjcOnCDAzkER0o3GiRepAg+qbxBXVk09GNtOIT1IVLXimzvvIogF
+         vyuvHWmAr4lnojsdHWVWcLS0efphX/dHRzlQlQF5GDGab/H1lCRp3/y96837fXE7zl
+         9yRLLIig7ZHbAvukNMnv/VnjMvzC3oFsQ++qxZfJ4X0ySZSZUZJ6jVVPG9SrbKQNvv
+         QpaAJ70VMUMXrkZOz0jGW4Uv8OW+H7n/BeOCDA2UjXlUhEnoi4QuoXi9Oidkc2O1++
+         s62gB3Tq08uU/C5kVP5lAjk4JxvVLwZA3VhOzE93xzF1mpzYyJ6TlAA5fYOqrSJF1c
+         wSqGnNKd4a/bQ==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id DBCAFA005D;
-        Tue, 28 May 2019 17:08:48 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id CF0B7A009C;
+        Tue, 28 May 2019 17:10:32 +0000 (UTC)
 Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 10:08:48 -0700
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 10:10:32 -0700
 Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
  IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 22:38:45 +0530
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 22:40:29 +0530
 Received: from [10.13.182.230] (10.13.182.230) by
  IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 28 May 2019 22:38:58 +0530
-Subject: Re: [PATCH v3] ARC: [plat-hsdk]: Add support of Vivante GPU
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+ (TLS) id 14.3.408.0; Tue, 28 May 2019 22:40:42 +0530
+Subject: Re: [PATCH] ARC: [plat-hsdk] Get rid of inappropriate PHY settings
+To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         <linux-snps-arc@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.arc,gmane.linux.drivers.devicetree
-References: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
+CC:     <linux-kernel@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>,
+        "Rob Herring" <robh+dt@kernel.org>
+Newsgroups: gmane.linux.kernel,gmane.linux.kernel.arc
+References: <20190515153340.40074-1-abrodkin@synopsys.com>
 From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=vgupta@synopsys.com; keydata=
@@ -84,12 +83,12 @@ Autocrypt: addr=vgupta@synopsys.com; keydata=
  d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
  cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
  tf3ClCidHNaGky9KcNSQ
-Message-ID: <bfe55e41-961f-9824-e613-d3f38301680a@synopsys.com>
-Date:   Tue, 28 May 2019 10:08:34 -0700
+Message-ID: <968eb5f2-1a9b-f9bb-8a49-ad5221c4d274@synopsys.com>
+Date:   Tue, 28 May 2019 10:10:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20190515153340.40074-1-abrodkin@synopsys.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -99,11 +98,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 10:54 AM, Eugeniy Paltsev wrote:
-> HSDK board has built-in Vivante GPU IP which works perfectly fine
-> with Etnaviv driver, so let's use it.
+On 5/15/19 8:33 AM, Alexey Brodkin wrote:
+> Initial bring-up of the platform was done on FPGA prototype
+> where TI's DP83867 PHY was used. And so some specific PHY
+> options were added.
 > 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> Just to confirm this is what we get on FPGA prototype in the bootlog:
+> | TI DP83867 stmmac-0:00: attached PHY driver [TI DP83867] ...
+> 
+> On real board though we have Micrel KZS9031 PHY and we even have
+> CONFIG_MICREL_PHY=y set in hsdk_defconfig. That's what we see in the bootlog:
+> | Micrel KSZ9031 Gigabit PHY stmmac-0:00: ...
+> 
+> So essentially all TI-related bits have to go away.
+> 
+> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+> Cc: Trent Piepho <tpiepho@impinj.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
 
 Added to for-curr.
 
