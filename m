@@ -2,78 +2,112 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FACFC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C42C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDAF2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348312054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eSHzSzix"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="W2MfJnxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfE1NoC (ORCPT
+        id S1727631AbfE1NpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:44:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58948 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbfE1NoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:44:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nvi7MnXX/CxSxnFKxV1sR7rcZWzepfL3hwfQ+8PG8Y8=; b=eSHzSzixc2JWxyPPSo4TVlPJ9
-        mIHi6+veTT3ZL1ETz09keDDvVtcq9Po84m1vYq+noiFHeyLKF4vJSvGG9BdGNdlO2ofeKujyS2kHK
-        +TmMPX86O8DaF/upbtQ5i7LIcdoVbKKm51znjgJXDhJMpACvQOAdqFdqE4MFnxWbTujkUgWOQ4har
-        RVo4K25BHO4/GO4WKEoNtmeBXFiwLZoSmjCxt1raV2ccn/IlKehMRT2YiXeo3wIPTdEnhPqEMF5Mk
-        AoYdtzOAX0MWtxQgDA2+TzJZTmRMtP/eo1WGrCGpRSouK3CP8CTO0EoGAKctpfbczlgR9QvZSxsgv
-        ikjSPcPyA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVcOS-0003Fs-LE; Tue, 28 May 2019 13:43:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 82B212065C636; Tue, 28 May 2019 15:43:54 +0200 (CEST)
-Date:   Tue, 28 May 2019 15:43:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
-Message-ID: <20190528134354.GP2623@hirez.programming.kicks-ass.net>
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-5-kan.liang@linux.intel.com>
+        Tue, 28 May 2019 09:45:04 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:35436 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbfE1NpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:45:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=v8rsP2R8PtTOiYNMg+AH6ULR38KzTJtcVg1hTMGe/FQ=; b=W2MfJnxvxkqjI8/Elz3gKtqHV4
+        zbUlNH5nPGoJz2AbDZa0fl1wH+qgsXTXZcpcMGeH0TcOv0ZvHjPDj7aPfBqUXfRB+sqwgbg2tmHBL
+        GMA5Bv0CR8EdJZge67WN6jJmtROq3wBOpbC7n60qddNILHuox/2ufS9FAam8EY16OtLM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hVcPS-0006hs-Ep; Tue, 28 May 2019 15:44:58 +0200
+Date:   Tue, 28 May 2019 15:44:58 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: fix handling of upper half of
+ STATS_TYPE_PORT
+Message-ID: <20190528134458.GE18059@lunn.ch>
+References: <20190528131701.23912-1-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190528131701.23912-1-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
-> @@ -3287,6 +3304,13 @@ static int core_pmu_hw_config(struct perf_event *event)
->  	return intel_pmu_bts_config(event);
->  }
->  
-> +#define EVENT_CODE(e)	(e->attr.config & INTEL_ARCH_EVENT_MASK)
-> +#define is_slots_event(e)	(EVENT_CODE(e) == 0x0400)
-> +#define is_perf_metrics_event(e)				\
-> +		(((EVENT_CODE(e) & 0xff) == 0xff) &&		\
-> +		 (EVENT_CODE(e) >= 0x01ff) &&			\
-> +		 (EVENT_CODE(e) <= 0x04ff))
-> +
+On Tue, May 28, 2019 at 01:17:10PM +0000, Rasmus Villemoes wrote:
+> Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
+> up in bits 47:32 of the return value, instead of bits 31:16 as they
+> should.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-That is horrific.. (e & INTEL_ARCH_EVENT_MASK) & 0xff is just daft,
-that should be: (e & ARCH_PERFMON_EVENTSEL_EVENT).
+Hi Rasmus
 
-Also, we already have fake events for event=0, see FIXED2, why are we
-now using event=0xff ?
+Please include a Fixes tag, to indicate where the problem was
+introduced. In this case, i think it was:
+
+Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
+
+And set the Subject to [PATCH net] to indicate this should be applied
+to the net tree.
+
+> ---
+> I also noticed that it's a bit inconsistent that we return U64_MAX if
+> there's a read error in STATS_TYPE_PORT, while
+> mv88e6xxx_g1_stats_read() returns 0 in case of a read error. In
+> practice, register reads probably never fail so it doesn't matter.
+> 
+>  drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+> index 370434bdbdab..317553d2cb21 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+> @@ -785,7 +785,7 @@ static uint64_t _mv88e6xxx_get_ethtool_stat(struct mv88e6xxx_chip *chip,
+>  			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
+>  			if (err)
+>  				return U64_MAX;
+> -			high = reg;
+> +			low |= ((u32)reg) << 16;
+>  		}
+>  		break;
+>  	case STATS_TYPE_BANK1:
+
+What i don't like about this is how the function finishes:
+
+       	}
+        value = (((u64)high) << 32) | low;
+        return value;
+}
+
+A better fix might be
+
+-		break
++		value = (((u64)high) << 16 | low;
++		return value;
+
+	Andrew	
