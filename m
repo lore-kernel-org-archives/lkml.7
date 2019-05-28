@@ -2,173 +2,121 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0BBC07542
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75C22075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E272075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 02:03:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="UoloAsRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfE1B6G (ORCPT
+        id S1727911AbfE1CDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:58:06 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:37852 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727865AbfE1B6F (ORCPT
+        Mon, 27 May 2019 22:03:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42490 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727763AbfE1CDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:58:05 -0400
-Received: by mail-it1-f197.google.com with SMTP id n10so1048834ita.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 18:58:05 -0700 (PDT)
+        Mon, 27 May 2019 22:03:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r22so7566921pfh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 May 2019 19:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=babayev.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=JaRPKvxw8+L+l1OScOFu7hcSbVbLQEUBHgcFnYYHmu4=;
+        b=UoloAsRruBW1XQDpfAyHrpJiDnUusRnJGYAd3/CPmhR9+d00govfBjxS7ZRMtQs0DT
+         pkp3tpflZlxImlkyMcfYcKdblDGWPHVZJLZOpaioebFMoPJsWLyVyOMalaIxVh1s3GV6
+         IxFv2mFwubmVUqaI2Ubqa3MFjUyaEgK/Ehidg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=f50L0/gM15p3IwCPfAp/JpyNmK+MV7NE0qtjgZoia8w=;
-        b=AUIBsx07iX+nQ3EapE4ECkPT4XyekQqHzS5iFyOL+NXsVqfwiglLZqK724BIFR8Zgh
-         a3xWk4gKEtbfMm8NrwGofue4sqHst2O3fjmpznAvsG7Z5SOEOhYluZDZ5pHvi1LbeSXk
-         n5xrELOPhWETy6QTU7zIQLsAyfq94I6sy+lIhhonyejD5jyOP3VID2+TwwyQnSHbqALZ
-         V8X5jRJq43qMfA2qH5i414WCNfxLcWmKcf8F4KLjjX68QeuFTLqkvbaHFpSIZFzIbNKr
-         aReJjdQq2kJhXnpy0Q6WMxXC3GM1J/8mmqt44pQLMDMVxlB14IoiEAg37vIEGVDixJpR
-         4CIA==
-X-Gm-Message-State: APjAAAX9Mvo0+O5ngX6SCGNzgLYEXmk+ld8zTujizltDAyQl+TB+Z1Db
-        cacsKyqqJMeoPAt4atyKypZrx32WLvXI6w3FihfozOuKAmfn
-X-Google-Smtp-Source: APXvYqzVah2+cIKF3bNv+ldrb/eL3LShn6Bo3r2PtgArFDsnpRzi6BB9x7k7hUGuAqFYiZ6g0C8CpB6LIWzOBGdB4kBxtF29IOrF
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=JaRPKvxw8+L+l1OScOFu7hcSbVbLQEUBHgcFnYYHmu4=;
+        b=l+1WjhY37fyD/uX84CZqI4WpBTYslFg0na8Xfh4o4HkSK4AdCDLPzO/SSBohvvDVA0
+         5tbxhUBkdrdhoNJT7ladHbGwOynLrdjrJecvjbMEl6cyWsws3T6AzOS3OMfUUNNqXeo0
+         hRq2oHkax8kkFp5v7Lwgnskv7l17qbRM6e8gfdBNdpbXd7lewMW53rD6HGA4f5uoveZO
+         3W6i7WXXlUN6j/vfAy4aGgvsSLsFcxK3PidT7J+8Povu46hdYpwNYRWKCIqdDNc7LiFM
+         ulzZCUHenAY4GLE4IVN8cMaZR4Rdqo3ZxGzWbGAWnGpNSQ5QegEs9pyHSD9AEpXOy3lZ
+         Lj5w==
+X-Gm-Message-State: APjAAAXNQ55Ee6FLyEBiAzEcGVzzhYMGJB09Fek3iHYZunWuAux8VfLn
+        y6QSS6xWN4mEKINAKmZMCZk1PgrF5smqfQ==
+X-Google-Smtp-Source: APXvYqw2SNP/oW+Z1HqXmWCh/MRHPfCU1W0Ako0J9SiTpph/+j3M6XiUeGDrvUXSkpmF5PVfGG+p2w==
+X-Received: by 2002:a17:90a:2042:: with SMTP id n60mr2230768pjc.8.1559009025213;
+        Mon, 27 May 2019 19:03:45 -0700 (PDT)
+Received: from localhost ([128.107.241.177])
+        by smtp.gmail.com with ESMTPSA id u6sm6899535pgm.22.2019.05.27.19.03.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 May 2019 19:03:44 -0700 (PDT)
+References: <20190505193435.3248-1-ruslan@babayev.com> <20190525005302.27164-1-ruslan@babayev.com> <20190527184743.GA8808@kunai>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Ruslan Babayev <ruslan@babayev.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Ruslan Babayev <ruslan@babayev.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        xe-linux-external@cisco.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
+In-reply-to: <20190527184743.GA8808@kunai>
+Date:   Mon, 27 May 2019 19:03:44 -0700
+Message-ID: <874l5f9vy7.fsf@babayev.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7605:: with SMTP id g5mr2679266iom.79.1559008684703;
- Mon, 27 May 2019 18:58:04 -0700 (PDT)
-Date:   Mon, 27 May 2019 18:58:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da88840589e8fe2c@google.com>
-Subject: memory leak in nr_rx_frame
-From:   syzbot <syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+Wolfram Sang writes:
 
-HEAD commit:    c5b44095 Merge tag 'trace-v5.2-rc1-2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135dcac4a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-dashboard link: https://syzkaller.appspot.com/bug?extid=d6636a36d3c34bd88938
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159ca182a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ac4c5ca00000
+> On Fri, May 24, 2019 at 05:53:01PM -0700, Ruslan Babayev wrote:
+>> This allows drivers to lookup i2c adapters on ACPI based systems similar=
+ to
+>> of_get_i2c_adapter_by_node() with DT based systems.
+>>=20
+>> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+>> Cc: xe-linux-external@cisco.com
+>
+> Please have a look how your patches look in my inbox:
+>
+> May 05 Ruslan Babayev  ( 129) [PATCH] net: phy: sfp: enable i2c-bus detec=
+tion on ACPI based systems
+> May 05 Ruslan Babayev  (  65) =E2=94=9C=E2=94=80>[PATCH 1/2] i2c: acpi: e=
+xport i2c_acpi_find_adapter_by_handle
+> May 24 Ruslan Babayev  (  65) =E2=94=94=E2=94=80>[PATCH net-next v2 1/2] =
+i2c: acpi: export i2c_acpi_find_adapter_by_handle
+> May 05 Ruslan Babayev  (  65) [PATCH net-next 1/2] i2c: acpi: export i2c_=
+acpi_find_adapter_by_handle
+> May 06 Ruslan Babayev  (   3) =E2=94=9C=E2=94=80>[PATCH RFC v2 net-next] =
+Enable SFP support on ACPI
+> May 06 Ruslan Babayev  (  65) =E2=94=9C=E2=94=80>[PATCH RFC v2 net-next 1=
+/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
+> May 06 Ruslan Babayev  ( 120) =E2=94=94=E2=94=80>[PATCH RFC v2 net-next 2=
+/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
+> May 07 Ruslan Babayev  ( 154)   =E2=94=94=E2=94=80&=E2=94=80>
+> May 07 Ruslan Babayev  (  10)     =E2=94=94=E2=94=80>
+> May 22 Ruslan Babayev  (  29)       =E2=94=94=E2=94=80>
+> May 05 Ruslan Babayev  (  93) [PATCH net-next 2/2] net: phy: sfp: enable =
+i2c-bus detection on ACPI based systems
+> May 06 Ruslan Babayev  (  25) =E2=94=9C=E2=94=80&=E2=94=80>
+> May 06 Ruslan Babayev  (  99) =E2=94=94=E2=94=80&=E2=94=80>
+>
+> This is highly confusing, and super hard to find out which patches belong
+> together. v2 2/2 seems even missing. Please resend this as a new series w=
+ithout
+> any in-reply-to, and a fresh cover-letter, so I know which one to apply t=
+o my
+> tree.
+>
+> Thanks,
+>
+>    Wolfram
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d6636a36d3c34bd88938@syzkaller.appspotmail.com
-
-DRCONF(NETDEV_CHANGE): hsr_slave_0: link becomes ready
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88812393a800 (size 2048):
-   comm "softirq", pid 0, jiffies 4294941705 (age 14.320s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     06 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-   backtrace:
-     [<0000000040c90168>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<0000000040c90168>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<0000000040c90168>] slab_alloc mm/slab.c:3326 [inline]
-     [<0000000040c90168>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<0000000040c90168>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<00000000cf430504>] kmalloc include/linux/slab.h:552 [inline]
-     [<00000000cf430504>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
-     [<00000000d895dd9d>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
-     [<000000006dfffbd8>] nr_make_new net/netrom/af_netrom.c:479 [inline]
-     [<000000006dfffbd8>] nr_rx_frame+0x3ba/0x8a0 net/netrom/af_netrom.c:962
-     [<000000007e984676>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:62
-     [<0000000080a4b335>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<00000000b58aba8b>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<00000000b58aba8b>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<00000000b58aba8b>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<00000000b58aba8b>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000c8260f2e>] __do_softirq+0x115/0x35e kernel/softirq.c:293
-     [<00000000a50d1686>] invoke_softirq kernel/softirq.c:374 [inline]
-     [<00000000a50d1686>] irq_exit+0xbb/0xe0 kernel/softirq.c:414
-     [<00000000fb3290a8>] exiting_irq arch/x86/include/asm/apic.h:536  
-[inline]
-     [<00000000fb3290a8>] smp_apic_timer_interrupt+0x7b/0x170  
-arch/x86/kernel/apic/apic.c:1068
-     [<000000001caa821f>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:806
-     [<0000000092c5e05c>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000006b3a6a48>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000a7e7084a>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-     [<00000000f6ad9bb1>] cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-     [<00000000f6ad9bb1>] do_idle+0x1ea/0x2c0 kernel/sched/idle.c:263
-     [<00000000711ac4f4>] cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-
-BUG: memory leak
-unreferenced object 0xffff88811f3ca1e0 (size 32):
-   comm "softirq", pid 0, jiffies 4294941705 (age 14.320s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     03 00 00 00 03 00 00 00 0f 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000005fe8e8f4>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000005fe8e8f4>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000005fe8e8f4>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000005fe8e8f4>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000003ffaa535>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000003ffaa535>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000003ffaa535>] selinux_sk_alloc_security+0x48/0xb0  
-security/selinux/hooks.c:5059
-     [<000000001306812e>] security_sk_alloc+0x49/0x70  
-security/security.c:2030
-     [<00000000bbbf2d36>] sk_prot_alloc+0xf1/0x170 net/core/sock.c:1611
-     [<00000000d895dd9d>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
-     [<000000006dfffbd8>] nr_make_new net/netrom/af_netrom.c:479 [inline]
-     [<000000006dfffbd8>] nr_rx_frame+0x3ba/0x8a0 net/netrom/af_netrom.c:962
-     [<000000007e984676>] nr_loopback_timer+0x4e/0xd0  
-net/netrom/nr_loopback.c:62
-     [<0000000080a4b335>] call_timer_fn+0x45/0x1e0 kernel/time/timer.c:1322
-     [<00000000b58aba8b>] expire_timers kernel/time/timer.c:1366 [inline]
-     [<00000000b58aba8b>] __run_timers kernel/time/timer.c:1685 [inline]
-     [<00000000b58aba8b>] __run_timers kernel/time/timer.c:1653 [inline]
-     [<00000000b58aba8b>] run_timer_softirq+0x256/0x740  
-kernel/time/timer.c:1698
-     [<00000000c8260f2e>] __do_softirq+0x115/0x35e kernel/softirq.c:293
-     [<00000000a50d1686>] invoke_softirq kernel/softirq.c:374 [inline]
-     [<00000000a50d1686>] irq_exit+0xbb/0xe0 kernel/softirq.c:414
-     [<00000000fb3290a8>] exiting_irq arch/x86/include/asm/apic.h:536  
-[inline]
-     [<00000000fb3290a8>] smp_apic_timer_interrupt+0x7b/0x170  
-arch/x86/kernel/apic/apic.c:1068
-     [<000000001caa821f>] apic_timer_interrupt+0xf/0x20  
-arch/x86/entry/entry_64.S:806
-     [<0000000092c5e05c>] native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-     [<000000006b3a6a48>] arch_cpu_idle+0xa/0x10  
-arch/x86/kernel/process.c:571
-     [<00000000a7e7084a>] default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Will do, sorry about that.
