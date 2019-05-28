@@ -2,226 +2,131 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF9C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C84208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EEB20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559042590;
-	bh=xCTbSkA9E2ZK9Qb5B/KmXzjAxM64rKW0LvN/KmsTp44=;
+	s=default; t=1559042924;
+	bh=izXSK7Wde25XcQ8pvIweznD9lZihceruvVpgb9FdwNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n7H8pfGQs5UQRCDPpoImUC+ThJOc6N7IHco06awGR/JpPIDjkyxx9l1MKpz1CdupY
-	 8B2HI6gXx9S3svu+8HVfWCpLLSEq9KuZewT499G5ZzXYCxt27xwKdi0uNSvlPKBXyX
-	 xz5KhNdu4AlUvPgY1v5C1LF/Y/1+W8zRszvPro8c=
+	b=pjLIm2FFlS1BMHDj7A+tIiwzZqGvdfQe3mcp13omInnwzd1VYCUDuRl5C5E9UV2FE
+	 xeZbagzmHOPHxEx0rttIgkZlhKeF1PnByPAEt7PCn3l2nD5/tYaCKpXk7GGyaPmBWm
+	 4E+mZbjlVRsne3h40/lklDdKg8BB/yFaO0J1RUoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfE1LXJ (ORCPT
+        id S1726557AbfE1L2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:23:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx1.suse.de"
+        Tue, 28 May 2019 07:28:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48788 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726313AbfE1LXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:23:09 -0400
+        id S1726313AbfE1L2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:28:43 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1EFA0AF42;
-        Tue, 28 May 2019 11:23:07 +0000 (UTC)
-Date:   Tue, 28 May 2019 13:23:05 +0200
+        by mx1.suse.de (Postfix) with ESMTP id 5C877AF1C;
+        Tue, 28 May 2019 11:28:41 +0000 (UTC)
+Date:   Tue, 28 May 2019 13:28:40 +0200
 From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
-        david@redhat.com
-Subject: Re: [v6 2/3] mm/hotplug: make remove_memory() interface useable
-Message-ID: <20190528112305.GX1658@dhcp22.suse.cz>
-References: <20190517215438.6487-1-pasha.tatashin@soleen.com>
- <20190517215438.6487-3-pasha.tatashin@soleen.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528112840.GY1658@dhcp22.suse.cz>
+References: <20190527124411.GC1658@dhcp22.suse.cz>
+ <20190528032632.GF6879@google.com>
+ <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
+ <20190528111208.GA30365@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517215438.6487-3-pasha.tatashin@soleen.com>
+In-Reply-To: <20190528111208.GA30365@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-05-19 17:54:37, Pavel Tatashin wrote:
-> As of right now remove_memory() interface is inherently broken. It tries
-> to remove memory but panics if some memory is not offline. The problem
-> is that it is impossible to ensure that all memory blocks are offline as
-> this function also takes lock_device_hotplug that is required to
-> change memory state via sysfs.
+On Tue 28-05-19 20:12:08, Minchan Kim wrote:
+> On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
+> > On Tue 28-05-19 19:32:56, Minchan Kim wrote:
+> > > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > > > > if we went with the per vma fd approach then you would get this
+> > > > > > > > feature automatically because map_files would refer to file backed
+> > > > > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > > > > >
+> > > > > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > > > > so map_anon wouldn't be helpful.
+> > > > > > 
+> > > > > > Without chiming on whether the filter option is a good idea, I'd like
+> > > > > > to suggest that providing an efficient binary interfaces for pulling
+> > > > > > memory map information out of processes.  Some single-system-call
+> > > > > > method for retrieving a binary snapshot of a process's address space
+> > > > > > complete with attributes (selectable, like statx?) for each VMA would
+> > > > > > reduce complexity and increase performance in a variety of areas,
+> > > > > > e.g., Android memory map debugging commands.
+> > > > > 
+> > > > > I agree it's the best we can get *generally*.
+> > > > > Michal, any opinion?
+> > > > 
+> > > > I am not really sure this is directly related. I think the primary
+> > > > question that we have to sort out first is whether we want to have
+> > > > the remote madvise call process or vma fd based. This is an important
+> > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> > > > so far unfortunately.
+> > > 
+> > > With current usecase, it's per-process API with distinguishable anon/file
+> > > but thought it could be easily extended later for each address range
+> > > operation as userspace getting smarter with more information.
+> > 
+> > Never design user API based on a single usecase, please. The "easily
+> > extended" part is by far not clear to me TBH. As I've already mentioned
+> > several times, the synchronization model has to be thought through
+> > carefuly before a remote process address range operation can be
+> > implemented.
 > 
-> So, between calling this function and offlining all memory blocks there
-> is always a window when lock_device_hotplug is released, and therefore,
-> there is always a chance for a panic during this window.
-> 
-> Make this interface to return an error if memory removal fails. This way
-> it is safe to call this function without panicking machine, and also
-> makes it symmetric to add_memory() which already returns an error.
+> I agree with you that we shouldn't design API on single usecase but what
+> you are concerning is actually not our usecase because we are resilient
+> with the race since MADV_COLD|PAGEOUT is not destruptive.
+> Actually, many hints are already racy in that the upcoming pattern would
+> be different with the behavior you thought at the moment.
 
-I was about to object because of the acpi hotremove but looking closer
-acpi_memory_remove_memory and few others already do use __remove_memory
-instead of remove_memory so this is good to go. I really hate how we had
-to BUG in remove_memory as well so this is definitely a good change.
+How come they are racy wrt address ranges? You would have to be in
+multithreaded environment and then the onus of synchronization is on
+threads. That model is quite clear. But we are talking about separate
+processes and some of them might be even not aware of an external entity
+tweaking their address space.
 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> If you are still concerning of address range synchronization, how about
+> moving such hints to per-process level like prctl?
+> Does it make sense to you?
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  include/linux/memory_hotplug.h |  8 +++--
->  mm/memory_hotplug.c            | 64 +++++++++++++++++++++++-----------
->  2 files changed, 49 insertions(+), 23 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ae892eef8b82..988fde33cd7f 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -324,7 +324,7 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
->  extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
->  extern void try_offline_node(int nid);
->  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
-> -extern void remove_memory(int nid, u64 start, u64 size);
-> +extern int remove_memory(int nid, u64 start, u64 size);
->  extern void __remove_memory(int nid, u64 start, u64 size);
->  
->  #else
-> @@ -341,7 +341,11 @@ static inline int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
->  	return -EINVAL;
->  }
->  
-> -static inline void remove_memory(int nid, u64 start, u64 size) {}
-> +static inline int remove_memory(int nid, u64 start, u64 size)
-> +{
-> +	return -EBUSY;
-> +}
-> +
->  static inline void __remove_memory(int nid, u64 start, u64 size) {}
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
->  
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 328878b6799d..ace2cc614da4 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1735,9 +1735,10 @@ static int check_memblock_offlined_cb(struct memory_block *mem, void *arg)
->  		endpa = PFN_PHYS(section_nr_to_pfn(mem->end_section_nr + 1))-1;
->  		pr_warn("removing memory fails, because memory [%pa-%pa] is onlined\n",
->  			&beginpa, &endpa);
-> -	}
->  
-> -	return ret;
-> +		return -EBUSY;
-> +	}
-> +	return 0;
->  }
->  
->  static int check_cpu_on_node(pg_data_t *pgdat)
-> @@ -1820,19 +1821,9 @@ static void __release_memory_resource(resource_size_t start,
->  	}
->  }
->  
-> -/**
-> - * remove_memory
-> - * @nid: the node ID
-> - * @start: physical address of the region to remove
-> - * @size: size of the region to remove
-> - *
-> - * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-> - * and online/offline operations before this call, as required by
-> - * try_offline_node().
-> - */
-> -void __ref __remove_memory(int nid, u64 start, u64 size)
-> +static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  {
-> -	int ret;
-> +	int rc = 0;
->  
->  	BUG_ON(check_hotplug_memory_range(start, size));
->  
-> @@ -1840,13 +1831,13 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
->  
->  	/*
->  	 * All memory blocks must be offlined before removing memory.  Check
-> -	 * whether all memory blocks in question are offline and trigger a BUG()
-> +	 * whether all memory blocks in question are offline and return error
->  	 * if this is not the case.
->  	 */
-> -	ret = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
-> -				check_memblock_offlined_cb);
-> -	if (ret)
-> -		BUG();
-> +	rc = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
-> +			       check_memblock_offlined_cb);
-> +	if (rc)
-> +		goto done;
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> @@ -1858,14 +1849,45 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
->  
->  	try_offline_node(nid);
->  
-> +done:
->  	mem_hotplug_done();
-> +	return rc;
->  }
->  
-> -void remove_memory(int nid, u64 start, u64 size)
-> +/**
-> + * remove_memory
-> + * @nid: the node ID
-> + * @start: physical address of the region to remove
-> + * @size: size of the region to remove
-> + *
-> + * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-> + * and online/offline operations before this call, as required by
-> + * try_offline_node().
-> + */
-> +void __remove_memory(int nid, u64 start, u64 size)
-> +{
-> +
-> +	/*
-> +	 * trigger BUG() is some memory is not offlined prior to calling this
-> +	 * function
-> +	 */
-> +	if (try_remove_memory(nid, start, size))
-> +		BUG();
-> +}
-> +
-> +/*
-> + * Remove memory if every memory block is offline, otherwise return -EBUSY is
-> + * some memory is not offline
-> + */
-> +int remove_memory(int nid, u64 start, u64 size)
->  {
-> +	int rc;
-> +
->  	lock_device_hotplug();
-> -	__remove_memory(nid, start, size);
-> +	rc  = try_remove_memory(nid, start, size);
->  	unlock_device_hotplug();
-> +
-> +	return rc;
->  }
->  EXPORT_SYMBOL_GPL(remove_memory);
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
-> -- 
-> 2.21.0
-> 
+No it doesn't. How is prctl any relevant to any address range
+operations.
 
 -- 
 Michal Hocko
