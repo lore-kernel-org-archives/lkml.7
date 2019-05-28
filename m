@@ -2,146 +2,128 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B54CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C979C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A10208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JQnCETd2"
+	by mail.kernel.org (Postfix) with ESMTP id 80477208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 15:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfE1PwL (ORCPT
+        id S1726879AbfE1PxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 11:52:11 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:36279 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfE1PwK (ORCPT
+        Tue, 28 May 2019 11:53:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42985 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfE1PxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 11:52:10 -0400
-Received: by mail-ua1-f66.google.com with SMTP id 94so8124873uam.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wS8hoqDHHdUU+aVRiUjUMRbeoVex4X+b9To5bYeyjZ8=;
-        b=JQnCETd2IGwTVEqh1W9deTB9fYhcQJX6SMUGhSDGjkZYZLhB0pKmx6lNWyqBBg4T3k
-         YnYqFvYU1x9cmheUMM9BwRitTXwwaV9CqogdqQxH/UUbtvQx/7yZoICE1RcfqiQFYjjc
-         SM3QyVkgaOPA7sDG30y2oiu2Ruha/g0sxwzKs=
+        Tue, 28 May 2019 11:53:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i2so18205505otr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:53:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wS8hoqDHHdUU+aVRiUjUMRbeoVex4X+b9To5bYeyjZ8=;
-        b=ZgUJLc4jaZlWdp1Orj+orjQzEp0WAaSsEP5gs7/98BtaElgvcL1Fv4Z+nVZUMGCC/Z
-         Cx3FdAJz1+EvGW+scGzzt5sA43rxZIfLr4EqMfjfBslLE08dmwhUr01prbMoOCrhER7w
-         OyznPWdp2/4Ppq6h6NIF2uNCoY35XcFStz8+KmFtfkhKghu6wxyttsij/VRbfUjxNk5Y
-         8Da94cXsDtEmRkx4FAN62fUOySiDIfCyuS15QkIFxiWANw0H/VrbK2RFX2YKFIEBcntb
-         2QoYXQhdYKoDmecopMGouUCbYITiIC8VMSf95qmdddqnrnvRu6QWlJZTGM/3wifQwooI
-         JecA==
-X-Gm-Message-State: APjAAAWbWdJUe3qYCwpuCh69kQJpflZRHdI6l3HM2O7mqMcuUdf9PlIG
-        +yTDDM5awk11qae3Bw8xF2xGWoUNyxc=
-X-Google-Smtp-Source: APXvYqwK6vbr07wUO4ZFmPeLWsyKpBIvCEdA4m5RSLJ1LNAyEYtxpFMdhggZrPnpxtFDF8S7z+R0gw==
-X-Received: by 2002:a9f:37c8:: with SMTP id q66mr836643uaq.119.1559058729894;
-        Tue, 28 May 2019 08:52:09 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id s78sm6513302vke.1.2019.05.28.08.52.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 08:52:08 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id c24so464297vsp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 08:52:05 -0700 (PDT)
-X-Received: by 2002:a67:ebd6:: with SMTP id y22mr57926194vso.87.1559058725303;
- Tue, 28 May 2019 08:52:05 -0700 (PDT)
+        bh=SEzbBlQG9PWtd5a62UB1gNIL78kQHaOBX6iGUYxagdo=;
+        b=CETdeiRrNkkY/iFb1YW3XjnzbwDSVoDvzeM68rUowQCUX95k5w3pv/tAvlkaXSFmDJ
+         zb17VDhb9Oo1RE0ubm0c9yT8XY/0Y8UaWVYslF7kwAjJHm2ZpG9yLcIwK3Q87V5eQswb
+         znquuuN1d5e7afl2pP+5wwqB6iDOFDRUndWlr04haGD/T/BDrencfAU1TC5dbmPezmo3
+         +cB5FWO0AGJkeOXog8a04ijJxsPCzfpbJaTTkAKZROoGFxaV69i1XpBmF88waWofI/+B
+         duG6+PXrWlNeYVUmyEWULmdpUe8aTXmjgtJidflLUhEjhkqgEMEZquMQSZQs+gLLJFQJ
+         crhQ==
+X-Gm-Message-State: APjAAAXY/wOkS+rV9m65T9isDB/z08npSTO0kaiPqL9ceUhAoced38Dg
+        nNWQn0ARJsbHFrIUZc7islVYjaIX+VPSH4FQ/gY=
+X-Google-Smtp-Source: APXvYqz5xuCiYcBraQ+feTCqPEQuyUWUjqF+idvC6b9V1DLp0HFySu2Mo/Dr2zATO9JApzPsBMuZVBeP6sCP1tifo1E=
+X-Received: by 2002:a9d:7987:: with SMTP id h7mr14821107otm.284.1559058783533;
+ Tue, 28 May 2019 08:53:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190517225420.176893-2-dianders@chromium.org> <20190528121833.7D3A460A00@smtp.codeaurora.org>
-In-Reply-To: <20190528121833.7D3A460A00@smtp.codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 28 May 2019 08:51:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
-Message-ID: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for
- BRCM 4354
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Madhan Mohan R <MadhanMohan.R@cypress.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        brcm80211-dev-list@cypress.com, Double Lo <double.lo@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>
+References: <20190312202008.29681-1-malat@debian.org> <20190312212318.17822-1-malat@debian.org>
+ <87d0k2q025.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87d0k2q025.fsf@concordia.ellerman.id.au>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Tue, 28 May 2019 17:52:52 +0200
+Message-ID: <CA+7wUswLP5cffrYZuEZ9bJeq1-FNNq6LFurMrOM1bmnDDN7E-g@mail.gmail.com>
+Subject: Re: [PATCH v2] powerpc/32: sstep: Move variable `rc` within
+ CONFIG_PPC64 sentinels
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+On Tue, May 28, 2019 at 1:40 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
 >
-> Douglas Anderson <dianders@chromium.org> wrote:
+> Mathieu Malaterre <malat@debian.org> writes:
 >
-> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
-> > sdio_aos") we disabled something called "command decode in sdio_aos"
-> > for a whole bunch of Broadcom SDIO WiFi parts.
+> > Fix warnings treated as errors with W=1:
 > >
-> > After that patch landed I find that my kernel log on
-> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
-> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+> >   arch/powerpc/lib/sstep.c:1172:31: error: variable 'rc' set but not used [-Werror=unused-but-set-variable]
 > >
-> > This seems to happen every time the Broadcom WiFi transitions out of
-> > sleep mode.  Reverting the part of the commit that affects the WiFi on
-> > my boards fixes the problem for me, so that's what this patch does.
-> >
-> > Note that, in general, the justification in the original commit seemed
-> > a little weak.  It looked like someone was testing on a SD card
-> > controller that would sometimes die if there were CRC errors on the
-> > bus.  This used to happen back in early days of dw_mmc (the controller
-> > on my boards), but we fixed it.  Disabling a feature on all boards
-> > just because one SD card controller is broken seems bad.  ...so
-> > instead of just this patch possibly the right thing to do is to fully
-> > revert the original commit.
-> >
-> > Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> > Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> > ---
+> > v2: as suggested prefer CONFIG_PPC64 sentinel instead of unused keyword
 >
-> I don't see patch 2 in patchwork and I assume discussion continues.
-
-Apologies.  I made sure to CC you individually on all the patches but
-didn't think about the fact that you use patchwork to manage and so
-didn't ensure all patches made it to all lists (by default each patch
-gets recipients individually from get_maintainer).  I'll make sure to
-fix for patch set #2.  If you want to see all the patches, you can at
-least find them on lore.kernel.org linked from the cover:
-
-https://lore.kernel.org/patchwork/cover/1075373/
-
-
-> Please resend if/when I need to apply something.
+> I'd rather avoid adding more ifdefs if we can.
 >
-> 2 patches set to Changes Requested.
+> I think this works?
+
+It does ! ;)
+
+Reviewed-by: Mathieu Malaterre <malat@debian.org>
+
+> cheers
 >
-> 10948785 [1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
-
-As per Arend I'll change patch #1 to a full revert instead of a
-partial revert.  Arend: please yell if you want otherwise.
-
--Doug
+> diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
+> index 3d33fb509ef4..600b036ddfda 100644
+> --- a/arch/powerpc/lib/sstep.c
+> +++ b/arch/powerpc/lib/sstep.c
+> @@ -1169,7 +1169,7 @@ static nokprobe_inline int trap_compare(long v1, long v2)
+>  int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+>                   unsigned int instr)
+>  {
+> -       unsigned int opcode, ra, rb, rc, rd, spr, u;
+> +       unsigned int opcode, ra, rb, rd, spr, u;
+>         unsigned long int imm;
+>         unsigned long int val, val2;
+>         unsigned int mb, me, sh;
+> @@ -1292,7 +1292,6 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+>         rd = (instr >> 21) & 0x1f;
+>         ra = (instr >> 16) & 0x1f;
+>         rb = (instr >> 11) & 0x1f;
+> -       rc = (instr >> 6) & 0x1f;
+>
+>         switch (opcode) {
+>  #ifdef __powerpc64__
+> @@ -1307,10 +1306,14 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+>                 return 1;
+>
+>  #ifdef __powerpc64__
+> -       case 4:
+> +       case 4: {
+> +               unsigned int rc;
+> +
+>                 if (!cpu_has_feature(CPU_FTR_ARCH_300))
+>                         return -1;
+>
+> +               rc = (instr >> 6) & 0x1f;
+> +
+>                 switch (instr & 0x3f) {
+>                 case 48:        /* maddhd */
+>                         asm volatile(PPC_MADDHD(%0, %1, %2, %3) :
+> @@ -1336,6 +1339,7 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+>                  * primary opcode which do not have emulation support yet.
+>                  */
+>                 return -1;
+> +       }
+>  #endif
+>
+>         case 7:         /* mulli */
