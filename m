@@ -2,80 +2,89 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F30C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA8CC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B212520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="TEvuUTVh"
+	by mail.kernel.org (Postfix) with ESMTP id 76FCE2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 06:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfE1Gft (ORCPT
+        id S1727111AbfE1Goe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 02:35:49 -0400
-Received: from plaes.org ([188.166.43.21]:52992 "EHLO plaes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfE1Gfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 02:35:48 -0400
-Received: from localhost (unknown [IPv6:2001:bb8:4008:20:21a:64ff:fe97:f60])
-        by plaes.org (Postfix) with ESMTPSA id 5DC37402DD;
-        Tue, 28 May 2019 06:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1559025346; bh=kd8HHQHYAXLACCGTSACw8a42kGWpfQ/F8JYYcsX/XT8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TEvuUTVh4pdYVKL7ECC0h7Ez7SmZsh0B4YFSfMl45Rbi7nTqCc2Jnzif3X4dc4CoY
-         Tg8dPecXfAaXSevxJfhYMoEhorkYaKojfRIZki/o6HYZDgo6/bhgI2K1qwrodsADDK
-         4MRg5ryjdllptfioOBCNuB+dz07JwUuK0mTchhRF7OnJJaW5BFyFvPpnI3EnTo5iqv
-         WSTelNes6qCy06XKhN2cQ+cs/hyVN5vbzPchFJmLQSN1GUGKfhBb/V80Z3P/dFXBqA
-         o1jiiInXe7Zz2JUM2X7bZiR6yFHk6f1UqNFQZ/k1pjtnfKOmpx6rLkw4DZvPxn6wdv
-         xoBA6jJCBd9Iw==
-From:   Priit Laes <plaes@plaes.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, Priit Laes <plaes@plaes.org>
-Subject: [RESEND PATCH] ARM: dts: sun7i: olimex-lime2: Enable ac and power supplies
-Date:   Tue, 28 May 2019 09:35:44 +0300
-Message-Id: <20190528063544.17408-1-plaes@plaes.org>
-X-Mailer: git-send-email 2.11.0
+        Tue, 28 May 2019 02:44:34 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:57881 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726693AbfE1Goe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 02:44:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TSrpwyt_1559025859;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSrpwyt_1559025859)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 28 May 2019 14:44:28 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        hdanton@sina.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v7 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing sc->nr_scanned
+Date:   Tue, 28 May 2019 14:44:18 +0800
+Message-Id: <1559025859-72759-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lime2 has battery connector so enable these supplies.
+The commit 9092c71bb724 ("mm: use sc->priority for slab shrink targets")
+has broken up the relationship between sc->nr_scanned and slab pressure.
+The sc->nr_scanned can't double slab pressure anymore.  So, it sounds no
+sense to still keep sc->nr_scanned inc'ed.  Actually, it would prevent
+from adding pressure on slab shrink since excessive sc->nr_scanned would
+prevent from scan->priority raise.
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
+The bonnie test doesn't show this would change the behavior of
+slab shrinkers.
+
+				w/		w/o
+			  /sec    %CP      /sec      %CP
+Sequential delete: 	3960.6    94.6    3997.6     96.2
+Random delete: 		2518      63.8    2561.6     64.6
+
+The slight increase of "/sec" without the patch would be caused by the
+slight increase of CPU usage.
+
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v4: Added Johannes's ack
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 9c8eecf4337a..9001b5527615 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -206,6 +206,14 @@
+ mm/vmscan.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 7acd0af..b65bc50 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1137,11 +1137,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		if (!sc->may_unmap && page_mapped(page))
+ 			goto keep_locked;
  
- #include "axp209.dtsi"
+-		/* Double the slab pressure for mapped and swapcache pages */
+-		if ((page_mapped(page) || PageSwapCache(page)) &&
+-		    !(PageAnon(page) && !PageSwapBacked(page)))
+-			sc->nr_scanned++;
+-
+ 		may_enter_fs = (sc->gfp_mask & __GFP_FS) ||
+ 			(PageSwapCache(page) && (sc->gfp_mask & __GFP_IO));
  
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
 -- 
-2.11.0
+1.8.3.1
 
