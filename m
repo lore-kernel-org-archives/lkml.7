@@ -2,111 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49A5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE063C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD0420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC34420883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d0ZmRbMZ"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Oy9FRep8";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Oy9FRep8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfE1Mn4 (ORCPT
+        id S1727536AbfE1MoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:43:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49718 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfE1Mn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=d1+i8FlqvZy+DZCyf6x+0+OU5pzU76eA12cyixRHZMw=; b=d0ZmRbMZ2FxnVIyiCx1WmtxZb
-        ykmUwzb2v1f/D9dWvWix6OWElCYB7UAhbTgbY/f248GD00SyMm1UeaSVCp2BefOoIxbVXcjYOhpPb
-        kGzdl2M0lT2Cgs012Ca1LCopXW//8EyG1tfwImOSAdmmw19G6OZH/YFR0rcu6BhehnnesYo/H7BvD
-        tCzMzkOIyVaiMNiV7D6F1MwGC1h5uXD9RrddhosnRiWiglrS+X+IjOO5REaBOOk+yb/y92Nqw22rn
-        a3SRPTqFAoXuZkvwBaeHJPcoBTmNfmZSKaMRmstp5dZy/usXi0jyzX2/n0+Xl09mbLonNqRGyWYEc
-        gzzxJg96w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVbSI-0003Zr-Lp; Tue, 28 May 2019 12:43:50 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 663E4200A0444; Tue, 28 May 2019 14:43:49 +0200 (CEST)
-Date:   Tue, 28 May 2019 14:43:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
-Message-ID: <20190528124349.GU2606@hirez.programming.kicks-ass.net>
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-5-kan.liang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521214055.31060-5-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 28 May 2019 08:44:15 -0400
+Received: from node.akkea.ca ([192.155.83.177]:43058 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726999AbfE1MoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:44:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id E243F4E204D;
+        Tue, 28 May 2019 12:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1559047454; bh=QN+qfKJcn+iv1NFE027lzE+60Gd7OUBp8PBwf368hi8=;
+        h=From:To:Cc:Subject:Date;
+        b=Oy9FRep8jiYbF4jTd69IGkP9IGgMBqpY3UZZJFMP+XDZ3fyJxL955yZWPDnGcdu2M
+         Rg8y7rcdRF/t540YZGn5wCWnQf0T/Gs7dfsrbFmi4QkaIhGAdqGb9AUEdfDr4ctaLT
+         m5vxS/3uQUUiAfvV8+QLEocdB0vHGP4RJpGnGec4=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lTtIYmYKCoKZ; Tue, 28 May 2019 12:44:14 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id EE1D04E204B;
+        Tue, 28 May 2019 12:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1559047454; bh=QN+qfKJcn+iv1NFE027lzE+60Gd7OUBp8PBwf368hi8=;
+        h=From:To:Cc:Subject:Date;
+        b=Oy9FRep8jiYbF4jTd69IGkP9IGgMBqpY3UZZJFMP+XDZ3fyJxL955yZWPDnGcdu2M
+         Rg8y7rcdRF/t540YZGn5wCWnQf0T/Gs7dfsrbFmi4QkaIhGAdqGb9AUEdfDr4ctaLT
+         m5vxS/3uQUUiAfvV8+QLEocdB0vHGP4RJpGnGec4=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus.ainslie@puri.sm
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Carlo Caione <ccaione@baylibre.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the svns power key
+Date:   Tue, 28 May 2019 05:44:06 -0700
+Message-Id: <20190528124406.29730-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:40:50PM -0700, kan.liang@linux.intel.com wrote:
-> The 8bit metrics ratio values lose precision when the measurement period
-> gets longer.
-> 
-> To avoid this we always reset the metric value when reading, as we
-> already accumulate the count in the perf count value.
-> 
-> For a long period read, low precision is acceptable.
-> For a short period read, the register will be reset often enough that it
-> is not a problem.
+Add the snvs power key.
 
-> The PERF_METRICS may report wrong value if its delta was less than 1/255
-> of SLOTS (Fixed counter 3).
-> 
-> To avoid this, the PERF_METRICS and SLOTS registers have to be reset
-> simultaneously. The slots value has to be cached as well.
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-That doesn't sound like it is NMI-safe.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 45d10d8efd14..5f93fd9662ae 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/reset/imx8mq-reset.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include "dt-bindings/input/input.h"
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/thermal.h>
+ #include "imx8mq-pinfunc.h"
+@@ -463,6 +464,14 @@
+ 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+ 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
++
++				snvs_pwrkey: snvs-powerkey {
++					compatible = "fsl,sec-v4.0-pwrkey";
++					regmap = <&snvs>;
++					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++					linux,keycode = <KEY_POWER>;
++					wakeup-source;
++				};
+ 			};
+ 
+ 			clk: clock-controller@30380000 {
+-- 
+2.17.1
 
-
-
-> RDPMC
-> =========
-> The TopDown can be collected per thread/process. To use TopDown
-> through RDPMC in applications on Icelake, the metrics and slots values
-> have to be saved/restored during context switching.
-> 
-> Add specific set_period() to specially handle the slots and metrics
-> event. Because,
->  - The initial value must be 0.
->  - Only need to restore the value in context switch. For other cases,
->    the counters have been cleared after read.
-
-So the above claims to explain RDPMC, but doesn't mention that magic
-value below at all. In fact, I don't see how the above relates to RDPMC
-at all.
-
-> @@ -2141,7 +2157,9 @@ static int x86_pmu_event_idx(struct perf_event *event)
->  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
->  		return 0;
->  
-> -	if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
-> +	if (is_metric_idx(idx))
-> +		idx = 1 << 29;
-
-I can't find this in the SDM RDPMC description. What does it return?
-
-> +	else if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
->  		idx -= INTEL_PMC_IDX_FIXED;
->  		idx |= 1 << 30;
->  	}
