@@ -2,230 +2,183 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19444C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBB5216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1knwOVCD"
+	by mail.kernel.org (Postfix) with ESMTP id 002E8216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfE1RY4 (ORCPT
+        id S1727115AbfE1RaZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:24:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52718 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfE1RY4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:24:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SHJ0w2025010;
-        Tue, 28 May 2019 17:24:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=yIR5KILMIfQyVVNhI1f1eKnl3P6dGAdoWRI/Ecl2G9w=;
- b=1knwOVCDjXAgbM8RRH9HuTFsfMwYtY6KMWqJY6TAS3dMUNOsQXPeX3UZ8eijLCvysD6N
- 9v3zIJWZkwxL+o+x+Y7XvnR+ChSDRADS1uppjbWVMWMmjl/o7+QxlijZ+zkvCUjaiuN+
- hCAxbnhXZ6tCJHCNt5sYdFSSDxjBmhQ81fCr2hvB6t09nJwiDNfUi0eHLOiRW6Uho0IR
- XyS8GRMEglDvLYelaut3B+g1pU1lwJ/Y12xz+e5rgND55mf43PW4dEyJQo7CX8MEpA6J
- VlhLtJhtBo9lwNDHi+dXKl60bKfN5khMkuxQTZTVj2k1yrF42+8hWhj/h9M/SGV1cJHQ vw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2spxbq4nef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 17:24:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4SHMYCG070694;
-        Tue, 28 May 2019 17:22:34 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2srbdwwvxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 May 2019 17:22:34 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4SHMYbt070702;
-        Tue, 28 May 2019 17:22:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2srbdwwvxt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 17:22:34 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4SHMWht018598;
-        Tue, 28 May 2019 17:22:32 GMT
-Received: from wengwanwork.cn.oracle.com (/10.211.52.31)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 May 2019 10:22:31 -0700
-Subject: Re: [Ocfs2-devel] [PATCH 1/2] ocfs2: add last unlock times in
- locking_state
-To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org,
-        jiangqi903@gmail.com
-Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com
-References: <20190523104047.14794-1-ghe@suse.com>
-From:   Wengang <wen.gang.wang@oracle.com>
-Message-ID: <66083663-1d25-437b-ce98-07d200f446ab@oracle.com>
-Date:   Tue, 28 May 2019 10:22:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Tue, 28 May 2019 13:30:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:9937 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfE1RaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 13:30:24 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DFB9D99CFE;
+        Tue, 28 May 2019 17:30:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 01BBC60BDF;
+        Tue, 28 May 2019 17:30:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190528162603.GA24097@kroah.com>
+References: <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
 MIME-Version: 1.0
-In-Reply-To: <20190523104047.14794-1-ghe@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905280110
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4030.1559064620.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Tue, 28 May 2019 18:30:20 +0100
+Message-ID: <4031.1559064620@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 17:30:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gang,
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-This idea sounds cool!
-Some comments in lines:
+> > Implement a misc device that implements a general notification queue as a
+> > ring buffer that can be mmap()'d from userspace.
+> 
+> "general" but just for filesystems, right?  :(
 
-On 05/23/2019 03:40 AM, Gang He wrote:
-> ocfs2 file system uses locking_state file under debugfs to dump
-> each ocfs2 file system's dlm lock resources, but the dlm lock
-> resources in memory are becoming more and more after the files
-> were touched by the user. it will become a bit difficult to analyze
-> these dlm lock resource records in locking_state file by the upper
-> scripts, though some files are not active for now, which were
-> accessed long time ago.
-> Then, I'd like to add last pr/ex unlock times in locking_state file
-> for each dlm lock resource record, the the upper scripts can use
-> last unlock time to filter inactive dlm lock resource record.
->
-> Signed-off-by: Gang He <ghe@suse.com>
-> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->   fs/ocfs2/dlmglue.c | 21 +++++++++++++++++----
->   fs/ocfs2/ocfs2.h   |  1 +
->   2 files changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-> index af405586c5b1..dccf4136f8c1 100644
-> --- a/fs/ocfs2/dlmglue.c
-> +++ b/fs/ocfs2/dlmglue.c
-> @@ -448,7 +448,7 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
->   				    struct ocfs2_mask_waiter *mw, int ret)
->   {
->   	u32 usec;
-> -	ktime_t kt;
-> +	ktime_t last, kt;
->   	struct ocfs2_lock_stats *stats;
->   
->   	if (level == LKM_PRMODE)
-> @@ -458,7 +458,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
->   	else
->   		return;
->   
-> -	kt = ktime_sub(ktime_get(), mw->mw_lock_start);
-> +	last = ktime_get();
-Will ktime_get_real() be better than ktime_get() here?
-Per description,
-ktime_get:
-Useful for reliable timestamps and measuring short time intervals 
-accurately. Starts at system boot time but stops during suspend.
-ktime_get_real:
-Returns the time in relative to the UNIX epoch starting in 1970 using 
-the Coordinated Universal Time (UTC), same as gettimeofday() user space.
+Whatever gave you that idea?  You can watch keyrings events, for example -
+they're not exactly filesystems.  I've added the ability to watch for mount
+topology changes and superblock events because those are something I've been
+asked to do.  I've added something for block events because I've recently had
+a problem with trying to recover data from a dodgy disk in that every time the
+disk goes offline, the ddrecover goes "wheeeee!" as it just sees a lot of
+EIO/ENODATA at a great rate of knots because it doesn't know the driver is now
+ignoring the disk.
 
-Since ktime_get() returnis time since boot time, this value is 
-meaningless when compared to those from a different node in cluster, right?
+I don't know what else people might want to watch, but I've tried to make it
+as generic as possible so as not to exclude it if possible.
 
-And we need a "__kernel_long_t" to rather than a "u32"?
+> This doesn't match the structure definition in the documentation, so
+> something is out of sync.
 
+Ah, yes - I need to update that doc, thanks.
 
-> +	kt = ktime_sub(last, mw->mw_lock_start);
->   	usec = ktime_to_us(kt);
->   
->   	stats->ls_gets++;
-> @@ -474,6 +475,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
->   
->   	if (ret)
->   		stats->ls_fail++;
-> +
-> +	stats->ls_last = ktime_to_timespec(last).tv_sec;
->   }
->   
-Though maybe ocfs2_update_lock_stats() is designed to be called for each 
-successful lock request,
-seems current code calls it even when it returns with -EAGAIN which 
-breaks the design.  That's not introduced by your change, well, it may 
-lead to wrong stats...
+> I'm all for a "generic" event system for the kernel (heck, Solaris has
+> had one for decades), but it keeps getting shot down every time it comes
+> up.  What is different about this one?
 
-thanks,
-wengang
+Without studying all the other ones, I can't say - however, I need to add
+something for keyrings and I would prefer to make something generic.
 
->   static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
-> @@ -3093,8 +3096,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, void *v, loff_t *pos)
->    *	- Lock stats printed
->    * New in version 3
->    *	- Max time in lock stats is in usecs (instead of nsecs)
-> + * New in version 4
-> + *	- Add last pr/ex unlock times in secs
->    */
-> -#define OCFS2_DLM_DEBUG_STR_VERSION 3
-> +#define OCFS2_DLM_DEBUG_STR_VERSION 4
->   static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   {
->   	int i;
-> @@ -3145,6 +3150,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
->   # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
->   # define lock_refresh(_l)		((_l)->l_lock_refresh)
-> +# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
-> +# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
->   #else
->   # define lock_num_prmode(_l)		(0)
->   # define lock_num_exmode(_l)		(0)
-> @@ -3155,6 +3162,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   # define lock_max_prmode(_l)		(0)
->   # define lock_max_exmode(_l)		(0)
->   # define lock_refresh(_l)		(0)
-> +# define lock_last_prmode(_l)		(0)
-> +# define lock_last_exmode(_l)		(0)
->   #endif
->   	/* The following seq_print was added in version 2 of this output */
->   	seq_printf(m, "%u\t"
-> @@ -3165,6 +3174,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   		   "%llu\t"
->   		   "%u\t"
->   		   "%u\t"
-> +		   "%u\t"
-> +		   "%u\t"
->   		   "%u\t",
->   		   lock_num_prmode(lockres),
->   		   lock_num_exmode(lockres),
-> @@ -3174,7 +3185,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->   		   lock_total_exmode(lockres),
->   		   lock_max_prmode(lockres),
->   		   lock_max_exmode(lockres),
-> -		   lock_refresh(lockres));
-> +		   lock_refresh(lockres),
-> +		   lock_last_prmode(lockres),
-> +		   lock_last_exmode(lockres));
->   
->   	/* End the line */
->   	seq_printf(m, "\n");
-> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-> index 1f029fbe8b8d..8efa022684f4 100644
-> --- a/fs/ocfs2/ocfs2.h
-> +++ b/fs/ocfs2/ocfs2.h
-> @@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
->   
->   	/* Storing max wait in usecs saves 24 bytes per inode */
->   	u32		ls_max;		/* Max wait in USEC */
-> +	u32		ls_last;	/* Last unlock time in SEC */
->   };
->   #endif
->   
+> > +#define DEBUG_WITH_WRITE /* Allow use of write() to record notifications */
+> 
+> debugging code left in?
 
+I'll switch it to #undef.  I want to leave the code in there for testing
+purposes.  Possibly I should make it a Kconfig option.
+
+> > +	refcount_t		usage;
+> 
+> Usage of what, this structure?  Or something else?
+
+This is the number of usages of this struct (references to if you prefer).  I
+can add a comment to this effect.
+
+> > +EXPORT_SYMBOL(__post_watch_notification);
+> 
+> _GPL for new apis?  (I have to ask...)
+
+No.
+
+> > +		return -EOPNOTSUPP;
+> 
+> -ENOTTY is the correct "not a valid ioctl" error value, right?
+
+fs/ioctl.c does both, but I can switch it if it makes you happier.
+
+> > +void put_watch_queue(struct watch_queue *wqueue)
+> > +{
+> > +	if (refcount_dec_and_test(&wqueue->usage))
+> > +		kfree_rcu(wqueue, rcu);
+> 
+> Why not just use a kref?
+
+Why use a kref?  It seems like an effort to be a C++ base class, but without
+the C++ inheritance bit.  Using kref doesn't seem to gain anything.  It's just
+a wrapper around refcount_t - so why not just use a refcount_t?
+
+kref_put() could potentially add an unnecessary extra stack frame and would
+seem to be best avoided, though an optimising compiler ought to be able to
+inline if it can.
+
+Are you now on the convert all refcounts to krefs path?
+
+> > +EXPORT_SYMBOL(add_watch_to_object);
+> 
+> Naming nit, shouldn't the "prefix" all be the same for these new
+> functions?
+> 
+> watch_queue_add_object()?  watch_queue_put()?  And so on?
+
+Naming is fun.  watch_queue_add_object - that suggests something different to
+what the function actually does.  I'll think about adjusting the names.
+
+> > +module_exit(watch_queue_exit);
+> 
+> module_misc_device()?
+
+	warthog>git grep module_misc_device -- Documentation/
+	warthog1>
+
+> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> 
+> Yeah!!!
+
+Blech.
+
+> > +		struct {
+> > +			struct watch_notification watch; /* WATCH_TYPE_SKIP */
+> > +			volatile __u32	head;		/* Ring head index */
+> > +			volatile __u32	tail;		/* Ring tail index */
+> 
+> A uapi structure that has volatile in it?  Are you _SURE_ this is
+> correct?
+> 
+> That feels wrong to me...  This is not a backing-hardware register, it's
+> "just memory" and slapping volatile on it shouldn't be the correct
+> solution for telling the compiler to not to optimize away reads/flushes,
+> right?  You need a proper memory access type primitive for that to work
+> correctly everywhere I thought.
+> 
+> We only have 2 users of volatile in include/uapi, one for WMI structures
+> that are backed by firmware (seems correct), and one for DRM which I
+> have no idea how it works as it claims to be a lock.  Why is this new
+> addition the correct way to do this that no other ring-buffer that was
+> mmapped has needed to?
+
+Yeah, I understand your concern with this.
+
+The reason I put the volatiles in is that the kernel may be modifying the head
+pointer on one CPU simultaneously with userspace modifying the tail pointer on
+another CPU.
+
+Note that userspace does not need to enter the kernel to find out if there's
+anything in the buffer or to read stuff out of the buffer.  Userspace only
+needs to enter the kernel, using poll() or similar, to wait for something to
+appear in the buffer.
+
+David
