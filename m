@@ -2,104 +2,89 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A78C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DB2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA001204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A01B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="fbKiq+kY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bfv6NsKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfE1IWW (ORCPT
+        id S1726649AbfE1IXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:22:22 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38518 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbfE1IWW (ORCPT
+        Tue, 28 May 2019 04:23:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE1IXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:22:22 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 149C12E0AB2;
-        Tue, 28 May 2019 11:22:20 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Km6O208DaU-MJ5Wh8eb;
-        Tue, 28 May 2019 11:22:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1559031739; bh=9RhVP/yJe3HlT+a+XfRXoVOIwyNtKBtQCZV4M07FhM8=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=fbKiq+kYMUGNNRUT3UFeQRJDQHrSYk1LoUjUpPMi8wLRNtjQQ98td6rM6BAVH/Yy7
-         3r6Jx1Ef0B/vUoNUeuYneIU/XMqs1kU5SSlP54xEjz38oC5K9IKLikyMtu2i3U2tsw
-         1qnDONEbG+5Kcobp4ZN+l2ylGT7LFvE4FgoHwrOk=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id oqjkXthzh0-MJ8qwOQG;
-        Tue, 28 May 2019 11:22:19 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] scripts/decode_stacktrace.sh: prefix addr2line with
- $CROSS_COMPILE
-To:     manut@mecka.net, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, marc.zyngier@arm.com,
-        Manuel Traut <manut@linutronix.de>
-References: <20190527083425.3763-1-manut@linutronix.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <4d04ac27-0217-0790-b0cc-3115fbf8f0f9@yandex-team.ru>
-Date:   Tue, 28 May 2019 11:22:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:23:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LP7MPvy+aRLztWp8FooOU46PduDbMP/P2yCoPdAhii4=; b=Bfv6NsKQPlJ1Cucg5kXZFT2Bd
+        +QtcLKV0C18BDGh+NRth9XpK5j066yfliQHMZL9GtkjrvLvxjl3c25VrpmacauYxXvKFaz77Idi5H
+        fOXvqd3RU8C7PedJUgErkZlYSiTkV4Nl+RWzBEUbI1n3QVpWMNMoQLVZsiKyZAVetARjrkEudB4WJ
+        X3CMrRJnMdYRjLYS0FjGw+up2y8Wrv3fQZPaAFAKudaJB8Fp3pDBneBcDRLFRj4Rstl0yp3meu+pZ
+        kmUf84oxB8aXz4ip9Ae8OdxhbQAUQufQwo85e+OFfTjnCu/Z1Wsyjo4YiAhrVeL/0jo2Qp0ZXh+Kv
+        ZQU9iEjkQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVXNn-0003Cf-AF; Tue, 28 May 2019 08:22:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 62CFF20297D49; Tue, 28 May 2019 10:22:53 +0200 (CEST)
+Date:   Tue, 28 May 2019 10:22:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4] locking/lock_events: Use this_cpu_add() when necessary
+Message-ID: <20190528082253.GK2623@hirez.programming.kicks-ass.net>
+References: <20190524194222.8398-1-longman@redhat.com>
+ <20190527082326.GP2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wgr-2kxGU=AXFbW=00qOHCA0eb_Ky0Bq9aeBKOegaFxNg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190527083425.3763-1-manut@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgr-2kxGU=AXFbW=00qOHCA0eb_Ky0Bq9aeBKOegaFxNg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 27, 2019 at 12:33:56PM -0700, Linus Torvalds wrote:
+> On Mon, May 27, 2019 at 1:23 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > That's disguisting... I see Linus already applied it, but yuck. That's
+> > what we have raw_cpu_*() for.
+> 
+> Ahh, I tried to look for that, but there was enough indirection and
+> confusion that I wasn't sure they were generically available.
+> 
+> And the "raw_cpu_*()" functions are rare enough that I'd never
+> encountered them enough to really be aware of them. In fact, we seem
+> to have exactly _one_ user of "raw_cpu_add()" in the whole kernel, and
+> a handful of "raw_cpu_inc()".
 
+Yeah, not having many is good. From a correctness PoV they're basically
+always the wrong thing to use, except for this one usecase where we
+prefer speed over correctness.
 
-On 27.05.2019 11:34, Manuel Traut wrote:
-> At least for ARM64 kernels compiled with the crosstoolchain from
-> Debian/stretch or with the toolchain from kernel.org the line number is not
-> decoded correctly by 'decode_stacktrace.sh':
-> 
-> $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
->    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
->   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
->                                  /scratch/linux-arm64 \
->                                  /nfs/debian/lib/modules/4.20.0-devel
-> [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
-> 
-> If addr2line from the toolchain is used the decoded line number is correct:
-> 
-> [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
-> 
-> Signed-off-by: Manuel Traut <manut@linutronix.de>
+> But ack on your patch, and a heartfelt "yeah, that's the right thing". Thanks,
 
-Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-
-
-> ---
->   scripts/decode_stacktrace.sh | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-> index bcdd45df3f51..a7a36209a193 100755
-> --- a/scripts/decode_stacktrace.sh
-> +++ b/scripts/decode_stacktrace.sh
-> @@ -73,7 +73,7 @@ parse_symbol() {
->   	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
->   		local code=${cache[$module,$address]}
->   	else
-> -		local code=$(addr2line -i -e "$objfile" "$address")
-> +		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
->   		cache[$module,$address]=$code
->   	fi
->   
-> 
+Thanks, I'll go write me a Changelog then ;-)
