@@ -2,169 +2,106 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDFFC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA27C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6665120989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559039596;
-	bh=iNcsUsB7EyQsA5DrdvVE778DNpfdXcKZ+POwqV7Z0Ps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bnv5HUUjGI7OYTKG5O706gErLuCg5XB+BydT7jIUXszp/2gYKNx7xCWfhySrBeShe
-	 9yW4DtwbzGx6gcpufpxSDNCJr+AtUYDsGsDRIIV87uaEKpiBUJnzNo3t9DODjsH5RO
-	 9/K6l7b01YxfwT7FD7kpDFRdiywBuktkAz/u+ENQ=
+	by mail.kernel.org (Postfix) with ESMTP id B35F92075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j73/bSqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfE1KdP (ORCPT
+        id S1726761AbfE1Kd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:33:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37476 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfE1KdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:33:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 364C1AC66;
-        Tue, 28 May 2019 10:33:13 +0000 (UTC)
-Date:   Tue, 28 May 2019 12:33:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190528103312.GV1658@dhcp22.suse.cz>
-References: <20190521062628.GE32329@dhcp22.suse.cz>
- <20190527075811.GC6879@google.com>
- <20190527124411.GC1658@dhcp22.suse.cz>
- <20190528032632.GF6879@google.com>
- <20190528062947.GL1658@dhcp22.suse.cz>
- <20190528081351.GA159710@google.com>
- <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
- <20190528084927.GB159710@google.com>
- <20190528090821.GU1658@dhcp22.suse.cz>
- <CAKOZueux3T4_dMOUK6R=ZHhCFaSSstOCPh_KSwSMCW_yp=jdSg@mail.gmail.com>
+        Tue, 28 May 2019 06:33:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38919 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfE1Kd6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:33:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z26so11221926pfg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 03:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oZJXceOR5W0OlGeQCN6F076N25o2fhcQ2i3vvRm5pYQ=;
+        b=j73/bSqTARkKzpyaHo658WBMkNeKS2Uq6/daFmIqDaBU8Rcls6CL8GyGnIkySCee56
+         +PFpipWQu6/5P7GK7nxeAflyOogl1vd5rnbN9uK5cdSjU2srqi1hKq2mPXY1pDi9QisH
+         cFM/0AywS+cE6J9vT9kmEKY4jIEOB9i1CbKMQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oZJXceOR5W0OlGeQCN6F076N25o2fhcQ2i3vvRm5pYQ=;
+        b=bdqZ+ix6nJrmBA1/LfqemU0Q4kQLxCMTOf4gGOssRxjCQZ2pWwxQUy3+H3lOw4kuM9
+         w0wtLqARoFjyqhU80lPCEZGl4QW7G1MlaqnvY7iSEOAqKUdxVsiDoYdhnv3Sbb69SBKO
+         maVR2FKPzcNy6ttkWPigsvSgE7QIYkOHcMvIIUVqHGre0O2uEo8yxQtC8go6YL6Zdr79
+         tgFqfbNXYs6Zqh/YweR72MBCRiUovgj4krD3I1G7i9xEHXdMzaowOC7+lDec8ZAGc2YW
+         n4JA5QYh+SYuDqtFQMpkAwd1TvPPCAhXkEi4oBCtpfaiyUaVA8rSVdSYblXUg+0xix87
+         w9jA==
+X-Gm-Message-State: APjAAAVxO+Qb8Rr55Td6mCwKZhcJxQ0VF79gnsX74kikItGCd0EXQR9i
+        +xO1wJc8SrlnrHuaQyfg+bLXCA==
+X-Google-Smtp-Source: APXvYqwjAYybK8CE6Z+agRuvX91b1q3sME9mMt2hwQOPWam0Yo1jRMDlUb37dmMc5E1LEC+bzuRaWQ==
+X-Received: by 2002:a65:6382:: with SMTP id h2mr22163968pgv.355.1559039637870;
+        Tue, 28 May 2019 03:33:57 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id k63sm2234969pje.2.2019.05.28.03.33.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 03:33:57 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scripts/decode_stacktrace: Look for modules with .ko.debug extension
+Date:   Tue, 28 May 2019 18:33:46 +0800
+Message-Id: <20190528103346.42720-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZueux3T4_dMOUK6R=ZHhCFaSSstOCPh_KSwSMCW_yp=jdSg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 28-05-19 02:39:03, Daniel Colascione wrote:
-> On Tue, May 28, 2019 at 2:08 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
-> > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
-> > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
-> > > > > if we went with the per vma fd approach then you would get this
-> > > > > > feature automatically because map_files would refer to file backed
-> > > > > > mappings while map_anon could refer only to anonymous mappings.
-> > > > >
-> > > > > The reason to add such filter option is to avoid the parsing overhead
-> > > > > so map_anon wouldn't be helpful.
-> > > >
-> > > > Without chiming on whether the filter option is a good idea, I'd like
-> > > > to suggest that providing an efficient binary interfaces for pulling
-> > > > memory map information out of processes.  Some single-system-call
-> > > > method for retrieving a binary snapshot of a process's address space
-> > > > complete with attributes (selectable, like statx?) for each VMA would
-> > > > reduce complexity and increase performance in a variety of areas,
-> > > > e.g., Android memory map debugging commands.
-> > >
-> > > I agree it's the best we can get *generally*.
-> > > Michal, any opinion?
-> >
-> > I am not really sure this is directly related. I think the primary
-> > question that we have to sort out first is whether we want to have
-> > the remote madvise call process or vma fd based. This is an important
-> > distinction wrt. usability. I have only seen pid vs. pidfd discussions
-> > so far unfortunately.
-> 
-> I don't think the vma fd approach is viable. We have some processes
-> with a *lot* of VMAs --- system_server had 4204 when I checked just
-> now (and that's typical) --- and an FD operation per VMA would be
-> excessive.
+In Chromium OS kernel builds, we split the debug information as
+.ko.debug files, and that's what decode_stacktrace.sh needs to use.
 
-What do you mean by excessive here? Do you expect the process to have
-them open all at once?
+Relax objfile matching rule to allow any .ko* file to be matched.
 
-> VMAs also come and go pretty easily depending on changes in
-> protections and various faults.
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+---
 
-Is this really too much different from /proc/<pid>/map_files?
+Changes since v1:
+ - Added quotes around name pattern.
 
-[...]
+(note that the line in 81 chars now, but there is a precedent below, that
+does not split a much longer line in $(), so hopefully this is ok)
 
-> > An interface to query address range information is a separate but
-> > although a related topic. We have /proc/<pid>/[s]maps for that right
-> > now and I understand it is not a general win for all usecases because
-> > it tends to be slow for some. I can see how /proc/<pid>/map_anons could
-> > provide per vma information in a binary form via a fd based interface.
-> > But I would rather not conflate those two discussions much - well except
-> > if it could give one of the approaches more justification but let's
-> > focus on the madvise part first.
-> 
-> I don't think it's a good idea to focus on one feature in a
-> multi-feature change when the interactions between features can be
-> very important for overall design of the multi-feature system and the
-> design of each feature.
-> 
-> Here's my thinking on the high-level design:
-> 
-> I'm imagining an address-range system that would work like this: we'd
-> create some kind of process_vm_getinfo(2) system call [1] that would
-> accept a statx-like attribute map and a pid/fd parameter as input and
-> return, on output, two things: 1) an array [2] of VMA descriptors
-> containing the requested information, and 2) a VMA configuration
-> sequence number. We'd then have process_madvise() and other
-> cross-process VM interfaces accept both address ranges and this
-> sequence number; they'd succeed only if the VMA configuration sequence
-> number is still current, i.e., the target process hasn't changed its
-> VMA configuration (implicitly or explicitly) since the call to
-> process_vm_getinfo().
+akpm: To replace the existing patch in mmotm, thanks!
 
-The sequence number is essentially a cookie that is transparent to the
-userspace right? If yes, how does it differ from a fd (returned from
-/proc/<pid>/map_{anons,files}/range) which is a cookie itself and it can
-be used to revalidate when the operation is requested and fail if
-something has changed. Moreover we already do have a fd based madvise
-syscall so there shouldn't be really a large need to add a new set of
-syscalls.
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[...]
-
-> Or maybe the whole sequence number thing is overkill and we don't need
-> atomicity? But if there's a concern  that A shouldn't operate on B's
-> memory without knowing what it's operating on, then the scheme I've
-> proposed above solves this knowledge problem in a pretty lightweight
-> way.
-
-This is the main question here. Do we really want to enforce an external
-synchronization between the two processes to make sure that they are
-both operating on the same range - aka protect from the range going away
-and being reused for a different purpose. Right now it wouldn't be fatal
-because both operations are non destructive but I can imagine that there
-will be more madvise operations to follow (including those that are
-destructive) because people will simply find usecases for that. This
-should be reflected in the proposed API.
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index bcdd45df3f5127a..d88554dc0eec9e7 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -28,7 +28,7 @@ parse_symbol() {
+ 		local objfile=${modcache[$module]}
+ 	else
+ 		[[ $modpath == "" ]] && return
+-		local objfile=$(find "$modpath" -name $module.ko -print -quit)
++		local objfile=$(find "$modpath" -name "$module.ko*" -print -quit)
+ 		[[ $objfile == "" ]] && return
+ 		modcache[$module]=$objfile
+ 	fi
 -- 
-Michal Hocko
-SUSE Labs
+2.22.0.rc1.257.g3120a18244-goog
+
