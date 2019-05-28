@@ -2,106 +2,146 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F6C04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62412C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEC920717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374F221530
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:30:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="DeNEc67D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfE1H3J (ORCPT
+        id S1727614AbfE1HaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:29:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42043 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfE1H3J (ORCPT
+        Tue, 28 May 2019 03:30:17 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35856 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726203AbfE1HaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:29:09 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so13706517lfh.9;
-        Tue, 28 May 2019 00:29:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hd2ztrPa+/Jspv+88ZdGM7xjRP1HllQItAwAUGW3LRI=;
-        b=QpLdjelLA3HG8W7J0qqEUAvL8AgpDZNnHOCWfWnGNXyHyRufR58QFfwJAal8V0WOMX
-         GQaHY6ohSIZzqhgVcCr7GnaS7Ngz8rFNoQqyuoyd9WguexeVCZCQRXk79v8NGGMvHE4j
-         pLQjmv1UbV/k4H72vhB/Cl0w3Uyucg/8uxT485fwfhlm7N/Z8KmlPyuSdNQu+rvpxpcw
-         N36kmwGsOtKMH2KEIgrX9mDB23ook0jhsU1E8x3o1C0lTE65Y55aphDNX1TJ0hDEPned
-         XW+W4k7Wgv2UJeR9wK06bpJ4KsCNcpdvljLT3FWfxGmzfUkov4X9Oxc3Wsf8jzTkrbZO
-         hoUg==
-X-Gm-Message-State: APjAAAU/P99heey4X39O5VLmWSIEI7Gf4tpjVsvzqGZqhrLTb/GNKd+b
-        3gnd2Y/e6/6jBzGfbissqpZLCVakL6ok1Dg043w=
-X-Google-Smtp-Source: APXvYqz9vHfVvbiwy5f5TN/g85aWH14wVF+UEIVfXq7XO4eOsFQL7OTr/XH5SoitkvqVhSY+4KVeEqebYEVCJDL32MU=
-X-Received: by 2002:ac2:52a8:: with SMTP id r8mr25092524lfm.20.1559028546947;
- Tue, 28 May 2019 00:29:06 -0700 (PDT)
+        Tue, 28 May 2019 03:30:17 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 9F0C32E1491;
+        Tue, 28 May 2019 10:30:13 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id WmZsxO0Rsv-UCpWmw9d;
+        Tue, 28 May 2019 10:30:13 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1559028613; bh=b0tnBEaeSE0wx9SZBTkiemsceGG2gh/BPri5iBFlmTM=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=DeNEc67DccTvfjrv2GfpuCVW+0gZXFHC6VH0rBG93Qz6lpTLSEf0QDCDa+3WL7I+X
+         GZ8AN9RY+GikIyHi0zKEkYkJ7LcVcPAMrKYVVVMk3GQ1tgfpYnF2u0AnUQXSJ9zY2x
+         SaDK7qu1acKd2GlSFahxObLpKxDazFH1JAOnVFfc=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id bD1sDRHzsZ-UClmLKBl;
+        Tue, 28 May 2019 10:30:12 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
+ user space)
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
+References: <155895155861.2824.318013775811596173.stgit@buzz>
+ <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
+ <20190527143926.GF1658@dhcp22.suse.cz>
+ <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
+ <20190528065153.GB1803@dhcp22.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
+Date:   Tue, 28 May 2019 10:30:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1558711904-27278-1-git-send-email-gareth.williams.jx@renesas.com> <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
-In-Reply-To: <1558711904-27278-2-git-send-email-gareth.williams.jx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 May 2019 09:28:55 +0200
-Message-ID: <CAMuHMdV2jmY2u1-Z6cRR1OQcfW8U0HM_ac-xn1gO9nPf41iD+A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: renesas,r9a06g032-sysctrl:
- Document power Domains
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190528065153.GB1803@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gareth,
+On 28.05.2019 9:51, Michal Hocko wrote:
+> On Tue 28-05-19 09:25:13, Konstantin Khlebnikov wrote:
+>> On 27.05.2019 17:39, Michal Hocko wrote:
+>>> On Mon 27-05-19 16:21:56, Michal Hocko wrote:
+>>>> On Mon 27-05-19 16:12:23, Michal Hocko wrote:
+>>>>> [Cc linux-api. Please always cc this list when proposing a new user
+>>>>>    visible api. Keeping the rest of the email intact for reference]
+>>>>>
+>>>>> On Mon 27-05-19 13:05:58, Konstantin Khlebnikov wrote:
+>>>> [...]
+>>>>>> This implements manual kswapd-style memory reclaim initiated by userspace.
+>>>>>> It reclaims both physical memory and cgroup pages. It works in context of
+>>>>>> task who calls syscall madvise thus cpu time is accounted correctly.
+>>>>
+>>>> I do not follow. Does this mean that the madvise always reclaims from
+>>>> the memcg the process is member of?
+>>>
+>>> OK, I've had a quick look at the implementation (the semantic should be
+>>> clear from the patch descrition btw.) and it goes all the way up the
+>>> hierarchy and finally try to impose the same limit to the global state.
+>>> This doesn't really make much sense to me. For few reasons.
+>>>
+>>> First of all it breaks isolation where one subgroup can influence a
+>>> different hierarchy via parent reclaim.
+>>
+>> madvise(NULL, size, MADV_STOCKPILE) is the same as memory allocation and
+>> freeing immediately, but without pinning memory and provoking oom.
+>>
+>> So, there is shouldn't be any isolation or security issues.
+>>
+>> At least probably it should be limited with portion of limit (like half)
+>> instead of whole limit as it does now.
+> 
+> I do not think so. If a process is running inside a memcg then it is
+> a subject of a limit and that implies an isolation. What you are
+> proposing here is to allow escaping that restriction unless I am missing
+> something. Just consider the following setup
+> 
+> 		root (total memory = 2G)
+> 		 / \
+>             (1G) A   B (1G)
+>                     / \
+>             (500M) C   D (500M)
+> 
+> all of them used up close to the limit and a process inside D requests
+> shrinking to 250M. Unless I am misunderstanding this implementation
+> will shrink D, B root to 250M (which means reclaiming C and A as well)
+> and then globally if that was not sufficient. So you have allowed D to
+> "allocate" 1,75G of memory effectively, right?
 
-On Fri, May 24, 2019 at 5:32 PM Gareth Williams
-<gareth.williams.jx@renesas.com> wrote:
-> The driver is gaining power domain support, so add the new property
-> to the DT binding and update the examples.
->
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+It shrinks not 'size' memory - only while usage + size > limit.
+So, after reclaiming 250M in D all other levels will have 250M free.
 
-Thanks for your patch!
+Of course there might be race because reclaimer works with one level
+at the time. Probably it should start from inner level at each iteration.
 
-> --- a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
-@@ -40,4 +42,5 @@ Examples
->                 reg-io-width = <4>;
->                 clocks = <&sysctrl R9A06G032_CLK_UART0>;
->                 clock-names = "baudclk";
-> +               power-domains = <&sysctrl>;
+>   
+>>>
+>>> I also have a problem with conflating the global and memcg states. Does
+>>> it really make any sense to have the same target to the global state
+>>> as per-memcg? How are you supposed to use this interface to shrink a
+>>> particular memcg or for the global situation with a proportional
+>>> distribution to all memcgs?
+>>
+>> For now this is out of my use cease. This could be done in userspace
+>> with multiple daemons in different contexts and connection between them.
+>> In this case each daemon should apply pressure only its own level.
+> 
+> Do you expect all daemons to agree on their shrinking target? Could you
+> elaborate? I simply do not see how this can work with memcgs lower in
+> the hierarchy having a smaller limit than their parents.
+> 
 
-This is an interesting example: according to the driver,
-R9A06G032_CLK_UART0, is not clock used for power management?
-
-Oh, the real uart0 node in arch/arm/boot/dts/r9a06g032.dtsi uses
-
-    clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl R9A06G032_HCLK_UART0>;
-    clock-names = "baudclk", "apb_pclk";
-
-That does make sense...
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Daemons could distribute pressure among leaves and propagate it into parents.
+Together with low-limit this gives enough control over pressure distribution.
