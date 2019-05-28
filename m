@@ -2,105 +2,174 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E153FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18551C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F8020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JUZBtdgJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WOvlO9Oi"
+	by mail.kernel.org (Postfix) with ESMTP id DF57520989
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559044573;
+	bh=+lRmGRzmPuT25pr3mTtVK5eeewnHnqqcCjsbmgGJ7EA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SfvivoDMxB2M3/JKzfBT4gMcIIX4T2T8ibw2mRycdumpIIkyfFT2BZkeXVkIFwPmi
+	 qFTa6RCFAbkmJhqCrFpLKtBrNsCMaQ1wRYs6rWeUzpEGCvSKCJhP3paI5jOEaSpUtV
+	 4kYhAtP8ELIaSKFyHpsVCrfvzRP9btshMM40Ix38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfE1Lz4 (ORCPT
+        id S1727092AbfE1L4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:55:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42538 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfE1Lz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:55:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 301E760F3C; Tue, 28 May 2019 11:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559044555;
-        bh=k813bqE5/UfBXGr5ARK+Gx4QKOpZv/nuAkDg3b3jzBQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=JUZBtdgJYCs5pblKIc0RuQHtvm6TnBNEVhH8aoqE71dcShKITPGDsMnvnPPmPvHla
-         LSWMrEhVGZdChMYtAZcoNU6PYY9OwM6UpZoqLKHS85MtGrrctE2H+Vl6d13GWSLfRK
-         N1hVofqV4A4eBNF1OisaJKWSkL41tfN4nb7JjlSk=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FD3560EA5;
-        Tue, 28 May 2019 11:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559044550;
-        bh=k813bqE5/UfBXGr5ARK+Gx4QKOpZv/nuAkDg3b3jzBQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=WOvlO9OiVt/8dVWyeJQBAOLYO+j8JM2gLCQRAgk5U9cO7vYYd2hVBhSBDn8Yic4mP
-         gLeREwi2xjWCnce+jNnmZU1EpjP7pLVFJ65dljaJ1re9TosnZampAEcLgvdHn4Tsc/
-         0HF4c0DbiFI5ds0Qa6wLLVuGDWmuxq+Hh1ntp+Hk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5FD3560EA5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 May 2019 07:56:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54666 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726592AbfE1L4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 07:56:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2AFCEAD4A;
+        Tue, 28 May 2019 11:56:11 +0000 (UTC)
+Date:   Tue, 28 May 2019 13:56:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528115609.GA1658@dhcp22.suse.cz>
+References: <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <20190528103256.GA9199@google.com>
+ <20190528104117.GW1658@dhcp22.suse.cz>
+ <20190528111208.GA30365@google.com>
+ <20190528112840.GY1658@dhcp22.suse.cz>
+ <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling
- code of rtl_pci_probe()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190514123439.10524-1-baijiaju1990@gmail.com>
-References: <20190514123439.10524-1-baijiaju1990@gmail.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     pkshih@realtek.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190528115555.301E760F3C@smtp.codeaurora.org>
-Date:   Tue, 28 May 2019 11:55:50 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuesCSrE0esqDDbo8x5u5rM-Uv_81jjBt1QRXFKNOUJu0aw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+On Tue 28-05-19 04:42:47, Daniel Colascione wrote:
+> On Tue, May 28, 2019 at 4:28 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Tue 28-05-19 20:12:08, Minchan Kim wrote:
+> > > On Tue, May 28, 2019 at 12:41:17PM +0200, Michal Hocko wrote:
+> > > > On Tue 28-05-19 19:32:56, Minchan Kim wrote:
+> > > > > On Tue, May 28, 2019 at 11:08:21AM +0200, Michal Hocko wrote:
+> > > > > > On Tue 28-05-19 17:49:27, Minchan Kim wrote:
+> > > > > > > On Tue, May 28, 2019 at 01:31:13AM -0700, Daniel Colascione wrote:
+> > > > > > > > On Tue, May 28, 2019 at 1:14 AM Minchan Kim <minchan@kernel.org> wrote:
+> > > > > > > > > if we went with the per vma fd approach then you would get this
+> > > > > > > > > > feature automatically because map_files would refer to file backed
+> > > > > > > > > > mappings while map_anon could refer only to anonymous mappings.
+> > > > > > > > >
+> > > > > > > > > The reason to add such filter option is to avoid the parsing overhead
+> > > > > > > > > so map_anon wouldn't be helpful.
+> > > > > > > >
+> > > > > > > > Without chiming on whether the filter option is a good idea, I'd like
+> > > > > > > > to suggest that providing an efficient binary interfaces for pulling
+> > > > > > > > memory map information out of processes.  Some single-system-call
+> > > > > > > > method for retrieving a binary snapshot of a process's address space
+> > > > > > > > complete with attributes (selectable, like statx?) for each VMA would
+> > > > > > > > reduce complexity and increase performance in a variety of areas,
+> > > > > > > > e.g., Android memory map debugging commands.
+> > > > > > >
+> > > > > > > I agree it's the best we can get *generally*.
+> > > > > > > Michal, any opinion?
+> > > > > >
+> > > > > > I am not really sure this is directly related. I think the primary
+> > > > > > question that we have to sort out first is whether we want to have
+> > > > > > the remote madvise call process or vma fd based. This is an important
+> > > > > > distinction wrt. usability. I have only seen pid vs. pidfd discussions
+> > > > > > so far unfortunately.
+> > > > >
+> > > > > With current usecase, it's per-process API with distinguishable anon/file
+> > > > > but thought it could be easily extended later for each address range
+> > > > > operation as userspace getting smarter with more information.
+> > > >
+> > > > Never design user API based on a single usecase, please. The "easily
+> > > > extended" part is by far not clear to me TBH. As I've already mentioned
+> > > > several times, the synchronization model has to be thought through
+> > > > carefuly before a remote process address range operation can be
+> > > > implemented.
+> > >
+> > > I agree with you that we shouldn't design API on single usecase but what
+> > > you are concerning is actually not our usecase because we are resilient
+> > > with the race since MADV_COLD|PAGEOUT is not destruptive.
+> > > Actually, many hints are already racy in that the upcoming pattern would
+> > > be different with the behavior you thought at the moment.
+> >
+> > How come they are racy wrt address ranges? You would have to be in
+> > multithreaded environment and then the onus of synchronization is on
+> > threads. That model is quite clear. But we are talking about separate
+> > processes and some of them might be even not aware of an external entity
+> > tweaking their address space.
+> 
+> I don't think the difference between a thread and a process matters in
+> this context. Threads race on address space operations all the time
+> --- in the sense that multiple threads modify a process's address
+> space without synchronization.
 
-> *BUG 1:
-> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
-> rtl_deinit_core() in the error handling code is executed.
-> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
-> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
-> initialized. Thus a null-pointer dereference occurs.
-> The reason is that rtlpriv->scan_list.list is initialized by
-> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
-> 
-> To fix this bug, rtl_deinit_core() should not be called when
-> rtlpriv->cfg->ops->init_sw_vars() fails.
-> 
-> *BUG 2:
-> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
-> this function fails, and rtlpriv->scan_list.list has not been
-> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
-> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
-> dereference occurs due to the same reason of the above bug.
-> 
-> To fix this bug, the initialization of lists in rtl_init_core() are
-> performed before the call to rtl_regd_init().
-> 
-> These bugs are found by a runtime fuzzing tool named FIZZER written by
-> us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+I would disagree. They do have in-kernel synchronization as long as they
+do not use MAP_FIXED. If they do want to use MAP_FIXED then they better
+synchronize or the result is undefined.
 
-Ping & Larry, is this ok to take?
+> The main reasons that these races
+> hasn't been a problem are: 1) threads mostly "mind their own business"
+> and modify different parts of the address space or use locks to ensure
+> that they don't stop on each other (e.g., the malloc heap lock), and
+> 2) POSIX mmap atomic-replacement semantics make certain classes of
+> operation (like "magic ring buffer" setup) safe even in the presence
+> of other threads stomping over an address space.
+
+Agreed here.
+
+[...]
+
+> From a synchronization point
+> of view, it doesn't really matter whether it's a thread within the
+> target process or a thread outside the target process that does the
+> address space manipulation. What's new is the inspection of the
+> address space before performing an operation.
+
+The fundamental difference is that if you want to achieve the same
+inside the process then your application is inherenly aware of the
+operation and use whatever synchronization is needed to achieve a
+consistency. As soon as you allow the same from outside you either
+have to have an aware target application as well or you need a mechanism
+to find out that your decision has been invalidated by a later
+unsynchronized action.
+
+> Minchan started this thread by proposing some flags that would
+> implement a few of the filtering policies I used as examples above.
+> Personally, instead of providing a few pre-built policies as flags,
+> I'd rather push the page manipulation policy to userspace as much as
+> possible and just have the kernel provide a mechanism that *in
+> general* makes these read-decide-modify operations efficient and
+> robust. I still think there's way to achieve this goal very
+> inexpensively without compromising on flexibility.
+
+Agreed here.
 
 -- 
-https://patchwork.kernel.org/patch/10942971/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Michal Hocko
+SUSE Labs
