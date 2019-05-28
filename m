@@ -2,87 +2,84 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806ADC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815C4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583F3208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BBE920B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:02:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="04iorG8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfE1KAv convert rfc822-to-8bit (ORCPT
+        id S1726813AbfE1KCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:00:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56082 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbfE1KAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:00:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3EB65B030;
-        Tue, 28 May 2019 10:00:13 +0000 (UTC)
-Date:   Tue, 28 May 2019 12:00:11 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
-        Steven Honeyman <stevenhoneyman@gmail.com>,
-        Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
-        Jochen Eisinger <jochen@penguin-breeder.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Tue, 28 May 2019 06:02:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48070 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfE1KCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 06:02:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LusDKMLS+m4sZJCVghZn+t8ht/w0Gel9LIuZv0e2CfE=; b=04iorG8B7OxjkIlDfmg0N623K
+        H0TsySypnUjwPRESiBehwoKjnD1Cus2xp8T0m28bKV4uAd3/u/8XF8S/mk00S5tFvFPy2Nw+Sh+QK
+        lXYYhf+ncCwtmUK1VdJ4E/9zJY4YnYnVTsSfA8AFpcLFjhchF/8bo8q5iYPtdpksQuL88M87PSXTI
+        bd9PfxOFgqw/ILtCyCv6+0OhZPDQZbzHj3/jTVm5uWjcuyKuBzUxpF1Ip9ur1fbAIOFIoSKprOVte
+        k4Err2llUFCEsd97Cu2xqd58dKJkcQerpbGU31KLl35l1LKIcyG4AHKbZUFVdIdpBGVWmzd0wbnBL
+        0qj+2lcAw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVYvW-0002XR-Pq; Tue, 28 May 2019 10:01:51 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB5552065C636; Tue, 28 May 2019 12:01:47 +0200 (CEST)
+Date:   Tue, 28 May 2019 12:01:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Mario Limonciello <Mario_Limonciello@dell.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Message-ID: <20190528120011.288189f9@endymion>
-In-Reply-To: <20190528095402.hlnqfon6jk452one@pali>
-References: <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
-        <20180212153012.vffvjmz26ifyxbj5@pali>
-        <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
-        <20180213150004.5d2v7y7wwuure4io@pali>
-        <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
-        <20180213165023.xmzovx7fd3gdljxw@pali>
-        <20180226203255.lnnzipipjz5l2itz@ninjato>
-        <20190528111953.0e5415f4@endymion>
-        <20190528094132.ytsittb5hcgthoy2@pali>
-        <1559037015.6521.3.camel@suse.de>
-        <20190528095402.hlnqfon6jk452one@pali>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/8] perf/x86: Rework msr probe interface
+Message-ID: <20190528100147.GM2623@hirez.programming.kicks-ass.net>
+References: <20190527215129.10000-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527215129.10000-1-jolsa@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 11:54:02 +0200, Pali Rohár wrote:
-> On Tuesday 28 May 2019 11:50:15 Jean Delvare wrote:
-> > OK, thanks for the explanation. But assuming that we now instantiate
-> > the lis2lv02d device from i2c-i801 for exactly all the same machines,
-> > can't we just *enable* the freefall misc device feature of lis2lv02d
-> > and kill the dell-smo8800 driver completely? Seems more simple to
-> > maintain going forward.  
+On Mon, May 27, 2019 at 11:51:21PM +0200, Jiri Olsa wrote:
+> hi,
+> following up on [1], [2] and [3], this patchset adds update
+> attribute groups to pmu, factors out the MSR probe code and
+> use it in msr,cstate* and rapl PMUs.
 > 
-> I though about it and I already wrote that is it not practical. For ACPI
-> drivers there is easy way to get that interrupt number from ACPI tables.
-> From i2c-i801 PCI driver it is hard to get interrupt number for
-> particular ACPI device...
-> 
-> That is way I preferred simple solution: ACPI driver for ACPI device and
-> i2c driver for i2c device.
+> The functionality stays the same with one exception:
+> the event is not exported if the rdmsr return zero
+> on event's msr.
 
-OK, fine with me then :-)
+That seems a wee bit dangerous, are we sure none of these counters are 0
+by 'accident' when we probe them? I'm thinking esp. things like the Cn
+residency stuff could be 0 simply because we've not been into that state
+yet.
 
--- 
-Jean Delvare
-SUSE L3 Support
+Other than that, this looks good. Kan?
