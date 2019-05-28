@@ -2,135 +2,175 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFFCC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C9AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3612A20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwR7hrH4"
+	by mail.kernel.org (Postfix) with ESMTP id 1109A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 12:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559046732;
+	bh=4CH6wsV4zRFCqzqowLGeF3WwiWYsRogr0Um09KEIcWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FMEDqEZuJK/UK0sUapUeeyN2lcEfy0Qjfms+5jBjHRwFiVj+HPMi4GZs54zY6nWYF
+	 ueszhOUi9x5jq/TagUrjOM0IpykMQfZocVlsLiqOxsaBwjomPazSs/ZZkp7OZvMeNW
+	 hztgH5OckslSzKSLG18zfnvKaH852e6quAge2abc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfE1MaW (ORCPT
+        id S1727225AbfE1McL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 08:30:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40355 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfE1MaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 08:30:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so11394199pfn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 05:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wbDGMNbYYQdX+Pxgd0vXZtreujx15Q0l3ZduS6F2GKM=;
-        b=DwR7hrH4XP5l1bRLMyG3fcNleGVYoVC/tS84AWJhif6ykzugPG+ekI1PwCGTXaDGO8
-         iTfiaOapH9jFQ7MnE8/KcTEt2ffoZKpH7zOQc/D4xQnLu+E4LZ9z9KEMZjrfbXCtiqvi
-         dXSo0KyVluHT4kR9p4Riuh7neCVjt4H6ufTo9SAZdKNFKDi6TGRnISCWIPDa0LxGrR5t
-         u0dFfncicOOMqrvABG40tZX2m1uKuzIPunjA4FE+mpJpSuDhT8XckfWZ/xkxmOU4Bw3z
-         Ri/A/ZUxxMQV4cVycg9pQb2xP9SncyAkEvNCfbSLdx2Gh8LkL2w32g2uPcUiV7kODABg
-         EqNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wbDGMNbYYQdX+Pxgd0vXZtreujx15Q0l3ZduS6F2GKM=;
-        b=SqgzMWfY801uHi3fmZR5hAnYHoMUiUqSFM/Ti1MeUTAHnbYNZXAqYhmvCzXchrRwWs
-         1IwiPSjjwV9fTGILpfTGRdFD6qKya+8100BCpuTf4FvClEHkDZYwmczUhkT/lMtwQz5d
-         Sqo6nZNjSRrFvITih5gNOI2TKt2gPuDvvxoLd8WjB5YYQigQXcVl+8/j7cWnHCZeXYcN
-         0X4HXT4Cx9PMGY6ezsXUrc4Dfi1dNd34TrornPZO7HNmpzqmqfPKQ/ffJpgTmmh5R6cy
-         FCirIaImcvq6f41UHMYddTYEbC+GHd1ebM6ImNqIFwqcR6XLOhXzsgB+51snhRiu5GJd
-         zeaQ==
-X-Gm-Message-State: APjAAAU067FXkeRwHz4eoytGJasjHIfTAG5fIthxFy802ib6HaEUyude
-        rh2iovueHYiG6OGz9IA/sIA=
-X-Google-Smtp-Source: APXvYqwWncBkj10LXWl+MumT21W1v1+iisFqPYQvOkVpMdzhh53zR0Fpx8rd0FLH6RVrACMt4bE7ow==
-X-Received: by 2002:a62:ab0a:: with SMTP id p10mr44367366pff.143.1559046621476;
-        Tue, 28 May 2019 05:30:21 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id y12sm1434787pgi.10.2019.05.28.05.30.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 28 May 2019 05:30:20 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     will.deacon@arm.com, linux@armlinux.org.uk, mark.rutland@arm.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        peterz@infradead.org, kan.liang@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] perf: Fix oops when kthread execs user process
-Date:   Tue, 28 May 2019 20:31:29 +0800
-Message-Id: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 28 May 2019 08:32:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35846 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726592AbfE1McL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 08:32:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 30483B016;
+        Tue, 28 May 2019 12:32:09 +0000 (UTC)
+Date:   Tue, 28 May 2019 14:32:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
+ MADV_FILE_FILTER
+Message-ID: <20190528123208.GC1658@dhcp22.suse.cz>
+References: <20190528062947.GL1658@dhcp22.suse.cz>
+ <20190528081351.GA159710@google.com>
+ <CAKOZuesnS6kBFX-PKJ3gvpkv8i-ysDOT2HE2Z12=vnnHQv0FDA@mail.gmail.com>
+ <20190528084927.GB159710@google.com>
+ <20190528090821.GU1658@dhcp22.suse.cz>
+ <CAKOZueux3T4_dMOUK6R=ZHhCFaSSstOCPh_KSwSMCW_yp=jdSg@mail.gmail.com>
+ <20190528103312.GV1658@dhcp22.suse.cz>
+ <CAKOZueuRAtps+YZ1g2SOevBrDwE6tWsTuONJu1NLgvW7cpA-ug@mail.gmail.com>
+ <20190528114923.GZ1658@dhcp22.suse.cz>
+ <CAKOZueuerHTCPbQqowSxi-_sRsqxYQQqgyi1UOh7EkZcS3DCnA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZueuerHTCPbQqowSxi-_sRsqxYQQqgyi1UOh7EkZcS3DCnA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a kthread calls call_usermodehelper() the steps are:
-  1. allocate current->mm
-  2. load_elf_binary()
-  3. populate current->thread.regs
+On Tue 28-05-19 05:11:16, Daniel Colascione wrote:
+> On Tue, May 28, 2019 at 4:49 AM Michal Hocko <mhocko@kernel.org> wrote:
+[...]
+> > > We have various system calls that provide hints for open files, but
+> > > the memory operations are distinct. Modeling anonymous memory as a
+> > > kind of file-backed memory for purposes of VMA manipulation would also
+> > > be a departure from existing practice. Can you help me understand why
+> > > you seem to favor the FD-per-VMA approach so heavily? I don't see any
+> > > arguments *for* an FD-per-VMA model for remove memory manipulation and
+> > > I see a lot of arguments against it. Is there some compelling
+> > > advantage I'm missing?
+> >
+> > First and foremost it provides an easy cookie to the userspace to
+> > guarantee time-to-check-time-to-use consistency.
+> 
+> But only for one VMA at a time.
 
-While doing this, interrupts are not disabled. If there is a perf
-interrupt in the middle of this process (i.e. step 1 has completed
-but not yet reached to step 3) and if perf tries to read userspace
-regs, kernel oops.
+Which is the unit we operate on, right?
 
-Fix it by setting abi to PERF_SAMPLE_REGS_ABI_NONE when userspace
-pt_regs are not set.
+> > It also naturally
+> > extend an existing fadvise interface that achieves madvise semantic on
+> > files.
+> 
+> There are lots of things that madvise can do that fadvise can't and
+> that don't even really make sense for fadvise, e.g., MADV_FREE. It
+> seems odd to me to duplicate much of the madvise interface into
+> fadvise so that we can use file APIs to give madvise hints. It seems
+> simpler to me to just provide a mechanism to put the madvise hints
+> where they're needed.
 
-See commit bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs
-user process") for details.
+I do not see why we would duplicate. I confess I haven't tried to
+implement this so I might be overlooking something but it seems to me
+that we could simply reuse the same functionality from both APIs.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- arch/arm/kernel/perf_regs.c   | 3 ++-
- arch/arm64/kernel/perf_regs.c | 3 ++-
- arch/x86/kernel/perf_regs.c   | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+> > I am not really pushing hard for this particular API but I really
+> > do care about a programming model that would be sane.
+> 
+> You've used "sane" twice so far in this message. Can you specify more
+> precisely what you mean by that word?
 
-diff --git a/arch/arm/kernel/perf_regs.c b/arch/arm/kernel/perf_regs.c
-index 05fe92a..78ee29a 100644
---- a/arch/arm/kernel/perf_regs.c
-+++ b/arch/arm/kernel/perf_regs.c
-@@ -36,5 +36,6 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 			struct pt_regs *regs_user_copy)
- {
- 	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
-+	regs_user->abi = (regs_user->regs) ? perf_reg_abi(current) :
-+			 PERF_SAMPLE_REGS_ABI_NONE;
- }
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 0bbac61..ac19d19 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -58,5 +58,6 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 			struct pt_regs *regs_user_copy)
- {
- 	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
-+	regs_user->abi = (regs_user->regs) ? perf_reg_abi(current) :
-+			 PERF_SAMPLE_REGS_ABI_NONE;
- }
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index 07c30ee..fa79d6d 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -102,7 +102,8 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 			struct pt_regs *regs_user_copy)
- {
- 	regs_user->regs = task_pt_regs(current);
--	regs_user->abi = perf_reg_abi(current);
-+	regs_user->abi = (regs_user->regs) ? perf_reg_abi(current) :
-+			 PERF_SAMPLE_REGS_ABI_NONE;
- }
- #else /* CONFIG_X86_64 */
- #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
+Well, I would consider a model which would prevent from unintended side
+effects (e.g. working on a completely different object) without a tricky
+synchronization sane.
+
+> I agree that there needs to be
+> some defense against TOCTOU races when doing remote memory management,
+> but I don't think providing this robustness via a file descriptor is
+> any more sane than alternative approaches. A file descriptor comes
+> with a lot of other features --- e.g., SCM_RIGHTS, fstat, and a
+> concept of owning a resource --- that aren't needed to achieve
+> robustness.
+> 
+> Normally, a file descriptor refers to some resource that the kernel
+> holds as long as the file descriptor (well, the open file description
+> or struct file) lives -- things like graphics buffers, files, and
+> sockets. If we're using an FD *just* as a cookie and not a resource,
+> I'd rather just expose the cookie directly.
+
+You are absolutely right. But doesn't that apply to any other
+revalidation method that would be tracking VMA status as well. As I've
+said I am not married to this approach as long as there are better
+alternatives. So far we are in a discussion what should be the actual
+semantic of the operation and how much do we want to tolerate races. And
+it seems that we are diving into implementation details rather than
+landing with a firm decision that the current proposed API is suitable
+or not.
+
+> > If we have a
+> > different means to achieve the same then all fine by me but so far I
+> > haven't heard any sound arguments to invent something completely new
+> > when we have established APIs to use.
+> 
+> Doesn't the next sentence describe something profoundly new? :-)
+> 
+> > Exporting anonymous mappings via
+> > proc the same way we do for file mappings doesn't seem to be stepping
+> > outside of the current practice way too much.
+> 
+> It seems like a radical departure from existing practice to provide
+> filesystem interfaces to anonymous memory regions, e.g., anon_vma.
+> You've never been able to refer to those memory regions with file
+> descriptors.
+> 
+> All I'm suggesting is that we take the existing madvise mechanism,
+> make it work cross-process, and make it robust against TOCTOU
+> problems, all one step at a time. Maybe my sense of API "size" is
+> miscalibrated, but adding a new type of FD to refer to anonymous VMA
+> regions feels like a bigger departure and so requires stronger
+> justification, especially if the result of the FD approach is probably
+> something less efficient than a cookie-based one.
+
+Feel free to propose the way to achieve that in the respective email
+thread.
+ 
+> > and we should focus on discussing whether this is a
+> > sane model. And I think it would be much better to discuss that under
+> > the respective patch which introduces that API rather than here.
+> 
+> I think it's important to discuss what that API should look like. :-)
+
+It will be fun to follow this discussion and make some sense of
+different parallel threads.
+
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
