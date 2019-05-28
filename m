@@ -2,148 +2,109 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA40C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557EAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC7B20989
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB5921848
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S96DHKfG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z/G3eU4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfE1SE6 (ORCPT
+        id S1727872AbfE1SFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:04:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35415 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfE1SE5 (ORCPT
+        Tue, 28 May 2019 14:05:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfE1SFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:04:57 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n14so18669335otk.2;
-        Tue, 28 May 2019 11:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CQxWFe6czG2bT+E5vQ0cGm/ESs62tRcAolQyTGumg4o=;
-        b=S96DHKfGnrWA3fayeAGBuk0VhGyiR0EWi0nRny8YntXYzTGPKq58f4EJtve596fjOJ
-         codwqPXsn5sDeRcmx9hR2FbNzwUumlg5Rt6mZQuoPP8TJSunDqzcQ1eI+hkckvuwNaw+
-         T0rvJ7Bnyzxl6cWLPWN4nJsqxzOagnXoBx9Vx+WjGun77D+76DZCCPsyWUuwDYsGWTLg
-         E1KClD0GDUyCh+M8yKezXOJZX11761ZeraD7tFnD4LbLBbt7wUREWFG0H+ROARi8GwJA
-         C/x0Rr+/RApnvVW65xyNSSC9PWexT4EaZ9qspfSTB75Dscey7bP0hKUFl/YTI9gEErrv
-         39jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CQxWFe6czG2bT+E5vQ0cGm/ESs62tRcAolQyTGumg4o=;
-        b=df1g/zK5K0k/K+JM2T/oWNq1Zkg2xOMAN+mRMJ4UVCOozfW6wkyA8T1N/1DcIagQC+
-         M7Xgw8/DQPTjDu0AWElRqiraybznDwBWxq5zerHBnj3okjAdOVPXf7HjByYBcW+7AO6C
-         PrxL4IqjK39KGggFRv+MQlBwxbWmj2LV4gh8gYDgXWsypZJKCl/z+246ThjIdPbM4/Wf
-         oqdaZlY94fnl59wc2mdVFursL6MdL1RtKoxk3ltpn8E2X8rL+gRN+xkSKHehsK0iJoW2
-         uCCjzqWUaAZVlfkekyYEzYfKIdH2gAj9KRJGXg5a3hnVTXPgRSO17diwutc82j1MmoWb
-         ke5g==
-X-Gm-Message-State: APjAAAUG2p/dxSQ1zj0kH7fWYSC9S5QVoPaloChxMpFiX90pGhN338J2
-        J7t735WTloOgSXyueUlEsKi475cNx1N6SuZj448=
-X-Google-Smtp-Source: APXvYqxQxsGkXFE+oqzGgB8Id81ggPL3jwHGjadRwPTCK4xlA9P4CLJsxyz90d3Pkk+rQcnZDov0VfIxSa3LyGBHu3I=
-X-Received: by 2002:a9d:744d:: with SMTP id p13mr54509230otk.96.1559066696707;
- Tue, 28 May 2019 11:04:56 -0700 (PDT)
+        Tue, 28 May 2019 14:05:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c4UYGdsKZq4NWqEx58QdiCg0rhfNu1KBY55h4BFMWyo=; b=Z/G3eU4sXgkwxGprjOpXcSzLe
+        FTtNHYcgOv34akNz/txX2tXTNsgieQtVKHlKXqAXBFJ+9Gn1usByy9aX7Rll9b+ncwnyOWBLN7vEQ
+        pNaYuP7UgOn/7apSRvDMPXvGQojZF7h4G8KLK8JhlUD4GHLoNOcc0LUfDGaSa02y8aSNOrfkmsZPs
+        suIz4JJzLFZdAPZ2j29SFwVJNv4sOOn1Xt8jwjtZ4ON7TUoMkH7nZu4Tg9q4dmyBTAQvPP0w0WRpI
+        gx2s7xb3rv4/cU7HG4E54EcIHlONdBWs7NugwaXHKqfWoigrHtM8HXzPwO2GJnXMbWq+Xv33MjFud
+        48I6pFdcQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVgTF-0001MV-Sq; Tue, 28 May 2019 18:05:09 +0000
+Subject: Re: linux-next: Tree for May 28 (platform/olpc/olpc-xo175-ec)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Lennert Buytenhek <buytenh@wantstofly.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+References: <20190528145838.23b73e25@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <68b2b71a-970b-8e0e-1ee3-e05a51c3bdf2@infradead.org>
+Date:   Tue, 28 May 2019 11:05:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190525181133.4875-1-martin.blumenstingl@googlemail.com>
- <20190525181133.4875-5-martin.blumenstingl@googlemail.com>
- <3b61897a-267b-fd6e-181b-a8c7e47918fb@baylibre.com> <CAFBinCDXNy4=6U2gsh6vK6WEtJKAdfDGPMrpPJthbp5Rru1hbg@mail.gmail.com>
- <20190527180047.nfsjfqs22coyqmvp@pengutronix.de>
-In-Reply-To: <20190527180047.nfsjfqs22coyqmvp@pengutronix.de>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 28 May 2019 20:04:45 +0200
-Message-ID: <CAFBinCCWYf4TJ8GTL3PrHMRfL3=Ma-QrTAGSyAp5OQc0M-67Jg@mail.gmail.com>
-Subject: Re: [PATCH 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thierry.reding@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190528145838.23b73e25@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On 5/27/19 9:58 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20190524:
+> 
 
-On Mon, May 27, 2019 at 8:00 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Mon, May 27, 2019 at 07:46:43PM +0200, Martin Blumenstingl wrote:
-> > Hi Neil,
-> >
-> > On Mon, May 27, 2019 at 2:26 PM Neil Armstrong <narmstrong@baylibre.com=
-> wrote:
-> > >
-> > > On 25/05/2019 20:11, Martin Blumenstingl wrote:
-> > > > MISC_CLK_SEL_WIDTH is only used in one place where it's converted i=
-nto
-> > > > a bit-mask. Rename and change the macro to be a bit-mask so that
-> > > > conversion is not needed anymore. No functional changes intended.
-> > > >
-> > > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.=
-com>
-> > > > ---
-> > > >  drivers/pwm/pwm-meson.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> > > > index c62a3ac924d0..84b28ba0f903 100644
-> > > > --- a/drivers/pwm/pwm-meson.c
-> > > > +++ b/drivers/pwm/pwm-meson.c
-> > > > @@ -33,7 +33,7 @@
-> > > >  #define MISC_A_CLK_DIV_SHIFT 8
-> > > >  #define MISC_B_CLK_SEL_SHIFT 6
-> > > >  #define MISC_A_CLK_SEL_SHIFT 4
-> > > > -#define MISC_CLK_SEL_WIDTH   2
-> > > > +#define MISC_CLK_SEL_MASK    0x3
-> > >
-> > > NIT I would have used GENMASK here
-> > that was my initial idea but I decided against it.
-> > the variant I came up with was: #define MISC_CLK_SEL_MASK    GENMASK(1,=
- 0)
-> >
-> > however, the actual offset is either 4 or 6 (depending on the PWM chann=
-el)
-> > and I felt that duplicating the macro would just make it more complicat=
-ed
-> > so instead I chose to be consistent with MISC_CLK_DIV_MASK
->
-> An option would be:
->
->         #define MISC_CLK_SEL_MASK(hwid)         GENMASK(1 + 4 * (hwid), 0=
- + 4 * (hwid))
->
-> (Note I didn't check a manual to the 4 above is probably wrong.)
-that (or at least something similar) will work
-the catch here is: we use it to initialize the mux clock and the
-common clock framework expects us to set "shift" and "mask", while
-mask starts at bit 0 instead of shift
+on x86, there are some issues with drivers/platform/olpc/olpc-xo175-ec.c:
 
-this is how the current code is being used at the moment:
-  channel->mux.shift =3D meson_pwm_per_channel_data[i].clk_sel_shift;
-  channel->mux.mask =3D MISC_CLK_SEL_MASK;
+a. when CONFIG_SPI is not set/enabled:
 
-so with MISC_CLK_SEL_MASK this would become:
-  channel->mux.shift =3D meson_pwm_per_channel_data[i].clk_sel_shift;
-  channel->mux.mask =3D MISC_CLK_SEL_MASK(i) >> channel->mux.shift;
+WARNING: unmet direct dependencies detected for SPI_SLAVE
+  Depends on [n]: SPI [=n]
+  Selected by [y]:
+  - OLPC_XO175_EC [=y] && (ARCH_MMP || COMPILE_TEST [=y])
 
-or we could dynamically determine the "shift" using ffs or friends
+ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_remove':
+olpc-xo175-ec.c:(.text+0x79): undefined reference to `spi_slave_abort'
+ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_send_command':
+olpc-xo175-ec.c:(.text+0x24d): undefined reference to `spi_async'
+ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_cmd':
+olpc-xo175-ec.c:(.text+0xb3c): undefined reference to `spi_slave_abort'
+ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_spi_driver_init':
+olpc-xo175-ec.c:(.init.text+0xa): undefined reference to `__spi_register_driver'
 
-my own brain parses the variant from the patch best
-I'm happy to change it though if we can find something "better"
+b. when CONFIG_INPUT is not set/enabled:
+
+ERROR: "input_register_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+ERROR: "input_set_capability" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+ERROR: "devm_input_allocate_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+ERROR: "input_event" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+
+c. when some power mgt. Kconfig symbol is not set/enabled:
+
+ERROR: "power_supply_put" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+ERROR: "power_supply_changed" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+ERROR: "power_supply_get_by_name" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+
+d. drivers/platform/olpc/Kconfig needs to use "menuconfig" like all of the other
+   Kconfig files in drivers/platform/ so that its menu is listed in the correct
+   place in *config interfaces.
 
 
-Martin
+:(
+
+-- 
+~Randy
