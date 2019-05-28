@@ -2,92 +2,95 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99379C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A390C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F90E21726
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E5F2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 17:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elCiHPbe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaq0BTRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfE1RMD (ORCPT
+        id S1727353AbfE1RM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 13:12:03 -0400
-Received: from mail-ed1-f47.google.com ([209.85.208.47]:45417 "EHLO
-        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbfE1RMD (ORCPT
+        Tue, 28 May 2019 13:12:59 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40130 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfE1RM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 13:12:03 -0400
-Received: by mail-ed1-f47.google.com with SMTP id g57so18002494edc.12;
-        Tue, 28 May 2019 10:12:02 -0700 (PDT)
+        Tue, 28 May 2019 13:12:59 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h13so15206400lfc.7;
+        Tue, 28 May 2019 10:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lYImdE1K3cUe2xPFfKctCk0xbs1kFjS1GtFoys4OKEc=;
-        b=elCiHPbeF+3BBhnD/fPMTklieZ6tyszuUka6t0KBE7hW2jdKkIboHAtr25j9U95Ikf
-         SR3t7R2wiTTMWcxf6u57nFDB1rYVtF62i57wVAJy1V+qT3ODXA7vw+48/1p9QfEAw9vY
-         DJl0xtovDV+V4awLz00+qFO1WJDc8lLT7dkPYd6XqRr70FHdTOUG/5hF9qC4mmAkntHu
-         bcyEqiiMQXF9pVYSYJrJI3prNpAgmZBe15Z9fNX+yf9F644uNPXzhU1sSOshy8aDUp/W
-         feiD9ySMIUcHhvNQ6Kb7ctoHYRqqebGN6QPFHqzlxm6aBLO3Y6Wx0OygowJJiPaIpyaQ
-         +aAw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7II5+XRnVobtVPgQVRQrDR8x4e5To08TyrztMHGvqag=;
+        b=eaq0BTRPkhNafZhWSSYSrscltuZlK8p6kHWOeCVXycDQv7t3RspcGhqc4CbVFRfJ0/
+         o7HJXatIFeoKZxyCMT287FoSfvrUs0U0xqqF+ZyaTxsF6AXOvHhx+mEnvBMiZVkkC7ec
+         QCS0S+APb1j6fW2ryNi4o7g80ajjVeRBHQNbzfaBo7pN07pH1YZkz60t0gSOOA3Sa77n
+         IUDDmczlKJ9hmuAndnQn4+Y/SUZKWO+OMmA80g+gjOLOd+UpCkLuevIe+dS8TuJtPJey
+         2PC562PZ6yYaNgc3BidpuZdLxw+bNgr4tYYphKwEZ3XqIzT7w38tkPatdRI9FkWb/PTS
+         N+nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lYImdE1K3cUe2xPFfKctCk0xbs1kFjS1GtFoys4OKEc=;
-        b=gkjukjqnUTTW2RRr6sLqd7HEDChRs8F98gW7M4X9Q3p93CzPU9Vio4U9aEeP4j3mpN
-         2WKiLbyMPdNKnO/6VFgLZbP6TA6XyQ7bC5/9235SgJcG1GD5ZK8kiJAcn9TMeJAAI3N2
-         rrIQ83g0WBx7JErCFY0JATzSvqqqwQktboSjZSE/J86urFE7C9jQ19TKIXZgSQpinqSl
-         yqj8P3seFh5mzGnJkDs/JoRG9FiI5wADeBHJIjywPmrXvqmL1MFxY1EYrcNlxz4UwH3s
-         AuFUlsdXN9j5KG11T3ZbbbGHhSpQ10Pqm0W2eFGshSaDFSD1IIrjbb3rpaAiiDPWsRNQ
-         llpg==
-X-Gm-Message-State: APjAAAXl7Ynb9TsUtGqrCzBHaWN+Tp+3Mx53A12D/VcQ1rRJ/IlWtk2Z
-        ntkVoLRLVwXZzbugpSwbXQgWIf0ja37i1cyKBZA=
-X-Google-Smtp-Source: APXvYqyAvOfbFAAK6aMyy93n7UREJlpiHInet91UkneecigYVrJX7593QPls/vDRXj8AibJ87Uas7h5rWHEPU6WqUys=
-X-Received: by 2002:a17:906:76c8:: with SMTP id q8mr70324783ejn.229.1559063521332;
- Tue, 28 May 2019 10:12:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7II5+XRnVobtVPgQVRQrDR8x4e5To08TyrztMHGvqag=;
+        b=DUO5En1dTvbSXbQmc1GJnFFO6BTzt4kM8cklYJFWB48yixiorxlkVoiTq/CxBHIffZ
+         iXHVIvJO+E1H3MlLjs+L7VjJ6bmW9oXtjSuz+E1M80xJUtSiXHOVRBxHWDMMs+vYxdr3
+         xgwBrmnqGu/zrcbdfPuBkBn0kMUBrw3XWHGcaUoTh0wehFtWK2F/YtcWJRKTGTcxWsX7
+         r0foGPhd8Knt/9VDehH3QdBJALvz7SfQKfZ30t0k8j6p7VEpTpGu/BO1vwA2kowJVvx+
+         6IGIadI3kyMYpxG1EcOxZYvXPUNygFjtHuIpGsSebpqwxVYLDjGgIyjCGU7ptKvSbhza
+         TB/Q==
+X-Gm-Message-State: APjAAAV93OVsPOgfGkrb1W0J7jh4irOp4k8Y9FXBiOP1B7gDtgZUVm2l
+        ftnfML7vEQ2TwlaUI2Om6fk=
+X-Google-Smtp-Source: APXvYqweo1MPDUPsmU7agUat02Negiwx5X1FenEPDIVNxQGPC9Z7TsrTpK50AruQozndnwRD+b61rA==
+X-Received: by 2002:ac2:4908:: with SMTP id n8mr3692243lfi.10.1559063577452;
+        Tue, 28 May 2019 10:12:57 -0700 (PDT)
+Received: from esperanza ([176.120.239.149])
+        by smtp.gmail.com with ESMTPSA id x14sm2989317lfe.83.2019.05.28.10.12.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 10:12:56 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:12:54 +0300
+From:   Vladimir Davydov <vdavydov.dev@gmail.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>, cgroups@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 4/7] mm: unify SLAB and SLUB page accounting
+Message-ID: <20190528171254.ymnytie2uc4hwd4v@esperanza>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190521200735.2603003-5-guro@fb.com>
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
- <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
- <879E5DA6-3A4F-4CE1-9DA5-480EE30109DE@appneta.com> <CAF=yD-LQT7=4vvMwMa96_SFuUd5GywMoae7hGi9n6rQeuhhxuQ@mail.gmail.com>
- <5BB184F2-6C20-416B-B2AF-A678400CFE3E@appneta.com> <CAF=yD-+6CRyqL6Fq5y2zpw5nnDitYC7G1c2JAVHZTjyw68DYJg@mail.gmail.com>
- <903DEC70-845B-4C4B-911D-2F203C191C27@appneta.com> <CAF=yD-Le0XKCfyDBvHmBRVqkwn1D6ZoG=12gss5T62VcN5+1_w@mail.gmail.com>
- <9811659B-6D5A-4C4F-9CF8-735E9CA6DE4E@appneta.com> <CAF=yD-KcX-zCgZFVVVMU7JFy+gJwRpUoViA_mWdM4QtHNr685g@mail.gmail.com>
-In-Reply-To: <CAF=yD-KcX-zCgZFVVVMU7JFy+gJwRpUoViA_mWdM4QtHNr685g@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 28 May 2019 13:11:24 -0400
-Message-ID: <CAF=yD-J2eNn4xNu37ekXfDGMtzQjOPVrWJ+EaLqdJmFcrnk8pA@mail.gmail.com>
-Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521200735.2603003-5-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- > Now that I know the issue is only in TCP, I can speculate that all bytes are
-> > being reported, but done with fewer messages. It may warrant some
-> > investigation in case there is some kind of bug.
->
-> This would definitely still be a bug and should not happen. We have
-> quite a bit of experience with TCP zerocopy and I have not run into
-> this in practice, so I do think that it is somehow a test artifact.
+On Tue, May 21, 2019 at 01:07:32PM -0700, Roman Gushchin wrote:
+> Currently the page accounting code is duplicated in SLAB and SLUB
+> internals. Let's move it into new (un)charge_slab_page helpers
+> in the slab_common.c file. These helpers will be responsible
+> for statistics (global and memcg-aware) and memcg charging.
+> So they are replacing direct memcg_(un)charge_slab() calls.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Christoph Lameter <cl@linux.com>
 
-To be clear, I'm not saying that it is an artifact of your extensions.
-It's quite likely that the zerocopy benchmark was a bit flaky in that
-regard all along. No need to spend further time on that for this
-patchset.
+Makes sense even without the rest of the series,
+
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
