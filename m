@@ -2,149 +2,120 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B868FC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1646C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E40208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3E9208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 10:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N5gqwYZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfE1KsG (ORCPT
+        id S1726714AbfE1KsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 06:48:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:55177 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfE1KsG (ORCPT
+        Tue, 28 May 2019 06:48:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47004 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726547AbfE1KsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 06:48:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id t7so15557267iof.21
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 03:48:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0nui5Erb9mPjKkGbLUOeBj8g+XDIbbULEjjyl9kXiHU=;
-        b=OjkHHYCGwQjRCaUnfMcb6cTjMzxierh9x9e3q6Ae9y5zNadfK6VQA3xm0jju6AwQVm
-         ICnlqK1sp2J4HuWPCzb6CjAxTwalvCjxbOGXvsLVS4iysd+4SZkmNmONGBcsnIuobUSZ
-         tLcsq8uV00NL8DP9dJUJHE5SJD5j9aCfEqIl4HT7UlKhqhXdRlynyBRwribd4zjTDTgr
-         hAjvtpYHZys34WxyY1xp4GaS9Coq4OLJ5KibMgTUAR0eQliRaYpO35Z8jc367TZWx/08
-         6pwq/iWFR//QsUxP7W4tSZyMsJOunIj2ipeYyQz7VBNs3j6lRqItIIeInJEoH/PI04bx
-         9EoA==
-X-Gm-Message-State: APjAAAWI+PZqNVLk+UHLP4hdcnlplisb3tYSPfqLh0ZU0VJ/+Fmv/b0t
-        tJ3hP0CX66EF/NBpKtJeOD/YoA0+HbMnut6iXtQkjR27Db1K
-X-Google-Smtp-Source: APXvYqwOl9+z3XSVgq/rWqTJjMm0wzXaZIrMXRTXxNwn6ciNwHUq+gQi/t8avgjA3A9klnIUAhByu5nHzGzhvdjuep01l8PC9bDC
+        Tue, 28 May 2019 06:48:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RkNAaQnFGQavYiriTPKlPs3zV7ehPx3Q5wBuIkfcSyQ=; b=N5gqwYZkhKw5xd3HaXD+oKNxk
+        7cRQ/oGaV9aX3rkUf1/5FQZvH0tG0X10+CakLOYduKuyAweNgLDRjVZLuAfR5zF78tlCFV5cG12O0
+        Kax9nSIj/coHdRxD34yq9onu0e9K1Mr44je4DrL6JDwx+4oh3fcA5VVZ2wGvbCMPvYbc1Z4XwoHiq
+        r0zY0HFL8GBkP5HgiyfQeWSWB4sXQF1YADcr9jy16IyVumfhGZf9hEbfNJ5B2KMXjC06XUQ0WBf4S
+        vqzvEOhRbrWwZPUwjlviUQEOuppvCpbmPhtc1XdKrYnD7mPn7Pf6/Oko6DmCTy8yR5tZDMyTjyQKe
+        ygubRKysA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVZda-00033A-HC; Tue, 28 May 2019 10:47:22 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0AB552072908C; Tue, 28 May 2019 12:47:20 +0200 (CEST)
+Date:   Tue, 28 May 2019 12:47:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, arnd@arndb.de,
+        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
+        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
+        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
+        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
+        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
+        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
+        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vgupta@synopsys.com,
+        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
+        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
+Message-ID: <20190528104719.GN2623@hirez.programming.kicks-ass.net>
+References: <20190522132250.26499-1-mark.rutland@arm.com>
+ <20190523083013.GA4616@andrea>
+ <20190523101926.GA3370@lakrids.cambridge.arm.com>
+ <20190524103731.GN2606@hirez.programming.kicks-ass.net>
+ <20190524111807.GS2650@hirez.programming.kicks-ass.net>
+ <20190524114220.GA4260@fuggles.cambridge.arm.com>
+ <20190524115231.GN2623@hirez.programming.kicks-ass.net>
+ <20190524224340.GA3792@andrea>
 MIME-Version: 1.0
-X-Received: by 2002:a24:5547:: with SMTP id e68mr2727057itb.83.1559040485433;
- Tue, 28 May 2019 03:48:05 -0700 (PDT)
-Date:   Tue, 28 May 2019 03:48:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000532b860589f0669a@google.com>
-Subject: general protection fault in cdev_del
-From:   syzbot <syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524224340.GA3792@andrea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, May 25, 2019 at 12:43:40AM +0200, Andrea Parri wrote:
+> > ---
+> > Subject: Documentation/atomic_t.txt: Clarify pure non-rmw usage
+> > 
+> > Clarify that pure non-RMW usage of atomic_t is pointless, there is
+> > nothing 'magical' about atomic_set() / atomic_read().
+> > 
+> > This is something that seems to confuse people, because I happen upon it
+> > semi-regularly.
+> > 
+> > Acked-by: Will Deacon <will.deacon@arm.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  Documentation/atomic_t.txt | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> > index dca3fb0554db..89eae7f6b360 100644
+> > --- a/Documentation/atomic_t.txt
+> > +++ b/Documentation/atomic_t.txt
+> > @@ -81,9 +81,11 @@ SEMANTICS
+> >  
+> >  The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+> >  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+> > -smp_store_release() respectively.
+> > +smp_store_release() respectively. Therefore, if you find yourself only using
+> > +the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+> > +and are doing it wrong.
+> 
+> The counterargument (not so theoretic, just look around in the kernel!) is:
+> we all 'forget' to use READ_ONCE() and WRITE_ONCE(), it should be difficult
+> or more difficult to forget to use atomic_read() and atomic_set()...   IAC,
+> I wouldn't call any of them 'wrong'.
 
-syzbot found the following crash on:
+I'm thinking you mean that the type system isn't helping us with
+READ/WRITE_ONCE() like it does with atomic_t ? And while I agree that
+there is room for improvement there, that doesn't mean we should start
+using atomic*_t all over the place for that.
 
-HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=178e4526a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
-dashboard link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dc5d54a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17cae526a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 2486 Comm: kworker/1:2 Not tainted 5.2.0-rc1+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:cdev_del+0x22/0x90 fs/char_dev.c:592
-Code: cf 0f 1f 80 00 00 00 00 55 48 89 fd 48 83 ec 08 e8 93 a5 d5 ff 48 8d  
-7d 64 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
-89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 4f 48
-RSP: 0018:ffff8881d18e7218 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff8881d249a100 RCX: ffffffff820d879e
-RDX: 000000000000000c RSI: ffffffff8167705d RDI: 0000000000000064
-RBP: 0000000000000000 R08: ffff8881d18d1800 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8881d25c9100 R14: 0000000000000000 R15: ffff8881cc2a8070
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f35af318000 CR3: 00000001cc182000 CR4: 00000000001406e0
-Call Trace:
-  tty_unregister_device drivers/tty/tty_io.c:3192 [inline]
-  tty_unregister_device+0x10d/0x1a0 drivers/tty/tty_io.c:3187
-  hso_serial_tty_unregister drivers/net/usb/hso.c:2245 [inline]
-  hso_create_bulk_serial_device drivers/net/usb/hso.c:2682 [inline]
-  hso_probe.cold+0xc8/0x120 drivers/net/usb/hso.c:2948
-  usb_probe_interface+0x30b/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x287/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
-  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x1700 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0xa2/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x287/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c4/0x230 drivers/base/dd.c:777
-  bus_for_each_drv+0x15e/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e6/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x1700 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1adc/0x35a0 drivers/usb/core/hub.c:5432
-  process_one_work+0x90a/0x1580 kernel/workqueue.c:2268
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
-  kthread+0x30e/0x420 kernel/kthread.c:254
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 3b56fa5a205cba42 ]---
-RIP: 0010:cdev_del+0x22/0x90 fs/char_dev.c:592
-Code: cf 0f 1f 80 00 00 00 00 55 48 89 fd 48 83 ec 08 e8 93 a5 d5 ff 48 8d  
-7d 64 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
-89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 4f 48
-RSP: 0018:ffff8881d18e7218 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff8881d249a100 RCX: ffffffff820d879e
-RDX: 000000000000000c RSI: ffffffff8167705d RDI: 0000000000000064
-RBP: 0000000000000000 R08: ffff8881d18d1800 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8881d25c9100 R14: 0000000000000000 R15: ffff8881cc2a8070
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f35af318000 CR3: 00000001cc182000 CR4: 00000000001406e0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Part of the problem with READ/WRITE_ONCE() is that it serves a dual
+purpose; we've tried to untangle that at some point, but Linus wasn't
+having it.
