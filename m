@@ -2,144 +2,128 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC95B20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25C7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfE1T1f (ORCPT
+        id S1727895AbfE1T3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 15:27:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38414 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbfE1T1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 15:27:35 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SJO63w028935
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:27:34 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ssa6rtjc3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 15:27:34 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 28 May 2019 20:27:33 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 20:27:28 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SJRRNP22282730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 19:27:27 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C0A6BE053;
-        Tue, 28 May 2019 19:27:27 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D76FDBE058;
-        Tue, 28 May 2019 19:27:22 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.218.160])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue, 28 May 2019 19:27:22 +0000 (GMT)
-References: <20190418035120.2354-1-bauerman@linux.ibm.com> <20190418035120.2354-10-bauerman@linux.ibm.com> <1557835765.4139.9.camel@linux.ibm.com>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v10 09/12] ima: Implement support for module-style appended signatures
-In-reply-to: <1557835765.4139.9.camel@linux.ibm.com>
-Date:   Tue, 28 May 2019 16:27:17 -0300
+        Tue, 28 May 2019 15:29:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46940 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726732AbfE1T3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 15:29:46 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 310337FDFE;
+        Tue, 28 May 2019 19:29:46 +0000 (UTC)
+Received: from krava (ovpn-204-42.brq.redhat.com [10.40.204.42])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 521841F8;
+        Tue, 28 May 2019 19:29:43 +0000 (UTC)
+Date:   Tue, 28 May 2019 21:29:42 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH 1/3] perf header: Add die information in CPU topology
+Message-ID: <20190528192942.GJ10611@krava>
+References: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
+ <20190528090001.GD27906@krava>
+ <03a95846-5ccd-bbfa-ec95-b2cb8a83607d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19052819-0004-0000-0000-000015154B13
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011176; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01209921; UDB=6.00635635; IPR=6.00990951;
- MB=3.00027089; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-28 19:27:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052819-0005-0000-0000-00008BD76A03
-Message-Id: <87y32q5qi2.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03a95846-5ccd-bbfa-ec95-b2cb8a83607d@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 19:29:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 28, 2019 at 03:06:16PM -0400, Liang, Kan wrote:
+> 
+> 
+> On 5/28/2019 5:00 AM, Jiri Olsa wrote:
+> > On Thu, May 23, 2019 at 01:41:19PM -0700, kan.liang@linux.intel.com wrote:
+> > 
+> > SNIP
+> > 
+> > > diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+> > > index ece0710..f6e7db7 100644
+> > > --- a/tools/perf/util/cputopo.c
+> > > +++ b/tools/perf/util/cputopo.c
+> > > @@ -1,5 +1,6 @@
+> > >   // SPDX-License-Identifier: GPL-2.0
+> > >   #include <sys/param.h>
+> > > +#include <sys/utsname.h>
+> > >   #include <inttypes.h>
+> > >   #include <api/fs/fs.h>
+> > > @@ -8,9 +9,10 @@
+> > >   #include "util.h"
+> > >   #include "env.h"
+> > > -
+> > >   #define CORE_SIB_FMT \
+> > >   	"%s/devices/system/cpu/cpu%d/topology/core_siblings_list"
+> > > +#define DIE_SIB_FMT \
+> > > +	"%s/devices/system/cpu/cpu%d/topology/die_cpus_list"
+> > >   #define THRD_SIB_FMT \
+> > >   	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
+> > >   #define NODE_ONLINE_FMT \
+> > > @@ -20,7 +22,26 @@
+> > >   #define NODE_CPULIST_FMT \
+> > >   	"%s/devices/system/node/node%d/cpulist"
+> > > -static int build_cpu_topology(struct cpu_topology *tp, int cpu)
+> > > +bool check_x86_die_exists(void)
+> > > +{
+> > > +	char filename[MAXPATHLEN];
+> > > +	struct utsname uts;
+> > > +
+> > > +	if (uname(&uts) < 0)
+> > > +		return false;
+> > > +
+> > > +	if (strncmp(uts.machine, "x86_64", 6))
+> > > +		return false;
+> > > +
+> > > +	scnprintf(filename, MAXPATHLEN, DIE_SIB_FMT,
+> > > +		  sysfs__mountpoint(), 0);
+> > > +	if (access(filename, F_OK) == -1)
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
+> > 
+> > we could rename this to:
+> > 
+> > static bool has_die(void)
+> > {
+> > 	static bool has_die;
+> > 
+> > 	if (initialized)
+> > 		return has_die;
+> > 
+> > 	has_die = ...
+> > 	initialized = true;
+> > }
+> > 
+> > and got rid of all those 'has_die' arguments below
+> 
+> Yes, we can rename the function to has_die(). It looks like all the
+> 'has_die' arguments can be replaced either.
+> 
+> But why we want a "initialized" here? to cache the value? It looks like we
+> only need to call has_die() once.
 
-Mimi Zohar <zohar@linux.ibm.com> writes:
+right, if it's called from one place then it's ok
 
-> Hi Thiago,
->
-> On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
->> 
->> @@ -326,6 +356,10 @@ int ima_appraise_measurement(enum ima_hooks func,
->> case INTEGRITY_UNKNOWN:
->> break;
->> case INTEGRITY_NOXATTRS:/* No EVM protected xattrs. */
->> +/* It's fine not to have xattrs when using a modsig. */
->> +if (try_modsig)
->> +break;
->> +/* fall through */
->> case INTEGRITY_NOLABEL:/* No security.evm xattr. */
->> cause = "missing-HMAC";
->> goto out;
->> @@ -340,6 +374,14 @@ int ima_appraise_measurement(enum ima_hooks func,
->> rc = xattr_verify(func, iint, xattr_value, xattr_len, &status,
->>  &cause);
->> 
->> +/*
->> + * If we have a modsig and either no imasig or the imasig's key isn't
->> + * known, then try verifying the modsig.
->> + */
->> +if (status != INTEGRITY_PASS && try_modsig &&
->> + (!xattr_value || rc == -ENOKEY))
->> +rc = modsig_verify(func, modsig, &status, &cause);
->
-> EVM protects other security xattrs, not just security.ima, if they
-> exist. As a result, evm_verifyxattr() could pass based on the other
-> security xattrs.
-
-Indeed! It doesn't make sense to test for status != INTEGRITY_PASS here.
-Not sure what I was thinking. Thanks for spotting it. With your other
-comments about this if clause, this code now reads:
-
-	/*
-	 * If we have a modsig and either no imasig or the imasig's key isn't
-	 * known, then try verifying the modsig.
-	 */
-	if (try_modsig &&
-	    (!xattr_value || xattr_value->type == IMA_XATTR_DIGEST_NG ||
-	     rc == -ENOKEY))
-		rc = modsig_verify(func, modsig, &status, &cause);
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+thanks,
+jirka
