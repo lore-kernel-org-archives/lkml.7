@@ -2,101 +2,104 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEA6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD76BC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54CA2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lS6v7GXa"
+	by mail.kernel.org (Postfix) with ESMTP id AC5B42054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 13:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfE1Nl4 (ORCPT
+        id S1727630AbfE1Nm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 09:41:56 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37814 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbfE1Nly (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 09:41:54 -0400
-Received: by mail-it1-f193.google.com with SMTP id m140so3944161itg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 06:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLDbNj8hKOhihnmanHTtFjySrA3DxxDhmX5hUAsmw+o=;
-        b=lS6v7GXaZSalFWMm3WoSzuQB9Zjsw+onIMCLE6JJat+mQouJXGu2nR6VYifIFSFjHU
-         WL7yLn/fqh5cHHMBiWbOyrZVR2F2qCH643m2/reJJyR78KXIoBzFB5ZgCSItTzRZhYsT
-         F8qd0Jjy8o8bjV/q9TmuPrK9IKQE15lPqwE2mQhutKKiN4xhbbW+PIcjdcT/2xgCFctq
-         d4xg1mnASyV9qs6xc9zLsl9AvhL/jJmm/1V9IEI9fbmxwecIufiiYOHcZwN2G/B7kH4s
-         Lgdvv/oFEa4WvmyaLPLDSHq38tjMcIDzngUTDg4GasjcXupqrC+/XOz529WM0zC2u/VC
-         Q0/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLDbNj8hKOhihnmanHTtFjySrA3DxxDhmX5hUAsmw+o=;
-        b=rjXURw994rjTa5VU6BCX1mFtAudtdTCxIuCxU1Zl0uN4DY8eoH6/S+bOsuibA1Zr8d
-         vN/WjRy7GuYVgA4UFKiXZaiJIfoBJzy++cagcaH+BpW1pYtFnHjNIuBHnoL11u1/6GwJ
-         +dzVbg91ZtoEPXMqWPfGwhDsgr1YGRmbg3yksZCZTR2TlY7sKMh3Ui+gCZUbTElYQxG3
-         o1jB85QAqD5W8BTvoSqhHsKt1cqz+4rQbZIMiKyNGdsPWVaDfjjf4EprtsY+plAtE4av
-         dLNw3cn4roR38x/loySOqANs3nXB4FDstpw91NrlHyHhqzyN3yZeA4RQlAe2g3RD/LPP
-         ovmQ==
-X-Gm-Message-State: APjAAAVeP15oUGc20t7P1+5Z/+DnjwTrle2h/0WPuo7GVHFZQfBC5th9
-        GeBw54fAqTImriaZc6D/uSw=
-X-Google-Smtp-Source: APXvYqwm3jzumtfY56PvbYQzifT5CbLD2HPcAeXfSX9KzujmuncjrObdq8JSYqinusPnHLwQdQOb1Q==
-X-Received: by 2002:a24:210f:: with SMTP id e15mr3122762ita.122.1559050913144;
-        Tue, 28 May 2019 06:41:53 -0700 (PDT)
-Received: from localhost.localdomain ([2607:fea8:7a60:20d:6f1c:3788:87f4:7fe7])
-        by smtp.gmail.com with ESMTPSA id v139sm1247007itb.25.2019.05.28.06.41.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 06:41:52 -0700 (PDT)
-From:   Donald Yandt <donald.yandt@gmail.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        yanmin_zhang@linux.intel.com, linux-kernel@vger.kernel.org,
-        Donald Yandt <donald.yandt@gmail.com>
-Subject: [PATCH resend] tools/perf/util/machine: Return NULL instead of null-terminating
-Date:   Tue, 28 May 2019 09:41:28 -0400
-Message-Id: <20190528134128.30841-1-donald.yandt@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 28 May 2019 09:42:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53888 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727038AbfE1Nm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 09:42:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 256C4AF6A;
+        Tue, 28 May 2019 13:42:28 +0000 (UTC)
+Date:   Tue, 28 May 2019 15:42:27 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+Message-ID: <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+References: <20190528002412.1625-1-dima@arista.com>
+ <20190528041500.GB26865@jagdpanzerIV>
+ <20190528044619.GA3429@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528044619.GA3429@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return NULL instead of null-terminating version char array when fgets fails due to end-of-file or error.
+On Tue 2019-05-28 13:46:19, Sergey Senozhatsky wrote:
+> On (05/28/19 13:15), Sergey Senozhatsky wrote:
+> > On (05/28/19 01:24), Dmitry Safonov wrote:
+> > [..]
+> > > While handling sysrq the console_loglevel is bumped to default to print
+> > > sysrq headers. It's done to print sysrq messages with WARNING level for
+> > > consumers of /proc/kmsg, though it sucks by the following reasons:
+> > > - changing console_loglevel may produce tons of messages (especially on
+> > >   bloated with debug/info prints systems)
+> > > - it doesn't guarantee that the message will be printed as printk may
+> > >   deffer the actual console output from buffer (see the comment near
+> > >   printk() in kernel/printk/printk.c)
+> > > 
+> > > Provide KERN_UNSUPPRESSED printk() annotation for such legacy places.
+> > > Make sysrq print the headers unsuppressed instead of changing
+> > > console_loglevel.
 
-Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
----
- tools/perf/util/machine.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I like this idea. console_loglevel is temporary manipulated only
+when some messages should or should never appear on the console.
+Storing this information in the message flags would help
+to solve all the related races.
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 28a9541c4..6fd877220 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1235,9 +1235,9 @@ static char *get_kernel_version(const char *root_dir)
- 		return NULL;
+> > I've been thinking about this a while ago... So what I thought back
+> > then was that affected paths are atomic: sysrq, irqs, NMI, etc. Well
+> > at leasted it seemed to be so.
 
- 	tmp = fgets(version, sizeof(version), file);
--	if (!tmp)
--		*version = '\0';
- 	fclose(file);
-+	if (!tmp)
-+		return NULL;
+Yes, this would be useful for the other situations when all printk's
+in a particular context should be handled this way. We could build
+it on top of this patch.
 
- 	name = strstr(version, prefix);
- 	if (!name)
---
-2.20.1
+> Ahh.. OK, now I sort of remember why I gave up on this idea (see [1]
+> at the bottom, when it comes to uv_nmi_dump_state()) - printk_NMI and
+> printk-safe redirections.
+> 
+> 	NMI
+> 		loglevel = NEW
+> 		printk -> printk_safe_nmi
+> 		loglevel = OLD
+> 
+> 	iret
+> 
+> 	IRQ
+> 		flush printk_safe_nmi -> printk
+> 		// At this point we don't remember about
+> 		// loglevel manipulation anymore
+> 	iret
 
+printk_safe buffer preserves KERN_* headers. It should be
+possible to insert KERN_UNSUPPRESSED there.
+
+The patch itself looks fine on the first sight. If we go
+forward, please, split the printk and sysrq part
+into two patches.
+
+Best Regards,
+Petr
