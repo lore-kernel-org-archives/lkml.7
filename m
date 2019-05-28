@@ -2,113 +2,110 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E775CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D1DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0612075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314FE20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfE1O3n (ORCPT
+        id S1727267AbfE1OaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:29:43 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58696 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726693AbfE1O3b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:29:31 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SEOK0i014332;
-        Tue, 28 May 2019 09:29:02 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2sq340kgp1-1;
-        Tue, 28 May 2019 09:29:01 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail3.cirrus.com (Postfix) with ESMTP id A0B1D61429A7;
-        Tue, 28 May 2019 09:29:42 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 28 May
- 2019 15:29:00 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 28 May 2019 15:29:00 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9579D44;
-        Tue, 28 May 2019 15:29:00 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v3 5/6] i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
-Date:   Tue, 28 May 2019 15:28:59 +0100
-Message-ID: <20190528142900.24147-5-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
-References: <20190528142900.24147-1-ckeepax@opensource.cirrus.com>
+        Tue, 28 May 2019 10:30:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36530 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfE1OaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:30:01 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B8E7A7E42F;
+        Tue, 28 May 2019 14:30:01 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1796C10027C5;
+        Tue, 28 May 2019 14:30:00 +0000 (UTC)
+Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     Barret Rhoden <brho@google.com>, Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
+ <20190510184204.225451-1-brho@google.com>
+ <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
+ <d968a588-c43b-cfe1-6358-6c5d99f916a3@google.com>
+ <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
+Message-ID: <e5f7f37b-5c99-f9de-61ce-5b3394caf0d2@redhat.com>
+Date:   Tue, 28 May 2019 10:30:00 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=855 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905280094
+In-Reply-To: <ba46f7c1-caee-4237-b6c5-7edec0eaaac3@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 28 May 2019 14:30:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It makes sense to contain all the ACPI IRQ handling in a single helper
-function.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
 
-No changes since v2.
+On 5/22/19 1:08 PM, Prarit Bhargava wrote:
+> 
+> 
+> On 5/13/19 10:37 AM, Barret Rhoden wrote:
+>> Hi -
+>>
+> 
+> Hey Barret, my apologies for not getting back to you earlier.  I got caught up
+> in something that took me away from this issue.
+> 
+>> On 5/13/19 7:23 AM, Prarit Bhargava wrote:
+>> [snip]
+>>> A module is loaded once for each cpu.
+>>
+>> Does one CPU succeed in loading the module, and the others fail with EEXIST?
+>>
+>>> My follow-up patch changes from wait_event_interruptible() to
+>>> wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
+>>> make progress on other tasks, which changes the return values from
+>>> wait_event_interruptible().
+>>>
+>>> https://marc.info/?l=linux-kernel&m=155724085927589&w=2
+>>>
+>>> I believe this also takes your concern into account?
+>>
+>> That patch might work for me, but I think it papers over the bug where the check
+>> on old->state that you make before sleeping (was COMING || UNFORMED, now !LIVE)
+>> doesn't match the check to wake up in finished_loading().
+>>
+>> The reason the issue might not show up in practice is that your patch basically
+>> polls, so the condition checks in finished_loading() are only a quicker exit.
+>>
+>> If you squash my patch into yours, I think it will cover that case. Though if
+>> polling is the right answer here, it also raises the question of whether or not
+>> we even need finished_loading().
+>>
+> 
+> The more I look at this I think you're right.  Let me do some additional testing
+> with your patch + my original patch.
+> 
 
-Thanks,
-Charles
+I have done testing on arm64, s390x, ppc64le, ppc64, and x86 and have not seen
+any issues.
 
- drivers/i2c/i2c-core-acpi.c | 3 +++
- drivers/i2c/i2c-core-base.c | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Jessica, how would you like me to proceed?  Would you like an updated patch with
+Signed-off's from both Barret & myself?
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 62a938c17cbd2..42d53fe91c7ed 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -172,6 +172,9 @@ int i2c_acpi_get_irq(struct i2c_client *client)
- 
- 	acpi_dev_free_resource_list(&resource_list);
- 
-+	if (irq == -ENOENT)
-+		irq = acpi_dev_gpio_irq_get(adev, 0);
-+
- 	return irq;
- }
- 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index b6b009bfe842b..684ea2665d994 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -336,9 +336,6 @@ static int i2c_device_probe(struct device *dev)
- 				irq = of_irq_get(dev->of_node, 0);
- 		} else if (ACPI_COMPANION(dev)) {
- 			irq = i2c_acpi_get_irq(client);
--
--			if (irq == -ENOENT)
--				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
- 		}
- 		if (irq == -EPROBE_DEFER)
- 			return irq;
--- 
-2.11.0
+P.
 
+> P.
+> 
+> 
+>> Barret
