@@ -2,103 +2,167 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B553C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF8FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E578E2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCCB208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfE1Ff0 (ORCPT
+        id S1727418AbfE1Ffi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:35:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48830 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfE1Ff0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:35:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB1C8A78;
-        Mon, 27 May 2019 22:35:25 -0700 (PDT)
-Received: from [10.162.40.141] (p8cg001049571a15.blr.arm.com [10.162.40.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 004CB3F690;
-        Mon, 27 May 2019 22:35:21 -0700 (PDT)
-Subject: Re: [PATCH 1/4] arm64: module: create module allocations without exec
- permissions
-To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
- <20190523102256.29168-2-ard.biesheuvel@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d82eb4fe-8113-3f8e-f465-26679ebae2df@arm.com>
-Date:   Tue, 28 May 2019 11:05:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 28 May 2019 01:35:38 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:42827 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726269AbfE1Ffh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 01:35:37 -0400
+X-UUID: be5130a6a2bb477e8ab994be11f10e88-20190528
+X-UUID: be5130a6a2bb477e8ab994be11f10e88-20190528
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 649026001; Tue, 28 May 2019 13:35:30 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 28 May 2019 13:35:29 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 28 May 2019 13:35:29 +0800
+Message-ID: <1559021729.15879.1.camel@mtksdaap41>
+Subject: Re: [PATCH v2 22/25] drm/mediatek: adjust ddp clock control flow
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
+        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Tue, 28 May 2019 13:35:29 +0800
+In-Reply-To: <1555403090.11519.7.camel@mtksdaap41>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-23-git-send-email-yongqiang.niu@mediatek.com>
+         <1555403090.11519.7.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190523102256.29168-2-ard.biesheuvel@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Yongqiang:
 
-
-On 05/23/2019 03:52 PM, Ard Biesheuvel wrote:
-> Now that the core code manages the executable permissions of code
-> regions of modules explicitly, it is no longer necessary to create
-
-I guess the permission transition for various module sections happen
-through module_enable_[ro|nx]() after allocating via module_alloc().
-
-> the module vmalloc regions with RWX permissions, and we can create
-> them with RW- permissions instead, which is preferred from a
-> security perspective.
-
-Makes sense. Will this be followed in all architectures now ?
-
+On Tue, 2019-04-16 at 16:24 +0800, CK Hu wrote:
+> Hi, Yongqiang:
 > 
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-> ---
->  arch/arm64/kernel/module.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > 
+> > display hardware clock will not unprepare when
+> > crtc is disable, until crtc is destroyed.
+> > with this patch, hard clock will disable and unprepare
+> > at the same time.
 > 
-> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> index 2e4e3915b4d0..88f0ed31d9aa 100644
-> --- a/arch/arm64/kernel/module.c
-> +++ b/arch/arm64/kernel/module.c
-> @@ -41,7 +41,7 @@ void *module_alloc(unsigned long size)
->  
->  	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
->  				module_alloc_base + MODULES_VSIZE,
-> -				gfp_mask, PAGE_KERNEL_EXEC, 0,
-> +				gfp_mask, PAGE_KERNEL, 0,
->  				NUMA_NO_NODE, __builtin_return_address(0));
->  
->  	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-> @@ -57,7 +57,7 @@ void *module_alloc(unsigned long size)
->  		 */
->  		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
->  				module_alloc_base + SZ_4G, GFP_KERNEL,
-> -				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-> +				PAGE_KERNEL, 0, NUMA_NO_NODE,
->  				__builtin_return_address(0));
->  
->  	if (p && (kasan_module_alloc(p, size) < 0)) {
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+This patch looks independent, so I've applied it to
+mediatek-drm-fixes-5.2 [1], thanks.
+
+[1]
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.2
+
+Regards,
+CK
+> 
+> > 
+> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 26 ++++++--------------------
+> >  1 file changed, 6 insertions(+), 20 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> > index 0f97ee3..606c6e2 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> > @@ -195,7 +195,7 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
+> >  
+> >  	DRM_DEBUG_DRIVER("%s\n", __func__);
+> >  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+> > -		ret = clk_enable(mtk_crtc->ddp_comp[i]->clk);
+> > +		ret = clk_prepare_enable(mtk_crtc->ddp_comp[i]->clk);
+> >  		if (ret) {
+> >  			DRM_ERROR("Failed to enable clock %d: %d\n", i, ret);
+> >  			goto err;
+> > @@ -205,7 +205,7 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
+> >  	return 0;
+> >  err:
+> >  	while (--i >= 0)
+> > -		clk_disable(mtk_crtc->ddp_comp[i]->clk);
+> > +		clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
+> >  	return ret;
+> >  }
+> >  
+> > @@ -215,7 +215,7 @@ static void mtk_crtc_ddp_clk_disable(struct mtk_drm_crtc *mtk_crtc)
+> >  
+> >  	DRM_DEBUG_DRIVER("%s\n", __func__);
+> >  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+> > -		clk_disable(mtk_crtc->ddp_comp[i]->clk);
+> > +		clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
+> >  }
+> >  
+> >  static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+> > @@ -615,15 +615,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+> >  		if (!comp) {
+> >  			dev_err(dev, "Component %pOF not initialized\n", node);
+> >  			ret = -ENODEV;
+> > -			goto unprepare;
+> > -		}
+> > -
+> > -		ret = clk_prepare(comp->clk);
+> > -		if (ret) {
+> > -			dev_err(dev,
+> > -				"Failed to prepare clock for component %pOF: %d\n",
+> > -				node, ret);
+> > -			goto unprepare;
+> > +			return ret;
+> >  		}
+> >  
+> >  		mtk_crtc->ddp_comp[i] = comp;
+> > @@ -649,23 +641,17 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+> >  		ret = mtk_plane_init(drm_dev, &mtk_crtc->planes[zpos],
+> >  				     BIT(pipe), type);
+> >  		if (ret)
+> > -			goto unprepare;
+> > +			return ret;
+> >  	}
+> >  
+> >  	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
+> >  				mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
+> >  				NULL, pipe);
+> >  	if (ret < 0)
+> > -		goto unprepare;
+> > +		return ret;
+> >  	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
+> >  	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, MTK_LUT_SIZE);
+> >  	priv->num_pipes++;
+> >  
+> >  	return 0;
+> > -
+> > -unprepare:
+> > -	while (--i >= 0)
+> > -		clk_unprepare(mtk_crtc->ddp_comp[i]->clk);
+> > -
+> > -	return ret;
+> >  }
 > 
 
-Which just makes sure that PTE_PXN never gets dropped while creating
-these mappings.
+
