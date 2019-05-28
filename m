@@ -2,130 +2,125 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DA1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B379C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94A7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95202075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 07:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="BPOq3hZ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sTVCTQwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfE1HCK (ORCPT
+        id S1727357AbfE1HFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 03:02:10 -0400
-Received: from mail-eopbgr680077.outbound.protection.outlook.com ([40.107.68.77]:20708
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfE1HCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 03:02:10 -0400
+        Tue, 28 May 2019 03:05:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42005 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfE1HFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 03:05:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r22so8003798pfh.9;
+        Tue, 28 May 2019 00:05:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AxdnGrTkHNOZgkBxgA0glW5ekbVIta1MIx8jjVGV09U=;
- b=BPOq3hZ6ml9Zr+9aXM+K+k2KIaI+GQkfO8BzH9s4MxuIQBZTD5vvpJmk/yzkwH64ghJJjMrvrAAKSRKdOM18hMXv6K1nAQl9AvGPWbVHGhHAx15sFng7TZwQwd1Nbg2p5yexnaPl67id6/TuJKGgs2nwEWpNEy8KS9Bk0vUPjCs=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB3560.namprd03.prod.outlook.com (52.135.213.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.20; Tue, 28 May 2019 07:02:07 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Tue, 28 May 2019
- 07:02:07 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: stmmac: use dev_info() before netdev is
- registered
-Thread-Topic: [PATCH net-next] net: stmmac: use dev_info() before netdev is
- registered
-Thread-Index: AQHVFSNDwZ9fWQ9KOEG6EbFP/Z0S5Q==
-Date:   Tue, 28 May 2019 07:02:07 +0000
-Message-ID: <20190528145253.21b8abbc@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TY1PR01CA0201.jpnprd01.prod.outlook.com (2603:1096:403::31)
- To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e56f1351-25c6-47aa-2a32-08d6e33a657b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3560;
-x-ms-traffictypediagnostic: BYAPR03MB3560:
-x-microsoft-antispam-prvs: <BYAPR03MB356077961C059714EF5286B2ED1E0@BYAPR03MB3560.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 00514A2FE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39850400004)(376002)(199004)(189003)(73956011)(5660300002)(66946007)(66476007)(1076003)(71190400001)(66556008)(478600001)(64756008)(66446008)(476003)(66066001)(2906002)(72206003)(54906003)(110136005)(71200400001)(14454004)(6436002)(81166006)(316002)(6486002)(86362001)(68736007)(305945005)(6512007)(81156014)(52116002)(7736002)(486006)(26005)(8676002)(99286004)(4326008)(186003)(53936002)(25786009)(50226002)(386003)(6506007)(3846002)(256004)(9686003)(6116002)(8936002)(102836004)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3560;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9u2giS+oMkZS8Mw5tJ3UYNsfna6lDBy3yEyXnYUFn3u0M0eVLoaOiP1ejfbQTmiWmDaEH+aoRCOfAq+/mk0taZLpAiYifzRtZOYKpS5dSwnZ3PTMDOQyL3aUHCwC+3qdo/AoW6pmAorZMTHI2ahU0jEvdlB8XsalWwefsx6Rit2NkTtNfo5wjrZI9fFiRAJE+a55iutveNnbd/IigXM+e5mANe+HSylhEKx34QK1Q1PIWdR4ty9Tr1DwZAFfiN16nQMaRstdQdElOj1+xOCl/WxSd70QScgikvjsEl2NCBtl1nB+C/WwvZYnb8AG67PgGPVA5uEUsuvJFhnuf/yL7vOkiYLUbS0LtUYA7Tt5fFzJ/pX/91rG8PGiERBl+uRrPR7NGItrTvwPapXQucXdKpU1taOjX/bbn5QuHsk8EHg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <377D233A793EE04789DE5F86CED96582@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E/ZAaCWtOroQWVvLC5q9wuH/qlBcoxb4vLQTQm3UQbo=;
+        b=sTVCTQwcjOUbBeDTPZ9slIgPL7vc7+8M/O2YOnWqEz0DAzf2tUwdnTlU0GzopMLZJq
+         mG8Nq01ounojAaiDTcwXpLoOCOfxfzprjI3G7jL2No2j89M8v51FdKkrH6eimAPl6ifx
+         Ki3tWybo3KPGSaRLa/U+9d+PeIEdjH5EFMtzJlYcCnLR1sCkNUix7HMiWGK/c3Riidzj
+         eVak/YJO22tACt/XU1quCIZ1d3CurojyziZydPbyttk0mk6zjFWroMJ2MY30Ys3OUA5a
+         G8pzUEHYUXNswLQ74XLHjMj2bKfvgVcCzJ+YzapQqtnEUa6HwC1mxJXaW9T/5BUxw1RE
+         gA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E/ZAaCWtOroQWVvLC5q9wuH/qlBcoxb4vLQTQm3UQbo=;
+        b=EFPv7I6iQ8EfxafSkJ9a9A+QY27AReyG0DSSsBLvN+45WeSDDHHElOlA9Z1V/DXiu8
+         4rW/KUJyFnz7JUPSFOzsWbq5dwaA0zRDzvci10b6iOX8LGN4Gx6nwjICzVp1k2HRsTTN
+         Omn254Wka3k4jvuJLjrV7ggfJ6R3v4iZHpND53S41KBvlnXUP3clERsMRrDk2TGnK9P5
+         fcRE91mX9WouiooI5g1t8BkxjAk8o9V0VLDgyBHtfJLdlGLYW0+5wCZAIvt1zXgomMgn
+         VomFCGzsyl1CLyMskI+zKmsMOV11X5pl7+Z5Nr1ozg31eQVL9LNuXAnKCov8OQdMQkg1
+         CJxg==
+X-Gm-Message-State: APjAAAU92PQ15Ron68dPNYSRAN5+LR57NyjJYf8bumiu8pIsThbJeLNr
+        ny9PlV8skY438c8Jj4qtHAQ=
+X-Google-Smtp-Source: APXvYqwjuycOJymYacAnddrW34eMUmkeWw3rETyOEQpBXYDURHWelTLHkKdBzzVDLXiSgtPyJdGQhw==
+X-Received: by 2002:a63:ec02:: with SMTP id j2mr107551727pgh.340.1559027129956;
+        Tue, 28 May 2019 00:05:29 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id d15sm33527932pfm.186.2019.05.28.00.05.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 00:05:29 -0700 (PDT)
+Date:   Tue, 28 May 2019 15:05:08 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        PDL-MPT-FUSIONLINUX <MPT-FusionLinux.pdl@broadcom.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mpt3sas_ctl: fix double-fetch bug in _ctl_ioctl_main()
+Message-ID: <20190528070508.GA18498@zhanggen-UX430UQ>
+References: <20190527005716.GA17015@zhanggen-UX430UQ>
+ <CA+RiK64ddLM1Uhp_neqaX3HeaGqn-b=MgK3fGzXnee-o3SAVdg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e56f1351-25c6-47aa-2a32-08d6e33a657b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2019 07:02:07.2381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3560
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+RiK64ddLM1Uhp_neqaX3HeaGqn-b=MgK3fGzXnee-o3SAVdg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before the netdev is registered, calling netdev_info() will emit
-something as "(unnamed net device) (uninitialized)", looks confusing.
+On Tue, May 28, 2019 at 11:44:35AM +0530, Suganath Prabu Subramani wrote:
+> Please consider this patch as Ack-by: Suganath Prabu S
+> <suganath-prabu.subramani@broadcom.com>
+> 
+> Thanks,
+> Suganath.
+> 
+> 
+> On Mon, May 27, 2019 at 6:27 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> >
+> > In _ctl_ioctl_main(), 'ioctl_header' is fetched the first time from
+> > userspace. 'ioctl_header.ioc_number' is then checked. The legal result
+> > is saved to 'ioc'. Then, in condition MPT3COMMAND, the whole struct is
+> > fetched again from the userspace. Then _ctl_do_mpt_command() is called,
+> > 'ioc' and 'karg' as inputs.
+> >
+> > However, a malicious user can change the 'ioc_number' between the two
+> > fetches, which will cause a potential security issues.  Moreover, a
+> > malicious user can provide a valid 'ioc_number' to pass the check in
+> > first fetch, and then modify it in the second fetch.
+> >
+> > To fix this, we need to recheck the 'ioc_number' in the second fetch.
+> >
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > ---
+> > diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> > index b2bb47c..5181c03 100644
+> > --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> > +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+> > @@ -2319,6 +2319,10 @@ _ctl_ioctl_main(struct file *file, unsigned int cmd, void __user *arg,
+> >                         break;
+> >                 }
+> >
+> > +               if (karg.hdr.ioc_number != ioctl_header.ioc_number) {
+> > +                       ret = -EINVAL;
+> > +                       break;
+> > +               }
+> >                 if (_IOC_SIZE(cmd) == sizeof(struct mpt3_ioctl_command)) {
+> >                         uarg = arg;
+> >                         ret = _ctl_do_mpt_command(ioc, karg, &uarg->mf);
+Thanks for your reply, Suganath.
 
-Before this patch:
-[    3.155028] stmmaceth f7b60000.ethernet (unnamed net_device) (uninitiali=
-zed): device MAC address 52:1a:55:18:9e:9d
-
-After this patch:
-[    3.155028] stmmaceth f7b60000.ethernet: device MAC address 52:1a:55:18:=
-9e:9d
-
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/ne=
-t/ethernet/stmicro/stmmac/stmmac_main.c
-index 08022fbcb67a..7af083c29b36 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2167,8 +2167,8 @@ static void stmmac_check_ether_addr(struct stmmac_pri=
-v *priv)
- 		stmmac_get_umac_addr(priv, priv->hw, priv->dev->dev_addr, 0);
- 		if (!is_valid_ether_addr(priv->dev->dev_addr))
- 			eth_hw_addr_random(priv->dev);
--		netdev_info(priv->dev, "device MAC address %pM\n",
--			    priv->dev->dev_addr);
-+		dev_info(priv->device, "device MAC address %pM\n",
-+			 priv->dev->dev_addr);
- 	}
- }
-=20
---=20
-2.20.1
-
+Thanks
+Gen
