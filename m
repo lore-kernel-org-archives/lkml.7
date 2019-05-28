@@ -2,216 +2,90 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CD1C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA4220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="irftUQki"
+	by mail.kernel.org (Postfix) with ESMTP id 282C0214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 14:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfE1Onr (ORCPT
+        id S1727170AbfE1OoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 10:43:47 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33165 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfE1Onr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 10:43:47 -0400
-Received: by mail-vs1-f66.google.com with SMTP id y6so299544vsb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xoaLrOaVKIM8ESM/O0FPRf0nY0zEO7GufQin910pcKk=;
-        b=irftUQkii/33TKs92nEGhu6oEm/EW/DyqkbJsM8saeMvXwkfZS4WGQ/dEu6pFb6gGg
-         0d1zWvIPJGBgIBmCeReqSQgMzYAPsgVxJF2pBEkSYRpOkTQBLERmkeYhgvUWbzeITOcZ
-         DQFrs7MUbN0sMHD30cVrw4wDXvPXgNm24GlwI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xoaLrOaVKIM8ESM/O0FPRf0nY0zEO7GufQin910pcKk=;
-        b=lVnkNTxzw2AvwOViMmitpht7V2Pw9ybuCuacJkLwH+AMWDclhFA02JXCSvFVuDIBCc
-         OTPvjNivZtEzl8EIFw7I7UedwDx3LWSOw8UAFv9OMeDo2inYhUKz/XYOn/pnKwzGaxyg
-         7UEWMn1DhYN5y0gku97ZP5DJ5yNaCVpc6AtDoJkHyYh5yJsKTckta6EqeEL2DG/cf09L
-         THmpnjGpNq2T4PYkL4R31P4z3YlPi1rSLA48LkueGkyRx6DTX/Kf+VG08Fvd3aEcNKWJ
-         2fyqD04jViKoRg8pjXIQ0b+DsaT4f5pwINvSp9sxiqiSRiIJMM3jmfIt3MmrmraSGdG7
-         iM/g==
-X-Gm-Message-State: APjAAAVKhnQ1b9Gwb3ES/tshGKyD0PK9D+SQxFAXvCdCS0oQUq+fmH68
-        A4mNEk4J607LLH5niUCaXanR84AGeIQ=
-X-Google-Smtp-Source: APXvYqxC9XXEyG0BMFTXi41T7LcTEj9rRTtkrHbTJox+QKhBYEL3ofHUPIoXgzUeH4LHnegX3CBRFQ==
-X-Received: by 2002:a67:8b44:: with SMTP id n65mr54936928vsd.99.1559054625281;
-        Tue, 28 May 2019 07:43:45 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id l132sm1438635vkd.39.2019.05.28.07.43.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 07:43:45 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id r19so7979204uap.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 07:43:44 -0700 (PDT)
-X-Received: by 2002:ab0:4a97:: with SMTP id s23mr27884679uae.19.1559054305839;
- Tue, 28 May 2019 07:38:25 -0700 (PDT)
+        Tue, 28 May 2019 10:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726720AbfE1OoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 10:44:02 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E12820679;
+        Tue, 28 May 2019 14:44:01 +0000 (UTC)
+Date:   Tue, 28 May 2019 10:44:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tomas Bortoli <tomasbortoli@gmail.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace: Avoid memory leak in predicate_parse()
+Message-ID: <20190528104400.388e4c3f@gandalf.local.home>
+In-Reply-To: <20190528134659.4041-1-tomasbortoli@gmail.com>
+References: <20190528134659.4041-1-tomasbortoli@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190429204040.18725-1-dianders@chromium.org> <CAD=FV=WEDkufoEUYv9U+c+Y_bm8MYEWS25n63vUeNG0LLCFnuw@mail.gmail.com>
- <CAPDyKFoKN2zUNvDkgciO6r_ohdh2Vaj5qQaAPwMq21y02XAK8A@mail.gmail.com>
-In-Reply-To: <CAPDyKFoKN2zUNvDkgciO6r_ohdh2Vaj5qQaAPwMq21y02XAK8A@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 28 May 2019 07:38:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VqqDK6SLC_1_cFUjjEdTNUU09GJi4ZEMNwt_mgjnVRdg@mail.gmail.com>
-Message-ID: <CAD=FV=VqqDK6SLC_1_cFUjjEdTNUU09GJi4ZEMNwt_mgjnVRdg@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: dw_mmc: Disable SDIO interrupts while suspended
- to fix suspend/resume
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        Emil Renner Berthing <emil.renner.berthing@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 28 May 2019 15:46:59 +0200
+Tomas Bortoli <tomasbortoli@gmail.com> wrote:
 
-On Tue, May 28, 2019 at 6:12 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 20 May 2019 at 20:41, Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Mon, Apr 29, 2019 at 1:41 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Processing SDIO interrupts while dw_mmc is suspended (or partly
-> > > suspended) seems like a bad idea.  We really don't want to be
-> > > processing them until we've gotten ourselves fully powered up.
-> > >
-> > > You might be wondering how it's even possible to become suspended when
-> > > an SDIO interrupt is active.  As can be seen in
-> > > dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
-> > > suspend when the SDIO interrupt is enabled.  ...but even though we
-> > > stop normal runtime suspend transitions when SDIO interrupts are
-> > > enabled, the dw_mci_runtime_suspend() can still get called for a full
-> > > system suspend.
-> > >
-> > > Let's handle all this by explicitly masking SDIO interrupts in the
-> > > suspend call and unmasking them later in the resume call.  To do this
-> > > cleanly I'll keep track of whether the client requested that SDIO
-> > > interrupts be enabled so that we can reliably restore them regardless
-> > > of whether we're masking them for one reason or another.
-> > >
-> > > It should be noted that if dw_mci_enable_sdio_irq() is never called
-> > > (for instance, if we don't have an SDIO card plugged in) that
-> > > "client_sdio_enb" will always be false.  In those cases this patch
-> > > adds a tiny bit of overhead to suspend/resume (a spinlock and a
-> > > read/write of INTMASK) but other than that is a no-op.  The
-> > > SDMMC_INT_SDIO bit should always be clear and clearing it again won't
-> > > hurt.
-> > >
-> > > Without this fix it can be seen that rk3288-veyron Chromebooks with
-> > > Marvell WiFi would sometimes fail to resume WiFi even after picking my
-> > > recent mwifiex patch [1].  Specifically you'd see messages like this:
-> > >   mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
-> > >   mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
-> > >
-> > > ...and tracing through the resume code in the failing cases showed
-> > > that we were processing a SDIO interrupt really early in the resume
-> > > call.
-> > >
-> > > NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
-> > > support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
-> > > Defer SDIO interrupt handling until after resume") [2].  Presumably
-> > > this is the same problem that was solved by that patch.
-> > >
-> > > [1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
-> > > [2] https://crrev.com/c/230765
-> > >
-> > > Cc: <stable@vger.kernel.org> # 4.14.x
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > I didn't put any "Fixes" tag here, but presumably this could be
-> > > backported to whichever kernels folks found it useful for.  I have at
-> > > least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
-> > > show the problem.  It is very easy to pick this to v4.19 and it
-> > > definitely fixes the problem there.
-> > >
-> > > I haven't spent the time to pick this to 4.14 myself, but presumably
-> > > it wouldn't be too hard to backport this as far as v4.13 since that
-> > > contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
-> > > MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
-> > > make sense for anyone experiencing this problem to just pick the old
-> > > CHROMIUM patch to fix them.
-> > >
-> > > Changes in v2:
-> > > - Suggested 4.14+ in the stable tag (Sasha-bot)
-> > > - Extra note that this is a noop on non-SDIO (Shawn / Emil)
-> > > - Make boolean logic cleaner as per https://crrev.com/c/1586207/1
-> > > - Hopefully clear comments as per https://crrev.com/c/1586207/1
-> > >
-> > >  drivers/mmc/host/dw_mmc.c | 27 +++++++++++++++++++++++----
-> > >  drivers/mmc/host/dw_mmc.h |  3 +++
-> > >  2 files changed, 26 insertions(+), 4 deletions(-)
-> >
-> > Ulf: are you the right person to land this?  With 5.2-rc1 out it might
-> > be a good time for it?  To refresh your memory about this patch:
-> >
-> > * Patch v1 was posted back on April 10th [1] so we're at about 1.5
-> > months of time for people to comment about it now.  Should be more
-> > than enough.
->
-> Apologize for the delay, not sure why this has slipped through my
-> filters. Anyway, let me have a look at it now.
+> In case of errors, predicate_parse() goes to the out_free label
+> to free memory and to return an error code.
+> 
+> However, predicate_parse() does not free the predicates of the
+> temporary prog_stack array, thence leaking them.
+> 
+> 
+> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+> Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
+> ---
+>  kernel/trace/trace_events_filter.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index d3e59312ef40..98eafad750d3 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -433,6 +433,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+>  		parse_error(pe, -ENOMEM, 0);
+>  		goto out_free;
+>  	}
+> +	memset(prog_stack, 0, nr_preds * sizeof(*prog_stack));
+> +
 
-No worries.  If there's something better I can do in the future to
-avoid problems, please let me know.
+Can you instead just switch the allocation of prog_stack to use
+kcalloc()?
+
+Thanks,
+
+-- Steve
 
 
-> > * Shawn Lin saw it and didn't hate it.  He had some confusion about
-> > how it worked and I've hopefully alleviated via extra comments / text.
-> >
-> > * Emil Renner Berthing thought it caused a regression for him but then
-> > tested further and was convinced that it didn't.  This is extra
-> > confirmation that someone other than me did try the patch and found it
-> > to not break things.  ;-)
-> >
-> > * It has been reviewed by Guenter Roeck (in v2)
->
-> One question, I am guessing you are considering
-> https://lkml.org/lkml/2019/5/17/761 as the long term solution, and
-> thus $subject patch should go as fix+stable? No?
+>  	inverts = kmalloc_array(nr_preds, sizeof(*inverts), GFP_KERNEL);
+>  	if (!inverts) {
+>  		parse_error(pe, -ENOMEM, 0);
+> @@ -579,6 +581,8 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+>  out_free:
+>  	kfree(op_stack);
+>  	kfree(inverts);
+> +	for (i = 0; prog_stack[i].pred; i++)
+> +		kfree(prog_stack[i].pred);
+>  	kfree(prog_stack);
+>  	return ERR_PTR(ret);
+>  }
 
-No, the two problems are completely separate.  ${SUBJECT} patch deals
-with full system suspend/resume.  I originally reproduced the problems
-on a device with Marvell WiFi, though it could possibly affect
-Broadcom parts on dw_mmc too.  ${SUBJECT} patch is ready to land on
-mainline Linux at your leisure.  Also: in case you didn't notice
-(since it didn't thread properly for me), Shawn Lin gave it a reviewed
-by [1].
-
-The patch you refer to [2] is related to something akin to an idle
-state (more like Runtime PM) and only affects Broadcom parts.  Also
-the Broadcom issue ought to happen across all host controllers (AKA
-not just dw_mmc).
-
-[1] https://lkml.kernel.org/r/982ffba1-c599-e73d-e5e0-b1be5668851c@rock-chips.com
-[2] https://lkml.org/lkml/2019/5/17/761
-
--Doug
