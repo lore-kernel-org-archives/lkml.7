@@ -2,102 +2,275 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1D1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3EDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9BD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JqvTk2uS"
+	by mail.kernel.org (Postfix) with ESMTP id 6FD65208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfE1JlQ (ORCPT
+        id S1726579AbfE1Jla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:41:16 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:39838 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfE1JlQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:41:16 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D5D61C1DBA;
-        Tue, 28 May 2019 09:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559036484; bh=D731wz21YeITb5xPmWrEYvvhxG+m4OVL0X26qnGuol4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JqvTk2uSNMc3IlMREczO8QhAGmcQmdtNdaKnvNnTaT/Q7jAgKoqgC/vf4M5XjCIaX
-         J5WHi0/I4pYBP8d9tjEoYDPIiwtepRVy4ZMG5hkRMZbJ5SZ05doYoSCvGGjIR9Sua5
-         3G8iNWZsZaUU1eDN/0sN8MUdnlsA9EUZgOw9M8xHqHArJ13HWQaAWd7k/PYkog51Mi
-         fOKXj8Yae7hfys5Rem0wnXmNSAcvVYPF6B+/JGYJOwZwgV1F0I1QT0n+PLKafxq2BL
-         5DFTjMNk9nCpAWJvxVD/4K70CxCgENW793Y3LOQejVHfAeZGcr75fulqNkZSapq548
-         vmQkdFGK6CXkg==
-Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.58])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CDF31A0093;
-        Tue, 28 May 2019 09:41:11 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: [plat-hsdk]: enable creg-gpio controller
-Date:   Tue, 28 May 2019 12:40:52 +0300
-Message-Id: <20190528094052.2393-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 28 May 2019 05:41:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8912 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfE1Jla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:41:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 02:41:29 -0700
+X-ExtLoop1: 1
+Received: from ideak-desk.fi.intel.com ([10.237.72.204])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2019 02:41:27 -0700
+From:   Imre Deak <imre.deak@intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH v3 1/2] lockdep: Fix OOO unlock when hlocks need merging
+Date:   Tue, 28 May 2019 12:40:50 +0300
+Message-Id: <20190528094051.22840-1-imre.deak@intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HSDK SOC has CREG GPIO controller which can be used to control
-SPI chip select lines.
-Enable it in preparation of enabling SPI peripherals.
+The sequence
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+	static DEFINE_WW_CLASS(test_ww_class);
+
+	struct ww_acquire_ctx ww_ctx;
+	struct ww_mutex ww_lock_a;
+	struct ww_mutex ww_lock_b;
+	struct mutex lock_c;
+	struct mutex lock_d;
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_c);		(*)
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	ww_acquire_fini(&ww_ctx);
+
+triggers the following WARN in __lock_release() when doing the unlock at *:
+
+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
+
+The problem is that the WARN check doesn't take into account the merging
+of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
+by 2 not only 1.
+
+Note that the following sequence doesn't trigger the WARN, since there
+won't be any hlock merging.
+
+	ww_acquire_init(&ww_ctx, &test_ww_class);
+
+	ww_mutex_init(&ww_lock_a, &test_ww_class);
+	ww_mutex_init(&ww_lock_b, &test_ww_class);
+
+	mutex_init(&lock_c);
+	mutex_init(&lock_d);
+
+	ww_mutex_lock(&ww_lock_a, &ww_ctx);
+
+	mutex_lock(&lock_c);
+	mutex_lock(&lock_d);
+
+	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+
+	mutex_unlock(&lock_d);
+
+	ww_mutex_unlock(&ww_lock_b);
+	ww_mutex_unlock(&ww_lock_a);
+
+	mutex_unlock(&lock_c);
+
+	ww_acquire_fini(&ww_ctx);
+
+In general both of the above two sequences are valid and shouldn't
+trigger any lockdep warning.
+
+Fix this by taking the decrement due to the hlock merging into account
+during lock release and hlock class re-setting. Merging can't happen
+during lock downgrading since there won't be a new possibility to merge
+hlocks in that case, so add a WARN if merging still happens then.
+
+v2:
+- Clarify the commit log and use mutex_lock() instead of mutex_trylock()
+  in the example sequences for simplicity.
+v3: (Peter)
+- Sanitize counting the merge in reacquire_held_locks().
+- Optimize calculating the new expected lockdep depth in __lock_release().
+
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Imre Deak <imre.deak@intel.com>
 ---
- arch/arc/boot/dts/hsdk.dts      | 8 ++++++++
- arch/arc/configs/hsdk_defconfig | 1 +
- 2 files changed, 9 insertions(+)
+ kernel/locking/lockdep.c | 41 ++++++++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 7425bb0f2d1b..83e163e51b34 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -237,6 +237,14 @@
- 			dma-coherent;
- 		};
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index c47788fa85f9..7a48649ce6bc 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3715,7 +3715,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 				hlock->references = 2;
+ 			}
  
-+		creg_gpio: gpio@14b0 {
-+			compatible = "snps,creg-gpio-hsdk";
-+			reg = <0x14b0 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			ngpios = <2>;
-+		};
+-			return 1;
++			return 2;
+ 		}
+ 	}
+ 
+@@ -3921,22 +3921,33 @@ static struct held_lock *find_held_lock(struct task_struct *curr,
+ }
+ 
+ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
+-			      int idx)
++				int idx, unsigned int *merged)
+ {
+ 	struct held_lock *hlock;
++	int first_idx = idx;
+ 
+ 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
+ 		return 0;
+ 
+ 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
+-		if (!__lock_acquire(hlock->instance,
++		switch (__lock_acquire(hlock->instance,
+ 				    hlock_class(hlock)->subclass,
+ 				    hlock->trylock,
+ 				    hlock->read, hlock->check,
+ 				    hlock->hardirqs_off,
+ 				    hlock->nest_lock, hlock->acquire_ip,
+-				    hlock->references, hlock->pin_count))
++				    hlock->references, hlock->pin_count)) {
++		case 0:
+ 			return 1;
++		case 1:
++			break;
++		case 2:
++			*merged += (idx == first_idx);
++			break;
++		default:
++			WARN_ON(1);
++			return 0;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -3947,9 +3958,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 		 unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+ 	struct lock_class *class;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -3974,14 +3985,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	curr->lockdep_depth = i;
+ 	curr->curr_chain_key = hlock->prev_chain_key;
+ 
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
+ 		return 0;
+ 
+ 	/*
+ 	 * I took it apart and put it back together again, except now I have
+ 	 * these 'spare' parts.. where shall I put them.
+ 	 */
+-	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
++	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
+ 		return 0;
+ 	return 1;
+ }
+@@ -3989,8 +4000,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 0;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -4015,7 +4026,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	hlock->read = 1;
+ 	hlock->acquire_ip = ip;
+ 
+-	if (reacquire_held_locks(curr, depth, i))
++	if (reacquire_held_locks(curr, depth, i, &merged))
+ 		return 0;
+ 
+ 	/*
+@@ -4024,6 +4035,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+ 	 */
+ 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
+ 		return 0;
 +
- 		gpio: gpio@3000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = <0x3000 0x20>;
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 0e5fd29ed238..0c4411f50948 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -49,6 +49,7 @@ CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_DWAPB=y
-+CONFIG_GPIO_SNPS_CREG=y
- # CONFIG_HWMON is not set
- CONFIG_DRM=y
- # CONFIG_DRM_FBDEV_EMULATION is not set
++	/* Merging can't happen with unchanged classes.. */
++	if (DEBUG_LOCKS_WARN_ON(merged))
++		return 0;
++
+ 	return 1;
+ }
+ 
+@@ -4038,8 +4054,8 @@ static int
+ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
++	unsigned int depth, merged = 1;
+ 	struct held_lock *hlock;
+-	unsigned int depth;
+ 	int i;
+ 
+ 	if (unlikely(!debug_locks))
+@@ -4094,14 +4110,15 @@ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
+ 	if (i == depth-1)
+ 		return 1;
+ 
+-	if (reacquire_held_locks(curr, depth, i + 1))
++	if (reacquire_held_locks(curr, depth, i + 1, &merged))
+ 		return 0;
+ 
+ 	/*
+ 	 * We had N bottles of beer on the wall, we drank one, but now
+ 	 * there's not N-1 bottles of beer left on the wall...
++	 * Pouring two of the bottles together is acceptable.
+ 	 */
+-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
++	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
+ 
+ 	/*
+ 	 * Since reacquire_held_locks() would have called check_chain_key()
 -- 
-2.21.0
+2.17.1
 
