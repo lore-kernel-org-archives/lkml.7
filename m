@@ -2,114 +2,101 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10DC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F320FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A455C208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:58:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="u3veDeuD"
+	by mail.kernel.org (Postfix) with ESMTP id D1E5B2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfE1I6x (ORCPT
+        id S1726698AbfE1I7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:58:53 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:33994 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726279AbfE1I6x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:58:53 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 820A62E0A7B;
-        Tue, 28 May 2019 11:58:50 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id uDbd8mNgjG-wnp8YhTV;
-        Tue, 28 May 2019 11:58:50 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1559033930; bh=e67vXEFlguLHoPzm4i6XNcC1TsQ4C+poa1KdWpDWoFM=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=u3veDeuDUQqhxqZN/gx25dJHfV9rTVsyH55dJyggW9tsHn9L8tEWLJMbVDXtSNkn+
-         /Mu+KdcC/MNOuZx0EXTTo9HeqV7S1epVvwf7ngTgKEAJdcLz0aKJuK6/qOcof9TqCc
-         5C72JSfB2X5Dg3IePfeIr7t3TMMHRgLn5I8OXHEs=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:d877:17c:81de:6e43])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 56Lg4wTzc1-wn8qqC4T;
-        Tue, 28 May 2019 11:58:49 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH RFC] mm/madvise: implement MADV_STOCKPILE (kswapd from
- user space)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Roman Gushchin <guro@fb.com>, linux-api@vger.kernel.org
-References: <155895155861.2824.318013775811596173.stgit@buzz>
- <20190527141223.GD1658@dhcp22.suse.cz> <20190527142156.GE1658@dhcp22.suse.cz>
- <20190527143926.GF1658@dhcp22.suse.cz>
- <9c55a343-2a91-46c6-166d-41b94bf5e9c8@yandex-team.ru>
- <20190528065153.GB1803@dhcp22.suse.cz>
- <a4e5eeb8-3560-d4b4-08a0-8a22c677c0f7@yandex-team.ru>
- <20190528073835.GP1658@dhcp22.suse.cz>
- <5af1ba69-61d1-1472-4aa3-20beb4ae44ae@yandex-team.ru>
- <20190528084243.GT1658@dhcp22.suse.cz>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <4ecf491b-68b5-9a65-5074-648a4f94d2b0@yandex-team.ru>
-Date:   Tue, 28 May 2019 11:58:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 04:59:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59572 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfE1I7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:59:44 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3DD4E2E95A2;
+        Tue, 28 May 2019 08:59:44 +0000 (UTC)
+Received: from krava (unknown [10.43.17.32])
+        by smtp.corp.redhat.com (Postfix) with SMTP id BF9745D9CD;
+        Tue, 28 May 2019 08:59:42 +0000 (UTC)
+Date:   Tue, 28 May 2019 10:59:42 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH 3/3] perf header: Rename "sibling cores" to "sibling
+ sockets"
+Message-ID: <20190528085942.GA27906@krava>
+References: <1558644081-17738-1-git-send-email-kan.liang@linux.intel.com>
+ <1558644081-17738-3-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528084243.GT1658@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558644081-17738-3-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 28 May 2019 08:59:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.2019 11:42, Michal Hocko wrote:
-> On Tue 28-05-19 11:04:46, Konstantin Khlebnikov wrote:
->> On 28.05.2019 10:38, Michal Hocko wrote:
-> [...]
->>> Could you define the exact semantic? Ideally something for the manual
->>> page please?
->>>
->>
->> Like kswapd which works with thresholds of free memory this one reclaims
->> until 'free' (i.e. memory which could be allocated without invoking
->> direct recliam of any kind) is lower than passed 'size' argument.
+On Thu, May 23, 2019 at 01:41:21PM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> s@lower@higher@ I guess
+> The "sibling cores" actually shows the sibling CPUs of a socket.
+> The name "sibling cores" is very misleading.
+> 
+> Rename "sibling cores" to "sibling sockets"
 
-Yep. My wording still bad.
-'size' argument should be called 'watermark' or 'threshold'.
+by checking on die topology, I found that thread_siblings_list
+is deprecated/renamed to core_cpus_list.. we should keep that
+in mind and support both
 
-I.e. reclaim while 'free' memory is lower passed 'threshold'.
+jirka
 
 > 
->> Thus right after madvise(NULL, size, MADV_STOCKPILE) 'size' bytes
->> could be allocated in this memory cgroup without extra latency from
->> reclaimer if there is no other memory consumers.
->>
->> Reclaimed memory is simply put into free lists in common buddy allocator,
->> there is no reserves for particular task or cgroup.
->>
->> If overall memory allocation rate is smooth without rough spikes then
->> calling MADV_STOCKPILE in loop periodically provides enough room for
->> allocations and eliminates direct reclaim from all other tasks.
->> As a result this eliminates unpredictable delays caused by
->> direct reclaim in random places.
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf.data-file-format.txt | 2 +-
+>  tools/perf/util/header.c                           | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> OK, this makes it more clear to me. Thanks for the clarification!
-> I have clearly misunderstood and misinterpreted target as the reclaim
-> target rather than free memory target.  Sorry about the confusion.
-> I sill think that this looks like an abuse of the madvise but if there
-> is a wider consensus this is acceptable I will not stand in the way.
+> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+> index c731416..dd85163 100644
+> --- a/tools/perf/Documentation/perf.data-file-format.txt
+> +++ b/tools/perf/Documentation/perf.data-file-format.txt
+> @@ -168,7 +168,7 @@ struct {
+>  };
+>  
+>  Example:
+> -	sibling cores   : 0-8
+> +	sibling sockets : 0-8
+>  	sibling dies	: 0-3
+>  	sibling dies	: 4-7
+>  	sibling threads : 0-1
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index faa1e38..eb79495 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1465,7 +1465,7 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
+>  	str = ph->env.sibling_cores;
+>  
+>  	for (i = 0; i < nr; i++) {
+> -		fprintf(fp, "# sibling cores   : %s\n", str);
+> +		fprintf(fp, "# sibling sockets : %s\n", str);
+>  		str += strlen(str) + 1;
+>  	}
+>  
+> -- 
+> 2.7.4
 > 
