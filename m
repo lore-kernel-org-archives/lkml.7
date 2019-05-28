@@ -2,42 +2,56 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C09C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF15BC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29856208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D0A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 08:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfE1IfG (ORCPT
+        id S1726760AbfE1IgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 04:35:06 -0400
-Received: from relay.sw.ru ([185.231.240.75]:44080 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfE1IfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 04:35:05 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hVXZU-000124-DK; Tue, 28 May 2019 11:35:00 +0300
-Subject: Re: [PATCH] list_lru: fix memory leak in __memcg_init_list_lru_node
-To:     Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
-References: <20190528043202.99980-1-shakeelb@google.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <6ed45785-4b5b-83f9-6487-6c4142fe22ac@virtuozzo.com>
-Date:   Tue, 28 May 2019 11:34:59 +0300
+        Tue, 28 May 2019 04:36:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42574 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfE1IgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 04:36:08 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 603D727FF5B
+Subject: Re: linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on
+ rk3288-veyron-jaq
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matt Hart <matthew.hart@linaro.org>, mgalka@collabora.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <5cec74e8.1c69fb81.37335.9d7b@mx.google.com>
+ <0edab48f-06e5-9ed8-09be-7c9976ae1afb@collabora.com>
+ <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <de92e3bd-70e8-fcba-3c88-c04170704e7b@collabora.com>
+Date:   Tue, 28 May 2019 09:36:03 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190528043202.99980-1-shakeelb@google.com>
+In-Reply-To: <CAMuHMdUF1Csi1ZMccOj=kurijMLcA6G+TP_spsE+fnMvZR71Vw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -46,65 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.2019 07:32, Shakeel Butt wrote:
-> Syzbot reported following memory leak:
-> 
-> ffffffffda RBX: 0000000000000003 RCX: 0000000000441f79
-> BUG: memory leak
-> unreferenced object 0xffff888114f26040 (size 32):
->   comm "syz-executor626", pid 7056, jiffies 4294948701 (age 39.410s)
->   hex dump (first 32 bytes):
->     40 60 f2 14 81 88 ff ff 40 60 f2 14 81 88 ff ff  @`......@`......
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<0000000018f36b56>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
->     [<0000000018f36b56>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<0000000018f36b56>] slab_alloc mm/slab.c:3326 [inline]
->     [<0000000018f36b56>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
->     [<0000000055b9a1a5>] kmalloc include/linux/slab.h:547 [inline]
->     [<0000000055b9a1a5>] __memcg_init_list_lru_node+0x58/0xf0 mm/list_lru.c:352
->     [<000000001356631d>] memcg_init_list_lru_node mm/list_lru.c:375 [inline]
->     [<000000001356631d>] memcg_init_list_lru mm/list_lru.c:459 [inline]
->     [<000000001356631d>] __list_lru_init+0x193/0x2a0 mm/list_lru.c:626
->     [<00000000ce062da3>] alloc_super+0x2e0/0x310 fs/super.c:269
->     [<000000009023adcf>] sget_userns+0x94/0x2a0 fs/super.c:609
->     [<0000000052182cd8>] sget+0x8d/0xb0 fs/super.c:660
->     [<0000000006c24238>] mount_nodev+0x31/0xb0 fs/super.c:1387
->     [<0000000006016a76>] fuse_mount+0x2d/0x40 fs/fuse/inode.c:1236
->     [<000000009a61ec1d>] legacy_get_tree+0x27/0x80 fs/fs_context.c:661
->     [<0000000096cd9ef8>] vfs_get_tree+0x2e/0x120 fs/super.c:1476
->     [<000000005b8f472d>] do_new_mount fs/namespace.c:2790 [inline]
->     [<000000005b8f472d>] do_mount+0x932/0xc50 fs/namespace.c:3110
->     [<00000000afb009b4>] ksys_mount+0xab/0x120 fs/namespace.c:3319
->     [<0000000018f8c8ee>] __do_sys_mount fs/namespace.c:3333 [inline]
->     [<0000000018f8c8ee>] __se_sys_mount fs/namespace.c:3330 [inline]
->     [<0000000018f8c8ee>] __x64_sys_mount+0x26/0x30 fs/namespace.c:3330
->     [<00000000f42066da>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
->     [<0000000043d74ca0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> This is a simple off by one bug on the error path.
-> 
-> Reported-by: syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Hi Geert,
 
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-
-> ---
->  mm/list_lru.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 28/05/2019 08:45, Geert Uytterhoeven wrote:
+> Hi Guillaume,
 > 
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 0bdf3152735e..92870be4a322 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -358,7 +358,7 @@ static int __memcg_init_list_lru_node(struct list_lru_memcg *memcg_lrus,
->  	}
->  	return 0;
->  fail:
-> -	__memcg_destroy_list_lru_node(memcg_lrus, begin, i - 1);
-> +	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
->  	return -ENOMEM;
->  }
->  
+> On Tue, May 28, 2019 at 9:13 AM Guillaume Tucker
+> <guillaume.tucker@collabora.com> wrote:
+>> On 28/05/2019 00:38, kernelci.org bot wrote:
+>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>> * This automated bisection report was sent to you on the basis  *
+>>> * that you may be involved with the breaking commit it has      *
+>>> * found.  No manual investigation has been done to verify it,   *
+>>> * and the root cause of the problem may be somewhere else.      *
+>>> * Hope this helps!                                              *
+>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>
+>>> linusw/for-next boot bisection: v5.2-rc1-8-g73a790c68d7e on rk3288-veyron-jaq
+>>>
+>>> Summary:
+>>>   Start:      73a790c68d7e Merge branch 'devel' into for-next
+>>>   Details:    https://kernelci.org/boot/id/5cebf03d59b514dd627a3629
+>>>   Plain log:  https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
+>>>   HTML log:   https://storage.kernelci.org//linusw/for-next/v5.2-rc1-8-g73a790c68d7e/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
+>>>   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting error
+>>>
+>>> Checks:
+>>>   revert:     PASS
+>>>   verify:     PASS
+>>>
+>>> Parameters:
+>>>   Tree:       linusw
+>>>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/
+>>>   Branch:     for-next
+>>>   Target:     rk3288-veyron-jaq
+>>>   CPU arch:   arm
+>>>   Lab:        lab-collabora
+>>>   Compiler:   gcc-8
+>>>   Config:     multi_v7_defconfig
+>>>   Test suite: boot
+>>>
+>>> Breaking commit found:
+>>>
+>>> -------------------------------------------------------------------------------
+>>> commit 28694e009e512451ead5519dd801f9869acb1f60
+>>> Author: Elaine Zhang <zhangqing@rock-chips.com>
+>>> Date:   Tue Apr 30 18:09:44 2019 +0800
+>>>
+>>>     thermal: rockchip: fix up the tsadc pinctrl setting error
+>>
+>> This commit has now been reverted in mainline.  Would it be OK
+>> for you to rebase your for-next branch on v5.2-rc2 or cherry-pick
+>> the revert to avoid recurring bisections?
+>>
+>> Ideally this should have been fixed or reverted in mainline
+>> before v5.2-rc1 was released, or even earlier when this was first
+>> found in -next on 13th May.  Unfortunately it was overlooked and
+>> then spread to other branches like yours.
 > 
+> I'm afraid it's gonna spread to even more for-next branches, as most
+> subsystem maintainers base their for-next branch on the previous rc1
+> release.  Typically maintainers do not rebase their for-next branches,
+> and do not cherry-pick fixes, unless they are critical for their
+> subsystem.  So you can expect this to show up in e.g. the m68k for-next
+> branch soon...
 
+That is what I feared, thanks for confirming.
+
+> Can't you mark this as a known issue, to prevent spending cycles on the
+> same bisection, and sending out more bisection reports for the same
+> issue?
+
+Not really, so I've disabled bisections in the linux-gpio tree
+and a few other maintainers' trees for now.  I'll see if we can
+come up with a more systematic way of suppressing bisections in
+similar cases (i.e. the issue has been fixed in mainline later
+than the base commit for the branch being tested).
+
+Thanks,
+Guillaume
