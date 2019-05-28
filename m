@@ -2,159 +2,184 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7D6C072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54654C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42A5216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559079111;
-	bh=B3o8n9SYmJUHF3FbOoAq6ElBxC4Irv0C7SwxfW0q6xM=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=CPtaEdEXNnqyhVLT9+SMZ+ngccW7LFdhQuYN7rHNFX3+K5FCdlTW2h/GJvYiXN8L1
-	 VvqiGlOXmTs4Sbyr2ikVX9hUtovh345qTMKKPC94Ech4nTLDm+Z2/q2TqWRYXMgy+k
-	 c1mL+1qi30vn0zBBHxVYimmc4dxDd1MM7Yry8j7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2851B2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:36:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMsjIGG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfE1Vbv (ORCPT
+        id S1727771AbfE1VgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfE1Vbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:31:50 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E323C2075B;
-        Tue, 28 May 2019 21:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559079109;
-        bh=B3o8n9SYmJUHF3FbOoAq6ElBxC4Irv0C7SwxfW0q6xM=;
-        h=Date:From:To:cc:Subject:From;
-        b=WUGHTvBWnKfY4zuHnA2yGwugqnDj8KRilM6MCZy2qP0sWTxds0Dprg8EWhOaJEwu3
-         FvNMjV2PbIGEkSXGybFZh8W7JwcdwYUmdGR+hD2j0s7OBtNf9CjTl+s8n1QuQmhY2Q
-         AKmsOTHF9VF33eLsC9dzKzy0Oy61Ve2jniQ8kcAs=
-Date:   Tue, 28 May 2019 23:31:45 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/power: Fix 'nosmt' vs. hibernation triple fault during
- resume
-Message-ID: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 28 May 2019 17:36:15 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:35538 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfE1VgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 17:36:14 -0400
+Received: by mail-ed1-f49.google.com with SMTP id p26so200321edr.2;
+        Tue, 28 May 2019 14:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uecXIZDcklzAA/OFh3RkZA0lNa/d4a4Fo/G/5x2r9/U=;
+        b=fMsjIGG81xsEdA/DBHHj4AXpArTXtvjcRWFsKFgh07AzA1bkNjW2xPVStuRLXue+JN
+         clpgnkBoD+GgFGC3/uMfQbFAyPqjnWGmBP4iSQl3TR0KuPnfBlue3BQdHNtpIwOXAwi7
+         W0VhkYYwBbs3HwdAfQa2O0tkrHJKsULiVCNxDddcllgoRWmpTMfR2v45nbKDS8iyRUep
+         iUxv4pxXs54sY0fPI7G35lKiFvpnrUJnGDs6JA4ZtU1PUPwAZVAn3TV8f1waMbJpQvJE
+         IOMIaXhFX6P0lsf1QfLxEuZE9S/2UDS6njg7+Bgan41PKQYafFRvTWWzptw9TjOzbaeb
+         z3vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uecXIZDcklzAA/OFh3RkZA0lNa/d4a4Fo/G/5x2r9/U=;
+        b=l9fP15H3KI3olH0BRvCOlytwLpEHYWJo5IAaW6ZZKL3/BiqdT/xDACG9qPe33xr+f1
+         qFZO2uSD63SSDRcZo/0T0Yue0J0y3czNZgtdxZc2079n4QMOMeISvZmGVnKD75nQcM3O
+         U0d1UPmcd9Mgb+qLBmHA3B7e+YGPYyH1zGiulfkEQL7K20mkmU7cHAWwNmW6EWYuTKrK
+         zXGsK7KxFaWwpRwDzUjvTsgzE6ba/ogPHaOBI96RXa6NIn4qt+exbVSo2yANcCLx/3PG
+         VevAskIW0bve/OLtlXUEGKQd9MOOlA8LPFgjm00A3C2DwrYpsTGYDoK0KtjVVHDtO93S
+         O7hg==
+X-Gm-Message-State: APjAAAU3O5f9Cye7+w8uUbS6AFFGPEItN2BiGp+pb8QARM9G5GxDdH63
+        94oLEfcf+Q+UoX2hGs5QmkOSDUa8NF+fMhndjsw=
+X-Google-Smtp-Source: APXvYqxHxoY8doCT8Xl943B0NhZ0oQA/tfutSQ/S2Sg9d0XLQi8EKmPuF2z5B0/clzfxkfW54vgULnxDSyFVmrxEJAk=
+X-Received: by 2002:aa7:ca54:: with SMTP id j20mr131541007edt.23.1559079372032;
+ Tue, 28 May 2019 14:36:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190528184708.16516-1-fklassen@appneta.com> <20190528184708.16516-2-fklassen@appneta.com>
+In-Reply-To: <20190528184708.16516-2-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 28 May 2019 17:35:35 -0400
+Message-ID: <CAF=yD-KcA5NZ2_tp3zaxW5sbf75a17DLX+VR9hyZo7MTcYAxiw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] net/udpgso_bench_tx: options to exercise
+ TX CMSG
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+On Tue, May 28, 2019 at 3:24 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> This enhancement adds options that facilitate load testing with
+> additional TX CMSG options, and to optionally print results of
+> various send CMSG operations.
+>
+> These options are especially useful in isolating situations
+> where error-queue messages are lost when combined with other
+> CMSG operations (e.g. SO_ZEROCOPY).
+>
+> New options:
+>
+>     -a - count all CMSG messages and match to sent messages
+>     -T - add TX CMSG that requests TX software timestamps
+>     -H - similar to -T except request TX hardware timestamps
+>     -P - call poll() before reading error queue
+>     -v - print detailed results
+>
+> v2: Enhancements as per Willem de Bruijn <willemb@google.com>
+>     - Updated control and buffer parameters for recvmsg
+>     - poll() parameter cleanup
+>     - fail on bad audit results
+>     - remove TOS options
+>     - improved reporting
+>
+> Signed-off-by: Fred Klassen <fklassen@appneta.com>
+> ---
 
-As explained in
+> -static void flush_zerocopy(int fd)
+> +static void flush_cmsg(struct cmsghdr *cmsg)
+>  {
+> -       struct msghdr msg = {0};        /* flush */
+> +       switch (cmsg->cmsg_level) {
+> +       case SOL_SOCKET:
+> +               if (cmsg->cmsg_type == SO_TIMESTAMPING) {
+> +                       int i;
+> +
+> +                       i = (cfg_tx_ts == SOF_TIMESTAMPING_TX_HARDWARE) ? 2 : 0;
+> +                       struct scm_timestamping *tss;
 
-	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Please don't mix declarations and code.
 
-we always, no matter what, have to bring up x86 HT siblings during boot at 
-least once in order to avoid first MCE bringing the system to its knees.
+> +
+> +                       tss = (struct scm_timestamping *)CMSG_DATA(cmsg);
+> +                       if (tss->ts[i].tv_sec == 0)
+> +                               stat_tx_ts_errors++;
+> +               } else {
+> +                       error(1, 0,
+> +                             "unknown SOL_SOCKET cmsg type=%u level=%u\n",
+> +                             cmsg->cmsg_type, cmsg->cmsg_level);
 
-That means that whenever 'nosmt' is supplied on the kernel command-line, 
-all the HT siblings are as a result sitting in mwait or cpudile after 
-going through the online-offline cycle at least once.
+Technically, no need to repeat cmsg_level
+> +               }
+> +               break;
+> +       case SOL_IP:
+> +       case SOL_IPV6:
+> +               switch (cmsg->cmsg_type) {
+> +               case IP_RECVERR:
+> +               case IPV6_RECVERR:
+> +               {
+> +                       struct sock_extended_err *err;
+> +
+> +                       err = (struct sock_extended_err *)CMSG_DATA(cmsg);
+> +                       switch (err->ee_origin) {
+> +                       case SO_EE_ORIGIN_TIMESTAMPING:
+> +                               // Got a TX timestamp from error queue
+> +                               stat_tx_ts++;
+> +                               break;
+> +                       case SO_EE_ORIGIN_ICMP:
+> +                       case SO_EE_ORIGIN_ICMP6:
+> +                               if (cfg_verbose)
+> +                                       fprintf(stderr,
+> +                                               "received ICMP error: type=%u, code=%u\n",
+> +                                               err->ee_type, err->ee_code);
+> +                               break;
+> +                       case SO_EE_ORIGIN_ZEROCOPY:
+> +                       {
+> +                               __u32 lo = err->ee_info;
+> +                               __u32 hi = err->ee_data;
+> +
+> +                               if (hi == lo - 1) {
+> +                                       // TX was aborted
 
-This causes a serious issue though when a kernel, which saw 'nosmt' on its 
-commandline, is going to perform resume from hibernation: if the resume 
-from the hibernated image is successful, cr3 is flipped in order to point 
-to the address space of the kernel that is being resumed, which in turn 
-means that all the HT siblings are all of a sudden mwaiting on address 
-which is no longer valid.
+where does this come from?
 
-That results in triple fault shortly after cr3 is switched, and machine 
-reboots.
+> +                                       stat_zcopy_errors++;
+> +                                       if (cfg_verbose)
+> +                                               fprintf(stderr,
+> +                                                       "Zerocopy TX aborted: lo=%u hi=%u\n",
+> +                                                       lo, hi);
+> +                               } else if (hi == lo) {
 
-Fix this by always waking up all the SMT siblings before initiating the 
-'restore from hibernation' process; this guarantees that all the HT 
-siblings will be properly carried over to the resumed kernel waiting in 
-resume_play_dead(), and acted upon accordingly afterwards, based on the 
-target kernel configuration.
+technically, no need to special case
 
-Cc: stable@vger.kernel.org # v4.19+
-Debugged-by: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
----
- arch/x86/power/cpu.c | 11 +++++++++++
- include/linux/cpu.h  |  2 ++
- kernel/cpu.c         |  2 +-
- 3 files changed, 14 insertions(+), 1 deletion(-)
+> +                                       // single ID acknowledged
+> +                                       stat_zcopies++;
+> +                               } else {
+> +                                       // range of IDs acknowledged
+> +                                       stat_zcopies += hi - lo + 1;
+> +                               }
+> +                               break;
 
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index a7d966964c6f..bde8ce1f6c6c 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -299,9 +299,20 @@ int hibernate_resume_nonboot_cpu_disable(void)
- 	 * address in its instruction pointer may not be possible to resolve
- 	 * any more at that point (the page tables used by it previously may
- 	 * have been overwritten by hibernate image data).
-+	 *
-+	 * First, make sure that we wake up all the potentially disabled SMT
-+	 * threads which have been initially brought up and then put into
-+	 * mwait/cpuidle sleep.
-+	 * Those will be put to proper (not interfering with hibernation
-+	 * resume) sleep afterwards, and the resumed kernel will decide itself
-+	 * what to do with them.
- 	 */
- 	smp_ops.play_dead = resume_play_dead;
-+	ret = cpuhp_smt_enable();
-+	if (ret)
-+		goto out;
- 	ret = disable_nonboot_cpus();
-+out:
- 	smp_ops.play_dead = play_dead;
- 	return ret;
- }
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 3813fe45effd..b5523552a607 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -201,10 +201,12 @@ enum cpuhp_smt_control {
- extern enum cpuhp_smt_control cpu_smt_control;
- extern void cpu_smt_disable(bool force);
- extern void cpu_smt_check_topology(void);
-+extern int cpuhp_smt_enable(void);
- #else
- # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
- static inline void cpu_smt_disable(bool force) { }
- static inline void cpu_smt_check_topology(void) { }
-+static inline int cpuhp_smt_enable(void) { return 0; }
- #endif
- 
- /*
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index f2ef10460698..3ff5ce0e4132 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
- 	return ret;
- }
- 
--static int cpuhp_smt_enable(void)
-+int cpuhp_smt_enable(void)
- {
- 	int cpu, ret = 0;
- 
+> +static void set_tx_timestamping(int fd)
+> +{
+> +       int val = SOF_TIMESTAMPING_OPT_CMSG | SOF_TIMESTAMPING_OPT_ID;
 
--- 
-Jiri Kosina
-SUSE Labs
+Could consider adding SOF_TIMESTAMPING_OPT_TSONLY to not have to deal
+with a data buffer on recv from errqueue.
