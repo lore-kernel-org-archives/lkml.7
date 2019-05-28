@@ -2,230 +2,91 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82521C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB872053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5AB2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 05:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfE1FMp (ORCPT
+        id S1727230AbfE1FOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 01:12:45 -0400
-Received: from master.debian.org ([82.195.75.110]:58744 "EHLO
-        master.debian.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfE1FMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 01:12:45 -0400
-Received: from pabs by master.debian.org with local (Exim 4.89)
-        (envelope-from <pabs@master.debian.org>)
-        id 1hVUPJ-0004Ec-MW; Tue, 28 May 2019 05:12:17 +0000
-From:   Paul Wise <pabs3@bonedaddy.net>
-To:     Neil Horman <nhorman@tuxdriver.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>
-Subject: [PATCH v3] coredump: Split pipe command whitespace before expanding template
-Date:   Tue, 28 May 2019 13:11:42 +0800
-Message-Id: <20190528051142.24939-1-pabs3@bonedaddy.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190521003756.5236-1-pabs3@bonedaddy.net>
-References: <20190521003756.5236-1-pabs3@bonedaddy.net>
+        Tue, 28 May 2019 01:14:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35832 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfE1FON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 01:14:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 May 2019 22:14:13 -0700
+X-ExtLoop1: 1
+Received: from shzintpr02.sh.intel.com (HELO [0.0.0.0]) ([10.239.4.160])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2019 22:14:07 -0700
+Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
+References: <20190524075637.29496-1-tao3.xu@intel.com>
+ <20190524075637.29496-2-tao3.xu@intel.com>
+ <20190527103003.GX2623@hirez.programming.kicks-ass.net>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <43e2a62a-e992-2138-f038-1e4b2fb79ad1@intel.com>
+Date:   Tue, 28 May 2019 13:11:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190527103003.GX2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save the offsets of the start of each argument to avoid having to
-update pointers to each argument after every corename krealloc and
-to avoid having to duplicate the memory for the dump command.
 
-Executable names containing spaces were previously being expanded from
-%e or %E and then split in the middle of the filename. This is incorrect
-behaviour since an argument list can represent arguments with spaces.
+On 27/05/2019 18:30, Peter Zijlstra wrote:
+> On Fri, May 24, 2019 at 03:56:35PM +0800, Tao Xu wrote:
+>> This patch adds support for UMONITOR, UMWAIT and TPAUSE instructions
+>> in kvm, and by default dont't expose it to kvm and provide a capability
+>> to enable it.
+> 
+> I'm thinking this should be conditional on the guest being a 1:1 guest,
+> and I also seem to remember we have bits for that already -- they were
+> used to disable paravirt spinlocks for example.
+> 
 
-The splitting could lead to extra arguments being passed to the core dump
-handler that it might have interpreted as options or ignored completely.
+Hi Peter,
 
-Core dump handlers that are not aware of this Linux kernel issue will be
-using %e or %E without considering that it may be split and so they will
-be vulnerable to processes with spaces in their names breaking their
-argument list. If their internals are otherwise well written, such as
-if they are written in shell but quote arguments, they will work better
-after this change than before. If they are not well written, then there
-is a slight chance of breakage depending on the details of the code but
-they will already be fairly broken by the split filenames.
+I am wondering if "1:1 guest" means different guests in the same host 
+should have different settings on user wait instructions?
 
-Core dump handlers that are aware of this Linux kernel issue will be
-placing %e or %E as the last item in their core_pattern and then
-aggregating all of the remaining arguments into one, separated by
-spaces. Alternatively they will be obtaining the filename via other
-methods. Both of these will be compatible with the new arrangement.
+User wait instructions(UMONITOR, UMWAIT and TPAUSE) can use in guest 
+only when the VMCS Secondary Processor-Based VM-Execution Control bit 26 
+is 1, otherwise any execution of TPAUSE, UMONITOR, or UMWAIT causes a #UD.
 
-A side effect from this change is that unknown template types
-(for example %z) result in an empty argument to the dump handler
-instead of the argument being dropped. This is a desired change as:
+So with a capability to enable it, we use qemu kvm_vm_ioctl_enable_cap() 
+to enable it. The qemu link is blew:
+https://lists.gnu.org/archive/html/qemu-devel/2019-05/msg05810.html
 
-It is easier for dump handlers to process empty arguments than dropped
-ones, especially if they are written in shell or don't pass each template
-item with a preceding command-line option in order to differentiate
-between individual template types. Most core_patterns in the wild do not
-use options so they can confuse different template types (especially
-numeric ones) if an earlier one gets dropped in old kernels. If the
-kernel introduces a new template type and a core_pattern uses it, the
-core dump handler might not expect that the argument can be dropped in
-old kernels.
+By using different QEMU parameters, different guests in the same host 
+would have different features with or without user wait instructions.
 
-For example, this can result in security issues when %d is dropped in old
-kernels. This happened with the corekeeper package in Debian and resulted
-in the interface between corekeeper and Linux having to be rewritten to
-use command-line options to differentiate between template types.
+About "disable paravirt spinlocks" case, I am wondering if it uses 
+kernel parameters? If it uses kernel parameters, different guests in the 
+same host may have same settings on user wait instructions.
 
-The core_pattern for most core dump handlers is written by the handler
-author who would generally not insert unknown template types so this
-change should be compatible with all the core dump handlers that exist.
+Or when we uses kernel parameters to disable user wait instructions, for 
+a host chooses to enable user wait instructions, we should do some work 
+on QEMU to choose disable or enable user wait instructions?
 
-Fixes: 74aadce98605
-Reported-by: Jakub Wilk <jwilk@jwilk.net>
-Reported-in: https://bugs.debian.org/924398
-Reported-by: Paul Wise <pabs3@bonedaddy.net>
-Reported-in: https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/
-Suggested-by: Jakub Wilk <jwilk@jwilk.net>
-Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
----
- fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 39 insertions(+), 5 deletions(-)
+Thanks
 
-Changelog:
-v3 Adjust footer fields, drop obvious comment
-v2 Fix build failure due to typo after variable renaming
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index e42e17e55bfd..b1ea7dfbd149 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -7,6 +7,7 @@
- #include <linux/stat.h>
- #include <linux/fcntl.h>
- #include <linux/swap.h>
-+#include <linux/ctype.h>
- #include <linux/string.h>
- #include <linux/init.h>
- #include <linux/pagemap.h>
-@@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
-  * name into corename, which must have space for at least
-  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
-  */
--static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-+static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-+			   size_t **argv, int *argc)
- {
- 	const struct cred *cred = current_cred();
- 	const char *pat_ptr = core_pattern;
- 	int ispipe = (*pat_ptr == '|');
-+	bool was_space = false;
- 	int pid_in_pattern = 0;
- 	int err = 0;
- 
-@@ -201,12 +204,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
- 		return -ENOMEM;
- 	cn->corename[0] = '\0';
- 
--	if (ispipe)
-+	if (ispipe) {
-+		int argvs = sizeof(core_pattern) / 2;
-+		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-+		if (!(*argv))
-+			return -ENOMEM;
-+		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+	}
- 
- 	/* Repeat as long as we have more pattern to process and more output
- 	   space */
- 	while (*pat_ptr) {
-+		/*
-+		 * Split on spaces before doing template expansion so that
-+		 * %e and %E don't get split if they have spaces in them
-+		 */
-+		if (ispipe) {
-+			if (isspace(*pat_ptr)) {
-+				was_space = true;
-+				pat_ptr++;
-+				continue;
-+			} else if (was_space) {
-+				was_space = false;
-+				err = cn_printf(cn, "%c", '\0');
-+				if (err)
-+					return err;
-+				(*argv)[(*argc)++] = cn->used;
-+			}
-+		}
- 		if (*pat_ptr != '%') {
- 			err = cn_printf(cn, "%c", *pat_ptr++);
- 		} else {
-@@ -546,6 +572,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	struct cred *cred;
- 	int retval = 0;
- 	int ispipe;
-+	size_t *argv = NULL;
-+	int argc = 0;
- 	struct files_struct *displaced;
- 	/* require nonrelative corefile path and be extra careful */
- 	bool need_suid_safe = false;
-@@ -592,9 +620,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 
- 	old_cred = override_creds(cred);
- 
--	ispipe = format_corename(&cn, &cprm);
-+	ispipe = format_corename(&cn, &cprm, &argv, &argc);
- 
- 	if (ispipe) {
-+		int argi;
- 		int dump_count;
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
-@@ -637,12 +666,16 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 			goto fail_dropcount;
- 		}
- 
--		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-+		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-+					    GFP_KERNEL);
- 		if (!helper_argv) {
- 			printk(KERN_WARNING "%s failed to allocate memory\n",
- 			       __func__);
- 			goto fail_dropcount;
- 		}
-+		for (argi = 0; argi < argc; argi++)
-+			helper_argv[argi] = cn.corename + argv[argi];
-+		helper_argv[argi] = NULL;
- 
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
-@@ -652,7 +685,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
- 
--		argv_free(helper_argv);
-+		kfree(helper_argv);
- 		if (retval) {
- 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
- 			       cn.corename);
-@@ -766,6 +799,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(mm, core_dumped);
- 	revert_creds(old_cred);
--- 
-2.20.1
-
+Tao
