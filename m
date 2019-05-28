@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC451C282E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABB5C072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC32216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2DA216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 23:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJ0SeKUf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RpbbByeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfE1XCU (ORCPT
+        id S1727710AbfE1XCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 19:02:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34480 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfE1XCR (ORCPT
+        Tue, 28 May 2019 19:02:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35044 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbfE1XCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 19:02:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so115729pgg.1;
-        Tue, 28 May 2019 16:02:16 -0700 (PDT)
+        Tue, 28 May 2019 19:02:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so263113pfd.2;
+        Tue, 28 May 2019 16:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TYxqVL6ya69qBm4d49uLd/seawSvaqtAiTG+XLQaxa8=;
-        b=MJ0SeKUfWyrctojOBtc2sUIRaYZjaPr/SfW6rtwAj13+sI6jDqQ8wpcYbyqf8JBgTp
-         3K/2kDdfdDdKj8vAFxNjPobsLjXBIbGOgv56DB/ngzeAt00MKfI0WHMaZ2gaBCqKIMxL
-         jEfgENpp3+blpCPEks+/TVdmAGZqqdyc57pGju8LIku/a1prFdsYMuygNueazoK0JS1f
-         LhZ95SPE67XH8nyKJskl2AV43xc3sm6JzDA0DEHhKyWB2iWDZOOXDMKDLj3ePXCo5qWn
-         nUNj1RYlOANAvKcncMGI+gdRrNfRTaxdzDMEIaMEcWhKz7dPKAPFOeey5b9+i1djez+g
-         YuvA==
+        bh=JrcPDuAFrT0kBFAkL3W3QNhPSv5oCk1/oSUkr2l2aQg=;
+        b=RpbbByeIQSuxpCpW000iv9NexBvHSPXVbUWRIQdw2/m8q/ohtNGBYflUZgy9ZKltGA
+         aJSEwHEHHHgjoysC5gacLMJuTuRqIM3kZZFLq8UaXX9DYIxIUygYz7nmd4G6/WE5YADe
+         ylYnDLrhjaUSft+KuqT8j5xq24UcbqpVnSzI4aIHDqs6IJ5RGp52k+b/+riPV03IWFB2
+         2TjW89G4Io95py93GZie6KCOhZEQRE4NpbOIkq4qR29uYmlQYE77HDCbnijLTX5pFBU8
+         rrBmscbnXEhYI03D8sLzy3gNo9DGooJcoCVB0Z0NuuT5CeKBdhLI6TPLnRew3v730qPH
+         QenA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TYxqVL6ya69qBm4d49uLd/seawSvaqtAiTG+XLQaxa8=;
-        b=T79QbtorNjXdVKPISEKSouRiqS93P2lLq1yQzuWwHeajLe85+3f2PAva9pTyi3Qz8J
-         zq+eOQIqlJ8hBaEYT2n+Zi6jOUym85zDlM22qLI5jCMKq/qW1m7ku0A1SBtr38cICQXA
-         4hJm9yjE5MnOktAlE5uIhbyoBReD4i5vLUVkmZ9JKVlGakZRrq+pEnW8LnoHgm8rClMA
-         8WgjT4sWC8L+3WxuhrZY5YBUjAmXwC6BUdpCLdAeuC0rd3oNjwT87Xv0xiGYN5AujlfL
-         uaqYy52Yn+Fe+EbLECkKE8xTVSwD4PtUrTycbTaVx8Y6It1zuqWe6FjzcvZyRI8fb+2a
-         s/Ng==
-X-Gm-Message-State: APjAAAVuEJw63WkJju+yDQH/YMm4oqnuQgiw6BoMDp4JGsU2fDf6c4IX
-        Zuat9Y893v/Tqis2QDXSHT4=
-X-Google-Smtp-Source: APXvYqyO9aGngsIKVqNqsAs0/kG5aaHpoSPbIa3wS0StMA1Ypw++h0bJTbJ1hAlqIYYRutjO6nnBmA==
-X-Received: by 2002:a62:cfc4:: with SMTP id b187mr147977844pfg.134.1559084536452;
-        Tue, 28 May 2019 16:02:16 -0700 (PDT)
+        bh=JrcPDuAFrT0kBFAkL3W3QNhPSv5oCk1/oSUkr2l2aQg=;
+        b=V+vqdvIrCsnJ7JepgtF9AHRMDezlwfYl+ohxkXQzaug0EtQdvdQGC75Kh1Owf8QBJd
+         4a6zHlYQJAH5OGUlp+S4V+XR7/ADXboZsbNGaIhY9VmgFTpuLJ7H8uDHjOaOfmbX/++Y
+         S8dBeyPwo9hySoDsMI+Kd6UAwqu/MdpbNgRJE4yzIT4WqOdgG9MbAuS6XqW6ZoQWXoTK
+         NsoEYC+uWlvJM8PIgjLHhmiytOG5Fd4Z60zHm1cLbX+qKg4iZZoLYvOQgdDw6U05BhS7
+         ZPh4pz+s0NXMtpV4TVh2ysegdx8lCUNtIqt+ZxPZjjqaV5UeDjKN/iShN93cRSdP0M1G
+         vwqA==
+X-Gm-Message-State: APjAAAXL6sxTmHOV0I1htfqqUQczjQ+YqaxBsGraxcjH1VBV0asiv90C
+        Jb0qywb9KMvm2Tee0cGoiAg=
+X-Google-Smtp-Source: APXvYqzmyQ4N+ykhgfKclIyz83roWdW3COf/TLcBCRdQQyOr7Y0HBhdCu30wnl7INN8Tcu0LC9OpkA==
+X-Received: by 2002:a63:2ad2:: with SMTP id q201mr131357493pgq.94.1559084539511;
+        Tue, 28 May 2019 16:02:19 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j13sm14369573pfh.13.2019.05.28.16.02.14
+        by smtp.gmail.com with ESMTPSA id j13sm14369573pfh.13.2019.05.28.16.02.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 16:02:15 -0700 (PDT)
+        Tue, 28 May 2019 16:02:18 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Fong <gregory.0xf0@gmail.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/7] ARM: dts: BCM63xx: Fix DTC W=1 warnings
-Date:   Tue, 28 May 2019 16:01:32 -0700
-Message-Id: <20190528230134.27007-6-f.fainelli@gmail.com>
+Subject: [PATCH 7/7] ARM: dts: NSP: Fix the bulk of W=1 DTC warnings
+Date:   Tue, 28 May 2019 16:01:34 -0700
+Message-Id: <20190528230134.27007-8-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190528230134.27007-1-f.fainelli@gmail.com>
 References: <20190528230134.27007-1-f.fainelli@gmail.com>
@@ -86,64 +86,162 @@ Fix the bulk of the unit_address_vs_reg warnings and unnecessary
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm63138.dtsi    | 9 +++------
- arch/arm/boot/dts/bcm963138dvt.dts | 2 +-
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi     | 9 +++------
+ arch/arm/boot/dts/bcm958522er.dts  | 2 +-
+ arch/arm/boot/dts/bcm958525er.dts  | 2 +-
+ arch/arm/boot/dts/bcm958525xmc.dts | 2 +-
+ arch/arm/boot/dts/bcm958622hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958623hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958625hr.dts  | 2 +-
+ arch/arm/boot/dts/bcm958625k.dts   | 2 +-
+ arch/arm/boot/dts/bcm988312hr.dts  | 2 +-
+ 9 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm63138.dtsi b/arch/arm/boot/dts/bcm63138.dtsi
-index e6a41e1b27fd..9c0325cf9e22 100644
---- a/arch/arm/boot/dts/bcm63138.dtsi
-+++ b/arch/arm/boot/dts/bcm63138.dtsi
-@@ -41,9 +41,6 @@
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 6925b30c2253..da6d70f09ef1 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -77,7 +77,7 @@
+ 		interrupt-affinity = <&cpu0>, <&cpu1>;
  	};
  
- 	clocks {
--		#address-cells = <1>;
--		#size-cells = <0>;
+-	mpcore {
++	mpcore@19000000 {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0x19000000 0x00023000>;
+ 		#address-cells = <1>;
+@@ -122,7 +122,7 @@
+ 			      <0x20100 0x100>;
+ 		};
+ 
+-		L2: l2-cache {
++		L2: l2-cache@22000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x22000 0x1000>;
+ 			cache-unified;
+@@ -166,7 +166,7 @@
+ 		};
+ 	};
+ 
+-	axi {
++	axi@18000000 {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0x18000000 0x0011c40c>;
+ 		#address-cells = <1>;
+@@ -415,9 +415,6 @@
+ 					  "imp_sleep_timer_p5",
+ 					  "imp_sleep_timer_p7",
+ 					  "imp_sleep_timer_p8";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
 -
- 		/* UBUS peripheral clock */
- 		periph_clk: periph_clk {
- 			#clock-cells = <0>;
-@@ -94,7 +91,7 @@
- 			reg = <0x1e000 0x100>;
- 		};
+ 			status = "disabled";
  
--		gic: interrupt-controller@1e100 {
-+		gic: interrupt-controller@1f000 {
- 			compatible = "arm,cortex-a9-gic";
- 			reg = <0x1f000 0x1000
- 				0x1e100 0x100>;
-@@ -125,7 +122,7 @@
- 						  IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
--		armpll: armpll {
-+		armpll: armpll@20000 {
- 			#clock-cells = <0>;
- 			compatible = "brcm,bcm63138-armpll";
- 			clocks = <&periph_clk>;
-@@ -144,7 +141,7 @@
- 			#reset-cells = <2>;
- 		};
- 
--		ahci: sata@8000 {
-+		ahci: sata@a000 {
- 			compatible = "brcm,bcm63138-ahci", "brcm,sata3-ahci";
- 			reg-names = "ahci", "top-ctrl";
- 			reg = <0xa000 0x9ac>, <0x8040 0x24>;
-diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
-index 8dca97eeaf57..43a5f78acd5e 100644
---- a/arch/arm/boot/dts/bcm963138dvt.dts
-+++ b/arch/arm/boot/dts/bcm963138dvt.dts
-@@ -16,7 +16,7 @@
- 		stdout-path = &serial0;
+ 			/* ports are defined in board DTS */
+diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+index 21479b4ce823..8c388eb8a08f 100644
+--- a/arch/arm/boot/dts/bcm958522er.dts
++++ b/arch/arm/boot/dts/bcm958522er.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
 -	memory {
-+	memory@0 {
- 		reg = <0x0 0x08000000>;
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+index cda3d790965b..c339771bb22e 100644
+--- a/arch/arm/boot/dts/bcm958525er.dts
++++ b/arch/arm/boot/dts/bcm958525er.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
  
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+index f86649812b59..1c72ec8288de 100644
+--- a/arch/arm/boot/dts/bcm958525xmc.dts
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x40000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
+index df60602b054d..96a021cebd97 100644
+--- a/arch/arm/boot/dts/bcm958622hr.dts
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+index 3893e7af343a..b2c7f21d471e 100644
+--- a/arch/arm/boot/dts/bcm958623hr.dts
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index cf226b02141f..a2c9de35ddfb 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x20000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+index 10b3d512bb33..3fcca12d83c2 100644
+--- a/arch/arm/boot/dts/bcm958625k.dts
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -42,7 +42,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
+index e39db14d805e..edd0f630e025 100644
+--- a/arch/arm/boot/dts/bcm988312hr.dts
++++ b/arch/arm/boot/dts/bcm988312hr.dts
+@@ -43,7 +43,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@60000000 {
+ 		device_type = "memory";
+ 		reg = <0x60000000 0x80000000>;
+ 	};
 -- 
 2.17.1
 
