@@ -2,126 +2,211 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D571C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12682C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DE12166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 18:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92602166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 19:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZnZ12hg"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FzPaGIqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfE1Szh (ORCPT
+        id S1727341AbfE1TAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 14:55:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34123 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfE1Szg (ORCPT
+        Tue, 28 May 2019 15:00:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34073 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfE1TAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 14:55:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j24so18754852ljg.1;
-        Tue, 28 May 2019 11:55:35 -0700 (PDT)
+        Tue, 28 May 2019 15:00:11 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h2so8470724pgg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 12:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z7OOVvI8Ey+rnG7udPCtpGE+elQQfpsLoYRPaWdaqvo=;
-        b=sZnZ12hgMrnbJJiyGJxwjDn8ZGRsO5eLpJZLeiFCbMilukST9exCPSOrckih25w1cZ
-         yNR4yCjnJX7bzsLnoe5l+54xRd/uMe43ufc+t4NL5JaLF2DzyTe5XKJhDZodeGi/Qnlr
-         /7FDFgGROff3N/3ui3bRFPydof7LMNZd83vdpjbZRCUJIdb36xqyOp0pSefcfQ19yKZ+
-         NbruhAdAj0SzwJHz3T61vwqsqas27A2PPAGCL6hzYzf3zg8/xBZoZ6bmO4FJ5I4fxoVD
-         nkt65Hto6wJ664T/Sv/820JLn4jVABFqlLAi8UsbhffWPquPzuEjZ0Z+OTfdY0/rcDdN
-         Qwdw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CZU9rfW8nSOc4u3WOwnTVIA3CZHkFWB1l1BBXho+t1E=;
+        b=FzPaGIqytxNT9NZViSpOmKVdl43I/21qdH/XEJADRxqiPUmFgFNy39u6WxcswLTBGy
+         K+vsCbgHOaP7qUNzE6C4Fj/tvaTKPTM185KhjLV+BAv6HAbPzauWOPcsW6lrAG1Kdrpj
+         3WaNK0LBsCsiCRknaUJOFjgk1xpIOYEEQ9ly4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z7OOVvI8Ey+rnG7udPCtpGE+elQQfpsLoYRPaWdaqvo=;
-        b=cDDLBLPwzASbpL4U4YiNgjFE8aJq4lMaYrtkSNRFvzHNBuMp9m8+Xq/1u/z7LufFbN
-         yuRpKjYvaRZHORcZgLJ/8Jgdp7oJrb3eJqKRxxO63dTGd77DsSbmylkW0iX5eQJWrPng
-         gOcjbvATKgDJel3c0OyJjzBL9AHgBad/vF1RFYU0MfKrpiX/H2j4v9B0JzA0zhiuHqDm
-         pi0cSxsLoB3NZB+/DNRUjDe+Z04jcYK6+E8a4vBM7WzDvt04r0bNBOhzhyLk4fhrpY5B
-         IUvYWFwKqISO8gK/FaxvC5JHZPEDw3uSrRB6MMiT1bTh2RDskdtR3pFSDdRlYq+WNKxu
-         xxtQ==
-X-Gm-Message-State: APjAAAXr2RfgGz1hLcbQmLpTzUuI4u+9CfqQukmFvxZTeNjw4Vd2W2we
-        lCn+2x75ZCQWNAxspZ7O/ia/7sHj
-X-Google-Smtp-Source: APXvYqwxeXuHx774Ybt8+VVCDljiDWR6aiH7KirjGQj3/ICiJnH7lMaxFST4KELexMRLZu14zE8Wpw==
-X-Received: by 2002:a2e:9742:: with SMTP id f2mr32429404ljj.184.1559069734544;
-        Tue, 28 May 2019 11:55:34 -0700 (PDT)
-Received: from [192.168.1.17] (cis152.neoplus.adsl.tpnet.pl. [83.31.42.152])
-        by smtp.gmail.com with ESMTPSA id x16sm3071055lji.3.2019.05.28.11.55.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 11:55:33 -0700 (PDT)
-Subject: cross-merges with MFD tree (was: Re: GFS2: Pull Request)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-References: <CAHc6FU5Yd9EVju+kY8228n-Ccm7F2ZBRJUbesT-HYsy2YjKc_w@mail.gmail.com>
- <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <61f6987a-5502-f119-6595-fc6badb864fb@gmail.com>
-Date:   Tue, 28 May 2019 20:55:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CZU9rfW8nSOc4u3WOwnTVIA3CZHkFWB1l1BBXho+t1E=;
+        b=BAQGHZNM7+neQR9WUILiR42ddiu9+DPJbLMM/LpuFBroSvvDZMX2DBHSMQcYg5j4yi
+         qvDlpPrnK4ox+PfjSQMckQJABck5f5rTqdpWADZ2oNwMPDiVquAm88zc33ZG7gKNRXn7
+         APqBF7uYjmL5Rtz8OvxC7uWZeIucCp9qiclaBHPqIkOSDA8K+pPoS0L8P961X9dDKsp6
+         Bmx2U5emWmP6IvOotDTUWJ+5c1jQBeMLu5/Sx1R0nknp4YZE3vMdHiN9+B30+qZi8mKX
+         w9bg5pdD68QLhIqKIiCbbXUO1bKVwlsR083/tR69U0jK7VLQk4v288MGGQnRhlF8/GZb
+         4I0Q==
+X-Gm-Message-State: APjAAAWpC/VIh6Att5OyMN2dCnhoF/yg3A2VQ3MAJhpJSDz4tL1YAExu
+        mWkTZrnT2IljKztBqKHNH8poQA==
+X-Google-Smtp-Source: APXvYqxspO7cUxx1NQf2GJHqZGcCk4fhMupGqSyyqjhO+mREbCifd0mCwiZRtxg5Qy/t3TlJwpO7jw==
+X-Received: by 2002:a63:4d0b:: with SMTP id a11mr46097351pgb.74.1559070009971;
+        Tue, 28 May 2019 12:00:09 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id c17sm14847688pfi.116.2019.05.28.12.00.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 12:00:08 -0700 (PDT)
+Date:   Tue, 28 May 2019 15:00:07 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, kvm-ppc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] Remove some notrace RCU APIs
+Message-ID: <20190528190007.GC252809@google.com>
+References: <20190524234933.5133-1-joel@joelfernandes.org>
+ <20190524232458.4bcf4eb4@gandalf.local.home>
+ <20190525081444.GC197789@google.com>
+ <20190525070826.16f76ee7@gandalf.local.home>
+ <20190525141954.GA176647@google.com>
+ <20190525155035.GE28207@linux.ibm.com>
+ <20190525181407.GA220326@google.com>
+ <20190528122447.GS28207@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wj_L9d8P0Kmtb5f4wudm=KGZ5z0ijJ-NxTY-CcNcNDP5A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528122447.GS28207@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-On 5/8/19 7:55 PM, Linus Torvalds wrote:
-> On Wed, May 8, 2019 at 4:49 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
->>
->> There was a conflict with commit 2b070cfe582b ("block: remove the i
->> argument to bio_for_each_segment_all") on Jens's block layer changes
->> which you've already merged. I've resolved that by merging those block
->> layer changes; please let me know if you want this done differently.
+On Tue, May 28, 2019 at 05:24:47AM -0700, Paul E. McKenney wrote:
+> On Sat, May 25, 2019 at 02:14:07PM -0400, Joel Fernandes wrote:
+> > On Sat, May 25, 2019 at 08:50:35AM -0700, Paul E. McKenney wrote:
+> > > On Sat, May 25, 2019 at 10:19:54AM -0400, Joel Fernandes wrote:
+> > > > On Sat, May 25, 2019 at 07:08:26AM -0400, Steven Rostedt wrote:
+> > > > > On Sat, 25 May 2019 04:14:44 -0400
+> > > > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > > 
+> > > > > > > I guess the difference between the _raw_notrace and just _raw variants
+> > > > > > > is that _notrace ones do a rcu_check_sparse(). Don't we want to keep
+> > > > > > > that check?  
+> > > > > > 
+> > > > > > This is true.
+> > > > > > 
+> > > > > > Since the users of _raw_notrace are very few, is it worth keeping this API
+> > > > > > just for sparse checking? The API naming is also confusing. I was expecting
+> > > > > > _raw_notrace to do fewer checks than _raw, instead of more. Honestly, I just
+> > > > > > want to nuke _raw_notrace as done in this series and later we can introduce a
+> > > > > > sparse checking version of _raw if need-be. The other option could be to
+> > > > > > always do sparse checking for _raw however that used to be the case and got
+> > > > > > changed in http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+> > > > > 
+> > > > > What if we just rename _raw to _raw_nocheck, and _raw_notrace to _raw ?
+> > > > 
+> > > > That would also mean changing 160 usages of _raw to _raw_nocheck in the
+> > > > kernel :-/.
+> > > > 
+> > > > The tracing usage of _raw_notrace is only like 2 or 3 users. Can we just call
+> > > > rcu_check_sparse directly in the calling code for those and eliminate the APIs?
+> > > > 
+> > > > I wonder what Paul thinks about the matter as well.
+> > > 
+> > > My thought is that it is likely that a goodly number of the current uses
+> > > of _raw should really be some form of _check, with lockdep expressions
+> > > spelled out.  Not that working out what exactly those lockdep expressions
+> > > should be is necessarily a trivial undertaking.  ;-)
+> > 
+> > Yes, currently where I am a bit stuck is the rcu_dereference_raw()
+> > cannot possibly know what SRCU domain it is under, so lockdep cannot check if
+> > an SRCU lock is held without the user also passing along the SRCU domain. I
+> > am trying to change lockdep to see if it can check if *any* srcu domain lock
+> > is held (regardless of which one) and complain if none are. This is at least
+> > better than no check at all.
+> > 
+> > However, I think it gets tricky for mutexes. If you have something like:
+> > mutex_lock(some_mutex);
+> > p = rcu_dereference_raw(gp);
+> > mutex_unlock(some_mutex);
+> > 
+> > This might be a perfectly valid invocation of _raw, however my checks (patch
+> > is still cooking) trigger a lockdep warning becase _raw cannot know that this
+> > is Ok. lockdep thinks it is not in a reader section. This then gets into the
+> > territory of a new rcu_derference_raw_protected(gp, assert_held(some_mutex))
+> > which sucks because its yet another API. To circumvent this issue, can we
+> > just have callers of rcu_dereference_raw ensure that they call
+> > rcu_read_lock() if they are protecting dereferences by a mutex? That would
+> > make things a lot easier and also may be Ok since rcu_read_lock is quite
+> > cheap.
 > 
-> PLEASE.
+> Why not just rcu_dereference_protected(lockdep_is_held(some_mutex))?
+> The API is already there, and no need for spurious readers.
+
+Hmm, so I gave a bad example, here is a better example:
+
+fib_get_table calls hlist_for_each_entry_rcu()
+hlist_for_each_entry_rcu calls rcu_dereference_raw().
+
+This is perfectly Ok to be called under rtnl_mutex. However rcu_dererence_raw
+in hlist_for_each_entry_rcu has no way of knowing that the rtnl_mutex held is
+sufficient for the protection since it is not directly called by the caller.
+
+I am almost sure I saw other examples of rcu_dereference_raw being called
+this way as well.
+
+I was trying to make an "automatic" lockdep check for all this, but it is
+quite hard to do so without passing down lockdep experessions down a call
+chain thus complicating all such callchains.
+
+Further I don't think code can trivially be converted from
+rcu_dereference_raw to rcu_dereference_protected even if the protection being
+offered is known, since the former does not do sparse checking and the latter
+might trigger false sparse checks in case the pointer in concern is protected
+both by RCU and non-RCU methods. I believe this is why you removed sparse
+checking from rcu_dereference_raw as well:
+
+http://lists.infradead.org/pipermail/linux-afs/2016-July/001016.html
+
+> > > That aside, if we are going to change the name of an API that is
+> > > used 160 places throughout the tree, we would need to have a pretty
+> > > good justification.  Without such a justification, it will just look
+> > > like pointless churn to the various developers and maintainers on the
+> > > receiving end of the patches.
+> > 
+> > Actually, the API name change is not something I want to do, it is Steven
+> > suggestion. My suggestion is let us just delete _raw_notrace and just use the
+> > _raw API for tracing, since _raw doesn't do any tracing anyway. Steve pointed
+> > that _raw_notrace does sparse checking unlike _raw, but I think that isn't an
+> > issue since _raw doesn't do such checking at the moment anyway.. (if possible
+> > check my cover letter again for details/motivation of this series).
 > 
-> I say this to somebody pretty much every single merge window: don't do
-> merges for me.
-> 
-> You are actually just hurting, not helping. I want to know what the
-> conflicts are, not by being told after-the-fact, but by just seeing
-> them and resolving them.
-> 
-> Yes, I like being _warned_ ahead of time - partly just as a heads up
-> to me, but partly also to show that the maintainers are aware of the
-> notifications from linux-next, and that linux-next is working as
-> intended, and people aren't just ignoring what it reports.
-> 
-> But I do *NOT* want to see maintainers cross-merging each others trees.
+> Understood, but regardless of who suggested it, if we are to go through
+> with it, good justification will be required.  ;-)
 
-I would like to clarify if this applies to immutable integration
-branches that are usually created for MFD subsystem. That subsystem
-is somehow specific since changes made to MFD drivers are often a part
-of bigger patch sets that add drivers of MFD cells to the other
-subsystems.
+Ok ;-). About the names of the APIs, I thought of leaving rcu_dereference_raw
+and its callers intact, and just rename:
 
-Like in my area of interest an addition of a driver for LED cell
-of MFD device must be followed by addition of a corresponding entry to
-struct mfd_cell array in the related MFD driver.
+ * hlist_for_each_entry_rcu_notrace
+ * rcu_dereference_raw_notrace
 
-And sometimes even another subsystem is involved, like e.g. regulator
-framework in case of recent extension of ti-lmu driver.
+to:
+ * hlist_for_each_entry_rcu_sparse
+ * rcu_dereference_raw_sparse
 
-So far you haven't complained about this specific workflow, but I'd like
-to make sure how you see it.
+The _sparse would stand for "sparse checking". However I am open to better
+names..
 
--- 
-Best regards,
-Jacek Anaszewski
+Such renaming would avoid confusion and keep the fact about sparse checking
+less ambiguous.
+
+thanks!
+
+ - Joel
+
