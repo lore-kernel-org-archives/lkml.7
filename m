@@ -2,116 +2,107 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DF9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE1AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48F820823
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+O60kLd"
+	by mail.kernel.org (Postfix) with ESMTP id C042220823
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 01:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfE1Bqb (ORCPT
+        id S1727844AbfE1Bse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 May 2019 21:46:31 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38057 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727271AbfE1Bqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 May 2019 21:46:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b76so10421889pfb.5;
-        Mon, 27 May 2019 18:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D2rFQ9Zn6Sfvpd4VvHl4DIwDnQ+7eEVa+yVBHImykSU=;
-        b=G+O60kLd8YSi7cKOOqV9I0jGI+lt6eDsuLRDZ0D78YJjIrsR36IZ900jxnl+29KlDX
-         JI3xoutFdjqNBBJuoJFiORIaSU2tKcpTpgWGyOcG5bSuo2TJQaNy56Jg2gWf+1ctJ6qi
-         qK5LtZjRN6ZWaRGf5f6Q5ZP1RWZEm8t1HWKPpqNYnKk0WG4bRd/ZIiti1hpuVXB4xPuY
-         AwM3rvAd/rLVfbDgj4XreRloZ3NgPz4moCLJ4SMrlpBfEl/X+MBPjdClyukRcJGnGIQz
-         cO5mFnrwr6Y+HtKbWt3Ii5eQ6Aqw7S/WdAqY07OiumuHnacG/IqwMjuvwlpPLNR61Jja
-         iGiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D2rFQ9Zn6Sfvpd4VvHl4DIwDnQ+7eEVa+yVBHImykSU=;
-        b=kaRUpUeQoZQWz9sqDxQnanMYPVAu326fPuEXbmghB3qyh0gpX1d4fPaXgJv8POvOjF
-         nMlEJqjq69TqCdn5KWoLd5OVByKUNnmcOmkBOvqdXiopGHwqXP3gGqVi92jhF6kceVD0
-         ythaXJACMwTCzUxRxHInbT8zzGsxt6Q2YV5t8aH7109KlnnimTKbpx5UiqpiGYndmnPa
-         RO78z5QBrnq+QgqnvvE8OkLgnypHDpdFvQAwERbR/uXBr3XWI6/uI+Wzn/oCMXOr2lP5
-         ZNKmAZa/I7BlLszVtbnjiSBnAL9QIctrZO3jrkyiiM0j9Hk7Fm9UFKztntmj6LKT4609
-         2/Dg==
-X-Gm-Message-State: APjAAAV9cNNlt//O5Jw4tClC3XmrNYvEGQgLKKI20SzExcBvBQteRt1W
-        CTckD5wH43RMgFUw15E+AYs=
-X-Google-Smtp-Source: APXvYqwaUI8LjoO6n4nZaTh0GQa+WbshW4PAeOWZTV2ETgI4mg9Cd5WfjPhqg1LtXsP7a4ZLMYe6eA==
-X-Received: by 2002:a17:90a:364b:: with SMTP id s69mr2211108pjb.15.1559007989594;
-        Mon, 27 May 2019 18:46:29 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d5sm8354611pgi.86.2019.05.27.18.46.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 May 2019 18:46:28 -0700 (PDT)
-Date:   Mon, 27 May 2019 18:46:26 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] Fix Elan I2C touchpads in latest generation from
- Lenovo
-Message-ID: <20190528014626.GB193221@dtor-ws>
-References: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
+        Mon, 27 May 2019 21:48:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17583 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727271AbfE1Bse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 May 2019 21:48:34 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 560C66BA30B9C8FF9BBD;
+        Tue, 28 May 2019 09:48:32 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 09:48:22 +0800
+Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
+ processing linkwatch wq
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     <davem@davemloft.net>, <hkallweit1@gmail.com>,
+        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
+ <20190527075838.5a65abf9@hermes.lan>
+ <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
+ <20190527181744.289c4b2f@hermes.lan>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <bb880dab-16dc-0d4b-fa42-809c40cac43b@huawei.com>
+Date:   Tue, 28 May 2019 09:48:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524135046.17710-1-benjamin.tissoires@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190527181744.289c4b2f@hermes.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 03:50:38PM +0200, Benjamin Tissoires wrote:
-> Here comes the v3.
+On 2019/5/28 9:17, Stephen Hemminger wrote:
+> On Tue, 28 May 2019 09:04:18 +0800
+> Yunsheng Lin <linyunsheng@huawei.com> wrote:
 > 
-> Very few changes from v2:
-> - dropped the last 2 patches where I tried to be smart, and it turns out
->   that it was not very a good idea
-> - also removed the only other blacklisted model, as it has been tested with
->   the v2 and it is also now working properly
+>> On 2019/5/27 22:58, Stephen Hemminger wrote:
+>>> On Mon, 27 May 2019 09:47:54 +0800
+>>> Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>   
+>>>> When user has configured a large number of virtual netdev, such
+>>>> as 4K vlans, the carrier on/off operation of the real netdev
+>>>> will also cause it's virtual netdev's link state to be processed
+>>>> in linkwatch. Currently, the processing is done in a work queue,
+>>>> which may cause worker starvation problem for other work queue.
+>>>>
+>>>> This patch releases the cpu when link watch worker has processed
+>>>> a fixed number of netdev' link watch event, and schedule the
+>>>> work queue again when there is still link watch event remaining.
+>>>>
+>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>  
+>>>
+>>> Why not put link watch in its own workqueue so it is scheduled
+>>> separately from the system workqueue?  
+>>
+>> From testing and debuging, the workqueue runs on the cpu where the
+>> workqueue is schedule when using normal workqueue, even using its
+>> own workqueue instead of system workqueue. So if the cpu is busy
+>> processing the linkwatch event, it is not able to process other
+>> workqueue' work when the workqueue is scheduled on the same cpu.
+>>
+>> Using unbound workqueue may solve the cpu starvation problem.
+>> But the __linkwatch_run_queue is called with rtnl_lock, so if it
+>> takes a lot time to process, other need to take the rtnl_lock may
+>> not be able to move forward.
+> 
+> Agree with the starvation issue. My cocern is that large number of
+> events that end up being delayed would impact things that are actually
+> watching for link events (like routing daemons).
 
-Applied the lot, thank you.
+Agreed. I am not familiar with above use cases, it would be very helpful
+if someone can help testing the impact of above use case.
 
 > 
-> Cheers,
-> Benjamin
+> It probably would be not accepted to do rtnl_unlock/sched_yield/rtnl_lock
+> in the loop, but that is another alternative.
+
+Yes. But seems not very efficient to do rtnl_unlock/sched_yield/rtnl_lock
+for very linkwatch_do_dev.
+
 > 
-> Benjamin Tissoires (8):
->   Input: elantech - query the min/max information beforehand too
->   Input: elantech - add helper function elantech_is_buttonpad()
->   Input: elantech - detect middle button based on firmware version
->   dt-bindings: add more optional properties for elan_i2c touchpads
->   Input: elan_i2c - do not query the info if they are provided
->   Input: elantech/SMBus - export all capabilities from the PS/2 node
->   Input: elan_i2c - handle physical middle button
->   Input: elantech: remove P52 and P72 from SMBus blacklist
 > 
->  .../devicetree/bindings/input/elan_i2c.txt    |  11 +
->  drivers/input/mouse/elan_i2c_core.c           |  72 +++-
->  drivers/input/mouse/elantech.c                | 320 ++++++++++--------
->  drivers/input/mouse/elantech.h                |   8 +
->  4 files changed, 246 insertions(+), 165 deletions(-)
 > 
-> -- 
-> 2.21.0
+> .
 > 
 
--- 
-Dmitry
