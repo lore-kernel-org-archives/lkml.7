@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC7FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A26C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534B12173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155BF21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 16:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8EnxSxS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAN3nk6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfE1QPh (ORCPT
+        id S1727318AbfE1QPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 12:15:37 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39213 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfE1QPG (ORCPT
+        Tue, 28 May 2019 12:15:04 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33954 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbfE1QPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 12:15:06 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so3530251wma.4;
-        Tue, 28 May 2019 09:15:04 -0700 (PDT)
+        Tue, 28 May 2019 12:15:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f8so20931112wrt.1;
+        Tue, 28 May 2019 09:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MeV22BL5hfS4X5C1QCisA6E+loww6qQHxa27Rpq4STA=;
-        b=t8EnxSxSHqX7JGzCuQ0W+V8VDDdrfYp0zXTg0Jjv2VES+ObbS608OuEC5aduG8a4/I
-         rwaEnHAfehwqhg9PUQjtU5nQyBzyzsMgSzKx3A9yzTFORamwTqcIK7nbw8UyNXB/reNj
-         eAmdi/bNMybaRTu88vlknWqsQojYxDnYZ/Y+GIEwRISrp98d3acLdJD8w0r/Du9sFekh
-         sT0uBwFY+QLPEcdhbgyW7S678kKqXFOXDwVg/OqNifg7AI3r8Q30UWQwsFo+kb7j4/iQ
-         ZJaDD/lq7Fgus/ZlD1a8TlJ+dwFMD3dtRwGv84ojGYGtB9lqL2jbod6gsr7Cog5uFHSG
-         seOQ==
+        bh=H9liOXPsd3FXJL6A6hHO3yEhmEbo+emmwpujmCXjpXw=;
+        b=lAN3nk6BcHTbA9hMqBoHlaoQPbKumXQmvaUsGmEFMfU70ngnOsGFbtxDiXJ/AGLxdd
+         r64/kh3ayQTPIo1NbUam1LmsoDMXpnfp3dcES4XvY6BJ0gUAkIJxKzg5mMinPhqLMURP
+         mdSUts6La6ZEXMbjHG3ZmL990Dg+qwKXAwTyOiCUTO0U2a/s83bMNsxjIHrgaqHU7g2w
+         c3p3pOG+rE+pbwKUza5raE0oZkhVH0tKue27/UAVCxXqG9gd4erZhDAu0R1wZpT69/P5
+         qBPZh90AzOXpSvmmaU3GY3RtviSoxy00Uty0qlqh4fiZUtvu5FBHz53RSuoLoCtw9zgq
+         xHZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MeV22BL5hfS4X5C1QCisA6E+loww6qQHxa27Rpq4STA=;
-        b=PNdFlXfOzfKUfW9wqVxyAqMBzmQYW7pTI24Li5JkGPiViyl278rLoMSj1phlsaMqnb
-         Q4LiQx8QfXEc+WW8bMi6rypAdGVgk5SurnDpit+2vc8QNjdHuhDnzU3+5VLidJ3n0dpB
-         5PybnGCHCZ3W/ZX2cUrf+l/aAphr/qQV+8LCRIO/Xj+NemARmVqh3TB3+qfaOr/isZ2r
-         VLoGm5KQ5h9rT7PgtdblQAQuznkhv84yk2zlv4H3isi2bQ6iiopokDXCx/wm9EQ0wWKe
-         a9mtAeygdW79uVk7/XF18vSQzbySxlcA6YA5QRStLQGrLDe12MuNke8Cthx4QyYB8jHk
-         o0pA==
-X-Gm-Message-State: APjAAAX7osIH8eU0G5NBoEwnVCRvtFvy3MiYR54IhF2CTgBjctBEgU3g
-        174CyuJkjLJfPYCg9tLp4V8=
-X-Google-Smtp-Source: APXvYqwZj4S7dA+LFRVzSYZt/holujUhydPpu6LvW7id0q64AOuVXDwurd2DjKbvrBMgqBKJZCp/Mg==
-X-Received: by 2002:a1c:208c:: with SMTP id g134mr3904606wmg.112.1559060103992;
-        Tue, 28 May 2019 09:15:03 -0700 (PDT)
+        bh=H9liOXPsd3FXJL6A6hHO3yEhmEbo+emmwpujmCXjpXw=;
+        b=b8xU+yNAyLdTIZCefRNRBLjK3W1KoxJvr+gBX+5HybtYeQ9qgwfsz1a6NXGJmUCCM/
+         MOS6vNGot20M839NzX9liHsEGXDqLODdm5tE6WuF0A43wrIaCAr+Xezg0wk/6g6qh0Pi
+         Y4ImSRKToHFHMLPHuPUFZuI7BmwFS62ZRuw8R4FYSAzbffpLlxdNAp860XDP6snr1U/7
+         BgIIH3MgX4p3U57gaqiJ1cY3fPzu2EJKlotzYuYWlyiYmpLh4gJrxmdrvy7R5UMiUkAC
+         RjDl15i0PzYVxNurMxGgB3fBOQXVPWA1mwOd/cbqVPb6RjEP+H19GybJZimllNAB5G1R
+         RjZg==
+X-Gm-Message-State: APjAAAWEIT9l87Bi5cjSC4NE6KmyH1V9Tk1cBzo+aDSfNw3oypRQrITq
+        Mns33p6ax8qdX+wGCK8yNXA=
+X-Google-Smtp-Source: APXvYqxkXdupOTx0Qvelttq93DUjprFEtCpp13vAvBO1yy2nKVU/gZJzkZwaLYnnuYy/Zv8kLSXzaQ==
+X-Received: by 2002:adf:e40f:: with SMTP id g15mr4091897wrm.174.1559060098168;
+        Tue, 28 May 2019 09:14:58 -0700 (PDT)
 Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
-        by smtp.gmail.com with ESMTPSA id l14sm13678787wrt.57.2019.05.28.09.15.02
+        by smtp.gmail.com with ESMTPSA id l14sm13678787wrt.57.2019.05.28.09.14.57
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 28 May 2019 09:15:03 -0700 (PDT)
+        Tue, 28 May 2019 09:14:57 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,11 +66,10 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 08/12] arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
-Date:   Tue, 28 May 2019 18:14:36 +0200
-Message-Id: <20190528161440.27172-9-peron.clem@gmail.com>
+Subject: [PATCH v3 03/12] media: rc: sunxi: Add A31 compatible
+Date:   Tue, 28 May 2019 18:14:31 +0200
+Message-Id: <20190528161440.27172-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190528161440.27172-1-peron.clem@gmail.com>
 References: <20190528161440.27172-1-peron.clem@gmail.com>
@@ -82,31 +81,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Allwiner A31 has a different memory mapping so add the compatible
+we will need it later.
 
-OrangePi Win board contains IR receiver. Enable it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/rc/sunxi-cir.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 510f661229dc..e05191b71adf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -180,6 +180,10 @@
- 	status = "okay";
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index d02dcb6fd0a5..0504ebfc831f 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_quirks = {
+ 	.fifo_size = 64,
  };
  
-+&r_ir {
-+	status = "okay";
++static const struct sunxi_ir_quirks sun6i_a31_ir_quirks = {
++	.has_reset = true,
++	.fifo_size = 64,
 +};
 +
- &r_rsb {
- 	status = "okay";
- 
+ static const struct of_device_id sunxi_ir_match[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-ir",
+@@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] = {
+ 		.compatible = "allwinner,sun5i-a13-ir",
+ 		.data = &sun5i_a13_ir_quirks,
+ 	},
++	{
++		.compatible = "allwinner,sun6i-a31-ir",
++		.data = &sun6i_a31_ir_quirks,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_ir_match);
 -- 
 2.20.1
 
