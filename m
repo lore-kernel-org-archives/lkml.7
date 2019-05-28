@@ -2,133 +2,78 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63328C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5F2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4490621726
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241F2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfE1JKL (ORCPT
+        id S1726830AbfE1JLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:10:11 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:45861 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfE1JKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:10:09 -0400
-Received: from [IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13] ([IPv6:2001:983:e9a7:1:10b2:2e62:e4b1:bd13])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VY7Shh4qrsDWyVY7ThcOs5; Tue, 28 May 2019 11:10:07 +0200
-Subject: Re: [RFCv1 07/12] media: mtk-vcodec: abstract firmware interface
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190528055635.12109-1-acourbot@chromium.org>
- <20190528055635.12109-8-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1bfc3919-d0a4-c156-a23d-694d3ba65671@xs4all.nl>
-Date:   Tue, 28 May 2019 11:10:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 05:11:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17596 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbfE1JLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:11:14 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5831C91C97D14D4ADA04;
+        Tue, 28 May 2019 17:11:12 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 17:11:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>,
+        <mcoquelin.stm32@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: stmmac: Fix build error without CONFIG_INET
+Date:   Tue, 28 May 2019 17:10:40 +0800
+Message-ID: <20190528091040.20288-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190528055635.12109-8-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNkRnE/7I0BZw7uSTLp8FZTB9WWwwbpb2C4XssM5KjCBgwwV3fr9sMUhp31q/0UPOS5H9lvdRyki0rMBg95fR8fkQ4vo31dEC9c528yzxWShvwhRtXBV
- p90HGPEnXP+gFOOWrWShlhC59D4c6Ooujuzz263ol0T+hwnBTUkkkBxu6IhG6z/FGshx+8bSXq9aariXYOjknSGbBtXuhZTcRMyx7GqAWl5JH5ygt1jmRMSY
- R3GlPYLWhJGju1U9SWvbzA/pVTjZnoCQ5MiMfzBjzzKr2RQ/ZJJPiE5T6npnejVic/c7HCYb2FmwiYSMmiD69sKdcLTGW7pIODqFh0VlLb+eRUcYUIbyxO9H
- fuker8EHSkwLJs2VuDwQX1QouKrDzqEHu2wQIvdfPxDiCyRN3b4VMdz974cZ0a17vkM4RfD53JFHh3zlPd0G/+ThLZbuapUcIN8bPhryGuMedHAHPeifvvyr
- Mp9Nnqj7FlDwopYULu6qipUY0TZV2qxkPfkAfz5K4FjstddUmZmmXbhJq6hvqSxX+V9DC5ut7nDDE+as
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 7:56 AM, Alexandre Courbot wrote:
-> From: Yunfei Dong <yunfei.dong@mediatek.com>
-> 
-> MT8183's codec firwmare is run by a different remote processor from
-> MT8173. While the firmware interface is basically the same, the way to
-> invoke it differs. Abstract all firmware calls under a layer that will
-> allow us to handle both firmware types transparently.
-> 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> [acourbot: refactor, cleanup and split]
-> ---
->  drivers/media/platform/mtk-vcodec/Makefile    |   4 +-
->  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  47 ++----
->  .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
->  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |   5 +-
->  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  46 ++---
->  .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 157 ++++++++++++++++++
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  36 ++++
->  .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   1 -
->  .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
->  .../media/platform/mtk-vcodec/vdec_drv_if.c   |   1 -
->  .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  10 +-
->  .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  11 +-
->  .../platform/mtk-vcodec/venc/venc_h264_if.c   |  15 +-
->  .../platform/mtk-vcodec/venc/venc_vp8_if.c    |   8 +-
->  .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
->  .../media/platform/mtk-vcodec/venc_vpu_if.c   |  15 +-
->  .../media/platform/mtk-vcodec/venc_vpu_if.h   |   5 +-
->  21 files changed, 270 insertions(+), 100 deletions(-)
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-> 
+Fix gcc build error while CONFIG_INET is not set
 
-<snip>
+drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.o: In function `__stmmac_test_loopback':
+stmmac_selftests.c:(.text+0x8ec): undefined reference to `ip_send_check'
+stmmac_selftests.c:(.text+0xacc): undefined reference to `udp4_hwcsum'
 
-> +EXPORT_SYMBOL(mtk_vcodec_fw_select);
-> +
-> +int mtk_vcodec_fw_load_firmware(struct mtk_vcodec_fw *fw)
-> +{
-> +	return fw->ops->load_firmware(fw);
-> +}
-> +EXPORT_SYMBOL(mtk_vcodec_fw_load_firmware);
-> +
-> +unsigned int mtk_vcodec_fw_get_vdec_capa(struct mtk_vcodec_fw *fw)
-> +{
-> +	return fw->ops->get_vdec_capa(fw);
-> +}
-> +EXPORT_SYMBOL(mtk_vcodec_fw_get_vdec_capa);
-> +
-> +unsigned int mtk_vcodec_fw_get_venc_capa(struct mtk_vcodec_fw *fw)
-> +{
-> +	return fw->ops->get_venc_capa(fw);
-> +}
-> +EXPORT_SYMBOL(mtk_vcodec_fw_get_venc_capa);
-> +
-> +void *mtk_vcodec_fw_map_dm_addr(struct mtk_vcodec_fw *fw, u32 mem_addr)
-> +{
-> +	return fw->ops->map_dm_addr(fw, mem_addr);
-> +}
-> +EXPORT_SYMBOL(mtk_vcodec_fw_map_dm_addr);
-> +
-> +int mtk_vcodec_fw_ipi_register(struct mtk_vcodec_fw *fw, int id,
-> +	mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-> +{
-> +	return fw->ops->ipi_register(fw, id, handler, name, priv);
-> +}
-> +EXPORT_SYMBOL(mtk_vcodec_fw_ipi_register);
+Add CONFIG_INET dependency to fix this.
 
-I recommend using EXPORT_SYMBOL_GPL instead.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index 7791ad5..0b5c8d7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -15,6 +15,7 @@ if STMMAC_ETH
+ 
+ config STMMAC_SELFTESTS
+ 	bool "Support for STMMAC Selftests"
++	depends on INET
+ 	depends on STMMAC_ETH
+ 	default n
+ 	---help---
+-- 
+2.7.4
 
-	Hans
+
