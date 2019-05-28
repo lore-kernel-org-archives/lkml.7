@@ -2,147 +2,119 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1ADC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44BEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A39208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="F8AFn2T8"
+	by mail.kernel.org (Postfix) with ESMTP id B70C3208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfE1LQJ (ORCPT
+        id S1726732AbfE1LQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:16:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36275 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfE1LQI (ORCPT
+        Tue, 28 May 2019 07:16:34 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:36292 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfE1LQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:16:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s17so19774553wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 04:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m2nsIiu2xmXeWsYUgRHVpMlsXmoMPRxeUORAALMIKSI=;
-        b=F8AFn2T8q0YuEbe8O1YmusdB4KKX4+W7+bSwB31soLQqW7nM+xmlU7TAZMFkFdHJLB
-         Jy1WVb8qw8KkVqWiofCzb5Ey2TiQlhTVZFu8lRZeL0GtHBtn4yicUcWTdye2K+uayqkC
-         jqFubNh1Hl8MPRKXzBgIS8CoL7co65suY5UoU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m2nsIiu2xmXeWsYUgRHVpMlsXmoMPRxeUORAALMIKSI=;
-        b=NknNhEzlTG5TzQ6aMtQ8BlX0gE4hUZzqkk9vdZQZjuLrYkNlj+kQuvuPyGylFgOGXL
-         q+mGQupt5ACHyHsf0uW6ga/ij7z86u4u+4fBNZd6kdUJGGNgAyiwNkq4NSpJfuEAmEpK
-         qq/2A8h9k5YOnr8ksb6/Z3QWBdvonNKLT8OAweVMfWBQ9ujQI6oz5eZABhZD2CN0WmfR
-         NA9qNDjWGsWbR2/IimhV0c3WHGRKdCIvlyT2d1UhF99TPjQNeAkbBeOLtUUMe7jcy8oe
-         P6sK/kENkd0RoeOeumxh5jziNAiitfLcCsZFEEtdAz41jJTHz4iGGPPc/Tkp+nwmJME2
-         8x0w==
-X-Gm-Message-State: APjAAAXKSA4sJ0GcZ2A2mgIpHQjPYFMhUsAJ1OYuN3Z8fvjf7DtlZRwn
-        zInXQph7NFsSsDOGsPg0vaNCxQ==
-X-Google-Smtp-Source: APXvYqz5nIcFjokXYBk+792MqQz8LkCQtBXoFpS+E23Bk9wHZ1kkRwZndDs817gSoTcwICsJyRkaDQ==
-X-Received: by 2002:adf:9bd2:: with SMTP id e18mr27122695wrc.210.1559042166403;
-        Tue, 28 May 2019 04:16:06 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id h17sm16048029wrq.79.2019.05.28.04.16.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 04:16:05 -0700 (PDT)
-Date:   Tue, 28 May 2019 13:15:58 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, arnd@arndb.de,
-        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
-        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
-        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
-        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
-        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
-        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
-        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vgupta@synopsys.com,
-        gregkh@linuxfoundation.org, jhansen@vmware.com, vdasa@vmware.com,
-        aditr@vmware.com, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
-Message-ID: <20190528111558.GA9106@andrea>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
- <20190523083013.GA4616@andrea>
- <20190523101926.GA3370@lakrids.cambridge.arm.com>
- <20190524103731.GN2606@hirez.programming.kicks-ass.net>
- <20190524111807.GS2650@hirez.programming.kicks-ass.net>
- <20190524114220.GA4260@fuggles.cambridge.arm.com>
- <20190524115231.GN2623@hirez.programming.kicks-ass.net>
- <20190524224340.GA3792@andrea>
- <20190528104719.GN2623@hirez.programming.kicks-ass.net>
+        Tue, 28 May 2019 07:16:33 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hVa5a-0003j5-P3; Tue, 28 May 2019 07:16:26 -0400
+Date:   Tue, 28 May 2019 07:15:50 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190528111550.GA4658@hmswarspite.think-freely.org>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528104719.GN2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190528013600.GM5506@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:47:19PM +0200, Peter Zijlstra wrote:
-> On Sat, May 25, 2019 at 12:43:40AM +0200, Andrea Parri wrote:
-> > > ---
-> > > Subject: Documentation/atomic_t.txt: Clarify pure non-rmw usage
-> > > 
-> > > Clarify that pure non-RMW usage of atomic_t is pointless, there is
-> > > nothing 'magical' about atomic_set() / atomic_read().
-> > > 
-> > > This is something that seems to confuse people, because I happen upon it
-> > > semi-regularly.
-> > > 
-> > > Acked-by: Will Deacon <will.deacon@arm.com>
-> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  Documentation/atomic_t.txt | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-> > > index dca3fb0554db..89eae7f6b360 100644
-> > > --- a/Documentation/atomic_t.txt
-> > > +++ b/Documentation/atomic_t.txt
-> > > @@ -81,9 +81,11 @@ SEMANTICS
-> > >  
-> > >  The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
-> > >  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
-> > > -smp_store_release() respectively.
-> > > +smp_store_release() respectively. Therefore, if you find yourself only using
-> > > +the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
-> > > +and are doing it wrong.
+On Mon, May 27, 2019 at 10:36:00PM -0300, Marcelo Ricardo Leitner wrote:
+> On Mon, May 27, 2019 at 05:48:06PM -0700, syzbot wrote:
+> > Hello,
 > > 
-> > The counterargument (not so theoretic, just look around in the kernel!) is:
-> > we all 'forget' to use READ_ONCE() and WRITE_ONCE(), it should be difficult
-> > or more difficult to forget to use atomic_read() and atomic_set()...   IAC,
-> > I wouldn't call any of them 'wrong'.
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    9c7db500 Merge tag 'selinux-pr-20190521' of git://git.kern..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10388530a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=f7e9153b037eac9b1df8
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e32f8ca00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177fa530a00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com
+> > 
+> >  0 to HW filter on device batadv0
+> > executing program
+> > executing program
+> > executing program
+> > BUG: memory leak
+> > unreferenced object 0xffff88810ef68400 (size 1024):
+> >   comm "syz-executor273", pid 7046, jiffies 4294945598 (age 28.770s)
+> >   hex dump (first 32 bytes):
+> >     1d de 28 8d de 0b 1b e3 b5 c2 f9 68 fd 1a 97 25  ..(........h...%
+> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace:
+> >     [<00000000a02cebbd>] kmemleak_alloc_recursive
+> > include/linux/kmemleak.h:55 [inline]
+> >     [<00000000a02cebbd>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> >     [<00000000a02cebbd>] slab_alloc mm/slab.c:3326 [inline]
+> >     [<00000000a02cebbd>] __do_kmalloc mm/slab.c:3658 [inline]
+> >     [<00000000a02cebbd>] __kmalloc_track_caller+0x15d/0x2c0 mm/slab.c:3675
+> >     [<000000009e6245e6>] kmemdup+0x27/0x60 mm/util.c:119
+> >     [<00000000dfdc5d2d>] kmemdup include/linux/string.h:432 [inline]
+> >     [<00000000dfdc5d2d>] sctp_process_init+0xa7e/0xc20
+> > net/sctp/sm_make_chunk.c:2437
+> >     [<00000000b58b62f8>] sctp_cmd_process_init net/sctp/sm_sideeffect.c:682
+> > [inline]
+> >     [<00000000b58b62f8>] sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1384
+> > [inline]
+> >     [<00000000b58b62f8>] sctp_side_effects net/sctp/sm_sideeffect.c:1194
+> > [inline]
+> >     [<00000000b58b62f8>] sctp_do_sm+0xbdc/0x1d60
+> > net/sctp/sm_sideeffect.c:1165
 > 
-> I'm thinking you mean that the type system isn't helping us with
-> READ/WRITE_ONCE() like it does with atomic_t ?
-
-Yep.
-
-
-> And while I agree that
-> there is room for improvement there, that doesn't mean we should start
-> using atomic*_t all over the place for that.
-
-Agreed.  But this still doesn't explain that "and are doing it wrong",
-AFAICT; maybe just remove that part?
-
-  Andrea
-
-
+> Note that this is on the client side. It was handling the INIT_ACK
+> chunk, from sctp_sf_do_5_1C_ack().
 > 
-> Part of the problem with READ/WRITE_ONCE() is that it serves a dual
-> purpose; we've tried to untangle that at some point, but Linus wasn't
-> having it.
+> I'm not seeing anything else other than sctp_association_free()
+> releasing this memory. This means 2 things:
+> - Every time the cookie is retransmitted, it leaks. As shown by the
+>   repetitive leaks here.
+> - The cookie remains allocated throughout the association, which is
+>   also not good as that's a 1k that we could have released back to the
+>   system right after the handshake.
+> 
+>   Marcelo
+> 
+If we have an INIT chunk bundled with a COOKIE_ECHO chunk in the same packet,
+this might occur.  Processing for each chunk (via sctp_cmd_process_init and
+sctp_sf_do_5_1D_ce both call sctp_process_init, which would cause a second write
+to asoc->peer.cookie, leaving the first write (set via kmemdup), to be orphaned
+and leak.  Seems like we should set a flag to determine if we've already cloned
+the cookie, and free the old one if its set.  If we wanted to do that on the
+cheap, we might be able to get away with checking asoc->stream->[in|out]cnt for
+being non-zero as an indicator if we've already cloned the cookie
+
+Neil
+
