@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3EDC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B30DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD65208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CDF2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfE1Jla (ORCPT
+        id S1726680AbfE1Jle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:41:30 -0400
+        Tue, 28 May 2019 05:41:34 -0400
 Received: from mga03.intel.com ([134.134.136.65]:8912 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfE1Jla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:41:30 -0400
+        id S1726203AbfE1Jlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:41:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 02:41:29 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 02:41:31 -0700
 X-ExtLoop1: 1
 Received: from ideak-desk.fi.intel.com ([10.237.72.204])
-  by orsmga003.jf.intel.com with ESMTP; 28 May 2019 02:41:27 -0700
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2019 02:41:29 -0700
 From:   Imre Deak <imre.deak@intel.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
@@ -33,10 +33,12 @@ Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v3 1/2] lockdep: Fix OOO unlock when hlocks need merging
-Date:   Tue, 28 May 2019 12:40:50 +0300
-Message-Id: <20190528094051.22840-1-imre.deak@intel.com>
+Subject: [PATCH v3 2/2] lockdep: Fix merging of hlocks with non-zero references
+Date:   Tue, 28 May 2019 12:40:51 +0300
+Message-Id: <20190528094051.22840-2-imre.deak@intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528094051.22840-1-imre.deak@intel.com>
+References: <20190528094051.22840-1-imre.deak@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,13 +54,14 @@ The sequence
 	struct ww_acquire_ctx ww_ctx;
 	struct ww_mutex ww_lock_a;
 	struct ww_mutex ww_lock_b;
+	struct ww_mutex ww_lock_c;
 	struct mutex lock_c;
-	struct mutex lock_d;
 
 	ww_acquire_init(&ww_ctx, &test_ww_class);
 
 	ww_mutex_init(&ww_lock_a, &test_ww_class);
 	ww_mutex_init(&ww_lock_b, &test_ww_class);
+	ww_mutex_init(&ww_lock_c, &test_ww_class);
 
 	mutex_init(&lock_c);
 
@@ -67,63 +70,33 @@ The sequence
 	mutex_lock(&lock_c);
 
 	ww_mutex_lock(&ww_lock_b, &ww_ctx);
+	ww_mutex_lock(&ww_lock_c, &ww_ctx);
 
-	mutex_unlock(&lock_c);		(*)
+	mutex_unlock(&lock_c);	(*)
 
+	ww_mutex_unlock(&ww_lock_c);
 	ww_mutex_unlock(&ww_lock_b);
 	ww_mutex_unlock(&ww_lock_a);
 
-	ww_acquire_fini(&ww_ctx);
+	ww_acquire_fini(&ww_ctx); (**)
 
-triggers the following WARN in __lock_release() when doing the unlock at *:
+will trigger the following error in __lock_release() when calling
+mutex_release() at **:
 
-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
+	DEBUG_LOCKS_WARN_ON(depth <= 0)
 
-The problem is that the WARN check doesn't take into account the merging
-of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
-by 2 not only 1.
+The problem is that the hlock merging happening at * updates the
+references for test_ww_class incorrectly to 3 whereas it should've
+updated it to 4 (representing all the instances for ww_ctx and
+ww_lock_[abc]).
 
-Note that the following sequence doesn't trigger the WARN, since there
-won't be any hlock merging.
+Fix this by updating the references during merging correctly taking into
+account that we can have non-zero references (both for the hlock that we
+merge into another hlock or for the hlock we are merging into).
 
-	ww_acquire_init(&ww_ctx, &test_ww_class);
-
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-
-	mutex_init(&lock_c);
-	mutex_init(&lock_d);
-
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
-
-	mutex_lock(&lock_c);
-	mutex_lock(&lock_d);
-
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
-
-	mutex_unlock(&lock_d);
-
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	mutex_unlock(&lock_c);
-
-	ww_acquire_fini(&ww_ctx);
-
-In general both of the above two sequences are valid and shouldn't
-trigger any lockdep warning.
-
-Fix this by taking the decrement due to the hlock merging into account
-during lock release and hlock class re-setting. Merging can't happen
-during lock downgrading since there won't be a new possibility to merge
-hlocks in that case, so add a WARN if merging still happens then.
-
-v2:
-- Clarify the commit log and use mutex_lock() instead of mutex_trylock()
-  in the example sequences for simplicity.
-v3: (Peter)
-- Sanitize counting the merge in reacquire_held_locks().
-- Optimize calculating the new expected lockdep depth in __lock_release().
+v2: (Peter)
+- Rebase on latest upstream tree.
+- Sanitize overflow check and hlock_references() helper.
 
 Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -131,146 +104,50 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Imre Deak <imre.deak@intel.com>
 ---
- kernel/locking/lockdep.c | 41 ++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+ kernel/locking/lockdep.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c47788fa85f9..7a48649ce6bc 100644
+index 7a48649ce6bc..1aa6dff3c12c 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -3715,7 +3715,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 				hlock->references = 2;
- 			}
+@@ -3638,6 +3638,11 @@ print_lock_nested_lock_not_held(struct task_struct *curr,
  
--			return 1;
-+			return 2;
+ static int __lock_is_held(const struct lockdep_map *lock, int read);
+ 
++static inline int hlock_references(struct held_lock *hlock)
++{
++	return hlock->references ? : 1;
++}
++
+ /*
+  * This gets called for every mutex_lock*()/spin_lock*() operation.
+  * We maintain the dependency maps and validate the locking attempt:
+@@ -3703,17 +3708,14 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	if (depth) {
+ 		hlock = curr->held_locks + depth - 1;
+ 		if (hlock->class_idx == class_idx && nest_lock) {
+-			if (hlock->references) {
+-				/*
+-				 * Check: unsigned int references:12, overflow.
+-				 */
+-				if (DEBUG_LOCKS_WARN_ON(hlock->references == (1 << 12)-1))
+-					return 0;
++			if (!references)
++				references++;
+ 
+-				hlock->references++;
+-			} else {
+-				hlock->references = 2;
+-			}
++			hlock->references = hlock_references(hlock) + references;
++
++			/* Overflow */
++			if (DEBUG_LOCKS_WARN_ON(hlock->references < references))
++				return 0;
+ 
+ 			return 2;
  		}
- 	}
- 
-@@ -3921,22 +3921,33 @@ static struct held_lock *find_held_lock(struct task_struct *curr,
- }
- 
- static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
--			      int idx)
-+				int idx, unsigned int *merged)
- {
- 	struct held_lock *hlock;
-+	int first_idx = idx;
- 
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return 0;
- 
- 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
--		if (!__lock_acquire(hlock->instance,
-+		switch (__lock_acquire(hlock->instance,
- 				    hlock_class(hlock)->subclass,
- 				    hlock->trylock,
- 				    hlock->read, hlock->check,
- 				    hlock->hardirqs_off,
- 				    hlock->nest_lock, hlock->acquire_ip,
--				    hlock->references, hlock->pin_count))
-+				    hlock->references, hlock->pin_count)) {
-+		case 0:
- 			return 1;
-+		case 1:
-+			break;
-+		case 2:
-+			*merged += (idx == first_idx);
-+			break;
-+		default:
-+			WARN_ON(1);
-+			return 0;
-+		}
- 	}
- 	return 0;
- }
-@@ -3947,9 +3958,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 		 unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
- 	struct lock_class *class;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -3974,14 +3985,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	curr->lockdep_depth = i;
- 	curr->curr_chain_key = hlock->prev_chain_key;
- 
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
- 		return 0;
- 
- 	/*
- 	 * I took it apart and put it back together again, except now I have
- 	 * these 'spare' parts.. where shall I put them.
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
-+	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
- 		return 0;
- 	return 1;
- }
-@@ -3989,8 +4000,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4015,7 +4026,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	hlock->read = 1;
- 	hlock->acquire_ip = ip;
- 
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
- 		return 0;
- 
- 	/*
-@@ -4024,6 +4035,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	 */
- 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
- 		return 0;
-+
-+	/* Merging can't happen with unchanged classes.. */
-+	if (DEBUG_LOCKS_WARN_ON(merged))
-+		return 0;
-+
- 	return 1;
- }
- 
-@@ -4038,8 +4054,8 @@ static int
- __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 1;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4094,14 +4110,15 @@ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
- 	if (i == depth-1)
- 		return 1;
- 
--	if (reacquire_held_locks(curr, depth, i + 1))
-+	if (reacquire_held_locks(curr, depth, i + 1, &merged))
- 		return 0;
- 
- 	/*
- 	 * We had N bottles of beer on the wall, we drank one, but now
- 	 * there's not N-1 bottles of beer left on the wall...
-+	 * Pouring two of the bottles together is acceptable.
- 	 */
--	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
-+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
- 
- 	/*
- 	 * Since reacquire_held_locks() would have called check_chain_key()
 -- 
 2.17.1
 
