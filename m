@@ -2,190 +2,229 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6683DC072B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ED0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F266208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="NXTtRR1J"
+	by mail.kernel.org (Postfix) with ESMTP id 9BD5F20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 21:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559078283;
+	bh=RQt0MYcsrj2YfAfufPagBuTAramftdXvJORm2piEfFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uH0f//b8hFF0fvXBIFeKnrGcex/q5nBdm1Lkto6zLDCvG+P5y81Vd21FuVBpujc5Z
+	 e3QpM6qaU4/Uwk3qK2xquW3bWn0LUTayKbh86Fphq29KnZcQCKbTjace2G9/S/HuzC
+	 Q6aj8qZYKv/VYm2QxupYzj+sZZOTfXSxQ3KDqVhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfE1VDr (ORCPT
+        id S1727788AbfE1VSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 17:03:47 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46805 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfE1VDr (ORCPT
+        Tue, 28 May 2019 17:18:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43090 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfE1VSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 17:03:47 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 01C578365B;
-        Wed, 29 May 2019 09:03:44 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1559077424;
-        bh=BZgZexAXkcPYJD9GhZcA3o/SL2VlASk3bQpDXjxBQxM=;
-        h=From:To:CC:Subject:Date:References;
-        b=NXTtRR1JVyI8wPURXD7U6DkBrAPR80AFA8w0ZBlJyHd8cvYxgp190YW5Q0rFlBn1c
-         djnuWQTqJjX1DnVmPsIYkuVk4KtJ0H+KIFiyADjAMaOPHTolvjV29RHg8jptPl1nKT
-         9L4szYfQksdfHYo4vS2LvIfDbZXFFJiGRuWx/0FYm9qAxfRVBEKuuPjg4y6os3iMG5
-         HBmtWYHVqIKLlssE6nbAA+PrW6gyQQ4nXhatdTYCIjw0Tg++IcHjjQh3QeFTAgfqwv
-         xGK1GroXHk7A61FSMJRn64lyP9VyoVQY2QVUXt9QCPuwqllw/5iWhvoGUd56FsCiaD
-         xhfiebtgU77tA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ceda22e0000>; Wed, 29 May 2019 09:03:42 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Wed, 29 May 2019 09:03:38 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 29 May 2019 09:03:38 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Paul Burton <paul.burton@mips.com>
-CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: MIPS r4k cache operations with SMP enabled
-Thread-Topic: MIPS r4k cache operations with SMP enabled
-Thread-Index: AQHVFQB0Z16/xM5TvUKYi9+2ojSGNw==
-Date:   Tue, 28 May 2019 21:03:38 +0000
-Message-ID: <c47924cbaf94448691cdd2503ecbf5ad@svr-chch-ex1.atlnz.lc>
-References: <d87063da1d104af8a040f5f25a588638@svr-chch-ex1.atlnz.lc>
- <1109cb84e36e483fb22c30a60ab4a6ff@svr-chch-ex1.atlnz.lc>
- <20190528210109.npyv64vdcfvy5owk@pburton-laptop>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 May 2019 17:18:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l17so136110wrm.10;
+        Tue, 28 May 2019 14:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nu2PBKefTEboHZyJFL1DxHjrLJAMe2LcS2THvq8WhzQ=;
+        b=hdjlynKmqUm+SqG9JFIsYLM/n5qM0mUyIyuIKpKaXSAkn153UojXr9IJgDEDlc9yxG
+         SDvqtBGona3FGqktVDhTW3nBhJXipHPDQn3zltCVC7w6HZEfvUcgTRNuaJYIa1WEOTxS
+         +t1A4c7YHVsBK4BQC6StDnMQ0Jb65WnyNHJfPqX5t+hMJ52jHd7Za69c/KrAbiMF3AkM
+         UYcYYBTEOObmulDrUe+pPTaFLVULTRsvPLlr8p1muj+WLtkm/o7DwAT/w5pWEwZOlZIY
+         pP536JzuH8mpDHfAfQ0LksoepgyLreHiorRiae5djSDRXVJZAwNEcZgekv+N1qjtd/ph
+         S2Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nu2PBKefTEboHZyJFL1DxHjrLJAMe2LcS2THvq8WhzQ=;
+        b=Bj4UcBpaG/HjMu3O1ucldlNMzhbFEB/aMXFw0/SoO148dN0VZXrcLVa6dbaCVs8Uym
+         XVMz8HfAjwfzUm2hGhBDs02Rr/QM4OHO/QKnIlahwwL5Mn6Lf7SSUo4iweyum5mBvuFp
+         cE31KF1cUVOueHxRcX0r+ls/+ypv8G8nsBa5vtcoIxjdEN/A/34wgr3cTFdK+3uc4Q2X
+         f+90Pe5iXX0YuIPROhWVeOxeyPnBFxEHy4wD0cGuYnct+Kjzcz+uzJJXdMYSu251d7he
+         t73sJViUCDSr5fLZIjQr7tw+T97DmLylmuh0BYXVq/IU4/liMThn5pOectgQ5jVq4UVh
+         +GIQ==
+X-Gm-Message-State: APjAAAXJT45p7yAQunOh3AypiWUIhtpfi9wmu7QWvCBAgy0X+mzHD0V5
+        AJdTiDOMhec1lwCFgrkFoMM=
+X-Google-Smtp-Source: APXvYqxUxZU4kA00IKfLx5MY1h+s6YnIZpCBe6ZHxtqGTCHYzf3BnK2ViMai0fAjLAhDPAl9F8z1XA==
+X-Received: by 2002:a5d:4104:: with SMTP id l4mr2398171wrp.302.1559078279600;
+        Tue, 28 May 2019 14:17:59 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id b5sm244623wrx.22.2019.05.28.14.17.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 14:17:58 -0700 (PDT)
+Date:   Tue, 28 May 2019 23:17:56 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Michael Petlan <mpetlan@redhat.com>,
+        Shawn Landden <shawn@git.icu>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Vitaly Chikunov <vt@altlinux.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/urgent fixes for 5.2
+Message-ID: <20190528211756.GA46600@gmail.com>
+References: <20190528175020.13343-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528175020.13343-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,=0A=
-=0A=
-On 29/05/19 9:01 AM, Paul Burton wrote:=0A=
-> Hi Chris,=0A=
-> =0A=
-> On Tue, May 28, 2019 at 05:19:37AM +0000, Chris Packham wrote:=0A=
->> On 28/05/19 2:52 PM, Chris Packham wrote:=0A=
->>> Hi,=0A=
->>>=0A=
->>> I'm trying to port a fairly old Broadcom integrated chip (BCM6818) to=
-=0A=
->>> the latest Linux kernel using the mips/bmips support.=0A=
->>>=0A=
->>> The chip has a BMIPS4355 core. This has two "thread processors" (cpu=0A=
->>> cores) with separate I-caches but a shared D-cache.=0A=
->>>=0A=
->>> I've got things booting but I encounter the following BUG()=0A=
->>>=0A=
->>> BUG: using smp_processor_id() in preemptible [00000000] code: swapper/0=
-/1=0A=
->>> caller is blast_dcache16+0x24/0x154=0A=
->>> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-at1 #5=0A=
->>> Stack : 00000036 8008d0d0 806a0000 807c0000 80754e10 0000000b 80754684=
-=0A=
->>> 8f831c8c=0A=
->>>            80900000 8f828424 807986e7 8071348c 00000000 10008f00 8f831c=
-30=0A=
->>> 7fb69e2a=0A=
->>>            00000000 00000000 80920000 00000056 00002335 00000000 807a00=
-00=0A=
->>> 00000000=0A=
->>>            6d6d3a20 00000000 00000056 73776170 00000000 ffffffff 10008f=
-01=0A=
->>> 807c0000=0A=
->>>            80790000 00002cc2 ffffffff 80900000 00000010 8f83198c 000000=
-00=0A=
->>> 80900000=0A=
->>>            ...=0A=
->>> Call Trace:=0A=
->>> [<8001c208>] show_stack+0x30/0x100=0A=
->>> [<8063282c>] dump_stack+0x9c/0xd0=0A=
->>> [<802f1cec>] debug_smp_processor_id+0xfc/0x110=0A=
->>> [<8002e274>] blast_dcache16+0x24/0x154=0A=
->>> [<80122978>] map_vm_area+0x58/0x70=0A=
->>> [<80123888>] __vmalloc_node_range+0x1fc/0x2b4=0A=
->>> [<80123b54>] vmalloc+0x44/0x50=0A=
->>> [<807d15d0>] jffs2_zlib_init+0x24/0x94=0A=
->>> [<807d1354>] jffs2_compressors_init+0x10/0x30=0A=
->>> [<807d151c>] init_jffs2_fs+0x68/0xf8=0A=
->>> [<8001016c>] do_one_initcall+0x7c/0x1f0=0A=
->>> [<807bee30>] kernel_init_freeable+0x17c/0x258=0A=
->>> [<80650d1c>] kernel_init+0x10/0xf8=0A=
->>> [<80015e6c>] ret_from_kernel_thread+0x14/0x1c=0A=
->>>=0A=
->>> In blast_dcache16 current_cpu_data is used which invokes=0A=
->>> smp_processor_id() triggering the BUG(). I can fix this by sprinkling=
-=0A=
->>> preempt_disable/preempt_enable through arch/mips/mm/c-r4k.c but that=0A=
->>> seems kind of wrong. Does anyone have any suggestion as to the right wa=
-y=0A=
->>> to avoid this BUG()?=0A=
-> =0A=
-> Ah, cache aliasing, will it ever cease to provide suprises? :)=0A=
-> =0A=
->> I think the following might do the trick=0A=
->>=0A=
->> ---- 8< ----=0A=
->> diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c=0A=
->> index 5166e38cd1c6..1fa7f093b59c 100644=0A=
->> --- a/arch/mips/mm/c-r4k.c=0A=
->> +++ b/arch/mips/mm/c-r4k.c=0A=
->> @@ -559,14 +559,19 @@ static inline int has_valid_asid(const struct=0A=
->> mm_struct *mm, unsigned int type)=0A=
->>           return 0;=0A=
->>    }=0A=
->>=0A=
->> -static void r4k__flush_cache_vmap(void)=0A=
->> +static inline void local_r4k_flush_cache(void *args)=0A=
->>    {=0A=
->>           r4k_blast_dcache();=0A=
->>    }=0A=
->>=0A=
->> +void r4k__flush_cache_vmap(void)=0A=
->> +{=0A=
->> +       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
->> +}=0A=
->> +=0A=
->>    static void r4k__flush_cache_vunmap(void)=0A=
->>    {=0A=
->> -       r4k_blast_dcache();=0A=
->> +       r4k_on_each_cpu(R4K_INDEX, local_r4k_flush_cache, NULL);=0A=
->>    }=0A=
->>=0A=
->>    /*=0A=
->> @@ -1758,6 +1763,43 @@ static int __init cca_setup(char *str)=0A=
->>           return 0;=0A=
->>    }=0A=
->> ---- 8< ----=0A=
->>=0A=
->> The rest of the call sites for r4k_blast_dcache() already run with=0A=
->> preemption disabled.=0A=
-> =0A=
-> That looks reasonable, but I'm wondering why these are separate to our=0A=
-> implementation of flush_kernel_vmap_range(). The latter already handles=
-=0A=
-> SMP & avoids flushing the whole dcache(s) when the area to flush is=0A=
-> smaller than the cache.=0A=
-> =0A=
-> Would it work to just redefine flush_cache_vmap() & flush_cache_vunmap()=
-=0A=
-> as calls to flush_kernel_vmap_range?=0A=
-> =0A=
-=0A=
-I imagine it would. I'll give it a try and send a proper patch if it's =0A=
-successful.=0A=
+
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo,
+> 
+> 	Please consider pulling, that is a trimmed down set from
+> yesterday's pull req, with just fixes.
+> 
+> 	The other stuff, mostly acting on the warnings for the UAPI
+> changes are being packaged into a perf/core pull request I'll send for
+> 5.3.
+> 
+> 	I had it mostly done earlier, but then I noticed the fix for
+> the syscall numbers, and backtracked to avoid sending yet another pull
+> req, got too late in the -rc game, so 5.3 they go.
+> 
+> 	I'm not reposting them, the only change was adding an Acked-by
+> for one of the UAPI syncs, the drm.h one.
+> 
+>         I did all the tests again, find them below, after the new signed
+> tag.
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 5bdd9ad875b6edf213f54ec3986ed9e8640c5cf9:
+> 
+>   Merge tag 'kbuild-fixes-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild (2019-05-20 17:22:17 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.2-20190528
+> 
+> for you to fetch changes up to a7350998a25ac10cdca5b33dee1d343a74debbfe:
+> 
+>   tools headers UAPI: Sync kvm.h headers with the kernel sources (2019-05-28 09:52:23 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> BPF:
+> 
+>   Jiri Olsa:
+> 
+>   - Fixup determination of end of kernel map, to avoid having BPF programs,
+>     that are after the kernel headers and just before module texts mixed up in
+>     the kernel map.
+> 
+> tools UAPI header copies:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Update copy of files related to new fspick, fsmount, fsconfig, fsopen,
+>     move_mount and open_tree syscalls.
+> 
+>   - Sync cpufeatures.h, sched.h, fs.h, drm.h, i915_drm.h and kvm.h headers.
+> 
+> Namespaces:
+> 
+>   Namhyung Kim:
+> 
+>   - Add missing byte swap ops for namespace events when processing records from
+>     perf.data files that could have been recorded in a arch with a different
+>     endianness.
+> 
+>   - Fix access to the thread namespaces list by using the namespaces_lock.
+> 
+> perf data:
+> 
+>   Shawn Landden:
+> 
+>   - Fix 'strncat may truncate' build failure with recent gcc.
+> 
+> s/390
+> 
+>   Thomas Richter:
+> 
+>   - Fix s390 missing module symbol and warning for non-root users in 'perf record'.
+> 
+> arm64:
+> 
+>   Vitaly Chikunov:
+> 
+>   - Fix mksyscalltbl when system kernel headers are ahead of the kernel.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (8):
+>       tools include UAPI: Update copy of files related to new fspick, fsmount, fsconfig, fsopen, move_mount and open_tree syscalls
+>       tools arch x86: Sync asm/cpufeatures.h with the with the kernel
+>       tools headers UAPI: Sync linux/sched.h with the kernel
+>       tools headers UAPI: Sync linux/fs.h with the kernel
+>       tools headers UAPI: Sync drm/i915_drm.h with the kernel
+>       tools headers UAPI: Sync drm/drm.h with the kernel
+>       perf test vmlinux-kallsyms: Ignore aliases to _etext when searching on kallsyms
+>       tools headers UAPI: Sync kvm.h headers with the kernel sources
+> 
+> Jiri Olsa (1):
+>       perf machine: Read also the end of the kernel
+> 
+> Namhyung Kim (2):
+>       perf namespace: Protect reading thread's namespace
+>       perf session: Add missing swap ops for namespace events
+> 
+> Shawn Landden (1):
+>       perf data: Fix 'strncat may truncate' build failure with recent gcc
+> 
+> Thomas Richter (1):
+>       perf record: Fix s390 missing module symbol and warning for non-root users
+> 
+> Vitaly Chikunov (1):
+>       perf arm64: Fix mksyscalltbl when system kernel headers are ahead of the kernel
+> 
+>  tools/arch/arm64/include/uapi/asm/kvm.h           |  43 ++++
+>  tools/arch/powerpc/include/uapi/asm/kvm.h         |  46 ++++
+>  tools/arch/s390/include/uapi/asm/kvm.h            |   4 +-
+>  tools/arch/x86/include/asm/cpufeatures.h          |   3 +
+>  tools/include/uapi/asm-generic/unistd.h           |  14 +-
+>  tools/include/uapi/drm/drm.h                      |  37 ++++
+>  tools/include/uapi/drm/i915_drm.h                 | 254 +++++++++++++++-------
+>  tools/include/uapi/linux/fcntl.h                  |   2 +
+>  tools/include/uapi/linux/fs.h                     |   3 +
+>  tools/include/uapi/linux/kvm.h                    |  15 +-
+>  tools/include/uapi/linux/mount.h                  |  62 ++++++
+>  tools/include/uapi/linux/sched.h                  |   1 +
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl |   2 +-
+>  tools/perf/arch/s390/util/machine.c               |   9 +-
+>  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl |   6 +
+>  tools/perf/tests/vmlinux-kallsyms.c               |   9 +-
+>  tools/perf/util/data-convert-bt.c                 |   2 +-
+>  tools/perf/util/machine.c                         |  27 ++-
+>  tools/perf/util/session.c                         |  21 ++
+>  tools/perf/util/thread.c                          |  15 +-
+>  20 files changed, 481 insertions(+), 94 deletions(-)
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
