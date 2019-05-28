@@ -2,98 +2,110 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7CDC04E84
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649D2C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE0320883
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369D920883
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 11:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VPQcS2VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfE1LKb (ORCPT
+        id S1726602AbfE1LMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 07:10:31 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36235 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfE1LKb (ORCPT
+        Tue, 28 May 2019 07:12:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53486 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1LMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 07:10:31 -0400
-X-Originating-IP: 90.89.68.76
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E67F8E0004;
-        Tue, 28 May 2019 11:10:24 +0000 (UTC)
-Date:   Tue, 28 May 2019 13:10:24 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 28 May 2019 07:12:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4SBBrF8071878;
+        Tue, 28 May 2019 06:11:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559041913;
+        bh=XbgikyC9otiR4YuTt/uxocCuXVecKc1fGa0PD78NL7o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VPQcS2VMgEKOda7JpQv+0emh77HzV9Whuj3flfgsA+DAQrZa01jON9U3tCmf2khOg
+         fuw5K1DoHnhNWdOzur4PZNOJX0q0cdLT/bK5zsw6KnctJ5aFcCtwqMPk6Qb1AC39zI
+         lI9LCTS6Hi/6C3uZNTUIZsvumuuOlaTDghM/tqgQ=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4SBBr2P112080
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 May 2019 06:11:53 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 28
+ May 2019 06:11:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 28 May 2019 06:11:52 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4SBBoLo088964;
+        Tue, 28 May 2019 06:11:50 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Adam Ford <aford173@gmail.com>, <linux-omap@vger.kernel.org>
+CC:     <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
-Message-ID: <20190528111024.gj25jh5vstizze74@flea>
-References: <20190527201459.20130-1-peron.clem@gmail.com>
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <af325707-3e42-493d-e858-77878ef06138@ti.com>
+Date:   Tue, 28 May 2019 14:11:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z7ek7mx2fjvua3lu"
-Content-Disposition: inline
-In-Reply-To: <20190527201459.20130-1-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190510194229.20628-1-aford173@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---z7ek7mx2fjvua3lu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/05/2019 22:42, Adam Ford wrote:
+> Currently the source code is compiled using hard-coded values
+> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+> clock divider value to be moved to the device tree and be changed
+> without having to recompile the kernel.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi,
->
-> This series has been first proposed by Jernej Skrabec[1].
-> As this series is mandatory for SPDIF/I2S support and because he is
-> busy on Cedrus stuff. I asked him to make the minor change requested
-> and repost it.
-> Authorship remains to him.
->
-> I have tested this series with SPDIF driver and added a patch to enable
-> DMA_SUN6I_CONFIG for arm64.
->
-> Original Post:
-> "
-> DMA engine engine on H6 almost the same as on older SoCs. The biggest
-> difference is that it has slightly rearranged bits in registers and
-> it needs additional clock, probably due to iommu.
->
-> These patches were tested with I2S connected to HDMI. I2S needs
-> additional patches which will be sent later.
+I understand why you want to do this, but I'm not sure it's a good idea. 
+It's really something the driver should figure out, and if we add it to 
+the DT, it effectively becomes an ABI.
 
-For the whole series,
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+That said... I'm not sure how good of a job the driver could ever do, as 
+it can't know the future scaling needs of the userspace at the time it 
+is configuring the clock. And so, I'm not nacking this patch, but I 
+don't feel very good about this patch...
 
-Maxime
+The setting also affects all outputs (exluding venc), which may not be 
+what the user wants. Then again, I think this setting is really only 
+needed on OMAP2 & 3, which have only a single output. But that's the 
+same with the current kconfig option, of course.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+So, the current CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK is an ugly hack, in my 
+opinion, and moving it to DT makes it a worse hack =). But I don't have 
+any good suggestions either.
 
---z7ek7mx2fjvua3lu
-Content-Type: application/pgp-signature; name="signature.asc"
+  Tomi
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO0XIAAKCRDj7w1vZxhR
-xVR3AP9YbutRsxD9Y3rwfBC3bguX4JoBWqgLPRSKHszeGDW36QEA+LVEhKb99jvN
-catOGhDyeFdJdmT6r7eRLjjtMuPzCg8=
-=pe/c
------END PGP SIGNATURE-----
-
---z7ek7mx2fjvua3lu--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
