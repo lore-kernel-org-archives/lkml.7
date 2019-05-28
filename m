@@ -2,149 +2,91 @@ Return-Path: <SRS0=K12x=T4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1A2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7967C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50B20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7xG41YY"
+	by mail.kernel.org (Postfix) with ESMTP id BCE722075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfE1Jtg (ORCPT
+        id S1726602AbfE1JuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:49:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33268 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfE1Jtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 05:49:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 66so17188067otq.0;
-        Tue, 28 May 2019 02:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KRi+/C+vm5cztpsXfUVeLkDOVPLB4aZqwygYNrBno1g=;
-        b=Q7xG41YYF2ZmuxUb2X+ltjAzjeK7pLMfwEBHv5e2w+/MmZh8X55fZsTHT9XwciLR/E
-         HuUQGjJdVYrVQVkKmY8LlYkvwBKwRNYDjTDClmfRqzoL4jelnRiuxN9nY1CE8DeXQjbm
-         uW/8GSxTyhDXHpg7QNQnWu+TRA69AeqJj3mOkdLzAnVLLY34nt8Mg9u+dSa/lGR0mmQ4
-         JccPa4WCrMn9BC8uWe+Ufn2UXLgq+ojI+X2vf7wEFZnM/T4hy5jvbyFK5zDSmHkFTTfN
-         pCgwp28ud4+Ut+QR/L2fuLRGXw+t5nbiVMf95C2wK8bIYx/jRFcU5iAPGuqOXpmI0DZs
-         PNfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KRi+/C+vm5cztpsXfUVeLkDOVPLB4aZqwygYNrBno1g=;
-        b=oPimW8BBAV6IalFCxN+/0bcPyNQIqmoZC/QyPGdOR2BnS3NwaN/lcR36IYIrd1dHQ3
-         D9ypzcfTY/jDF+SVLLYk/DD973fpmIxcan+K5TH7tNjm9tu3dG2Cd5pWxq0sz371Pdrc
-         70KjcAHrdeBStcz46Gql2Fph7NyNB128978JD4+7TlNoiE0MIj08smL4wdFU6vm7A442
-         bVHobaWKa9Dq/GS6UVen/W2FovJ6VCNlY40EtsjXEzPo1deXLpL4FVQTyZPmuR6DBj0n
-         Mrv4q/Ha4JV/1i2aGmtQHPTgDk83iv8OE4K5mpXLPe9u0z4v5Frrf7BoQrtAhy2GyRpP
-         QBFQ==
-X-Gm-Message-State: APjAAAUqP4bWJGRq0a/4OOC3XYivjlNwBmVn4+gbiXIcTbifwnslVt7P
-        esrNNybYA/MUltEBH8ExnSpKyazeEpB9CSQLg0g=
-X-Google-Smtp-Source: APXvYqycJLHbMUrxyQVmE6fOyNT7aMXGE36q+p+fIGphy4C5ccLTEuNFk0FznlB9kOMyYpFlF5BuYnw4Rhffeot+1ZY=
-X-Received: by 2002:a9d:5a11:: with SMTP id v17mr17618810oth.254.1559036975223;
- Tue, 28 May 2019 02:49:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20180130013919.GA19959@hori1.linux.bs1.fc.nec.co.jp>
- <1517284444-18149-1-git-send-email-n-horiguchi@ah.jp.nec.com>
- <87inbbjx2w.fsf@e105922-lin.cambridge.arm.com> <20180207011455.GA15214@hori1.linux.bs1.fc.nec.co.jp>
- <87fu6bfytm.fsf@e105922-lin.cambridge.arm.com> <20180208121749.0ac09af2b5a143106f339f55@linux-foundation.org>
- <87wozhvc49.fsf@concordia.ellerman.id.au> <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
-In-Reply-To: <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 28 May 2019 17:49:28 +0800
-Message-ID: <CANRm+CxAgWVv5aVzQ0wdP_A7QQgqfy7nN_SxyaactG7Mnqfr2A@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: hwpoison: disable memory error handling on 1GB hugepage
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Xiao Guangrong <xiaoguangrong@tencent.com>,
-        lidongchen@tencent.com, yongkaiwu@tencent.com
+        Tue, 28 May 2019 05:50:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53812 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726203AbfE1JuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 05:50:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 67666AF38;
+        Tue, 28 May 2019 09:50:17 +0000 (UTC)
+Message-ID: <1559037015.6521.3.camel@suse.de>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>,
+        Steven Honeyman <stevenhoneyman@gmail.com>,
+        Valdis Kletnieks <Valdis.Kletnieks@vt.edu>,
+        Jochen Eisinger <jochen@penguin-breeder.org>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mario Limonciello <Mario_Limonciello@dell.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Date:   Tue, 28 May 2019 11:50:15 +0200
+In-Reply-To: <20190528094132.ytsittb5hcgthoy2@pali>
+References: <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
+         <20180131120348.azy25aqvn5wrdkeh@pali>
+         <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+         <20180212153012.vffvjmz26ifyxbj5@pali>
+         <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+         <20180213150004.5d2v7y7wwuure4io@pali>
+         <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+         <20180213165023.xmzovx7fd3gdljxw@pali>
+         <20180226203255.lnnzipipjz5l2itz@ninjato>
+         <20190528111953.0e5415f4@endymion> <20190528094132.ytsittb5hcgthoy2@pali>
+Organization: Suse Linux
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc Paolo,
-Hi all,
-On Wed, 14 Feb 2018 at 06:34, Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 02/12/2018 06:48 PM, Michael Ellerman wrote:
-> > Andrew Morton <akpm@linux-foundation.org> writes:
-> >
-> >> On Thu, 08 Feb 2018 12:30:45 +0000 Punit Agrawal <punit.agrawal@arm.com> wrote:
-> >>
-> >>>>
-> >>>> So I don't think that the above test result means that errors are properly
-> >>>> handled, and the proposed patch should help for arm64.
-> >>>
-> >>> Although, the deviation of pud_huge() avoids a kernel crash the code
-> >>> would be easier to maintain and reason about if arm64 helpers are
-> >>> consistent with expectations by core code.
-> >>>
-> >>> I'll look to update the arm64 helpers once this patch gets merged. But
-> >>> it would be helpful if there was a clear expression of semantics for
-> >>> pud_huge() for various cases. Is there any version that can be used as
-> >>> reference?
-> >>
-> >> Is that an ack or tested-by?
-> >>
-> >> Mike keeps plaintively asking the powerpc developers to take a look,
-> >> but they remain steadfastly in hiding.
-> >
-> > Cc'ing linuxppc-dev is always a good idea :)
-> >
->
-> Thanks Michael,
->
-> I was mostly concerned about use cases for soft/hard offline of huge pages
-> larger than PMD_SIZE on powerpc.  I know that powerpc supports PGD_SIZE
-> huge pages, and soft/hard offline support was specifically added for this.
-> See, 94310cbcaa3c "mm/madvise: enable (soft|hard) offline of HugeTLB pages
-> at PGD level"
->
-> This patch will disable that functionality.  So, at a minimum this is a
-> 'heads up'.  If there are actual use cases that depend on this, then more
-> work/discussions will need to happen.  From the e-mail thread on PGD_SIZE
-> support, I can not tell if there is a real use case or this is just a
-> 'nice to have'.
+On Tue, 2019-05-28 at 11:41 +0200, Pali Rohár wrote:
+> This is not a problem. lis3lv02d provides two things:
+> 
+> 1) 3 axes accelerometer
+> 2) optional interrupt and signal it to userspace via misc device
+> 
+> dell-smo8800 does not call any parts of lis2lv02d module. It just
+> provides for userspace same misc device API as lis3lv02d.
+> 
+> As lis3lv02d has misc device optional, registered i2c device from
+> i2c-i801 does not enable it.
+> 
+> So technically it is one device, but their functionality divided into
+> two modules. One which reports accelerometer axes and one which signals
+> disk fall interrupt. These two modules and functionalities does not have
+> to interact, so it is safe to have them separated.
 
-1GB hugetlbfs pages are used by DPDK and VMs in cloud deployment, we
-encounter gup_pud_range() panic several times in product environment.
-Is there any plan to reenable and fix arch codes?
+OK, thanks for the explanation. But assuming that we now instantiate
+the lis2lv02d device from i2c-i801 for exactly all the same machines,
+can't we just *enable* the freefall misc device feature of lis2lv02d
+and kill the dell-smo8800 driver completely? Seems more simple to
+maintain going forward.
 
-In addition, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu.c#n3213
-The memory in guest can be 1GB/2MB/4K, though the host-backed memory
-are 1GB hugetlbfs pages, after above PUD panic is fixed,
-try_to_unmap() which is called in MCA recovery path will mark the PUD
-hwpoison entry. The guest will vmexit and retry endlessly when
-accessing any memory in the guest which is backed by this 1GB poisoned
-hugetlbfs page. We have a plan to split this 1GB hugetblfs page by 2MB
-hugetlbfs pages/4KB pages, maybe file remap to a virtual address range
-which is 2MB/4KB page granularity, also split the KVM MMU 1GB SPTE
-into 2MB/4KB and mark the offensive SPTE w/ a hwpoison flag, a sigbus
-will be delivered to VM at page fault next time for the offensive
-SPTE. Is this proposal acceptable?
-
-Regards,
-Wanpeng Li
+-- 
+Jean Delvare
+SUSE L3 Support
