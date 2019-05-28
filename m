@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A998C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2839BC072B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B6D208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0680F208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 28 May 2019 09:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727679AbfE1JFr (ORCPT
+        id S1727485AbfE1JFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 05:05:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17611 "EHLO huawei.com"
+        Tue, 28 May 2019 05:05:41 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17612 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727458AbfE1JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727461AbfE1JEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 28 May 2019 05:04:38 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6ACB1E1CDEA6B55D122F;
+        by Forcepoint Email with ESMTP id 50CE98CBB0DF2193D2C2;
         Tue, 28 May 2019 17:04:36 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 28 May 2019 17:04:28 +0800
+ 14.3.439.0; Tue, 28 May 2019 17:04:27 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
         Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 11/12] net: hns3: adjust hns3_uninit_phy()'s location in the hns3_client_uninit()
-Date:   Tue, 28 May 2019 17:03:01 +0800
-Message-ID: <1559034182-24737-12-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 07/12] net: hns3: modify hclge_init_client_instance()
+Date:   Tue, 28 May 2019 17:02:57 +0800
+Message-ID: <1559034182-24737-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559034182-24737-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,39 +47,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hns3_uninit_phy() should be called before checking
-HNS3_NIC_STATE_INITED flags, otherwise when this checking fails,
-there is nobody to call hns3_uninit_phy().
+hclge_init_client_instance() is a little bloated and there is
+some duplicated code. This patch adds some cleanup for it.
 
-Fixes: c8a8045b2d0a ("net: hns3: Fix NULL deref when unloading driver")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 90 +++++++++++++---------
+ 1 file changed, 53 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5e12705..f6dc305 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3901,6 +3901,8 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 02a0698..b7106a5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8169,6 +8169,52 @@ static void hclge_info_show(struct hclge_dev *hdev)
+ 	dev_info(dev, "PF info end.\n");
+ }
  
- 	hns3_client_stop(handle);
- 
-+	hns3_uninit_phy(netdev);
++static int hclge_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
++					  struct hclge_vport *vport)
++{
++	struct hnae3_client *client = vport->nic.client;
++	struct hclge_dev *hdev = ae_dev->priv;
++	int ret;
 +
- 	if (!test_and_clear_bit(HNS3_NIC_STATE_INITED, &priv->state)) {
- 		netdev_warn(netdev, "already uninitialized\n");
- 		goto out_netdev_free;
-@@ -3910,8 +3912,6 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
++	ret = client->ops->init_instance(&vport->nic);
++	if (ret)
++		return ret;
++
++	set_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
++	hnae3_set_client_init_flag(client, ae_dev, 1);
++
++	if (netif_msg_drv(&hdev->vport->nic))
++		hclge_info_show(hdev);
++
++	return 0;
++}
++
++static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
++					   struct hclge_vport *vport)
++{
++	struct hnae3_client *client = vport->roce.client;
++	struct hclge_dev *hdev = ae_dev->priv;
++	int ret;
++
++	if (!hnae3_dev_roce_supported(hdev) || !hdev->roce_client ||
++	    !hdev->nic_client)
++		return 0;
++
++	client = hdev->roce_client;
++	ret = hclge_init_roce_base_info(vport);
++	if (ret)
++		return ret;
++
++	ret = client->ops->init_instance(&vport->roce);
++	if (ret)
++		return ret;
++
++	set_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
++	hnae3_set_client_init_flag(client, ae_dev, 1);
++
++	return 0;
++}
++
+ static int hclge_init_client_instance(struct hnae3_client *client,
+ 				      struct hnae3_ae_dev *ae_dev)
+ {
+@@ -8184,33 +8230,13 @@ static int hclge_init_client_instance(struct hnae3_client *client,
  
- 	hns3_force_clear_all_rx_ring(handle);
+ 			hdev->nic_client = client;
+ 			vport->nic.client = client;
+-			ret = client->ops->init_instance(&vport->nic);
++			ret = hclge_init_nic_client_instance(ae_dev, vport);
+ 			if (ret)
+ 				goto clear_nic;
  
--	hns3_uninit_phy(netdev);
+-			hnae3_set_client_init_flag(client, ae_dev, 1);
+-			set_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
 -
- 	hns3_nic_uninit_vector_data(priv);
+-			if (netif_msg_drv(&hdev->vport->nic))
+-				hclge_info_show(hdev);
+-
+-			if (hdev->roce_client &&
+-			    hnae3_dev_roce_supported(hdev)) {
+-				struct hnae3_client *rc = hdev->roce_client;
+-
+-				ret = hclge_init_roce_base_info(vport);
+-				if (ret)
+-					goto clear_roce;
+-
+-				ret = rc->ops->init_instance(&vport->roce);
+-				if (ret)
+-					goto clear_roce;
+-
+-				set_bit(HCLGE_STATE_ROCE_REGISTERED,
+-					&hdev->state);
+-				hnae3_set_client_init_flag(hdev->roce_client,
+-							   ae_dev, 1);
+-			}
++			ret = hclge_init_roce_client_instance(ae_dev, vport);
++			if (ret)
++				goto clear_roce;
  
- 	ret = hns3_nic_dealloc_vector_data(priv);
+ 			break;
+ 		case HNAE3_CLIENT_UNIC:
+@@ -8230,19 +8256,9 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 				vport->roce.client = client;
+ 			}
+ 
+-			if (hdev->roce_client && hdev->nic_client) {
+-				ret = hclge_init_roce_base_info(vport);
+-				if (ret)
+-					goto clear_roce;
+-
+-				ret = client->ops->init_instance(&vport->roce);
+-				if (ret)
+-					goto clear_roce;
+-
+-				set_bit(HCLGE_STATE_ROCE_REGISTERED,
+-					&hdev->state);
+-				hnae3_set_client_init_flag(client, ae_dev, 1);
+-			}
++			ret = hclge_init_roce_client_instance(ae_dev, vport);
++			if (ret)
++				goto clear_roce;
+ 
+ 			break;
+ 		default:
 -- 
 2.7.4
 
