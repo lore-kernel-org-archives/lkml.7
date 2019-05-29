@@ -2,88 +2,176 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5111C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F1C23B88
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3558223B88
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="l+25soU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfE2PJe convert rfc822-to-8bit (ORCPT
+        id S1726871AbfE2PKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:09:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40752 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2PJe (ORCPT
+        Wed, 29 May 2019 11:10:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37406 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2PKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:09:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so2116316ioc.7;
-        Wed, 29 May 2019 08:09:33 -0700 (PDT)
+        Wed, 29 May 2019 11:10:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a23so1838486pff.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3NHqlVoLnqt1FPrdV3/ouU8QWVDF9XpBsDFRA3M9mXw=;
+        b=l+25soU2r8L+HSnZwz7EAeGteROjLCaBLCfS46AdyKGmDYKRETwB+6CGZChZimiUfP
+         ngVccUx/aZUDVBs0m8Q6cnbIeBz+Ja6u69OL2s7TVX30cdjUYRMMccUhgfG1CYKw78w+
+         V1GIr0ftPCaKGc4AmHhHWk3Zogl1mCnO9ptqHVKKToXX415UW1dMo35OeNYX06d1JgZD
+         xhdFQfY5MumAWyV4kWY8VLCPmPdGF+cKN9nOJ3CM5JcUSf8XUJaAk+xc7Mfifq2VAu+u
+         D30p/HP8SCPBwTglWYYKym7xOMHHs9DhBLdqzjV3ph0mfKCf4upZUCDb0df1YbQF2S8d
+         aO0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZnaDev0tj+heu2iB5lB6hq5yDeKgLXO4KFHMV/Qt+5k=;
-        b=HhRQ4iY1Dg2OjS5vw1kfJlHWgsoEd8OliHnrcv6gwwgwKycHafISYKNP+czvWjASQd
-         RS2+gomWhKrOE7PX0lMS1p8oy/AJfuJ2JUNTlJC0l1X2kelNzaG9/Ip49JJh7aWd7C5E
-         thlrf4XXxDrpfJ47KME9bFjXiyIgVjTYrrgQevkRfh7IdPQyXpnTOaWGpB3K23GVQtK9
-         SxXmBQWSII/w5Q9JubTdBinOw3c/u+r13XOJwWygU4DMgk4lpGzUSkTW9fXy0Ly7b7e9
-         dsFeDvEtW3Lvg/2AXtWhez9j/3DKXPbYSjasp4z2gMHz1nNqFZABjD6naDQ/rvHjedCa
-         enTQ==
-X-Gm-Message-State: APjAAAUsavQI4ewtFB745rk7/u2vUG8r7tfI5NdksInV6+VYFVkvcD2f
-        RHuS3rZnNvpsfLHKSbnOsqo8fefVtWn50dd7KRA=
-X-Google-Smtp-Source: APXvYqySOnocW0FtjyGqwuP2FQxhmxY7P/texfW33GuY5PwHsuap8yTRqkoaWNnTkj3NpjtfrGddYcbbqyuWzUYQqNA=
-X-Received: by 2002:a6b:7:: with SMTP id 7mr828192ioa.253.1559142573556; Wed,
- 29 May 2019 08:09:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521161102.29620-1-peron.clem@gmail.com>
-In-Reply-To: <20190521161102.29620-1-peron.clem@gmail.com>
-From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Date:   Wed, 29 May 2019 17:09:22 +0200
-Message-ID: <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steven Price <steven.price@arm.com>,
-        devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3NHqlVoLnqt1FPrdV3/ouU8QWVDF9XpBsDFRA3M9mXw=;
+        b=f76x0taOpiqsXJvWOfwCZmWTNO6XR+4DYr5P2rVA60v3Q7pPFsPTlaO4bk5D80AnpP
+         pcAOC8EBcm3NO3s9rSAlkjSqQJul50kui1MAR9LPUxXItSGQSEThYq/WNPQ37LUEu9HO
+         VGe3VXrdxn9Uxe0wd2MpwC+swT8FwbSGRnmdF/NEjmD61sNpyOpAQdjTRYvCJOndjz0H
+         KKc3pcMsFf+b+6MDPJIkkZCmPTqi9dck0vyiAGgud2toNyGQOdwnG2Cy/hdMAjrvpqAw
+         8EPTrt8XtmpLd609iUk/cvWg3bgPbzpGIEq1EJnWvMvewwDMpE8DQ5eifNSwMKvC2mtb
+         FXAA==
+X-Gm-Message-State: APjAAAVSDSkuF3jDykghC3o9S3xaVmhR/vsyAia34W6rur8PLfKruVil
+        yg5N2d+IA/zn95CNsg7s8BjmGw==
+X-Google-Smtp-Source: APXvYqxm6x95Oz3ytQOQ6KJ6h+yMYOZG9THlrGBNRRjjiDeEhH7rSiaxnIXU6uXMK+p7Io1TQQBNsQ==
+X-Received: by 2002:a62:1ec1:: with SMTP id e184mr83655828pfe.185.1559142604091;
+        Wed, 29 May 2019 08:10:04 -0700 (PDT)
+Received: from ?IPv6:2600:100f:b10c:ace6:b862:4204:5f4a:fe22? ([2600:100f:b10c:ace6:b862:4204:5f4a:fe22])
+        by smtp.gmail.com with ESMTPSA id f38sm14162147pgm.85.2019.05.29.08.10.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 08:10:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH RFC v8 01/10] namei: obey trailing magic-link DAC permissions
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190524031109.v24r6typyug2rlto@yavin>
+Date:   Wed, 29 May 2019 08:10:00 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9712F80E-1016-4DB7-996D-B423E07A1C1F@amacapital.net>
+References: <20190520133305.11925-1-cyphar@cyphar.com> <20190520133305.11925-2-cyphar@cyphar.com> <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com> <20190523020009.mi25uziu2b3whf4l@yavin> <20190524031109.v24r6typyug2rlto@yavin>
+To:     Aleksa Sarai <cyphar@cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 at 18:11, Clément Péron <peron.clem@gmail.com> wrote:
->
-[snip]
-> [  345.204813] panfrost 1800000.gpu: mmu irq status=1
-> [  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-> 0x0000000002400400
 
-From what I can see here, 0x0000000002400400 points to the first byte
-of the first submitted job descriptor.
 
-So mapping buffers for the GPU doesn't seem to be working at all on
-64-bit T-760.
+> On May 23, 2019, at 8:11 PM, Aleksa Sarai <cyphar@cyphar.com> wrote:
+>=20
+>> On 2019-05-23, Aleksa Sarai <cyphar@cyphar.com> wrote:
+>>> On 2019-05-22, Andy Lutomirski <luto@kernel.org> wrote:
+>>> What are actual examples of uses for this exception?  Breaking
+>>> selftests is not, in and of itself, a huge problem.
+>>=20
+>> Not as far as I know. All of the re-opening users I know of do re-opens
+>> of O_PATH or are re-opening with the same (or fewer) privileges. I also
+>> ran this for a few days on my laptop without this exception, and didn't
+>> have any visible issues.
+>=20
+> I have modified the patch to WARN_ON(may_open_magiclink() =3D=3D -EACCES).=
 
-Steven, Robin, do you have any idea of why this could be?
+>=20
+> So far (in the past day on my openSUSE machines) I have only seen two
+> programs which have hit this case: kbd[1]'s "loadkeys" and "kbd_mode"
+> binaries. In addition to there not being any user-visible errors -- they
+> actually handle permission errors gracefully!
+>=20
+>  static int
+>  open_a_console(const char *fnam)
+>  {
+>      int fd;
+>=20
+>      /*
+>       * For ioctl purposes we only need some fd and permissions
+>       * do not matter. But setfont:activatemap() does a write.
+>       */
+>      fd =3D open(fnam, O_RDWR);
+>      if (fd < 0)
+>          fd =3D open(fnam, O_WRONLY);
+>      if (fd < 0)
+>          fd =3D open(fnam, O_RDONLY);
+>      if (fd < 0)
+>          return -1;
+>      return fd;
+>  }
+>=20
+> The above gets called with "/proc/self/fd/0" as an argument (as well as
+> other console candidates like "/dev/console"). And setfont:activatemap()
+> actually does handle read-only fds:
+>=20
+>  static void
+>  send_escseq(int fd, const char *seq, int n)
+>  {
+>      if (write(fd, seq, n) !=3D n) /* maybe fd is read-only */
+>          printf("%s", seq);
+>  }
+>=20
+>  void activatemap(int fd)
+>  {
+>      send_escseq(fd, "\033(K", 3);
+>  }
+>=20
+> So, thus far, not only have I not seen anything go wrong -- the only
+> program which actually hits this case handles the error gracefully.
+> Obviously we got lucky here, but the lack of any users of this
+> mis-feature leads me to have some hope that we can block it without
+> anyone noticing.
+>=20
+> But I emphatically do not want to break userspace here (except for
+> attackers, obviously).
 
-Thanks,
+Hmm. This will break any script that does echo foo >/dev/stdin too.
 
-Tomeu
+Just to throw an idea out there, what if the open were allowed if the file m=
+ode is sufficient or if the magic link target is openable with the correct m=
+ode without magic?  In other words, first check as in your code but without t=
+he exception and, if that check fails, then walk the same path that d_path w=
+ould return and see if it would work as a normal open?  Of course, that seco=
+nd attempt would need to disable magic links to avoid recursing.  I=E2=80=99=
+m not sure I love this idea...
+
+Otherwise, I imagine we can live with the exception, especially if the new o=
+pen API turns it off by default.
