@@ -2,195 +2,234 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4455C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBF9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65532075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06846208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9TPZUyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfE2HWC (ORCPT
+        id S1726798AbfE2HW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:22:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55884 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbfE2HWC (ORCPT
+        Wed, 29 May 2019 03:22:29 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:50486 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfE2HW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:22:02 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4T7JJWs010894
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:22:01 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ssmbe31ud-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:22:00 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 29 May 2019 08:21:58 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 29 May 2019 08:21:53 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4T7LqrD48693492
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 07:21:52 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE5FC4C052;
-        Wed, 29 May 2019 07:21:51 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C0104C04E;
-        Wed, 29 May 2019 07:21:50 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.53])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 29 May 2019 07:21:50 +0000 (GMT)
-Date:   Wed, 29 May 2019 10:21:48 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 57/62] x86/mktme: Overview of Multi-Key Total Memory
- Encryption
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
+        Wed, 29 May 2019 03:22:28 -0400
+Received: by mail-it1-f196.google.com with SMTP id a186so2068011itg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8PdySaW5/M3o7kkYS3QjGAsNuUlBv0LoNmhCVAMchU0=;
+        b=T9TPZUyUCmcKrtg2yY2ON08nKW6RVV80EBeBttIi75vabWW44DKxbpht0xyvAoRMgj
+         ibT+uaYcrnQOAnYHRcGQ/9rdZ22+IPHQ8rko9b13cMOPGQrdf19bFWgV+vIX1WhSaIIr
+         8AZLnqtTgjvG/zpKo4nCO/bt1bUYKfa82foNbByK+OxrDBzpX7a9AOaYHYfT1780Tks0
+         oyTkVKhs/kM2XVYHtUViPUSB3yGyqjJDlBDDO/+ZNMWPQWJkFumhaCA4WyLsauYEU18t
+         LcRfvGfoZwj5me6sfb0hWOJefXLi7TqoZW2LBg4wVgW7AyjYcyL8kePaRGqDLG0BYdqu
+         QTqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8PdySaW5/M3o7kkYS3QjGAsNuUlBv0LoNmhCVAMchU0=;
+        b=fpYYNgku7j0T3D+51DZGI09dvv8i3GGYEoqdu6Q/k3tx3aSsc2i0W+760Y/OB338C6
+         T3OFY7dL5Qf0Cf9OWgbZt8E8KnAM5OH0eAtKqF1eQPGeO7gpyOBU0infMRgWtIf5tzLL
+         mjpsnV+phoy46rL7ezc6/5BCLnO5RLY9IP1Z4GLhAceaLIjzcj3IoCoAsIydJH5LZvGU
+         gN7KKgqca1wcfKQXBsaydVFMliu70rkpxiXwEcC7XV2n85aTAgYgcXawx4E49l6CBny4
+         pBB53E+V2rlJu80NYz/Tn7PZH3FNqfM7TGZXeAVMnt2oWhAEZQEYbVMZZz0NF7+beCJx
+         1QFw==
+X-Gm-Message-State: APjAAAW+Ar8QTGfcQ0jkiEHKePbGP+hYJAe0KaY7iuv515M3hxbV5YmX
+        j2gtnAroMvXX7cnyv825ITrHHRu+qHmULOOEGLJ3qqZPMMk=
+X-Google-Smtp-Source: APXvYqxkZxQm2qtMOkWOJxLWeY/4J+xFkHGALhKS18VP9SiHIHbuR36TZL4ewm0+Z0rbmywU1DIfqoG8h1L2SB2ZUIc=
+X-Received: by 2002:a24:97d2:: with SMTP id k201mr5944306ite.151.1559114547584;
+ Wed, 29 May 2019 00:22:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19052907-0008-0000-0000-000002EB7A72
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052907-0009-0000-0000-000022584A02
-Message-Id: <20190529072148.GE3656@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-29_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905290049
+References: <20190529071843.24767-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190529071843.24767-1-andrew.smirnov@gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Wed, 29 May 2019 00:22:16 -0700
+Message-ID: <CAHQ1cqFb2f6TvWVzwsHq=mWmheLZ82rMDjoMwgrJmyXCdqrJKw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6: rdu2: Add node for UCS1002 USB
+ charger chip
+To:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:44:17PM +0300, Kirill A. Shutemov wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> Provide an overview of MKTME on Intel Platforms.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+On Wed, May 29, 2019 at 12:18 AM Andrey Smirnov
+<andrew.smirnov@gmail.com> wrote:
+>
+> Add node for UCS1002 USB charger chip connected to front panel USB and
+> replace "regulator-fixed" previously used to control VBUS.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+
+Ugh, forgot to properly update reroll counter. This and the rest of
+the series is a v2. Sorry about that.
+
+Thanks,
+Andrey Smirnov
+
 > ---
->  Documentation/x86/mktme/index.rst          |  8 +++
->  Documentation/x86/mktme/mktme_overview.rst | 57 ++++++++++++++++++++++
-
-I'd expect addition of mktme docs to Documentation/x86/index.rst
-
->  2 files changed, 65 insertions(+)
->  create mode 100644 Documentation/x86/mktme/index.rst
->  create mode 100644 Documentation/x86/mktme/mktme_overview.rst
-> 
-> diff --git a/Documentation/x86/mktme/index.rst b/Documentation/x86/mktme/index.rst
-> new file mode 100644
-> index 000000000000..1614b52dd3e9
-> --- /dev/null
-> +++ b/Documentation/x86/mktme/index.rst
-> @@ -0,0 +1,8 @@
+>
+> Changes since [v1]:
+>
+>     - Added GPIO hog configuration to put UCS1002 into correct mode
+>       even before its driver takes over. The code for that is taken
+>       from similar patch from Lucas, so I added his Signed-off-by as
+>       well.
+>
+> [v1] lore.kernel.org/r/20190522071227.31488-1-andrew.smirnov@gmail.com
+>
+>  arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 77 +++++++++++++++++++------
+>  1 file changed, 59 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> index 93be00a60c88..07e21d1e5b4c 100644
+> --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+> @@ -60,18 +60,6 @@
+>                 regulator-always-on;
+>         };
+>
+> -       reg_5p0v_user_usb: regulator-5p0v-user-usb {
+> -               compatible = "regulator-fixed";
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&pinctrl_reg_user_usb>;
+> -               vin-supply = <&reg_5p0v_main>;
+> -               regulator-name = "5V_USER_USB";
+> -               regulator-min-microvolt = <5000000>;
+> -               regulator-max-microvolt = <5000000>;
+> -               gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> -               startup-delay-us = <1000>;
+> -       };
+> -
+>         reg_3p3v_pmic: regulator-3p3v-pmic {
+>                 compatible = "regulator-fixed";
+>                 vin-supply = <&reg_12p0v>;
+> @@ -331,6 +319,39 @@
+>         };
+>  };
+>
+> +&gpio3 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_gpio3_hog>;
 > +
-> +=========================================
-> +Multi-Key Total Memory Encryption (MKTME)
-> +=========================================
+> +       usb-emulation {
+> +               gpio-hog;
+> +               gpios = <19 GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "usb-emulation";
+> +       };
 > +
-> +.. toctree::
+> +       usb-mode1 {
+> +               gpio-hog;
+> +               gpios = <20 GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "usb-mode1";
+> +       };
 > +
-> +   mktme_overview
-> diff --git a/Documentation/x86/mktme/mktme_overview.rst b/Documentation/x86/mktme/mktme_overview.rst
-> new file mode 100644
-> index 000000000000..59c023965554
-> --- /dev/null
-> +++ b/Documentation/x86/mktme/mktme_overview.rst
-> @@ -0,0 +1,57 @@
-> +Overview
-> +=========
-> +Multi-Key Total Memory Encryption (MKTME)[1] is a technology that
-> +allows transparent memory encryption in upcoming Intel platforms.
-> +It uses a new instruction (PCONFIG) for key setup and selects a
-> +key for individual pages by repurposing physical address bits in
-> +the page tables.
+> +       usb-pwr {
+> +               gpio-hog;
+> +               gpios = <22 GPIO_ACTIVE_LOW>;
+> +               output-high;
+> +               line-name = "usb-pwr-ctrl-en-n";
+> +       };
 > +
-> +Support for MKTME is added to the existing kernel keyring subsystem
-> +and via a new mprotect_encrypt() system call that can be used by
-> +applications to encrypt anonymous memory with keys obtained from
-> +the keyring.
+> +       usb-mode2 {
+> +               gpio-hog;
+> +               gpios = <23 GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "usb-mode2";
+> +       };
+> +};
 > +
-> +This architecture supports encrypting both normal, volatile DRAM
-> +and persistent memory.  However, persistent memory support is
-> +not included in the Linux kernel implementation at this time.
-> +(We anticipate adding that support next.)
+>  &i2c1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_i2c1>;
+> @@ -590,6 +611,16 @@
+>                 status = "disabled";
+>         };
+>
+> +       reg_5p0v_user_usb: charger@32 {
+> +               compatible = "microchip,ucs1002";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_ucs1002_pins>;
+> +               reg = <0x32>;
+> +               interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
+> +                                     <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
+> +               interrupt-names = "a_det", "alert";
+> +       };
 > +
-> +Hardware Background
-> +===================
+>         hpa1: amp@60 {
+>                 compatible = "ti,tpa6130a2";
+>                 pinctrl-names = "default";
+> @@ -935,6 +966,15 @@
+>                 >;
+>         };
+>
+> +       pinctrl_gpio3_hog: gpio3hoggrp {
+> +               fsl,pins = <
+> +                       MX6QDL_PAD_EIM_D19__GPIO3_IO19          0x1b0b0
+> +                       MX6QDL_PAD_EIM_D20__GPIO3_IO20          0x1b0b0
+> +                       MX6QDL_PAD_EIM_D22__GPIO3_IO22          0x1b0b0
+> +                       MX6QDL_PAD_EIM_D23__GPIO3_IO23          0x1b0b0
+> +               >;
+> +       };
 > +
-> +MKTME is built on top of an existing single-key technology called
-> +TME.  TME encrypts all system memory using a single key generated
-> +by the CPU on every boot of the system. TME provides mitigation
-> +against physical attacks, such as physically removing a DIMM or
-> +watching memory bus traffic.
+>         pinctrl_i2c1: i2c1grp {
+>                 fsl,pins = <
+>                         MX6QDL_PAD_CSI0_DAT8__I2C1_SDA          0x4001b8b1
+> @@ -982,12 +1022,6 @@
+>                 >;
+>         };
+>
+> -       pinctrl_reg_user_usb: usbotggrp {
+> -               fsl,pins = <
+> -                       MX6QDL_PAD_EIM_D22__GPIO3_IO22          0x40000038
+> -               >;
+> -       };
+> -
+>         pinctrl_rmii_phy_irq: phygrp {
+>                 fsl,pins = <
+>                         MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x40010000
+> @@ -1047,6 +1081,13 @@
+>                 >;
+>         };
+>
+> +       pinctrl_ucs1002_pins: ucs1002grp {
+> +               fsl,pins = <
+> +                       MX6QDL_PAD_EIM_A25__GPIO5_IO02          0x1b0b0
+> +                       MX6QDL_PAD_EIM_D21__GPIO3_IO21          0x1b0b0
+> +               >;
+> +       };
 > +
-> +MKTME enables the use of multiple encryption keys[2], allowing
-> +selection of the encryption key per-page using the page tables.
-> +Encryption keys are programmed into each memory controller and
-> +the same set of keys is available to all entities on the system
-> +with access to that memory (all cores, DMA engines, etc...).
-> +
-> +MKTME inherits many of the mitigations against hardware attacks
-> +from TME.  Like TME, MKTME does not mitigate vulnerable or
-> +malicious operating systems or virtual machine managers.  MKTME
-> +offers additional mitigations when compared to TME.
-> +
-> +TME and MKTME use the AES encryption algorithm in the AES-XTS
-> +mode.  This mode, typically used for block-based storage devices,
-> +takes the physical address of the data into account when
-> +encrypting each block.  This ensures that the effective key is
-> +different for each block of memory. Moving encrypted content
-> +across physical address results in garbage on read, mitigating
-> +block-relocation attacks.  This property is the reason many of
-> +the discussed attacks require control of a shared physical page
-> +to be handed from the victim to the attacker.
-> +
-> +--
-> +1. https://software.intel.com/sites/default/files/managed/a5/16/Multi-Key-Total-Memory-Encryption-Spec.pdf
-> +2. The MKTME architecture supports up to 16 bits of KeyIDs, so a
-> +   maximum of 65535 keys on top of the “TME key” at KeyID-0.  The
-> +   first implementation is expected to support 5 bits, making 63
-> +   keys available to applications.  However, this is not guaranteed.
-> +   The number of available keys could be reduced if, for instance,
-> +   additional physical address space is desired over additional
-> +   KeyIDs.
-> -- 
-> 2.20.1
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+>         pinctrl_usdhc2: usdhc2grp {
+>                 fsl,pins = <
+>                         MX6QDL_PAD_SD2_CMD__SD2_CMD             0x10059
+> --
+> 2.21.0
+>
