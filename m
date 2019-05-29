@@ -2,92 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F6DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034A8208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF78F208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfE2KLc (ORCPT
+        id S1726516AbfE2KMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:11:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:35105 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfE2KLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:11:32 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 03:11:31 -0700
-X-ExtLoop1: 1
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga001.fm.intel.com with ESMTP; 29 May 2019 03:11:28 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id D0EB52091F; Wed, 29 May 2019 13:11:27 +0300 (EEST)
-Date:   Wed, 29 May 2019 13:11:27 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Yong Deng <yong.deng@magewell.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v2 0/3] ARM: sun8i: a83t: Support Camera Sensor Interface
- controller
-Message-ID: <20190529101127.oykszcj7q4ikji47@paasikivi.fi.intel.com>
-References: <20190520150637.23557-1-megous@megous.com>
- <20190520151003.uklhhak5clxi5zpf@core.my.home>
- <CAGb2v64NDYo-yOvUQDpqzRB_A3NUgF3dXJeYbz_57uwB7mXwqQ@mail.gmail.com>
+        Wed, 29 May 2019 06:12:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42626 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfE2KMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:12:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F789341;
+        Wed, 29 May 2019 03:12:20 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FCBC3F59C;
+        Wed, 29 May 2019 03:12:18 -0700 (PDT)
+Subject: Re: [PATCH] iommu/dma: Fix condition check in iommu_dma_unmap_sg
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+References: <20190529081532.73585-1-natechancellor@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e8c21972-cb70-34ff-949d-5e2555c3a1fb@arm.com>
+Date:   Wed, 29 May 2019 11:12:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v64NDYo-yOvUQDpqzRB_A3NUgF3dXJeYbz_57uwB7mXwqQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190529081532.73585-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen-Yu,
-
-On Tue, May 28, 2019 at 09:03:06PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 20, 2019 at 11:10 PM Ondřej Jirman <megous@megous.com> wrote:
-> >
-> > On Mon, May 20, 2019 at 05:06:34PM +0200, verejna wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > This is a re-send of Chen-Yu's A83T CSI patch series with review tags
-> > > applied and removed address/size cells from csi_in port. Already applied
-> > > patches from v1  were dropped.
-> > >
-> > > The series is ready to be merged:
-> > >
-> > >   Patch 1 and 2 via sunxi tree
-> > >   Patch 3 via media tree
-> >
-> > Sorry, wrong numbers. 2 is for media tree, 3 is for sunxi, 1 is a dt-bindings
-> > patch, where I'm not sure.
+On 29/05/2019 09:15, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> Bindings typically go with the driver.
+> drivers/iommu/dma-iommu.c:897:6: warning: logical not is only applied to
+> the left hand side of this comparison [-Wlogical-not-parentheses]
+>          if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+>              ^                                 ~~
+> drivers/iommu/dma-iommu.c:897:6: note: add parentheses after the '!' to
+> evaluate the comparison first
+>          if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+>              ^
+>               (                                    )
+> drivers/iommu/dma-iommu.c:897:6: note: add parentheses around left hand
+> side expression to silence this warning
+>          if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+>              ^
+>              (                                )
+> 1 warning generated.
 > 
-> Sakari, this series is and has been ready for some time since before the merge
-> window. Could you please merge patches 1 and 2.
+> Judging from the rest of the commit and the conditional in
+> iommu_dma_map_sg, either
+> 
+>      if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+> 
+> or
+>      if ((attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+> 
+> was intended, not a combination of the two.
+> 
+> I personally think that the former is easier to understand so use that.
 
-Don't wait, instead cc or ping me; that helps. :-)
+Good catch, thanks Nathan. Looks like this was an unintentional mangling 
+while ratifying the couple of odd "x == 0" instances to "!x" in the 
+move. The effective double-negation is not what we want at all.
 
-The two patches are fine; I'll merge them.
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> Fixes: 06d60728ff5c ("iommu/dma: move the arm64 wrappers to common code")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/497
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>   drivers/iommu/dma-iommu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 0cd49c2d3770..0dee374fc64a 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -894,7 +894,7 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+>   	struct scatterlist *tmp;
+>   	int i;
+>   
+> -	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+> +	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+>   		iommu_dma_sync_sg_for_cpu(dev, sg, nents, dir);
+>   
+>   	/*
+> 
