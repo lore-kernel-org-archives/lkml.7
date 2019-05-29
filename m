@@ -2,153 +2,176 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080A7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44470C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C1423EFE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:10:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oHev3x4U"
+	by mail.kernel.org (Postfix) with ESMTP id 292A523F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfE2RK5 (ORCPT
+        id S1726694AbfE2RLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 13:10:57 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34516 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2RK4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 13:10:56 -0400
-Received: by mail-qk1-f195.google.com with SMTP id t64so2002105qkh.1;
-        Wed, 29 May 2019 10:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=ATwDtoWjOVCXqu7sDl5IFgBGFnm6OEQYsxPD7GTeoMc=;
-        b=oHev3x4UP07zZR6uklQz+WyfaygMFayVK0/pOOe/pxBYqFnpW2avxA8jdbrw2ec65W
-         Fri3ISzB/akPeGIMprylsCMCCx8sHzuVu4eNHbpdITWYrEpHw5qD5XbFDeQ9Cqi1ioiD
-         CGVgjriD6UQRaxDCUJedk6qttislYXsjJDPylVbmst8P4WG5udgOhh2bBJ2T2rwaGWE4
-         SgzTixruWECBXlr62RtmK0MPPkvhJzaWGqImigCCNnAUlN8eCEwuxtQhIY6TDfLxaaZS
-         gNmcmf4vCIEWIxKivec8u8CCXVfFwrugj3LJBbfCWRqhYdwmnVZi3FlLGsuxphFw0ZHW
-         vsxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=ATwDtoWjOVCXqu7sDl5IFgBGFnm6OEQYsxPD7GTeoMc=;
-        b=Adrbd8J19JLfNUfrRSQjPmLOhLI+yq01Rb6Gb7+P78lGFPFG3f7q/ANuhxh+UeN8J/
-         4RIOke8M4eWiGL6mQlbQAeEY+InnyFFJHxmMhWM3wpVHiNXdCmlELcE9w5iaBGWsFq3J
-         rw+D4Mc0uNU5xJMe8gc0MPBTEi4sVRLXcmpcxH3B69fLC3p5DBhsPdUgLKXNc2jm7qeD
-         Fi9vaupzLag9PJQZ6Djp3X9XXZt4OmmCUYoZOf9FCkgSUpC38JQpUZhr1ZxY2eejep4a
-         Ok30g49xABR1EEHSA3ZCtA4NBAk4RjxllFdM3LUpoToaHFnHfvoE2AvcHLzFLgqBBuJU
-         Za1Q==
-X-Gm-Message-State: APjAAAU3IXidGnRIYfQG9XNRH9cIFAsVwQcUlK2FrYD3ZAl0W2N1iut6
-        am7pAdeiqB8Aovm3VSWDcb0=
-X-Google-Smtp-Source: APXvYqyeW6k25mRsF7Bd54dp+F8mXgY7O82FSWRBEYEVm0CW4OafpVBvgoLxo7tWtGCNoYId7VXTgg==
-X-Received: by 2002:a37:6112:: with SMTP id v18mr12656693qkb.126.1559149855109;
-        Wed, 29 May 2019 10:10:55 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id h128sm17009qkc.27.2019.05.29.10.10.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 10:10:54 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:10:53 -0400
-Message-ID: <20190529131053.GB13966@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: fix handling of upper half of
- STATS_TYPE_PORT
-In-Reply-To: <dc84827e-6bac-7a01-f998-609cfe9a33ec@prevas.dk>
-References: <20190528131701.23912-1-rasmus.villemoes@prevas.dk>
- <20190528134458.GE18059@lunn.ch>
- <dc84827e-6bac-7a01-f998-609cfe9a33ec@prevas.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Wed, 29 May 2019 13:11:05 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33252 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbfE2RLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 13:11:04 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D71A72001B9;
+        Wed, 29 May 2019 19:11:01 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CA1142004B3;
+        Wed, 29 May 2019 19:11:01 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6DF3D205E4;
+        Wed, 29 May 2019 19:11:01 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: gcm - fix cacheline sharing
+Date:   Wed, 29 May 2019 20:10:56 +0300
+Message-Id: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus, Andrew,
+The generic GCM driver should ensure that whatever it passes into
+scatterlists is safe for non-cache coherent DMA.
+The issue was seen while running GCM on CAAM driver. But, since CAAM
+does not support GHASH on i.MX6, only CTR skcipher part of the GCM is
+offloaded.
+The skcipher request received by CAAM has req->src pointing to
+auth_tag[16] and req->iv pointing to iv[16]. Problem is that when
+the iv is updated (crypto API requires skcipher implementations to
+update the IV with the last ciphertext block) is written in iv[16],
+which is on the same cacheline as auth_tag[16] that was previously
+DMA mapped.
+Solution is to use a pointer, aligned to cache line, instead of auth_tag
+buffer, for encryption/decryption and then free it on completion.
 
-On Wed, 29 May 2019 06:42:53 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> wrote:
-> On 28/05/2019 15.44, Andrew Lunn wrote:
-> > On Tue, May 28, 2019 at 01:17:10PM +0000, Rasmus Villemoes wrote:
-> >> Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
-> >> up in bits 47:32 of the return value, instead of bits 31:16 as they
-> >> should.
-> >>
-> >> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> > 
-> > Hi Rasmus
-> > 
-> > Please include a Fixes tag, to indicate where the problem was
-> > introduced. In this case, i think it was:
-> > 
-> > Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
-> > 
-> > And set the Subject to [PATCH net] to indicate this should be applied
-> > to the net tree.
-> 
-> Will do.
-> 
-> >> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> >> index 370434bdbdab..317553d2cb21 100644
-> >> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> >> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> >> @@ -785,7 +785,7 @@ static uint64_t _mv88e6xxx_get_ethtool_stat(struct mv88e6xxx_chip *chip,
-> >>  			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
-> >>  			if (err)
-> >>  				return U64_MAX;
-> >> -			high = reg;
-> >> +			low |= ((u32)reg) << 16;
-> >>  		}
-> >>  		break;
-> >>  	case STATS_TYPE_BANK1:
-> > 
-> > What i don't like about this is how the function finishes:
-> > 
-> >        	}
-> >         value = (((u64)high) << 32) | low;
-> >         return value;
-> > }
-> > 
-> > A better fix might be
-> > 
-> > -		break
-> > +		value = (((u64)high) << 16 | low;
-> > +		return value;
-> 
-> Why? It's odd to have the u32 "high" sometimes represent the high 32
-> bits, sometimes the third 16 bits. It would make it harder to support an
-> 8-byte STATS_TYPE_PORT statistic. I think the code is much cleaner if
-> each case is just responsible for providing the upper/lower 32 bits,
-> then have the common case combine them; . It's just that in the
-> STATS_TYPE_BANK cases, the 32 bits are assembled from two 16 bit values
-> by a helper (mv88e6xxx_g1_stats_read), while it is "open-coded" in the
-> first case.
+Link: https://lore.kernel.org/linux-crypto/20190208114459.5nixe76xmmkhur75@gondor.apana.org.au/
+Cc: <stable@vger.kernel.org> # v4.19+
+Fixes: adcbc688fe2f ("crypto: gcm - Convert to new AEAD interface")
+Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-Here "low" and "high" are u32 and refer to the upper and lower halves
-of the u64 returned value. For a 4-byte STATS_TYPE_PORT value, the
-second read refers to the bits 31:16, thus belongs to (the upper half
-of) the lower half of the 64-bit returned value, i.e. "low".
+---
+I've checked the reproducibility of this issue starting with 4.19.y.
+---
+ crypto/gcm.c         | 26 +++++++++++++++++---------
+ include/crypto/gcm.h |  1 +
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
-The current return value is correct, as well as your patch.
+diff --git a/crypto/gcm.c b/crypto/gcm.c
+index 33f45a9..53e3ce5 100644
+--- a/crypto/gcm.c
++++ b/crypto/gcm.c
+@@ -66,7 +66,7 @@ struct crypto_gcm_ghash_ctx {
+ 
+ struct crypto_gcm_req_priv_ctx {
+ 	u8 iv[16];
+-	u8 auth_tag[16];
++	u8 *auth_tag;
+ 	u8 iauth_tag[16];
+ 	struct scatterlist src[3];
+ 	struct scatterlist dst[3];
+@@ -177,19 +177,23 @@ static void crypto_gcm_init_common(struct aead_request *req)
+ 	__be32 counter = cpu_to_be32(1);
+ 	struct scatterlist *sg;
+ 
+-	memset(pctx->auth_tag, 0, sizeof(pctx->auth_tag));
++	/*
++	 * kzalloc alignment is at least the cache line size
++	 * for non-cache coherent architectures.
++	 */
++	pctx->auth_tag = kzalloc(GCM_MAX_AUTH_SIZE, GFP_KERNEL);
+ 	memcpy(pctx->iv, req->iv, GCM_AES_IV_SIZE);
+ 	memcpy(pctx->iv + GCM_AES_IV_SIZE, &counter, 4);
+ 
+ 	sg_init_table(pctx->src, 3);
+-	sg_set_buf(pctx->src, pctx->auth_tag, sizeof(pctx->auth_tag));
++	sg_set_buf(pctx->src, pctx->auth_tag, GCM_MAX_AUTH_SIZE);
+ 	sg = scatterwalk_ffwd(pctx->src + 1, req->src, req->assoclen);
+ 	if (sg != pctx->src + 1)
+ 		sg_chain(pctx->src, 2, sg);
+ 
+ 	if (req->src != req->dst) {
+ 		sg_init_table(pctx->dst, 3);
+-		sg_set_buf(pctx->dst, pctx->auth_tag, sizeof(pctx->auth_tag));
++		sg_set_buf(pctx->dst, pctx->auth_tag, GCM_MAX_AUTH_SIZE);
+ 		sg = scatterwalk_ffwd(pctx->dst + 1, req->dst, req->assoclen);
+ 		if (sg != pctx->dst + 1)
+ 			sg_chain(pctx->dst, 2, sg);
+@@ -208,9 +212,8 @@ static void crypto_gcm_init_crypt(struct aead_request *req,
+ 	dst = req->src == req->dst ? pctx->src : pctx->dst;
+ 
+ 	skcipher_request_set_tfm(skreq, ctx->ctr);
+-	skcipher_request_set_crypt(skreq, pctx->src, dst,
+-				     cryptlen + sizeof(pctx->auth_tag),
+-				     pctx->iv);
++	skcipher_request_set_crypt(skreq, pctx->src, dst, cryptlen +
++				   GCM_MAX_AUTH_SIZE, pctx->iv);
+ }
+ 
+ static inline unsigned int gcm_remain(unsigned int len)
+@@ -440,6 +443,7 @@ static int gcm_enc_copy_hash(struct aead_request *req, u32 flags)
+ 	scatterwalk_map_and_copy(auth_tag, req->dst,
+ 				 req->assoclen + req->cryptlen,
+ 				 crypto_aead_authsize(aead), 1);
++	kfree(auth_tag);
+ 	return 0;
+ }
+ 
+@@ -492,11 +496,15 @@ static int crypto_gcm_verify(struct aead_request *req)
+ 	u8 *iauth_tag = pctx->iauth_tag;
+ 	unsigned int authsize = crypto_aead_authsize(aead);
+ 	unsigned int cryptlen = req->cryptlen - authsize;
++	int err;
+ 
+ 	crypto_xor(auth_tag, iauth_tag, 16);
+ 	scatterwalk_map_and_copy(iauth_tag, req->src,
+ 				 req->assoclen + cryptlen, authsize, 0);
+-	return crypto_memneq(iauth_tag, auth_tag, authsize) ? -EBADMSG : 0;
++	err = crypto_memneq(iauth_tag, auth_tag, authsize) ? -EBADMSG : 0;
++	kfree(auth_tag);
++
++	return err;
+ }
+ 
+ static void gcm_decrypt_done(struct crypto_async_request *areq, int err)
+@@ -678,7 +686,7 @@ static int crypto_gcm_create_common(struct crypto_template *tmpl,
+ 	inst->alg.base.cra_ctxsize = sizeof(struct crypto_gcm_ctx);
+ 	inst->alg.ivsize = GCM_AES_IV_SIZE;
+ 	inst->alg.chunksize = crypto_skcipher_alg_chunksize(ctr);
+-	inst->alg.maxauthsize = 16;
++	inst->alg.maxauthsize = GCM_MAX_AUTH_SIZE;
+ 	inst->alg.init = crypto_gcm_init_tfm;
+ 	inst->alg.exit = crypto_gcm_exit_tfm;
+ 	inst->alg.setkey = crypto_gcm_setkey;
+diff --git a/include/crypto/gcm.h b/include/crypto/gcm.h
+index c50e057..6b634ff 100644
+--- a/include/crypto/gcm.h
++++ b/include/crypto/gcm.h
+@@ -1,6 +1,7 @@
+ #ifndef _CRYPTO_GCM_H
+ #define _CRYPTO_GCM_H
+ 
++#define GCM_MAX_AUTH_SIZE 16
+ #define GCM_AES_IV_SIZE 12
+ #define GCM_RFC4106_IV_SIZE 8
+ #define GCM_RFC4543_IV_SIZE 8
+-- 
+2.1.0
 
-
-Thanks,
-Vivien
