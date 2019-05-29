@@ -2,209 +2,145 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B261EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D8F2419F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BBB22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="XfqTF9U8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhMrQeiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfE2UiC (ORCPT
+        id S1726540AbfE2Ul1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:38:02 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55803 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfE2UhC (ORCPT
+        Wed, 29 May 2019 16:41:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54081 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfE2Ul1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:37:02 -0400
-Received: by mail-it1-f195.google.com with SMTP id g24so6235648iti.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:37:01 -0700 (PDT)
+        Wed, 29 May 2019 16:41:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d17so2527036wmb.3;
+        Wed, 29 May 2019 13:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=G0IRZhtbIKeaZkChlh1OzdrtZcJGCkc1xSr+O9r8B4A=;
-        b=XfqTF9U8bytYV7Iqoj+RDzMO5rbryTRYkoLmkUd1ovcAQ+Vs1nZT+W781PY9UNEqOl
-         eWg7YyCW5fl18c/Jhf/GcnRXgoiJR/k3/7oCiGmM283Rjon4U6iabol62H6TWsxhkE6h
-         t/SPWIpwfBjiV1S0k7EBlKlo8OEttx9vHLZaU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9Tz0UIzcufcpr4ojWSAEz0BFZ3UGJduWbz8lnUbkZVU=;
+        b=WhMrQeiq7mQ0jLHtX70gCs13o4iNFOcAp42oU07/flu4B8w4YXaamkfijEmCOY0rwH
+         qaNVqy6X8inEKI8ORD6whNNywqdKbZIctR8GnON5I1pamJi902YAuDWCKYxytoE1F4iR
+         EXjItTYhvpODOz5mmln+08nfmPF2VHJRq5m7QyQn63bhnqFhbHH6PwJGjkvX17DiwJmZ
+         Zb2O3WSpRZ+tLgfE+hI/I0UGbiqprxY836aDUWMDaPk25ulpRnmA/MPUMLGdqF/PIvt/
+         62JcVAxWe0gHjizy0i+nO8kh75n3OL2BjxYQfIslus09LuAUo84Jn9Y/Bb/PrInzOjXd
+         L5Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=G0IRZhtbIKeaZkChlh1OzdrtZcJGCkc1xSr+O9r8B4A=;
-        b=aQLkw5XvU0ApJaQH8YU1VqsQmNJjfl6LpeHLwSlvUxgcUKpY9FYH3uDO/RtxNt4p39
-         wfsSNDWXOFOlcJJlnm7P4fEY55FaSZXqep9MpFGBRLDAr5MR4tk+yzd3ZhfmdldNSsdW
-         bNVdoB9a+SNSpQDSCYTxGhinq5U46CadJXW0N0ct9RQtpzKiJIhd+eZxb5/79F/BMMyF
-         cZho7hUJil8n4Q133eQ+UQFr5z/nvp+D5Z8Ms1DwjVU9zxg1DzW109GbIqWAzKSYyY2j
-         y1T9vPi3KOahbNbHbhUlzJ3u1DX6vDpmHCkcE3RH0pjTLgWA2gatm5nFo0HSRuWv9cCw
-         Nk2A==
-X-Gm-Message-State: APjAAAXolCdtisZstp1EieBF77F+tXz4/2XcvFr3HdJrqWYI9zS8RK/2
-        rxupMl2TXPrtVV13Q/pBbY9MTA==
-X-Google-Smtp-Source: APXvYqwdKNbVRZRjz9+a7xs2XWjpURlkHK8nibbUMX4tA6+hMcFJjyqKj4gih+2q/hgA1s5l2sjqLw==
-X-Received: by 2002:a24:78d1:: with SMTP id p200mr161999itc.69.1559162221330;
-        Wed, 29 May 2019 13:37:01 -0700 (PDT)
-Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id t63sm161997ita.42.2019.05.29.13.37.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:37:00 -0700 (PDT)
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC PATCH v3 04/16] sched/{rt,deadline}: Fix set_next_task vs pick_next_task
-Date:   Wed, 29 May 2019 20:36:40 +0000
-Message-Id: <38c61d5240553e043c27c5e00b9dd0d184dd6081.1559129225.git.vpillai@digitalocean.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
-In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9Tz0UIzcufcpr4ojWSAEz0BFZ3UGJduWbz8lnUbkZVU=;
+        b=Mj+0h1eKxoVwj9Ewpf8pam1CQrGXfYGWqvFCXPVazepvQsG+BQg04HRahT7TQg9bME
+         vgG8sVA6PcQ/xAS2SuB1v09BQGk9ybaiy0CBAwpqhe28OUa2lW6SCuAc6xwZgOjPs0Hb
+         47H6UJSPn5foO/FC0UCCftgJ2fuxh9C1ORui5/bF1NR7Xb185hGhyPpjsyBzELLtx54Q
+         p1BEDF8u1H12XouYWTrugOX+oZ5U0vyFNgMS3uYKKzeIwp+H1Rj+5e8v08DEM3ipiJ5T
+         tEyHpVo2+JRm7u2d1qugpsd5T7UJBWNKp7lOjaV+016+nC8M8LVs3j4HUDeb2jveiaWc
+         25Yw==
+X-Gm-Message-State: APjAAAUvlK7TjdIuoQ5l10udRasCLqeaYKO5sqzn8RDSkfzuNaumCYXu
+        amTxVA6L6gC2dO0/ulaIb42D/wE80H4=
+X-Google-Smtp-Source: APXvYqw/wsOiMDiZXdeIVgYS6OVEQNEqK/s0KQT2rLtryJYiwgP1BG72GC2iSHrdec4UDyAJE9p4KQ==
+X-Received: by 2002:a1c:ca01:: with SMTP id a1mr26694wmg.30.1559162484282;
+        Wed, 29 May 2019 13:41:24 -0700 (PDT)
+Received: from [192.168.1.2] ([86.121.27.188])
+        by smtp.gmail.com with ESMTPSA id l190sm701763wml.25.2019.05.29.13.41.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 13:41:23 -0700 (PDT)
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net, john.stultz@linaro.org, tglx@linutronix.de,
+        sboyd@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20190528235627.1315-1-olteanv@gmail.com>
+ <20190529045207.fzvhuu6d6jf5p65t@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Message-ID: <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
+Date:   Wed, 29 May 2019 23:41:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190529045207.fzvhuu6d6jf5p65t@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On 5/29/19 7:52 AM, Richard Cochran wrote:
+> On Wed, May 29, 2019 at 02:56:22AM +0300, Vladimir Oltean wrote:
+>> Not all is rosy, though.
+> 
+> You can sure say that again!
+>   
+>> PTP timestamping will only work when the ports are bridged. Otherwise,
+>> the metadata follow-up frames holding RX timestamps won't be received
+>> because they will be blocked by the master port's MAC filter. Linuxptp
+>> tries to put the net device in ALLMULTI/PROMISC mode,
+> 
+> Untrue.
+> 
 
-Because pick_next_task() implies set_curr_task() and some of the
-details haven't matter too much, some of what _should_ be in
-set_curr_task() ended up in pick_next_task, correct this.
+I'm sorry, then what does this code from raw.c do?
 
-This prepares the way for a pick_next_task() variant that does not
-affect the current state; allowing remote picking.
+> 	mreq.mr_ifindex = index;
+> 	mreq.mr_type = PACKET_MR_ALLMULTI;
+> 	mreq.mr_alen = 0;
+> 	if (!setsockopt(fd, SOL_PACKET, option, &mreq, sizeof(mreq))) {
+> 		return 0;
+> 	}
+> 	pr_warning("setsockopt PACKET_MR_ALLMULTI failed: %m");
+> 
+> 	mreq.mr_ifindex = index;
+> 	mreq.mr_type = PACKET_MR_PROMISC;
+> 	mreq.mr_alen = 0;
+> 	if (!setsockopt(fd, SOL_PACKET, option, &mreq, sizeof(mreq))) {
+> 		return 0;
+> 	}
+> 	pr_warning("setsockopt PACKET_MR_PROMISC failed: %m");
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/deadline.c | 23 ++++++++++++-----------
- kernel/sched/rt.c       | 27 ++++++++++++++-------------
- 2 files changed, 26 insertions(+), 24 deletions(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index e683d4c19ab8..0783dfa65150 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1694,12 +1694,21 @@ static void start_hrtick_dl(struct rq *rq, struct task_struct *p)
- }
- #endif
- 
--static inline void set_next_task(struct rq *rq, struct task_struct *p)
-+static void set_next_task_dl(struct rq *rq, struct task_struct *p)
- {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* You can't push away the running task */
- 	dequeue_pushable_dl_task(rq, p);
-+
-+	if (hrtick_enabled(rq))
-+		start_hrtick_dl(rq, p);
-+
-+	if (rq->curr->sched_class != &dl_sched_class)
-+		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+
-+	if (rq->curr != p)
-+		deadline_queue_push_tasks(rq);
- }
- 
- static struct sched_dl_entity *pick_next_dl_entity(struct rq *rq,
-@@ -1758,15 +1767,7 @@ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	p = dl_task_of(dl_se);
- 
--	set_next_task(rq, p);
--
--	if (hrtick_enabled(rq))
--		start_hrtick_dl(rq, p);
--
--	deadline_queue_push_tasks(rq);
--
--	if (rq->curr->sched_class != &dl_sched_class)
--		update_dl_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+	set_next_task_dl(rq, p);
- 
- 	return p;
- }
-@@ -1813,7 +1814,7 @@ static void task_fork_dl(struct task_struct *p)
- 
- static void set_curr_task_dl(struct rq *rq)
- {
--	set_next_task(rq, rq->curr);
-+	set_next_task_dl(rq, rq->curr);
- }
- 
- #ifdef CONFIG_SMP
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 3d9db8c75d53..353ad960691b 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1498,12 +1498,23 @@ static void check_preempt_curr_rt(struct rq *rq, struct task_struct *p, int flag
- #endif
- }
- 
--static inline void set_next_task(struct rq *rq, struct task_struct *p)
-+static inline void set_next_task_rt(struct rq *rq, struct task_struct *p)
- {
- 	p->se.exec_start = rq_clock_task(rq);
- 
- 	/* The running task is never eligible for pushing */
- 	dequeue_pushable_task(rq, p);
-+
-+	/*
-+	 * If prev task was rt, put_prev_task() has already updated the
-+	 * utilization. We only care of the case where we start to schedule a
-+	 * rt task
-+	 */
-+	if (rq->curr->sched_class != &rt_sched_class)
-+		update_rt_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+
-+	if (rq->curr != p)
-+		rt_queue_push_tasks(rq);
- }
- 
- static struct sched_rt_entity *pick_next_rt_entity(struct rq *rq,
-@@ -1577,17 +1588,7 @@ pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	p = _pick_next_task_rt(rq);
- 
--	set_next_task(rq, p);
--
--	rt_queue_push_tasks(rq);
--
--	/*
--	 * If prev task was rt, put_prev_task() has already updated the
--	 * utilization. We only care of the case where we start to schedule a
--	 * rt task
--	 */
--	if (rq->curr->sched_class != &rt_sched_class)
--		update_rt_rq_load_avg(rq_clock_pelt(rq), rq, 0);
-+	set_next_task_rt(rq, p);
- 
- 	return p;
- }
-@@ -2356,7 +2357,7 @@ static void task_tick_rt(struct rq *rq, struct task_struct *p, int queued)
- 
- static void set_curr_task_rt(struct rq *rq)
- {
--	set_next_task(rq, rq->curr);
-+	set_next_task_rt(rq, rq->curr);
- }
- 
- static unsigned int get_rr_interval_rt(struct rq *rq, struct task_struct *task)
--- 
-2.17.1
+>> but DSA doesn't
+>> pass this on to the master port, which does the actual reception.
+>> The master port is put in promiscous mode when the slave ports are
+>> enslaved to a bridge.
+>>
+>> Also, even with software-corrected timestamps, one can observe a
+>> negative path delay reported by linuxptp:
+>>
+>> ptp4l[55.600]: master offset          8 s2 freq  +83677 path delay     -2390
+>> ptp4l[56.600]: master offset         17 s2 freq  +83688 path delay     -2391
+>> ptp4l[57.601]: master offset          6 s2 freq  +83682 path delay     -2391
+>> ptp4l[58.601]: master offset         -1 s2 freq  +83677 path delay     -2391
+>>
+>> Without investigating too deeply, this appears to be introduced by the
+>> correction applied by linuxptp to t4 (t4c: corrected master rxtstamp)
+>> during the path delay estimation process (removing the correction makes
+>> the path delay positive).
+> 
+> No.  The root cause is the time stamps delivered by the hardware or
+> your driver.  That needs to be addressed before going forward.
+> 
+
+How can I check that the timestamps are valid?
+
+Regards,
+-Vladimir
+
+> Thanks,
+> Richard
+> 
 
