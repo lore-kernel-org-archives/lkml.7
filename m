@@ -2,132 +2,146 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33F4C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46DD240BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E63E240BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TgS75tg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfE2SzY (ORCPT
+        id S1726535AbfE2Szr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:55:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40376 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfE2SzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:55:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 498013097031;
-        Wed, 29 May 2019 18:55:24 +0000 (UTC)
-Received: from [10.10.122.41] (ovpn-122-41.rdu2.redhat.com [10.10.122.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EAB861B9B;
-        Wed, 29 May 2019 18:55:21 +0000 (UTC)
-Subject: Re: [PATCH] nbd: fix crash when the blksize is zero
-To:     xiubli@redhat.com, josef@toxicpanda.com, axboe@kernel.dk,
-        nbd@other.debian.org
-References: <20190527054438.13548-1-xiubli@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        atumball@redhat.com
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <5CEED598.7080703@redhat.com>
-Date:   Wed, 29 May 2019 13:55:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.6.0
+        Wed, 29 May 2019 14:55:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41225 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfE2Szq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:55:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s24so1307876plr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=znPmL9ULodOyU0PyZn6MpAN5tuQwaKzazg+9AyEInzs=;
+        b=TgS75tg2RnACM5k+Dq/XHwu8cvK3iWBMwBpBhZ00zh8zt/P/CCim/B+nbQOSe+Fs38
+         Ycsh/5dKTPJCIpt98v1Eqc/E8kiGtJtKntCyiRzkPBARg58okkUfYrRaeulpxpnmd0Uh
+         t/rr+WCi4oPXm0b3Hi5Uqx1er3NIT+fijO8EE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=znPmL9ULodOyU0PyZn6MpAN5tuQwaKzazg+9AyEInzs=;
+        b=YBDwpEMRIkZ8nWBiyhKiHgySFTJPz/wqy3YZQj8Pjhmp42uoQuTZUv2+NUvQbdMUfg
+         slhqLYNB+0fWy4zAqyhu8/+qOkjDvCUImQnMB2BV80qYzSvxu//zqfIE/Cc+JJHVyrqF
+         mqP+c4yL9hgqyTvEbUODLxJW9fEMHv9o85j1YZQwdTBboqBpDca1lnoYJAJXw8WF4TRI
+         URqY2BJT81i1iIWXk9YwqVA5vdj6a0tRLLmZBjdT5S8HEdjuX858Xm2b+71AFFcG8ofb
+         6YXJe8zAH2BJFKgkKzz5EB5v8hTHjnKtTn1DJtqV+ZA5hfa7GeFBg4dwaB0tBLO32w6d
+         /y7A==
+X-Gm-Message-State: APjAAAWMWheu9WS8LWE8SGvdjwUi1PbXU4/MKKR2rUBD7ITLUOdJ9Q58
+        ftAw0hOtgYd44PAZcCfZTZjrmQ==
+X-Google-Smtp-Source: APXvYqyDdxQEyJ2gIdwcKwRhS4KNGWtrcejgOOhoLQHLrBamWDu2+n6EfyIbhUJ4zSrtu5JKVvd1EQ==
+X-Received: by 2002:a17:902:27a8:: with SMTP id d37mr34741076plb.150.1559156146261;
+        Wed, 29 May 2019 11:55:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u2sm304783pjv.30.2019.05.29.11.55.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 11:55:45 -0700 (PDT)
+Date:   Wed, 29 May 2019 11:55:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
+Message-ID: <201905291154.E4A0CB717@keescook>
+References: <20190529113157.227380-1-jannh@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190527054438.13548-1-xiubli@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 29 May 2019 18:55:24 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529113157.227380-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/27/2019 12:44 AM, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
+On Wed, May 29, 2019 at 01:31:57PM +0200, Jann Horn wrote:
+> Restore the read memory barrier in __ptrace_may_access() that was deleted
+> a couple years ago. Also add comments on this barrier and the one it pairs
+> with to explain why they're there (as far as I understand).
 > 
-> This will allow the blksize to be set zero and then use 1024 as
-> default.
-> 
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
+> Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jann Horn <jannh@google.com>
+
+Ah, thanks! Nice find.
+
+Acked-by: Kees Cook <keescook@chromium.org>
+
+(And, yeah, Eric, I say snag it if you've got stuff queued up...)
+
+-Kees
+
 > ---
->  drivers/block/nbd.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
+> (I have no clue whatsoever what the relevant tree for this is, but I
+> guess Oleg is the relevant maintainer?)
 > 
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index 053958a..4c1de1c 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -135,6 +135,8 @@ struct nbd_cmd {
->  
->  #define NBD_MAGIC 0x68797548
->  
-> +#define NBD_DEF_BLKSIZE 1024
-> +
->  static unsigned int nbds_max = 16;
->  static int max_part = 16;
->  static struct workqueue_struct *recv_workqueue;
-> @@ -1237,6 +1239,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
->  		nbd_config_put(nbd);
->  }
->  
-> +static bool nbd_is_valid_blksize(unsigned long blksize)
-> +{
-> +	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
-> +		blksize > PAGE_SIZE)
-> +		return false;
-> +	return true;
-> +}
-> +
->  /* Must be called with config_lock held */
->  static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
->  		       unsigned int cmd, unsigned long arg)
-> @@ -1252,8 +1262,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
->  	case NBD_SET_SOCK:
->  		return nbd_add_socket(nbd, arg, false);
->  	case NBD_SET_BLKSIZE:
-> -		if (!arg || !is_power_of_2(arg) || arg < 512 ||
-> -		    arg > PAGE_SIZE)
-> +		if (!arg)
-> +			arg = NBD_DEF_BLKSIZE;
-> +		if (!nbd_is_valid_blksize(arg))
->  			return -EINVAL;
->  		nbd_size_set(nbd, arg,
->  			     div_s64(config->bytesize, arg));
-> @@ -1333,7 +1344,7 @@ static struct nbd_config *nbd_alloc_config(void)
->  	atomic_set(&config->recv_threads, 0);
->  	init_waitqueue_head(&config->recv_wq);
->  	init_waitqueue_head(&config->conn_wait);
-> -	config->blksize = 1024;
-> +	config->blksize = NBD_DEF_BLKSIZE;
->  	atomic_set(&config->live_connections, 0);
->  	try_module_get(THIS_MODULE);
->  	return config;
-> @@ -1769,6 +1780,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
->  	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
->  		u64 bsize =
->  			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
-> +		if (!bsize)
-> +			bsize = NBD_DEF_BLKSIZE;
-> +		if (!nbd_is_valid_blksize(bsize))
-> +			return -EINVAL;
-
-You can't only return here. You need to also drop the mutex, do
-nbd_put, and drop config_refs reference.
-
-Maybe you want to move this check to the beginning of the function with
-the NBD_ATTR_SIZE_BYTES sanity check since the error handling is easier
-there.
-
-
->  		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
+>  kernel/cred.c   |  9 +++++++++
+>  kernel/ptrace.c | 10 ++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/kernel/cred.c b/kernel/cred.c
+> index 45d77284aed0..07e069d00696 100644
+> --- a/kernel/cred.c
+> +++ b/kernel/cred.c
+> @@ -450,6 +450,15 @@ int commit_creds(struct cred *new)
+>  		if (task->mm)
+>  			set_dumpable(task->mm, suid_dumpable);
+>  		task->pdeath_signal = 0;
+> +		/*
+> +		 * If a task drops privileges and becomes nondumpable,
+> +		 * the dumpability change must become visible before
+> +		 * the credential change; otherwise, a __ptrace_may_access()
+> +		 * racing with this change may be able to attach to a task it
+> +		 * shouldn't be able to attach to (as if the task had dropped
+> +		 * privileges without becoming nondumpable).
+> +		 * Pairs with a read barrier in __ptrace_may_access().
+> +		 */
+>  		smp_wmb();
 >  	}
->  	if (info->attrs[NBD_ATTR_TIMEOUT]) {
+>  
+> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+> index 5710d07e67cf..e54452c2954b 100644
+> --- a/kernel/ptrace.c
+> +++ b/kernel/ptrace.c
+> @@ -324,6 +324,16 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+>  	return -EPERM;
+>  ok:
+>  	rcu_read_unlock();
+> +	/*
+> +	 * If a task drops privileges and becomes nondumpable (through a syscall
+> +	 * like setresuid()) while we are trying to access it, we must ensure
+> +	 * that the dumpability is read after the credentials; otherwise,
+> +	 * we may be able to attach to a task that we shouldn't be able to
+> +	 * attach to (as if the task had dropped privileges without becoming
+> +	 * nondumpable).
+> +	 * Pairs with a write barrier in commit_creds().
+> +	 */
+> +	smp_rmb();
+>  	mm = task->mm;
+>  	if (mm &&
+>  	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+> -- 
+> 2.22.0.rc1.257.g3120a18244-goog
 > 
 
+-- 
+Kees Cook
