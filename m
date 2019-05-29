@@ -2,162 +2,114 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E4EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3583AC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD7520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wOZ28q0D"
+	by mail.kernel.org (Postfix) with ESMTP id 0F6C620B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559126255;
+	bh=SxU7w6Gjg8QT0ZippUNKx1AOfJOqaCKBDZniPh5LqSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p+tqSb8IYQWJ42HCHCKRT6aF/RSKTUxEbOdY6RDxqbMp1l5kyJz7C6blqPVsqPJYQ
+	 581R8lkKsWtO8gXteBrOyk5VhZuogfXCKpg+6wygH9y3fK/+WEPd3hCxLif0HaeAwP
+	 LCo5cUVWAcoRXrHe+jWprsdVacQ19L0ZaI61vrvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfE2Kha (ORCPT
+        id S1726674AbfE2Khe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:37:30 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41040 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2Kh3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:37:29 -0400
-Received: by mail-vs1-f66.google.com with SMTP id w19so1390475vsw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tjnCyAMKOLgkdZookUva/jit8+LoVCiTGzc0TNGq/oA=;
-        b=wOZ28q0Dbsa83UgZEqBAyC7OuWb0kt0Le7tZXn7K4Cvh6Qd+xStSW7Yy8L8potaaWt
-         vCbmGvPV8IcOQ/DvUiQ+adosG5dqCgOU0cxAlWaHwgdAWEQOwpa7mZd3r2dQfTTa/2Xp
-         xfPvIdlyNqkUFyFUY7m71UUGC1xzQFWh/BD7nQZZSeEY2xfK/LMN48ajDbNJGFbWO1VN
-         bLgEW84wPlSshhv5X9kGiTUuNdGdVICyMUMKraO5xgLstqh0aOGGWLQgBSCCB89yzogY
-         Q9AQwpTs7/7RAYNEQnseubioA2ZJ7re36Nw2eitt4gpv7aqrecWSSXkKxIZOQg4hewD7
-         y3bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tjnCyAMKOLgkdZookUva/jit8+LoVCiTGzc0TNGq/oA=;
-        b=eRko2KiUQjrGXt8a0tacNFWe3Tj3Y1zILiA23HkFHghWeMAaL2TcJ2VEbiyLni9SrT
-         Wd3qVP46IMp7LS43XT6AciZyqNtNjBIcI1UVTgz4EYP0Tiu1kP/3mnPkdZN2edS79mrw
-         bAKU7iC+6fUZwFyYxia0wt+Ja5gbZP7I3+zYzEKHnaNgSGbjqDJTPJFHMq1WN77KYHJY
-         KBiBqHW/F6m+fUAfvq0odYdFpyLCDdYj3uLNg8tZFYpFpPGBFXZzQ22bXMPAIx7DoUEv
-         MP7+MBX1m4/EKXDdOoGM7tgEwjdGfKDjGRQ0izRaYE/embv6oYJ9txRP4arvGt3KXvcg
-         1bKA==
-X-Gm-Message-State: APjAAAVqqsx0A+eSvXOacIHIEdOZhjtGVePKaXtdQZf2a9dauq8NeT1v
-        JQgPX0YJ0wdh/sOvP/A+2aYOocm3xurdwISP33tUJQ==
-X-Google-Smtp-Source: APXvYqx8zt/2mUaOcclrGUfqtNcoqVnj8CT/3HypSvAAWyzH7F3cDGM/H+pIvoe/h4PMDjOkbfsFLwZh6e2SC0ttcNo=
-X-Received: by 2002:a67:fa51:: with SMTP id j17mr38251200vsq.89.1559126247816;
- Wed, 29 May 2019 03:37:27 -0700 (PDT)
+        Wed, 29 May 2019 06:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfE2Khc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:37:32 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E4720B1F;
+        Wed, 29 May 2019 10:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559126251;
+        bh=SxU7w6Gjg8QT0ZippUNKx1AOfJOqaCKBDZniPh5LqSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X1tF7/xEJxp+DEjeBZ5UhSnuwKkSs9o3uXZQH+65q0K3WUtTevT1EF7YefAVLfCnu
+         yzGvfQnyUvhDGeffyB0bypSWSfh7zNmqY5BGM3vtQYV0fDRBeQCc/gi/FGvGUnC8cq
+         xQ/sOh3NdsXQeBJ0p2ljLh31pK2HmbOXPi+KIPTA=
+Date:   Wed, 29 May 2019 03:37:31 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Stefan Bader <stefan.bader@canonical.com>
+Cc:     stable <stable@vger.kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Peter Oskolkov <posk@google.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Andy Whitcroft <andy.whitcroft@canonical.com>
+Subject: Re: [PATCH 1/4] ipv4: ipv6: netfilter: Adjust the frag mem limit
+ when truesize changes
+Message-ID: <20190529103731.GB7383@kroah.com>
+References: <20190529102542.17742-1-stefan.bader@canonical.com>
+ <20190529102542.17742-2-stefan.bader@canonical.com>
 MIME-Version: 1.0
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <1556264798-18540-4-git-send-email-ludovic.Barre@st.com> <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
- <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
-In-Reply-To: <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 29 May 2019 12:36:50 +0200
-Message-ID: <CAPDyKFqzNy3hDzovSxb6pd37u7SxWqYoJeu9+tf_qDF7gs0euA@mail.gmail.com>
-Subject: Re: [PATCH V2 3/5] mmc: mmci: fix clear of busy detect status
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529102542.17742-2-stefan.bader@canonical.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 11:20, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> On 5/27/19 8:17 PM, Ulf Hansson wrote:
-> > On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>
-> >> From: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> The "busy_detect_flag" is used to read/clear busy value of
-> >> mmci status. The "busy_detect_mask" is used to manage busy irq of
-> >> mmci mask.
-> >> For sdmmc variant, the 2 properties have not the same offset.
-> >> To clear the busyd0 status bit, we must add busy detect flag,
-> >> the mmci mask is not enough.
-> >>
-> >> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >
-> > Ludovic, again, apologies for the delay.
-> >
-> >> ---
-> >>   drivers/mmc/host/mmci.c | 3 ++-
-> >>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> >> index a040f54..3cd52e8 100644
-> >> --- a/drivers/mmc/host/mmci.c
-> >> +++ b/drivers/mmc/host/mmci.c
-> >> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
-> >>                   * to make sure that both start and end interrupts are always
-> >>                   * cleared one after the other.
-> >>                   */
-> >> -               status &= readl(host->base + MMCIMASK0);
-> >> +               status &= readl(host->base + MMCIMASK0) |
-> >> +                       host->variant->busy_detect_flag;
-> >
-> > I think this is not entirely correct, because it would mean we check
-> > for busy even if we haven't unmasked the busy IRQ via the
-> > variant->busy_detect_mask.
->
-> if the variant is busy_detect false:
->   => no problem because the busy_detect_flag or busy_detect_mask is not
->      defined.
+On Wed, May 29, 2019 at 12:25:39PM +0200, Stefan Bader wrote:
+> From: Jiri Wiesner <jwiesner@suse.com>
+> 
+> The *_frag_reasm() functions are susceptible to miscalculating the byte
+> count of packet fragments in case the truesize of a head buffer changes.
+> The truesize member may be changed by the call to skb_unclone(), leaving
+> the fragment memory limit counter unbalanced even if all fragments are
+> processed. This miscalculation goes unnoticed as long as the network
+> namespace which holds the counter is not destroyed.
+> 
+> Should an attempt be made to destroy a network namespace that holds an
+> unbalanced fragment memory limit counter the cleanup of the namespace
+> never finishes. The thread handling the cleanup gets stuck in
+> inet_frags_exit_net() waiting for the percpu counter to reach zero. The
+> thread is usually in running state with a stacktrace similar to:
+> 
+>  PID: 1073   TASK: ffff880626711440  CPU: 1   COMMAND: "kworker/u48:4"
+>   #5 [ffff880621563d48] _raw_spin_lock at ffffffff815f5480
+>   #6 [ffff880621563d48] inet_evict_bucket at ffffffff8158020b
+>   #7 [ffff880621563d80] inet_frags_exit_net at ffffffff8158051c
+>   #8 [ffff880621563db0] ops_exit_list at ffffffff814f5856
+>   #9 [ffff880621563dd8] cleanup_net at ffffffff814f67c0
+>  #10 [ffff880621563e38] process_one_work at ffffffff81096f14
+> 
+> It is not possible to create new network namespaces, and processes
+> that call unshare() end up being stuck in uninterruptible sleep state
+> waiting to acquire the net_mutex.
+> 
+> The bug was observed in the IPv6 netfilter code by Per Sundstrom.
+> I thank him for his analysis of the problem. The parts of this patch
+> that apply to IPv4 and IPv6 fragment reassembly are preemptive measures.
+> 
+> Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+> Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
+> Acked-by: Peter Oskolkov <posk@google.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> 
+> (backported from commit ebaf39e6032faf77218220707fc3fa22487784e0)
+> [smb: context adjustments in net/ipv6/netfilter/nf_conntrack_reasm.c]
+> Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
 
-Right.
+I can't take a patch for 4.4.y that is not in 4.9.y as anyone upgrading
+kernel versions would have a regression :(
 
->
-> if variant is busy_detect true:
-> the busy handle is split in 3 steps (see mmci_cmd_irq):
-> step 1: detection of busy line => unmasked the busy irq end
-> step 2: in busy wait => ignore cmd irq while current busy flag is
-> enabled.
-> step 3: end of busy => clear and mask busy irq
->
-> To detect the first step (see mmci_cmd_irq: which unmasks the busy irq)
-> we need to know the current busy state. Actually, the status register is
-> re-read in mmci_cmd_irq, why not used the status read in mmci_irq and in
-> parameter ?
+Can you also provide a backport of the needed patches for 4.9.y for this
+issue so I can take these?
 
-Right, I see your point.
+thanks,
 
-On the other hand, that re-read of the status registers should really
-not be needed. Maybe it's a leftover from my initial version of the
-code, but in any case we should remove that.
-
->
-> Regards,
-> Ludo
->
-> >
-> > I suggest to store a new bool in the host (call it
-> > "busy_detect_unmasked" or whatever makes sense to you), to track
-> > whether we have unmasked the busy IRQ or not. Then take this flag into
-> > account, before ORing the value of host->variant->busy_detect_flag,
-> > according to above.
-> >
-> >>                  if (host->variant->busy_detect)
-> >>                          writel(status & ~host->variant->busy_detect_mask,
-> >>                                 host->base + MMCICLEAR);
-> >> --
-> >> 2.7.4
-
-Kind regards
-Uffe
+greg k-h
