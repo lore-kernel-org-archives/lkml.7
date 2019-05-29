@@ -2,119 +2,161 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D663DC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A1CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B994D238C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE95E238C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="qPW3ofQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfE2Ped (ORCPT
+        id S1726912AbfE2Pec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:34:33 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:50759 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2Pec (ORCPT
+        Wed, 29 May 2019 11:34:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39642 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfE2Pec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 11:34:32 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hW0b1-00060s-1p; Wed, 29 May 2019 09:34:31 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hW0b0-0003Kb-7Q; Wed, 29 May 2019 09:34:30 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
-        <20190523003916.20726-4-ebiederm@xmission.com>
-        <20190523101702.GG26646@fuggles.cambridge.arm.com>
-        <875zq1gnh4.fsf_-_@xmission.com>
-        <20190523161509.GE31896@fuggles.cambridge.arm.com>
-        <8736l4evkn.fsf@xmission.com>
-        <20190524100008.GE3432@fuggles.cambridge.arm.com>
-        <87o93rcwee.fsf@xmission.com>
-        <20190529151227.GF11154@fuggles.cambridge.arm.com>
-Date:   Wed, 29 May 2019 10:34:25 -0500
-In-Reply-To: <20190529151227.GF11154@fuggles.cambridge.arm.com> (Will Deacon's
-        message of "Wed, 29 May 2019 16:12:27 +0100")
-Message-ID: <87muj51dha.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+Received: by mail-pg1-f193.google.com with SMTP id 196so116344pgc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QBTLnNOV7gK8Yksv7/ZayOzF1A/1p3r3qfTWQfsr+5k=;
+        b=qPW3ofQ+wrfRG8qTvQ96ZGHSSch5H/W2ns+8WOCWmmGhii04PuKOPIFYj5Qzmezyrn
+         XJylyTsK2Tr2TK/sawOqiMtam5VtSXWuPFXfFao86OwuyTL3pDo7LpJzXS9M6biwfUD8
+         kMjSawwtTyHDM1KcUcq+i6aOaNRJs0GWSqjUm9LNY5k9+Epka2VjJBVnBvR6QSUeV5vs
+         7e2WChPI0sOT3pRj16QXUNZKZKBw3vjTrviS+bfjuq3DJd2uOS6kjLlbmNTbnOuD+aZy
+         fz+wyvVgHEtIFUPFMBc3NV9Lf5JFtJWrohfYsoC/I0uwHiWOeaTBy7Cz7bDA1B/dyud9
+         R2tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QBTLnNOV7gK8Yksv7/ZayOzF1A/1p3r3qfTWQfsr+5k=;
+        b=btNbGUeSfCY2pGJTvQkXv9I+tH1GVP+QFhn2iQvSRDi6Eqx2sXGwobqSdMdQcR5LbW
+         I4aTW+Te8LffM58grEfsj3wAkQUiUWoZgOqRHU4rTahvU6czGc8N+ettOVJFjEMV4GV6
+         onUd8PgZVXM+WtyLNdbX7zPkCMZKlQIXLFoXCMMb03JKY4QrIWeLu6JkCotU+3WO/dOk
+         OYGACMiGGmPRZJAwnnIIlPUwCib6Smls0u1n3IM3VovBem8oav/WUooyDAnLir+e2Bzt
+         PhFaOWINf0rmlNW+3FwIkmbp9xuiXCU2IyTK+vv7R1Us8mQ202A0/lIp0wGeuEcU1XyP
+         ZWUQ==
+X-Gm-Message-State: APjAAAWNTgUsjHpwGqJasPkiuNjT1NqXI5VVh8C5GSq6rY3N0ffqGjGH
+        KE/jojQ7u7+MRwFFmJUR8unzKg==
+X-Google-Smtp-Source: APXvYqz9StBcZoB5Lg6+nM4qZaCfAQ8ekNwP4Ue16YfIsljxMfwjXEp4FnMnFD/1+Og2xj8d24Oitw==
+X-Received: by 2002:a63:7d09:: with SMTP id y9mr119516427pgc.350.1559144071263;
+        Wed, 29 May 2019 08:34:31 -0700 (PDT)
+Received: from cisco ([2601:280:b:edbb:840:fa90:7243:7032])
+        by smtp.gmail.com with ESMTPSA id f5sm19296566pfn.161.2019.05.29.08.34.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 08:34:30 -0700 (PDT)
+Date:   Wed, 29 May 2019 09:34:27 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+Message-ID: <20190529153427.GB8959@cisco>
+References: <cover.1554732921.git.rgb@redhat.com>
+ <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
+ <20190529145742.GA8959@cisco>
+ <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hW0b0-0003Kb-7Q;;;mid=<87muj51dha.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+JWnDMTAC4U8y81mkWSmRaxfqYNr09zag=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [REVIEW][PATCHv2 03/26] signal/arm64: Use force_sig not force_sig_fault for SIGKILL
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will.deacon@arm.com> writes:
+On Wed, May 29, 2019 at 11:29:05AM -0400, Paul Moore wrote:
+> On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
+> >
+> > On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
+> > > It is not permitted to unset the audit container identifier.
+> > > A child inherits its parent's audit container identifier.
+> >
+> > ...
+> >
+> > >  /**
+> > > + * audit_set_contid - set current task's audit contid
+> > > + * @contid: contid value
+> > > + *
+> > > + * Returns 0 on success, -EPERM on permission failure.
+> > > + *
+> > > + * Called (set) from fs/proc/base.c::proc_contid_write().
+> > > + */
+> > > +int audit_set_contid(struct task_struct *task, u64 contid)
+> > > +{
+> > > +     u64 oldcontid;
+> > > +     int rc = 0;
+> > > +     struct audit_buffer *ab;
+> > > +     uid_t uid;
+> > > +     struct tty_struct *tty;
+> > > +     char comm[sizeof(current->comm)];
+> > > +
+> > > +     task_lock(task);
+> > > +     /* Can't set if audit disabled */
+> > > +     if (!task->audit) {
+> > > +             task_unlock(task);
+> > > +             return -ENOPROTOOPT;
+> > > +     }
+> > > +     oldcontid = audit_get_contid(task);
+> > > +     read_lock(&tasklist_lock);
+> > > +     /* Don't allow the audit containerid to be unset */
+> > > +     if (!audit_contid_valid(contid))
+> > > +             rc = -EINVAL;
+> > > +     /* if we don't have caps, reject */
+> > > +     else if (!capable(CAP_AUDIT_CONTROL))
+> > > +             rc = -EPERM;
+> > > +     /* if task has children or is not single-threaded, deny */
+> > > +     else if (!list_empty(&task->children))
+> > > +             rc = -EBUSY;
+> > > +     else if (!(thread_group_leader(task) && thread_group_empty(task)))
+> > > +             rc = -EALREADY;
+> > > +     read_unlock(&tasklist_lock);
+> > > +     if (!rc)
+> > > +             task->audit->contid = contid;
+> > > +     task_unlock(task);
+> > > +
+> > > +     if (!audit_enabled)
+> > > +             return rc;
+> >
+> > ...but it is allowed to change it (assuming
+> > capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
+> > immediately useful since we still live in the world of majority
+> > privileged containers if we didn't allow changing it, in addition to
+> > un-setting it.
+> 
+> The idea is that only container orchestrators should be able to
+> set/modify the audit container ID, and since setting the audit
+> container ID can have a significant effect on the records captured
+> (and their routing to multiple daemons when we get there) modifying
+> the audit container ID is akin to modifying the audit configuration
+> which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
+> is that you would only change the audit container ID from one
+> set/inherited value to another if you were nesting containers, in
+> which case the nested container orchestrator would need to be granted
+> CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
+> compromise).
 
-> On Fri, May 24, 2019 at 05:36:41PM -0500, Eric W. Biederman wrote:
->> Will Deacon <will.deacon@arm.com> writes:
->> 
->> > On Thu, May 23, 2019 at 03:59:20PM -0500, Eric W. Biederman wrote:
->> >> Will Deacon <will.deacon@arm.com> writes:
->> >> 
->> >> > On Thu, May 23, 2019 at 11:11:19AM -0500, Eric W. Biederman wrote:
->> >> >> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
->> >> >> index ade32046f3fe..e45d5b440fb1 100644
->> >> >> --- a/arch/arm64/kernel/traps.c
->> >> >> +++ b/arch/arm64/kernel/traps.c
->> >> >> @@ -256,7 +256,10 @@ void arm64_force_sig_fault(int signo, int code, void __user *addr,
->> >> >>  			   const char *str)
->> >> >>  {
->> >> >>  	arm64_show_signal(signo, str);
->> >> >> -	force_sig_fault(signo, code, addr, current);
->> >> >> +	if (signo == SIGKILL)
->> >> >> +		force_sig(SIGKILL, current);
->> >> >> +	else
->> >> >> +		force_sig_fault(signo, code, addr, current);
->> >> >>  }
->> >> >
->> >> > Acked-by: Will Deacon <will.deacon@arm.com>
->> >> >
->> >> > Are you planning to send this series on, or would you like me to pick this
->> >> > into the arm64 tree?
->> >> 
->> >> I am planning on taking this through siginfo tree, unless it causes
->> >> problems.
->> >
->> > Okey doke, it would just be nice to see this patch land in 5.2, that's
->> > all.
->> 
->> As this does not appear to have any real world consequences I am aiming
->> at 5.3.  If someone else would like to take it and feed it to Linus
->> sooner I won't object.
->
-> Thanks. I've picked this patch up as part of the arm64 fixes I plan to send
-> for -rc3.
+But then don't you want some kind of ns_capable() instead (probably
+not the obvious one, though...)? With capable(), you can't really nest
+using the audit-id and user namespaces together.
 
-Sounds good.
-
-We might have a trivial conflict between our branches as I am also
-including this in my for-next branch, as I have further patches that go
-on to remove the task argument from force_sig and force_sig_fault.
-
-But I don't think it is anything to worry about.
-
-Eric
-
-
+Tycho
