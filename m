@@ -2,176 +2,118 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2008CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3558223B88
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="l+25soU2"
+	by mail.kernel.org (Postfix) with ESMTP id E833D23B9B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559142614;
+	bh=jyaufMCqctNlaZ5kFXP4DRaQtQz6X19BijSecFx9i4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z1emSZEv/idYjvuI+Aqw/t9wZTrEaUMBwNlKu84/TLFV85HKbkqwcUIxNfe2uLw5/
+	 P4bNaeCcsxwamXwZjV4neziVgaJtDfIOafwplwrQXOl/rZfxucs2f3zCO1v258yhho
+	 I+OquT2jDHrWMiigX1MjZuqmFZpxic8H8u/MKWag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfE2PKF (ORCPT
+        id S1726896AbfE2PKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:10:05 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37406 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2PKF (ORCPT
+        Wed, 29 May 2019 11:10:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38516 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2PKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:10:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a23so1838486pff.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3NHqlVoLnqt1FPrdV3/ouU8QWVDF9XpBsDFRA3M9mXw=;
-        b=l+25soU2r8L+HSnZwz7EAeGteROjLCaBLCfS46AdyKGmDYKRETwB+6CGZChZimiUfP
-         ngVccUx/aZUDVBs0m8Q6cnbIeBz+Ja6u69OL2s7TVX30cdjUYRMMccUhgfG1CYKw78w+
-         V1GIr0ftPCaKGc4AmHhHWk3Zogl1mCnO9ptqHVKKToXX415UW1dMo35OeNYX06d1JgZD
-         xhdFQfY5MumAWyV4kWY8VLCPmPdGF+cKN9nOJ3CM5JcUSf8XUJaAk+xc7Mfifq2VAu+u
-         D30p/HP8SCPBwTglWYYKym7xOMHHs9DhBLdqzjV3ph0mfKCf4upZUCDb0df1YbQF2S8d
-         aO0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3NHqlVoLnqt1FPrdV3/ouU8QWVDF9XpBsDFRA3M9mXw=;
-        b=f76x0taOpiqsXJvWOfwCZmWTNO6XR+4DYr5P2rVA60v3Q7pPFsPTlaO4bk5D80AnpP
-         pcAOC8EBcm3NO3s9rSAlkjSqQJul50kui1MAR9LPUxXItSGQSEThYq/WNPQ37LUEu9HO
-         VGe3VXrdxn9Uxe0wd2MpwC+swT8FwbSGRnmdF/NEjmD61sNpyOpAQdjTRYvCJOndjz0H
-         KKc3pcMsFf+b+6MDPJIkkZCmPTqi9dck0vyiAGgud2toNyGQOdwnG2Cy/hdMAjrvpqAw
-         8EPTrt8XtmpLd609iUk/cvWg3bgPbzpGIEq1EJnWvMvewwDMpE8DQ5eifNSwMKvC2mtb
-         FXAA==
-X-Gm-Message-State: APjAAAVSDSkuF3jDykghC3o9S3xaVmhR/vsyAia34W6rur8PLfKruVil
-        yg5N2d+IA/zn95CNsg7s8BjmGw==
-X-Google-Smtp-Source: APXvYqxm6x95Oz3ytQOQ6KJ6h+yMYOZG9THlrGBNRRjjiDeEhH7rSiaxnIXU6uXMK+p7Io1TQQBNsQ==
-X-Received: by 2002:a62:1ec1:: with SMTP id e184mr83655828pfe.185.1559142604091;
-        Wed, 29 May 2019 08:10:04 -0700 (PDT)
-Received: from ?IPv6:2600:100f:b10c:ace6:b862:4204:5f4a:fe22? ([2600:100f:b10c:ace6:b862:4204:5f4a:fe22])
-        by smtp.gmail.com with ESMTPSA id f38sm14162147pgm.85.2019.05.29.08.10.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 08:10:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH RFC v8 01/10] namei: obey trailing magic-link DAC permissions
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190524031109.v24r6typyug2rlto@yavin>
-Date:   Wed, 29 May 2019 08:10:00 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9712F80E-1016-4DB7-996D-B423E07A1C1F@amacapital.net>
-References: <20190520133305.11925-1-cyphar@cyphar.com> <20190520133305.11925-2-cyphar@cyphar.com> <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com> <20190523020009.mi25uziu2b3whf4l@yavin> <20190524031109.v24r6typyug2rlto@yavin>
-To:     Aleksa Sarai <cyphar@cyphar.com>
+        Wed, 29 May 2019 11:10:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EmV3+mm8xVIYULNsB7o8Zl6HJvO8Q8TYrCH6IuDaJa4=; b=abwNwYqwKkqxBhuv7lSPID6gB
+        W73kiZ0C3uC2yF5dXGapSIT0+mmfFVulFxtchgCujf/vCo6X2RD5SeUA/o6J40UK1OKTJhNyl35vn
+        7XpnR9HfppDgEaa7c83zO4/AZnzktGD11wk2BNAPVvTPfxU+WQP/OYifv+iOvgrhE/Xpw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hW0DK-00050l-9k; Wed, 29 May 2019 15:10:02 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id E417A440046; Wed, 29 May 2019 16:10:00 +0100 (BST)
+Date:   Wed, 29 May 2019 16:10:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
+        lee.jones@linaro.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
+ enable flexible
+Message-ID: <20190529151000.GP2456@sirena.org.uk>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-2-dmurphy@ti.com>
+ <20190523130311.GA17245@sirena.org.uk>
+ <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
+ <20190526124838.GH2456@sirena.org.uk>
+ <2398099b-16e6-f155-5852-45ba3dbc21ef@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MmQIYbZiCoQ2kDro"
+Content-Disposition: inline
+In-Reply-To: <2398099b-16e6-f155-5852-45ba3dbc21ef@ti.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--MmQIYbZiCoQ2kDro
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On May 23, 2019, at 8:11 PM, Aleksa Sarai <cyphar@cyphar.com> wrote:
->=20
->> On 2019-05-23, Aleksa Sarai <cyphar@cyphar.com> wrote:
->>> On 2019-05-22, Andy Lutomirski <luto@kernel.org> wrote:
->>> What are actual examples of uses for this exception?  Breaking
->>> selftests is not, in and of itself, a huge problem.
->>=20
->> Not as far as I know. All of the re-opening users I know of do re-opens
->> of O_PATH or are re-opening with the same (or fewer) privileges. I also
->> ran this for a few days on my laptop without this exception, and didn't
->> have any visible issues.
->=20
-> I have modified the patch to WARN_ON(may_open_magiclink() =3D=3D -EACCES).=
+On Wed, May 29, 2019 at 06:51:32AM -0500, Dan Murphy wrote:
 
->=20
-> So far (in the past day on my openSUSE machines) I have only seen two
-> programs which have hit this case: kbd[1]'s "loadkeys" and "kbd_mode"
-> binaries. In addition to there not being any user-visible errors -- they
-> actually handle permission errors gracefully!
->=20
->  static int
->  open_a_console(const char *fnam)
->  {
->      int fd;
->=20
->      /*
->       * For ioctl purposes we only need some fd and permissions
->       * do not matter. But setfont:activatemap() does a write.
->       */
->      fd =3D open(fnam, O_RDWR);
->      if (fd < 0)
->          fd =3D open(fnam, O_WRONLY);
->      if (fd < 0)
->          fd =3D open(fnam, O_RDONLY);
->      if (fd < 0)
->          return -1;
->      return fd;
->  }
->=20
-> The above gets called with "/proc/self/fd/0" as an argument (as well as
-> other console candidates like "/dev/console"). And setfont:activatemap()
-> actually does handle read-only fds:
->=20
->  static void
->  send_escseq(int fd, const char *seq, int n)
->  {
->      if (write(fd, seq, n) !=3D n) /* maybe fd is read-only */
->          printf("%s", seq);
->  }
->=20
->  void activatemap(int fd)
->  {
->      send_escseq(fd, "\033(K", 3);
->  }
->=20
-> So, thus far, not only have I not seen anything go wrong -- the only
-> program which actually hits this case handles the error gracefully.
-> Obviously we got lucky here, but the lack of any users of this
-> mis-feature leads me to have some hope that we can block it without
-> anyone noticing.
->=20
-> But I emphatically do not want to break userspace here (except for
-> attackers, obviously).
+> Although I don't disagree with you I don't see how the interface is fragi=
+le
+> with only these 3 regulators defined.
 
-Hmm. This will break any script that does echo foo >/dev/stdin too.
+> Would it not be prudent to amend this driver if/when a new regulator is
+> needed that has a different enable bit/register combination?=A0=A0 And if=
+ that
 
-Just to throw an idea out there, what if the open were allowed if the file m=
-ode is sufficient or if the magic link target is openable with the correct m=
-ode without magic?  In other words, first check as in your code but without t=
-he exception and, if that check fails, then walk the same path that d_path w=
-ould return and see if it would work as a normal open?  Of course, that seco=
-nd attempt would need to disable magic links to avoid recursing.  I=E2=80=99=
-m not sure I love this idea...
+The fragility I'm worried about is someone forgetting to make suitable
+updates, especially if they don't use the feature in their own system.
 
-Otherwise, I imagine we can live with the exception, especially if the new o=
-pen API turns it off by default.
+> was the case I would almost expect a different driver completely if the
+> regmap did not line up correctly.=A0 I only reused this driver because the
+> registers and bits lined up and did not think it was necessary to create a
+> whole new driver.
+
+This is a single register bit which is set once on startup isn't it?  It
+seems like exactly the sort of thing that a hardware designer might
+change incompatibly, perhaps even for good reasons like adding more
+flexibility over which pins can be used to control the enable and far
+=66rom something that would require a totally new driver if it was handled
+differently.
+
+--MmQIYbZiCoQ2kDro
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzuoMMACgkQJNaLcl1U
+h9CHOwf/UTUIOVotY6+NILgR0Cw+Y05M6AKN4cKcbuwRRwmm1J5pa51uu354zrST
+lHS9DeCOTICl1VOZ4foUZ2puX0m/dClezj0InMSDzh8QYhqPJDpG8l+RBRtG1Uuo
+oX+BePc+pB59jJsTM7MJixZ295Z/x5hCOMrlofwAVgN7N8a4ROG4JNki6abmidEA
+FX4nfqRQICbLPYrXpMCoVqMwh8Qi0E7pD5YBrRlJ9RnG5VbVVZiKjieRUj5x4edV
+aOdFllk8NGf1A6fp5q/DALioeamKiuad6Eyx8CUbxgHo6In8DnfCBKbf23cUZakA
+qmg5QUork2WSm5tWHSU11Ami190r+g==
+=dJBD
+-----END PGP SIGNATURE-----
+
+--MmQIYbZiCoQ2kDro--
