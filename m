@@ -2,70 +2,133 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CE7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45A3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFEB623E2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E23E23E29
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="opPA4eY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfE2Qlw (ORCPT
+        id S1726984AbfE2QoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:41:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33606 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfE2Qlv (ORCPT
+        Wed, 29 May 2019 12:44:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47596 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfE2QoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:41:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z28so2000037pfk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:41:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=PDhUrA5/RrC3JM7DYbgnLMAMpwwCgpy6bnreDMvHf4U=;
-        b=J8wNHRrxWsG5CWgUp3ekQW4kM2q+nuKkiB2cNIbTaZKH8JZMjtq28QRmpDRb88RDjf
-         WAPpuUJf5EL72x9TDWjE7SwoPCu3kh/vpZDn1Z9LfHmPQ4jnGkybGiKMd4IjdmXPBHBF
-         rPTTHtCiv40U+P4qZ8Cpu/hBymWZceW+Z7FdQ/7Fsi2oy3Bz+6wkLkjzjdQvcb9YwtwL
-         7cLxVQiiXieAZiBnvs8BQHvudQeBrglSC1nqYYCyyxuGKZxqYuEMrYz5Ew4HQHTLSTkk
-         1cNA5XKorPKAn211q4VeDbEydR2Ah4bCQjXKE8w48WKZ8S7eT2eu/YRAxeC1vV31PfUV
-         by+A==
-X-Gm-Message-State: APjAAAWmwNJwB/Vg7t3LFerMGTJpb/u2UBnXruPg89iTu18D7yV+S0h8
-        HrJOIpy7lujp2xA2Sou/7f+Jng==
-X-Google-Smtp-Source: APXvYqyZ3V1656NRZe9sautQeFGu8evjanQeuikfzOH4Kg314/FswV7M7Zan7JmCuTha1Fo9ELaMIQ==
-X-Received: by 2002:a62:ae0e:: with SMTP id q14mr6280675pff.164.1559148106114;
-        Wed, 29 May 2019 09:41:46 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id 128sm180525pff.16.2019.05.29.09.41.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 09:41:45 -0700 (PDT)
-Date:   Wed, 29 May 2019 09:41:45 -0700 (PDT)
-X-Google-Original-Date: Wed, 29 May 2019 09:39:12 PDT (-0700)
-Subject:     Re: [PATCH] riscv: fix locking violation in page fault handler
-In-Reply-To: <mvmy336luba.fsf@suse.de>
-CC:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     schwab@suse.de
-Message-ID: <mhng-35399cf5-4e49-4d23-9a53-297a53c3d573@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 29 May 2019 12:44:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sxzAs+3HnzYC9EoyXWpVI8ykljmz5DFHFWPIJsNygyQ=; b=opPA4eY5MGIVUeEnQjWc3VAJ/
+        4oXlxib2TTPMoX4NSr7melN23eKj6rkoxnQGfN6bLUlJ185bd3ROanNSCEa9f3oCT4lHpf94pxEWV
+        ISvHz2YaNLlTt6LLkY+yt7WQ5KlhFsAU6o76aU3PMhiLsNwdZ57JEgNB6YxzN5IyY41YQSOqm+lRI
+        YW5k1rqgXLu8LSpCwKHeGb2q0JJi+0CJH9px60p4G+8Cc29Ep2boOiEcaoiFTtz2l3hm88Wi2jRyH
+        N0y0NQSVEBJicGKx1lUK22DOUrEoOK10QfZplisFB6S48RHDIWlgurzwmzq9vwtzEeuQAJEi52l+E
+        7b7E2XGPw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW1gP-0002uk-4d; Wed, 29 May 2019 16:44:09 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 51939201D5AB3; Wed, 29 May 2019 18:44:07 +0200 (CEST)
+Date:   Wed, 29 May 2019 18:44:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au,
+        acme@redhat.com, eranian@google.com, fweisbec@gmail.com,
+        jolsa@redhat.com
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190529164407.GA2623@hirez.programming.kicks-ass.net>
+References: <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+ <20190529091733.GA4485@fuggles.cambridge.arm.com>
+ <20190529101042.GN2623@hirez.programming.kicks-ass.net>
+ <20190529102022.GC4485@fuggles.cambridge.arm.com>
+ <20190529125557.GU2623@hirez.programming.kicks-ass.net>
+ <20190529130521.GA11023@fuggles.cambridge.arm.com>
+ <20190529132515.GW2623@hirez.programming.kicks-ass.net>
+ <20190529143510.GA11154@fuggles.cambridge.arm.com>
+ <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
+ <20190529162528.GB12420@fuggles.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529162528.GB12420@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 00:42:01 PDT (-0700), schwab@suse.de wrote:
-> On Mai 07 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
->
->> LMK if you, or anyone else, has a preference.  I'm assuming this will go in
->> through my tree, so I've picked up my version for now :)
->
-> You did?
+On Wed, May 29, 2019 at 05:25:28PM +0100, Will Deacon wrote:
 
-It ended up landing in Linus' tree as 8fef9900d43f ("riscv: fix locking
-violation in page fault handler"), so it looks like I did manage avoid losing
-this one.
+> > > > On Wed, May 29, 2019 at 02:05:21PM +0100, Will Deacon wrote:
+> > > > > On Wed, May 29, 2019 at 02:55:57PM +0200, Peter Zijlstra wrote:
+> > > > 
+> > > > > >  	if (user_mode(regs)) {
+> > > > > 
+> > > > > Hmm, so it just occurred to me that Mark's observation is that the regs
+> > > > > can be junk in some cases. In which case, should we be checking for
+> > > > > kthreads first?
+
+> Sorry, I'm not trying to catch you out! Just trying to understand what the
+> semantics are supposed to be.
+> 
+> I do find the concept of user_mode(regs) bizarre for the idle task. By the
+> above, we definitely have a bug on arm64 (user_mode(regs) tends to be
+> true for the idle task), and I couldn't figure out how you avoided it on
+> x86. I guess it happens to work because the stack is zero-initialised or
+> something?
+
+So lets take the whole thing:
+
+static void perf_sample_regs_user(struct perf_regs *regs_user,
+				  struct pt_regs *regs,
+				  struct pt_regs *regs_user_copy)
+{
+	if (user_mode(regs)) {
+		regs_user->abi = perf_reg_abi(current);
+		regs_user->regs = regs;
+	} else if (!(current->flags & PF_KTHREAD)) {
+		perf_get_regs_user(regs_user, regs, regs_user_copy);
+	} else {
+		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+		regs_user->regs = NULL;
+	}
+}
+
+This is called from the perf-generate-a-sample path, which is typically
+an exception (IRQ/NMI/whatever) or a software/tracepoint thing.
+
+In the exception case, the @regs argument are the exception register, as
+provided by your entry.S to your exception handlers. In the
+software/tracepoint thing, it is the result of
+perf_arch_fetch_caller_regs().
+
+So @regs is always 'sane' and user_mode(regs) tells us if the exception
+came from userspace (and software/tracepoints always fail this, they
+'obviously' don't come from userspace). If we're idle, we're not from
+userspace, so this branch doesn't matter.
+
+Next, we test if there is a userspace part _at_all_, this is the newly
+minted: '!(current->flags & PF_KTHREAD)', if that passes, we use
+architecture magic -- task_pt_regs() -- to get the user-regs. This can
+be crap. But since the idle task will always fail our test (as would
+the old one, idle->mm is always NULL), we'll never get here for idle.
+
+Then failing the above two, as we must for idle, we'll default to
+ABI_NONE/NULL.
+
+
+Does that help?
