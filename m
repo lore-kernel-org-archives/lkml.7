@@ -4,76 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFECDC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634BCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892A924330
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B5324326
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172272;
-	bh=51yZ6RZgtKOlKFc0Vy80gFuoiQWZbbSDlf2HBM/XHrs=;
+	s=default; t=1559172285;
+	bh=YTEjs04hZCWVpALwCo0ona+k3Z9Xs305DgRYTn+PT7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6Fc4s3ob3B18KYHhdpo0p3UeSP5pnl9t50EIg9ZRoUJQLnkAy9TY9HC1m1KSyV/Q
-	 LJLCguRmHEK+7rKBW1iXTTpgSh2pk9ALS+QM5V5cLxO4CDjr1haMLhyMwYBScGykGm
-	 WhJm0lSJ2SguO85RFkkcOSLG+QkaNhoBJsonZa/I=
+	b=D70cz+EJj8OygRCu070Cc2Kmpieia3c2UKKZgIYCVNrEGsYWMi0NZxMUv2ksK1roy
+	 mTmqzLQ3D7FdLR/4BD/ZLCd+w/Ff0IvQirC0/xltwqCloi5uXv6OMNpaKepfGyLa+b
+	 dek6f9k2X6zM1OJ9fGwn3xRaGyjNTLK1mJgEifds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfE2XY1 (ORCPT
+        id S1726959AbfE2XYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:24:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49264 "EHLO
+        Wed, 29 May 2019 19:24:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49248 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfE2XYD (ORCPT
+        with ESMTP id S1726698AbfE2XYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:24:03 -0400
+        Wed, 29 May 2019 19:24:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=pLa6QBXDUlkvKl0F9KmB92FN1yBU20l3+fc3LLX9/Ow=; b=TUTbNEI2sFRqzFdX8mAEDw+ZKk
-        XtHS4RpAgwYG5mZM22U1r6M0vo9yBLzdpBWxLG+Wua96AfW4fGlJvlNU4cwOADtGPiZmrkKWvTbCA
-        +YlWRB5YJuvFtbYIZXOusbPxpxpK7XsazwynFvbwvZf9cNf3WTWLfqLh+qA00YXjPTsZuDlOCdtga
-        duJk804hRhhdM7AAVrd8q+J05abzsvq5dJZOHHiK+GjqJam/lkUK4JruIWmnniYsXhPKSyxV8wube
-        cTsvAcSBdajn4t+NWdFdqsXfNt6brPC/m0bcxjACGqdLnz+bast5CItihyQj2txojtCoXFRwIv9JW
-        P1hLrtIA==;
+        bh=ET29ju1+oMQpwZnUmWoRWQU4cUr3EcBdPbSqKU0nYKk=; b=fQXe3jkDrpW033U8WZIbJZgy2I
+        PR+iZPMvM0wOGqHqnLLEz5jIw0fNwSOla72jq5FhX3TVh9GKakgSJLYugtZbFo4WwFWocJiDpJr6b
+        sCffpE2fe3Ww7+luh9Z297FZtCNbVVsh/zq4GnZCbNBXZD/Uir/eUzCenyciV5Lw7hZpVAB1vqXJ8
+        iDrDysBfq6Pl13JTAS5QdPZ+0bHqM6gsyGktP2ow3XG83AY8DVvvT4bsj1snEDbROw4aHYbEbmPt2
+        BEVnhdIvmoesHk0kvNuCZtSNRRGqiM9XkHO2vZTnjqRp2P3GGKgiJRNo6AVteylXdryJFIncQBQes
+        dQX0805w==;
 Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7vL-0005Rw-HW; Wed, 29 May 2019 23:23:59 +0000
+        id 1hW7vL-0005Ru-I0; Wed, 29 May 2019 23:23:59 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7vI-0007xI-NZ; Wed, 29 May 2019 20:23:56 -0300
+        id 1hW7vI-0007wt-IQ; Wed, 29 May 2019 20:23:56 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matan Ziv-Av <matan@svgalib.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 09/22] docs: mark orphan documents as such
-Date:   Wed, 29 May 2019 20:23:40 -0300
-Message-Id: <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
+        Liang Yang <liang.yang@amlogic.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 03/22] dt: fix broken references to nand.txt
+Date:   Wed, 29 May 2019 20:23:34 -0300
+Message-Id: <21356cd8ffb906c77e83220e842d0443a5666aa0.1559171394.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
 References: <cover.1559171394.git.mchehab+samsung@kernel.org>
@@ -84,176 +78,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx doesn't like orphan documents:
+The Documentation/devicetree/bindings/mtd/nand.txt were both renamed
+and converted to YAML on a single patch, without updating references
+to it. That caused several cross-references to break.
 
-    Documentation/accelerators/ocxl.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f429-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f746-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32f769-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32h743-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/arm/stm32/stm32mp157-overview.rst: WARNING: document isn't included in any toctree
-    Documentation/gpu/msm-crash-dump.rst: WARNING: document isn't included in any toctree
-    Documentation/interconnect/interconnect.rst: WARNING: document isn't included in any toctree
-    Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
-    Documentation/powerpc/isa-versions.rst: WARNING: document isn't included in any toctree
-    Documentation/virtual/kvm/amd-memory-encryption.rst: WARNING: document isn't included in any toctree
-    Documentation/virtual/kvm/vcpu-requests.rst: WARNING: document isn't included in any toctree
-
-So, while they aren't on any toctree, add :orphan: to them, in order
-to silent this warning.
+Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/accelerators/ocxl.rst                 | 2 ++
- Documentation/arm/stm32/overview.rst                | 2 ++
- Documentation/arm/stm32/stm32f429-overview.rst      | 2 ++
- Documentation/arm/stm32/stm32f746-overview.rst      | 2 ++
- Documentation/arm/stm32/stm32f769-overview.rst      | 2 ++
- Documentation/arm/stm32/stm32h743-overview.rst      | 2 ++
- Documentation/arm/stm32/stm32mp157-overview.rst     | 2 ++
- Documentation/gpu/msm-crash-dump.rst                | 2 ++
- Documentation/interconnect/interconnect.rst         | 2 ++
- Documentation/laptops/lg-laptop.rst                 | 2 ++
- Documentation/powerpc/isa-versions.rst              | 2 ++
- Documentation/virtual/kvm/amd-memory-encryption.rst | 2 ++
- Documentation/virtual/kvm/vcpu-requests.rst         | 2 ++
- 13 files changed, 26 insertions(+)
+ Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt | 2 +-
+ Documentation/devicetree/bindings/mtd/gpmc-nand.txt          | 2 +-
+ Documentation/devicetree/bindings/mtd/marvell-nand.txt       | 2 +-
+ Documentation/devicetree/bindings/mtd/tango-nand.txt         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/accelerators/ocxl.rst
-index 14cefc020e2d..b1cea19a90f5 100644
---- a/Documentation/accelerators/ocxl.rst
-+++ b/Documentation/accelerators/ocxl.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- ========================================================
- OpenCAPI (Open Coherent Accelerator Processor Interface)
- ========================================================
-diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
-index 85cfc8410798..f7e734153860 100644
---- a/Documentation/arm/stm32/overview.rst
-+++ b/Documentation/arm/stm32/overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- ========================
- STM32 ARM Linux Overview
- ========================
-diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
-index 18feda97f483..65bbb1c3b423 100644
---- a/Documentation/arm/stm32/stm32f429-overview.rst
-+++ b/Documentation/arm/stm32/stm32f429-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F429 Overview
- ==================
+diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+index 3983c11e062c..5794ab1147c1 100644
+--- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+@@ -24,7 +24,7 @@ Optional children nodes:
+ Children nodes represent the available nand chips.
  
-diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
-index b5f4b6ce7656..42d593085015 100644
---- a/Documentation/arm/stm32/stm32f746-overview.rst
-+++ b/Documentation/arm/stm32/stm32f746-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F746 Overview
- ==================
+ Other properties:
+-see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++see Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
  
-diff --git a/Documentation/arm/stm32/stm32f769-overview.rst b/Documentation/arm/stm32/stm32f769-overview.rst
-index 228656ced2fe..f6adac862b17 100644
---- a/Documentation/arm/stm32/stm32f769-overview.rst
-+++ b/Documentation/arm/stm32/stm32f769-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32F769 Overview
- ==================
+ Example demonstrate on AXG SoC:
  
-diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
-index 3458dc00095d..c525835e7473 100644
---- a/Documentation/arm/stm32/stm32h743-overview.rst
-+++ b/Documentation/arm/stm32/stm32h743-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32H743 Overview
- ==================
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index c059ab74ed88..44919d48d241 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -8,7 +8,7 @@ explained in a separate documents - please refer to
+ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
  
-diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
-index 62e176d47ca7..2c52cd020601 100644
---- a/Documentation/arm/stm32/stm32mp157-overview.rst
-+++ b/Documentation/arm/stm32/stm32mp157-overview.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- STM32MP157 Overview
- ===================
+ For NAND specific properties such as ECC modes or bus width, please refer to
+-Documentation/devicetree/bindings/mtd/nand.txt
++Documentation/devicetree/bindings/mtd/nand-controller.yaml
  
-diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
-index 757cd257e0d8..240ef200f76c 100644
---- a/Documentation/gpu/msm-crash-dump.rst
-+++ b/Documentation/gpu/msm-crash-dump.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- =====================
- MSM Crash Dump Format
- =====================
-diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/interconnect/interconnect.rst
-index c3e004893796..56e331dab70e 100644
---- a/Documentation/interconnect/interconnect.rst
-+++ b/Documentation/interconnect/interconnect.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
  
-+:orphan:
-+
- =====================================
- GENERIC SYSTEM INTERCONNECT SUBSYSTEM
- =====================================
-diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
-index aa503ee9b3bc..f2c2ffe31101 100644
---- a/Documentation/laptops/lg-laptop.rst
-+++ b/Documentation/laptops/lg-laptop.rst
-@@ -1,5 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0+
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+index e0c790706b9b..7eeef1e1ed30 100644
+--- a/Documentation/devicetree/bindings/mtd/marvell-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+@@ -58,7 +58,7 @@ Optional properties:
+   Step sizes are not completely random for all and follow certain
+   patterns described in AN-379, "Marvell SoC NFC ECC".
  
-+:orphan:
-+
- LG Gram laptop extra features
- =============================
+-See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for more details on
+ generic bindings.
  
-diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
-index 812e20cc898c..66c24140ebf1 100644
---- a/Documentation/powerpc/isa-versions.rst
-+++ b/Documentation/powerpc/isa-versions.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- CPU to ISA Version Mapping
- ==========================
  
-diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
-index 659bbc093b52..33d697ab8a58 100644
---- a/Documentation/virtual/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- ======================================
- Secure Encrypted Virtualization (SEV)
- ======================================
-diff --git a/Documentation/virtual/kvm/vcpu-requests.rst b/Documentation/virtual/kvm/vcpu-requests.rst
-index 5feb3706a7ae..c1807a1b92e6 100644
---- a/Documentation/virtual/kvm/vcpu-requests.rst
-+++ b/Documentation/virtual/kvm/vcpu-requests.rst
-@@ -1,3 +1,5 @@
-+:orphan:
-+
- =================
- KVM VCPU Requests
- =================
+diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+index cd1bf2ac9055..91c8420241af 100644
+--- a/Documentation/devicetree/bindings/mtd/tango-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+@@ -11,7 +11,7 @@ Required properties:
+ - #size-cells: <0>
+ 
+ Children nodes represent the available NAND chips.
+-See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++See Documentation/devicetree/bindings/mtd/nand-controller.yaml for generic bindings.
+ 
+ Example:
+ 
 -- 
 2.21.0
 
