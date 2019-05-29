@@ -2,149 +2,73 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D4C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33309C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A87206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/LCSr8x"
+	by mail.kernel.org (Postfix) with ESMTP id 05D1720673
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfE2Bmb (ORCPT
+        id S1726097AbfE2BoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 21:42:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40945 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfE2Bmb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 21:42:31 -0400
-Received: by mail-io1-f65.google.com with SMTP id n5so414679ioc.7;
-        Tue, 28 May 2019 18:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EoH2CWs7MbhK17fbwkAfBOhK3xMnc8wfuzTcqK+dRok=;
-        b=t/LCSr8xmnGFbrNlwWwdHzTqfSnxCY2L4yCEWv+eDYxqZr3lB3ryKGh4LzLhjSQNrA
-         /RzeI3aRYUCJYc2fpYuKQ6a7s3kTDGOn+u1K6KS95Fy29F/65tEHFbRROzeTZsoFON/J
-         6jSXvJvo52WVnjvtiWDpecOIosufjGsRBjuBzdqtMT1rHp7TfW21zouiqAL1lFg9YZq9
-         GxkFbgBcbG059EuX4wD2RjgfFV2K7lKeBFUMppxU+n0yhqxCfw3Mk2BGGqk4S/p920Vl
-         nC++iL0Zl55Hkb52NgL7I+R7Ap9cWXPWP3S3YW2aTGy1ehGKMAPdZdYzt7AXhHEcmWhf
-         ZBxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EoH2CWs7MbhK17fbwkAfBOhK3xMnc8wfuzTcqK+dRok=;
-        b=muUXydfBHXo9XJ4wIHCPSHiBm/U/rEFZc82wc3PD3eaG4lLjD3hS2p6VFabAi0t8xy
-         AJt4jbyIAQ7pX7sacOcy7dW/pWd7GLf47/JJU0LszENuTwSP33ZxImb7NhX20e51oXKe
-         xulWQxPYDeQdqb5vwm1AcQs+97fTfTWorQb0WG+rLDQ3QQKegmQOzfl1SNaw+S61bOua
-         8DXGqUDTo+8VniCfGwTa5pJKA8zNIXVbSySCrLV+v2mWstQrwlh42VAXlZWk6KaLeq5i
-         Tui0qsLlEpkFVz8LfUhIw8YUYMhD8/6PUajZF5R719vQJQk/aNEhdQUKSpAG5oL5oJXd
-         J3aw==
-X-Gm-Message-State: APjAAAUaJuII9b7YdXMTzExJSu8phTLl5gXl9oCqeBGGhjI0NIjqP/p4
-        dTmg5FmtHB2MhFkO/wZ13Ahb2RUOzRYoZIUJpMw=
-X-Google-Smtp-Source: APXvYqxwxeY+R7quqY3oZRbtrIXfoVBb/W64nxddsmJtcEguN5jt64SgwZTJCAwkvdH/eBAnKMXkPnr9tECqxSYmXJI=
-X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr7942229iod.166.1559094150520;
- Tue, 28 May 2019 18:42:30 -0700 (PDT)
+        Tue, 28 May 2019 21:44:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49539 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbfE2BoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 21:44:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45DD5Z6xB4z9s4V;
+        Wed, 29 May 2019 11:44:02 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Young Xiao <92siuyang@gmail.com>
+Cc:     will.deacon@arm.com, linux@armlinux.org.uk, mark.rutland@arm.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+In-Reply-To: <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com> <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+Date:   Wed, 29 May 2019 11:44:02 +1000
+Message-ID: <87a7f6ox0d.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp> <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
- <20190529013713.GA13245@basecamp>
-In-Reply-To: <20190529013713.GA13245@basecamp>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 28 May 2019 19:42:19 -0600
-Message-ID: <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 7:37 PM Brian Masney <masneyb@onstation.org> wrote:
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
+>> When a kthread calls call_usermodehelper() the steps are:
+>>   1. allocate current->mm
+>>   2. load_elf_binary()
+>>   3. populate current->thread.regs
+>> 
+>> While doing this, interrupts are not disabled. If there is a perf
+>> interrupt in the middle of this process (i.e. step 1 has completed
+>> but not yet reached to step 3) and if perf tries to read userspace
+>> regs, kernel oops.
+>> 
+>> Fix it by setting abi to PERF_SAMPLE_REGS_ABI_NONE when userspace
+>> pt_regs are not set.
+>> 
+>> See commit bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs
+>> user process") for details.
 >
-> On Tue, May 28, 2019 at 07:32:14PM -0600, Jeffrey Hugo wrote:
-> > On Tue, May 28, 2019 at 7:17 PM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
-> > > > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > >
-> > > > > Here is a patch series that adds initial display support for the LG
-> > > > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
-> > > > > of these patches are RFC until we can get it fully working.
-> > > > >
-> > > > > The phones boots into terminal mode, however there is a several second
-> > > > > (or more) delay when writing to tty1 compared to when the changes are
-> > > > > actually shown on the screen. The following errors are in dmesg:
-> > > >
-> > > > I tested to apply patches 2-6 and got the console up on the phone as well.
-> > > > I see the same timouts, and I also notice the update is slow in the
-> > > > display, as if the DSI panel was running in low power (LP) mode.
-> > > >
-> > > > Was booting this to do some other work, but happy to see the progress!
-> > >
-> > > Thanks!
-> > >
-> > > I've had three people email me off list regarding the display working on
-> > > 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
-> > > this email is to get some more information out publicly.
-> > >
-> > > I pushed up a branch to my github with 15 patches applied against 4.17
-> > > that has a working display:
-> > >
-> > > https://github.com/masneyb/linux/commits/display-works-4.17
-> > >
-> > > It's in low speed mode but its usable. The first 10 patches are in
-> > > mainline now and the last 5 are in essence this patch series with the
-> > > exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
-> > > There's a slightly different version of that patch in mainline now.
-> > >
-> > > I'm planning to work on the msm8974 interconnect support once some of
-> > > the outstanding interconnect patches for the msm kms/drm driver arrive
-> > > in mainline. I'd really like to understand why the display works on
-> > > 4.17 with those patches though. I assume that it's related to the
-> > > vblank events not working properly? Let me preface this with I'm a
-> > > total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
-> > > looking for these events in the atomic commits before the migration?
-> > > See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
-> > > helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
-> > > call that was added.
-> >
-> > Do you know if the nexus 5 has a video or command mode panel?  There
-> > is some glitchyness with vblanks and command mode panels.
+> Why the hell do we set current->mm before it is complete? Note that
+> normally exec() builds the new mm before attaching it, see exec_mmap()
+> in flush_old_exec().
 >
-> Its in command mode. I know this because I see two 'pp done time out'
-> messages, even on 4.17. Based on my understanding, the ping pong code is
-> only applicable for command mode panels.
+> Also, why did those PPC folks 'fix' this in isolation? And why didn't
+> you Cc them?
 
-Actually, the ping pong element exists in both modes, but 'pp done
-time out' is a good indicator that it is command mode.
+We just assumed it was our bug, 'cause we have plenty of those :)
 
-Are you also seeing vblank timeouts?
-
-Do you have busybox?
-
-Can you run -
-sudo busybox devmem 0xFD900614
-sudo busybox devmem 0xFD900714
-sudo busybox devmem 0xFD900814
-sudo busybox devmem 0xFD900914
-sudo busybox devmem 0xFD900A14
+cheers
