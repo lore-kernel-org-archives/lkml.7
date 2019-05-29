@@ -2,68 +2,149 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FF1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D4C072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AD9206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A87206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/LCSr8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfE2Bkg (ORCPT
+        id S1726225AbfE2Bmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 21:40:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31292 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfE2Bkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 21:40:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 18:40:34 -0700
-X-ExtLoop1: 1
-Received: from shzintpr02.sh.intel.com (HELO [0.0.0.0]) ([10.239.4.160])
-  by orsmga001.jf.intel.com with ESMTP; 28 May 2019 18:40:32 -0700
-Subject: Re: [PATCH v2 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
-References: <20190524075637.29496-1-tao3.xu@intel.com>
- <20190524075637.29496-3-tao3.xu@intel.com>
- <c9f5050a-6144-adbc-25ef-8a7543176ac6@redhat.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <2922ac60-a22e-e22c-363a-04f3a2bb6838@intel.com>
-Date:   Wed, 29 May 2019 09:38:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 21:42:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40945 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfE2Bmb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 21:42:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id n5so414679ioc.7;
+        Tue, 28 May 2019 18:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EoH2CWs7MbhK17fbwkAfBOhK3xMnc8wfuzTcqK+dRok=;
+        b=t/LCSr8xmnGFbrNlwWwdHzTqfSnxCY2L4yCEWv+eDYxqZr3lB3ryKGh4LzLhjSQNrA
+         /RzeI3aRYUCJYc2fpYuKQ6a7s3kTDGOn+u1K6KS95Fy29F/65tEHFbRROzeTZsoFON/J
+         6jSXvJvo52WVnjvtiWDpecOIosufjGsRBjuBzdqtMT1rHp7TfW21zouiqAL1lFg9YZq9
+         GxkFbgBcbG059EuX4wD2RjgfFV2K7lKeBFUMppxU+n0yhqxCfw3Mk2BGGqk4S/p920Vl
+         nC++iL0Zl55Hkb52NgL7I+R7Ap9cWXPWP3S3YW2aTGy1ehGKMAPdZdYzt7AXhHEcmWhf
+         ZBxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EoH2CWs7MbhK17fbwkAfBOhK3xMnc8wfuzTcqK+dRok=;
+        b=muUXydfBHXo9XJ4wIHCPSHiBm/U/rEFZc82wc3PD3eaG4lLjD3hS2p6VFabAi0t8xy
+         AJt4jbyIAQ7pX7sacOcy7dW/pWd7GLf47/JJU0LszENuTwSP33ZxImb7NhX20e51oXKe
+         xulWQxPYDeQdqb5vwm1AcQs+97fTfTWorQb0WG+rLDQ3QQKegmQOzfl1SNaw+S61bOua
+         8DXGqUDTo+8VniCfGwTa5pJKA8zNIXVbSySCrLV+v2mWstQrwlh42VAXlZWk6KaLeq5i
+         Tui0qsLlEpkFVz8LfUhIw8YUYMhD8/6PUajZF5R719vQJQk/aNEhdQUKSpAG5oL5oJXd
+         J3aw==
+X-Gm-Message-State: APjAAAUaJuII9b7YdXMTzExJSu8phTLl5gXl9oCqeBGGhjI0NIjqP/p4
+        dTmg5FmtHB2MhFkO/wZ13Ahb2RUOzRYoZIUJpMw=
+X-Google-Smtp-Source: APXvYqxwxeY+R7quqY3oZRbtrIXfoVBb/W64nxddsmJtcEguN5jt64SgwZTJCAwkvdH/eBAnKMXkPnr9tECqxSYmXJI=
+X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr7942229iod.166.1559094150520;
+ Tue, 28 May 2019 18:42:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c9f5050a-6144-adbc-25ef-8a7543176ac6@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp> <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
+ <20190529013713.GA13245@basecamp>
+In-Reply-To: <20190529013713.GA13245@basecamp>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 28 May 2019 19:42:19 -0600
+Message-ID: <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 09:29, Paolo Bonzini wrote:
-> On 24/05/19 09:56, Tao Xu wrote:
->> +
->> +	if (rdmsrl_safe(MSR_IA32_UMWAIT_CONTROL, &host_umwait_control))
->> +		return;
->> +
-> 
-> Does the host value ever change?  If not, this can perhaps be read once
-> when kvm_intel is loaded.  And if it changes often, it should be
-> shadowed into a percpu variable.
-> 
-> Paolo
-> 
+On Tue, May 28, 2019 at 7:37 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Tue, May 28, 2019 at 07:32:14PM -0600, Jeffrey Hugo wrote:
+> > On Tue, May 28, 2019 at 7:17 PM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
+> > > > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > >
+> > > > > Here is a patch series that adds initial display support for the LG
+> > > > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
+> > > > > of these patches are RFC until we can get it fully working.
+> > > > >
+> > > > > The phones boots into terminal mode, however there is a several second
+> > > > > (or more) delay when writing to tty1 compared to when the changes are
+> > > > > actually shown on the screen. The following errors are in dmesg:
+> > > >
+> > > > I tested to apply patches 2-6 and got the console up on the phone as well.
+> > > > I see the same timouts, and I also notice the update is slow in the
+> > > > display, as if the DSI panel was running in low power (LP) mode.
+> > > >
+> > > > Was booting this to do some other work, but happy to see the progress!
+> > >
+> > > Thanks!
+> > >
+> > > I've had three people email me off list regarding the display working on
+> > > 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
+> > > this email is to get some more information out publicly.
+> > >
+> > > I pushed up a branch to my github with 15 patches applied against 4.17
+> > > that has a working display:
+> > >
+> > > https://github.com/masneyb/linux/commits/display-works-4.17
+> > >
+> > > It's in low speed mode but its usable. The first 10 patches are in
+> > > mainline now and the last 5 are in essence this patch series with the
+> > > exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
+> > > There's a slightly different version of that patch in mainline now.
+> > >
+> > > I'm planning to work on the msm8974 interconnect support once some of
+> > > the outstanding interconnect patches for the msm kms/drm driver arrive
+> > > in mainline. I'd really like to understand why the display works on
+> > > 4.17 with those patches though. I assume that it's related to the
+> > > vblank events not working properly? Let me preface this with I'm a
+> > > total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
+> > > looking for these events in the atomic commits before the migration?
+> > > See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
+> > > helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
+> > > call that was added.
+> >
+> > Do you know if the nexus 5 has a video or command mode panel?  There
+> > is some glitchyness with vblanks and command mode panels.
+>
+> Its in command mode. I know this because I see two 'pp done time out'
+> messages, even on 4.17. Based on my understanding, the ping pong code is
+> only applicable for command mode panels.
 
-Yes, the host value may change, we contact the host patch author Fenghua 
-to add the shadow in host when the host msr value change. And we will 
-improve this in the next version of patch.
+Actually, the ping pong element exists in both modes, but 'pp done
+time out' is a good indicator that it is command mode.
+
+Are you also seeing vblank timeouts?
+
+Do you have busybox?
+
+Can you run -
+sudo busybox devmem 0xFD900614
+sudo busybox devmem 0xFD900714
+sudo busybox devmem 0xFD900814
+sudo busybox devmem 0xFD900914
+sudo busybox devmem 0xFD900A14
