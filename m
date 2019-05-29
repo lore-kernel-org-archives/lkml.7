@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A956C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C1E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0692216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfE2KZv (ORCPT
+        id S1726959AbfE2K0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:25:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40604 "EHLO
+        Wed, 29 May 2019 06:26:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40611 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfE2KZp (ORCPT
+        with ESMTP id S1726043AbfE2KZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:25:45 -0400
+        Wed, 29 May 2019 06:25:47 -0400
 Received: from 1.general.smb.uk.vpn ([10.172.193.28] helo=canonical.com)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <stefan.bader@canonical.com>)
-        id 1hVvmB-0003im-KS; Wed, 29 May 2019 10:25:43 +0000
+        id 1hVvmD-0003j5-I6; Wed, 29 May 2019 10:25:45 +0000
 From:   Stefan Bader <stefan.bader@canonical.com>
 To:     stable <stable@vger.kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,9 +35,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Andy Whitcroft <andy.whitcroft@canonical.com>,
         Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH 1/4] ipv4: ipv6: netfilter: Adjust the frag mem limit when truesize changes
-Date:   Wed, 29 May 2019 12:25:39 +0200
-Message-Id: <20190529102542.17742-2-stefan.bader@canonical.com>
+Subject: [PATCH 4/4] ipv6: frags: Use inet_frag_pull_head() in ip6_expire_frag_queue()
+Date:   Wed, 29 May 2019 12:25:42 +0200
+Message-Id: <20190529102542.17742-5-stefan.bader@canonical.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190529102542.17742-1-stefan.bader@canonical.com>
 References: <20190529102542.17742-1-stefan.bader@canonical.com>
@@ -45,142 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Wiesner <jwiesner@suse.com>
+With frag code shared between IPv4 and IPv6 it is now possible
+to use inet_frag_pull_head() in ip6_expire_frag_queue() in order
+to properly extract the first skb from the frags queue.
+Since this really takes the skb out of the list, it no longer
+needs to be protected against removal (which implicitly fixes
+a crash that will happen somewhere in the call to icmp6_send()
+when the use count is forcefully checked to be 1.
 
-The *_frag_reasm() functions are susceptible to miscalculating the byte
-count of packet fragments in case the truesize of a head buffer changes.
-The truesize member may be changed by the call to skb_unclone(), leaving
-the fragment memory limit counter unbalanced even if all fragments are
-processed. This miscalculation goes unnoticed as long as the network
-namespace which holds the counter is not destroyed.
+ kernel BUG at linux-4.4.0/net/core/skbuff.c:1207!
+ RIP: 0010:[<ffffffff81740953>]
+  [<ffffffff81740953>] pskb_expand_head+0x243/0x250
+  [<ffffffff81740e50>] __pskb_pull_tail+0x50/0x350
+  [<ffffffff8183939a>] _decode_session6+0x26a/0x400
+  [<ffffffff817ec719>] __xfrm_decode_session+0x39/0x50
+  [<ffffffff818239d0>] icmpv6_route_lookup+0xf0/0x1c0
+  [<ffffffff81824421>] icmp6_send+0x5e1/0x940
+  [<ffffffff8183d431>] icmpv6_send+0x21/0x30
+  [<ffffffff8182b500>] ip6_expire_frag_queue+0xe0/0x120
 
-Should an attempt be made to destroy a network namespace that holds an
-unbalanced fragment memory limit counter the cleanup of the namespace
-never finishes. The thread handling the cleanup gets stuck in
-inet_frags_exit_net() waiting for the percpu counter to reach zero. The
-thread is usually in running state with a stacktrace similar to:
-
- PID: 1073   TASK: ffff880626711440  CPU: 1   COMMAND: "kworker/u48:4"
-  #5 [ffff880621563d48] _raw_spin_lock at ffffffff815f5480
-  #6 [ffff880621563d48] inet_evict_bucket at ffffffff8158020b
-  #7 [ffff880621563d80] inet_frags_exit_net at ffffffff8158051c
-  #8 [ffff880621563db0] ops_exit_list at ffffffff814f5856
-  #9 [ffff880621563dd8] cleanup_net at ffffffff814f67c0
- #10 [ffff880621563e38] process_one_work at ffffffff81096f14
-
-It is not possible to create new network namespaces, and processes
-that call unshare() end up being stuck in uninterruptible sleep state
-waiting to acquire the net_mutex.
-
-The bug was observed in the IPv6 netfilter code by Per Sundstrom.
-I thank him for his analysis of the problem. The parts of this patch
-that apply to IPv4 and IPv6 fragment reassembly are preemptive measures.
-
-Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
-Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
-Acked-by: Peter Oskolkov <posk@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-
-(backported from commit ebaf39e6032faf77218220707fc3fa22487784e0)
-[smb: context adjustments in net/ipv6/netfilter/nf_conntrack_reasm.c]
 Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
 ---
- net/ipv4/ip_fragment.c                  | 7 +++++++
- net/ipv6/netfilter/nf_conntrack_reasm.c | 8 +++++++-
- net/ipv6/reassembly.c                   | 8 +++++++-
- 3 files changed, 21 insertions(+), 2 deletions(-)
+ net/ipv6/reassembly.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/net/ipv4/ip_fragment.c b/net/ipv4/ip_fragment.c
-index 2c75330b1c71..5387e6ab78d7 100644
---- a/net/ipv4/ip_fragment.c
-+++ b/net/ipv4/ip_fragment.c
-@@ -519,6 +519,7 @@ static int ip_frag_reasm(struct ipq *qp, struct sk_buff *skb,
- 	struct rb_node *rbn;
- 	int len;
- 	int ihlen;
-+	int delta;
- 	int err;
- 	u8 ecn;
- 
-@@ -560,10 +561,16 @@ static int ip_frag_reasm(struct ipq *qp, struct sk_buff *skb,
- 	if (len > 65535)
- 		goto out_oversize;
- 
-+	delta = - head->truesize;
-+
- 	/* Head of list must not be cloned. */
- 	if (skb_unclone(head, GFP_ATOMIC))
- 		goto out_nomem;
- 
-+	delta += head->truesize;
-+	if (delta)
-+		add_frag_mem_limit(qp->q.net, delta);
-+
- 	/* If the first fragment is fragmented itself, we split
- 	 * it to two chunks: the first with data and paged part
- 	 * and the second, holding only fragments. */
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 664c84e47bab..e5d06ceb2c0c 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -353,7 +353,7 @@ static struct sk_buff *
- nf_ct_frag6_reasm(struct frag_queue *fq, struct net_device *dev)
- {
- 	struct sk_buff *fp, *op, *head = fq->q.fragments;
--	int    payload_len;
-+	int    payload_len, delta;
- 	u8 ecn;
- 
- 	inet_frag_kill(&fq->q);
-@@ -374,12 +374,18 @@ nf_ct_frag6_reasm(struct frag_queue *fq, struct net_device *dev)
- 		goto out_oversize;
- 	}
- 
-+	delta = - head->truesize;
-+
- 	/* Head of list must not be cloned. */
- 	if (skb_unclone(head, GFP_ATOMIC)) {
- 		pr_debug("skb is cloned but can't expand head");
- 		goto out_oom;
- 	}
- 
-+	delta += head->truesize;
-+	if (delta)
-+		add_frag_mem_limit(fq->q.net, delta);
-+
- 	/* If the first fragment is fragmented itself, we split
- 	 * it to two chunks: the first with data and paged part
- 	 * and the second, holding only fragments. */
 diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index ec917f58d105..020cf70273c9 100644
+index 020cf70273c9..2bd45abc2516 100644
 --- a/net/ipv6/reassembly.c
 +++ b/net/ipv6/reassembly.c
-@@ -343,7 +343,7 @@ static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
- {
- 	struct net *net = container_of(fq->q.net, struct net, ipv6.frags);
- 	struct sk_buff *fp, *head = fq->q.fragments;
--	int    payload_len;
-+	int    payload_len, delta;
- 	unsigned int nhoff;
- 	int sum_truesize;
- 	u8 ecn;
-@@ -384,10 +384,16 @@ static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
- 	if (payload_len > IPV6_MAXPLEN)
- 		goto out_oversize;
+@@ -110,16 +110,14 @@ void ip6_expire_frag_queue(struct net *net, struct frag_queue *fq)
+ 	IP6_INC_STATS_BH(net, __in6_dev_get(dev), IPSTATS_MIB_REASMTIMEOUT);
  
-+	delta = - head->truesize;
+ 	/* Don't send error if the first segment did not arrive. */
+-	head = fq->q.fragments;
+-	if (!(fq->q.flags & INET_FRAG_FIRST_IN) || !head)
++	if (!(fq->q.flags & INET_FRAG_FIRST_IN))
++		goto out;
 +
- 	/* Head of list must not be cloned. */
- 	if (skb_unclone(head, GFP_ATOMIC))
- 		goto out_oom;
++	head = inet_frag_pull_head(&fq->q);
++	if (!head)
+ 		goto out;
  
-+	delta += head->truesize;
-+	if (delta)
-+		add_frag_mem_limit(fq->q.net, delta);
-+
- 	/* If the first fragment is fragmented itself, we split
- 	 * it to two chunks: the first with data and paged part
- 	 * and the second, holding only fragments. */
+-	/* But use as source device on which LAST ARRIVED
+-	 * segment was received. And do not use fq->dev
+-	 * pointer directly, device might already disappeared.
+-	 */
+ 	head->dev = dev;
+-	skb_get(head);
+ 	spin_unlock(&fq->q.lock);
+ 
+ 	icmpv6_send(head, ICMPV6_TIME_EXCEED, ICMPV6_EXC_FRAGTIME, 0);
 -- 
 2.17.1
 
