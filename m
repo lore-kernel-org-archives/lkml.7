@@ -2,123 +2,91 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55259C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E168C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE8E24061
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF3E24067
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YIfCt4yr"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="lDBVYM8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfE2SWw (ORCPT
+        id S1727556AbfE2SXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:22:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38610 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2SWv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:22:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=46u7yWH7SEbkA+LGUDG+c1CeWmaboYlcCKtUzEnRpo8=; b=YIfCt4yrE3A4keXkYIi7JRIyx
-        DIgQER+VsVxJJ0t+VdSGG6VF0tK5H87d+mbDQYY7AzUdJK3zGlBl/1jWQ41sDtNqQmkwRDdyJgkyZ
-        Sjp/L/jB8y2DFH0nTYWSiJ9X+goO9gGWW/HirZu+iT/ufJdU/BitgcUik6T3/D+APf8LdmemSFnB0
-        LsvI4AJ7OtILMHg4O8Q7c0XLb0A6sr1UVAwhvRK5GFMjo00KZwdKGdk8tO6UqbqvAsSNMWrAXf+81
-        ckcngmi+jYUFgs3mMddy/Q3Y+7oxDixoE+OAPeR3AHX083gVTIU2TkIjSUWXeLe1ZRW8SbIZx7q/p
-        DLuA+3JHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW3Cp-0000m8-Va; Wed, 29 May 2019 18:21:44 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A1B03201B3992; Wed, 29 May 2019 20:21:42 +0200 (CEST)
-Date:   Wed, 29 May 2019 20:21:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190529182142.GF2623@hirez.programming.kicks-ass.net>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190529102038.GO2623@hirez.programming.kicks-ass.net>
- <94669b5a-06dd-e9bf-cfb6-b5d507a90946@redhat.com>
+        Wed, 29 May 2019 14:23:34 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:47815 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbfE2SXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:23:33 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c2fb5373;
+        Wed, 29 May 2019 17:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=gYtRFTzPGPTPSkG9w5pOkEZn+Ho=; b=lDBVYM8WGc0FxLn08jwD
+        nZgR+t9bpWIdm5oDXeDV+mP4rsRkT76wFFZUxDMIS2Uu+/5s/rDOpnw8S9lhdO4A
+        /45dOCDJNbbnwrMM2xMEVIJy0XizNYAnSlOU6wnJiGSEBOdyVDciqhNRQHHgfM9T
+        +rZXl69mtfOjsK6A+RmFJNVfwXDMj4sknWlfG9IWAEosSNEFevXzvBsM7JNLfdY0
+        OdHr4EYjETQ14TOvHRoi92wXftInk7ivFN7TjB5P3VWMFTWCvDuuqPz8fmKXfXn3
+        +JytPH4hYcawNt180N4YN4qXRBUMIvmH7aRGb1mmqovhIvuCQYgDmQ3PxmPCtb9b
+        Xg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b8f6351b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 29 May 2019 17:53:02 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH] arm: vdso: pass --be8 to linker if necessary
+Date:   Wed, 29 May 2019 20:23:24 +0200
+Message-Id: <20190529182324.8140-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94669b5a-06dd-e9bf-cfb6-b5d507a90946@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:51:31PM +0200, Daniel Bristot de Oliveira wrote:
-> On 29/05/2019 12:20, Peter Zijlstra wrote:
+The commit fe00e50b2db8 ("ARM: 8858/1: vdso: use $(LD) instead of $(CC)
+to link VDSO") removed the passing of CFLAGS, since ld doesn't take
+those directly. However, prior, big-endian ARM was relying on gcc to
+translate its -mbe8 option into ld's --be8 option. Lacking this, ld
+generated be32 code, making the VDSO generate SIGILL when called by
+userspace.
 
-> > I'm not sure I follow, IRQs disabled fully implies !preemptible. I don't
-> > see how the model would be more pessimistic than reality if it were to
-> > use this knowledge.
-> 
-> Maybe I did not expressed myself well... and the example was not good either.
-> 
-> "IRQs disabled fully implies !preemptible" is a "to big" step. In modeling (or
-> mathematical reasoning?), a good practice is to break the properties into small
-> piece, and then build more complex reasoning/implications using these "small
-> properties."
-> 
-> Doing "big steps" makes you prone "miss interpretations", creating ambiguity.
-> Then, -RT people are prone to be pessimist, non-RT optimistic, and so on... and
-> that is what models try to avoid.
+This commit passes --be8 if CONFIG_CPU_ENDIAN_BE8 is enabled.
 
-You already construct the big model out of small generators, this is
-just one more of those little generators.
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+ arch/arm/vdso/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> For instance, explaining this using words is contradictory:>
-> > Any !0 preempt_count(), which very much includes (Hard)IRQ and SoftIRQ
-> > counts, means non-preemptible.
-> 
-> One might argue that, the preemption of a thread always takes place with
-> preempt_count() != 0, because __schedule() is always called with preemption
-> disabled, so the preemption takes place while in non-preemptive.
+diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
+index fadf554d9391..1f5ec9741e6d 100644
+--- a/arch/arm/vdso/Makefile
++++ b/arch/arm/vdso/Makefile
+@@ -10,9 +10,10 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+ ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
+ 
+-ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
++ldflags-$(CONFIG_CPU_ENDIAN_BE8) := --be8
++ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+ 	    -z max-page-size=4096 -z common-page-size=4096 \
+-	    -nostdlib -shared \
++	    -nostdlib -shared $(ldflags-y) \
+ 	    $(call ld-option, --hash-style=sysv) \
+ 	    $(call ld-option, --build-id) \
+ 	    -T
+-- 
+2.21.0
 
-Yeah, I know about that one; you've used it in your talks. Also, you've
-modeled the schedule preempt disable as a special state. If you want we
-can actually make it a special bit in the preempt_count word too, the
-patch shouldn't be too hard, although it would make no practical
-difference.
-
-> - WAIT But you (daniel) wants to fake the atomicity between preempt_disable and
-> its tracepoint!
-> 
-> Yes, I do, but this is a very straightforward step/assumption: the atomicity is
-> about the real-event and the tracepoint that notifies it. It is not about two
-> different events.
-> 
-> That is why it is worth letting the modeling rules to clarify the behavior of
-> system, without doing non-obvious implication in the code part, so we can have a
-> model that fits better in the Linux actions/events to avoid ambiguity.
-
-You can easily build a little shim betwen the model and the tracehooks
-that fix this up if you don't want to stick it in the model proper.
-
-All the information is there. Heck you can even do that 3/3 thing
-internally I think.
