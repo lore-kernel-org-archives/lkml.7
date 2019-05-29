@@ -2,213 +2,154 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CBDC07542
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94341C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4969E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFA221019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSd6RavH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A0ThL7X9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfE2Gds (ORCPT
+        id S1726326AbfE2Ge4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 02:33:48 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43629 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfE2Gdr (ORCPT
+        Wed, 29 May 2019 02:34:56 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43869 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfE2Gez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 02:33:47 -0400
-Received: by mail-yb1-f194.google.com with SMTP id n145so372589ybg.10;
-        Tue, 28 May 2019 23:33:46 -0700 (PDT)
+        Wed, 29 May 2019 02:34:55 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t187so1105171oie.10
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 23:34:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yENNg7cJ89dNJXBOI0oAIdYRt7Ra6atK2tYz8p0gMCg=;
-        b=gSd6RavHCdQA6U4PmK50WU7ujwJFo5fxoJGlDl+i6xOvDAKDtBpghDDm0UIcMJ1ZlU
-         /aFHtGuF1bHEqxQJVd15Budgd3S9h4YJFeiyLo45rxhzARoBSJebbdrzA0YZpTTVqEYb
-         lSF2E9NzXeBFPdV8Lx+IBYhxY511yYJgLeJOOqjg9mmcuWw8GR6BzqMA0kxhJIjhC/7a
-         80JkV/Di3vv9PZtwM/LWYu4EkvfW28oVckVL8hJ8W0KEj1QRFONAs3K5vyC0Z6OVuZmL
-         cO3Art9UkR+Pe6p6QueAGoQSVAJZWkE8ESlqRnuiuYQUG8jRt4SdqwWPcwwnynIV7yxX
-         4yAg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=32oNNfOBxR/dIJDiqOCCeX3FJ2erRbG9x3SCfpFAaFc=;
+        b=A0ThL7X9hLFBwyv6iK++tvStLIKMPWGta2pKdZiVten8r/ND4jT+vyGCCE5oL3sH4K
+         APmx7ul95R/6gOgmEKWfoVrpaGhcozdHFgqQI4OAWBFMI0KT5KqgwRam+1TzGFVE8UzN
+         AAIJVGcoqGd8spLrUOFgdK44JrEKVFmEoFOD6ccDslM4FoQiBPlpqGODKufQm61utEkj
+         IyY35WqR1UX4/a4EJMV6Gi9xkOO4K6Zz4YvKInXqb3CR5bnZ1pP9WLciOAz6pR/rykjo
+         6wQ4dz2Xsskpd3n7gHc9OUls52XyE3gyNqL52tMRc3LNph5j4qxbiRJWnhoqBxUr2S7E
+         wb8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yENNg7cJ89dNJXBOI0oAIdYRt7Ra6atK2tYz8p0gMCg=;
-        b=p0k8OEzNgbMmJwHut6h3wTLGgZWUCQEujQQ9riWJ1gURsUgoFJqAzFADXNrKkZvLYq
-         tCzVR0KDRz+B7jXNk67rWqasc6F0RAWPhGylEznFkB//XMaaFajQ+KlpPtZsKgBu5BqW
-         7wOVc/qzEUtrF0hu/yokN6HdqMGlZfxSjXZm9QErbrNyMZMRYimZkoAB3SAh+qYaCwkB
-         xs29sTpbUxFadaSGKktoDlibIH1nYtVNt+NYKYigeRwJ18+Rn0hnVTEDxPPsV9ln+8W/
-         AiRx3ms9uqdABcBAD9cRMExzKSjFe75rhRUDW7jtXSgo+zfYKI4Q1Es4R8NOzW1CqTY4
-         FU5w==
-X-Gm-Message-State: APjAAAUizDDwygy6YqyCsbw5RXndhLkMTC+4xo6FgYUOTHg8XzKa45oL
-        2FZvhEBjYyzMALoW9GLw0mTt0OYtZbWqeH2vvaU=
-X-Google-Smtp-Source: APXvYqw6mhDaSRkRnU+dl3Ic5kIIYX8fjw8ZnGYUgNxTD9y/LjYm69ByqIvjP7UucT+m0cDy12RZjAOWaXE0FMJVtOo=
-X-Received: by 2002:a25:8109:: with SMTP id o9mr28076017ybk.132.1559111626228;
- Tue, 28 May 2019 23:33:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=32oNNfOBxR/dIJDiqOCCeX3FJ2erRbG9x3SCfpFAaFc=;
+        b=qejmYkoeh2KKvgL4ViwhqShgm9NeQMRyEINoYcHSka4FevuBF+GAHWTuycFbis7YQl
+         G1/0qBsBwbwhkRqu1sfYS6Qk7umCppFmmyNGGvw5IDZshL195VrXynXF4pN7kmIdbrpy
+         Hm93/LGMU47GQkn616Bw5+YLpGBkNZt2GgQS3TlZnNLXH8VuMxxryFSzRZVJAtcfzm4g
+         UOOY8Eafymzb+jWokGIU6ONt40kifStFhZNBIzkp4EVecNi/w5XoqyxGFhsYxd91lEOF
+         AznH5s3J4G+Xyt34PtAHCk2oSdT4M5tvqng85aJXc75JNLA3pEgn/J2Zl0x8OqoSkY+v
+         Tnjg==
+X-Gm-Message-State: APjAAAUp3sd8LaRifG3on/2U7Pz58KgHIE3RXwhuoSJvh4mRJk6oP14i
+        6DcRbrkAbhHpRqsfvid7dT5f0A==
+X-Google-Smtp-Source: APXvYqxHsfGGqbhU2XvuVpniJ59bCKj++ACikAww1d20dZ3Q6JWKSdvvP6mQjxwxg5tf7cOqfRU+xw==
+X-Received: by 2002:aca:342:: with SMTP id 63mr5026668oid.10.1559111695072;
+        Tue, 28 May 2019 23:34:55 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id l184sm6005234oih.49.2019.05.28.23.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 May 2019 23:34:54 -0700 (PDT)
+Date:   Wed, 29 May 2019 14:34:49 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
+Message-ID: <20190529063449.GA15808@leoy-ThinkPad-X240s>
+References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
+ <20190528051924.GA19112@leoy-ThinkPad-X240s>
+ <20190528145126.GA20714@xps15>
 MIME-Version: 1.0
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 29 May 2019 09:33:35 +0300
-Message-ID: <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528145126.GA20714@xps15>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 7:03 PM David Howells <dhowells@redhat.com> wrote:
->
->
-> Hi Al,
->
-> Here's a set of patches to add a general variable-length notification queue
-> concept and to add sources of events for:
->
->  (1) Mount topology events, such as mounting, unmounting, mount expiry,
->      mount reconfiguration.
->
->  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
->      errors (not complete yet).
->
->  (3) Block layer events, such as I/O errors.
->
->  (4) Key/keyring events, such as creating, linking and removal of keys.
->
-> One of the reasons for this is so that we can remove the issue of processes
-> having to repeatedly and regularly scan /proc/mounts, which has proven to
-> be a system performance problem.  To further aid this, the fsinfo() syscall
-> on which this patch series depends, provides a way to access superblock and
-> mount information in binary form without the need to parse /proc/mounts.
->
->
-> Design decisions:
->
->  (1) A misc chardev is used to create and open a ring buffer:
->
->         fd = open("/dev/watch_queue", O_RDWR);
->
->      which is then configured and mmap'd into userspace:
->
->         ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
->         ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
->         buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
->                    MAP_SHARED, fd, 0);
->
->      The fd cannot be read or written (though there is a facility to use
->      write to inject records for debugging) and userspace just pulls data
->      directly out of the buffer.
->
->  (2) The ring index pointers are stored inside the ring and are thus
->      accessible to userspace.  Userspace should only update the tail
->      pointer and never the head pointer or risk breaking the buffer.  The
->      kernel checks that the pointers appear valid before trying to use
->      them.  A 'skip' record is maintained around the pointers.
->
->  (3) poll() can be used to wait for data to appear in the buffer.
->
->  (4) Records in the buffer are binary, typed and have a length so that they
->      can be of varying size.
->
->      This means that multiple heterogeneous sources can share a common
->      buffer.  Tags may be specified when a watchpoint is created to help
->      distinguish the sources.
->
->  (5) The queue is reusable as there are 16 million types available, of
->      which I've used 4, so there is scope for others to be used.
->
->  (6) Records are filterable as types have up to 256 subtypes that can be
->      individually filtered.  Other filtration is also available.
->
->  (7) Each time the buffer is opened, a new buffer is created - this means
->      that there's no interference between watchers.
->
->  (8) When recording a notification, the kernel will not sleep, but will
->      rather mark a queue as overrun if there's insufficient space, thereby
->      avoiding userspace causing the kernel to hang.
->
->  (9) The 'watchpoint' should be specific where possible, meaning that you
->      specify the object that you want to watch.
->
-> (10) The buffer is created and then watchpoints are attached to it, using
->      one of:
->
->         keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
->         mount_notify(AT_FDCWD, "/", 0, fd, 0x02);
->         sb_notify(AT_FDCWD, "/mnt", 0, fd, 0x03);
->
->      where in all three cases, fd indicates the queue and the number after
->      is a tag between 0 and 255.
->
-> (11) The watch must be removed if either the watch buffer is destroyed or
->      the watched object is destroyed.
->
->
-> Things I want to avoid:
->
->  (1) Introducing features that make the core VFS dependent on the network
->      stack or networking namespaces (ie. usage of netlink).
->
->  (2) Dumping all this stuff into dmesg and having a daemon that sits there
->      parsing the output and distributing it as this then puts the
->      responsibility for security into userspace and makes handling
->      namespaces tricky.  Further, dmesg might not exist or might be
->      inaccessible inside a container.
->
->  (3) Letting users see events they shouldn't be able to see.
->
->
-> Further things that could be considered:
->
->  (1) Adding a keyctl call to allow a watch on a keyring to be extended to
->      "children" of that keyring, such that the watch is removed from the
->      child if it is unlinked from the keyring.
->
->  (2) Adding global superblock event queue.
->
->  (3) Propagating watches to child superblock over automounts.
->
+On Tue, May 28, 2019 at 08:51:26AM -0600, Mathieu Poirier wrote:
+> Good day,
+> 
+> On Tue, May 28, 2019 at 01:19:24PM +0800, Leo Yan wrote:
+> > Hi Suzuki,
+> > 
+> > On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
+> > > This series adds the support for CoreSight devices on ACPI based
+> > > platforms. The device connections are encoded as _DSD graph property[0],
+> > > with CoreSight specific extensions to indicate the direction of data
+> > > flow as described in [1]. Components attached to CPUs are listed
+> > > as child devices of the corresponding CPU, removing explicit links
+> > > to the CPU like we do in the DT.
+> > > 
+> > > The majority of the series cleans up the driver and prepares the subsystem
+> > > for platform agnostic firwmare probing, naming scheme, searching etc.
+> > > 
+> > > We introduce platform independent helpers to parse the platform supplied
+> > > information. Thus we rename the platform handling code from:
+> > > 	of_coresight.c  => coresight-platform.c
+> > > 
+> > > The CoreSight driver creates shadow devices that appear on the Coresight
+> > > bus, in addition to the real devices (e.g, AMBA bus devices). The name
+> > > of these devices match the real device. This makes the device name
+> > > a bit cryptic for ACPI platform. So this series also introduces a generic
+> > > platform agnostic device naming scheme for the shadow Coresight devices.
+> > > Towards this we also make changes to the way we lookup devices to resolve
+> > > the connections, as we can't use the names to identify the devices. So,
+> > > we use the "fwnode_handle" of the real device for the device lookups.
+> > > Towards that we clean up the drivers to keep track of the "CoreSight"
+> > > device rather than the "real" device. However, all real operations,
+> > > like DMA allocation, Power management etc. must be performed on
+> > > the real device which is the parent of the shadow device.
+> > > 
+> > > Finally we add the support for parsing the ACPI platform data. The power
+> > > management support is missing in the ACPI (and this is not specific to
+> > > CoreSight). The firmware must ensure that the respective power domains
+> > > are turned on.
+> > > 
+> > > Applies on v5.2-rc1
+> > > 
+> > > Tested on a Juno-r0 board with ACPI bindings patch (Patch 31/30) added on
+> > > top of [2]. You would need to make sure that the debug power domain is
+> > > turned on before the Linux kernel boots. (e.g, connect the DS-5 to the
+> > > Juno board while at UEFI). arm32 code is only compile tested.
+> > 
+> > After I applied this patch set, I found all device names under
+> > '/sys/bus/event_source/devices/cs_etm/sinks/' have been changed as
+> > below on my DB410c board:
+> > # ls /sys/bus/event_source/devices/cs_etm/sinks/
+> > tmc_etf0  tmc_etr0  tpiu0
+> 
+> Yes, that is the expected behavior.
+> 
+> > 
+> > This leads to below command failure when open PMU device:
+> > # perf record -e cs_etm/@826000.etr/ --per-thread uname
+> > failed to set sink "826000.etr" on event cs_etm/@826000.etr/ with 2 (No such file or directory)
+> 
+> Correct.
+> 
+> > 
+> > I must use below command so that perf can match string with the
+> > device name under '/sys/bus/event_source/devices/cs_etm/sinks/':
+> > # perf record -e cs_etm/@tmc_etr0/ --per-thread uname
+> 
+> Correct.
+> 
+> > 
+> > Seems to me, this is an unexpected change and when I worked on the
+> > patch set v2, IIRC that version still can use '826000.etr' to open PMU
+> > device.
+> 
+> Correct - v2 did not address the new naming convention for devices present under
+> 'event_source', something that was corrected in v3.
 
-David,
-
-I am interested to know how you envision filesystem notifications would
-look with this interface.
-
-fanotify can certainly benefit from providing a ring buffer interface to read
-events.
-
-From what I have seen, a common practice of users is to monitor mounts
-(somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
-It'd be good if those users can use a single watch mechanism/API for
-watching the mount namespace and filesystem events within mounts.
-
-A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
-It provides users with two complete different mechanisms to watch error
-and filesystem events. That is generally not a good thing to have.
-
-I am not asking that you implement fs_notify() before merging sb_notify()
-and I understand that you have a use case for sb_notify().
-I am asking that you show me the path towards a unified API (how a
-typical program would look like), so that we know before merging your
-new API that it could be extended to accommodate fsnotify events
-where the final result will look wholesome to users.
-
-Thanks,
-Amir.
+Thanks for confirmation, Mathieu.
