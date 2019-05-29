@@ -2,125 +2,157 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760C8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E5523B03
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADEA23B05
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbfE2OxJ (ORCPT
+        id S1726792AbfE2OxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:53:09 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:54879 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfE2OxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:53:09 -0400
-Received: from p200300d06f28ff00b92b307fdbdaf2b9.dip0.t-ipconnect.de ([2003:d0:6f28:ff00:b92b:307f:dbda:f2b9] helo=somnus.fritz.box)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <anna-maria@linutronix.de>)
-        id 1hVzwv-00061P-Pz; Wed, 29 May 2019 16:53:05 +0200
-Date:   Wed, 29 May 2019 16:53:05 +0200 (CEST)
-From:   Anna-Maria Gleixner <anna-maria@linutronix.de>
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Haris Okanovic <haris.okanovic@ni.com>
-Subject: Re: [patch 1/3] timers: raise timer softirq on
- __mod_timer/add_timer_on
-In-Reply-To: <20190415201429.342103190@amt.cnet>
-Message-ID: <alpine.DEB.2.21.1905291652480.1395@somnus>
-References: <20190415201213.600254019@amt.cnet> <20190415201429.342103190@amt.cnet>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 29 May 2019 10:53:18 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47446 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbfE2OxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:53:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07741341;
+        Wed, 29 May 2019 07:53:17 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3F8E3F5AF;
+        Wed, 29 May 2019 07:53:15 -0700 (PDT)
+Date:   Wed, 29 May 2019 15:53:13 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH 3/4] arm64/mm: Consolidate page fault information capture
+Message-ID: <20190529145312.GG31777@lakrids.cambridge.arm.com>
+References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
+ <1559133285-27986-4-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559133285-27986-4-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019, Marcelo Tosatti wrote:
+On Wed, May 29, 2019 at 06:04:44PM +0530, Anshuman Khandual wrote:
+> This consolidates page fault information capture and move them bit earlier.
+> While here it also adds an wrapper is_write_abort(). It also saves some
+> cycles by replacing multiple user_mode() calls into a single one earlier
+> during the fault.
 
-[...]
+To be honest, I doubt this has any measureable impact, but I agree that
+using variables _may_ make the flow control easier to understand.
 
-> The patch "timers: do not raise softirq unconditionally" from Thomas
-> attempts to address that by checking, in the sched tick, whether its
-> necessary to raise the timer softirq. Unfortunately, it attempts to grab
-> the tvec base spinlock which generates the issue described in the patch
-> "Revert "timers: do not raise softirq unconditionally"".
-
-Both patches are not available in the version your patch set is based
-on. Better pointers would be helpful.
-
-> tvec_base->lock protects addition of timers to the wheel versus
-> timer interrupt execution.
-
-The timer_base->lock (formally known as tvec_base->lock), synchronizes all
-accesses to timer_base and not only addition of timers versus timer
-interrupt execution. Deletion of timers, getting the next timer interrupt,
-forwarding the base clock and migration of timers are protected as well by
-timer_base->lock.
-
-> This patch does not grab the tvec base spinlock from irq context,
-> but rather performs a lockless access to base->pending_map.
-
-I cannot see where this patch performs a lockless access to
-timer_base->pending_map.
-
-> It handles the the race between timer addition and timer interrupt
-> execution by unconditionally (in case of isolated CPUs) raising the
-> timer softirq after making sure the updated bitmap is visible 
-> on remote CPUs.
-
-So after modifying a timer on a non housekeeping timer base, the timer
-softirq is raised - even if there is no pending timer in the next
-bucket. Only with this patch, this shouldn't be a problem - but it is an
-additional raise of timer softirq and an overhead when adding a timer,
-because the normal timer softirq is raised from sched tick anyway.
-
-> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 > 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: James Morse <james.morse@arm.com> 
+> Cc: Andrey Konovalov <andreyknvl@google.com>
 > ---
->  kernel/time/timer.c |   38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>  arch/arm64/mm/fault.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
 > 
-> Index: linux-rt-devel/kernel/time/timer.c
-> ===================================================================
-> --- linux-rt-devel.orig/kernel/time/timer.c	2019-04-15 13:56:06.974210992 -0300
-> +++ linux-rt-devel/kernel/time/timer.c	2019-04-15 14:21:02.788704354 -0300
-> @@ -1056,6 +1063,17 @@
->  		internal_add_timer(base, timer);
->  	}
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index da02678..170c71f 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -435,6 +435,11 @@ static bool is_el0_instruction_abort(unsigned int esr)
+>  	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
+>  }
 >  
-> +	if (!housekeeping_cpu(base->cpu, HK_FLAG_TIMER) &&
-> +	    !(timer->flags & TIMER_DEFERRABLE)) {
-> +		call_single_data_t *c;
-> +
-> +		c = per_cpu_ptr(&raise_timer_csd, base->cpu);
-> +
-> +		/* Make sure bitmap updates are visible on remote CPUs */
-> +		smp_wmb();
-> +		smp_call_function_single_async(base->cpu, c);
-> +	}
-> +
->  out_unlock:
->  	raw_spin_unlock_irqrestore(&base->lock, flags);
->
+> +static bool is_write_abort(unsigned int esr)
+> +{
+> +	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
+> +}
 
-Could you please explain me, why you decided to use the above
-implementation for raising the timer softirq after modifying a timer?
+In off-list review, I mentioned that this isn't true for EL1, and I
+think that we should name this 'is_el0_write_abort()' or add a comment
+explaining the caveats if factored into a helper.
 
 Thanks,
+Mark.
 
-	Anna-Maria
-
+> +
+>  static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  				   struct pt_regs *regs)
+>  {
+> @@ -443,6 +448,9 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  	vm_fault_t fault, major = 0;
+>  	unsigned long vm_flags = VM_READ | VM_WRITE;
+>  	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+> +	bool is_user = user_mode(regs);
+> +	bool is_el0_exec = is_el0_instruction_abort(esr);
+> +	bool is_write = is_write_abort(esr);
+>  
+>  	if (notify_page_fault(regs, esr))
+>  		return 0;
+> @@ -454,12 +462,12 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  	if (faulthandler_disabled() || !mm)
+>  		goto no_context;
+>  
+> -	if (user_mode(regs))
+> +	if (is_user)
+>  		mm_flags |= FAULT_FLAG_USER;
+>  
+> -	if (is_el0_instruction_abort(esr)) {
+> +	if (is_el0_exec) {
+>  		vm_flags = VM_EXEC;
+> -	} else if ((esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM)) {
+> +	} else if (is_write) {
+>  		vm_flags = VM_WRITE;
+>  		mm_flags |= FAULT_FLAG_WRITE;
+>  	}
+> @@ -487,7 +495,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  	 * we can bug out early if this is from code which shouldn't.
+>  	 */
+>  	if (!down_read_trylock(&mm->mmap_sem)) {
+> -		if (!user_mode(regs) && !search_exception_tables(regs->pc))
+> +		if (!is_user && !search_exception_tables(regs->pc))
+>  			goto no_context;
+>  retry:
+>  		down_read(&mm->mmap_sem);
+> @@ -498,7 +506,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  		 */
+>  		might_sleep();
+>  #ifdef CONFIG_DEBUG_VM
+> -		if (!user_mode(regs) && !search_exception_tables(regs->pc)) {
+> +		if (!is_user && !search_exception_tables(regs->pc)) {
+>  			up_read(&mm->mmap_sem);
+>  			goto no_context;
+>  		}
+> @@ -516,7 +524,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  		 * in __lock_page_or_retry in mm/filemap.c.
+>  		 */
+>  		if (fatal_signal_pending(current)) {
+> -			if (!user_mode(regs))
+> +			if (!is_user)
+>  				goto no_context;
+>  			return 0;
+>  		}
+> @@ -561,7 +569,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  	 * If we are in kernel mode at this point, we have no context to
+>  	 * handle this fault with.
+>  	 */
+> -	if (!user_mode(regs))
+> +	if (!is_user)
+>  		goto no_context;
+>  
+>  	if (fault & VM_FAULT_OOM) {
+> -- 
+> 2.7.4
+> 
