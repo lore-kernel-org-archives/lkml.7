@@ -4,116 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A98C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57459C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FD021019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E2920665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfE2HoV (ORCPT
+        id S1726792AbfE2HsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:44:21 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:10434 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726104AbfE2HoO (ORCPT
+        Wed, 29 May 2019 03:48:06 -0400
+Received: from regular1.263xmail.com ([211.150.70.198]:53544 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfE2HsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:44:14 -0400
-X-UUID: 901cb59dda324d9ca9e1a2dee2790b74-20190529
-X-UUID: 901cb59dda324d9ca9e1a2dee2790b74-20190529
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1677181078; Wed, 29 May 2019 15:44:09 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 29 May 2019 15:44:07 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 29 May 2019 15:44:06 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v6 02/10] dt-bindings: connector: add optional properties for Type-B
-Date:   Wed, 29 May 2019 15:43:40 +0800
-Message-ID: <1559115828-19146-3-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Wed, 29 May 2019 03:48:06 -0400
+Received: from jay.xu?rock-chips.com (unknown [192.168.167.83])
+        by regular1.263xmail.com (Postfix) with ESMTP id DE17130E;
+        Wed, 29 May 2019 15:47:57 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P11557T140190921455360S1559116073988880_;
+        Wed, 29 May 2019 15:47:56 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <2eda5746483fc101b21695d172a79742>
+X-RL-SENDER: jay.xu@rock-chips.com
+X-SENDER: xjq@rock-chips.com
+X-LOGIN-NAME: jay.xu@rock-chips.com
+X-FST-TO: xjq@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     jay.xu@rock-chips.com, heiko@sntech.de, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Cc:     zhangzj@rock-chips.com, manivannan.sadhasivam@linaro.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
+Date:   Wed, 29 May 2019 15:47:52 +0800
+Message-Id: <20190529074752.19388-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190528044850.23703-1-jay.xu@rock-chips.com>
+References: <20190528044850.23703-1-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-usb-b-connector
+This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
+include rk3399.dtsi. Also enable these nodes:
+- pcie/pcie_phy
+- sdhci/sdio/emmc/sdmmc
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
-v6 no changes
+changes since v1:
+- remove dfi and dmc
 
-v5 changes:
- 1. add reviewed by Rob
+ arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 74 +++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
 
-v4 no changes
-
-v3 changes:
- 1. add GPIO direction, and use fixed-regulator for GPIO controlled
-    VBUS regulator suggested by Rob;
-
-v2 changes:
- 1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
----
- .../bindings/connector/usb-connector.txt           | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index cef556d4e5ee..d357987181ee 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -17,6 +17,20 @@ Optional properties:
- - self-powered: Set this property if the usb device that has its own power
-   source.
- 
-+Optional properties for usb-b-connector:
-+- id-gpios: an input gpio for USB ID pin.
-+- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
-+  VBUS 5V.
-+  see gpio/gpio.txt.
-+- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
-+  mode or dual role mode is supported.
-+  Particularly, if use an output GPIO to control a VBUS regulator, should
-+  model it as a regulator.
-+  see regulator/fixed-regulator.yaml
-+- pinctrl-names : a pinctrl state named "default" is optional
-+- pinctrl-0 : pin control group
-+  see pinctrl/pinctrl-bindings.txt
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+new file mode 100644
+index 000000000000..b6d433ffa67d
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
 +
- Optional properties for usb-c-connector:
- - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-   connector has power support.
++#include "rk3399.dtsi"
++
++/ {
++	compatible = "rockchip,rk3399pro";
++
++	xin32k: xin32k {
++		compatible = "fixed-clock";
++		clock-frequency = <32768>;
++		clock-output-names = "xin32k";
++		#clock-cells = <0>;
++	};
++};
++
++&emmc_phy {
++	status = "okay";
++};
++
++&pcie_phy {
++	status = "okay";
++};
++
++&pcie0 {
++	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
++	num-lanes = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_clkreqn_cpm>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	mmc-hs400-1_8v;
++	supports-emmc;
++	non-removable;
++	keep-power-in-suspend;
++	mmc-hs400-enhanced-strobe;
++	status = "okay";
++};
++
++&sdio0 {
++	clock-frequency = <150000000>;
++	clock-freq-min-max = <200000 150000000>;
++	supports-sdio;
++	bus-width = <4>;
++	disable-wp;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	status = "okay";
++};
++
++&sdmmc {
++	clock-frequency = <150000000>;
++	clock-freq-min-max = <400000 150000000>;
++	supports-sd;
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	num-slots = <1>;
++	vqmmc-supply = <&vccio_sd>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	status = "okay";
++};
 -- 
-2.21.0
+2.17.1
+
+
 
