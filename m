@@ -2,156 +2,88 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1026EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBB02081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KB/ZAgwV"
+	by mail.kernel.org (Postfix) with ESMTP id D76FA2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfE2NPs (ORCPT
+        id S1727158AbfE2NQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:15:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42523 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE2NPs (ORCPT
+        Wed, 29 May 2019 09:16:45 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:49189 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfE2NQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:15:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 33so1352748pgv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xN5neQLEPuy8rf1hiSBhjEvuwhf5Or8I1z3QH2reqRo=;
-        b=KB/ZAgwVtpsscHpxRL2WxEnZSjd07Gwyz2fitS1PZiXG05ZDobhExv0V3qnjvyd5u1
-         IQ9J9BTglpmDw0bu8hG5dkRuNsrk8peU3jiDOnhitl1YfMgq1x1OG9zwddO7K8QCiQcL
-         yYbEaDkBlTyxSKY5Az8//PsZMu9hRaHjjylWtv8Mm93hliHX8wl/rQmOu0UpzUa5z2Ni
-         syP6arMk6/g+h0pRaE6Z+/OuQQeogHLblUZyFQ7mxjFdi1JCizncxqQ0NBZB8438Fz7l
-         4XmvoJJsbeEcOSlCIZsRYFNiKQqi74X096iz9lgxtysgSLcsgL3/+sac2FmVr1HTYWFh
-         CvZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xN5neQLEPuy8rf1hiSBhjEvuwhf5Or8I1z3QH2reqRo=;
-        b=irihqoydtV5wgXYCtenlU6E6DFQJKGET4EB3myWnklLBLcxjdrmp30NtWnNUulsA/j
-         Exyo3LljcNmNmPHp9sAjhZNdTsjmH5CJ/oaiunxsDQwzu1VVDPZc7pinKwbU214iPeMW
-         0kaTZt6RlL0mnkKSxY0tM1PoTD9Zh6HbWxvCv7/HWtUV2wcTysFmSZwUGajvCbKFrjXc
-         jXMSyfgjZBAnGwDgpD0OdhnpYSYEhGq/C93S1Ov0N3+mS5CB+s1mLXZEnQVaedtj3zrr
-         2gC1syd9SX8/yRZcxYwQxPtlL/E2nHw82rwNa0BUmrF2RQoLTzPdIY+Ig6E7Uy/yns2G
-         +KEw==
-X-Gm-Message-State: APjAAAWOnxO7AEXLefpB1oBfszKG5yr8nJeLfgT54FkPKvPqyDbvl/+8
-        PI+1qFI4O6QWKjkpHU0MRRI=
-X-Google-Smtp-Source: APXvYqxqk6JDonQnV/wxu8JWsy8K0bS3rk427TwK4U+WoZy6ABfTmVuXj+UIawze5M0YKtA8Sa13ig==
-X-Received: by 2002:a62:4d03:: with SMTP id a3mr152436226pfb.2.1559135747593;
-        Wed, 29 May 2019 06:15:47 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.67.155])
-        by smtp.gmail.com with ESMTPSA id o6sm17900752pfo.164.2019.05.29.06.15.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:15:46 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de, qader.aymen@gmail.com,
-        kim.jamie.bradley@gmail.com, keescook@chromium.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rts5208: Remove negations
-Date:   Wed, 29 May 2019 18:45:31 +0530
-Message-Id: <20190529131531.6368-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 29 May 2019 09:16:44 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45DWSn5ZnMz1rcqw;
+        Wed, 29 May 2019 15:16:40 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45DWSm40vbz1qqkj;
+        Wed, 29 May 2019 15:16:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id Aho-CC1PN1WD; Wed, 29 May 2019 15:16:39 +0200 (CEST)
+X-Auth-Info: heIz6POa976JqLUuwvE+2N83H3Q60nk8KinsJitNukiRlmGYQB/lJSXTXqr9r+Ce
+Received: from hawking (nat.nue.novell.com [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 29 May 2019 15:16:39 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Greg Ungerer <gerg@linux-m68k.org>, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
+References: <20190524201817.16509-1-jannh@google.com>
+        <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
+        <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+        <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
+        <7cac8be1-1667-6b6e-d2b8-d6ec5dc6da09@physik.fu-berlin.de>
+X-Yow:  FOOLED you!  Absorb EGO SHATTERING impulse rays, polyester poltroon!!
+Date:   Wed, 29 May 2019 15:16:38 +0200
+In-Reply-To: <7cac8be1-1667-6b6e-d2b8-d6ec5dc6da09@physik.fu-berlin.de> (John
+        Paul Adrian Glaubitz's message of "Wed, 29 May 2019 14:32:04 +0200")
+Message-ID: <mvma7f5bdu1.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously return variable fake_para was being negated before return.
-For simplification, fake_para can be changed to valid_para, which is
-returned without negation (corresponding values swapped accordingly).
-Further, the function names check_sd_current_prior and check_sd_speed_prior
-can be changed to valid_sd_current_prior and valid_sd_speed_prior
-respectively for greater clarity on the purpose of the functions.
+On Mai 29 2019, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de> wrote:
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rts5208/rtsx_chip.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+> On 5/28/19 12:56 PM, Greg Ungerer wrote:
+>>> Maybe... but I didn't want to rip it out without having one of the
+>>> maintainers confirm that this really isn't likely to be used anymore.
+>> 
+>> I have not used shared libraries on m68k non-mmu setups for
+>> a very long time. At least 10 years I would think.
+> We use shared libraries in Debian on m68k and Andreas Schwab uses them
+> on openSUSE/m68k.
 
-diff --git a/drivers/staging/rts5208/rtsx_chip.c b/drivers/staging/rts5208/rtsx_chip.c
-index 76c35f3c0208..17c4131f5f62 100644
---- a/drivers/staging/rts5208/rtsx_chip.c
-+++ b/drivers/staging/rts5208/rtsx_chip.c
-@@ -598,38 +598,38 @@ int rtsx_reset_chip(struct rtsx_chip *chip)
- 	return STATUS_SUCCESS;
- }
- 
--static inline int check_sd_speed_prior(u32 sd_speed_prior)
-+static inline int valid_sd_speed_prior(u32 sd_speed_prior)
- {
--	bool fake_para = false;
-+	bool valid_para = true;
- 	int i;
- 
- 	for (i = 0; i < 4; i++) {
- 		u8 tmp = (u8)(sd_speed_prior >> (i * 8));
- 
- 		if ((tmp < 0x01) || (tmp > 0x04)) {
--			fake_para = true;
-+			valid_para = false;
- 			break;
- 		}
- 	}
- 
--	return !fake_para;
-+	return valid_para;
- }
- 
--static inline int check_sd_current_prior(u32 sd_current_prior)
-+static inline int valid_sd_current_prior(u32 sd_current_prior)
- {
--	bool fake_para = false;
-+	bool valid_para = true;
- 	int i;
- 
- 	for (i = 0; i < 4; i++) {
- 		u8 tmp = (u8)(sd_current_prior >> (i * 8));
- 
- 		if (tmp > 0x03) {
--			fake_para = true;
-+			valid_para = false;
- 			break;
- 		}
- 	}
- 
--	return !fake_para;
-+	return valid_para;
- }
- 
- static int rts5208_init(struct rtsx_chip *chip)
-@@ -796,13 +796,13 @@ int rtsx_init_chip(struct rtsx_chip *chip)
- 		chip->rw_fail_cnt[i] = 0;
- 	}
- 
--	if (!check_sd_speed_prior(chip->sd_speed_prior))
-+	if (!valid_sd_speed_prior(chip->sd_speed_prior))
- 		chip->sd_speed_prior = 0x01040203;
- 
- 	dev_dbg(rtsx_dev(chip), "sd_speed_prior = 0x%08x\n",
- 		chip->sd_speed_prior);
- 
--	if (!check_sd_current_prior(chip->sd_current_prior))
-+	if (!valid_sd_current_prior(chip->sd_current_prior))
- 		chip->sd_current_prior = 0x00010203;
- 
- 	dev_dbg(rtsx_dev(chip), "sd_current_prior = 0x%08x\n",
+Nope, I don't use non-mmu.
+
+Andreas.
+
 -- 
-2.19.1
-
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
