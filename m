@@ -8,67 +8,69 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B7C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D1AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D84C21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1CE2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7RhC9x/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnB4rk7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfE2HSy (ORCPT
+        id S1726601AbfE2HS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:18:54 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46705 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfE2HSy (ORCPT
+        Wed, 29 May 2019 03:18:58 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41120 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfE2HSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 03:18:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so1003294pfm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:18:53 -0700 (PDT)
+Received: by mail-pl1-f196.google.com with SMTP id s24so536689plr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lfPQaJK4b6PcFs1pATGFmdv3+D6FpEgotdn3n+xpnSo=;
-        b=M7RhC9x/89fJXs+K/H6afYRjpW07ij58C9JovMK1gsKLCu1t9dxKU5DYa7Yqb0xHYo
-         9jjxyggQhQu2K4o0XpCVy1KbIYXBuX3ortitNmgEczNhBHMLDhczJpiAstGpB3wc0Y7C
-         wKe46qsSphda6/YVzrf0hsU6+j0YqHcpKGG/bnpAq2CcXphIdJQoCzQ0CVaLAkghuSDG
-         viEMMmtmw0CbtSFBAl7RoXT90gkAviRD1jivPYFkTDT4l2tvR+YwpnImfRmc/Gofw4LI
-         e8ZAJEF8wj0BWME5Udk9Gtp5ASduIzyi44FzET6xClsaYvbJgrwbhjNeHK9uStJcQivz
-         zNaA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aawXyaVUndOA3gmbFU8MOhKxpP5JaLgvaRjLb9Tuem4=;
+        b=AnB4rk7IBerNEQACRXU0wbgqUN6GQKnv1TOiQZum+VHMJfGOrrRvF97L7rD85gqj2v
+         W5UHKRF05pwBNpATd+bS/Kn1XLhyqoSEOGB8V+rPI2/Rkgnr6eBF6Ram0h/4ZhUtUY4t
+         6kKdMApz/Nh8LJ/QIB/TB1IAhvn2vbNASSudj/a99k7s1NCYGEeN3vy2/HSIi5ur0tv7
+         q/+Nniui6A5wFc7ngMSBZbnXO7Wc7amyLQDb0EPABOh7r75uaBxyozpmg2ST/+uE1Tv5
+         fcw7y+UvfTd78eQ5kuYo4ydO3ikP2ec7tkgCfxb9YjtOoOecFrm9kofPM4+Hb3pfiOig
+         pQSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lfPQaJK4b6PcFs1pATGFmdv3+D6FpEgotdn3n+xpnSo=;
-        b=Sz3TOd5phV5URAVJmbd5bohYdlCdO4W59ucy/6zst1QMyrVCnR/n/28ZoFEJ0AtiaL
-         x/uDSYw3/YjsULdxBj84gCvp+Pv1PcFJdthslNoaF8ugBF3MXZIzu7RJptfzVno6L+2k
-         JyTdq3u+c78zUmYZkub2AaD3zh78JjJQLiyOemi477S9xG36iIXEUBFWP77yDYuyCFi3
-         42pQawGqha5AJxc0WaQHdpOGRs6jNkidHMpzAEZ3z7B9rz5HAqbYgqi03JHe0B9jIRlu
-         mS/uFihW8ZLgiR9zFMCwGAH9dmElpjNy7gtGotE4OxYf6DB4WHVhR08yw7jcDTJPDZ+d
-         P2Qw==
-X-Gm-Message-State: APjAAAULjoOScTbBZI4n3oUucICiHmtQYJJ1EI29vRrkbuNWYxdE2BoN
-        FNA+jvrm/BuxLXfYlg7ZiXY=
-X-Google-Smtp-Source: APXvYqwOkFXvZjxTMa7XfJD9UYwZbQAVrZVJTnhy8paL3sJPyiMYYXu21mQiS9/zRY2lIYCHdhfhtQ==
-X-Received: by 2002:a63:2224:: with SMTP id i36mr17923970pgi.70.1559114332873;
-        Wed, 29 May 2019 00:18:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aawXyaVUndOA3gmbFU8MOhKxpP5JaLgvaRjLb9Tuem4=;
+        b=ArMkoJ8oUta037PiIMicuckRM0v/GpOUDGrekCKZyZfbqqWL/W/ibdq8pRrT0/FWnF
+         nyCpReDLXWhUrCbkPgeAAcQ1OrCSFoJbedrRlV5WpuhnJqrXyG84W9V73No0Eq7Q8rl0
+         4/kTDJV9ppJtSx5TRimkWS9BzXHVgArvifNDi6ZSRBBPQ/Tez6Ic2FognR6LPppJR60u
+         OYazzbLXphY9vIgqfoXAqbJJxF5ft5EIhS9zbFbNHLGhUw8bR7F9EP4UPJZz5aY5Aagv
+         zZ+fCoP/38govWjI6nidhNxYq+DseH/UbdW2WhUOhXoDOu9sl3bn6y149uFTKYwMyPBk
+         xAfQ==
+X-Gm-Message-State: APjAAAUwjQLzbmvOl2gnbOlzz2C1u6dmiqHj7A2qFfQSC2tB5WSZ6f75
+        umgY/twmL/F1jFo1IO49WTk=
+X-Google-Smtp-Source: APXvYqy2YXmVQ9gCwMlsysZFTnip1mV+36qIwpdi6BdCr9jTimWUqP8ajah8NmxFN+wIrkNfzVNVcg==
+X-Received: by 2002:a17:902:b495:: with SMTP id y21mr73769788plr.243.1559114333879;
+        Wed, 29 May 2019 00:18:53 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id y16sm32038938pfo.133.2019.05.29.00.18.51
+        by smtp.gmail.com with ESMTPSA id y16sm32038938pfo.133.2019.05.29.00.18.52
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 00:18:52 -0700 (PDT)
+        Wed, 29 May 2019 00:18:53 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
         Chris Healy <cphealy@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] ARM: dts: imx6: rdu2: Add node for UCS1002 USB charger chip
-Date:   Wed, 29 May 2019 00:18:41 -0700
-Message-Id: <20190529071843.24767-1-andrew.smirnov@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Wed, 29 May 2019 00:18:42 -0700
+Message-Id: <20190529071843.24767-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190529071843.24767-1-andrew.smirnov@gmail.com>
+References: <20190529071843.24767-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,154 +78,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add node for UCS1002 USB charger chip connected to front panel USB and
-replace "regulator-fixed" previously used to control VBUS.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
 Cc: Fabio Estevam <festevam@gmail.com>
 Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
-
-Changes since [v1]:
-
-    - Added GPIO hog configuration to put UCS1002 into correct mode
-      even before its driver takes over. The code for that is taken
-      from similar patch from Lucas, so I added his Signed-off-by as
-      well.
-
-[v1] lore.kernel.org/r/20190522071227.31488-1-andrew.smirnov@gmail.com
-
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 77 +++++++++++++++++++------
- 1 file changed, 59 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 93be00a60c88..07e21d1e5b4c 100644
+index 07e21d1e5b4c..04d4d4d7e43c 100644
 --- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -60,18 +60,6 @@
- 		regulator-always-on;
- 	};
- 
--	reg_5p0v_user_usb: regulator-5p0v-user-usb {
--		compatible = "regulator-fixed";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_reg_user_usb>;
--		vin-supply = <&reg_5p0v_main>;
--		regulator-name = "5V_USER_USB";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
--		startup-delay-us = <1000>;
--	};
--
- 	reg_3p3v_pmic: regulator-3p3v-pmic {
- 		compatible = "regulator-fixed";
- 		vin-supply = <&reg_12p0v>;
-@@ -331,6 +319,39 @@
- 	};
- };
- 
-+&gpio3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpio3_hog>;
-+
-+	usb-emulation {
-+		gpio-hog;
-+		gpios = <19 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "usb-emulation";
-+	};
-+
-+	usb-mode1 {
-+		gpio-hog;
-+		gpios = <20 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-mode1";
-+	};
-+
-+	usb-pwr {
-+		gpio-hog;
-+		gpios = <22 GPIO_ACTIVE_LOW>;
-+		output-high;
-+		line-name = "usb-pwr-ctrl-en-n";
-+	};
-+
-+	usb-mode2 {
-+		gpio-hog;
-+		gpios = <23 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "usb-mode2";
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c1>;
-@@ -590,6 +611,16 @@
- 		status = "disabled";
- 	};
- 
-+	reg_5p0v_user_usb: charger@32 {
-+		compatible = "microchip,ucs1002";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ucs1002_pins>;
-+		reg = <0x32>;
-+		interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
-+				      <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
-+		interrupt-names = "a_det", "alert";
-+	};
-+
- 	hpa1: amp@60 {
- 		compatible = "ti,tpa6130a2";
- 		pinctrl-names = "default";
-@@ -935,6 +966,15 @@
+@@ -658,7 +658,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -671,7 +671,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1096,7 +1096,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
  		>;
  	};
+@@ -1109,7 +1108,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
-+	pinctrl_gpio3_hog: gpio3hoggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x1b0b0
-+			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
-+			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
-+			MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
-@@ -982,12 +1022,6 @@
  		>;
- 	};
- 
--	pinctrl_reg_user_usb: usbotggrp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x40000038
--		>;
--	};
--
- 	pinctrl_rmii_phy_irq: phygrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_D30__GPIO3_IO30		0x40010000
-@@ -1047,6 +1081,13 @@
- 		>;
- 	};
- 
-+	pinctrl_ucs1002_pins: ucs1002grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02  	0x1b0b0
-+			MX6QDL_PAD_EIM_D21__GPIO3_IO21  	0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x10059
 -- 
 2.21.0
 
