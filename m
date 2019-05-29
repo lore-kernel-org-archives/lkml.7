@@ -2,99 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA52C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31031C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5D823C7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF2523C80
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:54:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="YLj+z14b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfE2PyK (ORCPT
+        id S1727249AbfE2PyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:54:10 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42274 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfE2PyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:54:09 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 2851560C;
-        Wed, 29 May 2019 15:54:09 +0000 (UTC)
-Date:   Wed, 29 May 2019 09:54:08 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
-Subject: [GIT PULL] Fixes for sphinx 2.0 docs build failures
-Message-ID: <20190529095408.1429a5ab@lwn.net>
-Organization: LWN.net
+        Wed, 29 May 2019 11:54:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34701 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfE2PyY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:54:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j24so3021901ljg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HZPIDMHhUw7CgfVQ/9XO5eI1+3TKH0K2oXJxQv63Hxo=;
+        b=YLj+z14bB4aNZfVxxhFnzHr+IJ0pqDENed4opWRwB3klsdl+zcbbOsZ5Cz+kb8fF3n
+         PYPoAbsciMmnBeh1o3ZEOzy622o6+WWvo1l6+xcYhEBGC1KG2jA+iDGAtAe504we8fuw
+         NI4d8Ws93egDU5nhkdLg5rTL97Ryu8Ksl/k3zgW9NN6D3YHQJNY55kto8DGg1v5rTMPs
+         KW+fDxM3R82Tcht78VcJ51Qfd3xt3w0ZzCmdzrym5zRrab0CHd81011koMd1G6XWAfkg
+         bgzrtoGgdM0nT7faKI/0o9NmgTL1+KPxcF+4fi8bvJBLZfBnNCjJM5Dm96IbByxYodVl
+         TLBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HZPIDMHhUw7CgfVQ/9XO5eI1+3TKH0K2oXJxQv63Hxo=;
+        b=U5s5NpWslOe7nOXhwz0Oegkset1an58GYJKaI1xQTKoKQhUKosvyI+4xSP4RaUdmQc
+         Ik7epAVSw8CBe3cKfqJBYOmUNA/1dJVUYY4u30eTiqix9w3fctBZ6mo606MWKtevL1jv
+         pxddV/sI9IgaZHtSjy95M1ZVKZcOZJIlg/IABv94THxcXO5iE0UDje0J2HXVQrYsdLI0
+         XYZh0EBUR2eloPl44oMGiokc9UJBeSM9zVcGPGgNLckRbOszjk9WmRBzmBJFmKc8W11C
+         JBQrwKr/09jZ12PtfYRalGRMU+HOcfw7CIZ0foH0DHzw2sL75qyQ0ecwKKRub5yx3yJu
+         GMpw==
+X-Gm-Message-State: APjAAAXakoSbzYvkJhyeJe6X0yBu4yAoOSCFtscu/8FWKYNmec2LgmvZ
+        8YT6Y1SQaVMcMmiz5VvmM4OB3g==
+X-Google-Smtp-Source: APXvYqxnp6Ve/wM1vnGRQlgI3iNH7KRfR+IK9dcQlN8Qua6EBlBLsRfVNuraPd66a2x2nieNPzMGWQ==
+X-Received: by 2002:a2e:7001:: with SMTP id l1mr42358017ljc.11.1559145262588;
+        Wed, 29 May 2019 08:54:22 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id y127sm9462lff.34.2019.05.29.08.54.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 08:54:21 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:54:19 +0200
+From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] staging: kpc2000: add missing spaces in core.c
+Message-ID: <20190529155419.ego3sfedew65ini5@dev.nikanor.nu>
+References: <20190524110802.2953-1-simon@nikanor.nu>
+ <20190524110802.2953-4-simon@nikanor.nu>
+ <20190527073159.GX31203@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190527073159.GX31203@kadam>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit
-a65fd4f0def56f59822b2c49522d36319bc8da8b:
+On Mon, May 27, 2019 at 10:31:59AM +0300, Dan Carpenter wrote:
+> On Fri, May 24, 2019 at 01:08:01PM +0200, Simon Sandström wrote:
+> > [..]
+> > -		ret = copy_to_user((void*)ioctl_param, (void*)&temp, sizeof(temp));
+> > +		ret = copy_to_user((void *)ioctl_param, (void *)&temp, sizeof(temp));
+> >  		if (ret)
+> >  			return -EFAULT;
+> 
+> This should really be written like so:
+> 
+> 		if (copy_to_user((void __user *)ioctl_param, &temp,
+> 				 sizeof(temp)))
+> 			return -EFAULT;
+> 
+> temp is really the wrong name.  "temp" is for temperatures.  "tmp" means
+> temporary.  But also "tmp" is wrong here because it's not a temporary
+> variable.  It's better to call it "regs" here.
+> 
+> regards,
+> dan carpenter
+> 
 
-  Documentation: kdump: fix minor typo (2019-05-21 09:31:28 -0600)
+I agree, but I don't think it fits within this patch. I can send a
+separate patch with this change.
 
-are available in the Git repository at:
+Thanks
 
-  git://git.lwn.net/linux.git tags/docs-5.2-fixes2
-
-for you to fetch changes up to 551bd3368a7b3cfef01edaade8970948d178d40a:
-
-  drm/i915: Maintain consistent documentation subsection ordering (2019-05-24 09:15:45 -0600)
-
-----------------------------------------------------------------
-The Sphinx 2.0 release contained a few incompatible API changes that broke
-our extensions and, thus, the documentation build in general.  Who knew
-that those deprecation warnings it was outputting actually meant we should
-change something?  This set of fixes makes the build work again with
-Sphinx 2.0 and eliminates the warnings for 1.8.  As part of that, we also
-need a few fixes to the docs for places where the new Sphinx is more
-strict.
-
-It is a bit late in the cycle for this kind of change, but it does fix
-problems that people are experiencing now.
-
-There has been some talk of raising the minimum version of Sphinx we
-support.  I don't want to do that abruptly, though, so these changes add
-some glue to continue to support versions back to 1.3.  We will be adding
-some infrastructure soon to nudge users of old versions forward, with the
-idea of maybe increasing our minimum version (and removing this glue)
-sometime in the future.
-
-----------------------------------------------------------------
-Jonathan Corbet (7):
-      doc: Cope with Sphinx logging deprecations
-      doc: Cope with the deprecation of AutoReporter
-      docs: fix numaperf.rst and add it to the doc tree
-      lib/list_sort: fix kerneldoc build error
-      docs: fix multiple doc build warnings in enumeration.rst
-      docs: Fix conf.py for Sphinx 2.0
-      drm/i915: Maintain consistent documentation subsection ordering
-
-Mauro Carvalho Chehab (1):
-      scripts/sphinx-pre-install: make it handle Sphinx versions
-
- Documentation/admin-guide/mm/index.rst            |  1 +
- Documentation/admin-guide/mm/numaperf.rst         |  2 +-
- Documentation/conf.py                             |  2 +-
- Documentation/firmware-guide/acpi/enumeration.rst |  2 +-
- Documentation/sphinx/kerneldoc.py                 | 44 +++++++++---
- Documentation/sphinx/kernellog.py                 | 28 ++++++++
- Documentation/sphinx/kfigure.py                   | 40 ++++++-----
- drivers/gpu/drm/i915/i915_reg.h                   |  6 +-
- drivers/gpu/drm/i915/intel_workarounds.c          |  2 +-
- lib/list_sort.c                                   |  3 +-
- scripts/sphinx-pre-install                        | 86 +++++++++++++++++++++--
- 11 files changed, 173 insertions(+), 43 deletions(-)
- create mode 100644 Documentation/sphinx/kernellog.py
+- Simon
