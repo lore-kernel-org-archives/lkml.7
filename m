@@ -4,60 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9085C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FB8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE87F241B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DF4241BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l6gTfJoS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kCF0pV8k"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i07xyBpW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kZvKvIeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfE2UzX (ORCPT
+        id S1726870AbfE2Uz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:55:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56626 "EHLO
+        Wed, 29 May 2019 16:55:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56274 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfE2UzV (ORCPT
+        with ESMTP id S1726787AbfE2UzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:55:21 -0400
+        Wed, 29 May 2019 16:55:19 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C84B3609F3; Wed, 29 May 2019 20:55:19 +0000 (UTC)
+        id 2BB0C61212; Wed, 29 May 2019 20:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559163320;
-        bh=MNplseeIKAQ0I6ymvujag5Wo9kZnnfQJJGa0KJiYvTw=;
+        s=default; t=1559163318;
+        bh=n2zt0GanUIWLgrJz7fCZ/sI6rrlNw5KuRp/QXgNCtHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l6gTfJoSMrYl5TH3aNNHXFJTlII3aQimbOW5TFPGP4QOClPMcQYc3Vbdi1EmFuqbS
-         Y/+UKJZhcr2YhF2n6tuhLiHyHvmqLMY/3I3KKnzN745qQWMmWt0ITWlJhLqL/kb6xz
-         gEt0MYAd1ls7+XhPUzkXz4T7S2aNnaJdkpwTzTUI=
+        b=i07xyBpW+ItVIUgetfisBNxNETW/8YdqkSOA/1K+BYUcH6NGATUnGlzXuOcei13RG
+         Pd46vFoBmrBTNKh1brFPrK/A2gYNfEARPkMscsnpbPrkBzKZsyVuiP+2HTqGKsAE39
+         TDH/wZXGVErxssIWKOTBT8c3mbwAkIuMCm875OgA=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 316DD6133A;
-        Wed, 29 May 2019 20:55:16 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29D3A61196;
+        Wed, 29 May 2019 20:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559163319;
-        bh=MNplseeIKAQ0I6ymvujag5Wo9kZnnfQJJGa0KJiYvTw=;
+        s=default; t=1559163316;
+        bh=n2zt0GanUIWLgrJz7fCZ/sI6rrlNw5KuRp/QXgNCtHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCF0pV8kDxPMcxpp+IyTex1gwg/kAHKVn4XAqB5esDSO93Xl+GZ/Y3itkDgvITbFW
-         hsVAyZL2PjbfPvLGFb3/IQSk3xE/qZFsnXnioDQY2E/uCuCLzVdec4wzyCD0+mibcO
-         paF/NvWuL6yXiI+I7DoQ//XSYK7/HmghFCVDIuNs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 316DD6133A
+        b=kZvKvIeP81tykgOcfXH3sVPApm3sFC85c/7tkGXe1a5MFNhkk+42UCooFgk+5meM+
+         0xgvg0tjAVTvAbqCdzV2LuLIHRl4Jpczd9i5o01dUQ+VADD2Xr2/MZCJBQjTNKPnm5
+         SaderNpmoB/EFBVrUYIcuNZUh+tG1mpG06kXFcZ0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29D3A61196
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     freedreno@lists.freedesktop.org
 Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
         hoegsberg@google.com, dianders@chromium.org,
-        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/16] iommu: Add DOMAIN_ATTR_PTBASE
-Date:   Wed, 29 May 2019 14:54:41 -0600
-Message-Id: <1559163292-4792-6-git-send-email-jcrouse@codeaurora.org>
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 04/16] iommu/arm-smmu: Add support for DOMAIN_ATTR_SPLIT_TABLES
+Date:   Wed, 29 May 2019 14:54:40 -0600
+Message-Id: <1559163292-4792-5-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559163292-4792-1-git-send-email-jcrouse@codeaurora.org>
 References: <1559163292-4792-1-git-send-email-jcrouse@codeaurora.org>
@@ -66,29 +69,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an attribute to return the base address of the pagetable. This is used
-by auxiliary domains from arm-smmu to return the address of the pagetable
-to the leaf driver so that it can set the appropriate pagetable through
-it's own means.
+If DOMAIN_ATTR_SPLIT_TABLES is specified for a domain pass
+ARM_64_LPAE_SPLIT_S1 to io_pgtable_ops to allocate and
+initialize TTBR0 and TTBR1 pagetables.
+
+v3: Moved all the pagetable specific work into io-pgtable-arm
+in previous patch
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- include/linux/iommu.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/arm-smmu.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index a2f07cf..49639b7 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -129,6 +129,7 @@ enum iommu_attr {
- 	DOMAIN_ATTR_NESTING,	/* two stages of translation */
- 	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
- 	DOMAIN_ATTR_SPLIT_TABLES,
-+	DOMAIN_ATTR_PTBASE,
- 	DOMAIN_ATTR_MAX,
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 7537639..33e6928 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -260,6 +260,7 @@ struct arm_smmu_domain {
+ 	bool				non_strict;
+ 	struct mutex			init_mutex; /* Protects smmu pointer */
+ 	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
++	u32 attributes;
+ 	struct iommu_domain		domain;
  };
  
+@@ -835,7 +836,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		ias = smmu->va_size;
+ 		oas = smmu->ipa_size;
+ 		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
+-			fmt = ARM_64_LPAE_S1;
++			if (smmu_domain->attributes &
++				(1 << DOMAIN_ATTR_SPLIT_TABLES))
++				fmt = ARM_64_LPAE_SPLIT_S1;
++			else
++				fmt = ARM_64_LPAE_S1;
+ 		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
+ 			fmt = ARM_32_LPAE_S1;
+ 			ias = min(ias, 32UL);
+@@ -1622,6 +1627,10 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+ 		case DOMAIN_ATTR_NESTING:
+ 			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+ 			return 0;
++		case DOMAIN_ATTR_SPLIT_TABLES:
++			*(int *)data = !!(smmu_domain->attributes &
++				(1 << DOMAIN_ATTR_SPLIT_TABLES));
++			return 0;
+ 		default:
+ 			return -ENODEV;
+ 		}
+@@ -1662,6 +1671,11 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+ 			else
+ 				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+ 			break;
++		case DOMAIN_ATTR_SPLIT_TABLES:
++			if (*((int *)data))
++				smmu_domain->attributes |=
++					(1 << DOMAIN_ATTR_SPLIT_TABLES);
++			break;
+ 		default:
+ 			ret = -ENODEV;
+ 		}
 -- 
 2.7.4
 
