@@ -2,54 +2,60 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274F7C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C5C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F4B21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9500721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfE2AJh (ORCPT
+        id S1727369AbfE2AKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 20:09:37 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54224 "EHLO
+        Tue, 28 May 2019 20:10:23 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:54236 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfE2AJg (ORCPT
+        with ESMTP id S1726620AbfE2AKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 20:09:36 -0400
+        Tue, 28 May 2019 20:10:23 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E8D5513FB671F;
-        Tue, 28 May 2019 17:09:35 -0700 (PDT)
-Date:   Tue, 28 May 2019 17:09:32 -0700 (PDT)
-Message-Id: <20190528.170932.1841104373899073742.davem@davemloft.net>
-To:     narmstrong@baylibre.com
-Cc:     netdev@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/2] net: stmmac: dwmac-meson: update with
- SPDX Licence identifier
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B2217103D40EF;
+        Tue, 28 May 2019 17:10:22 -0700 (PDT)
+Date:   Tue, 28 May 2019 17:10:22 -0700 (PDT)
+Message-Id: <20190528.171022.1815285028396063349.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     maxime.chevallier@bootlin.com, antoine.tenart@bootlin.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] net: mvpp2: cls: Remove unnessesary check in
+ mvpp2_ethtool_cls_rule_ins
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190527134623.5673-1-narmstrong@baylibre.com>
-References: <20190527134623.5673-1-narmstrong@baylibre.com>
+In-Reply-To: <20190527134646.21804-1-yuehaibing@huawei.com>
+References: <20190527134646.21804-1-yuehaibing@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 28 May 2019 17:09:36 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 28 May 2019 17:10:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
-Date: Mon, 27 May 2019 15:46:21 +0200
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Mon, 27 May 2019 21:46:46 +0800
 
-> Update the SPDX Licence identifier for the Amlogic Meson6 and Meson8 dwmac
-> glue drivers.
+> Fix smatch warning:
+> 
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c:1236
+>  mvpp2_ethtool_cls_rule_ins() warn: unsigned 'info->fs.location' is never less than zero.
+> 
+> 'info->fs.location' is u32 type, never less than zero.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Series applied.
+This doesn't apply to net-next.
