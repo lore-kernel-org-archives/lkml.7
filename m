@@ -2,110 +2,97 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B00C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB91C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF172216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48315208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="Da5akzEi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tA5SEkJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfE2HCQ (ORCPT
+        id S1726311AbfE2HGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:02:16 -0400
-Received: from mail-eopbgr80132.outbound.protection.outlook.com ([40.107.8.132]:46729
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725895AbfE2HCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:02:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hDqI4gw6TsCCPEHj55g0+Qph0f44D3m90I0w3jUmyeY=;
- b=Da5akzEid+qHUJyqMD6RNjsJBK46VaGmqVxqg4eTiYgIqjE2v5c3q5CwiNh7cQkjBAVvzEBY47VAtl9UrZDzK8nPgjaEoozgn2Z8AP7ffZjwuLZWDIpcjU1a4zTf+GabMn7+gUBWumnDpdVyAyCfasYY5g0d5DtDxXRkIVnxcoo=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2384.EURPRD10.PROD.OUTLOOK.COM (20.177.62.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Wed, 29 May 2019 07:02:11 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1922.021; Wed, 29 May 2019
- 07:02:11 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net v2] net: dsa: mv88e6xxx: fix handling of upper half of
- STATS_TYPE_PORT
-Thread-Topic: [PATCH net v2] net: dsa: mv88e6xxx: fix handling of upper half
- of STATS_TYPE_PORT
-Thread-Index: AQHVFexwewLvjBXjCUSJ0awhE0fnMQ==
-Date:   Wed, 29 May 2019 07:02:11 +0000
-Message-ID: <20190529070158.7040-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0211.eurprd05.prod.outlook.com
- (2603:10a6:3:fa::11) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 228cee14-80f4-4111-5f91-08d6e4039273
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2384;
-x-ms-traffictypediagnostic: VI1PR10MB2384:
-x-microsoft-antispam-prvs: <VI1PR10MB23849E0C0936E46E18B06CC88A1F0@VI1PR10MB2384.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0052308DC6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39850400004)(396003)(366004)(136003)(376002)(189003)(199004)(66946007)(4744005)(66556008)(72206003)(64756008)(66446008)(2906002)(6486002)(66476007)(81156014)(186003)(8676002)(71200400001)(8976002)(478600001)(5660300002)(66066001)(71190400001)(6436002)(81166006)(53936002)(26005)(50226002)(54906003)(14454004)(44832011)(99286004)(36756003)(316002)(486006)(1076003)(74482002)(42882007)(7736002)(305945005)(14444005)(4326008)(2616005)(3846002)(6116002)(110136005)(52116002)(6512007)(256004)(25786009)(68736007)(73956011)(102836004)(8936002)(6506007)(386003)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2384;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: o3iAtRBr3sfWvoeY2+AGLIZqC2hTk+Rb5wtvhgafsG6SJLx3diB+f0sfn2AiTdTdLr9a2LTXbrAMHVoKhw0YkmqtHe3TAIcxFshSkT+lxfza74Oqb4t903YNJ1MZLCvSkQFOjncU5vPPeGtxnFVioYxcEfgxl9EwnMQXigDNm/t1K0xI+/TGj8xKKTCIS0aEIt6c72iASqZ5MKb0kA7MQmcz5ERtl7IBHQf2Ccy2re1Kb8PE7wpUJNZLh6k8sJbBTNcpKz75jA6EYeIE8enjWSmx5T+49m2IPiX0X+7i+KGuDMDJ8HWFwlRJqjnmSFMOXtRybFlw7gPFBh/Z+6sWH/ApljvfgWpLs0EPTz0yzdeoTpCpi0AnwaTkbBB0raTfT1dXoUPYH0qanlU2knnEJawA3+BzBkAGB4KSZY+zJDI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 May 2019 03:06:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50666 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2HGv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 03:06:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4T76XlJ104973;
+        Wed, 29 May 2019 02:06:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559113593;
+        bh=SB026D3ajxFdRIc7n9qxk9u1vBZJWW0jZuTDSvXX7t4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tA5SEkJn+6HHVMgi/Z+ltEZKF4o4sH9ly30+SnU0y0h6Oa6gbczSq+B9hWXzqX8L7
+         R+pIFBZerml9joHBI9VKUgA61hhSY1VdN1yGdPbMXI8XpAEtHHo+SmPfzPSGZfQC7B
+         e270M0jtMkAU3U4y+MkpjUv/iOxhTg9KbGMJzOrs=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4T76Was037571
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 May 2019 02:06:33 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 29
+ May 2019 02:06:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 29 May 2019 02:06:32 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4T76TGH091555;
+        Wed, 29 May 2019 02:06:30 -0500
+Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+ <20190527112122.GJ5447@atomide.com>
+ <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
+ <20190528093952.GM5447@atomide.com>
+ <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
+ <20190528101847.GN5447@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <ac487765-01a3-2c82-d86e-db00451563a9@ti.com>
+Date:   Wed, 29 May 2019 10:06:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 228cee14-80f4-4111-5f91-08d6e4039273
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 07:02:11.5821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2384
+In-Reply-To: <20190528101847.GN5447@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q3VycmVudGx5LCB0aGUgdXBwZXIgaGFsZiBvZiBhIDQtYnl0ZSBTVEFUU19UWVBFX1BPUlQgc3Rh
-dGlzdGljIGVuZHMNCnVwIGluIGJpdHMgNDc6MzIgb2YgdGhlIHJldHVybiB2YWx1ZSwgaW5zdGVh
-ZCBvZiBiaXRzIDMxOjE2IGFzIHRoZXkNCnNob3VsZC4NCg0KRml4ZXM6IDZlNDZlMmQ4MjFiYiAo
-Im5ldDogZHNhOiBtdjg4ZTZ4eHg6IEZpeCB1NjQgc3RhdGlzdGljcyIpDQpTaWduZWQtb2ZmLWJ5
-OiBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCi0tLQ0KdjI6
-IGluY2x1ZGUgRml4ZXMgdGFnLCB1c2UgcHJvcGVyIHN1YmplY3QgcHJlZml4Lg0KDQogZHJpdmVy
-cy9uZXQvZHNhL212ODhlNnh4eC9jaGlwLmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9kc2Ev
-bXY4OGU2eHh4L2NoaXAuYyBiL2RyaXZlcnMvbmV0L2RzYS9tdjg4ZTZ4eHgvY2hpcC5jDQppbmRl
-eCAzNzA0MzRiZGJkYWIuLjMxNzU1M2QyY2IyMSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbmV0L2Rz
-YS9tdjg4ZTZ4eHgvY2hpcC5jDQorKysgYi9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2NoaXAu
-Yw0KQEAgLTc4NSw3ICs3ODUsNyBAQCBzdGF0aWMgdWludDY0X3QgX212ODhlNnh4eF9nZXRfZXRo
-dG9vbF9zdGF0KHN0cnVjdCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCwNCiAJCQllcnIgPSBtdjg4ZTZ4
-eHhfcG9ydF9yZWFkKGNoaXAsIHBvcnQsIHMtPnJlZyArIDEsICZyZWcpOw0KIAkJCWlmIChlcnIp
-DQogCQkJCXJldHVybiBVNjRfTUFYOw0KLQkJCWhpZ2ggPSByZWc7DQorCQkJbG93IHw9ICgodTMy
-KXJlZykgPDwgMTY7DQogCQl9DQogCQlicmVhazsNCiAJY2FzZSBTVEFUU19UWVBFX0JBTksxOg0K
-LS0gDQoyLjIwLjENCg0K
+On 28/05/2019 13:18, Tony Lindgren wrote:
+
+>> My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
+>> config.
+> 
+> Strange that this is not affecting other x15? I think timer12 would
+> be blocked on HS devices though?
+
+Seems that the kernel config affects. omap2plus_defconfig boots ok.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
