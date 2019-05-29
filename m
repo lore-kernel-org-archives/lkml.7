@@ -2,175 +2,157 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD999C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7B2C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D3E2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:54:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="RMh4cRIs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B2/amyXQ"
+	by mail.kernel.org (Postfix) with ESMTP id BB0F321019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfE2Dyw (ORCPT
+        id S1726566AbfE2DzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:54:52 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:35683 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725832AbfE2Dyw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:54:52 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D6E1D2412;
-        Tue, 28 May 2019 23:54:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 28 May 2019 23:54:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=C/3/rW+cjxuts9eVyQG2YcqoLaE
-        6ta6yRwttYTGwP58=; b=RMh4cRIsKgvvRcIMot+ceI2cTTlj13kxgcoWm6kZIPH
-        WjcYyrakjoXyJiU+GEGzkS5eGbRQvxvJZRDZGYWjh5gMXojfocIQ2RX9fi05CilS
-        fGpXxY3VxjS9MY/cl4h+iV9f1sF0kGt8UaNDTYhmtzIX7dBcKELY4/nb3MVEDBUz
-        XmTPyA04wGUcTiwE6aNJ/6pfj51DdSSXu5gl7UeVCulxSEVgct7ST1qOZxHR7uX3
-        kKMYk5/2b5eFAaBhPiPGs5Tu+eERe2tF7s0/F/PZXfFXowwwXTgGveU40uh86YmB
-        K4+15yYcpmWiP85wqAbPtVI9Kuqkqu+7yJn6r6DCYIA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=C/3/rW
-        +cjxuts9eVyQG2YcqoLaE6ta6yRwttYTGwP58=; b=B2/amyXQNQrAt5O5X5wA2c
-        kQXkfC58JIoqnldg4y5haXy4B4EFmzbG3+1KIj5gOBUvWpHjeTCCq/gNQ3IV3B1s
-        tbTgzXWtlzXOEBvKIebJ3Pm+R16stKjtlyY1FKv/pvgM7vOsQylV9gR+Y2BmB+89
-        4pD1C1LDtxu4hAN6sNGli0641uDLZZLA6WasO2Op9wUPfkJ5j9so+haCKKEcyxAV
-        MO2PSO+XiT3dRZ4jYAHKJb0J5bz9YfV10NlNyty9WGWdW0ZxbE0KdavYrMSJcqDu
-        kval6nTSZ6MuQTF0HBrMCWTts35keQ96t34e1ylhxqzUh3Qli+VYYwDDTMfY9Y4Q
-        ==
-X-ME-Sender: <xms:hwLuXKhJ8RpwWx5tIqyI_Ce6OXOUXeGfNro2shZbSc5OvKV6bltjcw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddviedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdlfedtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvdegrddujedurdefuddrudeggeenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:hwLuXH8KVmtakAESo4imAubhYDVFiySgffEyqi2XkhhLUrCHFCkkgQ>
-    <xmx:hwLuXNuvDUVOUc2IMg1Dy7fucpBptyRh4Y3lwSRsycK7zi5wEtEZvA>
-    <xmx:hwLuXLow9eJpDk2WF-cm25BgUIWZXSjzV1SdCSLbUdNbKL63Hlv5DQ>
-    <xmx:igLuXPl89IlGmwN4RVkrZqHseV-vqGJpKBqMU-IptL3Qun9Rde6_0g>
-Received: from localhost (124-171-31-144.dyn.iinet.net.au [124.171.31.144])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A7A6E80064;
-        Tue, 28 May 2019 23:54:46 -0400 (EDT)
-Date:   Wed, 29 May 2019 13:54:06 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v5 16/16] dcache: Add CONFIG_DCACHE_SMO
-Message-ID: <20190529035406.GA23181@eros.localdomain>
-References: <20190520054017.32299-1-tobin@kernel.org>
- <20190520054017.32299-17-tobin@kernel.org>
- <20190521005740.GA9552@tower.DHCP.thefacebook.com>
- <20190521013118.GB25898@eros.localdomain>
- <20190521020530.GA18287@tower.DHCP.thefacebook.com>
+        Tue, 28 May 2019 23:55:19 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44796 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfE2DzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 23:55:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 20:55:18 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2019 20:55:18 -0700
+Date:   Tue, 28 May 2019 20:56:19 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2] mm/swap: Fix release_pages() when releasing devmap
+ pages
+Message-ID: <20190529035618.GA21745@iweiny-DESK2.sc.intel.com>
+References: <20190524173656.8339-1-ira.weiny@intel.com>
+ <20190527150107.GG1658@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190521020530.GA18287@tower.DHCP.thefacebook.com>
-X-Mailer: Mutt 1.12.0 (2019-05-25)
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190527150107.GG1658@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:05:38AM +0000, Roman Gushchin wrote:
-> On Tue, May 21, 2019 at 11:31:18AM +1000, Tobin C. Harding wrote:
-> > On Tue, May 21, 2019 at 12:57:47AM +0000, Roman Gushchin wrote:
-> > > On Mon, May 20, 2019 at 03:40:17PM +1000, Tobin C. Harding wrote:
-> > > > In an attempt to make the SMO patchset as non-invasive as possible add a
-> > > > config option CONFIG_DCACHE_SMO (under "Memory Management options") for
-> > > > enabling SMO for the DCACHE.  Whithout this option dcache constructor is
-> > > > used but no other code is built in, with this option enabled slab
-> > > > mobility is enabled and the isolate/migrate functions are built in.
-> > > > 
-> > > > Add CONFIG_DCACHE_SMO to guard the partial shrinking of the dcache via
-> > > > Slab Movable Objects infrastructure.
-> > > 
-> > > Hm, isn't it better to make it a static branch? Or basically anything
-> > > that allows switching on the fly?
+On Mon, May 27, 2019 at 05:01:07PM +0200, Michal Hocko wrote:
+> On Fri 24-05-19 10:36:56, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > If that is wanted, turning SMO on and off per cache, we can probably do
-> > this in the SMO code in SLUB.
-> 
-> Not necessarily per cache, but without recompiling the kernel.
+> > Device pages can be more than type MEMORY_DEVICE_PUBLIC.
 > > 
-> > > It seems that the cost of just building it in shouldn't be that high.
-> > > And the question if the defragmentation worth the trouble is so much
-> > > easier to answer if it's possible to turn it on and off without rebooting.
+> > Handle all device pages within release_pages()
 > > 
-> > If the question is 'is defragmentation worth the trouble for the
-> > dcache', I'm not sure having SMO turned off helps answer that question.
-> > If one doesn't shrink the dentry cache there should be very little
-> > overhead in having SMO enabled.  So if one wants to explore this
-> > question then they can turn on the config option.  Please correct me if
-> > I'm wrong.
+> > This was found via code inspection while determining if release_pages()
+> > and the new put_user_pages() could be interchangeable.
 > 
-> The problem with a config option is that it's hard to switch over.
+> Please expand more about who is such a user and why does it use
+> release_pages rather than put_*page API.
+
+Sorry for not being more clear.   The error was discovered while discussing a
+proposal to change a use of release_pages() to put_user_pages()[1]
+
+[1] https://lore.kernel.org/lkml/20190523172852.GA27175@iweiny-DESK2.sc.intel.com/
+
+In that thread John was saying that release_pages() was functionally equivalent
+to a loop around put_page().  He also suggested implementing put_user_pages()
+by using release_pages().  On the surface they did not seem the same to me so I
+did a deep dive to make sure they were and found this error.
+
+>
+> The above changelog doesn't
+> really help understanding what is the actual problem. I also do not
+> understand the fix and a failure mode from release_pages is just scary.
+
+This is not failing release_pages().  The fix is that not all devmap pages are
+"public" type.  So previous to this change devmap pages of other types would
+not correctly be accounted for.
+
+The discussion about put_devmap_managed_page() "failing" is not about it
+failing directly but rather in how these pages should be accounted for.  Only
+devmap pages which require pagemap ops (specifically page_free()) require
+put_devmap_managed_page() processing.   Because of the optimized locking in
+release_pages() the zone device check is required to release the lock even if
+put_devmap_managed_page() does not handle the put.
+
+> It is basically impossible to handle the error case. So what is going on
+> here?
+
+I think what has happened is the code in release_pages() and put_page()
+diverged at some point.  I think it is worth a clean up in this area but I
+don't see way to do it at the moment which would be any cleaner than what is
+there.  So I've refrained from doing so.
+
+Does this help?  Would you like to roll a V3 with some of this in the commit
+message?
+
+Ira
+
+>
+>
+>
 > 
-> So just to test your changes in production a new kernel should be built,
-> tested and rolled out to a representative set of machines (which can be
-> measured in thousands of machines). Then if results are questionable,
-> it should be rolled back.
+> > Cc: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V1:
+> > 	Add comment clarifying that put_devmap_managed_page() can still
+> > 	fail.
+> > 	Add Reviewed-by tags.
+> > 
+> >  mm/swap.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/mm/swap.c b/mm/swap.c
+> > index 9d0432baddb0..f03b7b4bfb4f 100644
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -740,15 +740,18 @@ void release_pages(struct page **pages, int nr)
+> >  		if (is_huge_zero_page(page))
+> >  			continue;
+> >  
+> > -		/* Device public page can not be huge page */
+> > -		if (is_device_public_page(page)) {
+> > +		if (is_zone_device_page(page)) {
+> >  			if (locked_pgdat) {
+> >  				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+> >  						       flags);
+> >  				locked_pgdat = NULL;
+> >  			}
+> > -			put_devmap_managed_page(page);
+> > -			continue;
+> > +			/*
+> > +			 * zone-device-pages can still fail here and will
+> > +			 * therefore need put_page_testzero()
+> > +			 */
+> > +			if (put_devmap_managed_page(page))
+> > +				continue;
+> >  		}
+> >  
+> >  		page = compound_head(page);
+> > -- 
+> > 2.20.1
+> > 
 > 
-> What you're actually guarding is the kmem_cache_setup_mobility() call,
-> which can be perfectly avoided using a boot option, for example. Turning
-> it on and off completely dynamic isn't that hard too.
-
-Hi Roman,
-
-I've added a boot parameter to SLUB so that admins can enable/disable
-SMO at boot time system wide.  Then for each object that implements SMO
-(currently XArray and dcache) I've also added a boot parameter to
-enable/disable SMO for that cache specifically (these depend on SMO
-being enabled system wide).
-
-All three boot parameters default to 'off', I've added a config option
-to default each to 'on'.
-
-I've got a little more testing to do on another part of the set then the
-PATCH version is coming at you :)
-
-This is more a courtesy email than a request for comment, but please
-feel free to shout if you don't like the method outlined above.
-
-Fully dynamic config is not currently possible because currently the SMO
-implementation does not support disabling mobility for a cache once it
-is turned on, a bit of extra logic would need to be added and some state
-stored - I'm not sure it warrants it ATM but that can be easily added
-later if wanted.  Maybe Christoph will give his opinion on this.
-
-thanks,
-Tobin.
+> -- 
+> Michal Hocko
+> SUSE Labs
