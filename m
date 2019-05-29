@@ -2,105 +2,154 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B3DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E568C072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAA921019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16270206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5iwkDqn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX+X2Ny7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfE2CUm (ORCPT
+        id S1726365AbfE2CYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:20:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33193 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfE2CUm (ORCPT
+        Tue, 28 May 2019 22:24:21 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37723 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfE2CYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:20:42 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z28so564897pfk.0;
-        Tue, 28 May 2019 19:20:42 -0700 (PDT)
+        Tue, 28 May 2019 22:24:21 -0400
+Received: by mail-it1-f193.google.com with SMTP id s16so1119728ita.2;
+        Tue, 28 May 2019 19:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2Yv4K1hvNpR1+8DJIElCyNMLM6mZWuYhgbyhs82Pwy0=;
-        b=u5iwkDqn/7K1GBHkfYzQ6ohCsd80jlRZIQL7NT5PE3xEOQsIS3czAim4X1myyKuVYB
-         icmZlTZGffyuWWfEQlLOB36V3jCiO3Ha3iPRWFQSHli1ONp5HT65vHEaNNMYUd/qMF/L
-         bKNGxM7iBNcqevO415eDA8rAFrLxdmeoEaFJwYs3OtZnIYsNuxQtFESUsqFvWrUOI3pS
-         VIw9nBbg74YcE8NSTNJgN7QpX0gzxQCW48gU1A83TsuWr9vrP3lISPf9tF+ivk7EGQgz
-         CH5rBYq8i4bNotc+9dHGcfRvslh64Az2F+v6HThaI8Y7I6VvxBDwCZCvUbqpPd7t15nd
-         6Khg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pkI2uXRAShxqXkSUvpvwJ4ItMDdl8/Q41df8coamHk0=;
+        b=LX+X2Ny7LZpwASE6RSVor7y3/lpFmffZt9vd3p4i+CdDT9yJn+B04Lc7DmEm/WrZV8
+         Gm5jBfDpQt6e7gWn/yJQlEIfCAmMvLeuexPyULZsToNY7DjhKd4yD2b3eYQzyLj5a0xS
+         cY/28OKxSy8xY47dxsMMWITaiXvhuhIucoCfgiinU8Ftu5KKUq8uZ3JXz06DJkewLKnP
+         KRAohIHXkViAZFFL0mWlU6ZL9KTre4i6QT37E6Jb76PCU1bE0Wqv4hWeMF3TkTYcEnv6
+         IMtVtOP8Ii9Jzw/jUL7CNRhe/0QdEqlDPfDyEI7V2Y9h5xQl0FXZFyUGjnMYwnqT+oTa
+         jOEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2Yv4K1hvNpR1+8DJIElCyNMLM6mZWuYhgbyhs82Pwy0=;
-        b=gUdxyG+l+nGU9NABioWsr3V2vbRmdX05QUAwYMFPhTOFOUtqNE9zgoyHrv4Ly7ypDp
-         eD2dZ0uznfJKKlrQsTC/wUWkcQUZStuSbKVoLCq9Tf/jKBbddX3lP3EeajEqgeQOAgy6
-         oMGQIaeYPpTijfs87jpvHwGjQO1k4cyj4tsLSItNy2NrpPDIXFSXfDcsmlXRAUHYhPJI
-         fhPKE5EVzQxOztnX8xrH/hMCSIlWyX/L7gGUMd54NFbgVOjhn8gCctDisxXvdqBwYp27
-         DZCxoIkB7ycLpiEYuFX6eOcxu0e1n0PPF6/Q/Qn4M188Wz70II3IFT6pbBfit5j/lTdD
-         DxuQ==
-X-Gm-Message-State: APjAAAWQaSpYmfctt7aYWwct480FVzhr1FDe1gKPqH3Xb24rwwvl0kNP
-        PqxVgSkFHt1ek9XrGS0z1RI=
-X-Google-Smtp-Source: APXvYqxNIh7asWkaREFXSQyA9gzgUpdhqaCuM1hUeTel87H1TZ9MSDm+yPKtXf3g1oCTKcJPLTwlyA==
-X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr9515577pjk.32.1559096441748;
-        Tue, 28 May 2019 19:20:41 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id d6sm3623820pjo.32.2019.05.28.19.20.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 28 May 2019 19:20:41 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
-Date:   Wed, 29 May 2019 10:21:48 +0800
-Message-Id: <1559096508-25847-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pkI2uXRAShxqXkSUvpvwJ4ItMDdl8/Q41df8coamHk0=;
+        b=RhVaFU9E8pN/UxnkPpqpQbbrtKuUJwEoT7TazoSPod4j/238o98zuFOQCa+nT0T0Ot
+         znmZwjq0X45nvoAMbFG8pc+dcA9FletKW9W2jxzOFsEzRGaI+KqwsQbTDKJMP44aVPZv
+         teCXkO4hx79jnFWqUM5g7BuKftz62eK4yoZLF8lhGVK5sZ4Di4eb3xf9yGSuJCRRC9x+
+         seEjzRju6POHLZwFE6UhPVOBmgMjBySH486ZOO1zJYO+qbAQnz1wmTk1smitr3PdWc13
+         ry6nhfKyfeF4D5NMnWV2Zsi25NR68/90goS00e9GC1027aUDlmSvSldixlIWP5qtfEFA
+         WJ/g==
+X-Gm-Message-State: APjAAAXneMX1Ht5xHxpZvCc5NnjE8rdJe9lTOac+MAXhzr/NieQTKW+n
+        JsGspatCPQK+ZYPCfecc0fN6FjDDKLMwvQMIgl8=
+X-Google-Smtp-Source: APXvYqzvE5182ciT1TB9K19vtHHojeePX9Mas/KsfGZ6QiNvfa3aalA7WoBVYO+NTqQoODG9q3QtMCdcwyFBijqVObo=
+X-Received: by 2002:a24:6c4a:: with SMTP id w71mr5835760itb.128.1559096659929;
+ Tue, 28 May 2019 19:24:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp> <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
+In-Reply-To: <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 28 May 2019 20:24:09 -0600
+Message-ID: <CAOCk7Nq4zh_tY1aPQ3vJLxR-YDCfYY+iMqx+i5aXUX-wnyPP3w@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Brian Masney <masneyb@onstation.org>, Sean Paul <sean@poorly.run>,
+        Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
-sample period of a running perf_event. Consequently, when calculating
-the next event period, the new period will only be considered after the
-previous one has overflowed.
+On Tue, May 28, 2019 at 8:15 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Tue, May 28, 2019 at 6:17 PM Brian Masney <masneyb@onstation.org> wrote:
+> >
+> > On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
+> > > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > > Here is a patch series that adds initial display support for the LG
+> > > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
+> > > > of these patches are RFC until we can get it fully working.
+> > > >
+> > > > The phones boots into terminal mode, however there is a several second
+> > > > (or more) delay when writing to tty1 compared to when the changes are
+> > > > actually shown on the screen. The following errors are in dmesg:
+> > >
+> > > I tested to apply patches 2-6 and got the console up on the phone as well.
+> > > I see the same timouts, and I also notice the update is slow in the
+> > > display, as if the DSI panel was running in low power (LP) mode.
+> > >
+> > > Was booting this to do some other work, but happy to see the progress!
+> >
+> > Thanks!
+> >
+> > I've had three people email me off list regarding the display working on
+> > 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
+> > this email is to get some more information out publicly.
+> >
+> > I pushed up a branch to my github with 15 patches applied against 4.17
+> > that has a working display:
+> >
+> > https://github.com/masneyb/linux/commits/display-works-4.17
+> >
+> > It's in low speed mode but its usable. The first 10 patches are in
+> > mainline now and the last 5 are in essence this patch series with the
+> > exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
+> > There's a slightly different version of that patch in mainline now.
+> >
+> > I'm planning to work on the msm8974 interconnect support once some of
+> > the outstanding interconnect patches for the msm kms/drm driver arrive
+> > in mainline. I'd really like to understand why the display works on
+> > 4.17 with those patches though. I assume that it's related to the
+> > vblank events not working properly? Let me preface this with I'm a
+> > total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
+> > looking for these events in the atomic commits before the migration?
+> > See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
+> > helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
+> > call that was added.
+>
+> interconnect probably good to get going anyways (and I need to find
+> some time to respin those mdp5/dpu patches) but I guess not related to
+> what you see (ie. I'd expect interconnect issue would trigger
+> underflow irq's)..
+>
+> I'm not entirely sure why atomic would break things but cmd mode
+> panels aren't especially well tested.  I can't find it now but there
+> was a thread (or IRC discussion?) that intf2vblank() should be
+> returning MDP5_IRQ_PING_PONG_<n>_DONE instead of
+> MDP5_IRQ_PING_PONG_<n>_RD_PTR, which seems likely and possibly related
+> to vblank timing issues..
 
-This patch changes the calculation of the remaining event ticks so that
-they are offset if the period has changed.
+That was an irc discussion, and I've changed my mind on that.
 
-See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
-response to PERF_EVENT_IOC_PERIOD") for details.
+My big issue ended up being that autorefresh was enabled (which
+basically turns the command panel into a pseudo video mode panel),
+which appears incompatible with using the start kick.  If FW is
+configuring things in autorefresh mode, the driver likely doesn't
+know, and will make a mess of things by using the start kick.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- arch/sparc/kernel/perf_event.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Disabling autorefresh would make the driver work as is, but fbcon
+wouldn't work well (you'd need to do a start kick per frame, which
+doesn't seem to happen).  Removing the start kick and using the
+autorefresh feature seemed better in my testing, but I haven't cleaned
+up my code tree to send something up.
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index 6de7c68..a58ae9c 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -891,6 +891,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
- 	s64 period = hwc->sample_period;
- 	int ret = 0;
- 
-+	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
-+	if (unlikely(period != hwc->last_period))
-+		left = period - (hwc->last_period - left);
-+
- 	if (unlikely(left <= -period)) {
- 		left = period;
- 		local64_set(&hwc->period_left, left);
--- 
-2.7.4
-
+However, lets see how the hardware is actually configured in Brian's case.
