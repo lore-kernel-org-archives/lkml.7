@@ -2,105 +2,92 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96DEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0F824135
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F65324137
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bwKrSUcA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oi00JVdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfE2UQO (ORCPT
+        id S1726489AbfE2URx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:16:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45113 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfE2UQM (ORCPT
+        Wed, 29 May 2019 16:17:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37832 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfE2URx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:16:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so2329709pfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:16:11 -0700 (PDT)
+        Wed, 29 May 2019 16:17:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h1so2655423wro.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=byH71jcEnWiZocWjFrPDlTMOE7pd8EPRHoYGyukaY04=;
-        b=bwKrSUcAFY5li8JHROxevBRkVdZvfftmbN2jvX4D8l/n4Q/b0ePv+zprqpG2KluSLn
-         rSYJBFUhtygfnfgM4xMNPYR/Vp/NGpVKFovwEIHmtk8emThGP6iRNZH+rg7exn2dW3QV
-         qTeu7YoFimL+W4CSITeRLNxas0G8YpYTWwbHw=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=8oEKZozkL4jsgGM/i3GQ9/OGUfUGea1mU/dmE87dwL8=;
+        b=oi00JVdiMhRGT23pE+wlNyBH8zwTwikmyfnprOBPF7rGhDPkeCS0tR5PI4ZGGV5EAE
+         lgYgtn0WnXKAIrPtBk85V+8qq1Aw+1pOeWLc/nLB+GpXHsfo1drAGwWm8R+K+C4vqoNO
+         VI5OmIoA6/d0YaReAF/PW/cZw3s0hudO9yzkNmHo+tgYv5wn832em7pmULNRy2W5dSls
+         wsGfYgoXfNvp/x9QwvOJfjGeSyzUu0Y/tVhVYoRLXEdas/tRmhJynf07MQettC1IQVT1
+         I/7J4ulQitZKXCRHWgfbYQuECei9PynhYRul1YJE6RIqyHiFnqNoYY685s/2PAvI23+z
+         D/LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=byH71jcEnWiZocWjFrPDlTMOE7pd8EPRHoYGyukaY04=;
-        b=hmO1eGF+GBZ4A2YQ9h9mztb59dnFtwA+3+S9mSPp/Ky1Ud1Oqyg7iwxWc7ijt22TCW
-         KhhdJS+ksjRCGUc3dnaZIJWwaAGSr9j/GNnlNiwbI51IKoP6p2BFSsB7pze05FARIv+q
-         e0dJEBHm//hDfKAPe+6fmKn0s05+noIBXdOGD4Nzra8qatw+gRFgda44IfOoPc6OxVTO
-         xsSu5uGxWBTPytbWqpo2lUvEJEJSQ4URyOoUI8NEYGwWJnRbiW5Gt41YblNRqC2NzOIH
-         cbF5HsdYIAE51RTE4Q7ItONlwTfioxB0B6jX1k72WpZeBMxdqcFUkTwP3cPVHmtP0Q7O
-         GvWA==
-X-Gm-Message-State: APjAAAW8O++xu9TAxBsx1yXqbVLqHUAUFHeeXUGOax4RhUqp2S7BRJ7t
-        M/K5rnY77VRqq8AqXl2VniDplw==
-X-Google-Smtp-Source: APXvYqwOtLbXvQF12v2iQzcTzlTPHXYwr/VbPiH/+9zX0lzSfnaAmA5ZoEnSGfNESsFHQ7AnnjhQoA==
-X-Received: by 2002:a63:f44b:: with SMTP id p11mr139393871pgk.225.1559160971649;
-        Wed, 29 May 2019 13:16:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u6sm227693pgm.22.2019.05.29.13.16.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:16:10 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:16:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 00/14] Provide generic top-down mmap layout functions
-Message-ID: <201905291313.1E6BD2DFB@keescook>
-References: <20190526134746.9315-1-alex@ghiti.fr>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8oEKZozkL4jsgGM/i3GQ9/OGUfUGea1mU/dmE87dwL8=;
+        b=eWEZA5PaqKY0RdBZs2TIicjXlxXb5E+ftNG6rmv9cNr8vWZprozsyGdq4oRaZgGLlA
+         Ki6EOmoUklwnz8s9xxSPVOtkyewkTmZytH9n5P+ni+yheQSdDADk5WvnIQSGaBe2lshH
+         OnAYt1dz1k9K4NxtkTVvitEJKsQ5PURf8wqNI/eOTxXd5ngON9xEGRAA1Kk4Z/7gOjVH
+         REgoza8/CQfZxyJ0gnOsMcz04vRlLNgf2PCXRX8ZRjARmn3SkpNuzTZXC4EACZeWQ4pP
+         XTWBnI2CgHBkc8gxRd4cbAgbkaIqU8D9Dg4Cv6wQ3UfO6MkMKzU/yhQqsYkD6qZk9mpv
+         hCRg==
+X-Gm-Message-State: APjAAAV7HfFysyicxJsfHDwqJVBak6BzzvUM/RZaNp/5fqOS7rX7JXo2
+        5kzpApOTAJusL4yhDLR70Jl12FE=
+X-Google-Smtp-Source: APXvYqxh2X2AIvFrefbf6OdC+xoRWby5Ph1PJCKYsrqEAB/YbQltarLm2XpNLotK1cXCx2XPvCeSiQ==
+X-Received: by 2002:adf:e544:: with SMTP id z4mr15080122wrm.295.1559161070442;
+        Wed, 29 May 2019 13:17:50 -0700 (PDT)
+Received: from avx2 ([46.53.251.224])
+        by smtp.gmail.com with ESMTPSA id z74sm7843297wmc.2.2019.05.29.13.17.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 13:17:49 -0700 (PDT)
+Date:   Wed, 29 May 2019 23:17:47 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] elf: delete stale comment
+Message-ID: <20190529201747.GA23248@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190526134746.9315-1-alex@ghiti.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 09:47:32AM -0400, Alexandre Ghiti wrote:
-> This series introduces generic functions to make top-down mmap layout
-> easily accessible to architectures, in particular riscv which was
-> the initial goal of this series.
-> The generic implementation was taken from arm64 and used successively
-> by arm, mips and finally riscv.
+"passed_fileno" variable was deleted 11 years ago in 2.6.25.
 
-As I've mentioned before, I think this is really great. Making this
-common has long been on my TODO list. Thank you for the work! (I've sent
-separate review emails for individual patches where my ack wasn't
-already present...)
+Fixes: d20894a23708 ("Remove a.out interpreter support in ELF loader")
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
->   - There is no common API to determine if a process is 32b, so I came up with
->     !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
+ fs/binfmt_elf.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-Do we need a common helper for this idiom? (Note that I don't think it's
-worth blocking the series for this.)
-
--Kees
-
--- 
-Kees Cook
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1129,7 +1129,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			  load_addr, interp_load_addr);
+ 	if (retval < 0)
+ 		goto out;
+-	/* N.B. passed_fileno might not be initialized? */
+ 	current->mm->end_code = end_code;
+ 	current->mm->start_code = start_code;
+ 	current->mm->start_data = start_data;
