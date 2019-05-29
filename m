@@ -2,157 +2,199 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E39C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADEA23B05
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5874223B03
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCpg0iOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfE2OxS (ORCPT
+        id S1726800AbfE2Ox2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:53:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47446 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfE2OxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:53:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07741341;
-        Wed, 29 May 2019 07:53:17 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3F8E3F5AF;
-        Wed, 29 May 2019 07:53:15 -0700 (PDT)
-Date:   Wed, 29 May 2019 15:53:13 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Subject: Re: [PATCH 3/4] arm64/mm: Consolidate page fault information capture
-Message-ID: <20190529145312.GG31777@lakrids.cambridge.arm.com>
-References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
- <1559133285-27986-4-git-send-email-anshuman.khandual@arm.com>
+        Wed, 29 May 2019 10:53:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55890 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfE2Ox2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:53:28 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u78so1890954wmu.5;
+        Wed, 29 May 2019 07:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2Eo12RsqaIZEB4DcZum/qkV+9uFDwNoVvbATba2eQvo=;
+        b=QCpg0iOMU/pMoKF/WyHga2prxmzVTDoiklq49JKzhmlVe3tmicQMeqb70wJ/mgRJL9
+         ImOb77i1l2DGHpcZNFGDvLH//i++mzft2OpL7TguRXGWlojAqq5Ia/TlfyhSX2cG4+zY
+         w0SYYaNkX1dXdW0rNyPoEQtV0K3OQXqqmI8ZGSIw8+RpXg2zbEv4rCuIoCin45kicI0J
+         kRYNAN4MpFjA61MJVtB/dQRW1XDO4e+E0F0HJBrqrmclaC5bo5FHqeepdT2bsP52qEVm
+         MG9FYRRfkVQ0Wh6J3RoT0toPI9l+9NEe1RGR010LeyF1+q0Hv1LyCQvpV44meZZsYf86
+         2g1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2Eo12RsqaIZEB4DcZum/qkV+9uFDwNoVvbATba2eQvo=;
+        b=WBkBdOyoAkSS+XteCDC09L183zO6ljC2C4SQ+ZRfUgvuYW0nmmdme19wdE5ADoU7TH
+         APxH4echKtZ6YoS+i4vdgMIPUYkXF/sjOljuDIrYzVUZP6MMyYM1S6LvWdGavHjzkmML
+         4q727JkvyjG9O/tUvGIYDr4brYsx/6QCse6Lgm/GZpE/tT41fpooYJnwam5ss4gWo2MI
+         D+HlAVO+yTxauTj9kuMjVSdtA/jugN8MOmFt0YUddis29zsVIc38i4TehEeHvIGHE9j+
+         tZr0gpG+vFU3eUeO2pBdNY7MCsCty4YCxYkkK3wmVYA15M+fTpyt546cCu1vPx0svTc9
+         T4AQ==
+X-Gm-Message-State: APjAAAXRd4YTUKwcxuxrVhvE7Pxe1W5BdBb3rJDLnWoiTG+iuJlHdmZ4
+        2nopSFCV30eKoqX7ETcCQ60=
+X-Google-Smtp-Source: APXvYqy7AnAJHmbOhf67kLtaTrBe2xJBwcJXjY+OArbZSt8WSJ6+zIoWx0pdy6WlY/GLxniEmW41Cg==
+X-Received: by 2002:a1c:9c42:: with SMTP id f63mr6746358wme.23.1559141606090;
+        Wed, 29 May 2019 07:53:26 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id j9sm14696502wrr.90.2019.05.29.07.53.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 07:53:25 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] gpio: Add support for hierarchical IRQ domains
+Date:   Wed, 29 May 2019 16:53:21 +0200
+Message-Id: <20190529145322.20630-2-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190529145322.20630-1-thierry.reding@gmail.com>
+References: <20190529145322.20630-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559133285-27986-4-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 06:04:44PM +0530, Anshuman Khandual wrote:
-> This consolidates page fault information capture and move them bit earlier.
-> While here it also adds an wrapper is_write_abort(). It also saves some
-> cycles by replacing multiple user_mode() calls into a single one earlier
-> during the fault.
+From: Thierry Reding <treding@nvidia.com>
 
-To be honest, I doubt this has any measureable impact, but I agree that
-using variables _may_ make the flow control easier to understand.
+Hierarchical IRQ domains can be used to stack different IRQ controllers
+on top of each other. One specific use-case where this can be useful is
+if a power management controller has top-level controls for wakeup
+interrupts. In such cases, the power management controller can be a
+parent to other interrupt controllers and program additional registers
+when an IRQ has its wake capability enabled or disabled.
 
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: James Morse <james.morse@arm.com> 
-> Cc: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  arch/arm64/mm/fault.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index da02678..170c71f 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -435,6 +435,11 @@ static bool is_el0_instruction_abort(unsigned int esr)
->  	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
->  }
->  
-> +static bool is_write_abort(unsigned int esr)
-> +{
-> +	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
-> +}
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Changes in v3:
+- use irq_create_fwspec_mapping() instead of irq_domain_alloc_irqs()
+- add missing kerneldoc for new parent_domain field
+- keep IRQ_DOMAIN dependency for clarity
 
-In off-list review, I mentioned that this isn't true for EL1, and I
-think that we should name this 'is_el0_write_abort()' or add a comment
-explaining the caveats if factored into a helper.
+Changes in v2:
+- select IRQ_DOMAIN_HIERARCHY to avoid build failure
+- move more code into the gpiolib core
 
-Thanks,
-Mark.
+ drivers/gpio/Kconfig        |  1 +
+ drivers/gpio/gpiolib.c      | 33 +++++++++++++++++++++++++++++----
+ include/linux/gpio/driver.h |  8 ++++++++
+ 3 files changed, 38 insertions(+), 4 deletions(-)
 
-> +
->  static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  				   struct pt_regs *regs)
->  {
-> @@ -443,6 +448,9 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  	vm_fault_t fault, major = 0;
->  	unsigned long vm_flags = VM_READ | VM_WRITE;
->  	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
-> +	bool is_user = user_mode(regs);
-> +	bool is_el0_exec = is_el0_instruction_abort(esr);
-> +	bool is_write = is_write_abort(esr);
->  
->  	if (notify_page_fault(regs, esr))
->  		return 0;
-> @@ -454,12 +462,12 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  	if (faulthandler_disabled() || !mm)
->  		goto no_context;
->  
-> -	if (user_mode(regs))
-> +	if (is_user)
->  		mm_flags |= FAULT_FLAG_USER;
->  
-> -	if (is_el0_instruction_abort(esr)) {
-> +	if (is_el0_exec) {
->  		vm_flags = VM_EXEC;
-> -	} else if ((esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM)) {
-> +	} else if (is_write) {
->  		vm_flags = VM_WRITE;
->  		mm_flags |= FAULT_FLAG_WRITE;
->  	}
-> @@ -487,7 +495,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  	 * we can bug out early if this is from code which shouldn't.
->  	 */
->  	if (!down_read_trylock(&mm->mmap_sem)) {
-> -		if (!user_mode(regs) && !search_exception_tables(regs->pc))
-> +		if (!is_user && !search_exception_tables(regs->pc))
->  			goto no_context;
->  retry:
->  		down_read(&mm->mmap_sem);
-> @@ -498,7 +506,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  		 */
->  		might_sleep();
->  #ifdef CONFIG_DEBUG_VM
-> -		if (!user_mode(regs) && !search_exception_tables(regs->pc)) {
-> +		if (!is_user && !search_exception_tables(regs->pc)) {
->  			up_read(&mm->mmap_sem);
->  			goto no_context;
->  		}
-> @@ -516,7 +524,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  		 * in __lock_page_or_retry in mm/filemap.c.
->  		 */
->  		if (fatal_signal_pending(current)) {
-> -			if (!user_mode(regs))
-> +			if (!is_user)
->  				goto no_context;
->  			return 0;
->  		}
-> @@ -561,7 +569,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
->  	 * If we are in kernel mode at this point, we have no context to
->  	 * handle this fault with.
->  	 */
-> -	if (!user_mode(regs))
-> +	if (!is_user)
->  		goto no_context;
->  
->  	if (fault & VM_FAULT_OOM) {
-> -- 
-> 2.7.4
-> 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 62f3fe06cd2f..b87cc36005d8 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -45,6 +45,7 @@ config GPIO_ACPI
+ 
+ config GPIOLIB_IRQCHIP
+ 	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
+ 	bool
+ 
+ config DEBUG_GPIO
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e013d417a936..6b64bfa90089 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1825,9 +1825,22 @@ EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
+ 
+ static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+ {
++	struct irq_domain *domain = chip->irq.domain;
++
+ 	if (!gpiochip_irqchip_irq_valid(chip, offset))
+ 		return -ENXIO;
+ 
++	if (irq_domain_is_hierarchy(domain)) {
++		struct irq_fwspec spec;
++
++		spec.fwnode = domain->fwnode;
++		spec.param_count = 2;
++		spec.param[0] = offset;
++		spec.param[1] = IRQ_TYPE_NONE;
++
++		return irq_create_fwspec_mapping(&spec);
++	}
++
+ 	return irq_create_mapping(chip->irq.domain, offset);
+ }
+ 
+@@ -1936,7 +1949,14 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
+ 		type = IRQ_TYPE_NONE;
+ 	}
+ 
+-	gpiochip->to_irq = gpiochip_to_irq;
++	/*
++	 * Allow GPIO chips to override the ->to_irq() if they really need to.
++	 * This should only be very rarely needed, the majority should be fine
++	 * with gpiochip_to_irq().
++	 */
++	if (!gpiochip->to_irq)
++		gpiochip->to_irq = gpiochip_to_irq;
++
+ 	gpiochip->irq.default_type = type;
+ 	gpiochip->irq.lock_key = lock_key;
+ 	gpiochip->irq.request_key = request_key;
+@@ -1946,9 +1966,14 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
+ 	else
+ 		ops = &gpiochip_domain_ops;
+ 
+-	gpiochip->irq.domain = irq_domain_add_simple(np, gpiochip->ngpio,
+-						     gpiochip->irq.first,
+-						     ops, gpiochip);
++	if (gpiochip->irq.parent_domain)
++		gpiochip->irq.domain = irq_domain_add_hierarchy(gpiochip->irq.parent_domain,
++								0, gpiochip->ngpio,
++								np, ops, gpiochip);
++	else
++		gpiochip->irq.domain = irq_domain_add_simple(np, gpiochip->ngpio,
++							     gpiochip->irq.first,
++							     ops, gpiochip);
+ 	if (!gpiochip->irq.domain)
+ 		return -EINVAL;
+ 
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index a1d273c96016..472f2c127bf6 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -48,6 +48,14 @@ struct gpio_irq_chip {
+ 	 */
+ 	const struct irq_domain_ops *domain_ops;
+ 
++	/**
++	 * @parent_domain:
++	 *
++	 * If non-NULL, will be set as the parent of this GPIO interrupt
++	 * controller's IRQ domain to establish a hierarchy.
++	 */
++	struct irq_domain *parent_domain;
++
+ 	/**
+ 	 * @handler:
+ 	 *
+-- 
+2.21.0
+
