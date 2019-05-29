@@ -2,120 +2,73 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8C6C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E533E20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A552216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfE2MFj (ORCPT
+        id S1726893AbfE2MGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:05:39 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41627 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2MFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:05:38 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m18so1225204qki.8;
-        Wed, 29 May 2019 05:05:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uptjHgaBaplGgf+wVSZU2eUIoKk2cN8EqiU/ukCqtno=;
-        b=bVru2BYig38DgvLxps014WcqhT79gXuca2bK5YYvsZX6/pCoiF7T1M8KG+54g1GgRL
-         hQ0oNIofY0Gbta4HzbzhsdohwMrktKK7svU/HIKpWqDXrof/fWkKZZHI66oi1DqDMQg5
-         NB8WcqSYg1xcppR+jNWmNVDrEce6do2vQZJ5Nr7KW+wKe3F/AblZPRQzcqFyVwKaSSO2
-         kTSiq8lbGzIrOUyrYSJkl6zT0uCMGemojqtWR/amdEUbXcf2UgXiFNaVlfh3zTd9SUa5
-         mXsldNqN8pFQn+pLkwwwY8MA1i1shNTDENVRbNpm6kv0yluRrwi8cWE77677njpdVzkN
-         p+KQ==
-X-Gm-Message-State: APjAAAWZn+XYGCw+YL5NL9zlPbseU+lCQfI2zoFJclDHvZZmkybNeXbL
-        qFFCFM6UG4tV0waJ2QuQ0t1qvxY7h/2cq94Skuw=
-X-Google-Smtp-Source: APXvYqyekV82e1W5v+9f5Zmh22yFEE89mido7w9iaejsZbo7/EiB96l90U3/3zjongBQz+oYmXVaIj2lHXggVe4sbas=
-X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr80432085qkk.182.1559131537731;
- Wed, 29 May 2019 05:05:37 -0700 (PDT)
+        Wed, 29 May 2019 08:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfE2MGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:06:52 -0400
+Received: from oasis.local.home (unknown [12.156.218.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D455120644;
+        Wed, 29 May 2019 12:06:50 +0000 (UTC)
+Date:   Wed, 29 May 2019 08:06:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+Message-ID: <20190529080648.0e001bfd@oasis.local.home>
+In-Reply-To: <nycvar.YFH.7.76.1905291315310.1962@cbobk.fhfr.pm>
+References: <20190520194915.GB1646@sventech.com>
+        <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
+        <20190520210905.GC1646@sventech.com>
+        <20190520211931.vokbqxkx5kb6k2bz@treble>
+        <20190520173910.6da9ddaf@gandalf.local.home>
+        <20190521141629.bmk5onsaab26qoaw@treble>
+        <20190521104204.47d4e175@gandalf.local.home>
+        <20190521164227.bxdff77kq7fgl5lp@treble>
+        <20190521125319.04ac8b6c@gandalf.local.home>
+        <nycvar.YFH.7.76.1905291315310.1962@cbobk.fhfr.pm>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190524201817.16509-1-jannh@google.com> <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
- <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com> <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
-In-Reply-To: <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 May 2019 14:05:21 +0200
-Message-ID: <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sergei Poselenov <sposelenov@emcraft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> On 27/5/19 11:38 pm, Jann Horn wrote:
-> > On Sat, May 25, 2019 at 11:43 PM Andrew Morton
-> > <akpm@linux-foundation.org> wrote:
-> >> On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com> wrote:
-> >>> load_flat_shared_library() is broken: It only calls load_flat_file() if
-> >>> prepare_binprm() returns zero, but prepare_binprm() returns the number of
-> >>> bytes read - so this only happens if the file is empty.
-> >>
-> >> ouch.
-> >>
-> >>> Instead, call into load_flat_file() if the number of bytes read is
-> >>> non-negative. (Even if the number of bytes is zero - in that case,
-> >>> load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-> >>>
-> >>> In addition, remove the code related to bprm creds and stop using
-> >>> prepare_binprm() - this code is loading a library, not a main executable,
-> >>> and it only actually uses the members "buf", "file" and "filename" of the
-> >>> linux_binprm struct. Instead, call kernel_read() directly.
-> >>>
-> >>> Cc: stable@vger.kernel.org
-> >>> Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-> >>> Signed-off-by: Jann Horn <jannh@google.com>
-> >>> ---
-> >>> I only found the bug by looking at the code, I have not verified its
-> >>> existence at runtime.
-> >>> Also, this patch is compile-tested only.
-> >>> It would be nice if someone who works with nommu Linux could have a
-> >>> look at this patch.
-> >>
-> >> 287980e49ffc was three years ago!  Has it really been broken for all
-> >> that time?  If so, it seems a good source of freed disk space...
-> >
-> > Maybe... but I didn't want to rip it out without having one of the
-> > maintainers confirm that this really isn't likely to be used anymore.
->
-> I have not used shared libraries on m68k non-mmu setups for
-> a very long time. At least 10 years I would think.
+On Wed, 29 May 2019 13:17:21 +0200 (CEST)
+Jiri Kosina <jikos@kernel.org> wrote:
 
-I think Emcraft have a significant customer base running ARM NOMMU
-Linux, I wonder whether they would have run into this (adding
-Sergei to Cc).
-My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
+> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Subject: [PATCH] livepatch: Fix ftrace module text permissions race  
+> > 
+> > Thanks,
+> > 
+> > I'll try to find some time to test this as well.  
+> 
+> Steve, Jessica, any final word on this?
 
-The only architectures I see that enable binfmt-flat are sh, xtensa
-and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
-for a few machine specific configurations, and I'm in turn fairly sure
-those machines have not run a recent kernel in many years.
+I was under the impression that Josh was going to send an updated
+patch (and a properly sent one). Patches embedded in other emails don't
+get flagged by my internal patchwork, so they usually get ignored.
 
-The one SH nommu platform likely to have users is j2, and that is
-probably always used with musl-libc with elf-fdpic (given that
-Rich Felker maintains both the kernel port and the library).
-
-      Arnd
+-- Steve
