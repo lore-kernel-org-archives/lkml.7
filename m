@@ -2,57 +2,57 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCB7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3340CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A97622389
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F140722389
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="hKVDrehS"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="ToRXdgJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfE2Uh3 (ORCPT
+        id S1726474AbfE2UhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:37:29 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50829 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfE2UhT (ORCPT
+        Wed, 29 May 2019 16:37:12 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44617 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfE2UhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:37:19 -0400
-Received: by mail-it1-f194.google.com with SMTP id a186so6289176itg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:37:18 -0700 (PDT)
+        Wed, 29 May 2019 16:37:10 -0400
+Received: by mail-io1-f67.google.com with SMTP id f22so3039974iol.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:37:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=yEC2+0WbuuZvbN9MF45zkkqCR1Y7Z1sJ51mOopvbHAk=;
-        b=hKVDrehSDieR9MoJvSMG7Xqzi1n92lgzoTohYWiGf/plciqM42g2cQZnvd/w3NkoF7
-         hZgv6jpp9pj45C+kYb8bhqxE0M/gqLrLuQD99z+p62vx1/+b9FDY/4bqoA58/wiIywPQ
-         YUXDo1hMYdigFK37dWXScJgMJe+nHzTu9lrQY=
+        bh=xfxHFSc3o9z+LQIKmJo1/zP59vV7YWM0BcBPn1ilyLc=;
+        b=ToRXdgJ23QBUCOlh6F80e8xh4wOCibdt3Uc+QVi1K1uoUULh/+7jq/HjN0eKFZU43K
+         qldnwMFMEdj/agn8ii1ip2quJE/9T8pSHOB62r+s2+24+ZisxfdQXZcoE0yyGn1cyksC
+         StEuqe3YzTjAQUKY/WJuamXDehZ9aBB+NftGU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=yEC2+0WbuuZvbN9MF45zkkqCR1Y7Z1sJ51mOopvbHAk=;
-        b=FcmMOY+4XH2YSXV6sZQlLMegYh69lwwMqTuWa/rFxeIeaK8n0fOWM/+nB2WMxuw3rs
-         sPoLnRSNEqYkSF00ybME5sBPU6S83hTEyq6K2FxHQlAqPxPc2FT0p91Zk2DboYrnItfG
-         cXN9+zb2jEZWWxkigxlalC45lH91azi3jcTqyNUFX0n59505S0pHcHllrJHxdirB79t4
-         Enj9MTbHuRu3Uxsbmr1VmVcYVrdFrAj6FgzAkMX30gPxYjVblxG0IYHz44P5k1Pqtm9Y
-         Zm3GWbWwvukiSWeAotFD5OflH6AllausbUIxW/MuT5OQMVO/08GxC0ph0OFCRLWrnKpD
-         T/mw==
-X-Gm-Message-State: APjAAAU8F5rgfR5MPQcitL3G7ithDupyhE69Tj+VjKWQl4f8GrGgmnUe
-        daAcS6cYL9/KRHt1NJ4dGftjKg==
-X-Google-Smtp-Source: APXvYqzpHUgm1M0B0O7mm8LRVDyAgyq6PZCteW6QL0Isd7Qi9BjXYkORb5rlea6kiWaBAqi50Uo5aw==
-X-Received: by 2002:a02:2b1d:: with SMTP id h29mr28154932jaa.76.1559162233048;
-        Wed, 29 May 2019 13:37:13 -0700 (PDT)
+        bh=xfxHFSc3o9z+LQIKmJo1/zP59vV7YWM0BcBPn1ilyLc=;
+        b=uZQpb9FJZsP2Yc4FHT9HKGi37GPTRn4VKOLchpxmJDPoY/pJhUM9Cm23v98j+RO8tE
+         B5TePHvwmYZtaEULUERy5FNV7G4MC/SB7KYf1ayQIOzxWevZCDekK0sqXOQOQpBUqpv1
+         kFKG3L1sFPD4TRF+ezjRmG5ZUiRBehwqtEnhYNmlJCWtY4J2UE6Rv8eLsg0OpDW+FHDC
+         1CheM3JZUImV1EGwTKCSm9xi5Y0YS1rjEHGdby57t2stns9FN6KcEKoTWguMhG/VX0nK
+         TK4jrX4k4zCI71EyhzfkrMvDQMXTggSbKK7xbdODAyijMJP69zW9ICy5BKUuOmh8y2sR
+         TGnw==
+X-Gm-Message-State: APjAAAXPFocAJxM/ECxbYByuLQsgohJZT3LP4Rbl3odsZUKlluD4+SmH
+        prxBNAf3MGSa6LxQdBBC2JRTmA==
+X-Google-Smtp-Source: APXvYqx8Aq5H/O/9l/fT0E6doY6BAvce51/B/K2AVnm25fkrmV0qWXSHyhurYTWNrA7THTzVIKG/IA==
+X-Received: by 2002:a5d:9a11:: with SMTP id s17mr20266664iol.267.1559162229065;
+        Wed, 29 May 2019 13:37:09 -0700 (PDT)
 Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id k203sm159596itk.41.2019.05.29.13.37.12
+        by smtp.gmail.com with ESMTPSA id z77sm182361itb.35.2019.05.29.13.37.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:37:12 -0700 (PDT)
+        Wed, 29 May 2019 13:37:08 -0700 (PDT)
 From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
 To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
@@ -66,10 +66,11 @@ Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
         Valentin Schneider <valentin.schneider@arm.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC PATCH v3 16/16] sched: Debug bits...
-Date:   Wed, 29 May 2019 20:36:52 +0000
-Message-Id: <c1fd166d42ded9cc9839eb2722174549059dd36f.1559129225.git.vpillai@digitalocean.com>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Subject: [RFC PATCH v3 12/16] sched: A quick and dirty cgroup tagging interface
+Date:   Wed, 29 May 2019 20:36:48 +0000
+Message-Id: <3ce2cbb14593473f5c20bb44fd817fa5fde31a37.1559129225.git.vpillai@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
 References: <cover.1559129225.git.vpillai@digitalocean.com>
@@ -82,139 +83,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-Not-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Marks all tasks in a cgroup as matching for core-scheduling.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
+Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
 ---
- kernel/sched/core.c | 44 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 42 insertions(+), 2 deletions(-)
+
+Changes in v3
+-------------
+- Fixes the refcount management when deleting a tagged cgroup.
+  - Julien Desfossez
+
+---
+ kernel/sched/core.c  | 78 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/sched.h |  4 +++
+ 2 files changed, 82 insertions(+)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 5b8223c9a723..90655c9ad937 100644
+index 112d70f2b1e5..3164c6b33553 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -92,6 +92,10 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
- 
- 	int pa = __task_prio(a), pb = __task_prio(b);
- 
-+	trace_printk("(%s/%d;%d,%Lu,%Lu) ?< (%s/%d;%d,%Lu,%Lu)\n",
-+		     a->comm, a->pid, pa, a->se.vruntime, a->dl.deadline,
-+		     b->comm, b->pid, pb, b->se.vruntime, b->dl.deadline);
+@@ -6658,6 +6658,15 @@ static void sched_change_group(struct task_struct *tsk, int type)
+ 	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
+ 			  struct task_group, css);
+ 	tg = autogroup_task_group(tsk, tg);
 +
- 	if (-pa < -pb)
- 		return true;
- 
-@@ -246,6 +250,8 @@ static void __sched_core_enable(void)
- 
- 	static_branch_enable(&__sched_core_enabled);
- 	stop_machine(__sched_core_stopper, (void *)true, NULL);
++#ifdef CONFIG_SCHED_CORE
++	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie)
++		tsk->core_cookie = 0UL;
 +
-+	printk("core sched enabled\n");
++	if (tg->tagged /* && !tsk->core_cookie ? */)
++		tsk->core_cookie = (unsigned long)tg;
++#endif
++
+ 	tsk->sched_task_group = tg;
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+@@ -6737,6 +6746,18 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+ 	return 0;
  }
  
- static void __sched_core_disable(void)
-@@ -254,6 +260,8 @@ static void __sched_core_disable(void)
- 
- 	stop_machine(__sched_core_stopper, (void *)false, NULL);
- 	static_branch_disable(&__sched_core_enabled);
++static void cpu_cgroup_css_offline(struct cgroup_subsys_state *css)
++{
++#ifdef CONFIG_SCHED_CORE
++	struct task_group *tg = css_tg(css);
 +
-+	printk("core sched disabled\n");
++	if (tg->tagged) {
++		sched_core_put();
++		tg->tagged = 0;
++	}
++#endif
++}
++
+ static void cpu_cgroup_css_released(struct cgroup_subsys_state *css)
+ {
+ 	struct task_group *tg = css_tg(css);
+@@ -7117,6 +7138,46 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
  }
+ #endif /* CONFIG_RT_GROUP_SCHED */
  
- void sched_core_get(void)
-@@ -3707,6 +3715,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 			put_prev_task(rq, prev);
- 			set_next_task(rq, next);
- 		}
++#ifdef CONFIG_SCHED_CORE
++static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
++{
++	struct task_group *tg = css_tg(css);
 +
-+		trace_printk("pick pre selected (%u %u %u): %s/%d %lx\n",
-+			     rq->core->core_task_seq,
-+			     rq->core->core_pick_seq,
-+			     rq->core_sched_seq,
-+			     next->comm, next->pid,
-+			     next->core_cookie);
++	return !!tg->tagged;
++}
 +
- 		return next;
- 	}
- 
-@@ -3786,6 +3802,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 			 */
- 			if (i == cpu && !need_sync && !p->core_cookie) {
- 				next = p;
-+				trace_printk("unconstrained pick: %s/%d %lx\n",
-+					     next->comm, next->pid, next->core_cookie);
++static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft, u64 val)
++{
++	struct task_group *tg = css_tg(css);
++	struct css_task_iter it;
++	struct task_struct *p;
 +
- 				goto done;
- 			}
- 
-@@ -3794,6 +3813,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 			rq_i->core_pick = p;
- 
-+			trace_printk("cpu(%d): selected: %s/%d %lx\n",
-+				     i, p->comm, p->pid, p->core_cookie);
++	if (val > 1)
++		return -ERANGE;
 +
- 			/*
- 			 * If this new candidate is of higher priority than the
- 			 * previous; and they're incompatible; we need to wipe
-@@ -3810,6 +3832,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 				rq->core->core_cookie = p->core_cookie;
- 				max = p;
- 
-+				trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
++	if (!static_branch_likely(&sched_smt_present))
++		return -EINVAL;
 +
- 				if (old_max) {
- 					for_each_cpu(j, smt_mask) {
- 						if (j == i)
-@@ -3837,6 +3861,7 @@ next_class:;
- 	rq->core->core_pick_seq = rq->core->core_task_seq;
- 	next = rq->core_pick;
- 	rq->core_sched_seq = rq->core->core_pick_seq;
-+	trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
- 
- 	/*
- 	 * Reschedule siblings
-@@ -3862,11 +3887,20 @@ next_class:;
- 		if (i == cpu)
- 			continue;
- 
--		if (rq_i->curr != rq_i->core_pick)
-+		if (rq_i->curr != rq_i->core_pick) {
-+			trace_printk("IPI(%d)\n", i);
- 			resched_curr(rq_i);
-+		}
- 
- 		/* Did we break L1TF mitigation requirements? */
--		WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
-+		if (unlikely(!cookie_match(next, rq_i->core_pick))) {
-+			trace_printk("[%d]: cookie mismatch. %s/%d/0x%lx/0x%lx\n",
-+				     rq_i->cpu, rq_i->core_pick->comm,
-+				     rq_i->core_pick->pid,
-+				     rq_i->core_pick->core_cookie,
-+				     rq_i->core->core_cookie);
-+			WARN_ON_ONCE(1);
-+		}
- 	}
- 
- done:
-@@ -3905,6 +3939,10 @@ static bool try_steal_cookie(int this, int that)
- 		if (p->core_occupation > dst->idle->core_occupation)
- 			goto next;
- 
-+		trace_printk("core fill: %s/%d (%d->%d) %d %d %lx\n",
-+			     p->comm, p->pid, that, this,
-+			     p->core_occupation, dst->idle->core_occupation, cookie);
++	if (tg->tagged == !!val)
++		return 0;
 +
- 		p->on_rq = TASK_ON_RQ_MIGRATING;
- 		deactivate_task(src, p, 0);
- 		set_task_cpu(p, this);
-@@ -6501,6 +6539,8 @@ int sched_cpu_starting(unsigned int cpu)
- 		WARN_ON_ONCE(rq->core && rq->core != core_rq);
- 		rq->core = core_rq;
- 	}
++	tg->tagged = !!val;
 +
-+	printk("core: %d -> %d\n", cpu, cpu_of(core_rq));
- #endif /* CONFIG_SCHED_CORE */
++	if (!!val)
++		sched_core_get();
++
++	css_task_iter_start(css, 0, &it);
++	while ((p = css_task_iter_next(&it)))
++		p->core_cookie = !!val ? (unsigned long)tg : 0UL;
++	css_task_iter_end(&it);
++
++	if (!val)
++		sched_core_put();
++
++	return 0;
++}
++#endif
++
+ static struct cftype cpu_legacy_files[] = {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	{
+@@ -7152,6 +7213,14 @@ static struct cftype cpu_legacy_files[] = {
+ 		.read_u64 = cpu_rt_period_read_uint,
+ 		.write_u64 = cpu_rt_period_write_uint,
+ 	},
++#endif
++#ifdef CONFIG_SCHED_CORE
++	{
++		.name = "tag",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.read_u64 = cpu_core_tag_read_u64,
++		.write_u64 = cpu_core_tag_write_u64,
++	},
+ #endif
+ 	{ }	/* Terminate */
+ };
+@@ -7319,6 +7388,14 @@ static struct cftype cpu_files[] = {
+ 		.seq_show = cpu_max_show,
+ 		.write = cpu_max_write,
+ 	},
++#endif
++#ifdef CONFIG_SCHED_CORE
++	{
++		.name = "tag",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.read_u64 = cpu_core_tag_read_u64,
++		.write_u64 = cpu_core_tag_write_u64,
++	},
+ #endif
+ 	{ }	/* terminate */
+ };
+@@ -7326,6 +7403,7 @@ static struct cftype cpu_files[] = {
+ struct cgroup_subsys cpu_cgrp_subsys = {
+ 	.css_alloc	= cpu_cgroup_css_alloc,
+ 	.css_online	= cpu_cgroup_css_online,
++	.css_offline	= cpu_cgroup_css_offline,
+ 	.css_released	= cpu_cgroup_css_released,
+ 	.css_free	= cpu_cgroup_css_free,
+ 	.css_extra_stat_show = cpu_extra_stat_show,
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0cbcfb6c8ee4..bd9b473ebde2 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -363,6 +363,10 @@ struct cfs_bandwidth {
+ struct task_group {
+ 	struct cgroup_subsys_state css;
  
- 	sched_rq_cpu_starting(cpu);
++#ifdef CONFIG_SCHED_CORE
++	int			tagged;
++#endif
++
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	/* schedulable entities of this group on each CPU */
+ 	struct sched_entity	**se;
 -- 
 2.17.1
 
