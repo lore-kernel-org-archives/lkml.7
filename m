@@ -2,139 +2,309 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171B9C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3C623B6B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939DA23B7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559142287;
+	bh=csvCQEyxUdrD+re7HgkpNH1DZnYyfvw4QykhGJNNqTU=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=jHI00+gAVo3NhCyOVrbSI/VnKMobxhFD8vCDtzSx0EawMD1XxiwN+jYZM3bMhORx2
+	 3zZvn2dUsTKe9OLWPA8j6PDgtRrJJDgM9WZ5zsG30AO5bFO3ApIurubGWaFGJUithg
+	 2TgXc+N+HJ5fRW+/xdniso3WjV7mJ4WKymrvO9Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfE2PEI (ORCPT
+        id S1726693AbfE2PEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:04:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48699 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfE2PEH (ORCPT
+        Wed, 29 May 2019 11:04:46 -0400
+Received: from mail-it1-f177.google.com ([209.85.166.177]:36457 "EHLO
+        mail-it1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfE2PEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:04:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hW07Z-0003xg-Cq; Wed, 29 May 2019 15:04:05 +0000
-Subject: Re: [PATCH][next] drm/i915: fix uninitialized variable
- 'subslice_mask'
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stuart Summers <stuart.summers@intel.com>,
-        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-References: <20190529144325.17235-1-colin.king@canonical.com>
- <87lfyp47zw.fsf@intel.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d92fcf63-260a-a8e5-c9f1-856f848762d7@canonical.com>
-Date:   Wed, 29 May 2019 16:04:04 +0100
+        Wed, 29 May 2019 11:04:46 -0400
+Received: by mail-it1-f177.google.com with SMTP id e184so4101662ite.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=PJh+tH51cISlc+k9PbZLzCDGkI7OQ7r7QdvsJfI3jok=;
+        b=M0PmkRdXy/Uh6tT+dTOa7sF8GwOwvbkOKp4wzg9ZQqY6So8nr9kP6XyU3EW86/72lM
+         3iMzv1uo9iQKkuhBcp0mrtRK03Mfo4ZQdU9SwdnIqRrMv8ohyJSC3xkTY5Zu31df3lKY
+         p3Je0CbMINCyUU047VHJIqnVF0cUhVKkiUYWU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=PJh+tH51cISlc+k9PbZLzCDGkI7OQ7r7QdvsJfI3jok=;
+        b=CrJa5igboe8hNrLe8mEyciJQscqqSxFWz9KdopfyH8hloaCL0XosgrfZky8aGizz5M
+         wCoxmffQVYqozfeZueGgeBkkHtmcjQGB7bapKqzE0pGxM9rB8qe4iL1Kprs2nuwVPwv0
+         smyfZ1Ho+JnjcaiafQjx6ajZNwf9lmTrAnwKbitQCOsjuU0IZn3aqrwP64HHT3xT8/eI
+         thPm6bt9ajrq2lT760yaxgOcv5LMpwGETQ+9iR+pGe3Nh3+ASyqUXETIoXlH4EIDbnqH
+         zf0onx7WbqeR29UdzlfqgT34Cy37K/kwnXx2ISq8jyPa2Wym4q9LOt40vWC/NgxxfmrU
+         BBBw==
+X-Gm-Message-State: APjAAAV8I7mP8ERpyptW7rbR5evtbgpFZZPdT1JFXJe2HVY6HD7DA2Gn
+        bdz5jtmH859vp9fKoy9m9aGUoQ==
+X-Google-Smtp-Source: APXvYqyLllj2g4BWTx5k2+IbxSQPgM8xKi6MjTV5gtgLhB9rrvSOmJdS71KFKEBL3tiGe1vmxNe7sg==
+X-Received: by 2002:a02:930d:: with SMTP id d13mr35648476jah.48.1559142284118;
+        Wed, 29 May 2019 08:04:44 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v190sm1234957ita.14.2019.05.29.08.04.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 08:04:43 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        skhan@linuxfoundation.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes update for Linux 5.2-rc3
+Message-ID: <966d12fc-d32e-c72c-7996-34b8250388dc@linuxfoundation.org>
+Date:   Wed, 29 May 2019 09:04:42 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <87lfyp47zw.fsf@intel.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/mixed;
+ boundary="------------FFEEB26E0F873E8A7C0FD295"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 16:04, Jani Nikula wrote:
-> On Wed, 29 May 2019, Colin King <colin.king@canonical.com> wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently subslice_mask is not initialized and so data is being
->> bit-wise or'd into a garbage value. Fix this by inintializing
->> subslice_mask to zero.
->>
->> Addresses-Coverity: ("Uninitialized scalar variable")
->> Fixes: 1ac159e23c2c ("drm/i915: Expand subslice mask")
-> 
-> This was already reverted for other reasons. Need to be fixed on the
-> next round. For future reference, please Cc: author and reviewers of the
-> referenced commit.
+This is a multi-part message in MIME format.
+--------------FFEEB26E0F873E8A7C0FD295
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-OK, will do.
+Hi Linus,
 
-Thanks, Colin
-> 
-> BR,
-> Jani.
-> 
-> 
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/gpu/drm/i915/intel_device_info.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/i915/intel_device_info.c b/drivers/gpu/drm/i915/intel_device_info.c
->> index 3625f777f3a3..d395a09b994f 100644
->> --- a/drivers/gpu/drm/i915/intel_device_info.c
->> +++ b/drivers/gpu/drm/i915/intel_device_info.c
->> @@ -298,7 +298,7 @@ static void cherryview_sseu_info_init(struct drm_i915_private *dev_priv)
->>  {
->>  	struct sseu_dev_info *sseu = &RUNTIME_INFO(dev_priv)->sseu;
->>  	u32 fuse;
->> -	u8 subslice_mask;
->> +	u8 subslice_mask = 0;
->>  
->>  	fuse = I915_READ(CHV_FUSE_GT);
-> 
+Please pull the following Kselftest fixes update for Linux 5.2-rc3.
 
+This Kselftest update for Linux 5.2-rc3 consists of
+
+- Alexandre Belloni's fixes to rtc regressions introduced in kselftest
+   Makefile test run output refactoring work from Kees Cook.
+
+- ftrace test checkbashisms fixes from Masami Hiramatsu
+
+As a note, it is an usual and expected outcome to see a few regressions
+when Kselftest run-time scripts are enhanced. No surprises there.
+
+I am glad we are finding these problems early on in the rc cycle.
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.2-rc3
+
+for you to fetch changes up to eff82a263b5cfa3427fd9dbfedd96da94fdc9f19:
+
+   selftests: rtc: rtctest: specify timeouts (2019-05-24 13:39:58 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.2-rc3
+
+This Kselftest update for Linux 5.2-rc3 consists of
+
+- Alexandre Belloni's fixes to rtc regressions introduced in kselftest
+   Makefile test run output refactoring work from Kees Cook.
+
+- ftrace test checkbashisms fixes from Masami Hiramatsu
+
+----------------------------------------------------------------
+Alexandre Belloni (2):
+       selftests/harness: Allow test to configure timeout
+       selftests: rtc: rtctest: specify timeouts
+
+Masami Hiramatsu (2):
+       selftests/ftrace: Make a script checkbashisms clean
+       selftests/ftrace: Add checkbashisms meta-testcase
+
+  tools/testing/selftests/ftrace/ftracetest           |  1 +
+  .../selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc |  2 +-
+  .../selftests/ftrace/test.d/selftest/bashisms.tc    | 21 
++++++++++++++++++++++
+  tools/testing/selftests/kselftest_harness.h         | 17 ++++++++++++-----
+  tools/testing/selftests/rtc/rtctest.c               |  6 +++---
+  5 files changed, 38 insertions(+), 9 deletions(-)
+  create mode 100644 
+tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+----------------------------------------------------------------
+
+--------------FFEEB26E0F873E8A7C0FD295
+Content-Type: text/x-patch;
+ name="linux-kselftest-5.2-rc3.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.2-rc3.diff"
+
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 136387422b00..7da5e31fa0ed 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -318,6 +318,7 @@ run_test() { # testfile
+     local testlog=/proc/self/fd/1
+   fi
+   export TMPDIR=`mktemp -d /tmp/ftracetest-dir.XXXXXX`
++  export FTRACETEST_ROOT=$TOP_DIR
+   echo "execute$INSTANCE: "$1 > $testlog
+   SIG_RESULT=0
+   if [ $VERBOSE -eq -1 ]; then
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
+index 492426e95e09..7650a82db3f5 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_ftrace.tc
+@@ -3,7 +3,7 @@
+ # description: Kprobe dynamic event with function tracer
+ 
+ [ -f kprobe_events ] || exit_unsupported # this is configurable
+-grep function available_tracers || exit_unsupported # this is configurable
++grep "function" available_tracers || exit_unsupported # this is configurable
+ 
+ # prepare
+ echo nop > current_tracer
+diff --git a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+new file mode 100644
+index 000000000000..1b081e910e14
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+@@ -0,0 +1,21 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Meta-selftest: Checkbashisms
++
++if [ ! -f $FTRACETEST_ROOT/ftracetest ]; then
++  echo "Hmm, we can not find ftracetest"
++  exit_unresolved
++fi
++
++if ! which checkbashisms > /dev/null 2>&1 ; then
++  echo "No checkbashisms found. skipped."
++  exit_unresolved
++fi
++
++checkbashisms $FTRACETEST_ROOT/ftracetest
++checkbashisms $FTRACETEST_ROOT/test.d/functions
++for t in $(find $FTRACETEST_ROOT/test.d -name \*.tc); do
++  checkbashisms $t
++done
++
++exit 0
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 941d9391377f..2067c6b0e8a1 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -62,6 +62,7 @@
+ #include <sys/wait.h>
+ #include <unistd.h>
+ 
++#define TEST_TIMEOUT_DEFAULT 30
+ 
+ /* Utilities exposed to the test definitions */
+ #ifndef TH_LOG_STREAM
+@@ -169,7 +170,8 @@
+ 	static void test_name(struct __test_metadata *_metadata); \
+ 	static struct __test_metadata _##test_name##_object = \
+ 		{ .name = "global." #test_name, \
+-		  .fn = &test_name, .termsig = _signal }; \
++		  .fn = &test_name, .termsig = _signal, \
++		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
+ 	static void __attribute__((constructor)) _register_##test_name(void) \
+ 	{ \
+ 		__register_test(&_##test_name##_object); \
+@@ -280,12 +282,15 @@
+  */
+ /* TODO(wad) register fixtures on dedicated test lists. */
+ #define TEST_F(fixture_name, test_name) \
+-	__TEST_F_IMPL(fixture_name, test_name, -1)
++	__TEST_F_IMPL(fixture_name, test_name, -1, TEST_TIMEOUT_DEFAULT)
+ 
+ #define TEST_F_SIGNAL(fixture_name, test_name, signal) \
+-	__TEST_F_IMPL(fixture_name, test_name, signal)
++	__TEST_F_IMPL(fixture_name, test_name, signal, TEST_TIMEOUT_DEFAULT)
+ 
+-#define __TEST_F_IMPL(fixture_name, test_name, signal) \
++#define TEST_F_TIMEOUT(fixture_name, test_name, timeout) \
++	__TEST_F_IMPL(fixture_name, test_name, -1, timeout)
++
++#define __TEST_F_IMPL(fixture_name, test_name, signal, tmout) \
+ 	static void fixture_name##_##test_name( \
+ 		struct __test_metadata *_metadata, \
+ 		FIXTURE_DATA(fixture_name) *self); \
+@@ -307,6 +312,7 @@
+ 		.name = #fixture_name "." #test_name, \
+ 		.fn = &wrapper_##fixture_name##_##test_name, \
+ 		.termsig = signal, \
++		.timeout = tmout, \
+ 	 }; \
+ 	static void __attribute__((constructor)) \
+ 			_register_##fixture_name##_##test_name(void) \
+@@ -632,6 +638,7 @@ struct __test_metadata {
+ 	int termsig;
+ 	int passed;
+ 	int trigger; /* extra handler after the evaluation */
++	int timeout;
+ 	__u8 step;
+ 	bool no_print; /* manual trigger when TH_LOG_STREAM is not available */
+ 	struct __test_metadata *prev, *next;
+@@ -696,7 +703,7 @@ void __run_test(struct __test_metadata *t)
+ 	t->passed = 1;
+ 	t->trigger = 0;
+ 	printf("[ RUN      ] %s\n", t->name);
+-	alarm(30);
++	alarm(t->timeout);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+ 		printf("ERROR SPAWNING TEST CHILD\n");
+diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+index b2065536d407..66af608fb4c6 100644
+--- a/tools/testing/selftests/rtc/rtctest.c
++++ b/tools/testing/selftests/rtc/rtctest.c
+@@ -49,7 +49,7 @@ TEST_F(rtc, date_read) {
+ 	       rtc_tm.tm_hour, rtc_tm.tm_min, rtc_tm.tm_sec);
+ }
+ 
+-TEST_F(rtc, uie_read) {
++TEST_F_TIMEOUT(rtc, uie_read, NUM_UIE + 2) {
+ 	int i, rc, irq = 0;
+ 	unsigned long data;
+ 
+@@ -211,7 +211,7 @@ TEST_F(rtc, alarm_wkalm_set) {
+ 	ASSERT_EQ(new, secs);
+ }
+ 
+-TEST_F(rtc, alarm_alm_set_minute) {
++TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
+ 	struct timeval tv = { .tv_sec = 62 };
+ 	unsigned long data;
+ 	struct rtc_time tm;
+@@ -264,7 +264,7 @@ TEST_F(rtc, alarm_alm_set_minute) {
+ 	ASSERT_EQ(new, secs);
+ }
+ 
+-TEST_F(rtc, alarm_wkalm_set_minute) {
++TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
+ 	struct timeval tv = { .tv_sec = 62 };
+ 	struct rtc_wkalrm alarm = { 0 };
+ 	struct rtc_time tm;
+
+--------------FFEEB26E0F873E8A7C0FD295--
