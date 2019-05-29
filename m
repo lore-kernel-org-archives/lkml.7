@@ -2,152 +2,175 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3D3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E966C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4062721670
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379AB21881
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V+CQc1Ua"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="mn/7Y1LZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XISi7eb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfE2KEp (ORCPT
+        id S1726543AbfE2KGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:04:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42669 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfE2KEo (ORCPT
+        Wed, 29 May 2019 06:06:14 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:60151 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbfE2KGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:04:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l2so1278806wrb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=EvRHuK8mz2NMxeqe94A9v/S9Mu1WuY4pJlAWP/0yaCU=;
-        b=V+CQc1Uawwh7H+49Sc63wT1Z0PeCzOUvhYN0X5juPv/tDrEQfn4viRo7A4giKds037
-         FIxwvb6pfHvuaKYB1ogomOuc7GBDUpF1aRTl9Rh6vI3G9TmNKj2wgM1zJQJGQ3YzyxoF
-         ROlkb4JfXfnuzYHTXcBmxNyoZRJLBBJGSKJ1fkHk0OOM/VhyxPH1BYYyAUXfpsCFaUaO
-         KXcbZuY+nm3NoAJL7VFoswDkS6gCkQaEGHlsfdn0/y8lN7p7PSNgCFeQbaBSc94dMMxW
-         MYywOeqF6i0VEmmzgHxhri84uURb59HPScaQVwezeuZbVu7e51kRAGGqHVlYr/u8dOtH
-         pt5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=EvRHuK8mz2NMxeqe94A9v/S9Mu1WuY4pJlAWP/0yaCU=;
-        b=m6sEPMlCPPgsKLkN5IF4IJ7iPESfRNr2hHQxNe0cxkJycUpt965rEvgICoIxv614fn
-         YwRCSjf6cKX0JKN+jOfabNPX8zg2Mn4ulyQka0y6Fnl4SaG5eVugUuQafR/Wboknghz9
-         zcJdJ7LZa8W65+JiSfJJ1gtfJMuG8oQh7XqFVUcydKmBWtwnel6qqYqIKKhOfNZtZv6K
-         M3calrWujE561mReqJOj2RzS/0vqjS0tskDueeQNfeHnhyyHkIm7cGwerI3ep0f8Mx3X
-         lOm2DB7IQlTakJ1frdHtSVr/Fd8zFqmAWjahz1aVstfyxMEldSkK/+mzdoPgTR9iMK+i
-         TdWA==
-X-Gm-Message-State: APjAAAUR4D4FSF2SdNe+bS/rKHy89zAB1+/4Gnjqaj462vCyU+wLZOFM
-        hF3koGFlhOw9T5l/7hcY2rwEqQ==
-X-Google-Smtp-Source: APXvYqwg+x1MOMT+WmH/pBDUnkvqMWetCPalCNp+MayuVaC4AMRbrLW0huzcYAbqvXQX+V0Si1OQrQ==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr4283978wrx.29.1559124281873;
-        Wed, 29 May 2019 03:04:41 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f197sm5965858wme.39.2019.05.29.03.04.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 03:04:41 -0700 (PDT)
-From:   Loys Ollivier <lollivier@baylibre.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Karsten Merker <merker@debian.org>
-Cc:     "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: Testing the recent RISC-V DT patchsets
-In-Reply-To: <081611ea-a0d3-b0c9-3e08-8946513f2174@wdc.com>
-References: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com> <alpine.DEB.2.21.9999.1905280105110.20842@viisi.sifive.com> <86o93mpqbx.fsf@baylibre.com> <20190528153542.jfkkwycyc3vu6hld@excalibur.cnev.de> <081611ea-a0d3-b0c9-3e08-8946513f2174@wdc.com>
-Date:   Wed, 29 May 2019 12:04:39 +0200
-Message-ID: <86woi94lvs.fsf@baylibre.com>
+        Wed, 29 May 2019 06:06:13 -0400
+X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 06:06:12 EDT
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A37261B2A;
+        Wed, 29 May 2019 05:57:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 29 May 2019 05:57:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=U
+        v/IO1lpsMhYefZCZE7IzUSu7PAH6TRG1LbnuRgviM4=; b=mn/7Y1LZeF5WEZX9C
+        kyxZtrcWF3ULGfrAWaVTCu5SVtlugVE3VqZmjWKq6xRLw16HfohMo8gWCyfoiTDU
+        8ddDr3hcah8IDP6Hys4o8IC2EdotB5aWhP8EraoIMIJh7rSxM+BKMMZLl9NkVZnK
+        u8d8d3Tq/d+bMYPb6BDrLZqiB9tpWxyCpNDdk+W8+YDBdrWfUs98RZG9TU53K7Dz
+        JzBTbjFIf3kdd64Cj3KvVjOeVIk0m+zXZwZfm3VO+qvQIqvJ5VIncx8ff7FI9cB1
+        yNg71nTx/SLC0V1NRLStXOGxLLLNq2SftFdwZcoJwvxVzm0f9yJ9xJHcvbMQXOqS
+        f9JWA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=Uv/IO1lpsMhYefZCZE7IzUSu7PAH6TRG1LbnuRgvi
+        M4=; b=XISi7eb0l5udJyx94Grx8xbNBu9uDmTspw9Ab8MZI6lurhPep2RI+RxCG
+        ZQTte0gx97SzC5lbqL/OsmzePdtwqlKhCnCKwx+J0wQH/g8awSkdq4a1owukWtLA
+        pSl7na4swI9Jn5vGwVD9JNDTU+FqQo7zHiwOYrXVPzhmvKU0bhF2leedTKJqnsWJ
+        ZtZ3NyH7sqtqulHulH6p8cFT/inzGk9BoRibxUJQCqYn7HfABDtSJ4wgJtcE93Dn
+        ubSwIKAl5IYPjRHsfy/9y3A9uQnHlGjBxilfoFBwIobYLPZxf0MeJIy/dpZ66Cd6
+        VespO6do/dcNZaF/vdhqkw+ACdFLw==
+X-ME-Sender: <xms:k1fuXLxZbQcc-ANNiTUK7UBI2sL_vR5WZupSdrUc2A253Dtx8L_3pw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvjedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjggfsehtkeertddtreejnecuhfhrohhmpefvrghk
+    rghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhih
+    drjhhpqeenucfkphepudegrdefrdejhedrudekudenucfrrghrrghmpehmrghilhhfrhho
+    mhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphenucevlhhushhtvghruf
+    hiiigvpedt
+X-ME-Proxy: <xmx:k1fuXDqJLSpSTXkTZTciZs27YxisYeoGB6fGIVbV6inmjPgmkZdzug>
+    <xmx:k1fuXDzlPHfLKSKrwsKOVVoZfcm6NUzgWaAMmPe5QrZQEgSnVBAz3g>
+    <xmx:k1fuXCurnFtFsjwzcDFGDUTFxiwmFbRMHUebTfAZecsGB5BQqUsLjQ>
+    <xmx:lVfuXHp1xBd2evfpTHfjZBexRzt3oLWMlb8KBbQqAvRZxYLnnEZERg>
+Received: from workstation (ae075181.dynamic.ppp.asahi-net.or.jp [14.3.75.181])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 59261380084;
+        Wed, 29 May 2019 05:57:34 -0400 (EDT)
+Date:   Wed, 29 May 2019 18:57:31 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Igor Konopko <igor.j.konopko@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ALSA: fireface: Use ULL suffixes for 64-bit constants
+Message-ID: <20190529095730.GA7089@workstation>
+Mail-Followup-To: Geert Uytterhoeven <geert@linux-m68k.org>,
+        Igor Konopko <igor.j.konopko@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190528142424.19626-1-geert@linux-m68k.org>
+ <20190528142424.19626-5-geert@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528142424.19626-5-geert@linux-m68k.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 May 2019 at 00:50, Atish Patra <atish.patra@wdc.com> wrote:
+Hi,
 
-> On 5/28/19 8:36 AM, Karsten Merker wrote:
->> On Tue, May 28, 2019 at 05:10:42PM +0200, Loys Ollivier wrote:
->>> On Tue 28 May 2019 at 01:32, Paul Walmsley <paul.walmsley@sifive.com> wrote:
->>>
->>>> An update for those testing RISC-V patches: here's a new branch of
->>>> riscv-pk/bbl that doesn't try to read or modify the DT data at all, which
->>>> should be useful until U-Boot settles down.
->> [...]
->>>> Here is an Linux kernel branch with updated DT data that can be booted
->>>> with the above bootloader:
->>>>
->>>>     https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1-experimental
->>>>
->>>> A sample boot log follows, using a 'defconfig' build from that branch.
->>>
->>> Thanks Paul, I can confirm that it works.
->>>
->>> Something is still unclear to myself.
->>> Using FSBL + riscv-pk/bbl the linux kernel + device tree boots.
->>> Neither FSBL nor riscv-pk/bbl are modifying the DT.
->>>
->>> Using FSBL + OpenSBI + U-Boot the same kernel + device tree hangs on
->>> running /init.
->>>
->>> Would you have any pointer on what riscv-pk does that OpenSBI/U-boot doesn't ?
->>> Or maybe it is the other way around - OpenSBI/U-boot does something that
->>> extra that should not happen.
->> 
->> Hello,
->> 
->> I don't know which version of OpenSBI you are using, but there is
->> a problem with the combination of kernel 5.2-rc1 and OpenSBI
->> versions before commit
->> 
->>    https://github.com/riscv/opensbi/commit/4e2cd478208531c47343290f15b577d40c82649c
->> 
->> that can result in a hang on executing init, so in case you
->> should be using an older OpenSBI build that might be the source
->> of the problem that you are experiencing.
->> 
->> Regards,
->> Karsten
->> 
->
-> I verified the updated DT with upstream kernel for the boot flow OpenSBI 
-> + U-Boot + Linux or OpenSBI + Linux.
->
-> OpenSBI should be compiled for sifive platform with following additional 
-> argument
->
-> FW_PAYLOAD_FDT_PATH=<linux kernel 
-> source>/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb
->
-> FYI: It will only work when kernel is given a payload to U-Boot/OpenSBI 
-> directly.
->
+On Tue, May 28, 2019 at 04:24:23PM +0200, Geert Uytterhoeven wrote:
+> With gcc 4.1:
+> 
+>     sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_switch_fetching_mode’:
+>     sound/firewire/fireface/ff-protocol-latter.c:97: warning: integer constant is too large for ‘long’ type
+>     sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_begin_session’:
+>     sound/firewire/fireface/ff-protocol-latter.c:170: warning: integer constant is too large for ‘long’ type
+>     sound/firewire/fireface/ff-protocol-latter.c:197: warning: integer constant is too large for ‘long’ type
+>     sound/firewire/fireface/ff-protocol-latter.c:205: warning: integer constant is too large for ‘long’ type
+>     sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_finish_session’:
+>     sound/firewire/fireface/ff-protocol-latter.c:214: warning: integer constant is too large for ‘long’ type
+> 
+> Fix this by adding the missing "ULL" suffixes.
+> Add the same suffix to the last constant, to maintain consistency.
+> 
+> Fixes: fd1cc9de64c2ca6c ("ALSA: fireface: add support for Fireface UCX")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  sound/firewire/fireface/ff-protocol-latter.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Hum, I am surprised by this statement.
-I was able to verify the latest DT patch serie from Paul with:
-OpenSBI + U-Boot + Linux & DT.
+Thanks for your care.
 
-Following the OpenSBI documentation [0] with U-Boot payload:
-FW_PAYLOAD_PATH=<u-boot_build_dir>/u-boot.bin
+Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-I get an U-Boot prompt and then I can just load the linux kernel and
-device tree from the network.
-
-[0]: https://github.com/riscv/opensbi/blob/master/docs/platform/sifive_fu540.md#building-sifive-fu540-platform
-
-> Network booting is still not working as the clock driver probe doesn't 
-> happen because of the updated DT.
->
+> diff --git a/sound/firewire/fireface/ff-protocol-latter.c b/sound/firewire/fireface/ff-protocol-latter.c
+> index c8236ff89b7fb9de..b30d02d359b1d21b 100644
+> --- a/sound/firewire/fireface/ff-protocol-latter.c
+> +++ b/sound/firewire/fireface/ff-protocol-latter.c
+> @@ -9,11 +9,11 @@
+>  
+>  #include "ff.h"
+>  
+> -#define LATTER_STF		0xffff00000004
+> -#define LATTER_ISOC_CHANNELS	0xffff00000008
+> -#define LATTER_ISOC_START	0xffff0000000c
+> -#define LATTER_FETCH_MODE	0xffff00000010
+> -#define LATTER_SYNC_STATUS	0x0000801c0000
+> +#define LATTER_STF		0xffff00000004ULL
+> +#define LATTER_ISOC_CHANNELS	0xffff00000008ULL
+> +#define LATTER_ISOC_START	0xffff0000000cULL
+> +#define LATTER_FETCH_MODE	0xffff00000010ULL
+> +#define LATTER_SYNC_STATUS	0x0000801c0000ULL
+>  
+>  static int parse_clock_bits(u32 data, unsigned int *rate,
+>  			    enum snd_ff_clock_src *src)
 > -- 
-> Regards,
-> Atish
+> 2.17.1
+> 
+
+
+Regards
+
+Takashi Sakamoto
