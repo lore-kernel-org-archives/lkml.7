@@ -2,172 +2,85 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DB3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C19C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6154023B99
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1761B23BAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfE2PnW (ORCPT
+        id S1727047AbfE2PnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:43:22 -0400
-Received: from ou.quest-ce.net ([195.154.187.82]:48665 "EHLO ou.quest-ce.net"
+        Wed, 29 May 2019 11:43:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40548 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfE2PnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:43:22 -0400
-Received: from [2a01:e35:39f2:1220:9dd7:c176:119b:4c9d] (helo=opteyam2)
-        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <ydroneaud@opteya.com>)
-        id 1hW0iU-000B3I-RX; Wed, 29 May 2019 17:42:15 +0200
-Message-ID: <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
-From:   Yann Droneaud <ydroneaud@opteya.com>
-To:     Christian Brauner <christian@brauner.io>, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        jannh@google.com
-Cc:     fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
-        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
-Date:   Wed, 29 May 2019 17:42:14 +0200
-In-Reply-To: <20190529152237.10719-1-christian@brauner.io>
-References: <20190529152237.10719-1-christian@brauner.io>
-Organization: OPTEYA
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        id S1726097AbfE2PnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:43:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4905A3082B71;
+        Wed, 29 May 2019 15:43:15 +0000 (UTC)
+Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43C75272BB;
+        Wed, 29 May 2019 15:43:09 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v5 3/7] iommu/vt-d: Introduce is_downstream_to_pci_bridge
+ helper
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, robin.murphy@arm.com,
+        jean-philippe.brucker@arm.com, alex.williamson@redhat.com
+References: <20190528115025.17194-1-eric.auger@redhat.com>
+ <20190528115025.17194-4-eric.auger@redhat.com>
+ <20190529062125.GC26055@infradead.org>
+Message-ID: <f8edf6af-0c67-0e31-d28c-731e77f22a29@redhat.com>
+Date:   Wed, 29 May 2019 17:43:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:9dd7:c176:119b:4c9d
-X-SA-Exim-Mail-From: ydroneaud@opteya.com
-Subject: Re: [PATCH v1 1/2] fork: add clone3
-X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
-X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
+In-Reply-To: <20190529062125.GC26055@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 29 May 2019 15:43:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mercredi 29 mai 2019 à 17:22 +0200, Christian Brauner a écrit :
-> This adds the clone3 system call.
+Hi Christoph,
+
+On 5/29/19 8:21 AM, Christoph Hellwig wrote:
+>> +/* is_downstream_to_pci_bridge - test if a device belongs to the
+>> + * PCI sub-hierarchy of a candidate PCI-PCI bridge
+>> + *
+>> + * @dev: candidate PCI device belonging to @bridge PCI sub-hierarchy
+>> + * @bridge: the candidate PCI-PCI bridge
+>> + *
+>> + * Return: true if @dev belongs to @bridge PCI sub-hierarchy
+>> + */
 > 
+> This is not valid kerneldoc comment.  Try something like this:
 > 
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index b4cba953040a..6bc3e3d17150 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2472,7 +2475,96 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
->  		 unsigned long, tls)
->  #endif
->  {
-> -	return _do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr, tls);
-> +	struct kernel_clone_args args = {
-> +		.flags = clone_flags,
-> +		.stack = newsp,
-> +		.pidfd = parent_tidptr,
-> +		.parent_tidptr = parent_tidptr,
-> +		.tls = tls,
-> +		.child_tidptr = child_tidptr,
-> +	};
-> +
-> +	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
-> +	if ((clone_flags & CLONE_PIDFD) && (clone_flags & CLONE_PARENT_SETTID))
-> +		return -EINVAL;
-> +
-> +	return _do_fork(&args);
-> +}
-> +
-> +static bool clone3_flags_valid(u64 flags)
-> +{
-> +	if (flags & CLONE_DETACHED)
-> +		return false;
-> +
-> +	if (flags & ~CLONE_MAX)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> +				     struct clone_args __user *uargs,
-> +				     size_t size)
-> +{
-> +	struct clone_args args;
-> +
-> +	if (unlikely(size > PAGE_SIZE))
-> +		return -E2BIG;
-> +
-> +	if (unlikely(size < sizeof(struct clone_args)))
-> +		return -EINVAL;
-> +
-> +	if (unlikely(!access_ok(uargs, size)))
-> +		return -EFAULT;
-> +
-> +	if (size > sizeof(struct clone_args)) {
-> +		unsigned char __user *addr;
-> +		unsigned char __user *end;
-> +		unsigned char val;
-> +
-> +		addr = (void __user *)uargs + sizeof(struct clone_args);
-> +		end = (void __user *)uargs + size;
-> +
-> +		for (; addr < end; addr++) {
-> +			if (get_user(val, addr))
-> +				return -EFAULT;
-> +			if (val)
-> +				return -E2BIG;
+> /**
+>  * is_downstream_to_pci_bridge - test if a device belongs to the PCI
+>  *				 sub-hierarchy of a candidate PCI-PCI bridge
+>  * @dev: candidate PCI device belonging to @bridge PCI sub-hierarchy
+>  * @bridge: the candidate PCI-PCI bridge
+>  *
+>  * Returns true if @dev belongs to @bridge PCI sub-hierarchy, else false.
+>  */
+> 
+Sure,
 
-Should be -EINVAL: having something after the structure should be
-handled just like an invalid flags, while still allowing future
-userspace program to probe for support for newer feature.
+just replaced Returns by Return:
 
-> +		}
-> +
-> +		size = sizeof(struct clone_args);
-> +	}
-> +
-> +	if (copy_from_user(&args, uargs, size))
-> +		return -EFAULT;
-> +
-> +	if (!clone3_flags_valid(args.flags))
-> +		return -EINVAL;
-> +
-> +	memset(kargs, 0, sizeof(*kargs));
-> +
-> +	kargs->flags = args.flags;
-> +	kargs->child_tidptr = u64_to_user_ptr(args.child_tidptr);
-> +	kargs->parent_tidptr = u64_to_user_ptr(args.parent_tidptr);
-> +	kargs->pidfd = u64_to_user_ptr(args.pidfd);
-> +	kargs->stack = args.stack;
-> +	kargs->stack_size = args.stack_size;
-> +	kargs->tls = args.tls;
-> +
-> +	return 0;
-> +}
-> +
-> +SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
-> +{
-> +	int err;
-> +
-> +	struct kernel_clone_args kargs;
-> +
-> +	err = copy_clone_args_from_user(&kargs, uargs, size);
-> +	if (err)
-> +		return err;
-> +
-> +	return _do_fork(&kargs);
->  }
->  #endif
->  
+Thanks
 
-Regards.
-
--- 
-Yann Droneaud
-OPTEYA
-
-
+Eric
