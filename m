@@ -2,174 +2,96 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E94C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894FCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B261F23DE7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:37:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="HzpC0qmw"
+	by mail.kernel.org (Postfix) with ESMTP id 61C1B23DE8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfE2Qhn (ORCPT
+        id S1727225AbfE2QjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:37:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33169 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfE2Qhn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:37:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z28so1993113pfk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rYXje7pkSQOlawqAWE5SmLuc60hKf0FafMLhT40aro4=;
-        b=HzpC0qmw+hi+wxNs0qM40dFyonuMi7Bwb2k+tFbOesTzBeZBOfDBx0+EAkrAoZCUHw
-         XYtC7TeTj/1vIUxlmgGzB1AhFFhRBsE+jMIH6a3R5WIAFYvzuLhSBnp/IEEQBkZ5e/ek
-         WsQz9YWMWQn+K6ij5Yj5irLOe4DGrjvwRUsI5aK7JHVo0QFgzLQvCKcpAIWAN6s98P8m
-         0SYsWPVf0/IuQKFxW4LajOrGMRv+AVFbjaGYwdkJ9EpLTu0A4m+taaOAyVV1IhNAUzeI
-         PtJG1T4XS5PhwlMeW4/sVsCIzxLxsZVwqLOXB+WnjakWX9il7Nyt4L5cDR/UsZcLJKhD
-         MdrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rYXje7pkSQOlawqAWE5SmLuc60hKf0FafMLhT40aro4=;
-        b=eKi9R+Ltqd4P9jlLcSgmJe4tmo4htPBNn8Z9nagefO2zVf2JIIJ7ep2cR8lTPya6h6
-         B5+vv0NuXMwf8hQdCot7LdjBpGAYHZihJXXK+I3eEuXNgJ2XaJr2qCJ9kykQg2FgQpq/
-         kygPYQXZG/yGUeppqlhmdr+h/ijcpBToRslXlHl1FgAKMPmbYwPGK7QsYrsEtTTk/hrB
-         ACMoBOO39bJ6F85K99IbR/cOK15diW88+938hO5UoXf9Pd4xWrJC3tqXmJgfRCCwzd0/
-         sxwbn4eiiujgHq5Hops//3uw/TMteYOhH/5m4KPkx1AOOLg1xMVi31cqU8EJVyIxQOmY
-         /PYg==
-X-Gm-Message-State: APjAAAVwfGJRjoIXmZqg6llTUjM8QqFwDHiKhMCqxyBWHqCZhOB41f3X
-        izN3zQMTVR7iQX8w2/l45BPy+A==
-X-Google-Smtp-Source: APXvYqyxEAEh9Ml0eSaDbqfzNPYl7K6SJN3kxuzDOeDcbyjeiHXPApREIkOKRA2MpiLkXWFsDvT14A==
-X-Received: by 2002:a62:1846:: with SMTP id 67mr132559052pfy.33.1559147862067;
-        Wed, 29 May 2019 09:37:42 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id d24sm45802pjv.24.2019.05.29.09.37.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 09:37:41 -0700 (PDT)
-Date:   Wed, 29 May 2019 09:35:48 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Driver has suspect GRO implementation, TCP performance may be
- compromised.
-Message-ID: <20190529093548.3df7ee73@hermes.lan>
-In-Reply-To: <CANn89i+VvwMaHy2Br-0CcC3gPQ+PmG3Urpn4KpqL0P7XBykmcw@mail.gmail.com>
-References: <e070e241-fb65-a5b0-3155-7380a9203bcf@molgen.mpg.de>
-        <8627ea1e-8e51-c425-97f6-aeb57176e11a@gmail.com>
-        <eb730f01-0c6d-0589-36cc-7193d64c1ee8@molgen.mpg.de>
-        <CANn89i+VvwMaHy2Br-0CcC3gPQ+PmG3Urpn4KpqL0P7XBykmcw@mail.gmail.com>
+        Wed, 29 May 2019 12:39:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:49276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfE2QjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:39:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B84DE341;
+        Wed, 29 May 2019 09:38:59 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E64703F5AF;
+        Wed, 29 May 2019 09:38:56 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:38:54 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, acme@redhat.com, eranian@google.com,
+        fweisbec@gmail.com, jolsa@redhat.com
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190529163854.GN31777@lakrids.cambridge.arm.com>
+References: <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+ <20190529091733.GA4485@fuggles.cambridge.arm.com>
+ <20190529101042.GN2623@hirez.programming.kicks-ass.net>
+ <20190529102022.GC4485@fuggles.cambridge.arm.com>
+ <20190529125557.GU2623@hirez.programming.kicks-ass.net>
+ <20190529130521.GA11023@fuggles.cambridge.arm.com>
+ <20190529132515.GW2623@hirez.programming.kicks-ass.net>
+ <20190529143510.GA11154@fuggles.cambridge.arm.com>
+ <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
+ <20190529162435.GM31777@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529162435.GM31777@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 09:00:54 -0700
-Eric Dumazet <edumazet@google.com> wrote:
+On Wed, May 29, 2019 at 05:24:36PM +0100, Mark Rutland wrote:
+> On Wed, May 29, 2019 at 06:19:55PM +0200, Peter Zijlstra wrote:
+> > On Wed, May 29, 2019 at 03:35:10PM +0100, Will Deacon wrote:
+> > > On Wed, May 29, 2019 at 03:25:15PM +0200, Peter Zijlstra wrote:
+> > > > On Wed, May 29, 2019 at 02:05:21PM +0100, Will Deacon wrote:
+> > > > > On Wed, May 29, 2019 at 02:55:57PM +0200, Peter Zijlstra wrote:
+> > > > 
+> > > > > >  	if (user_mode(regs)) {
+> > > > > 
+> > > > > Hmm, so it just occurred to me that Mark's observation is that the regs
+> > > > > can be junk in some cases. In which case, should we be checking for
+> > > > > kthreads first?
+> > > > 
+> > > > task_pt_regs() can return garbage, but @regs is the exception (or
+> > > > perf_arch_fetch_caller_regs()) regs, and for those user_mode() had
+> > > > better be correct.
+> > > 
+> > > So what should we report for the idle task?
+> > 
+> > If an interrupt hits the idle task, @regs would be !user_mode(regs),
+> > we'll find current->flags & PF_KTHREAD (idle not having passed through
+> > exec()) and therefore we'll take ABI_NONE for the user regs.
+> > 
+> > Or am I not getting it?
+> 
+> If the contents of task_pt_regs(current) is garbage, then the result of
+> user_mode(task_pt_regs(current)) is also garbage, no?
 
-> On Wed, May 29, 2019 at 7:49 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
-> >
-> > Dear Eric,
-> >
-> >
-> > Thank you for the quick reply.
-> >
-> > On 05/28/19 19:18, Eric Dumazet wrote:  
-> > > On 5/28/19 8:42 AM, Paul Menzel wrote:  
-> >  
-> > >> Occasionally, Linux outputs the message below on the workstation Dell
-> > >> OptiPlex 5040 MT.
-> > >>
-> > >>     TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised.
-> > >>
-> > >> Linux 4.14.55 and Linux 5.2-rc2 show the message, and the WWW also
-> > >> gives some hits [1][2].
-> > >>
-> > >> ```
-> > >> $ sudo ethtool -i net00
-> > >> driver: e1000e
-> > >> version: 3.2.6-k
-> > >> firmware-version: 0.8-4
-> > >> expansion-rom-version:
-> > >> bus-info: 0000:00:1f.6
-> > >> supports-statistics: yes
-> > >> supports-test: yes
-> > >> supports-eeprom-access: yes
-> > >> supports-register-dump: yes
-> > >> supports-priv-flags: no
-> > >> ```
-> > >>
-> > >> Can the driver e1000e be improved?
-> > >>
-> > >> Any idea, what triggers this, as I do not see it every boot? Download
-> > >> of big files?
-> > >>  
-> > > Maybe the driver/NIC can receive frames bigger than MTU, although this would be strange.
-> > >
-> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > > index c61edd023b352123e2a77465782e0d32689e96b0..cb0194f66125bcba427e6e7e3cacf0c93040ef61 100644
-> > > --- a/net/ipv4/tcp_input.c
-> > > +++ b/net/ipv4/tcp_input.c
-> > > @@ -150,8 +150,10 @@ static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb,
-> > >                 rcu_read_lock();
-> > >                 dev = dev_get_by_index_rcu(sock_net(sk), skb->skb_iif);
-> > >                 if (!dev || len >= dev->mtu)
-> > > -                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
-> > > -                               dev ? dev->name : "Unknown driver");
-> > > +                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised."
-> > > +                               " len %u mtu %u\n",
-> > > +                               dev ? dev->name : "Unknown driver",
-> > > +                               len, dev ? dev->mtu : 0);
-> > >                 rcu_read_unlock();
-> > >         }
-> > >  }  
-> >
-> > I applied your patch on commit 9fb67d643 (Merge tag 'pinctrl-v5.2-2' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl):
-> >
-> >      [ 5507.291769] TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised. len 1856 mtu 1500  
-> 
-> 
-> The 'GRO' in the warning can be probably ignored, since this NIC does
-> not implement its own GRO.
-> 
-> You can confirm this with this debug patch:
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c
-> b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index 0e09bede42a2bd2c912366a68863a52a22def8ee..014a43ce77e09664bda0568dd118064b006acd67
-> 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -561,6 +561,9 @@ static void e1000_receive_skb(struct e1000_adapter *adapter,
->         if (staterr & E1000_RXD_STAT_VP)
->                 __vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), tag);
-> 
-> +       if (skb->len > netdev->mtu)
-> +               pr_err_ratelimited("received packet bigger (%u) than
-> MTU (%u)\n",
-> +                                  skb->len, netdev->mtu);
->         napi_gro_receive(&adapter->napi, skb);
->  }
+Ugh; I was being thick here and assuming regs was the result of
+task_pt_regs() when it's actually the interrupted regs.
 
-I think e1000 is one of those devices that only has receive limit as power of 2.
-Therefore frames up to 2K can be received.
+Sorry for the noise.
 
-There always some confusion in Linux about whether MTU is transmit only or devices
-have to enforce it on receive.
+Generally speaking though, if we ever task task_pt_regs() of an idle
+task we'll get junk, and user_mode() could be true.
+
+Thanks,
+Mark.
