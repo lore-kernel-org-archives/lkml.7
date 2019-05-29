@@ -2,85 +2,177 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2082C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4526C233FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0C023407
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559138579;
+	bh=0tSTYoMlHTVZxSrDog0lJVqBtj8J4qQgEtdzSomSTZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gQ43E8ZxZFDTm/Qx1GrOaDrFrtMM/Ma8HF+YOKpIxiHLiSbfJvTeEMbQL5qs95pL8
+	 wFI/WGtOb3JkzWVewYGm/dHb3ro1vUGDvfMBhD/AyH7fTUGthhpjtO64hSh3JdSFY1
+	 Qi2YgFt16txQKaCz0o8soKrdIDR7yv3kTv55yjt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbfE2OCn (ORCPT
+        id S1727531AbfE2OC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:02:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43018 "EHLO mga02.intel.com"
+        Wed, 29 May 2019 10:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727081AbfE2OCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:02:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:02:42 -0700
-X-ExtLoop1: 1
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by fmsmga004.fm.intel.com with ESMTP; 29 May 2019 07:02:41 -0700
-From:   Richard Gong <richard.gong@linux.intel.com>
-Subject: Re: [PATCHv4 2/4] firmware: add Intel Stratix10 remote system update
- driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
-        atull@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sen.li@intel.com,
-        Richard Gong <richard.gong@intel.com>
-References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
- <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
- <20190528231557.GA28886@kroah.com>
-Message-ID: <a68355e1-762b-0a22-7037-c06036717609@linux.intel.com>
-Date:   Wed, 29 May 2019 09:15:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727269AbfE2OC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:02:58 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A8B823402;
+        Wed, 29 May 2019 14:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559138577;
+        bh=0tSTYoMlHTVZxSrDog0lJVqBtj8J4qQgEtdzSomSTZ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hwPE3sV0wXedjVr2aCpquvp1LlpXrqHZxg6pcjxrIWPJnAL89WxJloIzstRSR3/fP
+         qVENpoMlU08Pz8ufgiUfRIDhOJejZEckw5R5QAGerIRKFXdg9N74E2PtvMpan7kL2K
+         9Vn44KtWtwtDC4BiiJqeIgClHffjxPlDQz3boADc=
+Date:   Wed, 29 May 2019 09:02:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shawn Anastasio <shawn@anastas.io>
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        sbobroff@linux.ibm.com, xyjxie@linux.vnet.ibm.com,
+        rppt@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] powerpc/pseries: Allow user-specified PCI
+ resource alignment after init
+Message-ID: <20190529140256.GC28250@google.com>
+References: <20190528040313.35582-1-shawn@anastas.io>
+ <20190528040313.35582-4-shawn@anastas.io>
 MIME-Version: 1.0
-In-Reply-To: <20190528231557.GA28886@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528040313.35582-4-shawn@anastas.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-
-On 5/28/19 6:15 PM, Greg KH wrote:
-> On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com wrote:
->> From: Richard Gong <richard.gong@intel.com>
->>
->> The Intel Remote System Update (RSU) driver exposes interfaces access
->> through the Intel Service Layer to user space via sysfs interface.
->> The RSU interfaces report and control some of the optional RSU features
->> on Intel Stratix 10 SoC.
->>
->> The RSU feature provides a way for customers to update the boot
->> configuration of a Intel Stratix 10 SoC device with significantly reduced
->> risk of corrupting the bitstream storage and bricking the system.
->>
->> Signed-off-by: Richard Gong <richard.gong@intel.com>
->> Reviewed-by: Alan Tull <atull@kernel.org>
+On Mon, May 27, 2019 at 11:03:13PM -0500, Shawn Anastasio wrote:
+> On pseries, custom PCI resource alignment specified with the commandline
+> argument pci=resource_alignment is disabled due to PCI resources being
+> managed by the firmware. However, in the case of PCI hotplug the
+> resources are managed by the kernel, so custom alignments should be
+> honored in these cases. This is done by only honoring custom
+> alignments after initial PCI initialization is done, to ensure that
+> all devices managed by the firmware are excluded.
 > 
-> Is Alan reviewing all of these new versions before you post them
-> publicly?  If so, great, if not, don't add tags to new versions when you
-> change things around...
-Yes, Alan reviewed all of these new versions before I submitted for 
-upstream.
+> Without this ability, sub-page BARs sometimes get mapped in between
+> page boundaries for hotplugged devices and are therefore unusable
+> with the VFIO framework. This change allows users to request
+> page alignment for devices they wish to access via VFIO using
+> the pci=resource_alignment commandline argument.
+> 
+> In the future, this could be extended to provide page-aligned
+> resources by default for hotplugged devices, similar to what is
+> done on powernv by commit 382746376993 ("powerpc/powernv: Override
+> pcibios_default_alignment() to force PCI devices to be page aligned")
+> 
+> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+> ---
+>  arch/powerpc/include/asm/machdep.h     |  3 +++
+>  arch/powerpc/kernel/pci-common.c       |  9 +++++++++
+>  arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
+>  3 files changed, 34 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
+> index 2fbfaa9176ed..46eb62c0954e 100644
+> --- a/arch/powerpc/include/asm/machdep.h
+> +++ b/arch/powerpc/include/asm/machdep.h
+> @@ -179,6 +179,9 @@ struct machdep_calls {
+>  
+>  	resource_size_t (*pcibios_default_alignment)(void);
+>  
+> +	/* Called when determining PCI resource alignment */
+> +	int (*pcibios_ignore_alignment_request)(void);
+> +
+>  #ifdef CONFIG_PCI_IOV
+>  	void (*pcibios_fixup_sriov)(struct pci_dev *pdev);
+>  	resource_size_t (*pcibios_iov_resource_alignment)(struct pci_dev *, int resno);
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index ff4b7539cbdf..8e0d73b4c188 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -238,6 +238,15 @@ resource_size_t pcibios_default_alignment(void)
+>  	return 0;
+>  }
+>  
+> +int pcibios_ignore_alignment_request(void)
+> +{
+> +	if (ppc_md.pcibios_ignore_alignment_request)
+> +		return ppc_md.pcibios_ignore_alignment_request();
+> +
+> +	/* Fall back to default method of checking PCI_PROBE_ONLY */
+> +	return pci_has_flag(PCI_PROBE_ONLY);
+> +}
+> +
+>  #ifdef CONFIG_PCI_IOV
+>  resource_size_t pcibios_iov_resource_alignment(struct pci_dev *pdev, int resno)
+>  {
+> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+> index e4f0dfd4ae33..07f03be02afe 100644
+> --- a/arch/powerpc/platforms/pseries/setup.c
+> +++ b/arch/powerpc/platforms/pseries/setup.c
+> @@ -82,6 +82,8 @@ EXPORT_SYMBOL(CMO_PageSize);
+>  
+>  int fwnmi_active;  /* TRUE if an FWNMI handler is present */
+>  
+> +static int initial_pci_init_done; /* TRUE if initial pcibios init has completed */
+> +
+>  static void pSeries_show_cpuinfo(struct seq_file *m)
+>  {
+>  	struct device_node *root;
+> @@ -749,6 +751,23 @@ static resource_size_t pseries_pci_iov_resource_alignment(struct pci_dev *pdev,
+>  }
+>  #endif
+>  
+> +static void pseries_after_init(void)
+> +{
+> +	initial_pci_init_done = 1;
+> +}
+> +
+> +static int pseries_ignore_alignment_request(void)
+> +{
+> +	if (initial_pci_init_done)
+> +		/*
+> +		 * Allow custom alignments after init for things
+> +		 * like PCI hotplugging.
+> +		 */
+> +		return 0;
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hmm, if there's any way to avoid this sort of early/late flag, that
+would be nicer.
 
-Regards,
-Richard
+> +
+> +	return pci_has_flag(PCI_PROBE_ONLY);
+> +}
+> +
+>  static void __init pSeries_setup_arch(void)
+>  {
+>  	set_arch_panic_timeout(10, ARCH_PANIC_TIMEOUT);
+> @@ -797,6 +816,9 @@ static void __init pSeries_setup_arch(void)
+>  	}
+>  
+>  	ppc_md.pcibios_root_bridge_prepare = pseries_root_bridge_prepare;
+> +	ppc_md.pcibios_after_init = pseries_after_init;
+> +	ppc_md.pcibios_ignore_alignment_request =
+> +		pseries_ignore_alignment_request;
+>  }
+>  
+>  static void pseries_panic(char *str)
+> -- 
+> 2.20.1
+> 
