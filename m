@@ -2,97 +2,103 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB91C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B3DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48315208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7BCF216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tA5SEkJn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RSu6+dlr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfE2HGv (ORCPT
+        id S1726474AbfE2HGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:06:51 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50666 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfE2HGv (ORCPT
+        Wed, 29 May 2019 03:06:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33499 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2HGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:06:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4T76XlJ104973;
-        Wed, 29 May 2019 02:06:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559113593;
-        bh=SB026D3ajxFdRIc7n9qxk9u1vBZJWW0jZuTDSvXX7t4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tA5SEkJn+6HHVMgi/Z+ltEZKF4o4sH9ly30+SnU0y0h6Oa6gbczSq+B9hWXzqX8L7
-         R+pIFBZerml9joHBI9VKUgA61hhSY1VdN1yGdPbMXI8XpAEtHHo+SmPfzPSGZfQC7B
-         e270M0jtMkAU3U4y+MkpjUv/iOxhTg9KbGMJzOrs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4T76Was037571
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 May 2019 02:06:33 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 29
- May 2019 02:06:32 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 29 May 2019 02:06:32 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4T76TGH091555;
-        Wed, 29 May 2019 02:06:30 -0500
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@collabora.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
- <20190527112122.GJ5447@atomide.com>
- <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
- <20190528093952.GM5447@atomide.com>
- <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
- <20190528101847.GN5447@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <ac487765-01a3-2c82-d86e-db00451563a9@ti.com>
-Date:   Wed, 29 May 2019 10:06:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 03:06:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 14so1359132qtf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qA9B1CIdYn7uFQh9agY6VqwI4z4QDnUm8YBBmahDu4U=;
+        b=RSu6+dlro0iGo/wUkUotKEAtoX5JlmpVTXx83cweGW1rp3wkzwJvCnwrRTU9LabdhH
+         WJzxoaT/USBOZMKWfosrpwqhOlCtxQhy0+dWLhm1GUa4vdZxi4ALhT4Gsa6dE7h4rntu
+         4rNayUppH/l8daDhNYVSVWru1i7bkr9B8Pxdk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qA9B1CIdYn7uFQh9agY6VqwI4z4QDnUm8YBBmahDu4U=;
+        b=ZzE1K7KNV/FcCtCPDPFpJZ0/Is8v1s/JmSGt4Su4MKDheLIjRtR0n7GJq+dMHPbUGO
+         rTVkVjBJcixDHZRPZtfI9jmqciWx+iwbHX3vfdHcD3jHBF2vHiKkJ0CefhNZiuH7aG8x
+         VQx0xHNWPpiAYasANk3SzHizqFB0Y16HkmtzUScab9EBYcvey1EH2Sa6s8mH4Mb0ZWPM
+         TNl26QV/JKvJABZQQSG+sV+SKDjgrcyF1LPFrRWxh6/doW953uRcYVInvZsdE/XDgAmF
+         EmjUS0MKZZOILzB9/oWlFqqR+YLasSpA7jtJRhFpdkFOo76uT5ooM/qpPtE6ZK29Q5jn
+         bn0A==
+X-Gm-Message-State: APjAAAUNUzhORmuzSzFtLUt/07CSQDF/KfskoNZpVvHIIP/SJQs8Z+fw
+        q76yqgRp0jxtSBqCOzL0Ih0UZ33109FWm1ra55tevQ==
+X-Google-Smtp-Source: APXvYqwaIhOfv/yjZJUEyrJh1Af7NiK3bC572neTGlR+hYHK4lhLZttmwCQu3ZrIVWJojbIsz1dCv5ftzO/ZJKndKPs=
+X-Received: by 2002:a0c:b66f:: with SMTP id q47mr24087512qvf.102.1559113613462;
+ Wed, 29 May 2019 00:06:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190528101847.GN5447@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190527045054.113259-1-hsinyi@chromium.org> <20190527045054.113259-2-hsinyi@chromium.org>
+ <1559093711.11380.6.camel@mtksdaap41>
+In-Reply-To: <1559093711.11380.6.camel@mtksdaap41>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 29 May 2019 15:06:27 +0800
+Message-ID: <CAJMQK-jDhDNViUA3dpixG=_Pe7x0qH4utBWy3k+D_+oKwEOPig@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm: mediatek: fix unbind functions
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/2019 13:18, Tony Lindgren wrote:
+On Wed, May 29, 2019 at 9:35 AM CK Hu <ck.hu@mediatek.com> wrote:
 
->> My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
->> config.
-> 
-> Strange that this is not affecting other x15? I think timer12 would
-> be blocked on HS devices though?
+>
+> I think mtk_dsi_destroy_conn_enc() has much thing to do and I would like
+> you to do more. You could refer to [2] for complete implementation.
+>
+> [2]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/exynos/exynos_drm_dsi.c?h=v5.2-rc2#n1575
+>
+Hi CK,
 
-Seems that the kernel config affects. omap2plus_defconfig boots ok.
+Since drm_encoder_cleanup() would already call drm_bridge_detach() to
+detach bridge, I think we only need to handle panel case here.
+We don't need to call mtk_dsi_encoder_disable() since
+mtk_output_dsi_disable() is called in mtk_dsi_remove() and
+dsi->enabled will be set to false. Calling second time will just
+returns immediately.
+So, besides setting
 
-  Tomi
+dsi->panel = NULL;
+dsi->conn.status = connector_status_disconnected;
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+are there other things we need to do here?
+
+Original code doesn't have drm_kms_helper_hotplug_event(), and I'm not
+sure if mtk dsi would need this.
+Also, mtk_dsi_stop() would also stop irq.
+
+Thanks
