@@ -2,90 +2,82 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE17C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF67C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D0C24018
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E289824024
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559152973;
+	bh=J1gLsjzvEkY7rS5KobvWe5qx+tH7eR2x9ewus4g2TrM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=A1k1pxtE/5ftHAqvKUp5Py7vuMQULL5mcvgLX4pHeVzE1L+bf3lGyJEeQyzX69rhS
+	 eWi0tBA471SMG9Q4Kt56ecl5w10pEIyvSxsdlG+yKh1W8EBe/pnKDxSN+TWxd9yvt2
+	 PWewwjGDdAqMr7YiSpHvwNpopb6FlbE6Ik9g+hdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfE2SCU convert rfc822-to-8bit (ORCPT
+        id S1727443AbfE2SCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:02:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:35763 "EHLO mga07.intel.com"
+        Wed, 29 May 2019 14:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfE2SCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:02:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 11:02:17 -0700
-X-ExtLoop1: 1
-Received: from pgsmsx114.gar.corp.intel.com ([10.108.55.203])
-  by orsmga001.jf.intel.com with ESMTP; 29 May 2019 11:02:15 -0700
-Received: from pgsmsx103.gar.corp.intel.com ([169.254.2.93]) by
- pgsmsx114.gar.corp.intel.com ([169.254.4.99]) with mapi id 14.03.0415.000;
- Thu, 30 May 2019 02:02:14 +0800
-From:   "Voon, Weifeng" <weifeng.voon@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH net-next v3 0/5] net: stmmac: enable EHL SGMII
-Thread-Topic: [PATCH net-next v3 0/5] net: stmmac: enable EHL SGMII
-Thread-Index: AQHVFcTZLHl57v7lrUiIrmrnYDAoDqaBNN0AgACP6TD//9lAgIAAx1Xw
-Date:   Wed, 29 May 2019 18:02:13 +0000
-Message-ID: <D6759987A7968C4889FDA6FA91D5CBC814707D62@PGSMSX103.gar.corp.intel.com>
-References: <1559125118-24324-1-git-send-email-weifeng.voon@intel.com>
- <78EB27739596EE489E55E81C33FEC33A0B932F7F@DE02WEMBXB.internal.synopsys.com>
- <D6759987A7968C4889FDA6FA91D5CBC81470697E@PGSMSX103.gar.corp.intel.com>
- <20190529140723.GE13689@lunn.ch>
-In-Reply-To: <20190529140723.GE13689@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.205]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726024AbfE2SCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:02:51 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5974524020;
+        Wed, 29 May 2019 18:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559152971;
+        bh=J1gLsjzvEkY7rS5KobvWe5qx+tH7eR2x9ewus4g2TrM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=R1xa4dU9ejuliWV5FRLjxgbtuQU06pHSLaRZPEXd4lskPsDwwOR9WDmQRGwvqq973
+         n2FcuNBKw1mcHtppG5SjMdyef8q89ki2X14a3EBhF6h7OelgF+uHUrsWoyuQ4xPvKA
+         Knso4QgKfDFQL2eJB2p0xzHQCAMXLKr3VP3HD0ms=
+Date:   Wed, 29 May 2019 20:02:47 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+In-Reply-To: <nycvar.YFH.7.76.1905291921060.1962@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1905292000310.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm> <20190529161028.a6kpywzpjazgql5u@treble> <nycvar.YFH.7.76.1905291818470.1962@cbobk.fhfr.pm> <20190529171726.obom7xql72bgbjhc@treble>
+ <nycvar.YFH.7.76.1905291921060.1962@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > Did you rebase this series against latest net-next tree ?
-> > >
-> > > Because you are missing MMC module in your HWIF table entry. This
-> > > module was recently added with the addition of selftests.
-> >
-> > No, the base is on last Thursday. Let me rebased on the latest net-next and
-> submit for v4.
-> 
-> Hi Weifeng
-> 
-> Anything you submit needs to be on todays net-next. If the patches don't
-> apply cleanly using git am, David will automatically reject them.
-> 
-> If you just want review, but not merge, please prefix the subject with "RFC".
-> 
-> 	Andrew
+On Wed, 29 May 2019, Jiri Kosina wrote:
 
-Thanks Andrew for the detail explanation. I will keep this in mind. 
+> The target kernel only onlines the CPUs which were online at the time of 
+> hibernation (and are therefore in frozen_cpus mask).
 
-Regards,
-Weifeng
+Hm, there is a catch though. After resume, the SMT siblings are now in hlt 
+instead of mwait.
+
+Which means that the resumed kernel has to do one more online/offline 
+cycle for them, to push them to mwait again.
+
+Bah.
+
+I'll send v3 shortly, so please don't apply v2 just yet.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
