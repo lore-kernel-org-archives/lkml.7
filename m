@@ -2,204 +2,113 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5AAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208832432F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF4824331
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172313;
-	bh=6Wrg1PLfo/XeAKhQDRCgkyPmVbLyF5cm9P6UJzKZ3fA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kjo+icx7lsDpnQ6KFaCp54srwavaa8qFMmDBz6g8+EWvXQ4rS8a24CvDKy+fgaFzb
-	 yvNolUEecZQPJfl2KRz3k2Ir1xTgmW8NTH6FXBzEmHzr0KAe1dfoHKOPJ/XWEenK/I
-	 79dVrmxCy/528x/OkMocEukOlr87cc0dLMWHXBeo=
+	s=default; t=1559172318;
+	bh=1Bt35fdi7GPaqw9BEzCEpvXz5zh6/UoMeuFYelLCwtk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KaD4ta+bHaBQ6sCdMmGQHI/ImFTiz3gcUYxllKabZ/AEpxDRnVGDGBjcyS3o0E/rl
+	 Xn1J6KL/0aITO8iZh3jvngyfByG/uRc3ETqATzuQYNqXya5MGU/oD1EqN7s6bQ1axY
+	 /c2MfjdzopOpOPyoXnTF02VDgOTLaL+mda+ZJFBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfE2XZM (ORCPT
+        id S1727064AbfE2XZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfE2XZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:25:04 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87B0624344;
-        Wed, 29 May 2019 23:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559172303;
-        bh=6Wrg1PLfo/XeAKhQDRCgkyPmVbLyF5cm9P6UJzKZ3fA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z5E8o+JEox0yVJSsC13ZezPRTNOayVjO6TcDo7juFv4p58oCL2fzzSyEd5zHBAvcK
-         Ku9GrzXIOkuHZcSUhrtJeEUM3dDCkEYdHMFXrT69R/HRwHrpxPdPNogFJh31vFls17
-         NtYD8XkICphtv2NUHotpHREkAG/P3/9i13ROz3AI=
-Date:   Wed, 29 May 2019 16:25:01 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] keys: Add a keyctl to move a key between keyrings
-Message-ID: <20190529232500.GA131466@gmail.com>
-References: <155856408314.10428.17035328117829912815.stgit@warthog.procyon.org.uk>
- <155856412507.10428.15987388402707639951.stgit@warthog.procyon.org.uk>
+        Wed, 29 May 2019 19:25:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49170 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfE2XYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:24:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=101NUubdgdQ5XTreIrPkh1wQNPvLvYeTkirlA9vazw4=; b=cKuo/zXENJygACfL65gsogn05p
+        6dIGhbpUvFYawarAVSJsma9Vw6fOxOHyu/mwvi/d2ZVecEoeeaXAA68FOLsQFeeOV7XdYvxNjX0mG
+        cJWjhDNATPJktdkHX7JOxE9x+5obzsy0G37bhR67isEeziusXUCWAsMW5xJYOvnmCWIKtX3YX0nFG
+        +uOIVLVbZWtqA5XFmDCrA2mzsR0DEPFuIK2HxD5Su9WXdseaROor5JXldCnoQ27RF6+oYgEbM4+vl
+        jYF/RlcmyGsWvbMuxWI9Yeqrfic+T2ivdtVfxO8KlfDTkuM+xWP7oK+BX2V1mKaeooKXxyw+SEx0m
+        nK53Q09w==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW7vL-0005Rq-9i; Wed, 29 May 2019 23:23:59 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hW7vI-0007xU-Pz; Wed, 29 May 2019 20:23:56 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH 12/22] gpu: i915.rst: Fix references to renamed files
+Date:   Wed, 29 May 2019 20:23:43 -0300
+Message-Id: <5ecde05364284f6845b651297fd9ce8225af2bcd.1559171394.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155856412507.10428.15987388402707639951.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:28:45PM +0100, David Howells wrote:
-> Add a keyctl to atomically move a link to a key from one keyring to
-> another.  The key must exist in "from" keyring and a flag can be given to
-> cause the operation to fail if there's a matching key already in the "to"
-> keyring.
-> 
-> This can be done with:
-> 
-> 	keyctl(KEYCTL_MOVE,
-> 	       key_serial_t key,
-> 	       key_serial_t from_keyring,
-> 	       key_serial_t to_keyring,
-> 	       unsigned int flags);
-> 
-> The key being moved must grant Link permission and both keyrings must grant
-> Write permission.
-> 
-> flags should be 0 or KEYCTL_MOVE_EXCL, with the latter preventing
-> displacement of a matching key from the "to" keyring.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Hardware workarounds ./drivers/gpu/drm/i915/intel_workarounds.c' failed with return code 1
+WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Logical Rings, Logical Ring Contexts and Execlists ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 1
+WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 2
 
-This shows up after a few seconds of syzkaller fuzzing with a description of
-KEYCTL_MOVE added:
+Fixes: 112ed2d31a46 ("drm/i915: Move GraphicsTechnology files under gt/")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/gpu/i915.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-WARNING: possible circular locking dependency detected
-5.2.0-rc1 #5 Not tainted
-------------------------------------------------------
-syz-executor.28/27700 is trying to acquire lock:
-00000000049888d8 (keyring_serialise_link_sem){+.+.}, at: __key_link_begin+0x1c2/0x2d0 security/keys/keyring.c:1231
+diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
+index 055df45596c1..38fefeb99bba 100644
+--- a/Documentation/gpu/i915.rst
++++ b/Documentation/gpu/i915.rst
+@@ -61,7 +61,7 @@ Intel GVT-g Host Support(vGPU device model)
+ Workarounds
+ -----------
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/intel_workarounds.c
++.. kernel-doc:: drivers/gpu/drm/i915/gt/selftest_workarounds.c
+    :doc: Hardware workarounds
+ 
+ Display Hardware Handling
+@@ -379,10 +379,10 @@ User Batchbuffer Execution
+ Logical Rings, Logical Ring Contexts and Execlists
+ --------------------------------------------------
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
++.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
+    :doc: Logical Rings, Logical Ring Contexts and Execlists
+ 
+-.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
++.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
+    :internal:
+ 
+ Global GTT views
+-- 
+2.21.0
 
-but task is already holding lock:
-00000000b171310c (&type->lock_class/1){+.+.}, at: __key_link_begin+0xa4/0x2d0 security/keys/keyring.c:1222
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&type->lock_class/1){+.+.}:
-       lock_acquire+0x106/0x330 kernel/locking/lockdep.c:4302
-       down_write_nested+0x3c/0xa0 kernel/locking/rwsem.c:177
-       __key_unlink_begin+0x6c/0x110 security/keys/keyring.c:1398
-       key_move+0x3ad/0x470 security/keys/keyring.c:1538
-       keyctl_keyring_move+0xb6/0x120 security/keys/keyctl.c:610
-       __do_sys_keyctl security/keys/keyctl.c:1823 [inline]
-       __se_sys_keyctl+0x8e/0x2c0 security/keys/keyctl.c:1685
-       __x64_sys_keyctl+0xbe/0x150 security/keys/keyctl.c:1685
-       do_syscall_64+0x9e/0x4b0 arch/x86/entry/common.c:301
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (keyring_serialise_link_sem){+.+.}:
-       check_prevs_add kernel/locking/lockdep.c:2417 [inline]
-       validate_chain kernel/locking/lockdep.c:2799 [inline]
-       __lock_acquire+0x38a4/0x3c30 kernel/locking/lockdep.c:3792
-       lock_acquire+0x106/0x330 kernel/locking/lockdep.c:4302
-       down_write+0x38/0xa0 kernel/locking/rwsem.c:66
-       __key_link_begin+0x1c2/0x2d0 security/keys/keyring.c:1231
-       key_move+0xf0/0x470 security/keys/keyring.c:1529
-       keyctl_keyring_move+0xb6/0x120 security/keys/keyctl.c:610
-       __do_sys_keyctl security/keys/keyctl.c:1823 [inline]
-       __se_sys_keyctl+0x8e/0x2c0 security/keys/keyctl.c:1685
-       __x64_sys_keyctl+0xbe/0x150 security/keys/keyctl.c:1685
-       do_syscall_64+0x9e/0x4b0 arch/x86/entry/common.c:301
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&type->lock_class/1);
-                               lock(keyring_serialise_link_sem);
-                               lock(&type->lock_class/1);
-  lock(keyring_serialise_link_sem);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor.28/27700:
- #0: 000000002a03f208 (&type->lock_class){++++}, at: __key_unlink_begin+0x6c/0x110 security/keys/keyring.c:1398
- #1: 00000000b171310c (&type->lock_class/1){+.+.}, at: __key_link_begin+0xa4/0x2d0 security/keys/keyring.c:1222
-
-stack backtrace:
-CPU: 8 PID: 27700 Comm: syz-executor.28 Not tainted 5.2.0-rc1 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xb1/0x118 lib/dump_stack.c:113
- print_circular_bug+0x4a4/0x4b5 kernel/locking/lockdep.c:1564
- check_prev_add+0xd1f/0x1af7 kernel/locking/lockdep.c:2309
- check_prevs_add kernel/locking/lockdep.c:2417 [inline]
- validate_chain kernel/locking/lockdep.c:2799 [inline]
- __lock_acquire+0x38a4/0x3c30 kernel/locking/lockdep.c:3792
- lock_acquire+0x106/0x330 kernel/locking/lockdep.c:4302
- down_write+0x38/0xa0 kernel/locking/rwsem.c:66
- __key_link_begin+0x1c2/0x2d0 security/keys/keyring.c:1231
- key_move+0xf0/0x470 security/keys/keyring.c:1529
- keyctl_keyring_move+0xb6/0x120 security/keys/keyctl.c:610
- __do_sys_keyctl security/keys/keyctl.c:1823 [inline]
- __se_sys_keyctl+0x8e/0x2c0 security/keys/keyctl.c:1685
- __x64_sys_keyctl+0xbe/0x150 security/keys/keyctl.c:1685
- do_syscall_64+0x9e/0x4b0 arch/x86/entry/common.c:301
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458a09
-Code: dd b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9d53755c88 EFLAGS: 00000246 ORIG_RAX: 00000000000000fa
-RAX: ffffffffffffffda RBX: 000000000071bf00 RCX: 0000000000458a09
-RDX: 000000001f62d16e RSI: 000000002490e642 RDI: 000000000000001e
-RBP: 00007f9d53755ca0 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000001afbc80a R11: 0000000000000246 R12: 00007f9d537566d4
-R13: 00000000004ac12c R14: 00000000006ebd68 R15: 0000000000000003
-FAULT_INJECTION: forcing a failure.
-name failslab, interval 1, probability 0, space 0, times 0
-CPU: 8 PID: 27700 Comm: syz-executor.28 Not tainted 5.2.0-rc1 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xb1/0x118 lib/dump_stack.c:113
- fail_dump lib/fault-inject.c:51 [inline]
- should_fail+0x61e/0x720 lib/fault-inject.c:143
- __should_failslab+0xec/0x120 mm/failslab.c:32
- should_failslab+0x9/0x14 mm/slab_common.c:1610
- slab_pre_alloc_hook mm/slab.h:420 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc_trace+0x146/0x2a0 mm/slab.c:3553
- kmalloc include/linux/slab.h:547 [inline]
- kzalloc include/linux/slab.h:742 [inline]
- assoc_array_insert+0xcc/0x440 lib/assoc_array.c:985
- __key_link_begin+0x120/0x2d0 security/keys/keyring.c:1236
- key_move+0xf0/0x470 security/keys/keyring.c:1529
- keyctl_keyring_move+0xb6/0x120 security/keys/keyctl.c:610
- __do_sys_keyctl security/keys/keyctl.c:1823 [inline]
- __se_sys_keyctl+0x8e/0x2c0 security/keys/keyctl.c:1685
- __x64_sys_keyctl+0xbe/0x150 security/keys/keyctl.c:1685
- do_syscall_64+0x9e/0x4b0 arch/x86/entry/common.c:301
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458a09
-Code: dd b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9d53755c88 EFLAGS: 00000246 ORIG_RAX: 00000000000000fa
-RAX: ffffffffffffffda RBX: 000000000071bf00 RCX: 0000000000458a09
-RDX: 000000001f62d16e RSI: 000000002490e642 RDI: 000000000000001e
-RBP: 00007f9d53755ca0 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000001afbc80a R11: 0000000000000246 R12: 00007f9d537566d4
-R13: 00000000004ac12c R14: 00000000006ebd68 R15: 0000000000000003
