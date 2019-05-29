@@ -2,119 +2,184 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA12C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA41C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463E920B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:55:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PNQZe4nw"
+	by mail.kernel.org (Postfix) with ESMTP id E3BD521019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfE2IzL (ORCPT
+        id S1726186AbfE2Izn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:55:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40478 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2IzL (ORCPT
+        Wed, 29 May 2019 04:55:43 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38423 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfE2Izm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:55:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id n5so1138911ioc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7KeoID3DEJVvd72x+oB2aXFD3P3WMkCRwLmanrhFSes=;
-        b=PNQZe4nwyBz/Q5jFW+yNJR7Zpv2BrGObFMkzwU5x9+lM1YlZhRfVrwD4EpflKAQODF
-         Sw1D7FK+s8qknqR33G4GLfXcYDymOvaVTUpEqi/9ul/qk/OijWjqMmEEurCD4YVmfpn+
-         zx/wKkx67KgkZj9CyTWEqBMxipsqLMuAVFsY5qun7aCs8a2MT2VlseJMet2S8dvqCry+
-         vZxGsC5eAg7wOX1/7bFnu/dxxFI5zaLj0bKipwoTHkYAH6+4Lm8AxXSh11jfQwQgj9la
-         qNW3SEIXeLImeaXqW0VziX28L+JsxriaT410Dh3L7a/Gh53qm6e5ewjKD03ntgGDM/F5
-         uzBQ==
+        Wed, 29 May 2019 04:55:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g13so2550947edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:55:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7KeoID3DEJVvd72x+oB2aXFD3P3WMkCRwLmanrhFSes=;
-        b=amz2VnWdtTYDTJILRYtxQKps9YlrrDYmd8q6KQBPmRRLrOccZNlpeU2HOjcwPCUpzP
-         tc7+P1QtuQ0F3WZjY5xtAo4qbOsXHH42YKDtu9IdHWgrvEzRzO/qIloJaOb2Szn0KjKy
-         Mw6xe1rM2aKM/4K7wqoKHP+poiwxf4MMvKx+yHnN+TcTv+/Tw3dyCvlACF0DYSrk3ZT2
-         jSU4R2aW+KV017wuJd4hbovIKMB+8P/F2hhcWMGXQk7aj8Y7wuZrmARIjA1+MRy/E+D2
-         adEVxK91Vggp9VO1QdwO3Y8IEmUcjqVxebUCsdtAufrYhLirxOahaCmSQA5F9biyZYPB
-         OVPg==
-X-Gm-Message-State: APjAAAUCS8CUgnkt7o7ntjbTvuLkUEdC6TE6KwK93wCVMzkE3gXiaV3l
-        XJImoY1SPI35QddRoOcI1je6FeIEJHM7rBy8yvaAWQ==
-X-Google-Smtp-Source: APXvYqzwiYPajeo477fLW7FKEc1f5mZbnuutDqmH4h7fz9/6ZJHsA2E1qqcl3+9B5i32HgcDRU1zvSBCqTz0hmsFCFg=
-X-Received: by 2002:a6b:e711:: with SMTP id b17mr12474897ioh.3.1559120109961;
- Wed, 29 May 2019 01:55:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fX+GYqlsTWpaFs0nnAGyeit/XcaHgQa5Q0k7tK90QNU=;
+        b=qLCX73Twkv9fjB2+IFimyospsxUkJ9hFvNOv30PIzq5KNOWu/QkJvyr0WS0ZGuxAIK
+         07a5C6vf+EMYyEPcXvpOc+BdlVhe66goS76IiMA5mc8eVUCSFAgd//Lr12r2eN68SoxZ
+         7n9xIFFTvD+zqat925G23bXDtb13BYNBiitZ8eerNX5rIaD4jHtbUidTlpQxvGFKrp+c
+         GJzfKP7q+/incDRXrUvejAYCenC+MUjA+YycZJXfcQepkhENmWVit2CIcEX8TS4OsMu7
+         ukvP7xpgi4geg7pcNF2Z8K/8GQ5Rqx6v4DUiyCxoR1QpSz+VfisP7CAiT/6rdIIb70np
+         R+tA==
+X-Gm-Message-State: APjAAAVLuQTC4XCp3GMP6CLf2T3OsbjV8c0vrExNYUnDDix+Nc1TGkB1
+        plftOLdhLQcH/C3Ab35IwCghgAzObXQ=
+X-Google-Smtp-Source: APXvYqxIsd0gKebgKxZy88P8pBC+xSqHhMsP5gxq1oztHkmhmT95gdzySvAIESCLpa1X31IC2fdMbQ==
+X-Received: by 2002:a50:b865:: with SMTP id k34mr135578096ede.16.1559120139343;
+        Wed, 29 May 2019 01:55:39 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:1c0c:6c86:46e0:a7ad:5246:f04d])
+        by smtp.gmail.com with ESMTPSA id g30sm4986273edg.57.2019.05.29.01.55.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 01:55:38 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: asus-wmi: Only Tell EC the OS will handle
+ display hotkeys from asus_nb_wmi
+To:     =?UTF-8?Q?Jo=c3=a3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190521062837.3887-1-hdegoede@redhat.com>
+ <CAOcMMifdq8PcnwANKxGtAmB+5nNOv-aEW3aFJyfPNngXeYCK5A@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1026f860-e961-cefe-3695-aaeaa8896597@redhat.com>
+Date:   Wed, 29 May 2019 10:55:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190528163258.260144-1-elver@google.com> <20190528163258.260144-2-elver@google.com>
- <20190528171942.GV2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190528171942.GV2623@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 29 May 2019 10:54:58 +0200
-Message-ID: <CACT4Y+ZK5i0r0GSZUOBGGOE0bzumNor1d89W8fvphF6EDqKqHg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tools/objtool: add kasan_check_* to uaccess whitelist
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOcMMifdq8PcnwANKxGtAmB+5nNOv-aEW3aFJyfPNngXeYCK5A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 7:19 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, May 28, 2019 at 06:32:57PM +0200, Marco Elver wrote:
-> > This is a pre-requisite for enabling bitops instrumentation. Some bitops
-> > may safely be used with instrumentation in uaccess regions.
-> >
-> > For example, on x86, `test_bit` is used to test a CPU-feature in a
-> > uaccess region:   arch/x86/ia32/ia32_signal.c:361
->
-> That one can easily be moved out of the uaccess region. Any else?
+Hi João,
 
-Marco, try to update config with "make allyesconfig" and then build
-the kernel without this change.
+On 5/28/19 11:22 PM, João Paulo Rechi Vita wrote:
+> On Mon, May 20, 2019 at 11:28 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
+>> handle the display off hotkey") causes the backlight to be permanently off
+>> on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
+>> 1015BX, Asus EeePC 1025C).
+>>
+>> The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
+>> by that commit is made conditional in this commit and only enabled in
+>> the quirk_entry structs in the asus-nb-wmi driver fixing the broken
+>> display / backlight on various EeePC laptop models.
+>>
+>> Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
+>> Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
+>>   drivers/platform/x86/asus-wmi.c    | 2 +-
+>>   drivers/platform/x86/asus-wmi.h    | 1 +
+>>   3 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+>> index b6f2ff95c3ed..59f3a37a44d7 100644
+>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>> @@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
+>>
+>>   static struct quirk_entry quirk_asus_unknown = {
+>>          .wapf = 0,
+>> +       .wmi_backlight_set_devstate = true,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_q500a = {
+>>          .i8042_filter = asus_q500a_i8042_filter,
+>> +       .wmi_backlight_set_devstate = true,
+>>   };
+>>
+>>   /*
+>> @@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a = {
+>>   static struct quirk_entry quirk_asus_x55u = {
+>>          .wapf = 4,
+>>          .wmi_backlight_power = true,
+>> +       .wmi_backlight_set_devstate = true,
+>>          .no_display_toggle = true,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_wapf4 = {
+>>          .wapf = 4,
+>> +       .wmi_backlight_set_devstate = true,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_x200ca = {
+>>          .wapf = 2,
+>> +       .wmi_backlight_set_devstate = true,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_ux303ub = {
+>>          .wmi_backlight_native = true,
+>> +       .wmi_backlight_set_devstate = true,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_x550lb = {
+>> +       .wmi_backlight_set_devstate = true,
+>>          .xusb2pr = 0x01D9,
+>>   };
+>>
+>>   static struct quirk_entry quirk_asus_forceals = {
+>> +       .wmi_backlight_set_devstate = true,
+>>          .wmi_force_als_set = true,
+>>   };
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index ee1fa93708ec..a66e99500c12 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+>>                  err = asus_wmi_backlight_init(asus);
+>>                  if (err && err != -ENODEV)
+>>                          goto fail_backlight;
+>> -       } else
+>> +       } else if (asus->driver->quirks->wmi_backlight_set_devstate)
+>>                  err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+>>
+>>          status = wmi_install_notify_handler(asus->driver->event_guid,
+>> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+>> index 6c1311f4b04d..57a79bddb286 100644
+>> --- a/drivers/platform/x86/asus-wmi.h
+>> +++ b/drivers/platform/x86/asus-wmi.h
+>> @@ -44,6 +44,7 @@ struct quirk_entry {
+>>          bool store_backlight_power;
+>>          bool wmi_backlight_power;
+>>          bool wmi_backlight_native;
+>> +       bool wmi_backlight_set_devstate;
+> 
+> Wouldn't it be better to add this field to struct asus_wmi_driver
+> instead, and set it in asus_nb_wmi_driver only? This way we wouldn't
+> need to make sure it is present in all quirk entries from this driver,
+> current and future.
+> 
+> I've tested both the original patch and my suggestion above and in
+> both cases the "turn off backlight" hotkey continued to work fine on a
+> machine where asus-nb-wmi is used (I don't have access to any machine
+> using the eeepc driver).
 
->
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  tools/objtool/check.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> > index 172f99195726..eff0e5209402 100644
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -443,6 +443,8 @@ static void add_ignores(struct objtool_file *file)
-> >  static const char *uaccess_safe_builtin[] = {
-> >       /* KASAN */
-> >       "kasan_report",
-> > +     "kasan_check_read",
-> > +     "kasan_check_write",
-> >       "check_memory_region",
-> >       /* KASAN out-of-line */
-> >       "__asan_loadN_noabort",
-> > --
-> > 2.22.0.rc1.257.g3120a18244-goog
-> >
+I deliberately put in the quirks struct so that if necessary we can
+enable / disable it easily on a per model (rather then per driver)
+case in the future.
+
+Regards,
+
+Hans
