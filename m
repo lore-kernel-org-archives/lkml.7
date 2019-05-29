@@ -2,222 +2,126 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F65C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1BB240FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB19824100
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfUUAWvN"
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="W5j4zwKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbfE2Tdx (ORCPT
+        id S1726189AbfE2Tmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:33:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33411 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfE2Tdw (ORCPT
+        Wed, 29 May 2019 15:42:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44631 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfE2Tmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:33:52 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so3076070lfe.0;
-        Wed, 29 May 2019 12:33:49 -0700 (PDT)
+        Wed, 29 May 2019 15:42:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e13so3669615ljl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=X4Z3SqYBRU5CnhsUgVz5EBro7b9YhlHplxl+AsDpg3g=;
-        b=AfUUAWvNQ+0SWuHNzMDdoUzKSDFpnqMP5l7v/fYDP2fHKixUiEFn+qk6f8asiWo3hF
-         nirIYf7lQ3nntinbNpqC843gd+vo4iAXf9ZEa4nz+4zfhF3yayI/Hsoze88asTtOiDx+
-         RdOPu7JoAxYi8TKB8WWPq0SIhORMryA1m51Hp8XDDBIkT/tJw1krbwcAfBZt6iYp//Ne
-         bqkw4zPGNRp3nMgmyT7iSSp5dNppRnCb5JJ1nOOoYD0KrK+G++ys/8P8gqaO68aTq05l
-         E8P5mqIH4PFR8QamY1j3kJ2tkeRmK+P1yHeLzMM4I0d+UxuinekLyRLZy2vCsZujQScI
-         dyWA==
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=15FB7VWNTS09jOnKS7kZ1lxWffgJJH8elfqUbjMzIek=;
+        b=W5j4zwKb9VnXxdkr6VCOXw01H3xP+Drolc6weYEBYi1SSl5fMA7WPay5KzfRe27+nS
+         UUEGUKnMBYlAP193V62aNMxwa5A3IixqGZgYlGUkLBXwGnyiY5j49KX9T56RfwvTIGFm
+         aBb9oOYAvZdEXYPatPJnirigsmFJ6zKcKNwT2x54Iu4M2JQxSKBI6FJU9Y5InZTZ5DbD
+         StAUqmYTcHH0Kd5nnC24XL3M71Ibf3uCk5FXWCutOspBG1/WD7Z2XAI/r9gEo+kcd5lc
+         Y+royAcZQ1UzR9jXbjFmHyIc93mySXzVBWNZZQ9m5KyLgPHeeBhzlL7LMIl7aDBjDRQY
+         SYUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=X4Z3SqYBRU5CnhsUgVz5EBro7b9YhlHplxl+AsDpg3g=;
-        b=fnSjno6s7gT/v7EOk7TCu/1cKktSU5QYR9UnvM5q1YWarbw8tcSZawNU+56YCnDpvD
-         ZJLWyAarIyBEiZqWw4Icf6sPOpwrzjDOiP3L88GgiulbCrMqVdqOhpopvBtKntf9vkqZ
-         E62V0xhaiIzomYL+5U4F/U744igdi2UJw2RhmhU9c+rvVTbQCCoyePuEeLJgaN1usSi9
-         pWbc9tITtT6hXHrNWNVDp6vye494P9cb+Tu54leJmiZk3z253RA1826paCJZNw8Oh7WP
-         eKQ1ZgKpC5ub/dDbAflxoBiLIb+QKKkHOKVyZkjZL7Elob5JEbBG0sZS8LIubHcG805C
-         lXIw==
-X-Gm-Message-State: APjAAAW51D4EHJmNkqJKvX/iwQUCQpPyfZRFxZC7fXjmafjcuIOhj4lm
-        KfsLQKgYAvF1e587N/OtMxx2KVL6
-X-Google-Smtp-Source: APXvYqxvssSSQUHtgkxfWoSya6zYLc3xaLhVuLB8bIWAr9w0v0183Exr4x65M1oltwOClE3oMcqJKg==
-X-Received: by 2002:a19:4017:: with SMTP id n23mr8725171lfa.112.1559158428625;
-        Wed, 29 May 2019 12:33:48 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id p1sm46460ljj.1.2019.05.29.12.33.47
+        bh=15FB7VWNTS09jOnKS7kZ1lxWffgJJH8elfqUbjMzIek=;
+        b=YLQbw2LyQgtDgNfxJlVa0nGmgAQgtjylIF4vqXnGl4yOkboxdmaPh3Ectnw6sHagxt
+         5+ediBD2GYbNkNNNjy1/Fz6kH+P41L51rF+AFsCAfXq5IEJbPt5015Pj9TSqsuZnxJDS
+         TbvYzmvGaJN8EoSlLqR3BifDBuaJ609O5GCj9x6OecApqsSTa6a8e7wxkytTuUb9TsoV
+         VUhf/xSAJSLRmaRpShsn1lJxElS6vgDcYQqi94n9l1iSm3nsUhGbmA24Fn8sbhlVLGyX
+         scq6Y/7vDbjCl/JExsnRwH5zudB1k7LDq7b9SydzepQzl9XpYokqNJa3MoaqwxsXgICq
+         eUwA==
+X-Gm-Message-State: APjAAAVPpQPR+WnGbT8zUcQ81vi3UKu88Az32wSPC80+vj7cucGEhGi1
+        YevOO1xL4Cal5RycDjsb3kRLaA==
+X-Google-Smtp-Source: APXvYqxA0lxab6Nu0SnqoWH9AnjYE6KgXIbGd4+maWc2k1YB44uaXwmkoYZBDi+B/giCmDI6RB4xUg==
+X-Received: by 2002:a2e:8587:: with SMTP id b7mr59051396lji.101.1559158949520;
+        Wed, 29 May 2019 12:42:29 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id l18sm29731lja.94.2019.05.29.12.42.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 12:33:47 -0700 (PDT)
-Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
- <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
- <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
-Date:   Wed, 29 May 2019 22:32:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 12:42:28 -0700 (PDT)
+From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     gregkh@linuxfoundation.org
+Cc:     jeremy@azazel.net, simon@nikanor.nu, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: kpc2000: replace bogus variable name in core.c
+Date:   Wed, 29 May 2019 21:42:22 +0200
+Message-Id: <20190529194222.9048-1-simon@nikanor.nu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.05.2019 21:14, Sowjanya Komatineni пишет:
-> 
-> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
->> 29.05.2019 2:08, Sowjanya Komatineni пишет:
->>> This patch adds suspend and resume support for Tegra pinctrl driver
->>> and registers them to syscore so the pinmux settings are restored
->>> before the devices resume.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 68
->>> +++++++++++++++++++++++++++++++-
->>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
->>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>>   7 files changed, 75 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> index a5008c066bac..bdc47e62c457 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> @@ -28,11 +28,18 @@
->>>   #include <linux/pinctrl/pinmux.h>
->>>   #include <linux/pinctrl/pinconf.h>
->>>   #include <linux/slab.h>
->>> +#include <linux/syscore_ops.h>
->>>     #include "../core.h"
->>>   #include "../pinctrl-utils.h"
->>>   #include "pinctrl-tegra.h"
->>>   +#define EMMC2_PAD_CFGPADCTRL_0            0x1c8
->>> +#define EMMC4_PAD_CFGPADCTRL_0            0x1e0
->>> +#define EMMC_DPD_PARKING            (0x1fff << 14)
->>> +
->>> +static struct tegra_pmx *pmx;
->>> +
->>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>>   {
->>>       return readl(pmx->regs[bank] + reg);
->>> @@ -629,6 +636,50 @@ static void
->>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>       }
->>>   }
->>>   +static int __maybe_unused tegra_pinctrl_suspend(void)
->>> +{
->>> +    u32 *backup_regs = pmx->backup_regs;
->>> +    u32 *regs;
->>> +    int i, j;
->>> +
->>> +    for (i = 0; i < pmx->nbanks; i++) {
->>> +        regs = pmx->regs[i];
->>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +            *backup_regs++ = readl(regs++);
->>> +    }
->>> +
->>> +    return pinctrl_force_sleep(pmx->pctl);
->>> +}
->>> +
->>> +static void __maybe_unused tegra_pinctrl_resume(void)
->>> +{
->>> +    u32 *backup_regs = pmx->backup_regs;
->>> +    u32 *regs;
->>> +    u32 val;
->>> +    int i, j;
->>> +
->>> +    for (i = 0; i < pmx->nbanks; i++) {
->>> +        regs = pmx->regs[i];
->>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
->>> +            writel(*backup_regs++, regs++);
->>> +    }
->>> +
->>> +    if (pmx->soc->has_park_padcfg) {
->>> +        val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +        val &= ~EMMC_DPD_PARKING;
->>> +        pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +
->>> +        val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +        val &= ~EMMC_DPD_PARKING;
->>> +        pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +    }
->>> +}
->>>
->> But the CFGPADCTRL registers are already programmed by restoring the
->> backup_regs and hence the relevant EMMC's are already unparked. Hence
->> why do you need to force-unpark both of the EMMC's? What if EMMC is
->> unpopulated on a board, why do you need to unpark it then?
-> 
-> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTRL)
-> are not part of pinmux.
-> 
-> They are part of CFGPADCTRL register so pinctrl driver pingroup doesn't
-> include these registers.
+"struct kp2000_regs temp" has nothing to do with temperatures, so
+replace it with the more proper name "regs".
 
-I'm looking at the tegra210_groups and it clearly has these both
-registers as a part of pinctrl setup because the rest of the bits
-configure drive of the pads.
+Signed-off-by: Simon Sandström <simon@nikanor.nu>
+---
+ drivers/staging/kpc2000/kpc2000/core.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-From pinctrl-tegra210.c:
+diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+index 4110032d0cbb..11ac57e31d45 100644
+--- a/drivers/staging/kpc2000/kpc2000/core.c
++++ b/drivers/staging/kpc2000/kpc2000/core.c
+@@ -314,24 +314,24 @@ static long kp2000_cdev_ioctl(struct file *filp, unsigned int ioctl_num,
+ 	case KP2000_IOCTL_GET_PCIE_ERROR_REG:       return readq(pcard->sysinfo_regs_base + REG_PCIE_ERROR_COUNT);
+ 
+ 	case KP2000_IOCTL_GET_EVERYTHING: {
+-		struct kp2000_regs temp;
++		struct kp2000_regs regs;
+ 		int ret;
+ 
+-		memset(&temp, 0, sizeof(temp));
+-		temp.card_id = pcard->card_id;
+-		temp.build_version = pcard->build_version;
+-		temp.build_datestamp = pcard->build_datestamp;
+-		temp.build_timestamp = pcard->build_timestamp;
+-		temp.hw_rev = pcard->hardware_revision;
+-		temp.ssid = pcard->ssid;
+-		temp.ddna = pcard->ddna;
+-		temp.cpld_reg = readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG);
+-
+-		ret = copy_to_user((void*)ioctl_param, (void*)&temp, sizeof(temp));
++		memset(&regs, 0, sizeof(regs));
++		regs.card_id = pcard->card_id;
++		regs.build_version = pcard->build_version;
++		regs.build_datestamp = pcard->build_datestamp;
++		regs.build_timestamp = pcard->build_timestamp;
++		regs.hw_rev = pcard->hardware_revision;
++		regs.ssid = pcard->ssid;
++		regs.ddna = pcard->ddna;
++		regs.cpld_reg = readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG);
++
++		ret = copy_to_user((void*)ioctl_param, (void*)&regs, sizeof(regs));
+ 		if (ret)
+ 			return -EFAULT;
+ 
+-		return sizeof(temp);
++		return sizeof(regs);
+ 		}
+ 
+ 	default:
+-- 
+2.20.1
 
-#define DRV_PINGROUP_REG_A		0x8d4	/* bank 0 */
-
-DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
-DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
-
-...
-
-0xa9c - 0x8d4 = 0x1c8
-0xab4 - 0x8d4 = 0x1e0
-
-Hence the PARK bits are already getting unset by restoring the
-backup_regs because the CFGPADCTRL registers are a part of the "bank 0"
-registers.
-
-Am I still missing something?
-
-> backup_regs doesn't take care of this and need to handled separately for
-> Tegra210.
-> 
-> 
-> During resume we have to clear PARK bit for the pads on Tegra210 and
-> this is not related to presence/absence of eMMC on the board.
-
-Okay, thank you for the clarification.
-
-> PAD is parked during LP0 entry to have it in DPD mode and it stays in
-> DPD till its cleared by SW on resume.
-
-Yes, this is documented in the public TRM. My main point is that it
-looks like the PARK bits are unneedlessly getting unset twice in your
-code (and it still looks like that to me).
