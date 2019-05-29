@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3340CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F9BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F140722389
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6B5227B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="ToRXdgJ2"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="WoUU5BDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfE2UhM (ORCPT
+        id S1726902AbfE2Uhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:37:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44617 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfE2UhK (ORCPT
+        Wed, 29 May 2019 16:37:41 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33080 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfE2UhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:37:10 -0400
-Received: by mail-io1-f67.google.com with SMTP id f22so3039974iol.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:37:09 -0700 (PDT)
+        Wed, 29 May 2019 16:37:12 -0400
+Received: by mail-it1-f195.google.com with SMTP id j17so6406011itk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=xfxHFSc3o9z+LQIKmJo1/zP59vV7YWM0BcBPn1ilyLc=;
-        b=ToRXdgJ23QBUCOlh6F80e8xh4wOCibdt3Uc+QVi1K1uoUULh/+7jq/HjN0eKFZU43K
-         qldnwMFMEdj/agn8ii1ip2quJE/9T8pSHOB62r+s2+24+ZisxfdQXZcoE0yyGn1cyksC
-         StEuqe3YzTjAQUKY/WJuamXDehZ9aBB+NftGU=
+        bh=KzPbPNVLoJ8an2+oYL5vGfNCfG5XqaXXUNgMrwuKiOo=;
+        b=WoUU5BDEvs4yWSWNELCK6SxUxlulNoGviYValPkmslZNFRePfn0gbEdnIJXXFj4uan
+         4EJ9o4CMGtR6T3Z1ti9355Q+xjyDNp4OMwyyioBEWi1VTcRvL+sqruNMzgaXEJYs6fZp
+         cvT/qN/NwYqq/N2vxq+zQKX8+bQ3To0P8Dc0c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=xfxHFSc3o9z+LQIKmJo1/zP59vV7YWM0BcBPn1ilyLc=;
-        b=uZQpb9FJZsP2Yc4FHT9HKGi37GPTRn4VKOLchpxmJDPoY/pJhUM9Cm23v98j+RO8tE
-         B5TePHvwmYZtaEULUERy5FNV7G4MC/SB7KYf1ayQIOzxWevZCDekK0sqXOQOQpBUqpv1
-         kFKG3L1sFPD4TRF+ezjRmG5ZUiRBehwqtEnhYNmlJCWtY4J2UE6Rv8eLsg0OpDW+FHDC
-         1CheM3JZUImV1EGwTKCSm9xi5Y0YS1rjEHGdby57t2stns9FN6KcEKoTWguMhG/VX0nK
-         TK4jrX4k4zCI71EyhzfkrMvDQMXTggSbKK7xbdODAyijMJP69zW9ICy5BKUuOmh8y2sR
-         TGnw==
-X-Gm-Message-State: APjAAAXPFocAJxM/ECxbYByuLQsgohJZT3LP4Rbl3odsZUKlluD4+SmH
-        prxBNAf3MGSa6LxQdBBC2JRTmA==
-X-Google-Smtp-Source: APXvYqx8Aq5H/O/9l/fT0E6doY6BAvce51/B/K2AVnm25fkrmV0qWXSHyhurYTWNrA7THTzVIKG/IA==
-X-Received: by 2002:a5d:9a11:: with SMTP id s17mr20266664iol.267.1559162229065;
-        Wed, 29 May 2019 13:37:09 -0700 (PDT)
+        bh=KzPbPNVLoJ8an2+oYL5vGfNCfG5XqaXXUNgMrwuKiOo=;
+        b=R0UlnpV7lOd4p8nQ3vdu8dOptS2I884OYYrACtQV8JeJ0HNlhN5Ptcs3brJToYYZME
+         6SR3EscHWzySG9DE25yZHuEhhPHzvlT6deQKndxu9haT9/by4F+ScH3oFwDs8O5biuil
+         zz6qbt463Vo+ff+/aM9pIMa+Nme7kBqW/CQMlodltNmIMjEeosmra5nkVOvFJmQhQEbX
+         7M1AIoM/61cFF56a81L7jKHmWZiNh5LYrprrL2Or06YKiQihXRlsy0RCQIMA4LtlBrqb
+         xYQisRjBmLutSMxFIXdAZRaSIaHbM04ZPhfm+vK/MmZLNCOYLaO2vSzItbPK20XnIAJw
+         j2RQ==
+X-Gm-Message-State: APjAAAVHyqt26DvbsamMRzwzV2h7l7eNnChYw/ZnBYQG/5g2f9Ch5Z1K
+        8Qz39hiroOMebQC6ZA+YU11M0Q==
+X-Google-Smtp-Source: APXvYqza4UPUOTOMLkMTlvDr3GV01DGi3xQqYQecq93DjA/40Q/xXcha+ACKXOpcs2cTVyqABcS7Jw==
+X-Received: by 2002:a24:b948:: with SMTP id k8mr148646iti.29.1559162231211;
+        Wed, 29 May 2019 13:37:11 -0700 (PDT)
 Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id z77sm182361itb.35.2019.05.29.13.37.08
+        by smtp.gmail.com with ESMTPSA id j11sm196937itj.11.2019.05.29.13.37.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:37:08 -0700 (PDT)
+        Wed, 29 May 2019 13:37:10 -0700 (PDT)
 From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
 To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
@@ -66,11 +66,10 @@ Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
         Valentin Schneider <valentin.schneider@arm.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Subject: [RFC PATCH v3 12/16] sched: A quick and dirty cgroup tagging interface
-Date:   Wed, 29 May 2019 20:36:48 +0000
-Message-Id: <3ce2cbb14593473f5c20bb44fd817fa5fde31a37.1559129225.git.vpillai@digitalocean.com>
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [RFC PATCH v3 14/16] sched/fair: Add a few assertions
+Date:   Wed, 29 May 2019 20:36:50 +0000
+Message-Id: <09fc702d6f38b8d75318ca863e48b102a64008ba.1559129225.git.vpillai@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1559129225.git.vpillai@digitalocean.com>
 References: <cover.1559129225.git.vpillai@digitalocean.com>
@@ -83,162 +82,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-Marks all tasks in a cgroup as matching for core-scheduling.
-
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
-Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
 ---
+ kernel/sched/fair.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Changes in v3
--------------
-- Fixes the refcount management when deleting a tagged cgroup.
-  - Julien Desfossez
-
----
- kernel/sched/core.c  | 78 ++++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h |  4 +++
- 2 files changed, 82 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 112d70f2b1e5..3164c6b33553 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6658,6 +6658,15 @@ static void sched_change_group(struct task_struct *tsk, int type)
- 	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
- 			  struct task_group, css);
- 	tg = autogroup_task_group(tsk, tg);
-+
-+#ifdef CONFIG_SCHED_CORE
-+	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie)
-+		tsk->core_cookie = 0UL;
-+
-+	if (tg->tagged /* && !tsk->core_cookie ? */)
-+		tsk->core_cookie = (unsigned long)tg;
-+#endif
-+
- 	tsk->sched_task_group = tg;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d8a107aea69b..26d29126d6a5 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6192,6 +6192,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	struct sched_domain *sd;
+ 	int i, recent_used_cpu;
  
- #ifdef CONFIG_FAIR_GROUP_SCHED
-@@ -6737,6 +6746,18 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
- 	return 0;
- }
++	/*
++	 * per-cpu select_idle_mask usage
++	 */
++	lockdep_assert_irqs_disabled();
++
+ 	if (available_idle_cpu(target))
+ 		return target;
  
-+static void cpu_cgroup_css_offline(struct cgroup_subsys_state *css)
-+{
-+#ifdef CONFIG_SCHED_CORE
-+	struct task_group *tg = css_tg(css);
-+
-+	if (tg->tagged) {
-+		sched_core_put();
-+		tg->tagged = 0;
-+	}
-+#endif
-+}
-+
- static void cpu_cgroup_css_released(struct cgroup_subsys_state *css)
- {
- 	struct task_group *tg = css_tg(css);
-@@ -7117,6 +7138,46 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
- }
- #endif /* CONFIG_RT_GROUP_SCHED */
+@@ -6619,8 +6624,6 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+  * certain conditions an idle sibling CPU if the domain has SD_WAKE_AFFINE set.
+  *
+  * Returns the target CPU number.
+- *
+- * preempt must be disabled.
+  */
+ static int
+ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_flags)
+@@ -6631,6 +6634,11 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+ 	int want_affine = 0;
+ 	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
  
-+#ifdef CONFIG_SCHED_CORE
-+static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
-+{
-+	struct task_group *tg = css_tg(css);
++	/*
++	 * required for stable ->cpus_allowed
++	 */
++	lockdep_assert_held(&p->pi_lock);
 +
-+	return !!tg->tagged;
-+}
-+
-+static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft, u64 val)
-+{
-+	struct task_group *tg = css_tg(css);
-+	struct css_task_iter it;
-+	struct task_struct *p;
-+
-+	if (val > 1)
-+		return -ERANGE;
-+
-+	if (!static_branch_likely(&sched_smt_present))
-+		return -EINVAL;
-+
-+	if (tg->tagged == !!val)
-+		return 0;
-+
-+	tg->tagged = !!val;
-+
-+	if (!!val)
-+		sched_core_get();
-+
-+	css_task_iter_start(css, 0, &it);
-+	while ((p = css_task_iter_next(&it)))
-+		p->core_cookie = !!val ? (unsigned long)tg : 0UL;
-+	css_task_iter_end(&it);
-+
-+	if (!val)
-+		sched_core_put();
-+
-+	return 0;
-+}
-+#endif
-+
- static struct cftype cpu_legacy_files[] = {
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	{
-@@ -7152,6 +7213,14 @@ static struct cftype cpu_legacy_files[] = {
- 		.read_u64 = cpu_rt_period_read_uint,
- 		.write_u64 = cpu_rt_period_write_uint,
- 	},
-+#endif
-+#ifdef CONFIG_SCHED_CORE
-+	{
-+		.name = "tag",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.read_u64 = cpu_core_tag_read_u64,
-+		.write_u64 = cpu_core_tag_write_u64,
-+	},
- #endif
- 	{ }	/* Terminate */
- };
-@@ -7319,6 +7388,14 @@ static struct cftype cpu_files[] = {
- 		.seq_show = cpu_max_show,
- 		.write = cpu_max_write,
- 	},
-+#endif
-+#ifdef CONFIG_SCHED_CORE
-+	{
-+		.name = "tag",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.read_u64 = cpu_core_tag_read_u64,
-+		.write_u64 = cpu_core_tag_write_u64,
-+	},
- #endif
- 	{ }	/* terminate */
- };
-@@ -7326,6 +7403,7 @@ static struct cftype cpu_files[] = {
- struct cgroup_subsys cpu_cgrp_subsys = {
- 	.css_alloc	= cpu_cgroup_css_alloc,
- 	.css_online	= cpu_cgroup_css_online,
-+	.css_offline	= cpu_cgroup_css_offline,
- 	.css_released	= cpu_cgroup_css_released,
- 	.css_free	= cpu_cgroup_css_free,
- 	.css_extra_stat_show = cpu_extra_stat_show,
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 0cbcfb6c8ee4..bd9b473ebde2 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -363,6 +363,10 @@ struct cfs_bandwidth {
- struct task_group {
- 	struct cgroup_subsys_state css;
+ 	if (sd_flag & SD_BALANCE_WAKE) {
+ 		record_wakee(p);
  
-+#ifdef CONFIG_SCHED_CORE
-+	int			tagged;
-+#endif
-+
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	/* schedulable entities of this group on each CPU */
- 	struct sched_entity	**se;
 -- 
 2.17.1
 
