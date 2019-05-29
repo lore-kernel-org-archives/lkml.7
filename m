@@ -2,96 +2,58 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510A6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F921C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2238C208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61971208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C63n5tH5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QBf/sgE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbfE2GLd (ORCPT
+        id S1726034AbfE2GQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 02:11:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57898 "EHLO
+        Wed, 29 May 2019 02:16:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59036 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfE2GLc (ORCPT
+        with ESMTP id S1725879AbfE2GQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 02:11:32 -0400
+        Wed, 29 May 2019 02:16:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ki8wlzJaAXUMUjbjK207hScTMszow2OB9kp3Ebyx2W4=; b=C63n5tH5sy21OVy69pE2Oeedi
-        R/8G/O4R+cqkOb+iay2A6/Ut98QvmOoVxDkFq9W2+7U/LqR+H8f2OYu4N8PPxCiXmTn6+ZCacke9R
-        NiVaBNHylJKbX5saC2PVaMZWgJI/vqUasbLHzdYAaf6JMJZnN5dnuUb+xuFqzNQ1JfxCcFuQJ4xK+
-        6qWDzjNi2j3o36d3TPB8w5XNqN0HcN+Qs09ffRNSsIKDnPfv3T/Ev6qXrq/Wr6gPHomkX4l/KvNpH
-        N2TnBmCl3vuVelWduaIB1cfkd9FE3VcX3LaRbJyskNDE+jHFkxAKB3R4p6SImibWTKLIlWDTUm7UG
-        kjPLjC7pg==;
+         bh=ZvSD57x006kLNUpKDRV5CxeOKDz/YIRDQvZo+hMkQZw=; b=QBf/sgE3gnBGHrSDWCr4TZBIR
+        Ys10TSVWzIEQ2ik3RCMsUB+Do+4mLrCAv3ACbdTOWV7/RzIq0OEnqa7RmDU38QCphr7O4SHZclJrV
+        P9vrmoFPS0Q6nMqExtar0WsFBgrA2rewQaaydtTKF1mdU78QcLD/JBOYAU8koDaLwpcfEu7eaRaU0
+        W7p/TW9u0evxIBQt2WYccVxUMQEIIg7ybcylz7N/67xjhaUxsnGlToK7dd21ar0D4DoWiLBSA9es8
+        807glmgPEO99VK5awoViXCsO+0/7+YXwKmVkh+IcZQi7V6IM0FZjMqx3973e+kE2PZFvzvc5LCSai
+        mZFZjofsA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVro6-0006Yh-Is; Wed, 29 May 2019 06:11:26 +0000
-Date:   Tue, 28 May 2019 23:11:26 -0700
+        id 1hVrsw-00086V-5O; Wed, 29 May 2019 06:16:26 +0000
+Date:   Tue, 28 May 2019 23:16:26 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190529061126.GA18124@infradead.org>
-References: <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
- <20190523201105.oifkksus4rzcwqt4@mbp>
- <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com>
- <20190524101139.36yre4af22bkvatx@mbp>
- <c6dd53d8-142b-3d8d-6a40-d21c5ee9d272@oracle.com>
- <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, kevin.tian@intel.com,
+        ashok.raj@intel.com, dima@arista.com, tmurphy@arista.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        jacob.jun.pan@intel.com
+Subject: Re: [PATCH v4 10/15] iommu/vt-d: Probe DMA-capable ACPI name space
+ devices
+Message-ID: <20190529061626.GA26055@infradead.org>
+References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
+ <20190525054136.27810-11-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
+In-Reply-To: <20190525054136.27810-11-baolu.lu@linux.intel.com>
 User-Agent: Mutt/1.9.2 (2017-12-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -99,20 +61,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:14:45PM +0200, Andrey Konovalov wrote:
-> Thanks for a lot of valuable input! I've read through all the replies
-> and got somewhat lost. What are the changes I need to do to this
-> series?
+On Sat, May 25, 2019 at 01:41:31PM +0800, Lu Baolu wrote:
+> Some platforms may support ACPI name-space enumerated devices
+> that are capable of generating DMA requests. Platforms which
+> support DMA remapping explicitly declares any such DMA-capable
+> ACPI name-space devices in the platform through ACPI Name-space
+> Device Declaration (ANDD) structure and enumerate them through
+> the Device Scope of the appropriate remapping hardware unit.
 > 
-> 1. Should I move untagging for memory syscalls back to the generic
-> code so other arches would make use of it as well, or should I keep
-> the arm64 specific memory syscalls wrappers and address the comments
-> on that patch?
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-It absolutely needs to move to common code.  Having arch code leads
-to pointless (often unintentional) semantic difference between
-architectures, and lots of boilerplate code.
+Isn't this something that should be handled through the IOMMU API so
+that it covers other IOMMU types as well?
 
-Btw, can anyone of the arm crowd or Khalid comment on the linux-mm
-thread on generic gup where I'm dealing with the pre-existing ADI
-case of pointer untagging?
+How does this scheme compare to the one implemented in
+drivers/acpi/arm64/iort.c?
