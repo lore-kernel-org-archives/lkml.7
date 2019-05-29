@@ -2,122 +2,114 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E986C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E5321019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559135694;
-	bh=xKlA2g0wIi0S7QT1ghsj/kNXtl6yCp86bG8AATUDAzk=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=zThnaKd5tLc1/P63XUYViIagveataFSymUDzKP24gehlGbwIzWv4vkq9Zna78zWnA
-	 QJcnEc8hMz/ctHiwdkKwVtlh77zPbrggFrGPXOTtNU7henuGGEXNz+He/w1xuJ4a5h
-	 zZAbbQ4xlkTXDvKQF27gBuIB3GFeTLFtLOaY7C4U=
+	by mail.kernel.org (Postfix) with ESMTP id 938A821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WcqJPV36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfE2NOx (ORCPT
+        id S1727137AbfE2NO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfE2NOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:14:53 -0400
-Received: from localhost (unknown [23.100.24.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F372081C;
-        Wed, 29 May 2019 13:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559135692;
-        bh=xKlA2g0wIi0S7QT1ghsj/kNXtl6yCp86bG8AATUDAzk=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=AVJjj8POoTrQ4M7YeIyqLpk553l1+dSgSikMjhX+vYUMNAKXNliKLQQGPNBYstW1w
-         XZ4o/uG+HMJljqzFV5GehPQSqkLoa0zd+dKCy0bWBzv0W6KDjCogzb6hg8X4rWbCyc
-         nfDQzzou7D2nvunV+KUtGTpA/cXDRyO+nSg72EL0=
-Date:   Wed, 29 May 2019 13:14:51 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     "Yan, Zheng" <zyan@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     idryomov@redhat.com, jlayton@redhat.com
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 8/8] ceph: hold i_ceph_lock when removing caps for freeing inode
-In-Reply-To: <20190523080646.19632-8-zyan@redhat.com>
-References: <20190523080646.19632-8-zyan@redhat.com>
-Message-Id: <20190529131452.43F372081C@mail.kernel.org>
+        Wed, 29 May 2019 09:14:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34210 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfE2NO4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:14:56 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v18so2048640lfi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zo8/tL88lhYZ8ZmjXhe5I0ivQ63AMHIIXfJiG0SngrI=;
+        b=WcqJPV36GoYCJyCKWssunS/8jjCOcm7506dwRBLhvYgsNR0UdI2bR6S+PaChd3NF+e
+         P+/GUrP8I1gxdIuXwHh6CxrPM6FsQK897PtueXW2sc688u6UEVtahdPaDHpbLdURczG/
+         exuh5TP/Fn7NuWWJubwb5BOU06YIqB0/o8baMnCRHH/ihY5uaT1si7LXcC8p9MWXL18d
+         oOzuzN3xy5AjXeHWyQmqeSM1pM2ZeR9RQEvA5xn86EDD7CpzITSwgBRLK8NSiZHIhZG2
+         4dGKz3NjhIgq/QlLySTSs2ZLnXWGPjQaDD2AF5PW0kac6rHkp3GF9xtJmzZ2Gi7XnFzZ
+         e6Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zo8/tL88lhYZ8ZmjXhe5I0ivQ63AMHIIXfJiG0SngrI=;
+        b=Ls6ULa/ri8kfVTHTQeu35CEzIVd34hD852uw4wTejDWI+bep3+hE+/afynH23jRTJ4
+         CfYtQWYcGSSdXHGwsq67ri/An2vIgAhPKeUEQEruyRRqqLUK4aUVVYZt1pT+dmxdoqkj
+         dgWQtU0WXnnKrZQ9REPxeoUpLdLyYBbTZZWW+fM3HiWud4t5PEbpmblpv8o1O/2llNBG
+         Uh+JNmu2qzKkCNoJw+9k7iN7cWXZAtf8eysap5LXEsvsYFhxRybDnS8RE9BriGooTaDE
+         CJbfgdCjrwX6pJAdqJmhU+Ehz8QxnJHvQRfbcx0QbXSPxPLH3h5NkSxnnIHq2XAEhXQG
+         VyXw==
+X-Gm-Message-State: APjAAAWCxAgsBnDB1tIWdtBqGUCu2Xdhg3+Nowwg9jauW0Skq21sLaiE
+        wThnMUZsuaxhUDs1h7Q6lQFAkNEw6Y7BRwFIsBZN
+X-Google-Smtp-Source: APXvYqw1iYjVpziXjswrmlU2rI862bFdoZ/LKvGEmuAIzGxOxKMlkrc2fuaVbN9QOa1jFVN2h6hTKGffJR8WNirL26o=
+X-Received: by 2002:ac2:4358:: with SMTP id o24mr5608001lfl.13.1559135695377;
+ Wed, 29 May 2019 06:14:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1554732921.git.rgb@redhat.com> <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
+ <CAHC9VhRW9f6GbhvvfifbOzd9p=PgdB2gq1E7tACcaqvfb85Y8A@mail.gmail.com>
+ <3299293.RYyUlNkVNy@x2> <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
+In-Reply-To: <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 29 May 2019 09:14:44 -0400
+Message-ID: <CAHC9VhScO5yfnM2tn=_6OKtuU5P_LukPfmnE06E0hVE-2e++uw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
+To:     Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>
+Cc:     Dan Walsh <dwalsh@redhat.com>, Neil Horman <nhorman@tuxdriver.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        Mrunal Patel <mpatel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, May 28, 2019 at 8:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-05-28 19:00, Steve Grubb wrote:
+> > On Tuesday, May 28, 2019 6:26:47 PM EDT Paul Moore wrote:
+> > > On Tue, May 28, 2019 at 5:54 PM Daniel Walsh <dwalsh@redhat.com> wrote:
 
-[This is an automated email]
+...
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+> > > > Mrunal Patel (maintainer of CRI-O) and I have reviewed the API, and
+> > > > believe this is something we can work on in the container runtimes team
+> > > > to implement the container auditing code in CRI-O and Podman.
+> > >
+> > > Thanks Dan.  If I pulled this into a branch and built you some test
+> > > kernels to play with, any idea how long it might take to get a proof
+> > > of concept working on the cri-o side?
+> >
+> > We'd need to merge user space patches and let them use that instead of the
+> > raw interface. I'm not going to merge user space until we are pretty sure the
+> > patch is going into the kernel.
+>
+> I have an f29 test rpm of the userspace bits if that helps for testing:
+>         http://people.redhat.com/~rbriggs/ghak90/git-1db7e21/
+>
+> Here's what it contains (minus the last patch):
+>         https://github.com/linux-audit/audit-userspace/compare/master...rgbriggs:ghau40-containerid-filter.v7.0
 
-The bot has tested the following trees: v5.1.4, v5.0.18, v4.19.45, v4.14.121, v4.9.178, v4.4.180, v3.18.140.
+Yes, exactly.  Just as I plan to start making some test kernels for
+people to play with (assuming v6 looks okay), I think it would be good
+if Steve could make a test build of the latest audit userspace with
+the audit container ID patches.  It really shouldn't be that hard, and
+the benefits should far outweigh any time spent generating the
+tree/builds.
 
-v5.1.4: Build OK!
-v5.0.18: Failed to apply! Possible dependencies:
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-
-v4.19.45: Failed to apply! Possible dependencies:
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-
-v4.14.121: Failed to apply! Possible dependencies:
-    a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
-    a57d9064e4ee4 ("ceph: flush pending works before shutdown super")
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-
-v4.9.178: Failed to apply! Possible dependencies:
-    a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
-    a57d9064e4ee4 ("ceph: flush pending works before shutdown super")
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-
-v4.4.180: Failed to apply! Possible dependencies:
-    13d1ad16d05ee ("libceph: move message allocation out of ceph_osdc_alloc_request()")
-    34b759b4a22b0 ("ceph: kill ceph_empty_snapc")
-    3f1af42ad0fad ("libceph: enable large, variable-sized OSD requests")
-    5be0389dac662 ("ceph: re-send AIO write request when getting -EOLDSNAP error")
-    7627151ea30bc ("libceph: define new ceph_file_layout structure")
-    779fe0fb8e188 ("ceph: rados pool namespace support")
-    922dab6134178 ("libceph, rbd: ceph_osd_linger_request, watch/notify v2")
-    a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
-    ae458f5a171ba ("libceph: make r_request msg_size calculation clearer")
-    c41d13a31fefe ("rbd: use header_oid instead of header_name")
-    c8fe9b17d055f ("ceph: Asynchronous IO support")
-    d30291b985d18 ("libceph: variable-sized ceph_object_id")
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-
-v3.18.140: Failed to apply! Possible dependencies:
-    10183a69551f7 ("ceph: check OSD caps before read/write")
-    28127bdd2f843 ("ceph: convert inline data to normal data before data write")
-    31c542a199d79 ("ceph: add inline data to pagecache")
-    5be0389dac662 ("ceph: re-send AIO write request when getting -EOLDSNAP error")
-    70db4f3629b34 ("ceph: introduce a new inode flag indicating if cached dentries are ordered")
-    745a8e3bccbc6 ("ceph: don't pre-allocate space for cap release messages")
-    7627151ea30bc ("libceph: define new ceph_file_layout structure")
-    779fe0fb8e188 ("ceph: rados pool namespace support")
-    83701246aee8f ("ceph: sync read inline data")
-    a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
-    affbc19a68f99 ("ceph: make sure syncfs flushes all cap snaps")
-    c8fe9b17d055f ("ceph: Asynchronous IO support")
-    d30291b985d18 ("libceph: variable-sized ceph_object_id")
-    d3383a8e37f80 ("ceph: avoid block operation when !TASK_RUNNING (ceph_mdsc_sync)")
-    e3ec8d6898f71 ("ceph: send cap releases more aggressively")
-    e96a650a8174e ("ceph, rbd: delete unnecessary checks before two function calls")
-
-
-How should we proceed with this patch?
-
---
-Thanks,
-Sasha
+-- 
+paul moore
+www.paul-moore.com
