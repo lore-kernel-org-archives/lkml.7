@@ -2,118 +2,176 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E310C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121772423E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B1624245
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="f+ScQg9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfE2VyI (ORCPT
+        id S1726617AbfE2VyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:54:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35524 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfE2VyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:54:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n14so3644248otk.2;
-        Wed, 29 May 2019 14:54:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t0RV3+kisHUMXyneeAKaGTJdWRVaLmpR4yiYkhivyfc=;
-        b=b/kK+HUOCpztpaHykIhF9DikDJvLs+iRQuDhcDKeJjV5OW+j3cKgnYladmp3jQ+3iS
-         pYT2zdtrR9CIXGBip2T8y9HJODZx+TAIjCMGvvDbqgHW/jxRm7RMIJbxaOOjFWxH3Iu0
-         7fgDW00+WUyZ0cI6axsB8LZx8QglNk5q68emHuy5DCRRT1uyphxwX9YTVD3FOGFnqLu/
-         IixHKir8B5IACAjaufWTcvv874NGR6rexYWAhEVUIOoUAq9toSDKbdJMF5SdI3pgzWNW
-         plLmnbdx6ItNhHInFrfaqzTcwkvRjnv10SXYzoTAlJHP3aqvBoViwCWgPB8fHK7YbDnh
-         JkvA==
-X-Gm-Message-State: APjAAAU8jycD4L4u2U8DJ9GPQPh+JONEqmqsuzGdGy6TqrFappDGym2A
-        DjJUerdHVAVLIJirPorfqkcp8Gq0wGQ=
-X-Google-Smtp-Source: APXvYqzrKWTxIu04+QqxzysOQWMh1txFa3MBWVB/r24ex7U1/u3liDy6ZewvC/BEmGVEX/uq24wOcQ==
-X-Received: by 2002:a9d:6c06:: with SMTP id f6mr9834otq.185.1559166846326;
-        Wed, 29 May 2019 14:54:06 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id h67sm142594otb.24.2019.05.29.14.54.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 14:54:05 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id u64so3391887oib.1;
-        Wed, 29 May 2019 14:54:04 -0700 (PDT)
-X-Received: by 2002:aca:e44b:: with SMTP id b72mr359320oih.108.1559166843892;
- Wed, 29 May 2019 14:54:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190529083254.39581-1-chuanhua.han@nxp.com>
-In-Reply-To: <20190529083254.39581-1-chuanhua.han@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 29 May 2019 16:53:52 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRTf6ooaJJDkO8xa9qhJhh1ZaQ5crRDX7sLaSV0CoRVyg@mail.gmail.com>
-Message-ID: <CADRPPNRTf6ooaJJDkO8xa9qhJhh1ZaQ5crRDX7sLaSV0CoRVyg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: mpc8xxx: Enable port input and interrupt
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 29 May 2019 17:54:23 -0400
+Received: from onstation.org ([52.200.56.107]:44478 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfE2VyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 17:54:23 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 4E7603E93F;
+        Wed, 29 May 2019 21:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1559166861;
+        bh=tIAy2GIEYuNFrX/uboRVUaQFApaBDfrKHODIjF4ZzsY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f+ScQg9nH5BPsj0L/L9Pa5xMLgJuRWLyNAdh6g8x1q7BuhrDpRaPl+RkGQ21g7SyY
+         R3BKA8lT8S5AS73Wb7sjxnACIfi+ejE5m4rfW7XJW9+TS9avwbBeX05ysQyCH2fT17
+         Trm/LM+RDTvci7VHkavslpvmltPUrECo6Wpb/35Y=
+Date:   Wed, 29 May 2019 17:54:21 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Zhang Ying-22455 <ying.zhang22455@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5
+ display support
+Message-ID: <20190529215421.GA20611@basecamp>
+References: <20190529011705.GA12977@basecamp>
+ <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
+ <20190529013713.GA13245@basecamp>
+ <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+ <20190529024648.GA13436@basecamp>
+ <CAOCk7NpC93ACr4jFm7SBOKSvFJSDhq2byX6BAYPX29BuYEkWnQ@mail.gmail.com>
+ <20190529102822.GA15027@basecamp>
+ <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
+ <20190529193046.GA19876@basecamp>
+ <26c535af-9853-c8c9-3138-04f5d9ee11b0@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26c535af-9853-c8c9-3138-04f5d9ee11b0@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 3:33 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->
-> The GPIO Input Buffer Enable register is used to control the input
-> enable of each individual GPIO port. When an individual GPIO port's
-> direction is set to input (GPIO_GPDIR[DRn=0]), the associated
-> input enable must be set (GPIOxGPIE[IEn]=1) to propagate the port
-> value to the GPIO Data Register.
+On Wed, May 29, 2019 at 01:58:16PM -0600, Jeffrey Hugo wrote:
+> On 5/29/2019 1:30 PM, Brian Masney wrote:
+> > On Wed, May 29, 2019 at 08:41:31AM -0600, Jeffrey Hugo wrote:
+> > > On Wed, May 29, 2019 at 4:28 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > > 
+> > > > On Tue, May 28, 2019 at 08:53:49PM -0600, Jeffrey Hugo wrote:
+> > > > > On Tue, May 28, 2019 at 8:46 PM Brian Masney <masneyb@onstation.org> wrote:
+> > > > > > 
+> > > > > > On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
+> > > > > > > > > Do you know if the nexus 5 has a video or command mode panel?  There
+> > > > > > > > > is some glitchyness with vblanks and command mode panels.
+> > > > > > > > 
+> > > > > > > > Its in command mode. I know this because I see two 'pp done time out'
+> > > > > > > > messages, even on 4.17. Based on my understanding, the ping pong code is
+> > > > > > > > only applicable for command mode panels.
+> > > > > > > 
+> > > > > > > Actually, the ping pong element exists in both modes, but 'pp done
+> > > > > > > time out' is a good indicator that it is command mode.
+> > > > > > > 
+> > > > > > > Are you also seeing vblank timeouts?
+> > > > > > 
+> > > > > > Yes, here's a snippet of the first one.
+> > > > > > 
+> > > > > > [    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
+> > > > > > [    2.556020] [CRTC:49:crtc-0] vblank wait timed out
+> > > > > > [    2.556023] Modules linked in:
+> > > > > > [    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
+> > > > > > [    2.556038] Hardware name: Generic DT based system
+> > > > > > [    2.556056] Workqueue: events deferred_probe_work_func
+> > > > > > ...
+> > > > > > 
+> > > > > > > Do you have busybox?
+> > > > > > > 
+> > > > > > > Can you run -
+> > > > > > > sudo busybox devmem 0xFD900614
+> > > > > > > sudo busybox devmem 0xFD900714
+> > > > > > > sudo busybox devmem 0xFD900814
+> > > > > > > sudo busybox devmem 0xFD900914
+> > > > > > > sudo busybox devmem 0xFD900A14
+> > > > > > 
+> > > > > > # busybox devmem 0xFD900614
+> > > > > > 0x00020020
+> > > > > 
+> > > > > Ok, so CTL_0 path, command mode, ping pong 0, with the output going to DSI 1.
+> > > > > 
+> > > > > Next one please:
+> > > > > 
+> > > > > busybox devmem 0xFD912D30
+> > > > 
+> > > > It's 0x00000000 on mainline and 4.17. I used the following script to
+> > > > dump the entire mdp5 memory region and attached the dump from 4.17 and
+> > > > 5.2rc1.
+> > > > 
+> > > 
+> > > ok, 0 means autorefresh is not on.  Which is fine.  My next guess
+> > > would be the vblank code checking the hardware vblank counter, which
+> > > doesn't exist.
+> > > In video mode, there is a frame counter which increments, which can be
+> > > used as the vblank counter.  Unfortunately, that hardware isn't active
+> > > in command mode, and there isn't an equivalent.
+> > > 
+> > > So, the vblank code is going to read the register, and look for an
+> > > update, which will never happen, thus it will timeout.  There is a
+> > > backup path which uses timestamps (no hardware), which you can
+> > > activate with a quick hack - make max_vblank_count = 0 at the
+> > > following line
+> > > https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c#L753
+> > 
+> > That fixed the issue!
+> 
+> Awesome.  I'm glad it was something simple.
+> 
+> > 
+> > I previously observed that mdp5_get_vblank_counter, specifically
+> > mdp5_encoder_get_framecount, would always return 0.
+> > 
+> > What's the best way to fix this in mainline? Set that to zero if any
+> > of the interface modes is MDP5_INTF_DSI_MODE_COMMAND?
+> > 
+> 
+> Short version, yes.  Long version:
+> 
+> I still have that hack in my tree and haven't come back to formulating
+> a proper fix yet.  Feel free to run with it.
+> 
+> Thinking about it briefly, we could do two things.  We could fake a
+> hardware counter by just increment an int every time the vblank irq is
+> processed, but that seems clunky.  Otherwise, we could force a
+> fallback onto the timestamp solution, which seems less invasive.
+> 
+> In theory, we could service multiple displays, with different
+> properties (ie a combination of command and video mode).  The hack
+> then, is not good, because it would break video mode (at-least we
+> wouldn't be using the register when we could).  It would be great if
+> the use of the hardware register could be done per display.
+> 
+> Luckily, it looks like someone just made that possible -
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/drm_vblank.c?h=v5.2-rc2&id=ed20151a7699bb2c77eba3610199789a126940c4
 
-I cannot relate what you are saying here with the code you changed.
+I'll work on this for the msm driver.
 
->
-> This patch enable port input and interrupt.
+Thanks for the info!
 
-NACK
-
-Why do we need to unmask all the interrupts by default?  The correct
-behavior is that all interrupts masked until they are actually
-requested.
-
->
-> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index c8673a5d9412..555e0e7957d9 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -373,9 +373,10 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (!mpc8xxx_gc->irq)
->                 return 0;
->
-> -       /* ack and mask all irqs */
-> +       /* ack and enable irqs */
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
-> -       gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
->
->         irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
->                                          mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> --
-> 2.17.1
->
+Brian
