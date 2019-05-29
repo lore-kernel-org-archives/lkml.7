@@ -2,107 +2,98 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0B2C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0042070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0T7FC52l"
+	by mail.kernel.org (Postfix) with ESMTP id 04B0320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfE2LLA (ORCPT
+        id S1726674AbfE2LMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:11:00 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:36010 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfE2LLA (ORCPT
+        Wed, 29 May 2019 07:12:49 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:60795 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfE2LMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:11:00 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TB46qZ050499;
-        Wed, 29 May 2019 11:10:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=j3HAaoMqE6iuqyfvW0nAhvODR9j2mUzCGvByfduj3lw=;
- b=0T7FC52lvVRETlu4Q2nJLBteQPUIiBdTb9iykHn5qi1kSA56R3oDOwbFQ+YoEQf8qLPu
- 15x/91qY7jMjVLLfUF3imVRRNq0Li/sKD+jgzUFviCE0Nw4GzBqTr68y26M6d58MRm9p
- HxrevIN7lisSCzyNknHoOWs9QXi4ax4Ceiwvrj3a1mNef5vgQnY3MS5xC9rOEtkuJjNJ
- XYGDgmeBeAU/s1lw+ZmCMkVT/1pAqM3dTpImiZ4Is5bGHhiy4molzBAcj+KTIZkYS4y0
- nGOt5UF+VuSeQ2D5AefIEvTItFEDbsfTFVXd9/rln2lhLSGe+xLc/VTWnj9I4gzzXMiK xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2spu7dh5m9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 11:10:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TBA0Qp024008;
-        Wed, 29 May 2019 11:10:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sr31v6rfq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 11:10:50 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TBAms6002516;
-        Wed, 29 May 2019 11:10:48 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 04:10:48 -0700
-Date:   Wed, 29 May 2019 14:10:41 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     David Airlie <airlied@linux.ie>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] agp: Re-order a condition to please static checkers
-Message-ID: <20190529111041.GE19119@mwanda>
+        Wed, 29 May 2019 07:12:49 -0400
+X-Originating-IP: 90.88.147.134
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 26487C000B;
+        Wed, 29 May 2019 11:12:37 +0000 (UTC)
+Date:   Wed, 29 May 2019 13:12:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190529111236.gnk4bics5xrfxyql@flea>
+References: <20190520150637.23557-1-megous@megous.com>
+ <20190520150637.23557-4-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zlv4nldcdeunkux4"
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290075
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290075
+In-Reply-To: <20190520150637.23557-4-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's nicer to check for integer overflow first and then check for if
-the "page_count" is within bounds, otherwise static checkers complain.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/char/agp/generic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--zlv4nldcdeunkux4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/char/agp/generic.c b/drivers/char/agp/generic.c
-index 658664a5a5aa..89901e5710bf 100644
---- a/drivers/char/agp/generic.c
-+++ b/drivers/char/agp/generic.c
-@@ -227,8 +227,8 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data *bridge,
- 		return NULL;
- 
- 	cur_memory = atomic_read(&bridge->current_memory_agp);
--	if ((cur_memory + page_count > bridge->max_memory_agp) ||
--	    (cur_memory + page_count < page_count))
-+	if ((cur_memory + page_count < page_count) ||
-+	    (cur_memory + page_count > bridge->max_memory_agp))
- 		return NULL;
- 
- 	if (type >= AGP_USER_TYPES) {
--- 
-2.20.1
+On Mon, May 20, 2019 at 05:06:37PM +0200, megous@megous.com wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The A83T SoC has a camera sensor interface (known as CSI in Allwinner
+> lingo), which is similar to the one found on the A64 and H3. The only
+> difference seems to be that support of MIPI CSI through a connected
+> MIPI CSI-2 bridge.
+>
+> Add a device node for it, and pinctrl nodes for the commonly used MCLK
+> and 8-bit parallel interface. The property /omit-if-no-ref/ is added to
+> the pinctrl nodes to keep the device tree blob size down if they are
+> unused.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
+Applied, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--zlv4nldcdeunkux4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO5pJAAKCRDj7w1vZxhR
+xfugAP9uM3nhnPYa61YOa1J7hJC/ogaqkG64ngXh7+5a0atLJgEAiFczeAYSxJpM
+w49Kak6GmlRewxlL2aBTHVZryI9C5gA=
+=G/QN
+-----END PGP SIGNATURE-----
+
+--zlv4nldcdeunkux4--
