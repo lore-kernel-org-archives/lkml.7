@@ -2,202 +2,230 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E4CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F115AC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A5E23AFA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C079A23B02
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VJSAKcoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfE2PlI (ORCPT
+        id S1727021AbfE2Plw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:41:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42246 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfE2PlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:41:08 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6DD88F0D15;
-        Wed, 29 May 2019 15:41:02 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 41CEB1019612;
-        Wed, 29 May 2019 15:40:53 +0000 (UTC)
-Subject: Re: [PATCH v5 2/7] iommu/vt-d: Duplicate iommu_resv_region objects
- per device list
-To:     Lu Baolu <baolu.lu@linux.intel.com>, eric.auger.pro@gmail.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
-        robin.murphy@arm.com
-Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com,
-        jean-philippe.brucker@arm.com
-References: <20190528115025.17194-1-eric.auger@redhat.com>
- <20190528115025.17194-3-eric.auger@redhat.com>
- <e22ccc46-7c37-c8d2-784b-3d4168512772@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <a4b991b1-53c8-bb72-a981-67d02763873e@redhat.com>
-Date:   Wed, 29 May 2019 17:40:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 29 May 2019 11:41:52 -0400
+Received: from sonic303-8.consmr.mail.bf2.yahoo.com ([74.6.131.47]:41634 "EHLO
+        sonic303-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbfE2Plv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559144509; bh=fIF8FHrdxkMOIaxKZ14fK2jsxLnWhP2FKBQ5OFGZvLk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=VJSAKcoTcK42fOZgEvm/NJt22/xiFB+818scenfqJv6WUv+OaiE6Z5uPGkgEkVUbsqMWRBaboGPF/inRn9pCCNa9Gr30S+o5qmsbR2VVPGZq636/eTUsZX402RIuUAjNzvo6ZMXkkNYAkm5Vkwf+VytR222WrH1L/r5jiiuHo6d2ARxXdrU35TVOujh/xj7LsFwHxqxczF1UHzvVUZthtODimR3YcOdI2RUTs490D8SB389wuqeSvwEA/f0dmndp9hTXyy7Vsr7+ozXll/g7KgvJL372LpsvaK4BSAOzFCTJNmracGluBnICe1CHZaY2XkCc2PGollL5c0wt8pxw2g==
+X-YMail-OSG: MsmGAukVM1mBdI3BtiJ8eZ8btC_ZI31E.AscaDvep.YvrbbjmnV_TirFFioysaT
+ YlHWtYzGcnGT65jKZgEdItX8Bm.cfPny8tW89N8yIqeCDedQXkIUyfENbWMOmZqek0ZMi3TjhNQs
+ tWn28v1LkEqKY0SXZbpO1j67BjPkiQEElY9VFwZIrBhRZeX5ohxXtBdK1xRDA2uZYdnoa2mGEZx6
+ zKFihzzYcQwO5mOFA3LFC_dTnk3r_4i7Fx4ILdHTi663PVtW.tCOrsOld438WBMiIm1LJOrybzUM
+ jS2I82a2OjVldWsoJVmr9EuOjXJ428zbRAZS_xch0TFrQgqEsvUsJpJybRm1Z5_MRi75aZ4YhpN9
+ FsqIl19HmQIbnax1dtulwxZnYbHQ2t3NGN0.s4k8qfu1Mk2XG2FDBC1Hii18qrfyQauoLqz7.9qJ
+ BCe5RsahVnLIvGDisC22Rrfqto90DbLdmj9Yt4d53FigKXZVcr4HBB0sxt26ZFg.A81ZzlSrr_EC
+ kkLYB28AlSGBzU_9hPfL93C9GNN1suCxrIQRAsrNrqJlhuIGGP6mv6Twgt3e3Oj48gHCU66ZKLzm
+ xatT7Cr1eEgrzMQhWT0VXGpp0nYdgBGN6BB3LwsHaYY_uWEObd15Xqy9_vQpTh_7AZDZc8005l8U
+ ilwPfztsMovuhWvTvJOR.fiwGwTPBe8fcVdOqcMMph2SHFkSEUVabfOpzzkH.R1zYXXuvkH0BvZC
+ 17jRzAzGUPjkl5DbRUYZcjr1pwnEqaKqjKFz7dDM0riNJ8RISn1cQhluzFco4Acmbic3eOXRI493
+ 6JSiH_EeBhpCu7MqsetK2OoZyh_a89Y5ma4J2pXvXqw8djLqseRndmHoKjDsiW65xUNPhMHr7G4R
+ pt203vN3KsdICxmASCwOGD5izTjDD9FgyP224SUCWoOhrfPIA0LC5iLoxxUAd5DobIEbOFhkLnTj
+ MGp4I16IFhpHY3Mms9zMtkpF6l03jRoDTC1aLVutDj1E2dNU2w8V5ENTR_JOA_4KvnVsuZlDXF4Y
+ EQpPZQnvL0vCjYvAmDYIZQ.M2cPtR797SslPc6NBEXErbPAc9b4LFwCWf8iuWR7._Slr6xd55xRn
+ ZsUML47cyyApxA7D7YEEeb9ge5kw_6I_w6c.Zq96D6DRJgh_rUgQRlvRywvAIzdE1kbfaN8womuH
+ JzziQdbl6Rkv_dvGE5kv7PuKL2_faAT_AbSruW1MOBqjx_xgDwBx0K1_VTUFh1h2PdwqIdcr7
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Wed, 29 May 2019 15:41:48 +0000
+Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
+          by smtp415.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 53cac997c7a8b6f08ba08da82c1b2c81;
+          Wed, 29 May 2019 15:41:45 +0000 (UTC)
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+To:     David Howells <dhowells@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
+References: <20190528235810.GA5776@kroah.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <31751.1559120984@warthog.procyon.org.uk>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <c3d76089-cd0a-a378-f6e8-2fe6e9a5c254@schaufler-ca.com>
+Date:   Wed, 29 May 2019 08:41:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <e22ccc46-7c37-c8d2-784b-3d4168512772@linux.intel.com>
+In-Reply-To: <31751.1559120984@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 29 May 2019 15:41:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lu,
+On 5/29/2019 2:09 AM, David Howells wrote:
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+>>>  (3) Letting users see events they shouldn't be able to see.
+>> How are you handling namespaces then?  Are they determined by the
+>> namespace of the process that opened the original device handle, or th=
+e
+>> namespace that made the new syscall for the events to "start flowing"?=
 
-On 5/29/19 4:04 AM, Lu Baolu wrote:
-> Hi Eric,
-> 
-> On 5/28/19 7:50 PM, Eric Auger wrote:
->> intel_iommu_get_resv_regions() aims to return the list of
->> reserved regions accessible by a given @device. However several
->> devices can access the same reserved memory region and when
->> building the list it is not safe to use a single iommu_resv_region
->> object, whose container is the RMRR. This iommu_resv_region must
->> be duplicated per device reserved region list.
->>
->> Let's remove the struct iommu_resv_region from the RMRR unit
->> and allocate the iommu_resv_region directly in
->> intel_iommu_get_resv_regions(). We hold the dmar_global_lock instead
->> of the rcu-lock to allow sleeping.
->>
->> Fixes: 0659b8dc45a6 ("iommu/vt-d: Implement reserved region get/put
->> callbacks")
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->>
->> v4 -> v5
->> - replace rcu-lock by the dmar_global_lock
->> ---
->>   drivers/iommu/intel-iommu.c | 34 +++++++++++++++++-----------------
->>   1 file changed, 17 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index a209199f3af6..5ec8b5bd308f 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -322,7 +322,6 @@ struct dmar_rmrr_unit {
->>       u64    end_address;        /* reserved end address */
->>       struct dmar_dev_scope *devices;    /* target devices */
->>       int    devices_cnt;        /* target device count */
->> -    struct iommu_resv_region *resv; /* reserved region handle */
->>   };
->>     struct dmar_atsr_unit {
->> @@ -4205,7 +4204,6 @@ static inline void init_iommu_pm_ops(void) {}
->>   int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void
->> *arg)
->>   {
->>       struct acpi_dmar_reserved_memory *rmrr;
->> -    int prot = DMA_PTE_READ|DMA_PTE_WRITE;
->>       struct dmar_rmrr_unit *rmrru;
->>       size_t length;
->>   @@ -4219,22 +4217,16 @@ int __init dmar_parse_one_rmrr(struct
->> acpi_dmar_header *header, void *arg)
->>       rmrru->end_address = rmrr->end_address;
->>         length = rmrr->end_address - rmrr->base_address + 1;
->> -    rmrru->resv = iommu_alloc_resv_region(rmrr->base_address, length,
->> prot,
->> -                          IOMMU_RESV_DIRECT);
->> -    if (!rmrru->resv)
->> -        goto free_rmrru;
->>         rmrru->devices = dmar_alloc_dev_scope((void *)(rmrr + 1),
->>                   ((void *)rmrr) + rmrr->header.length,
->>                   &rmrru->devices_cnt);
->>       if (rmrru->devices_cnt && rmrru->devices == NULL)
->> -        goto free_all;
->> +        goto free_rmrru;
->>         list_add(&rmrru->list, &dmar_rmrr_units);
->>         return 0;
->> -free_all:
->> -    kfree(rmrru->resv);
->>   free_rmrru:
->>       kfree(rmrru);
->>   out:
->> @@ -4452,7 +4444,6 @@ static void intel_iommu_free_dmars(void)
->>       list_for_each_entry_safe(rmrru, rmrr_n, &dmar_rmrr_units, list) {
->>           list_del(&rmrru->list);
->>           dmar_free_dev_scope(&rmrru->devices, &rmrru->devices_cnt);
->> -        kfree(rmrru->resv);
->>           kfree(rmrru);
->>       }
->>   @@ -5470,22 +5461,33 @@ static void intel_iommu_remove_device(struct
->> device *dev)
->>   static void intel_iommu_get_resv_regions(struct device *device,
->>                        struct list_head *head)
->>   {
->> +    int prot = DMA_PTE_READ|DMA_PTE_WRITE;
-> 
-> I know this is moved from above. How about adding spaces around the '|'?
-sure
-> 
->>       struct iommu_resv_region *reg;
->>       struct dmar_rmrr_unit *rmrr;
->>       struct device *i_dev;
->>       int i;
->>   -    rcu_read_lock();
->> +    down_write(&dmar_global_lock);
-> 
-> Just out of curiosity, why not down_read()? We don't change the rmrr
-> list here, right?
-you're right, my mistake.
-> 
->>       for_each_rmrr_units(rmrr) {
->>           for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
->>                         i, i_dev) {
->> +            struct iommu_resv_region *resv;
->> +            size_t length;
->> +
->>               if (i_dev != device)
->>                   continue;
->>   -            list_add_tail(&rmrr->resv->list, head);
->> +            length = rmrr->end_address - rmrr->base_address + 1;
->> +            resv = iommu_alloc_resv_region(rmrr->base_address,
->> +                               length, prot,
->> +                               IOMMU_RESV_DIRECT);
->> +            if (!resv)
->> +                break;
->> +
->> +            list_add_tail(&resv->list, head);
->>           }
->>       }
->> -    rcu_read_unlock();
->> +    up_write(&dmar_global_lock);
->>         reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
->>                         IOAPIC_RANGE_END - IOAPIC_RANGE_START + 1,
->> @@ -5500,10 +5502,8 @@ static void intel_iommu_put_resv_regions(struct
->> device *dev,
->>   {
->>       struct iommu_resv_region *entry, *next;
->>   -    list_for_each_entry_safe(entry, next, head, list) {
->> -        if (entry->type == IOMMU_RESV_MSI)
->> -            kfree(entry);
->> -    }
->> +    list_for_each_entry_safe(entry, next, head, list)
->> +        kfree(entry);
->>   }
->>     int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct
->> device *dev)
->>
-> 
-> Other looks good to me.
-> 
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Thanks!
+> So far I haven't had to deal directly with namespaces.
+>
+> mount_notify() requires you to have access to the mountpoint you want t=
+o watch
+> - and the entire tree rooted there is in one namespace, so your event s=
+ources
+> are restricted to that namespace.  Further, mount objects don't themsel=
+ves
+> have any other namespaces, not even a user_ns.
+>
+> sb_notify() requires you to have access to the superblock you want to w=
+atch.
+> superblocks aren't directly namespaced as a class, though individual
+> superblocks may participate in particular namespaces (ipc, net, etc.). =
+ I'm
+> thinking some of these should be marked unwatchable (all pseudo superbl=
+ocks,
+> kernfs-class, proc, for example).
+>
+> Superblocks, however, do each have a user_ns - but you were allowed to =
+access
+> the superblock by pathwalk, so you must have some access to the user_ns=
+ - I
+> think.
+>
+> KEYCTL_NOTIFY requires you to have View access on the key you're watchi=
+ng.
+> Currently, keys have no real namespace restrictions, though I have patc=
+hes to
+> include a namespace tag in the lookup criteria.
+>
+> block_notify() doesn't require any direct access since you're watching =
+a
+> global queue and there is no blockdev namespacing.  LSMs are given the =
+option
+> to filter events, though.  The thought here is that if you can access d=
+mesg,
+> you should be able to watch for blockdev events.
+>
+>
+> Actually, thinking further on this, restricting access to events is tri=
+ckier
+> than I thought and than perhaps Casey was suggesting.
+>
+> Say you're watching a mount object and someone in a different user_ns
+> namespace or with a different security label mounts on it.  What govern=
+s
+> whether you are allowed to see the event?
 
-Eric
-> 
-> Best regards,
-> Baolu
+Conceptually it should be simple, but we have a variety of different
+policies in the core OS, never mind what goes on inside the LSMs.
+If you want to treat a notification like a signal you would only deliver
+it if the process that performed the action that triggered the event
+has the same UID as the process receiving the notification. Should you
+decide to treat it like an IP packet only the LSMs would filter delivery.=
+
+If there are mode bits on the thing being watched shouldn't you respect
+them?
+
+> You're watching the object for changes - and it *has* changed.  Further=
+, you
+> might be able to see the result of this change by other means (/proc/mo=
+unts,
+> for instance).
+>
+> Should you be denied the event based on the security model?
+
+=46rom a subject/object model view there are two objects and one
+subject involved. The subject (active entity) is the process that
+changes the first object, triggering an event. The watching process
+(that will receive the notification) is the second object, because
+its state will change (be written to) when the notification is
+delivered. For the watching process to receive the notification
+the changing process needs write access to the watching process.
+The indirection of the notification mechanism isn't relevant.
+If the changing process couldn't directly notify the watching process
+it shouldn't be able to do it indirectly, either.
+
+> On the other hand, if you're watching a tree of mount objects, it could=
+ be
+> argued that you should be denied access to events on any mount object y=
+ou
+> can't reach by pathwalk.
+>
+> On the third hand, if you can see it in /proc/mounts or by fsinfo(), yo=
+u
+> should get an event for it.
+
+Right. We've done a pretty good job of muddling the security
+landscape by adding spiffy features to make life easier for
+particular use cases. /proc is chuck full of examples. Objects
+that can be viewed in many different ways make for confusing
+security models. Try explaining /proc/234/fd/2 to a security
+theory student.
+
+>> How are you handling namespaces then?
+> So to go back to the original question.  At the moment they haven't imp=
+inged
+> directly and I haven't had to deal with them directly.  There are indir=
+ect
+> namespace restrictions that I get for free just due to pathwalk, for in=
+stance.
+>
+> David
+
