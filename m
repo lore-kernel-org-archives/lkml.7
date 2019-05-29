@@ -2,92 +2,150 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F972424B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442E62424D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559166923;
-	bh=OhogNqWyv3ABQbRFxsFTTaHIwV9toKCK+Od3Dfj5jco=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bu9AIGgPKH239DOcMMhIa+ZiIJX91qOGTClKfi0OXVdjcjLESX6gzIG07Ywz9EYWW
-	 GVt//C19GWr4JT0uZLSfoB80rEa3mTGMpHVumIa2zdhmq4nF8n074v+eRwozHR4Fu1
-	 ED1M06LP2QCMGX24JaFZV6Wc/sae05yWQZIRb1Ic=
+	s=default; t=1559166937;
+	bh=8tg6OtL5MFGzZKrJoMJB7UCVwhRYE9ecDuehrbylaEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UdgCKGvvYNqcNZpk1NqqvdrZgXApqp679ausnrNxEzLxHklKVv2kOohHUzESDvRrp
+	 iOmET5JJGu6LcupVdywXBnPVoFksPewaqbpIDZsggZWHKeyPLikarRW1Yq9hM3l0wC
+	 c8lmhxVg1uR8rCBeIvoq8uoj6LSXcKqPxsanY6Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfE2VzW (ORCPT
+        id S1726673AbfE2Vzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38792 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 17:55:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfE2VzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:55:22 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        id S1726054AbfE2Vzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 17:55:35 -0400
+Received: from earth.universe (unknown [185.62.205.103])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CACB24249;
-        Wed, 29 May 2019 21:55:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC5D32424C;
+        Wed, 29 May 2019 21:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559166921;
-        bh=OhogNqWyv3ABQbRFxsFTTaHIwV9toKCK+Od3Dfj5jco=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bolZTDocO64fe7H42Ji8mYAT9N3CDt0wz3HI2M0r11DOpSUexO2rezhKRrkdCZeGZ
-         lIt7vsJCNrAeGKgI5ylwB0EL7ECXT1XhGQYxdzss0Inl3hUfpW2ME9A+iRONvQBJ3q
-         cgCck4vZ79HohWvdKumiKIh/6fS+/FImiCQOcoGU=
-Date:   Wed, 29 May 2019 14:55:20 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Jan Luebbe <jlu@pengutronix.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2] fs/proc: allow reporting eip/esp for all coredumping
- threads
-Message-Id: <20190529145520.c4b12290f48e46e23ac6d193@linux-foundation.org>
-In-Reply-To: <87y32p7i7a.fsf@linutronix.de>
-References: <20190522161614.628-1-jlu@pengutronix.de>
-        <875zpzif8v.fsf@linutronix.de>
-        <20190525143220.e771b7915d17f22dad1438fa@linux-foundation.org>
-        <87d0k5f1g7.fsf@linutronix.de>
-        <87y32p7i7a.fsf@linutronix.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1559166934;
+        bh=8tg6OtL5MFGzZKrJoMJB7UCVwhRYE9ecDuehrbylaEg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uhsNXG1CTmyoHxGkmUUcWP5rPoURLlTpMYJVekDNvfwdm/eOFkHvMHKeM4JjEuAc8
+         2VKe2MncqyaKKOOJHRxttOwx0NK5u7lAsgRIxwS+1YJv/JMNGUbCdeCRwMuDi2Gerj
+         Yu1KlCX5j42F2LegJ7N3zdmUXvzd52OLnb59Zrew=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 95E1A3C08D3; Wed, 29 May 2019 23:55:30 +0200 (CEST)
+Date:   Wed, 29 May 2019 23:55:30 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv6 3/4] drm/omap: add framedone interrupt support
+Message-ID: <20190529215530.mi3fjlsaziq22mw5@earth.universe>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <20190523200756.25314-4-sebastian.reichel@collabora.com>
+ <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gk4bpbyorxuwmmmt"
+Content-Disposition: inline
+In-Reply-To: <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 10:55:53 +0200 John Ogness <john.ogness@linutronix.de> wrote:
 
-> Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
-> /proc/PID/stat") stopped reporting eip/esp and commit fd7d56270b52
-> ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
-> reintroduced the feature to fix a regression with userspace core dump
-> handlers (such as minicoredumper).
-> 
-> Because PF_DUMPCORE is only set for the primary thread, this didn't fix
-> the original problem for secondary threads. Allow reporting the eip/esp
-> for all threads by checking for PF_EXITING as well. This is set for all
-> the other threads when they are killed. coredump_wait() waits for all
-> the tasks to become inactive before proceeding to invoke the core the
-> core dumper.
-> 
-> Reported-by: Jan Luebbe <jlu@pengutronix.de>
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->  This is a rework of Jan's v1 patch that allows accessing eip/esp of all
->  the threads without risk of the task still executing on a CPU.
+--gk4bpbyorxuwmmmt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Jan's patch ended up including
+Hi Tomi,
 
-Fixes: fd7d56270b526ca3 ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
-Cc: <stable@vger.kernel.org>
+On Tue, May 28, 2019 at 01:19:01PM +0300, Tomi Valkeinen wrote:
+> Hi Sebastian,
+>=20
+> On 23/05/2019 23:07, Sebastian Reichel wrote:
+>=20
+> > @@ -302,6 +328,30 @@ void omap_crtc_vblank_irq(struct drm_crtc *crtc)
+> >   	DBG("%s: apply done", omap_crtc->name);
+> >   }
+> > +void omap_crtc_framedone_irq(struct drm_crtc *crtc, uint32_t irqstatus)
+> > +{
+> > +	struct omap_crtc *omap_crtc =3D to_omap_crtc(crtc);
+> > +
+> > +	if (!omap_crtc->framedone_handler) {
+> > +		dev_warn(omap_crtc->base.dev->dev, "no framedone handler?");
+> > +		return;
+> > +	}
+>=20
+> This triggers on normal displays.
+>=20
+> FRAMEDONE is an interrupt we get when DISPC's output videoport is being
+> turned off. It's raised after the last frame has been finished (i.e. the
+> DISPC is truly done with that videoport).
+>
+> We get it for both conventional displays (when the display is turned off)
+> and for DSI command mode (when a single frame has been sent), as in both
+> cases the videoport is disabled after the operation. For conventional
+> displays, you can think FRAMEDONE as the last vsync.
 
-Are these not appropriate here?
+Ok, but it should only trigger when framedone irq is enabled. This
+commit adds the required infrastructure, but does not call=20
+omap_irq_enable_framedone() anywhere. The next commit enables it,
+but only for manually updated displays.
+
+> We also have special handling for FRAMEDONE in omap_crtc_set_enabled(),
+> which is used to get the drm driver to wait for FRAMEDONE when disabling =
+the
+> display. I wonder if this separate framedone handling might somehow confl=
+ict
+> with that code. And/or should these be somehow combined.
+
+Oh sorry, I missed the part that omap_irq_wait_init() actually
+enables the framedone irq. It should be enough to just drop the
+warning (and the curly brackets) to keep existing behaviour. The
+code exits early with the above warning for any existing code (since
+that does not register a framedone handler). DSI on the other hand
+does not reach the omap_irq_wait_init() part. Regarding combining
+the logic: I don't think there is anything to combine right now.
+It should be possible to simplify the logic after DSI has been
+converted to drm_panel style, since this will move the update logic
+for the screen content from the panel driver to DSI core.
+
+TLDR: It's enough to remove the warning. Do you need a new
+submission for this?
+
+-- Sebastian
+
+--gk4bpbyorxuwmmmt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzu/88ACgkQ2O7X88g7
++ppQsBAAoKxzg9EBL5zgLidy/H5+kl5O9fBNmxwIG1is6UEYr59RggjmuhjPrWTt
+x5PAX6d8E+wVjKftGMTPBhswhf0p2TAUbx9cmnYk4lUj0y4ldpmtIy8AlBVOIy4d
+I6KEacBFwh58XOkHhAJoQSjUpoaVAMG98bJmebk11Vo+XAB6czmihkFyaN0d8YJ/
+Sw6KRFcvJatiCUEvRFoSwE8lKiimpHW163jUiT1ChOp/F5etGMli7mMmWNGskdvk
+zM8KbbcmbV3lnyGO5xEunK7T60sWE6djb7dQokd5bTCWXvG9Pm+sB/cLkktou0KY
+jPhOdga5Pwq1rXVWgeGbz9mLiKtN0MBpNW62hso560lXJbd64a6D61FTQ6PQC/4g
+vT0eWS5e+ZrqJnC7AMyYtbCUq7LEwbMKDel0VAX0/ZHC0nMUhJ7AKVir6PeL0YoM
+mCOi8WrTGc6AIeVfVCZLv3jCf69SnjA1OKaMD63JuchgMhAQsO/sm44+YbvO7MA7
+nFzDF9CobrlVWOWAgpbKJXG1MmSzZa4wbrTdro+qV4ZqRdVMD/KVGBZViEMNBhhk
+RsdEKM+dORLozb7oavHnXPs/VrT6A67AOkNcfDTSyFhSzJKdNohF4TvEuX9GiQGa
+HE2cRWUnFIljtvyKld/yhZ2cNck8RQKOXQmXXAC4XwdA9NqMNjQ=
+=wUyO
+-----END PGP SIGNATURE-----
+
+--gk4bpbyorxuwmmmt--
