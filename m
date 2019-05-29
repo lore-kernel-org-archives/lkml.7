@@ -2,149 +2,121 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3776DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D43C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033EC23BB5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ViqyNnKa"
+	by mail.kernel.org (Postfix) with ESMTP id 97E5E23BB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559144736;
+	bh=r1khDvJXXHYH56OBNs3NXuRdIi29217+tEOioMVOG/w=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=QOvLlr0lGuBbR5FwZFKLamHdnjg1vtEzHvIWsXPwNPpuxqvpPCqnsr/zS770XKfR/
+	 S6FiCmISOQfl998N7NxIPCzSCWoQIS1PVSeIj6pkKW2MbV2nZUJKnlx5OupcBTrPzQ
+	 rL7LgssK8fwT2TEBiRlItPAkD5vpLQ6Hd5QOFtzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfE2PpN (ORCPT
+        id S1727001AbfE2Ppg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:45:13 -0400
-Received: from mail.efficios.com ([167.114.142.138]:46590 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfE2PpM (ORCPT
+        Wed, 29 May 2019 11:45:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41484 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfE2Ppf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:45:12 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5C5E520E810;
-        Wed, 29 May 2019 11:45:11 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 06Uex-ntIi6b; Wed, 29 May 2019 11:45:10 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id C762520E80B;
-        Wed, 29 May 2019 11:45:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C762520E80B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1559144710;
-        bh=Z8u/h+OkjMEmjPJ6ylYRgvClv2UsRwp41k4WjCc8j/0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=ViqyNnKao9tEaN867vuBuAYQVDaw826E1hgVaz5U8GY9XZRZMApV6dp8PUcC6qnsk
-         +o0dC6tPNyGGjG9x7qDHmlwtk9GKPP63jK+XJnsXXuFG+lfXTtIurAuphyL2PEC1si
-         rlWL8eJyrWq7eEPcITpC1O0xGLROp+sH+thw7gWpGNbfCgalOVbzJAfyN7ZASz72ZB
-         kP1lFDRCvpiVRQUNaIdpKo4dODwQcVR1bV/sdBoUJQ/mU2SlAzHIT5Vyf1qPKMUiqm
-         llCSbpGVtnQyqYP0bIKpxpLiQVlFrQGpJbFImbtRhvJbcNQXU+cBUnm7YAFgVWsYLw
-         S0TzC/XTwigbw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id D_tNcsrx8C2x; Wed, 29 May 2019 11:45:10 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id AA0FE20E7FE;
-        Wed, 29 May 2019 11:45:10 -0400 (EDT)
-Date:   Wed, 29 May 2019 11:45:10 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <20190503184219.19266-2-mathieu.desnoyers@efficios.com> <87h89gjgaf.fsf@oldenburg2.str.redhat.com> <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: 18yTu+T8PFt4cXiNhOg61XhmaTl3EWs0GkO7
+        Wed, 29 May 2019 11:45:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=rp4ARE/txgmWIiLjaBU33yEAvu9H/UEQOwbwY0L4/HM=; b=DA+VfPAveRlI
+        LGNKsUTSfU0iEQPQwALmuW0UMk0LivRlRyVDSgAJWXld4aapIZ+d/1NOLmI1/Nf0+/+YHu5EtLDea
+        D5XgzHzWShmh3QoaJicT98+He73Loh9yHwefAy3IjNck/8SPq6SAhjmCaEwpymDkYD5+PIJnxtj7A
+        4F5PM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hW0ld-00051n-Oa; Wed, 29 May 2019 15:45:29 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 3178944004A; Wed, 29 May 2019 16:45:29 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        wen.yang99@zte.com.cn
+Subject: Applied "wcd9335: fix a incorrect use of kstrndup()" to the asoc tree
+In-Reply-To: <20190529015305.GA4700@zhanggen-UX430UQ>
+X-Patchwork-Hint: ignore
+Message-Id: <20190529154529.3178944004A@finisterre.sirena.org.uk>
+Date:   Wed, 29 May 2019 16:45:29 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 27, 2019, at 3:27 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+The patch
 
-> ----- On May 27, 2019, at 7:19 AM, Florian Weimer fweimer@redhat.com wrote:
-> 
+   wcd9335: fix a incorrect use of kstrndup()
 
-[...]
+has been applied to the asoc tree at
 
->> 
->> Furthermore, the reference to ELF constructors is misleading.  I believe
->> the code you added to __libc_start_main to initialize __rseq_handled and
->> register __seq_abi with the kernel runs *after* ELF constructors have
->> executed (and not at all if the main program is written in Go, alas).
->> All initialization activity for the shared case needs to happen in
->> elf/rtld.c or called from there, probably as part of the security
->> initialization code or thereabouts.
-> 
-> in elf/rtld.c:dl_main() we have the following code:
-> 
->  /* We do not initialize any of the TLS functionality unless any of the
->     initial modules uses TLS.  This makes dynamic loading of modules with
->     TLS impossible, but to support it requires either eagerly doing setup
->     now or lazily doing it later.  Doing it now makes us incompatible with
->     an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
->     used.  Trying to do it lazily is too hairy to try when there could be
->     multiple threads (from a non-TLS-using libpthread).  */
->  bool was_tls_init_tp_called = tls_init_tp_called;
->  if (tcbp == NULL)
->    tcbp = init_tls ();
-> 
-> If I understand your point correctly, I should move the rseq_init() and
-> rseq_register_current_thread() for the SHARED case just after this
-> initialization, otherwise calling those from LIBC_START_MAIN() is too
-> late and it runs after initial modules constructors (or not at all for
-> Go). However, this means glibc will start using TLS internally. I'm
-> concerned that this is not quite in line with the above comment which
-> states that TLS is not initialized if no initial modules use TLS.
-> 
-> For the !SHARED use-case, if my understanding is correct, I should keep
-> rseq_init() and rseq_register_current_thread() calls within LIBC_START_MAIN().
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
 
-I've moved the rseq initialization for SHARED case to the very end of
-elf/rtld.c:init_tls(), and get the following error on make check:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Generating locale am_ET.UTF-8: this might take a while...
-Inconsistency detected by ld.so: get-dynamic-info.h: 143: elf_get_dynamic_info: Assertion `info[DT_FLAGS] == NULL || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0' failed!
-Charmap: "UTF-8" Inputfile: "am_ET" Outputdir: "am_ET.UTF-8" failed
-/bin/sh: 4: cannot create /home/efficios/git/glibc-build/localedata/am_ET.UTF-8/LC_CTYPE.test-result: Directory nonexistent
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This error goes away if I comment out the call to rseq_register_current_thread (),
-which touches the __rseq_abi __thread variable and issues a system call.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Currently, the __rseq_abi __thread variable is within
-sysdeps/unix/sysv/linux/rseq-sym.c, which is added to the
-sysdep_routines within sysdeps/unix/sysv/linux/Makefile. I
-suspect it may need to be moved elsewhere.
-
-Any thoughts on how to solve this ?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-Mathieu
+From a54988113985ca22e414e132054f234fc8a92604 Mon Sep 17 00:00:00 2001
+From: Gen Zhang <blackgod016574@gmail.com>
+Date: Wed, 29 May 2019 09:53:05 +0800
+Subject: [PATCH] wcd9335: fix a incorrect use of kstrndup()
 
+In wcd9335_codec_enable_dec(), 'widget_name' is allocated by kstrndup().
+However, according to doc: "Note: Use kmemdup_nul() instead if the size
+is known exactly." So we should use kmemdup_nul() here instead of
+kstrndup().
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/wcd9335.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index a04a7cedd99d..85737fe54474 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -2734,7 +2734,7 @@ static int wcd9335_codec_enable_dec(struct snd_soc_dapm_widget *w,
+ 	char *dec;
+ 	u8 hpf_coff_freq;
+ 
+-	widget_name = kstrndup(w->name, 15, GFP_KERNEL);
++	widget_name = kmemdup_nul(w->name, 15, GFP_KERNEL);
+ 	if (!widget_name)
+ 		return -ENOMEM;
+ 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.20.1
+
