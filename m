@@ -2,119 +2,147 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B11C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A0AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0D220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64942070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XQxR27+W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMu3UTNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfE2Kad (ORCPT
+        id S1726917AbfE2Kaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:30:33 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33956 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2Kad (ORCPT
+        Wed, 29 May 2019 06:30:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40800 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfE2Kaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:30:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1dAPKEgrdA77wQkAtd5gC6oh+a8AzS+LHB60Y9C2ymk=; b=XQxR27+WnVTmp5Ulgy4i5STtT
-        Tah9eldsP7kIUyYVcFMpcV2yfiLUNrTuxq7NrctEBZY/BTA5VkVO0y3AG0JU1L7l3DIUdZ0uGqe+W
-        HGj2dMWylU+fuC3tbzcuTHkxanPs5RpoOrF0KRZyUwXHA1i3y/6asMWyvb9MPjfDtrLeTYdRgat96
-        PV++Vrl5gIlZyVldbQpRWiv71ourwwNj2fyMFURDzRnQUjQ3RXsab5FDy3brTD6QFF79shi3VMh5D
-        IXzqdS1f8pqvORPrdrbvVa7LdmBiFmkwRPBPKWrz/uvWtx/hb5UMphU2JrU2FaVKbJ6TWE2pB8A7H
-        alLHgBeWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVvqV-0003TW-Mw; Wed, 29 May 2019 10:30:12 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 45FBD201A7E6D; Wed, 29 May 2019 12:30:10 +0200 (CEST)
-Date:   Wed, 29 May 2019 12:30:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH 3/3] asm-generic, x86: Add bitops instrumentation for
- KASAN
-Message-ID: <20190529103010.GP2623@hirez.programming.kicks-ass.net>
-References: <20190528163258.260144-1-elver@google.com>
- <20190528163258.260144-3-elver@google.com>
- <20190528165036.GC28492@lakrids.cambridge.arm.com>
- <CACT4Y+bV0CczjRWgHQq3kvioLaaKgN+hnYEKCe5wkbdngrm+8g@mail.gmail.com>
- <CANpmjNNtjS3fUoQ_9FQqANYS2wuJZeFRNLZUq-ku=v62GEGTig@mail.gmail.com>
- <20190529100116.GM2623@hirez.programming.kicks-ass.net>
- <CANpmjNMvwAny54udYCHfBw1+aphrQmiiTJxqDq7q=h+6fvpO4w@mail.gmail.com>
+        Wed, 29 May 2019 06:30:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g69so881350plb.7;
+        Wed, 29 May 2019 03:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=eqm2y/EYl4t9ex2ApVRgE5oPtA8beu8cf/DNbQrWYC4=;
+        b=uMu3UTNKyJbv+4as+0rx0Fi2vB4KtZcLZq5TD6/9FDRPs13p6whhNkASMmJjD6Ozb7
+         lXhyVLIo1j3zjvzxLSjkOZzArNGza7sHn9UK0KWfi50964KUPElWKYzx33u1JDcqPOVF
+         RZTY85DytWLIzMkoRfoaDvnq0lKwRX7iCNLWP9+baOTfqjvXJc6u5Fa4+VR17p7kThCZ
+         7N6y7yj/ndb9hPZ2RSui1bEQZN5uDaX93pPnFhJ6HCCzqZPkHL7gjkKdaPaTAeshvjfb
+         b8hiOAKyqBzMaAyIYXMgXIr97oY1EfFQhhyjbVr1XVCHAlavhcyQ0dpTtxU3+MgKtRf3
+         tX5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=eqm2y/EYl4t9ex2ApVRgE5oPtA8beu8cf/DNbQrWYC4=;
+        b=rhTPYxB8zjm2F1zsAMqFOX9RbP3FLsi4/ZDY1lN5purwj+sYWXD1iYcjcxyoto0rJS
+         43OaRBqHH0FumuZ4o2Wq1ZgtU5I6w2HIo4aNHF+NHbnhEFTq8pP9TLhjPkdZ5RWCxZxT
+         cDNFJTTpj2F+JhifQgry+x+Y+RT0EAm9eAgDOaFYbhwsnbjEXCXVVRL2kZSGx7H4p2Rr
+         IIk1pBmKzAqrImVkRFddbu8VMZHjSypHqqnfz1DkwvEflUGNxouyJgAR/+IEjGYco0Ym
+         qh4nQTr1zDzP68EpKKyJXMkdUrLSvbMIjtfMxkotd1hBNrhMexRZ2lHbbq/A2Yj7yA6/
+         AYkg==
+X-Gm-Message-State: APjAAAXXdgBeSA5qwTJpYanE9Bpj1a6fAvcV0nGBUwV0EAW6ArZnmnJq
+        F9N3yeDZYvZacwWIAZ2AgQ0a8UnY
+X-Google-Smtp-Source: APXvYqy4UuEQmCOIlNfSXgEQNLzqyrc/T8k26j9JHdYBHLQOWsBiZt/cus10aFbM3YVtAvOLl4GZNA==
+X-Received: by 2002:a17:902:2865:: with SMTP id e92mr29668592plb.264.1559125851418;
+        Wed, 29 May 2019 03:30:51 -0700 (PDT)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.21? ([2402:f000:1:1501:200:5efe:a66f:4715])
+        by smtp.gmail.com with ESMTPSA id t24sm20556776pfq.63.2019.05.29.03.30.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 03:30:50 -0700 (PDT)
+Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling
+ code of rtl_pci_probe()
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     pkshih@realtek.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190514123439.10524-1-baijiaju1990@gmail.com>
+ <20190528115555.301E760F3C@smtp.codeaurora.org>
+ <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <357682ba-d1ae-23b1-2372-b1a33d2ba1ac@gmail.com>
+Date:   Wed, 29 May 2019 18:30:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMvwAny54udYCHfBw1+aphrQmiiTJxqDq7q=h+6fvpO4w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 12:16:31PM +0200, Marco Elver wrote:
-> On Wed, 29 May 2019 at 12:01, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, May 29, 2019 at 11:20:17AM +0200, Marco Elver wrote:
-> > > For the default, we decided to err on the conservative side for now,
-> > > since it seems that e.g. x86 operates only on the byte the bit is on.
-> >
-> > This is not correct, see for instance set_bit():
-> >
-> > static __always_inline void
-> > set_bit(long nr, volatile unsigned long *addr)
-> > {
-> >         if (IS_IMMEDIATE(nr)) {
-> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
-> >                         : CONST_MASK_ADDR(nr, addr)
-> >                         : "iq" ((u8)CONST_MASK(nr))
-> >                         : "memory");
-> >         } else {
-> >                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> >                         : : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> >         }
-> > }
-> >
-> > That results in:
-> >
-> >         LOCK BTSQ nr, (addr)
-> >
-> > when @nr is not an immediate.
-> 
-> Thanks for the clarification. Given that arm64 already instruments
-> bitops access to whole words, and x86 may also do so for some bitops,
-> it seems fine to instrument word-sized accesses by default. Is that
-> reasonable?
 
-Eminently -- the API is defined such; for bonus points KASAN should also
-do alignment checks on atomic ops. Future hardware will #AC on unaligned
-[*] LOCK prefix instructions.
 
-(*) not entirely accurate, it will only trap when crossing a line.
-    https://lkml.kernel.org/r/1556134382-58814-1-git-send-email-fenghua.yu@intel.com
+On 2019/5/28 21:00, Larry Finger wrote:
+> On 5/28/19 6:55 AM, Kalle Valo wrote:
+>> Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+>>
+>>> *BUG 1:
+>>> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
+>>> rtl_deinit_core() in the error handling code is executed.
+>>> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
+>>> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
+>>> initialized. Thus a null-pointer dereference occurs.
+>>> The reason is that rtlpriv->scan_list.list is initialized by
+>>> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
+>>>
+>>> To fix this bug, rtl_deinit_core() should not be called when
+>>> rtlpriv->cfg->ops->init_sw_vars() fails.
+>>>
+>>> *BUG 2:
+>>> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
+>>> this function fails, and rtlpriv->scan_list.list has not been
+>>> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
+>>> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
+>>> dereference occurs due to the same reason of the above bug.
+>>>
+>>> To fix this bug, the initialization of lists in rtl_init_core() are
+>>> performed before the call to rtl_regd_init().
+>>>
+>>> These bugs are found by a runtime fuzzing tool named FIZZER written by
+>>> us.
+>>>
+>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>>
+>> Ping & Larry, is this ok to take?
+>>
+>
+> Kalle,
+>
+> Not at the moment. In reviewing the code, I was unable to see how this 
+> situation could develop, and his backtrace did not mention any rtlwifi 
+> code. For that reason, I asked him to add printk stat4ements to show 
+> the last part of rtl_pci that executed correctly. In 
+> https://marc.info/?l=linux-wireless&m=155788322631134&w=2, he promised 
+> to do that, but I have not seen the result.
+>
+
+Hi Larry,
+
+This patch is not related to the message you mentioned.
+That message is about an occasional crash that I reported.
+That crash occurred when request_irq() in rtl_pci_intr_mode_legacy() in 
+rtl_pci_intr_mode_decide() fails.
+I have added printk statements and try to reproduce and debug that 
+crash, but that crash does not always occur, and I still do not know the 
+root cause of that crash.
+
+The null-pointer dereferences fixed by this patch are different from 
+that crash, and they always occur when the related functions fail.
+So please review these null-pointer dereferences, thanks :)
+
+
+Best wishes,
+Jia-Ju Bai
+
