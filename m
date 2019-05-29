@@ -2,62 +2,108 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E64FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ED9C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C5024233
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C332423A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfE2Vta (ORCPT
+        id S1726501AbfE2Vxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:49:30 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43738 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfE2Vta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:49:30 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 780D460C;
-        Wed, 29 May 2019 21:49:29 +0000 (UTC)
-Date:   Wed, 29 May 2019 15:49:28 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masanari Iida <standby24x7@gmail.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        rdunlap@infradead.org
-Subject: Re: [PATCH] [linux-next] docs: tracing: Fix typos in histogram.rst
-Message-ID: <20190529154928.29b15e51@lwn.net>
-In-Reply-To: <20190521085525.2963c10f@gandalf.local.home>
-References: <20190521123000.24544-1-standby24x7@gmail.com>
-        <20190521085525.2963c10f@gandalf.local.home>
-Organization: LWN.net
+        Wed, 29 May 2019 17:53:30 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:58221 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfE2Vxa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 17:53:30 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 1F38E80302; Wed, 29 May 2019 23:53:18 +0200 (CEST)
+Date:   Wed, 29 May 2019 23:53:27 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190529215327.GA20914@amd>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905292223500.1962@cbobk.fhfr.pm>
+ <20190529212519.GA15104@amd>
+ <nycvar.YFH.7.76.1905292327080.1962@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1905292327080.1962@cbobk.fhfr.pm>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 08:55:25 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Tue, 21 May 2019 21:30:00 +0900
-> Masanari Iida <standby24x7@gmail.com> wrote:
-> 
-> > This patch fixes some spelling typos in histogram.rst  
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> Jon,
-> 
-> Care to take this in your tree?
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Done, thanks.
+On Wed 2019-05-29 23:27:34, Jiri Kosina wrote:
+> On Wed, 29 May 2019, Pavel Machek wrote:
+>=20
+> > > As explained in
+> > >=20
+> > > 	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+> > >=20
+> > > we always, no matter what, have to bring up x86 HT siblings during bo=
+ot at
+> > > least once in order to avoid first MCE bringing the system to its
+> > > knees.
+> >=20
+> >=20
+> > > Cc: stable@vger.kernel.org # v4.19+
+> > > Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+> > > Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+> > > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> >=20
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > But I'm less sure if this is -stable material. Is reverting
+> > 0cc3cd21657be04cb0559fe8063f2130493f92cf in -stable an option?
+>=20
+> Well, without that commit, first MCE to come kills nosmt system.
 
-jon
+=2E..which is same situation 4.9-stable and 4.14-stable lives with for a
+long long time, right?
+
+But you are right, reverting 0cc3cd21657b does not look like good
+option :-(.
+
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzu/1cACgkQMOfwapXb+vJVUgCffNI3/12a9mauuop60+FR8/z+
+MqgAn3S7yVE9nlSWs51frnsmzQ8paI+6
+=G4vF
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
