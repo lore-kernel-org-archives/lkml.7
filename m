@@ -2,172 +2,144 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BA8C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F5FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCDA23CCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKSaLVai"
+	by mail.kernel.org (Postfix) with ESMTP id B548E23CE0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfE2QFT (ORCPT
+        id S1727140AbfE2QGu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:05:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33051 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfE2QFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:05:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id w1so3065417ljw.0;
-        Wed, 29 May 2019 09:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3GGGJA3/I10hmN+FaID7oELuHlwizlwhFdAP02ZnolQ=;
-        b=mKSaLVai8fibO9xKHXtzRA7PDgGPWELFQ3E7x9Zz5tEvUAFreXll1s/5+3JW0i46wp
-         zj3796TIVoSku/Gaed0HWnuU/BgHtn4KQmUL7iMUiqk4RpEquAwKzVrJ7iRKzEh2vI4E
-         snMm3uGbiAdj6maldgD55Fagf9KcrF4rd64YueRxn5MSB0iS9BbsKWyzN9nGyXnc3zmN
-         1F10NBbNFwZwThR7f4KdP18gCSibcMvbs4bLL4D6H+8QETUTcfCZriRBitDXHjiUk54S
-         SH8AmdhJLF5qv51j7ZD/u/2DxQhkn1Yyc8DliOV32tdCjrnRwCKnrjjOU5NT6q0ljlz9
-         8PDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3GGGJA3/I10hmN+FaID7oELuHlwizlwhFdAP02ZnolQ=;
-        b=uU0+5L9sWdMndFEfcRDNi7UdyIRrCtx9ZGmlJc0x8QW9YhIXSNkY0PfDGBsQ9JtcQO
-         1sa97dJB4K1gXYVE+GF6lWhM43Z2ExeNDh6W6xVuFG+p0Schka7qOe0ybOVYLc/wLeR0
-         fmMoU2TdS/MF0S6zxbyjgXooCpvhTrgzR19W4r5Xka6WlVYAk30MuYTH/VRjhl9kALUw
-         33szW8fATD3izVPgyWRUpbEyDs8m2IGHf7MiNuB+V7BXwFLCTm52L5m308npsgmCZrfN
-         olNToH0TyMsMd4tDhEvSk9U24u3sb0PCxAr5cSoWSwanGdFk7bhwqM/48zD+LqaLkna1
-         rBzA==
-X-Gm-Message-State: APjAAAXIT3RbyT9HbknnHVWZUMAb3GEZeNmDsj4w7q5iO6YjWwuU1kaG
-        /Y8G4+5MszORzpqdoPOVDmEH0TzaXvI=
-X-Google-Smtp-Source: APXvYqzLp5xKUGGGWBXOnT/y1XSI7KgHDiukVIOqLlK45IjtJk9lqFcIiFl87qV6vYJ1UK6yLhu4fA==
-X-Received: by 2002:a2e:8583:: with SMTP id b3mr42982443lji.136.1559145916644;
-        Wed, 29 May 2019 09:05:16 -0700 (PDT)
-Received: from otyshchenko.kyiv.epam.com (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id k18sm3537179ljk.70.2019.05.29.09.05.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 29 May 2019 09:05:15 -0700 (PDT)
-From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, geert@linux-m68k.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH V6] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI is available
-Date:   Wed, 29 May 2019 19:05:00 +0300
-Message-Id: <1559145900-5757-1-git-send-email-olekstysh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 May 2019 12:06:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54926 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfE2QGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:06:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F077C30BC572;
+        Wed, 29 May 2019 16:06:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E295A7941C;
+        Wed, 29 May 2019 16:06:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190528231218.GA28384@kroah.com>
+References: <20190528231218.GA28384@kroah.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <31935.1559146000.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 29 May 2019 17:06:40 +0100
+Message-ID: <31936.1559146000@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 29 May 2019 16:06:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-If PSCI is available then most likely we are running on PSCI-enabled
-U-Boot which, we assume, has already taken care of resetting CNTVOFF
-and updating counter module before switching to non-secure mode
-and we don't need to.
+> > kref_put() could potentially add an unnecessary extra stack frame and would
+> > seem to be best avoided, though an optimising compiler ought to be able to
+> > inline if it can.
+> 
+> If kref_put() is on your fast path, you have worse problems (kfree isn't
+> fast, right?)
+> 
+> Anyway, it's an inline function, how can it add an extra stack frame?
 
-As the psci_smp_available() helper always returns false if CONFIG_SMP
-is disabled, it can't be used safely as an indicator of PSCI usage.
-For that reason, we check for the mandatory PSCI operation to be
-available.
+The call to the function pointer.  Hopefully the compiler will optimise that
+away for an inlineable function.
 
-Please note, an extra check to prevent secure_cntvoff_init() from
-being called for secondary CPUs in headsmp-apmu.S is not needed,
-as SMP code for APMU based system is not executed if PSCI is in use.
+> > Are you now on the convert all refcounts to krefs path?
+> 
+> "now"?  Remember, I wrote kref all those years ago,
 
-Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Julien Grall <julien.grall@arm.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Yes - and I thought it wasn't a good idea at the time.  But this is the first
+time you've mentioned it to me, let alone pushed to change to it, that I
+recall.
 
----
-   You can find previous discussions here:
-   [v1]  https://lkml.org/lkml/2019/4/17/810
-   [v2]  https://lkml.org/lkml/2019/5/3/338
-   [v3]  https://lkml.org/lkml/2019/5/10/415
-   [RFC] https://lkml.org/lkml/2019/5/10/473
-   [v4]  https://lkml.org/lkml/2019/5/14/550
-   [v5]  https://lkml.org/lkml/2019/5/17/219
+> everyone should use
+> it.  It saves us having to audit the same pattern over and over again.
+> And, even nicer, it uses a refcount now, and as you are trying to
+> reference count an object, it is exactly what this was written for.
+> 
+> So yes, I do think it should be used here, unless it is deemed to not
+> fit the pattern/usage model.
 
-   Changes in v2:
-      - Clarify patch subject/description
-      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
-        by using psci_smp_available()
-      - Check whether we are running on top of Xen, by using xen_domain()
+kref_put() enforces a very specific destructor signature.  I know of places
+where that doesn't work because the destructor takes more than one argument
+(granted that this is not the case here).  So why does kref_put() exist at
+all?  Why not kref_dec_and_test()?
 
-   Changes in v3:
-      - Don't check for the presence of Xen
+Why doesn't refcount_t get merged into kref, or vice versa?  Having both would
+seem redundant.
 
-   Changes in v4:
-      - Don't use psci_smp_available() helper, check for psci_ops.cpu_on
-        directly
-      - Skip updating counter module if PSCI is available
+Mind you, I've been gradually reverting atomic_t-to-refcount_t conversions
+because it seems I'm not allowed refcount_inc/dec_return() and I want to get
+at the point refcount for tracing purposes.
 
-   Changes in v5:
-      - Check for psci_ops.cpu_on if CONFIG_ARM_PSCI_FW is defined
+> > > > +module_exit(watch_queue_exit);
+> > > 
+> > > module_misc_device()?
+> > 
+> > 	warthog>git grep module_misc_device -- Documentation/
+> > 	warthog1>
+> 
+> Do I have to document all helper macros?
 
-   Changes in v6:
-      - Use reverse Xmas tree declaration order
-      - Use #ifdef instead of #if defined()
-      - Add Geert's R-b
----
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+If you add an API, documenting it is your privilege ;-)  It's an important
+test of the API - if you can't describe it, it's probably wrong.
 
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index eea60b2..9e4bc18 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-+#include <linux/psci.h>
- #include <asm/mach/arch.h>
- #include <asm/secure_cntvoff.h>
- #include "common.h"
-@@ -60,9 +61,24 @@ static unsigned int __init get_extal_freq(void)
- 
- void __init rcar_gen2_timer_init(void)
- {
-+	bool need_update = true;
- 	void __iomem *base;
- 	u32 freq;
- 
-+	/*
-+	 * If PSCI is available then most likely we are running on PSCI-enabled
-+	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-+	 * and updating counter module before switching to non-secure mode
-+	 * and we don't need to.
-+	 */
-+#ifdef CONFIG_ARM_PSCI_FW
-+	if (psci_ops.cpu_on)
-+		need_update = false;
-+#endif
-+
-+	if (need_update == false)
-+		goto skip_update;
-+
- 	secure_cntvoff_init();
- 
- 	if (of_machine_is_compatible("renesas,r8a7745") ||
-@@ -102,6 +118,7 @@ void __init rcar_gen2_timer_init(void)
- 
- 	iounmap(base);
- 
-+skip_update:
- 	of_clk_init(NULL);
- 	timer_probe();
- }
--- 
-2.7.4
+Now I will grant that you didn't add that function...
 
+> Anyway, it saves you boilerplate code, but if built in, it's at the module
+> init level, not the fs init level, like you are asking for here.  So that
+> might not work, it's your call.
+
+Actually, I probably shouldn't have a module exit function.  It can't be a
+module as it's called by core code.  I'll switch to builtin_misc_device().
+
+> And how does the tracing and perf ring buffers do this without needing
+> volatile?  Why not use the same type of interface they provide, as it's
+> always good to share code that has already had all of the nasty corner
+> cases worked out.
+
+I've no idea how trace does it - or even where - or even if.  As far as I can
+see, grepping for mmap in kernel/trace/*, there's no mmap support.
+
+Reading Documentation/trace/ring-buffer-design.txt the trace subsystem has
+some sort of transient page fifo which is a lot more complicated than what I
+want and doesn't look like it'll be mmap'able.
+
+Looking at the perf ring buffer, there appears to be a missing barrier in
+perf_aux_output_end():
+
+	rb->user_page->aux_head = rb->aux_head;
+
+should be:
+
+	smp_store_release(&rb->user_page->aux_head, rb->aux_head);
+
+It should also be using smp_load_acquire().  See
+Documentation/core-api/circular-buffers.rst
+
+And a (partial) patch has been proposed: https://lkml.org/lkml/2018/5/10/249
+
+David
