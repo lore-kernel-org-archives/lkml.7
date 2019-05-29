@@ -2,150 +2,260 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F29AC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF437C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F4E2415B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hvkcvhl5"
+	by mail.kernel.org (Postfix) with ESMTP id BDAD02415E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559161615;
+	bh=rsFLkVoc6raytro80aq+6SzVJLFKVFS7I52T1FXjiXk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FuA5+bVA+hfjmLSJavQ1ZpR4YB/Cms00GpD3PAVlQ9CuCRcXltNF3iehc7sRwMpZa
+	 Ka8Xm4m1x301lH2+LyIu3VbRD9LtE4IesAeKzZX1ousdyN/X650mrjbZcAwb6Mcl9n
+	 WUFt+2P6PvsVBQ33irSm6v4nZt/Lb79eaQFn6eDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfE2U0I (ORCPT
+        id S1726686AbfE2U0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:26:08 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:38137 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2U0G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:26:06 -0400
-Received: by mail-ua1-f66.google.com with SMTP id r19so1598649uap.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=1ST3Wiu11ivfdAEvM0Ly2pAInzScgdv/JYNtE1R9Tmw=;
-        b=Hvkcvhl5O83DvR3Z5w+npUq2XaOH0e5T7Y4TtsY60VcZ065NPPR3kIlKZon29rTSYD
-         7eO4uppCfMTiUDxe5U9/9UmoBETLTT4j4wbl7qfn7uU4El0XH8sd8sXSSh3i+ePtVfPm
-         vEqMBs8AWM0fw5Bu1oLmmwoCvHkEKvNKgcB7t0Czfh5v0jCapVVg9ZToNQJrdS7oAsHx
-         fYqJJWj38HEKsuPY4QYlk2oh1+PKmndwwUAhsIA9+VluWUfdvjCuzs6TrGgwjBQ6512G
-         /VyZA5K+gi8yFk4/1t1ISqaRHAKQG8PLwNduWaBN645MgEThjBiiL+YyXA8rAVt7h1o6
-         lOqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1ST3Wiu11ivfdAEvM0Ly2pAInzScgdv/JYNtE1R9Tmw=;
-        b=ZPLRz3QfnEjyev21YlwDSwVTQTQTdgRudXJJpBJJCq9ndhoLB6Zq3Zzb2v0aNeyI7E
-         UyxLcoVXBvf4id3R3Nac1nWKli/7dw1kTsgwFQNieUnlANMxXLVeN1SZVWabK7eVjErl
-         WjwADnneZE+lbyS1tDZyveBmQ94bqi41NM2oKtll6pIAFZgAjnJDXS9Ecn2aHl9I+m+p
-         dRTUvGfPyl8zGJ1HtUJ8wsaK1AgyKz5BQOuwT5lseZuvNio4lBexM2ysd4odoyS4Gl2J
-         xY7suxJ6fKWUV90iJbIMxGX/iNQJX9kFKVLGjTdOxrqppHSYdmEm3KAYCmEZJJzI/oQ5
-         d4Mw==
-X-Gm-Message-State: APjAAAXW/ueZwMkyh0R8cJXy7hAZFcs66R6P3XjH+iO4+xPn1F3dbza4
-        yigKGT44gFGi6SaKvgJtq7Gpqg==
-X-Google-Smtp-Source: APXvYqxY9aOuURIZ1sHkvE/NIWxwvXR+y0F7Q2SE+lU807QKHa4GSW8TKn/Q5MBJV2wxoWDCGBgXtA==
-X-Received: by 2002:ab0:5a07:: with SMTP id l7mr30621189uad.78.1559161565870;
-        Wed, 29 May 2019 13:26:05 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x71sm329206vkd.24.2019.05.29.13.26.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 13:26:05 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     axboe@kernel.dk
-Cc:     akpm@linux-foundation.org, hch@lst.de, peterz@infradead.org,
-        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] block: fix a crash in do_task_dead()
-Date:   Wed, 29 May 2019 16:25:26 -0400
-Message-Id: <1559161526-618-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 29 May 2019 16:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfE2U0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 16:26:54 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2A12415A;
+        Wed, 29 May 2019 20:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559161613;
+        bh=rsFLkVoc6raytro80aq+6SzVJLFKVFS7I52T1FXjiXk=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=SMqtu9N0xjVRmipa8gbWa2Zf/jNdoX95JZWX2ByC2M2l1bZVl1V0slgYS2TURGR99
+         UdjED6Omgx6yUYxj3daHvnCQFRz3MiWT078W/h65+IwSTjdQm0DD7SUb9RNP2MM88o
+         m7UONx+Ipwwsc82hNRUrZAVQ4oCbyKyCKe6Hvadg=
+Date:   Wed, 29 May 2019 22:26:48 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] x86/power: Fix 'nosmt' vs. hibernation triple fault during
+ resume
+In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1905292223500.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 0619317ff8ba ("block: add polled wakeup task helper")
-replaced wake_up_process() with blk_wake_io_task() in
-end_swap_bio_read() which triggers a crash when running heavy swapping
-workloads.
+From: Jiri Kosina <jkosina@suse.cz>
 
-[T114538] kernel BUG at kernel/sched/core.c:3462!
-[T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
-[T114538] Call trace:
-[T114538]  do_task_dead+0xf0/0xf8
-[T114538]  do_exit+0xd5c/0x10fc
-[T114538]  do_group_exit+0xf4/0x110
-[T114538]  get_signal+0x280/0xdd8
-[T114538]  do_notify_resume+0x720/0x968
-[T114538]  work_pending+0x8/0x10
+As explained in
 
-This is because shortly after set_special_state(TASK_DEAD),
-end_swap_bio_read() is called from an interrupt handler that revive the
-task state to TASK_RUNNING causes __schedule() to return and trip the
-BUG() later.
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
-[  C206] Call trace:
-[  C206]  dump_backtrace+0x0/0x268
-[  C206]  show_stack+0x20/0x2c
-[  C206]  dump_stack+0xb4/0x108
-[  C206]  blk_wake_io_task+0x7c/0x80
-[  C206]  end_swap_bio_read+0x22c/0x31c
-[  C206]  bio_endio+0x3d8/0x414
-[  C206]  dec_pending+0x280/0x378 [dm_mod]
-[  C206]  clone_endio+0x128/0x2ac [dm_mod]
-[  C206]  bio_endio+0x3d8/0x414
-[  C206]  blk_update_request+0x3ac/0x924
-[  C206]  scsi_end_request+0x54/0x350
-[  C206]  scsi_io_completion+0xf0/0x6f4
-[  C206]  scsi_finish_command+0x214/0x228
-[  C206]  scsi_softirq_done+0x170/0x1a4
-[  C206]  blk_done_softirq+0x100/0x194
-[  C206]  __do_softirq+0x350/0x790
-[  C206]  irq_exit+0x200/0x26c
-[  C206]  handle_IPI+0x2e8/0x514
-[  C206]  gic_handle_irq+0x224/0x228
-[  C206]  el1_irq+0xb8/0x140
-[  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
-[  C206]  do_task_dead+0x88/0xf8
-[  C206]  do_exit+0xd5c/0x10fc
-[  C206]  do_group_exit+0xf4/0x110
-[  C206]  get_signal+0x280/0xdd8
-[  C206]  do_notify_resume+0x720/0x968
-[  C206]  work_pending+0x8/0x10
+we always, no matter what, have to bring up x86 HT siblings during boot at
+least once in order to avoid first MCE bringing the system to its knees.
 
-Before the offensive commit, wake_up_process() will prevent this from
-happening by taking the pi_lock and bail out immediately if TASK_DEAD is
-set.
+That means that whenever 'nosmt' is supplied on the kernel command-line,
+all the HT siblings are as a result sitting in mwait or cpudile after
+going through the online-offline cycle at least once.
 
-if (!(p->state & TASK_NORMAL))
-	goto out;
+This causes a serious issue though when a kernel, which saw 'nosmt' on its
+commandline, is going to perform resume from hibernation: if the resume
+from the hibernated image is successful, cr3 is flipped in order to point
+to the address space of the kernel that is being resumed, which in turn
+means that all the HT siblings are all of a sudden mwaiting on address
+which is no longer valid.
 
-Fix it by calling wake_up_process() if it is in a non-task context.
+That results in triple fault shortly after cr3 is switched, and machine
+reboots.
 
-Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Fix this by always waking up all the SMT siblings before initiating the
+'restore from hibernation' process; this guarantees that all the HT
+siblings will be properly carried over to the resumed kernel waiting in
+resume_play_dead(), and acted upon accordingly afterwards, based on the
+target kernel configuration.
+Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+again in case it has SMT disabled; this means it has to online all
+the siblings when resuming (so that they come out of hlt) and offline
+them again to let them reach mwait.
+
+Cc: stable@vger.kernel.org # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 ---
- include/linux/blkdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 592669bcc536..290eb7528f54 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1803,7 +1803,7 @@ static inline void blk_wake_io_task(struct task_struct *waiter)
- 	 * that case, we don't need to signal a wakeup, it's enough to just
- 	 * mark us as RUNNING.
+v1 -> v2:
+        - restructure error handling as suggested by peterz
+        - add Rafael's ack
+
+v2 -> v3:
+	- added extra online/offline dance for nosmt case during
+	  resume, as we want the siblings to be in mwait, not hlt
+	- dropped peterz's and Rafael's acks for now due to the above
+
+ arch/x86/power/cpu.c       | 10 ++++++++++
+ arch/x86/power/hibernate.c | 33 +++++++++++++++++++++++++++++++++
+ include/linux/cpu.h        |  4 ++++
+ kernel/cpu.c               |  4 ++--
+ kernel/power/hibernate.c   |  8 ++++++++
+ 5 files changed, 57 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index a7d966964c6f..513ce09e9950 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable(void)
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
  	 */
--	if (waiter == current)
-+	if (waiter == current && in_task())
- 		__set_current_state(TASK_RUNNING);
- 	else
- 		wake_up_process(waiter);
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+index 4845b8c7be7f..fc413717a45f 100644
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -11,6 +11,7 @@
+ #include <linux/suspend.h>
+ #include <linux/scatterlist.h>
+ #include <linux/kdebug.h>
++#include <linux/cpu.h>
+ 
+ #include <crypto/hash.h>
+ 
+@@ -245,3 +246,35 @@ int relocate_restore_code(void)
+ 	__flush_tlb_all();
+ 	return 0;
+ }
++
++int arch_resume_nosmt(void)
++{
++	int ret = 0;
++	/*
++	 * We reached this while coming out of hibernation. This means
++	 * that SMT siblings are sleeping in hlt, as mwait is not safe
++	 * against control transition during resume (see comment in
++	 * hibernate_resume_nonboot_cpu_disable()).
++	 *
++	 * If the resumed kernel has SMT disabled, we have to take all the
++	 * SMT siblings out of hlt, and offline them again so that they
++	 * end up in mwait proper.
++	 *
++	 * Called with hotplug disabled.
++	 */
++	cpu_hotplug_enable();
++	if (cpu_smt_control == CPU_SMT_DISABLED ||
++			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
++		enum cpuhp_smt_control old = cpu_smt_control;
++
++		ret = cpuhp_smt_enable();
++		if (ret)
++			goto out;
++		ret = cpuhp_smt_disable(old);
++		if (ret)
++			goto out;
++	}
++out:
++	cpu_hotplug_disable();
++	return ret;
++}
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 3813fe45effd..fcb1386bb0d4 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -201,10 +201,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
++extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
++static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+ 
+ /*
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f2ef10460698..077fde6fb953 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2061,7 +2061,7 @@ static void cpuhp_online_cpu_device(unsigned int cpu)
+ 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+ }
+ 
+-static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ {
+ 	int cpu, ret = 0;
+ 
+@@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index c8c272df7154..40dadbee7aa5 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -257,6 +257,10 @@ void swsusp_show_speed(ktime_t start, ktime_t stop,
+ 		(kps % 1000) / 10);
+ }
+ 
++__weak int arch_resume_nosmt(void)
++{
++}
++
+ /**
+  * create_image - Create a hibernation image.
+  * @platform_mode: Whether or not to use the platform driver.
+@@ -324,6 +328,10 @@ static int create_image(int platform_mode)
+  Enable_cpus:
+ 	suspend_enable_secondary_cpus();
+ 
++	/* Allow architectures to do nosmt-specific post-resume dances */
++	if (!in_suspend)
++		error = arch_resume_nosmt();
++
+  Platform_finish:
+ 	platform_finish(platform_mode);
+ 
 -- 
-1.8.3.1
+Jiri Kosina
+SUSE Labs
 
