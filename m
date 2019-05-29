@@ -2,100 +2,108 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8D5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DC5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CE5242E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:07:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3qzbB1q"
+	by mail.kernel.org (Postfix) with ESMTP id 4591B2430B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559171378;
+	bh=voLiJJ+YBWkuXuOa/EV1wytC0XoJkY6LDaACMMBxoag=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IB+DE1yTnGSEdrqb1hZfltIiHXVclFgwcp+09FEQWARFvujqzzcj5WMnYjV3n2Vi3
+	 OLrTWwi6P2blWd1cg8arKo3XdLMXUi4OsX7xEv7th5rqZi9+whRkVgED/n/pDlDwBH
+	 thkuQyWVti94QMaypGD2YtvTyzH/VXY1l4JxmjmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfE2XHa (ORCPT
+        id S1726638AbfE2XJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:07:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37587 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfE2XHa (ORCPT
+        Wed, 29 May 2019 19:09:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47586 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfE2XJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:07:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e7so1217608pln.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 16:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EbuoCefVnNXOM+7/3lTJLOeEE6MIMd3tES4l4TDHW64=;
-        b=M3qzbB1qBronEk3HobFj0grL6qxn37uEHDCE23Rc9qHgtHVbbm7aetvz/fMuixWxxU
-         18ifnSGCUWmA8JSF7pqwjqGf7Vm4ytetknLeNECbQzJZYrD2xncVVlFfRqBuPK5oqm62
-         A8upO2dHAIenvci/wvlYReVClbElOEFJTes8v3rFEhQaZTzVYhOjndZWm9vBfaTQ8T+m
-         a7EWYUcaF6cDefqdDWahKl9XCxJobHvwxlTWGMR/HKk0ZUv258X+kfpede/Xg2Koc2k9
-         ID51BNwbNVj6+5jGUZJK9BwclNT+3waLnGXyFTsrp3Z7u6G/S4EOXO30iQQHIYNUeoOd
-         +Paw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EbuoCefVnNXOM+7/3lTJLOeEE6MIMd3tES4l4TDHW64=;
-        b=mK/BAHsGVLSbLrHf+3vlRpkr2hY13sYHbeBbv+XyGyEI4z6kVzT0q4CHBMgUimPuyJ
-         78KSGJR9cjl/UMfxWOEsZafjWALus088zEiOq0PptUKg2G7DB/YTe38tXFDbvMvISL91
-         f2WczsmeOQESwXcVkOZdRkn4dk634QUYlv/7pXfGr3yBUoEvSnKsf1zLL0T50CZS9Kck
-         Hs0/Y4ugz4oa6OfD/Cs9r5y9STb9Mnv7jOExOw+NqEANussOud84pne1C+Z2gUTxOzo3
-         Ee+A6PUcAKxz5v5EEus24QD9xan2ORoC+vc11Lf77rnPvH30hzJSDBxGz6COouEs8/Pl
-         kR4g==
-X-Gm-Message-State: APjAAAUqqErFW9hQdqBjjUmxqeIZQD4NoSreyJ3tcXo5PsTHhMLsN17J
-        rFdyjsKSRD891Cfl1nNEywA=
-X-Google-Smtp-Source: APXvYqyZnGjzHeeiqAw/QSIZUGr4a34eKBKdG3AsoGh8+Qmht/O/mRzd7nLEOS8kavtAfsemH3fTvQ==
-X-Received: by 2002:a17:902:b18f:: with SMTP id s15mr576136plr.44.1559171249534;
-        Wed, 29 May 2019 16:07:29 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id e6sm773276pfl.115.2019.05.29.16.07.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 16:07:28 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:06:19 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     robin.murphy@arm.com, m.szyprowski@samsung.com, vdumpa@nvidia.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, tony@atomide.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        dann.frazier@canonical.com
-Subject: Re: [PATCH v3 0/2] Optimize dma_*_from_contiguous calls
-Message-ID: <20190529230618.GC17556@Asurada-Nvidia.nvidia.com>
-References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
- <20190528060424.GA11521@lst.de>
+        Wed, 29 May 2019 19:09:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Pzy7R7NMtIp0soxdacOvAtehGecGOy+zjqDf/NYYYuQ=; b=ox5BvDxZ/jy4+sN4uLv8yqRD44
+        XESlSqsqcaZEBuY3CmAeXrFTq7oW+fwCkUQdNtbYKmx/y3rv7ROk/C6P/0D8sKTLp6+qElFtOS/j1
+        x8+xS12gxsGFcWXNWtmHr4nOomFrnXUS4LVv3Nv0w/cY/2Gx7JPe0sUmXnS9+KhpslITowcGW2l22
+        gC3R3/j5njBxKCZeBnPSYIz0uQAYS4aKUp34Yosr1udeR7gsFr5MoN0NPwlp1ZFyLKtzcLwZX1Vyf
+        ylb2X4m8uCwpZpurJDSAnh5++ME70oF5oG/EzVmWV6mMR1/5aPtu1kNGXqgh3s6ehf9JXfxZzE9sa
+        2GqMI9Rw==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW7hQ-0000lB-Fv; Wed, 29 May 2019 23:09:36 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hW7hN-0007Tl-NR; Wed, 29 May 2019 20:09:33 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 08/10] scripts/documentation-file-ref-check: teach about .txt -> .yaml renames
+Date:   Wed, 29 May 2019 20:09:30 -0300
+Message-Id: <a301b6e922407c12279d7ca51b70156673e66ddc.1559170790.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1559170790.git.mchehab+samsung@kernel.org>
+References: <cover.1559170790.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528060424.GA11521@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 08:04:24AM +0200, Christoph Hellwig wrote:
-> Thanks,
-> 
-> applied to dma-mapping for-next.
-> 
-> Can you also send a conversion of drivers/iommu/dma-iommu.c to your
-> new helpers against this tree?
-> 
-> http://git.infradead.org/users/hch/dma-mapping.git/shortlog/refs/heads/for-next
+At DT, files are being renamed to jason. Teach the script how to
+handle such renames when used in fix mode.
 
-I can. There is a reported regression with !CONFIG_DMA_CMA now
-so I will do that after a fix is merged and the whole thing is
-stable.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/documentation-file-ref-check | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-Thank you
+diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
+index 5d775ca7469b..ff16db269079 100755
+--- a/scripts/documentation-file-ref-check
++++ b/scripts/documentation-file-ref-check
+@@ -165,13 +165,22 @@ foreach my $ref (keys %broken_ref) {
+ 
+ 	# usual reason for breakage: DT file moved around
+ 	if ($ref =~ /devicetree/) {
+-		my $search = $new;
+-		$search =~ s,^.*/,,;
+-		$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
++		# usual reason for breakage: DT file renamed to .yaml
+ 		if (!$f) {
+-			# Manufacturer name may have changed
+-			$search =~ s/^.*,//;
++			my $new_ref = $ref;
++			$new_ref =~ s/\.txt$/.yaml/;
++			$f=$new_ref if (-f $new_ref);
++		}
++
++		if (!$f) {
++			my $search = $new;
++			$search =~ s,^.*/,,;
+ 			$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
++			if (!$f) {
++				# Manufacturer name may have changed
++				$search =~ s/^.*,//;
++				$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
++			}
+ 		}
+ 	}
+ 
+-- 
+2.21.0
+
