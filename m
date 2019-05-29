@@ -2,99 +2,123 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FF2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F22C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE4922ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BA822AED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559137473;
+	bh=TDyNtlz445V2KfqCvU5AeZnbIE1PFnUssf6X86CEbM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZHlqV5ftiDJh5qlBAI91BgCSQcpPglCDCju1C7W7KWLEe1WmbxbZxZ0yCT7TUPRFe
+	 r7hIysBAATEzmgATdesOn/y1Ot3ZZ8h2rLAvIsi/XumT7qDdPw2AVk1G3pfy5Ez9ah
+	 Th+imYE4EwqF92tAORqCLl7bar6nuS3zUznYICrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfE2Nnh (ORCPT
+        id S1727354AbfE2Noc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:43:37 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:48400 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfE2Nng (ORCPT
+        Wed, 29 May 2019 09:44:32 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42222 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfE2Noc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:43:36 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hVyqZ-0000lu-Gj; Wed, 29 May 2019 09:43:34 -0400
-Date:   Wed, 29 May 2019 09:42:00 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Steve Grubb <sgrubb@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Fix xoring of arch_get_random_long into crng->state array
-Message-ID: <20190529134200.GA31099@hmswarspite.think-freely.org>
-References: <20190402220025.14499-1-nhorman@tuxdriver.com>
+        Wed, 29 May 2019 09:44:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y13so2103082lfh.9;
+        Wed, 29 May 2019 06:44:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FyDp/Sea9Ytj79ykUYdPjN3F1ceX0kmZop3ND/MuQ8k=;
+        b=Ezn75/K23ZKYppz1TPsH5dr9ZLefX4v+6+1FttqhEPObxCSFV/F73dB30hx/XJYdTq
+         M6E1/yxSQkqfAGnogEbn1cZw/lqkL5RYHWu6qLwr0MKPbISxxS7ezfvI9UFkbGSrbxBM
+         qWENxt+ue9YPhi1whEWCR9svk/2pln81brry5p1UAC06E/3txFZKBCuXkKvrKwlFHjYj
+         2aUL1G5HwkIlGWx7yIB9DAMUiF7mySNxZ8udH8XPORxLt6ZGR3PFGbeudpbdwCKJkcmU
+         k98jtRk1D2YpJf7shdd3rQla0JxnW/jeymkjkPUmZWZ50F5oU3LNubq+azzKikYPIskB
+         k5xA==
+X-Gm-Message-State: APjAAAUNKPsbygRx5aep6544KDqEvRtdGKjLLFpn5uh8juV4QB7cPC/n
+        GZvRi9LOZzubNcbCKNqIhfM=
+X-Google-Smtp-Source: APXvYqyRdWhNSYk7M2iTK+aQ8Fl6loE39UE8WgE0C4Ft4MsJbrZrFuqdmPun7lzQzXH0UPfHycNM2A==
+X-Received: by 2002:ac2:494f:: with SMTP id o15mr4449106lfi.22.1559137470075;
+        Wed, 29 May 2019 06:44:30 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id p5sm3434957lfc.80.2019.05.29.06.44.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:44:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hVysd-00084k-KS; Wed, 29 May 2019 15:44:35 +0200
+Date:   Wed, 29 May 2019 15:44:35 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 1/2 v3] serial: mctrl_gpio: Check if GPIO property
+ exisits before requesting it
+Message-ID: <20190529134435.GR568@localhost>
+References: <20190527111805.876-1-sr@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402220025.14499-1-nhorman@tuxdriver.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190527111805.876-1-sr@denx.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 06:00:25PM -0400, Neil Horman wrote:
-> When _crng_extract is called, any arch that has a registered
-> arch_get_random_long method, attempts to mix an unsigned long value into
-> the crng->state buffer, it only mixes in 32 of the 64 bits available,
-> because the state buffer is an array of u32 values, even though 2 u32
-> are expected to be filled (owing to the fact that it expects indexes 14
-> and 15 to be filled).
-> 
-> Bring the expected behavior into alignment by casting index 14 to an
-> unsignled long pointer, and xoring that in instead.
-> 
-> Tested successfully by myself
-> 
-> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> Reported-by: Steve Grubb <sgrubb@redhat.com>
-> CC: "Theodore Ts'o" <tytso@mit.edu>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Mon, May 27, 2019 at 01:18:04PM +0200, Stefan Roese wrote:
+> This patch adds a check for the GPIOs property existence, before the
+> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+> support is added (2nd patch in this patch series) on x86 platforms using
+> ACPI.
+
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
 > ---
->  drivers/char/random.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> v3:
+> - No change
 > 
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index 38c6d1af6d1c..8178618458ac 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -975,14 +975,16 @@ static void _extract_crng(struct crng_state *crng,
->  			  __u8 out[CHACHA_BLOCK_SIZE])
->  {
->  	unsigned long v, flags;
-> -
-> +	unsigned long *archrnd;
->  	if (crng_ready() &&
->  	    (time_after(crng_global_init_time, crng->init_time) ||
->  	     time_after(jiffies, crng->init_time + CRNG_RESEED_INTERVAL)))
->  		crng_reseed(crng, crng == &primary_crng ? &input_pool : NULL);
->  	spin_lock_irqsave(&crng->lock, flags);
-> -	if (arch_get_random_long(&v))
-> -		crng->state[14] ^= v;
-> +	if (arch_get_random_long(&v)) {
-> +		archrnd = (unsigned long *)&crng->state[14];
-> +		*archrnd ^= v;
-> +	}
->  	chacha20_block(&crng->state[0], out);
->  	if (crng->state[12] == 0)
->  		crng->state[13]++;
-> -- 
-> 2.20.1
+> v2:
+> - Include the problem description and analysis from Mika into the commit
+>   text, as suggested by Greg.
 > 
+>  drivers/tty/serial/serial_mctrl_gpio.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 39ed56214cd3..cac50b20a119 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -116,6 +116,13 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+>  
+>  	for (i = 0; i < UART_GPIO_MAX; i++) {
+>  		enum gpiod_flags flags;
+> +		char *gpio_str;
+> +
+> +		/* Check if GPIO property exists and continue if not */
+> +		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+> +				     mctrl_gpios_desc[i].name);
 
-Ping, Arnd, Ted, Greg, any comment here?
-Neil
+Where's the corresponding kfree?
 
+> +		if (!device_property_present(dev, gpio_str))
+> +			continue;
+>  
+>  		if (mctrl_gpios_desc[i].dir_out)
+>  			flags = GPIOD_OUT_LOW;
+
+Johan
