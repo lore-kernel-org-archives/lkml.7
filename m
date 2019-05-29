@@ -2,175 +2,372 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2789C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B9EC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FCD2411C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB04624124
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B8qh1Ld1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lZClLD4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfE2UDZ (ORCPT
+        id S1726438AbfE2UKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:03:25 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37707 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2UDZ (ORCPT
+        Wed, 29 May 2019 16:10:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44849 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfE2UKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:03:25 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i4so2747127oih.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:03:24 -0700 (PDT)
+        Wed, 29 May 2019 16:10:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so2320590pfo.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:10:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wGYaW+Hbd7AIoyclHFi63uNBzsUxP8AhdA4OguMOUvU=;
-        b=B8qh1Ld1yMoWv42IjspSyHyrdNKC/Oak8TrNecsHfG/hEFJqdhKoXaNDznyMAbR8TY
-         JDudaudBS400/nz0t2T89CvhNY7aY48OZ92qeMBJ2L4TrkqBWlsOa7qb8O6EAmyizV/w
-         h5/z2hq1cYpvnFgrT69H3jABNHO1ao+JnuspAqa7ayvj56s9jXAt3TxfO3PU0pVarzNR
-         b3kt9GEmlrh9w000Qg3vprCJNFsmy4fHFQHaTcAXpOPZQwK+uH/mv99EEI5hOTSNfaJE
-         uxLWN2jt7vTQhYuPaCiuJ8fFW6Y8JCBUMdOJppnbQMSCuxX7rGB2slGjawAtJHnDCihn
-         8D6Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4tO49DCZiMUuRTyd+RB4sj1Pf9UNQPKfv9m6vwCN9bU=;
+        b=lZClLD4C5PJCN/fAXazHH9tFux7V7osICYTD415D0JHAHk0wYmLL0BNiWP2GXwT2jO
+         iJp3k2hMYmE015ugulaI/SgLfdBc+b7Ih3aLb8qGzEGNW1C7RUJZUITdm8wIg0lnn62N
+         UjssZpDlWyvPgk7k0JOYPvkBQgpbe6QGWgOn0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wGYaW+Hbd7AIoyclHFi63uNBzsUxP8AhdA4OguMOUvU=;
-        b=a9HbtDuf8YTrX98R7QZzqTin6qVSrBBNtta4QJtXtZnThoKezkJOZ15zIR4kq161UH
-         At/x6iYs3xEaWvwRIe4AOUqRxuooH76cjcdSQ+4XYd2egcu8ZNuYU+/RlE+aH8utW+yN
-         Rd4aQkGI4QlAf2iUAdPHiXYC08ukQefz6jpQdrLYhFjEu6k6oyTEyXrVzDoDJF2cedFv
-         8f6FHQSLK/mSshPgdF4OD1KbZpd8ljCQ8BaPBzHN2hIWanZNOg2kDWlshu4qQpC0XUMu
-         moc4BzVyw5eCA2GFWHKo6u/zcxa+Yzq84NGSQYXNMUjmeZ8aGHdJ+B3ADjqoRwrhCUqE
-         q3bw==
-X-Gm-Message-State: APjAAAX8QaTEjHOiCAQXtvbjyywI8kU48k7O0WkyHH93K1Wx0O0f46ru
-        BcuJ5r+ZP1+FBqqfMfmCFFXusKwvY2fBWxJHDlYylg==
-X-Google-Smtp-Source: APXvYqz/ZWCizrBFHM4Cq1/ncU1oZvTHMFn6u0WZv6z/Jxsk+gNST636u5zULqKhQ67c/cd+0e4ZjxI0UTLTyU4JRZ8=
-X-Received: by 2002:aca:ec0f:: with SMTP id k15mr21599oih.43.1559160199272;
- Wed, 29 May 2019 13:03:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4tO49DCZiMUuRTyd+RB4sj1Pf9UNQPKfv9m6vwCN9bU=;
+        b=meyVGP/eLC8O/35Xw2bqGDzBMYVj+THev3l9POY+ga41EA+fVPitQQJ5IrIPnLH423
+         T+uCY0NF1QxfGQKT6wCksQD+JcBTauBUAoop7OWD5LqVHQVApS2RLZbH945Fy796O3fn
+         T42FO/q1+O4LUEVSCTya3O8eeTPsAfjzI4dON98cBZ0oxOtNtzvsSuPM1ZRkD0tefRxj
+         whBLjqJL4ebvK/GbGwt3vpgsRLjLN/Zchvooi2fp4UQLTc4BNeKaCViYFDPlcm39OY+J
+         bpC3aTVkVOm5IUJJ7vMThCIJQBAnXjjBy8gkJ3ce9zim9pkIJRhxGgywTat/Ybjpq/Vm
+         EIMw==
+X-Gm-Message-State: APjAAAWAbiD+x4VR4w4LvuTbWRtn2FyKx8buEb5zddly4vuDQ7L0LSkH
+        uBfAlyduDlb125jqeeLkJuRCLg==
+X-Google-Smtp-Source: APXvYqzGkzotfqRqlViLgd17DR1DtrVmfgKSVcRWSDYtwWcN+yj4Gv1oMUrd81n+gHG7RpUcJbaPsA==
+X-Received: by 2002:a63:9d8d:: with SMTP id i135mr140578933pgd.245.1559160636677;
+        Wed, 29 May 2019 13:10:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g8sm432758pjp.17.2019.05.29.13.10.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 13:10:35 -0700 (PDT)
+Date:   Wed, 29 May 2019 13:10:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v4 04/14] arm64, mm: Move generic mmap layout functions
+ to mm
+Message-ID: <201905291310.D7E954C95B@keescook>
+References: <20190526134746.9315-1-alex@ghiti.fr>
+ <20190526134746.9315-5-alex@ghiti.fr>
 MIME-Version: 1.0
-References: <20190524010117.225219-1-saravanak@google.com> <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
-In-Reply-To: <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 29 May 2019 13:02:43 -0700
-Message-ID: <CAGETcx-xWt50zb0JQrDRpqxL8i-PAV4j4_rPLFrJantuyxAxnw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190526134746.9315-5-alex@ghiti.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sending again because email client somehow reverted to HTML.
-Frank, Rob, Mark,
+On Sun, May 26, 2019 at 09:47:36AM -0400, Alexandre Ghiti wrote:
+> arm64 handles top-down mmap layout in a way that can be easily reused
+> by other architectures, so make it available in mm.
+> It then introduces a new config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> that can be set by other architectures to benefit from those functions.
+> Note that this new config depends on MMU being enabled, if selected
+> without MMU support, a warning will be thrown.
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Gentle reminder. I've replied to your emails spread across the
-different patches in the series. Hoping they address your questions
-and concerns. Please let me know what you think.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Thanks,
-Saravana
+-Kees
 
+> ---
+>  arch/Kconfig                       | 10 ++++
+>  arch/arm64/Kconfig                 |  1 +
+>  arch/arm64/include/asm/processor.h |  2 -
+>  arch/arm64/mm/mmap.c               | 76 -----------------------------
+>  kernel/sysctl.c                    |  6 ++-
+>  mm/util.c                          | 78 +++++++++++++++++++++++++++++-
+>  6 files changed, 92 insertions(+), 81 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c47b328eada0..df3ab04270fa 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -701,6 +701,16 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
+>  	  and vice-versa 32-bit applications to call 64-bit mmap().
+>  	  Required for applications doing different bitness syscalls.
+>  
+> +# This allows to use a set of generic functions to determine mmap base
+> +# address by giving priority to top-down scheme only if the process
+> +# is not in legacy mode (compat task, unlimited stack size or
+> +# sysctl_legacy_va_layout).
+> +# Architecture that selects this option can provide its own version of:
+> +# - STACK_RND_MASK
+> +config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> +	bool
+> +	depends on MMU
+> +
+>  config HAVE_COPY_THREAD_TLS
+>  	bool
+>  	help
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 4780eb7af842..3d754c19c11e 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -69,6 +69,7 @@ config ARM64
+>  	select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
+>  	select ARCH_SUPPORTS_NUMA_BALANCING
+>  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
+> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+>  	select ARCH_WANT_FRAME_POINTERS
+>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
+>  	select ARM_AMBA
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index fcd0e691b1ea..3bd818edf319 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -282,8 +282,6 @@ static inline void spin_lock_prefetch(const void *ptr)
+>  		     "nop") : : "p" (ptr));
+>  }
+>  
+> -#define HAVE_ARCH_PICK_MMAP_LAYOUT
+> -
+>  #endif
+>  
+>  extern unsigned long __ro_after_init signal_minsigstksz; /* sigframe size */
+> diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
+> index ac89686c4af8..c74224421216 100644
+> --- a/arch/arm64/mm/mmap.c
+> +++ b/arch/arm64/mm/mmap.c
+> @@ -31,82 +31,6 @@
+>  
+>  #include <asm/cputype.h>
+>  
+> -/*
+> - * Leave enough space between the mmap area and the stack to honour ulimit in
+> - * the face of randomisation.
+> - */
+> -#define MIN_GAP (SZ_128M)
+> -#define MAX_GAP	(STACK_TOP/6*5)
+> -
+> -static int mmap_is_legacy(struct rlimit *rlim_stack)
+> -{
+> -	if (current->personality & ADDR_COMPAT_LAYOUT)
+> -		return 1;
+> -
+> -	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+> -		return 1;
+> -
+> -	return sysctl_legacy_va_layout;
+> -}
+> -
+> -unsigned long arch_mmap_rnd(void)
+> -{
+> -	unsigned long rnd;
+> -
+> -#ifdef CONFIG_COMPAT
+> -	if (is_compat_task())
+> -		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+> -	else
+> -#endif
+> -		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+> -	return rnd << PAGE_SHIFT;
+> -}
+> -
+> -static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+> -{
+> -	unsigned long gap = rlim_stack->rlim_cur;
+> -	unsigned long pad = stack_guard_gap;
+> -
+> -	/* Account for stack randomization if necessary */
+> -	if (current->flags & PF_RANDOMIZE)
+> -		pad += (STACK_RND_MASK << PAGE_SHIFT);
+> -
+> -	/* Values close to RLIM_INFINITY can overflow. */
+> -	if (gap + pad > gap)
+> -		gap += pad;
+> -
+> -	if (gap < MIN_GAP)
+> -		gap = MIN_GAP;
+> -	else if (gap > MAX_GAP)
+> -		gap = MAX_GAP;
+> -
+> -	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+> -}
+> -
+> -/*
+> - * This function, called very early during the creation of a new process VM
+> - * image, sets up which VM layout function to use:
+> - */
+> -void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+> -{
+> -	unsigned long random_factor = 0UL;
+> -
+> -	if (current->flags & PF_RANDOMIZE)
+> -		random_factor = arch_mmap_rnd();
+> -
+> -	/*
+> -	 * Fall back to the standard layout if the personality bit is set, or
+> -	 * if the expected stack growth is unlimited:
+> -	 */
+> -	if (mmap_is_legacy(rlim_stack)) {
+> -		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+> -		mm->get_unmapped_area = arch_get_unmapped_area;
+> -	} else {
+> -		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+> -		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+> -	}
+> -}
+> -
+>  /*
+>   * You really shouldn't be using read() or write() on /dev/mem.  This might go
+>   * away in the future.
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 943c89178e3d..aebd03cc4b65 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -271,7 +271,8 @@ extern struct ctl_table epoll_table[];
+>  extern struct ctl_table firmware_config_table[];
+>  #endif
+>  
+> -#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
+> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+> +    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>  int sysctl_legacy_va_layout;
+>  #endif
+>  
+> @@ -1566,7 +1567,8 @@ static struct ctl_table vm_table[] = {
+>  		.proc_handler	= proc_dointvec,
+>  		.extra1		= &zero,
+>  	},
+> -#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
+> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+> +    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>  	{
+>  		.procname	= "legacy_va_layout",
+>  		.data		= &sysctl_legacy_va_layout,
+> diff --git a/mm/util.c b/mm/util.c
+> index dab33b896146..717f5d75c16e 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -15,7 +15,12 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/userfaultfd_k.h>
+>  #include <linux/elf.h>
+> +#include <linux/elf-randomize.h>
+> +#include <linux/personality.h>
+>  #include <linux/random.h>
+> +#include <linux/processor.h>
+> +#include <linux/sizes.h>
+> +#include <linux/compat.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -313,7 +318,78 @@ unsigned long randomize_stack_top(unsigned long stack_top)
+>  #endif
+>  }
+>  
+> -#if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
+> +#ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> +#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
+> +unsigned long arch_mmap_rnd(void)
+> +{
+> +	unsigned long rnd;
+> +
+> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+> +	if (is_compat_task())
+> +		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+> +	else
+> +#endif /* CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS */
+> +		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+> +
+> +	return rnd << PAGE_SHIFT;
+> +}
+> +#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
+> +
+> +static int mmap_is_legacy(struct rlimit *rlim_stack)
+> +{
+> +	if (current->personality & ADDR_COMPAT_LAYOUT)
+> +		return 1;
+> +
+> +	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+> +		return 1;
+> +
+> +	return sysctl_legacy_va_layout;
+> +}
+> +
+> +/*
+> + * Leave enough space between the mmap area and the stack to honour ulimit in
+> + * the face of randomisation.
+> + */
+> +#define MIN_GAP		(SZ_128M)
+> +#define MAX_GAP		(STACK_TOP / 6 * 5)
+> +
+> +static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+> +{
+> +	unsigned long gap = rlim_stack->rlim_cur;
+> +	unsigned long pad = stack_guard_gap;
+> +
+> +	/* Account for stack randomization if necessary */
+> +	if (current->flags & PF_RANDOMIZE)
+> +		pad += (STACK_RND_MASK << PAGE_SHIFT);
+> +
+> +	/* Values close to RLIM_INFINITY can overflow. */
+> +	if (gap + pad > gap)
+> +		gap += pad;
+> +
+> +	if (gap < MIN_GAP)
+> +		gap = MIN_GAP;
+> +	else if (gap > MAX_GAP)
+> +		gap = MAX_GAP;
+> +
+> +	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+> +}
+> +
+> +void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+> +{
+> +	unsigned long random_factor = 0UL;
+> +
+> +	if (current->flags & PF_RANDOMIZE)
+> +		random_factor = arch_mmap_rnd();
+> +
+> +	if (mmap_is_legacy(rlim_stack)) {
+> +		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+> +		mm->get_unmapped_area = arch_get_unmapped_area;
+> +	} else {
+> +		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+> +		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+> +	}
+> +}
+> +#elif defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
+>  void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+>  {
+>  	mm->mmap_base = TASK_UNMAPPED_BASE;
+> -- 
+> 2.20.1
+> 
 
-On Wed, May 29, 2019 at 1:00 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Frank, Rob, Mark,
->
-> Gentle reminder. I've replied to your emails spread across the different patches in the series. Hoping they address your questions and concerns. Please let me know what you think.
->
-> Thanks,
-> Saravana
->
-> On Thu, May 23, 2019 at 6:01 PM Saravana Kannan <saravanak@google.com> wrote:
->>
->> Add a generic "depends-on" property that allows specifying mandatory
->> functional dependencies between devices. Add device-links after the
->> devices are created (but before they are probed) by looking at this
->> "depends-on" property.
->>
->> This property is used instead of existing DT properties that specify
->> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
->> is because not all resources referred to by existing DT properties are
->> mandatory functional dependencies. Some devices/drivers might be able
->> to operate with reduced functionality when some of the resources
->> aren't available. For example, a device could operate in polling mode
->> if no IRQ is available, a device could skip doing power management if
->> clock or voltage control isn't available and they are left on, etc.
->>
->> So, adding mandatory functional dependency links between devices by
->> looking at referred phandles in DT properties won't work as it would
->> prevent probing devices that could be probed. By having an explicit
->> depends-on property, we can handle these cases correctly.
->>
->> Having functional dependencies explicitly called out in DT and
->> automatically added before the devices are probed, provides the
->> following benefits:
->>
->> - Optimizes device probe order and avoids the useless work of
->>   attempting probes of devices that will not probe successfully
->>   (because their suppliers aren't present or haven't probed yet).
->>
->>   For example, in a commonly available mobile SoC, registering just
->>   one consumer device's driver at an initcall level earlier than the
->>   supplier device's driver causes 11 failed probe attempts before the
->>   consumer device probes successfully. This was with a kernel with all
->>   the drivers statically compiled in. This problem gets a lot worse if
->>   all the drivers are loaded as modules without direct symbol
->>   dependencies.
->>
->> - Supplier devices like clock providers, regulators providers, etc
->>   need to keep the resources they provide active and at a particular
->>   state(s) during boot up even if their current set of consumers don't
->>   request the resource to be active. This is because the rest of the
->>   consumers might not have probed yet and turning off the resource
->>   before all the consumers have probed could lead to a hang or
->>   undesired user experience.
->>
->>   Some frameworks (Eg: regulator) handle this today by turning off
->>   "unused" resources at late_initcall_sync and hoping all the devices
->>   have probed by then. This is not a valid assumption for systems with
->>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>   this due to the lack of a clear signal for when they can turn off
->>   resources. This leads to downstream hacks to handle cases like this
->>   that can easily be solved in the upstream kernel.
->>
->>   By linking devices before they are probed, we give suppliers a clear
->>   count of the number of dependent consumers. Once all of the
->>   consumers are active, the suppliers can turn off the unused
->>   resources without making assumptions about the number of consumers.
->>
->> By default we just add device-links to track "driver presence" (probe
->> succeeded) of the supplier device. If any other functionality provided
->> by device-links are needed, it is left to the consumer/supplier
->> devices to change the link when they probe.
->>
->>
->> Saravana Kannan (5):
->>   of/platform: Speed up of_find_device_by_node()
->>   driver core: Add device links support for pending links to suppliers
->>   dt-bindings: Add depends-on property
->>   of/platform: Add functional dependency link from "depends-on" property
->>   driver core: Add sync_state driver/bus callback
->>
->>  .../devicetree/bindings/depends-on.txt        |  26 +++++
->>  drivers/base/core.c                           | 106 ++++++++++++++++++
->>  drivers/of/platform.c                         |  75 ++++++++++++-
->>  include/linux/device.h                        |  24 ++++
->>  include/linux/of.h                            |   3 +
->>  5 files changed, 233 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
->>
->> --
->> 2.22.0.rc1.257.g3120a18244-goog
->>
+-- 
+Kees Cook
