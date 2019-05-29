@@ -2,96 +2,78 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B399C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F56C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630F8227BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA5A229EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UitTYw7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfE2Nlt (ORCPT
+        id S1727347AbfE2NmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:41:49 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41768 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfE2Nlt (ORCPT
+        Wed, 29 May 2019 09:42:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39738 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfE2NmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:41:49 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m18so1449664qki.8;
-        Wed, 29 May 2019 06:41:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B4Hu2BykjV2XUgQjXYreykG9CRGtaQihhtWlraD16NE=;
-        b=sl4DM5ZdnaEZ7230fYjDZKFkNHlXI2r1MHAbH/EzdU4PTZaFWfnRXcbUxeHsZUrOWr
-         eg3HmJaxtFeFVEfNEbwz+Vfuy2iZbcNM09i33cxV4P+uR8/fQji3bDwDQNzFAgfHW8tc
-         zSxfK2Cdhi9KbsqPUpOPKzmFZv2OO6wJRgY8dN90EuR3MzbO3J3RrHemZ+Gh7HTFoN3D
-         30W/kXjEqFGxkhE/cYqneBhjQ3KX+Lrbf0O/fi7O06T7lxcaKpwR0Yn0nfKFLRWHpOp+
-         TYGbBNJmHrX5zAtsn1UrIrxfsOwqyK7ZoO1xMMLDOY7LbZuT/ltL7HI+4LD+aefmYehj
-         8GmQ==
-X-Gm-Message-State: APjAAAUhzCfy010lSBqK1n8hFlt+KWriO7ZKizIpYvSJAKISEOWqQIsM
-        DpQiHDcqaxTLAoHWjAL5hRUc013QGXt9mn+g6IE=
-X-Google-Smtp-Source: APXvYqwI32DYHBzUvKVuPe+aOANmgUoQBTNNnfm9jjZUjMGmB4YKECE25ibchquT1Q2cVjHAmLwbc+ySXwB2JGCPHNI=
-X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr80895478qkk.182.1559137308118;
- Wed, 29 May 2019 06:41:48 -0700 (PDT)
+        Wed, 29 May 2019 09:42:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=10Sgr4KoOvxj5IRiocrEj1QA9w+FzRZ30VNM6K3+zD4=; b=UitTYw7U2uWW2cHi64yEuejtX
+        4R+jVh2r4FK0YjiPB62XRVxFNFpvCiYGj1ZxrsXXvv08ZneciW6FAaR+eKuqWGciqqulGYiBi8vxB
+        wXKZZCIkcvMvnvAZnGUjq/TLLA1ANy0nL8/h1cDatE2wi1w7FktHa11xfCDDNLyxC85/wxjbyU5md
+        LzcsHV/fba8ydkl7mXrFsLT6j4mRNYYXDbNKoS9nAtRCTYzdQ/eltfaG7CigapT4R5vsdNQM3MTYW
+        fSZAEXuODNB4gRoPcYnIRRRCeQQ9bC8GwtdGYTIxSCS6T3KHf60/CAOGxzJ+Y56O+YXj8GKLaCmKs
+        yuxzlVYCA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVyq2-0002Ct-Iu; Wed, 29 May 2019 13:41:54 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BB12A201D5AB1; Wed, 29 May 2019 15:41:52 +0200 (CEST)
+Date:   Wed, 29 May 2019 15:41:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Matt Helsley <mhelsley@vmware.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 00/13] Cleanup recordmcount and begin objtool
+ conversion
+Message-ID: <20190529134152.GX2623@hirez.programming.kicks-ass.net>
+References: <cover.1558569448.git.mhelsley@vmware.com>
+ <20190528144328.6wygc2ofk5oaggaf@treble>
 MIME-Version: 1.0
-References: <20190524201817.16509-1-jannh@google.com> <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
- <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
- <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org> <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
- <889fc718-b662-8235-5d60-9d330e77cf18@linux-m68k.org>
-In-Reply-To: <889fc718-b662-8235-5d60-9d330e77cf18@linux-m68k.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 May 2019 15:41:31 +0200
-Message-ID: <CAK8P3a0zj126XSGjMbiDJDkY8sF+6JNWH0VsJEUAga6OGHV0vg@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-To:     Greg Ungerer <gregungerer00@gmail.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sergei Poselenov <sposelenov@emcraft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528144328.6wygc2ofk5oaggaf@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 2:29 PM Greg Ungerer <gregungerer00@gmail.com> wrote:
-> On 29/5/19 10:05 pm, Arnd Bergmann wrote:
-> > On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> >> On 27/5/19 11:38 pm, Jann Horn wrote:
-> >>> On Sat, May 25, 2019 at 11:43 PM Andrew Morton
-> >>> <akpm@linux-foundation.org> wrote:
-> >>> Maybe... but I didn't want to rip it out without having one of the
-> >>> maintainers confirm that this really isn't likely to be used anymore.
-> >>
-> >> I have not used shared libraries on m68k non-mmu setups for
-> >> a very long time. At least 10 years I would think.
-> >
-> > I think Emcraft have a significant customer base running ARM NOMMU
-> > Linux, I wonder whether they would have run into this (adding
-> > Sergei to Cc).
-> > My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
-> >
-> > The only architectures I see that enable binfmt-flat are sh, xtensa
-> > and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
->
-> m68k uses enables it too. It is the only binary format supported
-> when running no-mmu on m68k. (You can use it with MMU enabled too
-> if you really want too).
+On Tue, May 28, 2019 at 09:43:28AM -0500, Josh Poimboeuf wrote:
+> Would it be feasible to eventually combine subcommands so that objtool
+> could do both ORC and mcount generation in a single invocation?  I
+> wonder what what the interface would look like.
 
-My mistake, I meant to write 'the only architectures /other than m68k/",
-which you had already mentioned above.
+objtool orc+mcount ?
 
-    Arnd
+That is, have '+' be a separator for cmd thingies. That would of course
+require all other arguments to be shared between all commands, which is
+currently already so, but I've not checked the mcount patches.
+
+Alternatively, we ditch the command thing entirely and live off of pure
+flags:
+
+ 'o', "orc", "Generate ORC data"
+ 'c', "mcount', "Generate mcount() location data"
