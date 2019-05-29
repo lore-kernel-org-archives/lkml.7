@@ -2,102 +2,162 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B294C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA956C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02DA208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69092075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfE2KMg (ORCPT
+        id S1726795AbfE2KNu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:12:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42654 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfE2KMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:12:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AAC4341;
-        Wed, 29 May 2019 03:12:33 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 536243F59C;
-        Wed, 29 May 2019 03:12:31 -0700 (PDT)
-Date:   Wed, 29 May 2019 11:11:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
-        mpe@ellerman.id.au
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190529101135.GA31777@lakrids.cambridge.arm.com>
-References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
- <20190528140103.GT2623@hirez.programming.kicks-ass.net>
- <20190528153224.GE20758@fuggles.cambridge.arm.com>
- <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+        Wed, 29 May 2019 06:13:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16575 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfE2KNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:13:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 03:13:49 -0700
+X-ExtLoop1: 1
+Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
+  by orsmga003.jf.intel.com with ESMTP; 29 May 2019 03:13:45 -0700
+Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
+ irsmsx110.ger.corp.intel.com (163.33.3.25) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 29 May 2019 11:13:43 +0100
+Received: from irsmsx102.ger.corp.intel.com ([169.254.2.108]) by
+ irsmsx155.ger.corp.intel.com ([169.254.14.127]) with mapi id 14.03.0415.000;
+ Wed, 29 May 2019 11:13:43 +0100
+From:   "Reshetova, Elena" <elena.reshetova@intel.com>
+To:     Theodore Ts'o <tytso@mit.edu>
+CC:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        "Eric Biggers" <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
+ syscall
+Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CAABf/AIAAAvkAgAGZnrD///dzgIAHjbaA///31ICAAC4VAIABBxmAgAAfuaCAAA5FAIAED8OAgAAYaYCAAINWgIAAbRaAgBjvMfCAACWEgIABZK1g
+Date:   Wed, 29 May 2019 10:13:43 +0000
+Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4CABA56@IRSMSX102.ger.corp.intel.com>
+References: <20190508113239.GA33324@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
+ <20190509055915.GA58462@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
+ <20190509084352.GA96236@gmail.com>
+ <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
+ <201905111703.5998DF5F@keescook> <20190512080245.GA7827@gmail.com>
+ <201905120705.4F27DF3244@keescook>
+ <2236FBA76BA1254E88B949DDB74E612BA4CA8DBF@IRSMSX102.ger.corp.intel.com>
+ <20190528133347.GD19149@mit.edu>
+In-Reply-To: <20190528133347.GD19149@mit.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.182]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528173228.GW2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 07:32:28PM +0200, Peter Zijlstra wrote:
-> On Tue, May 28, 2019 at 04:32:24PM +0100, Will Deacon wrote:
-> > On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
-> > > On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
-> > > > When a kthread calls call_usermodehelper() the steps are:
-> > > >   1. allocate current->mm
-> > > >   2. load_elf_binary()
-> > > >   3. populate current->thread.regs
-> > > > 
-> > > > While doing this, interrupts are not disabled. If there is a perf
-> > > > interrupt in the middle of this process (i.e. step 1 has completed
-> > > > but not yet reached to step 3) and if perf tries to read userspace
-> > > > regs, kernel oops.
-> > 
-> > This seems to be because pt_regs(current) gives NULL for kthreads on Power.
+> I confess I've kind of lost the plot on the performance requirements
+> at this point.  Instead of measuring and evaluating potential
+> solutions, can we try to approach this from the opposite direction and
+> ask what the requirements are?
 > 
-> 'funny' thing that, perf_sample_regs_user() seems to assume that
-> anything with current->mm is in fact a user task, and that assumption is
-> just plain wrong, consider use_mm().
+> What's the maximum number of CPU cycles that we are allowed to burn
+> such that we can meet the 1-2% overhead?
 
-Tagnentially, it looks like that assumption is made elsewhere, and could
-do with a more general cleanup. IIUC, the following are suspect:
+This is a good question on which I have no answer, so I tried to play with
+performance numbers as much as I know. I don't know what is
+considered acceptable for a syscall path and I guess answer can also 
+be presented in two security configurations, like weak (less CPU cycles)
+and strong (more cycles). 
 
-* kmemleak's scan_should_stop()
-* x86's __kernel_fpu_begin()
-* arm64's arch_dup_task_struct()
-
-It's probably worth an is_thread(task) helper so that those can be
-written in an obviously correct way.
-
-> So I'm thinking the right thing to do here is something like the below;
-> umh should get PF_KTHREAD cleared when it passes exec(). And this should
-> also fix the power splat I'm thinking.
 > 
-> ---
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index abbd4b3b96c2..9929404b6eb9 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
->  	if (user_mode(regs)) {
->  		regs_user->abi = perf_reg_abi(current);
->  		regs_user->regs = regs;
-> -	} else if (current->mm) {
-> +	} else if (!(current->flags & PF_KTHREAD) && current->mm) {
+> And how many bits of uncertainty are we trying to present to the
+> attacker?  
 
-Wouldn't !PF_KTHREAD imply current->mm anyhow?
+I think currently we are talking about 5 bits. Ideally maybe 8 bits,
+given that offset is new for each syscall, it should be enough to remove
+the "stability and predictability" feature of kernel thread stack that
+attackers rely on. If your chances of crashing kernel 255 from 256,
+you might figure some other attack path instead. 
 
-Thanks,
-Mark.
+What's the minimum beyond we shouldn't bother?  (Perhaps
+> because rdtsc will give us that many bits?)  
+
+Again, it is all about probabilities. 4 bits gives us success chance of
+1 in 16 (of not crashing kernel), this is already starting to be dangerous
+in my view, so maybe no less than 5?
+
+And does that change if
+> we vary the reseed window in terms of the number of system calls
+> between reseeding?
+
+I think if we talk about prng, reseeding should be done periodically to 
+make sure we never overrun the safe generation period and also for 
+additional security (seeding with proper entropy).
+But the most important part is to have a distinct offset (random bits) between
+each consequent syscall.
+ 
+> And what are the ideal parameters after which point we're just gilding
+> the lily?
+
+Not sure about ideal params for the whole combination here since security
+and performance are basically conflicting with each other (as usual). 
+So, that's why I was trying to propose to have two version of this:
+- one with tilt towards performance (rdtsc based)
+- one with tilt towards security (CRNG-based)
+And then let users choose what matters more for their workload. 
+For normal things like dektops, etc. CRNG based version won't provide
+any noticeable overhead. It might only matter for syscall sensitive workloads,
+which btw, most likely not enable quite a bunch of other security protections, 
+so I would say that for them to have even rdtsc() version is actually an 
+improvement in their defenses for stack (and basically no impact on performance).
+
+On related note: the current prng we have in kernel (prandom) is based on a
+*very old* style of prngs, which is basically 4 linear LFSRs xored together. 
+Nowadays, we have much more powerful prngs that show much better
+statistical and even security properties (not cryptographically secure, but still
+not so linear like the one above). 
+What is the reason why we still use a prng that is couple of decades away from the
+state of art in the area? It is actively used, especially by network stack,
+should we update it to smth that is more appropriate (speed would be comparable)?
+
+I am mostly talking about PCG-based generators:
+http://www.pcg-random.org/
+
+If people are interested, I could put together a PoC and we have an expert here we can
+consult for providing calculations for min-entropy, HILL entropy and whatever 
+is requested. 
+
+Best Regards,
+Elena.
+
