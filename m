@@ -2,102 +2,166 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E697C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2510C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283CB2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCFA21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kTq5oKCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfE2EWG (ORCPT
+        id S1725903AbfE2E0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 00:22:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:36779 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfE2EWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 00:22:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45DHbm6RTRz9s4V;
-        Wed, 29 May 2019 14:21:55 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.vnet.ibm.com
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-In-Reply-To: <20190528153224.GE20758@fuggles.cambridge.arm.com>
-References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com> <20190528140103.GT2623@hirez.programming.kicks-ass.net> <20190528153224.GE20758@fuggles.cambridge.arm.com>
-Date:   Wed, 29 May 2019 14:21:54 +1000
-Message-ID: <877ea9q49p.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 29 May 2019 00:26:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33613 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfE2E0l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 00:26:41 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h17so562332pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 21:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id;
+        bh=5JJ5fP/lDTAT9lV7xByh9EU/tkZg+0nZnzbUrujyoZg=;
+        b=kTq5oKCOvb2JCjaJ13ybujn6O92eJItL/ZZRxZzq2f9s59vvAI5lkJSqmOB3CjQ0qD
+         9u8MEgtx6tPOCi9fXdf0/Y4JGYAYxJ+IPb9C78+I2QwQOi0yGpa5pvWqLZ/FORR/RyY6
+         63x5WeSHMoeExX+r6oIGbbIUmVsY9BdH3zSIsm5nO+9MEAncg1hT+CvrebHklrUYoIKm
+         sP2GcxXbyzLkJdGqbOS1TJjrqYtqBNNC6VZPF3ELlMPG1sGxRnHdv4BYVn3rGPs3x+jf
+         YW/3iMocgkhTd1hkEHr8Xky56S8fE1llF5tbygiELsel0yI2uN497rAQW8dpWZm8ACgI
+         4kWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=5JJ5fP/lDTAT9lV7xByh9EU/tkZg+0nZnzbUrujyoZg=;
+        b=MsuyokpIw04sOxW+yeIKoVgInzBJCeQTFZKzXIBG/nirAGckwLNcNat6NtuHO6cW53
+         fBo0nN1Ml7Dik5n13aYg7jGVH9yMAmxxC0p3n593uzp6qktOy8aBKLQDcGXMnfS1UesY
+         XD+8PTHjvzs+jexF9n+m2/og1wvJD8oimFtrq1owfo/x5bG+Ngwq5exOHyejSBA7pdQO
+         Pn59306d2l5jWX6iWWTZQt/BEsQpJazmPhWif2wZrTs2JigY2X5h4p+9D2o6wifA6b/J
+         VXJsuOeV5NRDpKpg0mkf3OEijLQTSfRz6XM6bR2McwbIPiXrUwxjqfaDXHEWiUHzwFb4
+         u9nQ==
+X-Gm-Message-State: APjAAAVCaUTDZnHcz+Dw4d7b1lAMsh1632i3nFhu8ZFiS5eActai8hxk
+        qnolWHpiMzocZETynEfPMKr4Aw==
+X-Google-Smtp-Source: APXvYqz8+KopayMYqNIAnYzjwkQi92y0EfTJXP+WbfUiu3G6DyTGAMkJzIynLIfakB8aLVEH3oY7WA==
+X-Received: by 2002:a65:56cc:: with SMTP id w12mr3084328pgs.415.1559104000681;
+        Tue, 28 May 2019 21:26:40 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id 128sm9217350pff.16.2019.05.28.21.26.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 28 May 2019 21:26:39 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
+Date:   Wed, 29 May 2019 09:56:18 +0530
+Message-Id: <1559103978-13852-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will.deacon@arm.com> writes:
-> On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
->> On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
->> > When a kthread calls call_usermodehelper() the steps are:
->> >   1. allocate current->mm
->> >   2. load_elf_binary()
->> >   3. populate current->thread.regs
->> > 
->> > While doing this, interrupts are not disabled. If there is a perf
->> > interrupt in the middle of this process (i.e. step 1 has completed
->> > but not yet reached to step 3) and if perf tries to read userspace
->> > regs, kernel oops.
->
-> This seems to be because pt_regs(current) gives NULL for kthreads on Power.
+The i2c-ocore driver already has a polling mode interface.But it needs
+a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+There is an erratum in FU540 chip that prevents interrupt driven i2c
+transfers from working, and also the I2C controller's interrupt bit
+cannot be cleared if set, due to this the existing i2c polling mode
+interface added in mainline earlier doesn't work, and CPU stall's
+infinitely, when-ever i2c transfer is initiated.
 
-Right, we've done that since roughly forever in copy_thread():
+Ref:
+	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
 
-int copy_thread(unsigned long clone_flags, unsigned long usp,
-		unsigned long kthread_arg, struct task_struct *p)
-{
-	...
-	/* Copy registers */
-	sp -= sizeof(struct pt_regs);
-	childregs = (struct pt_regs *) sp;
-	if (unlikely(p->flags & PF_KTHREAD)) {
-		/* kernel thread */
-		memset(childregs, 0, sizeof(struct pt_regs));
-		childregs->gpr[1] = sp + sizeof(struct pt_regs);
-                ...
-		p->thread.regs = NULL;	/* no user register state */
+The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+FU540-COOO SoC.
 
-See commit from 2002:
-  https://github.com/mpe/linux-fullhistory/commit/c0a96c0918d21d8a99270e94d9c4a4a322d04581#diff-edb76bfcc84905163f34d24d2aad3f3aR187
+The polling function identifies a SiFive device based on the device node
+and enables the workaround.
 
-> From the initial report [1], it doesn't look like the mm isn't initialised,
-> but rather than we're dereferencing a NULL pt_regs pointer somehow for the
-> current task (see previous comment). I don't see how that can happen on
-> arm64, given that we put the pt_regs on the kernel stack which is allocated
-> during fork.
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+---
+ drivers/i2c/busses/i2c-ocores.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-We have the regs on the stack too (see above), but we're explicitly
-NULL'ing the link from task->thread.
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index b334fa2..4117f1a 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -35,6 +35,7 @@ struct ocores_i2c {
+ 	int iobase;
+ 	u32 reg_shift;
+ 	u32 reg_io_width;
++	unsigned long flags;
+ 	wait_queue_head_t wait;
+ 	struct i2c_adapter adap;
+ 	struct i2c_msg *msg;
+@@ -84,6 +85,8 @@ struct ocores_i2c {
+ #define TYPE_GRLIB		1
+ #define TYPE_SIFIVE_REV0	2
+ 
++#define OCORES_FLAG_BROKEN_IRQ BIT(1) /* Broken IRQ for FU540-C000 SoC */
++
+ static void oc_setreg_8(struct ocores_i2c *i2c, int reg, u8 value)
+ {
+ 	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
+@@ -236,9 +239,12 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
+ 	struct ocores_i2c *i2c = dev_id;
+ 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
+ 
+-	if (!(stat & OCI2C_STAT_IF))
++	if (i2c->flags & OCORES_FLAG_BROKEN_IRQ) {
++		if ((stat & OCI2C_STAT_IF) && !(stat & OCI2C_STAT_BUSY))
++			return IRQ_NONE;
++	} else if (!(stat & OCI2C_STAT_IF)) {
+ 		return IRQ_NONE;
+-
++	}
+ 	ocores_process(i2c, stat);
+ 
+ 	return IRQ_HANDLED;
+@@ -353,6 +359,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
+ 		ret = ocores_isr(-1, i2c);
+ 		if (ret == IRQ_NONE)
+ 			break; /* all messages have been transferred */
++		else {
++			if (i2c->flags & OCORES_FLAG_BROKEN_IRQ)
++				if (i2c->state == STATE_DONE)
++					break;
++		}
+ 	}
+ }
+ 
+@@ -595,6 +606,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct ocores_i2c *i2c;
+ 	struct ocores_i2c_platform_data *pdata;
++	const struct of_device_id *match;
+ 	struct resource *res;
+ 	int irq;
+ 	int ret;
+@@ -677,6 +689,14 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq == -ENXIO) {
+ 		ocores_algorithm.master_xfer = ocores_xfer_polling;
++
++		/*
++		 * Set in OCORES_FLAG_BROKEN_IRQ to enable workaround for
++		 * FU540-C000 SoC in polling mode.
++		 */
++		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
++		if (match && (long)match->data == TYPE_SIFIVE_REV0)
++			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+ 	} else {
+ 		if (irq < 0)
+ 			return irq;
+-- 
+1.9.1
 
-Looks like on arm64 and x86 there is no link from task->thread, instead
-you get from task to pt_regs via task_stack_page().
-
-That actually seems potentially fishy given the comment on
-task_stack_page() about the stack going away for exiting tasks. We
-should probably be NULL'ing the regs pointer in free_thread_stack() or
-similar. Though that race mustn't be happening because other arches
-would see it.
-
-Or are we just wrong and kthreads should have non-NULL regs? I can't
-find another arch that does the same as us.
-
-cheers
