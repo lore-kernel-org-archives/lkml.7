@@ -2,104 +2,128 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F0FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FF2C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F092E240BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559156198;
-	bh=DWacRiwjMj5a6VpNoYOYqOsALp1g7SzVyS/YpGPvbME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1kUJ/9cwF0eriGMQfVGJHKB9eDP/OoEow2lVG8PGPu9Nl3NFhpqx2wOdqKRATpwBm
-	 iEdkc3VLFSu8v8X+LdRL76njY+dq7iO4c3lzQHi0MJa7yuXnU7iLwvuIgzpPri/iI5
-	 +svjw1gIomTXET550fWreUrwy85uCfLa2lzsZ6D8=
+	by mail.kernel.org (Postfix) with ESMTP id 97D09240BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfE2S4h (ORCPT
+        id S1726638AbfE2S5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42284 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 14:57:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41056 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfE2S4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:56:36 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725914AbfE2S5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:57:01 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF71240BE;
-        Wed, 29 May 2019 18:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559156196;
-        bh=DWacRiwjMj5a6VpNoYOYqOsALp1g7SzVyS/YpGPvbME=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ov+kFAm9SPsGT2YMMpFvTCZEDkJpzWpOlHKmDUPvzdWyfFa2wdjrgin1I6IjcVSrr
-         QJCS6fkWrInglVv78IHvzeidm/q/4O4Dz35Goyga/FeetKZSoe3JgkfXqzq0EBzoEX
-         AMiELAo1aNmIOd0XE10waOoXu4dcGGyyLXNFJnmA=
-Date:   Wed, 29 May 2019 14:56:34 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 077/375] USB: serial: fix initial-termios
- handling
-Message-ID: <20190529185634.GI12898@sasha-vm>
-References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-77-sashal@kernel.org>
- <20190523052600.GA15348@localhost>
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C55F30C1B92;
+        Wed, 29 May 2019 18:56:41 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A9CF5C5DF;
+        Wed, 29 May 2019 18:56:28 +0000 (UTC)
+Date:   Wed, 29 May 2019 12:56:27 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alan Tull <atull@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Steve Sistare <steven.sistare@oracle.com>,
+        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
+        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: add account_locked_vm utility function
+Message-ID: <20190529125627.0cb5b704@x1.home>
+In-Reply-To: <20190528150424.tjbaiptpjhzg7y75@ca-dmjordan1.us.oracle.com>
+References: <de375582-2c35-8e8a-4737-c816052a8e58@ozlabs.ru>
+        <20190524175045.26897-1-daniel.m.jordan@oracle.com>
+        <20190525145118.bfda2d75a14db05a001e49ad@linux-foundation.org>
+        <20190528150424.tjbaiptpjhzg7y75@ca-dmjordan1.us.oracle.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190523052600.GA15348@localhost>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 29 May 2019 18:57:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:26:00AM +0200, Johan Hovold wrote:
->Hi Sasha,
->
->On Wed, May 22, 2019 at 03:16:17PM -0400, Sasha Levin wrote:
->> From: Johan Hovold <johan@kernel.org>
->>
->> [ Upstream commit 579bebe5dd522580019e7b10b07daaf500f9fb1e ]
->>
->> The USB-serial driver init_termios callback is used to override the
->> default initial terminal settings provided by USB-serial core.
->>
->> After a bug was fixed in the original implementation introduced by
->> commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
->> callback was no longer called just once on first use as intended but
->> rather on every (first) open.
->>
->> This specifically meant that the terminal settings saved on (final)
->> close were ignored when reopening a port for drivers overriding the
->> initial settings.
->>
->> Also update the outdated function header referring to the creation of
->> termios objects.
->>
->> Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
->> Signed-off-by: Johan Hovold <johan@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->The stable tag was left out on purpose as this is essentially a new
->feature, and definitely a behavioural change which should not be
->backported.
->
->Please drop from your autosel queues.
+On Tue, 28 May 2019 11:04:24 -0400
+Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
 
-Dropped!
+> On Sat, May 25, 2019 at 02:51:18PM -0700, Andrew Morton wrote:
+> > On Fri, 24 May 2019 13:50:45 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> >   
+> > > locked_vm accounting is done roughly the same way in five places, so
+> > > unify them in a helper.  Standardize the debug prints, which vary
+> > > slightly, but include the helper's caller to disambiguate between
+> > > callsites.
+> > > 
+> > > Error codes stay the same, so user-visible behavior does too.  The one
+> > > exception is that the -EPERM case in tce_account_locked_vm is removed
+> > > because Alexey has never seen it triggered.
+> > > 
+> > > ...
+> > >
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -1564,6 +1564,25 @@ long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+> > >  int get_user_pages_fast(unsigned long start, int nr_pages,
+> > >  			unsigned int gup_flags, struct page **pages);
+> > >  
+> > > +int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+> > > +			struct task_struct *task, bool bypass_rlim);
+> > > +
+> > > +static inline int account_locked_vm(struct mm_struct *mm, unsigned long pages,
+> > > +				    bool inc)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (pages == 0 || !mm)
+> > > +		return 0;
+> > > +
+> > > +	down_write(&mm->mmap_sem);
+> > > +	ret = __account_locked_vm(mm, pages, inc, current,
+> > > +				  capable(CAP_IPC_LOCK));
+> > > +	up_write(&mm->mmap_sem);
+> > > +
+> > > +	return ret;
+> > > +}  
+> > 
+> > That's quite a mouthful for an inlined function.  How about uninlining
+> > the whole thing and fiddling drivers/vfio/vfio_iommu_type1.c to suit. 
+> > I wonder why it does down_write_killable and whether it really needs
+> > to...  
+> 
+> Sure, I can uninline it.  vfio changelogs don't show a particular reason for
+> _killable[1].  Maybe Alex has something to add.  Otherwise I'll respin without
+> it since the simplification seems worth removing _killable.
+> 
+> [1] 0cfef2b7410b ("vfio/type1: Remove locked page accounting workqueue")
 
->Also, may I ask you again not to include usb-serial (and drivers/gnss)
->in your autosel processing.
+A userspace vfio driver maps DMA via an ioctl through this path, so I
+believe I used killable here just to be friendly that it could be
+interrupted and we could fall out with an errno if it were stuck here.
+No harm, no foul, the user's mapping is aborted and unwound.  If we're
+deadlocked or seriously contended on mmap_sem, maybe we're already in
+trouble, but it seemed like a valid and low hanging use case for
+killable.  Thanks,
 
-Of course, I've added it to my list.
-
---
-Thanks,
-Sasha
+Alex
