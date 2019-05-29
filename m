@@ -2,135 +2,226 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC7EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7C3C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F892419D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED046241A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q68ON5fl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB4e6ou3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfE2Uoq (ORCPT
+        id S1726538AbfE2UrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:44:46 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:39589 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2Uop (ORCPT
+        Wed, 29 May 2019 16:47:12 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44759 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfE2UrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:44:45 -0400
-Received: by mail-lf1-f45.google.com with SMTP id f1so3195711lfl.6;
-        Wed, 29 May 2019 13:44:44 -0700 (PDT)
+        Wed, 29 May 2019 16:47:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e13so3847018ljl.11;
+        Wed, 29 May 2019 13:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UtEQugnVA8WtRWp7G7Y45aQVnDBb1kJS56ouDNRrh18=;
-        b=q68ON5flGUjwdqu0F8r+qQMqmf038cqqfksP/N5sHNqPExIALVbQNkpQljV0pOvj+P
-         PbsYh3RkgIU6LhRpmq6KVTKqnBXuN+H9caVvJJqiHGOoN7SiOD99z4UOdK7noXhynS11
-         cQdZ5A7FbyRnsGRRyHuJx/GPJFzlZbI741NhDyEiOuCeEZZQ0a7l3LcqCPVDAeIKNyX8
-         yaTYEsNocpvbsOCz33zZjSmDckyfjTyvHDuJEk9i9YBg1e4mDMSdGejwYBf3RmO8+CCj
-         k3pMU4PNkFVQaMxgggaVOm7WuRo/VTWM0p0D/Br4To725r+W6ymLstIu3On1DTQKUPBl
-         E0yw==
+        bh=yV8ZGOSAaBTmrYL8Q6K1zkAiI1xSYAEEQ+zw5Yv+xjY=;
+        b=fB4e6ou3vZGC4IjFzCK2pfhbudjn543TYZG/M9MQikQQnRsc32NLFrgf8LWhnkHnoV
+         9Q3MilbtLygCsacbQQ4mq4OMgj4OpnACY/NUuDj1/Yeyizmjm7sQ/+sQsvcWMBto+KA2
+         7XTE0/GMVly8dUQZ8jinkBLQ2L+yEX4qzpIuo2q6MKJlKBKoVUHgA4Zc3ukj3TPaNzdG
+         9cl8zBt7Hakqflarsfd+Be6ydq9HN+0gC0OO5bnTK2ISmRgSjmjytFtIyeSrpIfq2BnZ
+         8Ag0H49G9dwakYF+SEyMOkW1h7VcmV0sozR/bpDC4pKcND2CHOSLNRidfznKgQB2y0YW
+         qbEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UtEQugnVA8WtRWp7G7Y45aQVnDBb1kJS56ouDNRrh18=;
-        b=aaF136lIPdItn6e1C5G0NsgxAJSxuD6udgmR01E6/OFkSq89Xhc4Esx/sKuqGRRZNJ
-         vLHTsAhzyJpDbQwYfxoaGFSGcBWG1RXhcGHu3jhWrcQisE9ijMTjO+A6rVrQy6bBquVt
-         vJowJo9aXe7lpmBdo5YcyF8jveRk/04592vF3ZKnHkGZ6znxNHQX3a3DkuPJqV3lNT26
-         WZLsiHdftmGC7zgDtLK1lylsiNoaRH1Ue8mqlk4bnOBqWB1g/vdjj81epGhSiAuHggwe
-         ecK2KGRVGQL1aLoRSx1Q7PjOrAvuCQ5LefhvLEC79f9PiETWwsLcQ97CpbJG6i3Obe7F
-         EHbg==
-X-Gm-Message-State: APjAAAWtjNAlrtTbeY94JcB2Dqc3DsBn6czY/vKYZZ5/a3Z+kMfadBMI
-        0Rub0E8APjojUKaWEsbm6/jf+LWU
-X-Google-Smtp-Source: APXvYqwvvzLIvZZEdeOl/8+MNYp3TSxul95xS02f3pliLRcSOlBqgL4imye69ReCebWH9sRbN2fmMg==
-X-Received: by 2002:ac2:4313:: with SMTP id l19mr20557763lfh.124.1559162681699;
-        Wed, 29 May 2019 13:44:41 -0700 (PDT)
-Received: from [192.168.1.17] (cjl105.neoplus.adsl.tpnet.pl. [83.31.61.105])
-        by smtp.gmail.com with ESMTPSA id y19sm113495lfl.40.2019.05.29.13.44.40
+        bh=yV8ZGOSAaBTmrYL8Q6K1zkAiI1xSYAEEQ+zw5Yv+xjY=;
+        b=QXjNlqiqShzjuXv1vv8I9k1MNlV7ng2fU0VD1xkIcSDm5sTaopkXyMgwn2UpNvFlJg
+         mtGZ5MbA+cMERdQkVgzDFH502ftZtUEQyqnROHDsXrVSH/XNn9iVdJoaGz5KSiICRgM0
+         yWpWOZe6j/PL1sjRuO1TdqsGCO6Ym4A0bkF8Y5wgnnXVDYT4NqlhYtfbn3qDjk5BuRs9
+         IhfMrAp+mYx4tSzPzwI0H/DP8Rvkykqu1505GrBmQ8/oULs0RJYbqlN+xmdh+TeHr/fz
+         ZAKaZLgFT3TuN1xojLZ6hh2IkmoKnTmQsrI6BNeqFhKIDv6J7pfLUuctCX1DLlvjp7wW
+         ga4g==
+X-Gm-Message-State: APjAAAWSUpUeYlT+1wPoD6aPccQVsWbz9B1uSp625ehgDC+zeZhKaMya
+        BXHXozWUuVMFZuNTdp9V451W0pxe
+X-Google-Smtp-Source: APXvYqzXbubS9THAIk8gBZRL3Mu/OmSbOO79qThoYZT8S9c9WpMjDzfH+By/IJ5tRboBQfMux2LHRA==
+X-Received: by 2002:a2e:2c17:: with SMTP id s23mr16730777ljs.214.1559162828243;
+        Wed, 29 May 2019 13:47:08 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id e12sm110511lfb.70.2019.05.29.13.47.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 13:44:41 -0700 (PDT)
-Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, lgirdwood@gmail.com
-References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
- <20190521211504.GD1580@sirena.org.uk>
- <0340dce2-87fb-938d-615e-376e29f37b54@gmail.com>
- <20190522190225.GH8582@sirena.org.uk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <5589b6b4-2bbc-a0ef-9c9f-a3ec161b773b@gmail.com>
-Date:   Wed, 29 May 2019 22:44:39 +0200
+        Wed, 29 May 2019 13:47:07 -0700 (PDT)
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+ <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+ <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+ <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
+ <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <34480b14-48da-2745-086d-6a8900c5a049@gmail.com>
+Date:   Wed, 29 May 2019 23:47:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190522190225.GH8582@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 9:02 PM, Mark Brown wrote:
-> On Wed, May 22, 2019 at 08:27:32PM +0200, Jacek Anaszewski wrote:
->> On 5/21/19 11:15 PM, Mark Brown wrote:
->>> On Tue, May 21, 2019 at 10:30:38PM +0200, Jacek Anaszewski wrote:
+29.05.2019 23:11, Sowjanya Komatineni пишет:
 > 
->>>>         regulator: lm363x: Make the gpio register enable flexible
->>>>         regulator: lm363x: Add support for LM36274
+> On 5/29/19 12:32 PM, Dmitry Osipenko wrote:
+>> 29.05.2019 21:14, Sowjanya Komatineni пишет:
+>>> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
+>>>> 29.05.2019 2:08, Sowjanya Komatineni пишет:
+>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>>> and registers them to syscore so the pinmux settings are restored
+>>>>> before the devices resume.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra.c    | 68
+>>>>> +++++++++++++++++++++++++++++++-
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>>>>>    drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>>>>>    7 files changed, 75 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> index a5008c066bac..bdc47e62c457 100644
+>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> @@ -28,11 +28,18 @@
+>>>>>    #include <linux/pinctrl/pinmux.h>
+>>>>>    #include <linux/pinctrl/pinconf.h>
+>>>>>    #include <linux/slab.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>>      #include "../core.h"
+>>>>>    #include "../pinctrl-utils.h"
+>>>>>    #include "pinctrl-tegra.h"
+>>>>>    +#define EMMC2_PAD_CFGPADCTRL_0            0x1c8
+>>>>> +#define EMMC4_PAD_CFGPADCTRL_0            0x1e0
+>>>>> +#define EMMC_DPD_PARKING            (0x1fff << 14)
+>>>>> +
+>>>>> +static struct tegra_pmx *pmx;
+>>>>> +
+>>>>>    static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32
+>>>>> reg)
+>>>>>    {
+>>>>>        return readl(pmx->regs[bank] + reg);
+>>>>> @@ -629,6 +636,50 @@ static void
+>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>>        }
+>>>>>    }
+>>>>>    +static int __maybe_unused tegra_pinctrl_suspend(void)
+>>>>> +{
+>>>>> +    u32 *backup_regs = pmx->backup_regs;
+>>>>> +    u32 *regs;
+>>>>> +    int i, j;
+>>>>> +
+>>>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>>>> +        regs = pmx->regs[i];
+>>>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>>>> +            *backup_regs++ = readl(regs++);
+>>>>> +    }
+>>>>> +
+>>>>> +    return pinctrl_force_sleep(pmx->pctl);
+>>>>> +}
+>>>>> +
+>>>>> +static void __maybe_unused tegra_pinctrl_resume(void)
+>>>>> +{
+>>>>> +    u32 *backup_regs = pmx->backup_regs;
+>>>>> +    u32 *regs;
+>>>>> +    u32 val;
+>>>>> +    int i, j;
+>>>>> +
+>>>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>>>> +        regs = pmx->regs[i];
+>>>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>>>> +            writel(*backup_regs++, regs++);
+>>>>> +    }
+>>>>> +
+>>>>> +    if (pmx->soc->has_park_padcfg) {
+>>>>> +        val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>>>> +        val &= ~EMMC_DPD_PARKING;
+>>>>> +        pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>>>> +
+>>>>> +        val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>>>> +        val &= ~EMMC_DPD_PARKING;
+>>>>> +        pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>>>> +    }
+>>>>> +}
+>>>>>
+>>>> But the CFGPADCTRL registers are already programmed by restoring the
+>>>> backup_regs and hence the relevant EMMC's are already unparked. Hence
+>>>> why do you need to force-unpark both of the EMMC's? What if EMMC is
+>>>> unpopulated on a board, why do you need to unpark it then?
+>>> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTRL)
+>>> are not part of pinmux.
+>>>
+>>> They are part of CFGPADCTRL register so pinctrl driver pingroup doesn't
+>>> include these registers.
+>> I'm looking at the tegra210_groups and it clearly has these both
+>> registers as a part of pinctrl setup because the rest of the bits
+>> configure drive of the pads.
+>>
+>>  From pinctrl-tegra210.c:
+>>
+>> #define DRV_PINGROUP_REG_A        0x8d4    /* bank 0 */
+>>
+>> DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
+>> DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
+>>
+>> ...
+>>
+>> 0xa9c - 0x8d4 = 0x1c8
+>> 0xab4 - 0x8d4 = 0x1e0
+>>
+>> Hence the PARK bits are already getting unset by restoring the
+>> backup_regs because the CFGPADCTRL registers are a part of the "bank 0"
+>> registers.
+>>
+>> Am I still missing something?
 > 
->>> Why have these been applied, I haven't reviewed them?  As far as I can
->>> tell they were sent before the merge window so I'd expect a resend at
->>> this point...
+> DRV_PINGROUP parked_bit is -1 and will not be programmed so store and
+> restore will not take care of it.
 > 
->> The patch set have been floating around for some time and besides
-> 
-> Most of that time as far as I can tell they weren't being posted to
-> subsystem maintainers, you can't expect people to be aware of patches
-> that they are not being sent and single postings get missed or dropped
-> for all sorts of reasons.
-> 
->> the v2 you were cc'ed by Dan, I also poked you a week ago for v4 [1].
-> 
-> That post from a week ago was you copying me into a thread I wasn't CCed
-> on saying I should have been sent the patches.  My expectation would
-> therefore be that someone would send me the patches, I'm obviously going
-> to prioritize patches that actually get sent to me over ones where I
-> have to go searching to try to turn up copies.
+> Also EMMC PADCFG is the only padcfg register which has parked bit and
+> for other IO pads its part of pinmux
 
-I admit I should have CC'ed you the exact patches and not only
-the cover letter.
+You're storing raw values of all of the PINCTRL registers and then
+restoring the raw values (if I'm not misreading that part on the patch),
+it's absolutely meaningless that DRV_PINGROUP doesn't define the PARK bits.
 
->> Don't be surprised that I assumed you simply don't care.
-> 
-> You have unreasonable expectations here.  At the very least I would have
-> expected something along the lines of "hey, you don't seem to have
-> looked at these" before you just applied things, and ideally ensuring
-> that the patches had actually been sent to everyone with a reasonable
-> lead time so there was a good chance that review could happen.
+In a result, the backup_regs array contains raw CFGPADCTRL value with
+the PARK bits being unset on store, that value is written out on the
+restore as-is and hence the PARK bits are getting unset as well.
 
-In fact you were notified only of v2 of the patch set AFAICS.
-There is indeed a chance it might have gone unnoticed through
-your mailbox (or classified otherwise).
-
-I need to be more wary in such cases in the future.
-
->> Still, we're awaiting your comments
-> 
-> If someone sends me the patches...
-> 
->> [0] https://lkml.org/lkml/2019/4/10/547
->> [1] https://lkml.org/lkml/2019/5/14/717
-
--- 
-Best regards,
-Jacek Anaszewski
+And why DRV_PINGROUP misses PARK bits for the EMMC's? Looks like a
+driver's drawback that need to be addressed.
