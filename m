@@ -2,128 +2,85 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1134AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6C6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D869720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:33:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CWsIJryF"
+	by mail.kernel.org (Postfix) with ESMTP id 5B7EE21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559129670;
+	bh=5qqB+LkxFWgDdcgULhenSbq10dxUOlAU30DJl8fvWpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QbYHDE5rjGRlG+a8kGzWqniLam1AfGIKj4KijK2XbBwdiZ62BJstNerf+/zZPyxAT
+	 p9ZweCnCfuUg9515HwXli7LI9ATyLXZFmHq4b30iqC4ZL8tOWrN9weDVUV+2PgksLA
+	 ZRGf4JpMQGWE33fYFaT/xa/aTnP5mpQEu2EiP9Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfE2LdG (ORCPT
+        id S1726937AbfE2Le3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:33:06 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:42324 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfE2LdF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:33:05 -0400
-Received: by mail-vk1-f202.google.com with SMTP id l20so847656vkl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 04:33:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=EPoVy8lx0burcqRe9tnNKcLoXN9lfRRXZMjhWxr4XRw=;
-        b=CWsIJryFsXwTbU5c7t9lokMjdfRXXNr0foOaD5TZxOkCPbrKdjqCdooJY+N16Zcdc+
-         lhmPlI7p4rC/EpxHYMXFECQ2hJoea2SQPwNMH8vwMvJboBKEpU/UTfkvG8VsG3quMpRX
-         vKUcAGSA1Vi2zbLJAQODn62wcO4PmJVZOdpkzdgbSWl/Ilt+iHpHdV3QMShxa00Uw8ek
-         qisJYnAW1PIc4/TeIluzaTHmZxmai/af998YqoRPXcJMEpS+B5cHqwKXrwdtot7AnK8u
-         +d6XZqUa7u7ZvCmR4u5n2mn13+wpdPddyVscYCb6XnDn6NIPOmpIqk8tZ6RBBjULAQZg
-         Th+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=EPoVy8lx0burcqRe9tnNKcLoXN9lfRRXZMjhWxr4XRw=;
-        b=bFpn4chsY8nYkUQjh7itA4LdsV4EDb0Ith85VB10aLdSqdbPhvYxGhsWZ0ZauHQn86
-         Fp6UiE5ArZd+pyFOrId/SvN0CYp7IY96X+O5Una+MT5mcguUEXhIMHdyO5wTonJWhJtS
-         JVp0tDMTD4+63mVg/33PwoRsc0Mm/lFWSLYAJskWz3E/8qUxFF5yxEu1uTJTjDQjz90h
-         UM51bb9UXAscx4WdxuGTigiVidFmD819MLrcMlpiPrH6Ywgy03EEJOim5RZM0KJDUPQH
-         TpPUjuXsVMd0wAy5PDPREYkxe2xYtfjw75IGYWrehmGJ1CWTR5yPx3zk1tHUSmtj2uH7
-         bg2w==
-X-Gm-Message-State: APjAAAWwfOUSoigVtUNzWZwgWmIYtCC0ijrzsuPq9dE6obayfglT8QyX
-        7l2OFhIn2CaRtqyRPp+mQS4buUhfjw==
-X-Google-Smtp-Source: APXvYqxchUgQZbyKRC3Fz+fFZ11sCN/4NRnGLAsryiW13pJ5/PcIXiARspgv5Wt8tukfciEkcv5kqoCI3w==
-X-Received: by 2002:ab0:14cb:: with SMTP id f11mr7593106uae.24.1559129583868;
- Wed, 29 May 2019 04:33:03 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:31:57 +0200
-Message-Id: <20190529113157.227380-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
-From:   Jann Horn <jannh@google.com>
-To:     Oleg Nesterov <oleg@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, jannh@google.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 May 2019 07:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfE2Le2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 07:34:28 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE2120B1F;
+        Wed, 29 May 2019 11:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559129668;
+        bh=5qqB+LkxFWgDdcgULhenSbq10dxUOlAU30DJl8fvWpI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yg88l+06JcDZRH85MGOkFgJs9WdzrVF9m1mDG5YhVhWhjzQuKHIC+vh0h9ixW5dmA
+         3gDhCyiwz9JrXQvWSIwm6CG5oQkHDMHK2i6Q0q8eqXagYZ12duIW4MLdEWeg64sJF0
+         RS+LZ6nBDFuXrtuKJEwgT0c3y/6WXku6RfVeKZ0s=
+Date:   Wed, 29 May 2019 04:34:27 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     laurentiu.tudor@nxp.com
+Cc:     hch@lst.de, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 0/5] prerequisites for device reserved local mem rework
+Message-ID: <20190529113427.GC11952@kroah.com>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Restore the read memory barrier in __ptrace_may_access() that was deleted
-a couple years ago. Also add comments on this barrier and the one it pairs
-with to explain why they're there (as far as I understand).
+On Wed, May 29, 2019 at 01:28:38PM +0300, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> For HCs that have local memory, replace the current DMA API usage
+> with a genalloc generic allocator to manage the mappings for these
+> devices.
+> This is in preparation for dropping the existing "coherent" dma
+> mem declaration APIs. Current implementation was relying on a short
+> circuit in the DMA API that in the end, was acting as an allocator
+> for these type of devices.
+> 
+> Only compiled tested, so any volunteers willing to test are most welcome.
+> 
+> Thank you!
+> 
+> For context, see thread here: https://lkml.org/lkml/2019/4/22/357
 
-Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
----
-(I have no clue whatsoever what the relevant tree for this is, but I
-guess Oleg is the relevant maintainer?)
+All look good to me:
 
- kernel/cred.c   |  9 +++++++++
- kernel/ptrace.c | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/kernel/cred.c b/kernel/cred.c
-index 45d77284aed0..07e069d00696 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -450,6 +450,15 @@ int commit_creds(struct cred *new)
- 		if (task->mm)
- 			set_dumpable(task->mm, suid_dumpable);
- 		task->pdeath_signal = 0;
-+		/*
-+		 * If a task drops privileges and becomes nondumpable,
-+		 * the dumpability change must become visible before
-+		 * the credential change; otherwise, a __ptrace_may_access()
-+		 * racing with this change may be able to attach to a task it
-+		 * shouldn't be able to attach to (as if the task had dropped
-+		 * privileges without becoming nondumpable).
-+		 * Pairs with a read barrier in __ptrace_may_access().
-+		 */
- 		smp_wmb();
- 	}
- 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 5710d07e67cf..e54452c2954b 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -324,6 +324,16 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	return -EPERM;
- ok:
- 	rcu_read_unlock();
-+	/*
-+	 * If a task drops privileges and becomes nondumpable (through a syscall
-+	 * like setresuid()) while we are trying to access it, we must ensure
-+	 * that the dumpability is read after the credentials; otherwise,
-+	 * we may be able to attach to a task that we shouldn't be able to
-+	 * attach to (as if the task had dropped privileges without becoming
-+	 * nondumpable).
-+	 * Pairs with a write barrier in commit_creds().
-+	 */
-+	smp_rmb();
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
--- 
-2.22.0.rc1.257.g3120a18244-goog
+Christoph, this is going through your tree, right?
 
+thanks,
+
+greg k-h
