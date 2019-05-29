@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42753C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B419CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183E723BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF9023BCD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Uk2Xn1lu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pcBmF7zl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfE2PtU (ORCPT
+        id S1727189AbfE2Ptu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:49:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39346 "EHLO vps0.lunn.ch"
+        Wed, 29 May 2019 11:49:50 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39366 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfE2PtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:49:20 -0400
+        id S1725936AbfE2Ptt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:49:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=FSmVTVfY0fmsLVjAxB2ZUOOjOUzRYdgko89LUfDdwZ4=; b=Uk2Xn1lulr7crQVgIg/wiqa1Qr
-        PfbtwLmuLkpOvqM8lYWKlcWN/foi/tlU25F+qc/rdMJw2otunk9xuEhT87IzH7fIb7UqYxgRXgIqa
-        GXwb4AqEujzlrDmUPhur5CO75qQBqDA47y0rhS5h+34A40Gn4Iywq+fX5ZCYZKS9Q++I=;
+        bh=BAqXeysVNLkOXIzyWbRWtDQZpEYszIMfARUvOc65Ygo=; b=pcBmF7zl0gPFNFWdNCq+ZhqwCM
+        ONXGL9YhIUQk5yyQQdw11zoMqIdRolepdw8DZ8YRDY3DOWhEayDz/c+KeK8MTXIqf/rNUHGgNdJLh
+        4SLetzUEQnYC/+18/XoObrUGY6O8OxHYdti2Sv7EJ8mfDZsl95HzDaLHpLB/WSimXCCs=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
         (envelope-from <andrew@lunn.ch>)
-        id 1hW0pA-0000fP-2F; Wed, 29 May 2019 17:49:08 +0200
-Date:   Wed, 29 May 2019 17:49:08 +0200
+        id 1hW0pj-0000gu-Rn; Wed, 29 May 2019 17:49:43 +0200
+Date:   Wed, 29 May 2019 17:49:43 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Ruslan Babayev <ruslan@babayev.com>
 Cc:     mika.westerberg@linux.intel.com, wsa@the-dreams.de,
@@ -42,26 +42,69 @@ Cc:     mika.westerberg@linux.intel.com, wsa@the-dreams.de,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [net-next,v4 1/2] i2c: acpi: export
- i2c_acpi_find_adapter_by_handle
-Message-ID: <20190529154908.GX18059@lunn.ch>
+Subject: Re: [net-next,v4 2/2] net: phy: sfp: enable i2c-bus detection on
+ ACPI based systems
+Message-ID: <20190529154943.GY18059@lunn.ch>
 References: <20190528230233.26772-1-ruslan@babayev.com>
- <20190528230233.26772-2-ruslan@babayev.com>
+ <20190528230233.26772-3-ruslan@babayev.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528230233.26772-2-ruslan@babayev.com>
+In-Reply-To: <20190528230233.26772-3-ruslan@babayev.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:02:32PM -0700, Ruslan Babayev wrote:
-> This allows drivers to lookup i2c adapters on ACPI based systems similar to
-> of_get_i2c_adapter_by_node() with DT based systems.
+On Tue, May 28, 2019 at 04:02:33PM -0700, Ruslan Babayev wrote:
+> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
+> systems similar to how it's done with DT.
+> 
+> An example DSD describing an SFP on an ACPI based system:
+> 
+> Device (SFP0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_CRS, ResourceTemplate()
+>     {
+>         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+>                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+>             { 0, 1, 2, 3, 4 }
+>     })
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "sff,sfp" },
+>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+>             Package () { "maximum-power-milliwatt", 1000 },
+>             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+>             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+>             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+>             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+>             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+>         },
+>     })
+> }
+> 
+> Device (PHY0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+>             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+>             Package () { "managed", "in-band-status" },
+>             Package () { "phy-mode", "sgmii" },
+>         },
+>     })
+> }
 > 
 > Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> Cc: xe-linux-external@cisco.com
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
