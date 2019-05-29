@@ -2,86 +2,135 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EBFC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70AFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814C8217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559099948;
-	bh=jE0bNLaY53Z8nSUY6OlnLjAN+ljsrbXhvZ38e1WAjwE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jys4Jb1S9qBuPpiTBZTlmKrjnD4ix7fd1F6ORh0ievwgvTpsUTkvI2Srbw3aql9+i
-	 XlOMLWHJblkcYypvUW5Nx3u0JGuxvunzV49GE1asyZ3SwcKEYh24ERav826vTB0N5Y
-	 3tPRnL9ivXseeWOnkNEoBf91qjKW6A9wgf0OQjm8=
+	by mail.kernel.org (Postfix) with ESMTP id 8A16D21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfE2DTH (ORCPT
+        id S1726544AbfE2DWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
+        Tue, 28 May 2019 23:22:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58200 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfE2DTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:19:07 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725856AbfE2DWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 23:22:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927352173B;
-        Wed, 29 May 2019 03:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559099946;
-        bh=jE0bNLaY53Z8nSUY6OlnLjAN+ljsrbXhvZ38e1WAjwE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KI/PZTV86LTUcP5/Gx7wEH90yj01lgOrWLmjQH2twd7jBSscERnYIsZuLRYM+RbFC
-         h75NCqTgFnpWugEO9dOCFCHNTF1m76GxQnfmljvLHmW8UhBaQAOkbDY5AlmiYu8klV
-         SRi1tJQPFBMutzkdRGAkIc4eCwHXtRucqHbbETok=
-Date:   Tue, 28 May 2019 20:19:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpumask: Remove error message and backtrace on
- out-of-memory condition
-Message-Id: <20190528201906.c0a5fb647b070c462bd7de1e@linux-foundation.org>
-In-Reply-To: <20190527122958.6667-1-geert+renesas@glider.be>
-References: <20190527122958.6667-1-geert+renesas@glider.be>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id D2D51308425C;
+        Wed, 29 May 2019 03:22:51 +0000 (UTC)
+Received: from [10.72.12.48] (ovpn-12-48.pek2.redhat.com [10.72.12.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D46731972B;
+        Wed, 29 May 2019 03:22:42 +0000 (UTC)
+Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
+To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+References: <20190528105623.27983-1-sgarzare@redhat.com>
+ <20190528105623.27983-4-sgarzare@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
+Date:   Wed, 29 May 2019 11:22:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190528105623.27983-4-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 29 May 2019 03:22:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 14:29:58 +0200 Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-> There is no need to print an error message and backtrace if
-> kmalloc_node() fails, as the memory allocation core already takes care
-> of that.
-> 
-> ...
+On 2019/5/28 下午6:56, Stefano Garzarella wrote:
+> We flush all pending works before to call vdev->config->reset(vdev),
+> but other works can be queued before the vdev->config->del_vqs(vdev),
+> so we add another flush after it, to avoid use after free.
 >
-> --- a/lib/cpumask.c
-> +++ b/lib/cpumask.c
-> @@ -114,13 +114,6 @@ bool alloc_cpumask_var_node(cpumask_var_t *mask, gfp_t flags, int node)
->  {
->  	*mask = kmalloc_node(cpumask_size(), flags, node);
->  
-> -#ifdef CONFIG_DEBUG_PER_CPU_MAPS
-> -	if (!*mask) {
-> -		printk(KERN_ERR "=> alloc_cpumask_var: failed!\n");
-> -		dump_stack();
-> -	}
-> -#endif
+> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>   net/vmw_vsock/virtio_transport.c | 23 +++++++++++++++++------
+>   1 file changed, 17 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> index e694df10ab61..ad093ce96693 100644
+> --- a/net/vmw_vsock/virtio_transport.c
+> +++ b/net/vmw_vsock/virtio_transport.c
+> @@ -660,6 +660,15 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>   	return ret;
+>   }
+>   
+> +static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
+> +{
+> +	flush_work(&vsock->loopback_work);
+> +	flush_work(&vsock->rx_work);
+> +	flush_work(&vsock->tx_work);
+> +	flush_work(&vsock->event_work);
+> +	flush_work(&vsock->send_pkt_work);
+> +}
+> +
+>   static void virtio_vsock_remove(struct virtio_device *vdev)
+>   {
+>   	struct virtio_vsock *vsock = vdev->priv;
+> @@ -668,12 +677,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>   	mutex_lock(&the_virtio_vsock_mutex);
+>   	the_virtio_vsock = NULL;
+>   
+> -	flush_work(&vsock->loopback_work);
+> -	flush_work(&vsock->rx_work);
+> -	flush_work(&vsock->tx_work);
+> -	flush_work(&vsock->event_work);
+> -	flush_work(&vsock->send_pkt_work);
 > -
->  	return *mask != NULL;
->  }
->  EXPORT_SYMBOL(alloc_cpumask_var_node);
+>   	/* Reset all connected sockets when the device disappear */
+>   	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
+>   
+> @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>   	vsock->event_run = false;
+>   	mutex_unlock(&vsock->event_lock);
+>   
+> +	/* Flush all pending works */
+> +	virtio_vsock_flush_works(vsock);
+> +
+>   	/* Flush all device writes and interrupts, device will not use any
+>   	 * more buffers.
+>   	 */
+> @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>   	/* Delete virtqueues and flush outstanding callbacks if any */
+>   	vdev->config->del_vqs(vdev);
+>   
+> +	/* Other works can be queued before 'config->del_vqs()', so we flush
+> +	 * all works before to free the vsock object to avoid use after free.
+> +	 */
+> +	virtio_vsock_flush_works(vsock);
 
-Well, not really - as it stands CONFIG_DEBUG_PER_CPU_MAPS=y can override a
-caller's __GFP_NOWARN.
 
-I wonder if anyone ever sets CONFIG_DEBUG_PER_CPU_MAPS any more...
+Some questions after a quick glance:
+
+1) It looks to me that the work could be queued from the path of 
+vsock_transport_cancel_pkt() . Is that synchronized here?
+
+2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run 
+still needed? It looks to me we've already done except that we need 
+flush rx_work in the end since send_pkt_work can requeue rx_work.
+
+Thanks
+
+
+> +
+>   	kfree(vsock);
+>   	mutex_unlock(&the_virtio_vsock_mutex);
+>   }
