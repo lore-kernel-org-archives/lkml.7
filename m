@@ -2,146 +2,147 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79514C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3428C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF0F24305
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C41E24305
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Z1Hek7XJ"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vrry6r0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfE2XMD (ORCPT
+        id S1726652AbfE2XNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:12:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36650 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfE2XMC (ORCPT
+        Wed, 29 May 2019 19:13:01 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:44877 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfE2XNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:12:02 -0400
-Received: by mail-pg1-f193.google.com with SMTP id a3so789204pgb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 16:12:02 -0700 (PDT)
+        Wed, 29 May 2019 19:13:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=hXo8tqJj43axubOUsA5cbLHV2YxMMkvWWZc8Ao43XSA=;
-        b=Z1Hek7XJ1MZIIz+UBdT1hkUxpFkEtBxkX7b8Pl+AuvfBm/IPaoj+3yYDDhyFmBSr8t
-         ZyngPhfKqhFeH8KtT9ihHyAGNF0mVOBohNPK6oiiKdkcllg+SB3DTem+ke3Tbp9d3ZhF
-         jLYDOq40vl7XlC62+xYv7E0fb/m9J/uc0J22pFtLOiIUiRR1GTcIKwHD6Zf9Bm+KXWj3
-         D4JplobPLr3d5LtYSaPsuWNjGuQhf5Fp7Thu6PUnWwGHCrlwzqJr0B7H1KLyYj4weXKF
-         yRBFSSsk5f2vEFSCoP3KI86yzvNF3YZLbLW3Tmtep1Czd7T6a6w0/iH7jguogVigeucG
-         bPRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=hXo8tqJj43axubOUsA5cbLHV2YxMMkvWWZc8Ao43XSA=;
-        b=dwF2pl+mY5W5ECzzmEbeqtbweY63FkF3hyklrJytX5BN39ld6pAnA/ohOX6tvUB1Dh
-         yDQ/sj8y8L2+ZkkYkwn9vUpxr7teDfeYXPbF6xcCsTBq4WJpogzsw+ge4pgInEiEQJAe
-         DzRJucHS6+feLhWqpy8ReeQFMA/+xZ6aPtw+G4xFkXVklWeHJMyTaIdsNsj93VGRXIm8
-         KYmFiIZGQVZuUWD4DN5X3Y7VXGRJncY58zSXNWKLadRq1V9t2o7pfgPnVvJkHecTyEhV
-         xtD1vPsqLSIIP76Z8j6JXvFNXIpXqY6ESUawrGqT2X9Ie+Beaszbfp5vxs5XfaZ1oYHT
-         q3WQ==
-X-Gm-Message-State: APjAAAVHPqnejhix78Nql832nKVLUrTSJbtbyKsGNKl3/ekwyDdFCNUU
-        VwzciNezcfNLGpavxGMUcFdtVQ==
-X-Google-Smtp-Source: APXvYqzSbiZOcqIEBdHHVXH9gx83KIlHBGDGOZAgGMpsekS+eED+muYtsmS9Z1I4BxDAKp+PBWv5SA==
-X-Received: by 2002:a17:90a:bc42:: with SMTP id t2mr186703pjv.107.1559171521905;
-        Wed, 29 May 2019 16:12:01 -0700 (PDT)
-Received: from ?IPv6:2600:100f:b107:bb64:69d6:593c:1bea:7300? ([2600:100f:b107:bb64:69d6:593c:1bea:7300])
-        by smtp.gmail.com with ESMTPSA id q20sm391919pgq.66.2019.05.29.16.12.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 16:12:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
-Date:   Wed, 29 May 2019 16:12:00 -0700
-Cc:     David Howells <dhowells@redhat.com>, Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2FF92095-E5B1-4811-A7F8-B7D4C32F86DD@amacapital.net>
-References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk> <14347.1559127657@warthog.procyon.org.uk> <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com> <4552118F-BE9B-4905-BF0F-A53DC13D5A82@amacapital.net> <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559171580; x=1590707580;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kf+YYPidV8/Ha/+Vglzg/t5JfZt167PpRucdfQl/36Y=;
+  b=vrry6r0qD3odiepfpwNL1vTykGKgXJTrVakBdgrSqjTpYQNzG7isg0J1
+   7bbS/gi182V/EymbcKWUv7R9/DEdeA82JyyFPPn/etXGR2Y129yE6n6Cy
+   Q5zdiSDUX6B6oauwbapCthui+KTFggzfh9c5EWCfeJ6VekmyuBO33obSQ
+   g=;
+X-IronPort-AV: E=Sophos;i="5.60,527,1549929600"; 
+   d="scan'208";a="768192754"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 29 May 2019 23:12:57 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 7367DA1FD1;
+        Wed, 29 May 2019 23:12:57 +0000 (UTC)
+Received: from EX13D05UWC003.ant.amazon.com (10.43.162.226) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 29 May 2019 23:12:57 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D05UWC003.ant.amazon.com (10.43.162.226) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 29 May 2019 23:12:57 +0000
+Received: from localhost (10.107.66.154) by mail-relay.amazon.com
+ (10.43.162.232) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Wed, 29 May 2019 23:12:56 +0000
+Date:   Wed, 29 May 2019 16:12:56 -0700
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Eduardo Valentin <eduval@amazon.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] hwmon: core: add thermal sensors only if
+ dev->of_node is present
+Message-ID: <20190529231256.GB18339@u40b0340c692b58f6553c.ant.amazon.com>
+References: <20190517231337.27859-1-eduval@amazon.com>
+ <20190517231337.27859-2-eduval@amazon.com>
+ <20190528150821.GB5516@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190528150821.GB5516@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 28, 2019 at 08:08:21AM -0700, Guenter Roeck wrote:
+> Hi Eduardo,
+> 
+> On Fri, May 17, 2019 at 04:13:36PM -0700, Eduardo Valentin wrote:
+> > Drivers may register to hwmon and request for also registering
+> > with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
+> > some of these driver, e.g. marvell phy, may be probed from
+> > Device Tree or being dynamically allocated, and in the later
+> > case, it will not have a dev->of_node entry.
+> > 
+> > Registering with hwmon without the dev->of_node may result in
+> > different outcomes depending on the device tree, which may
+> > be a bit misleading. If the device tree blob has no 'thermal-zones'
+> > node, the *hwmon_device_register*() family functions are going
+> > to gracefully succeed, because of-thermal,
+> > *thermal_zone_of_sensor_register() return -ENODEV in this case,
+> > and the hwmon error path handles this error code as success to
+> > cover for the case where CONFIG_THERMAL_OF is not set.
+> > However, if the device tree blob has the 'thermal-zones'
+> > entry, the *hwmon_device_register*() will always fail on callers
+> > with no dev->of_node, propagating -EINVAL.
+> > 
+> > If dev->of_node is not present, calling of-thermal does not
+> > make sense. For this reason, this patch checks first if the
+> > device has a of_node before going over the process of registering
+> > with the thermal subsystem of-thermal interface. And in this case,
+> > when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
+> > and no dev->of_node will still register with hwmon, but not with
+> > the thermal subsystem. If all the hwmon part bits are in place,
+> > the registration will succeed.
+> > 
+> Makes sense. I'd apply it as-is, but it would be better if you resend
+> it to the list to give others a chance to comment.
 
+Ok Cool.
 
-> On May 29, 2019, at 10:46 AM, Casey Schaufler <casey@schaufler-ca.com> wro=
-te:
->=20
->> On 5/29/2019 10:13 AM, Andy Lutomirski wrote:
->>=20
->>>> On May 29, 2019, at 8:53 AM, Casey Schaufler <casey@schaufler-ca.com> w=
-rote:
->>>>=20
->>>> On 5/29/2019 4:00 AM, David Howells wrote:
->>>> Jann Horn <jannh@google.com> wrote:
->>>>=20
->>>>>> +void post_mount_notification(struct mount *changed,
->>>>>> +                            struct mount_notification *notify)
->>>>>> +{
->>>>>> +       const struct cred *cred =3D current_cred();
->>>>> This current_cred() looks bogus to me. Can't mount topology changes
->>>>> come from all sorts of places? For example, umount_mnt() from
->>>>> umount_tree() from dissolve_on_fput() from __fput(), which could
->>>>> happen pretty much anywhere depending on where the last reference gets=
+Yeah, the patches were copied to the mailing list. Only the cover letter
+somehow I forgot to copy the mailing lists while git-sending-email.
 
->>>>> dropped?
->>>> IIRC, that's what Casey argued is the right thing to do from a security=
- PoV.
->>>> Casey?
->>> You need to identify the credential of the subject that triggered
->>> the event. If it isn't current_cred(), the cred needs to be passed
->>> in to post_mount_notification(), or derived by some other means.
->> Taking a step back, why do we care who triggered the event?  It seems to m=
-e that we should care whether the event happened and whether the *receiver* i=
-s permitted to know that.
->=20
-> There are two filesystems, "dot" and "dash". I am not allowed
-> to communicate with Fred on the system, and all precautions have
-> been taken to ensure I cannot. Fred asks for notifications on
-> all mount activity. I perform actions that result in notifications
-> on "dot" and "dash". Fred receives notifications and interprets
-> them using Morse code. This is not OK. If Wilma, who *is* allowed
-> to communicate with Fred, does the same actions, he should be
-> allowed to get the messages via Morse.
+I will resend the two patches (and the cover letter) after fixing
+the comment on patch 2/2.
 
-Under this scenario, Fred should not be allowed to enable these watches. If y=
-ou give yourself and Fred unconstrained access to the same FS, then can comm=
-unicate.
+> 
+> Thanks,
+> Guenter
+> 
+> > Cc: Jean Delvare <jdelvare@suse.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: linux-hwmon@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+> > ---
+> >  drivers/hwmon/hwmon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+> > index fcdbac4a56e3..6b3559f58b67 100644
+> > --- a/drivers/hwmon/hwmon.c
+> > +++ b/drivers/hwmon/hwmon.c
+> > @@ -619,7 +619,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+> >  	if (err)
+> >  		goto free_hwmon;
+> >  
+> > -	if (dev && chip && chip->ops->read &&
+> > +	if (dev && dev->of_node && chip && chip->ops->read &&
+> >  	    chip->info[0]->type == hwmon_chip &&
+> >  	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
+> >  		const struct hwmon_channel_info **info = chip->info;
+> > -- 
+> > 2.21.0
+> > 
 
->=20
-> Other security modelers may disagree. The models they produce
-> are going to be *very* complicated and will introduce agents and
-> intermediate objects to justify Fred's reception of an event as
-> a read operation.
-
-I disagree. They=E2=80=99ll model the watch as something to prevent if they w=
-ant to restrict communication.
-
->=20
->> (And receiver means whoever subscribed, presumably, not whoever called re=
-ad() or mmap().)
->=20
-> The receiver is the process that gets the event. There may
-> be more than one receiver, and the receivers may have different
-> credentials. Each needs to be checked separately.
-
-I think it=E2=80=99s a bit crazy to have the same event queue with two reade=
-rs who read different things.
-
+-- 
+All the best,
+Eduardo Valentin
