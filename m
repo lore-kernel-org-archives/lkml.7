@@ -2,134 +2,191 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7E0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269A8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058D12407A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F033A227C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WrBZnM6Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pz4dftM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfE2SjH (ORCPT
+        id S1726186AbfE2SmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:39:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37352 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2SjG (ORCPT
+        Wed, 29 May 2019 14:42:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35100 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfE2SmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:39:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIXRk1051803;
-        Wed, 29 May 2019 18:38:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=THamC/necnAG3k0b6m2lzotQxZzYf7wS5P936VQIGeY=;
- b=WrBZnM6ZmVcJlPylNNIR/dfOAgxQ1n5mBVtox4d3xjQyTPWqyy6eMNHnrmBnlkjatlvA
- uGOysuC9TQIkhHoRn4A0EY8PusDh25gpV/Wi4bOglzrKwaHlZYMsOaCkMAEh7Oc1zG4H
- o5aBY3h0pke87yaD6FFtpEWCGOFT3e22OuLLNMpFqQBRqJf1s1U9+ZhsZbUHtiEJimhk
- CCZzlWi4wabkYmp44sPv7LEg5Mh5sXvNW2aC2mg7bGejM8GPo82kSDE92MGxM5yTU4Sv
- FYNjz+9EfB1A2l+UFVFPM/S+5WCUb8cfNrvM8MGDkLXLQ+KQUnKnAuC5N9DwD7JNDbJI ZQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2spw4tktvv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:38:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIa26f039849;
-        Wed, 29 May 2019 18:36:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sr31ve7qt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 18:36:09 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TIZxGZ002287;
-        Wed, 29 May 2019 18:35:59 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 11:35:59 -0700
-Date:   Wed, 29 May 2019 14:35:59 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        akpm@linux-foundation.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alan Tull <atull@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Steve Sistare <steven.sistare@oracle.com>,
-        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: add account_locked_vm utility function
-Message-ID: <20190529183559.jzkpvbdiimnp3n2m@ca-dmjordan1.us.oracle.com>
-References: <de375582-2c35-8e8a-4737-c816052a8e58@ozlabs.ru>
- <20190524175045.26897-1-daniel.m.jordan@oracle.com>
- <20190529180547.GA16182@iweiny-DESK2.sc.intel.com>
+        Wed, 29 May 2019 14:42:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id p2so2775974iol.2;
+        Wed, 29 May 2019 11:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ac4wfHXOGpPwgmU9+NyMZSbTQr/j+BDgOZSJk6FL+cU=;
+        b=pz4dftM4fTpg7Y0etCDItJltv1TiXyMGLurzZkTgC82QCcMycu+LXgi6ynxqt27jOI
+         tv0ZDDfcyNcGZNWZMDeEkoOJzcIxqKnVhMeI0RooHtMkgokw+eDE+wGRX+NS68icKKDR
+         LsYD5yoS58k7hDYhkj/ijTP1S9U9SqNegRH6WMTPEQjWZGCId36KmNr2PcRRhDBzTIXH
+         gyQi0cqJ5mc9Pen0AjXg0CH17gPGI8Wet+zHnRq6LnZbvJUGzFw3wH2VEK+Re6pvZrA5
+         Dcap5QyONoSMp4ZcUHcFcJccKd9chk88/RhpR3XueX2OpX/famGA1D0TbGA0NEMgUdrB
+         PPhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ac4wfHXOGpPwgmU9+NyMZSbTQr/j+BDgOZSJk6FL+cU=;
+        b=QQkQ725MMp/KD8hmqUjA4+5WEheXVGVuiCI+PWmWNVRMqQTtSJUSGoFg4k3KVqkX0j
+         +V1Q7Ypac3MGttMDGkX/qQfq5zaHCFBLlQytabu3U5ZELhjDY5b6yn4iChQT/q7MkjaR
+         mjorpeXSPqLbh3jz05NlJcYuJGpQMg6RMD8+zkRhS8TGX0fmbQMouC7cuTKbSjAZOHTs
+         Xh5VQXH9P3TMW/Mc6L2PCkup35UtP+xOonMgLFwxd9VlEUYncWAdGQf6JDTzywXZHw79
+         hvlEED5Lc1GS5ID8lpVMA9jZKGdqfXOLHcWsDhcEmWphaT3ohGTinwCLNy/njLbX+81l
+         ru1A==
+X-Gm-Message-State: APjAAAXWfwSEZzhMSSgTAREHiwhZ6lfEePubbmBsJSXRg8x9/lUODei2
+        aRBQBjJDkHVOoFP20ZAlihIdYXznFEjNq3GBuXg=
+X-Google-Smtp-Source: APXvYqzQDio796G4Lx7zeBpaekA8t5Ss1nQFheXwKT3BzHWDoYIvDIez2PAO6oHIVKTGTiRNKqYB5znXP2b/LOi4buQ=
+X-Received: by 2002:a6b:c411:: with SMTP id y17mr13876076ioa.265.1559155340985;
+ Wed, 29 May 2019 11:42:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529180547.GA16182@iweiny-DESK2.sc.intel.com>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=18 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290120
+References: <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com> <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+ <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
+ <20190524141054.GB2655@redhat.com> <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
+ <20190524163310.GG2655@redhat.com> <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
+ <20190527150409.GA8961@redhat.com> <CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com>
+ <20190529165717.GC27659@redhat.com>
+In-Reply-To: <20190529165717.GC27659@redhat.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 29 May 2019 11:42:09 -0700
+Message-ID: <CABeXuvrFqGySKNLFK4f5er2ahQpz_eTbF+RfXCis1TZNT16Ddg@mail.gmail.com>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:05:48AM -0700, Ira Weiny wrote:
-> On Fri, May 24, 2019 at 01:50:45PM -0400, Daniel Jordan wrote:
-> > +static inline int account_locked_vm(struct mm_struct *mm, unsigned long pages,
-> > +				    bool inc)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (pages == 0 || !mm)
-> > +		return 0;
-> > +
-> > +	down_write(&mm->mmap_sem);
-> > +	ret = __account_locked_vm(mm, pages, inc, current,
-> > +				  capable(CAP_IPC_LOCK));
-> > +	up_write(&mm->mmap_sem);
-> > +
-> > +	return ret;
-> > +}
-> > +
-...snip...
-> > +/**
-> > + * __account_locked_vm - account locked pages to an mm's locked_vm
-> > + * @mm:          mm to account against, may be NULL
-> 
-> This kernel doc is wrong.  You dereference mm straight away...
-...snip...
-> > +
-> > +	locked_vm = mm->locked_vm;
-> 
-> here...
-> 
-> Perhaps the comment was meant to document account_locked_vm()?
+On Wed, May 29, 2019 at 9:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 05/28, Deepa Dinamani wrote:
+> >
+> > I agree that signal handller being called and return value not being
+> > altered is an issue with other syscalls also. I was just wondering if
+> > some userspace code assumption would be assuming this. This is not a
+> > kernel bug.
+> >
+> > But, I do not think we have an understanding of what was wrong in
+> > 854a6ed56839a anymore since you pointed out that my assumption was not
+> > correct that the signal handler being called without errno being set
+> > is wrong.
+>
+> Deepa, sorry, I simply can't parse the above... most probably because of
+> my bad English.
 
-Yes, the comment got out of sync when I moved the !mm check outside
-__account_locked_vm.  Thanks for catching, will fix.
+Ok, All I meant was that I had thought a signal handler being invoked
+without the error value reflecting it was wrong. That is what I had
+thought was wrong with 854a6ed56839a. Now, that we agree that signal
+handler can be invoked without the errno returning success, I thought
+I did not know what is wrong with 854a6ed56839a anymore.
+
+But, you now pointed out that the signals we care about should not be
+delivered after an event has been ready. This points out to what was
+wrong with 854a6ed56839a. Thanks.
+
+> > One open question: this part of epoll_pwait was already broken before
+> > 854a6ed56839a. Do you agree?
+> >
+> > if (err == -EINTR) {
+> >                    memcpy(&current->saved_sigmask, &sigsaved,
+> >                           sizeof(sigsaved));
+> >                     set_restore_sigmask();
+> >   } else
+> >                    set_current_blocked(&sigsaved);
+>
+> I do not understand why do you think this part was broken :/
+
+Ok, because of your other statement that the signals the application
+cares about do not want to know about signals they care about after an
+event is ready this is also not a problem.
+
+> > Or, I could revert the signal_pending() check and provide a fix
+> > something like below(not a complete patch)
+>
+> ...
+>
+> > -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> > +int restore_user_sigmask(const void __user *usigmask, sigset_t
+> > *sigsaved, int sig_pending)
+> >  {
+> >
+> >         if (!usigmask)
+> >                return;
+> >
+> >         /*
+> >          * When signals are pending, do not restore them here.
+> >          * Restoring sigmask here can lead to delivering signals that the above
+> >          * syscalls are intended to block because of the sigmask passed in.
+> >          */
+> > +       if (sig_pending) {
+> >                 current->saved_sigmask = *sigsaved;
+> >                 set_restore_sigmask();
+> >                return;
+> >            }
+> >
+> > @@ -2330,7 +2330,8 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
+> > epoll_event __user *, events,
+> >
+> >         error = do_epoll_wait(epfd, events, maxevents, timeout);
+> >
+> > -       restore_user_sigmask(sigmask, &sigsaved);
+> > +       signal_detected = restore_user_sigmask(sigmask, &sigsaved,
+> > error == -EINTR);
+>
+> I fail to understand this pseudo-code, sorry. In particular, do not understand
+> why restore_user_sigmask() needs to return a boolean.
+
+That was a remnant from the other patch. Return type needs to be void.
+
+> The only thing I _seem to_ understand is the "sig_pending" flag passed by the
+> caller which replaces the signal_pending() check.
+
+Correct. This is what is the main change I was proposing.
+
+> Yes, this is what I think we
+> should do, and this is what I tried to propose from the very beginning in my
+> 1st email in this thread.
+
+This was not clear to me in your first response that you did not want
+the signal_pending() check in restore_user_sigmask(). :
+https://lore.kernel.org/lkml/20190522150505.GA4915@redhat.com/
+
+"Ugh. I need to re-check, but at first glance I really dislike this change.
+
+I think we can fix the problem _and_ simplify the code. Something like below.
+The patch is obviously incomplete, it changes only only one caller of
+set_user_sigmask(), epoll_pwait() to explain what I mean.
+
+restore_user_sigmask() should simply die. Although perhaps another helper
+makes sense to add WARN_ON(test_tsk_restore_sigmask() && !signal_pending)."
+
+-Deepa
