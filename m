@@ -2,138 +2,100 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DBAC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B29C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0925223AC6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559141188;
-	bh=8rorXxnzSizFaq/FwdOra1IJYD1LwqZRGLVPZflpURU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Oa2oXbuLD0Et0mnY3EgKDamrD5kM7O/BPdTb22IPBY+Zr0XOCskAtxH++WYUT4O02
-	 Rj4v0UQUNm2VX3KdCVihyBJen+xD1TlYcS4yLM1onfFZfjbiQD5Olz+nps2rsIDoN4
-	 5S5FrEmq6LVxBxHIYN4tQ/HK8JEap825AKz1pKUI=
+	by mail.kernel.org (Postfix) with ESMTP id E102422293
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfE2Oq1 (ORCPT
+        id S1726544AbfE2Orp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfE2Oq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:46:27 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDBA123ABA;
-        Wed, 29 May 2019 14:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559141186;
-        bh=8rorXxnzSizFaq/FwdOra1IJYD1LwqZRGLVPZflpURU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ChjW1N1j0JLE1k+6PI9oRVCzrm0/6xRkmhZMyeTJiffjNss00ok4MLacKMa3US1rx
-         FN6/LJ31a97fa8G5S3LutlyDmu8cEB6Lm/KdhgnODWeKxs1hm23F35PNDM5Mwk4708
-         9DKoVs51KUk90xiw83kAhL3spQ+sPr7jJkVV7S2w=
-Received: by mail-lj1-f182.google.com with SMTP id e13so2719077ljl.11;
-        Wed, 29 May 2019 07:46:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAWgJCxU0p/Z2v4j5PbvnL/kZeguBzqiXVIi4zrjxxYLQxaC33Jn
-        fPCBOQi0PiD4+vN5Bp4MIJSfdZRcepu2uprPIF0=
-X-Google-Smtp-Source: APXvYqxtJA+YU8qUOjC0WysP9KRgGAX0/VOWIsIUq8MPRay9hybngeVcKiAzZaJtnygTzi7YGPErKMp9WeCpZWwBji4=
-X-Received: by 2002:a2e:9cc4:: with SMTP id g4mr59526686ljj.47.1559141178602;
- Wed, 29 May 2019 07:46:18 -0700 (PDT)
+        Wed, 29 May 2019 10:47:45 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:58203 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbfE2Orp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:47:45 -0400
+Received: from [IPv6:2001:983:e9a7:1:c843:3d28:cba4:8b6e] ([IPv6:2001:983:e9a7:1:c843:3d28:cba4:8b6e])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id VzrihqjyRsDWyVzrjhhsMi; Wed, 29 May 2019 16:47:43 +0200
+Subject: Re: [PATCH v7 1/3] media: cec: expose HDMI connector to CEC dev
+ mapping
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190521105203.154043-1-darekm@google.com>
+ <16889839-b4e9-9984-2e36-5f07ceb7d7f2@xs4all.nl>
+ <CALFZZQH7-mzRZbji1w-UwRLdw6c8+CThn0e96oG8E2Eq1ivANQ@mail.gmail.com>
+ <8e575d0b-4765-ae54-019e-0fab522fe1d5@xs4all.nl>
+Message-ID: <a421ff13-c8ee-b72c-3e1e-376b9e426064@xs4all.nl>
+Date:   Wed, 29 May 2019 16:47:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-4-matheus@castello.eng.br>
-In-Reply-To: <20190527022258.32748-4-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 29 May 2019 16:46:07 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com>
-Message-ID: <CAJKOXPd2F6iy0ZqYf+X2k=eQ=tY1zG4gVbrr68XqE9+w4HK6dw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8e575d0b-4765-ae54-019e-0fab522fe1d5@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOFT+KbQpijqyY5R6EctfAmZFUWcR7Yo8VtDvKyY1iseCfmQislEu119ZXE7vyKuwoWGVlrk+vRYss4UV7TI8lpabv6A4Ezf/SBF9CeiZfUq0sePM05e
+ klvYpdsrUkSKH2hKRVUZ1ZAeP0aAob/B/vnp76BTChU1VyxDtyuYsYr0o9Hdy+U7dgTuyiYF3rHTAH9oYrUS9Q2nMMMUWBlGV9iCOaC8uSe99TNO1rPcszYo
+ Nzu1hK4y16hkHF8msZQxpkL5JfsrZGydglixkKiYet2TKPe7rYJu6upOAlaXYloccL2jEDt0MakXY9bc2OZ72gj8JjsGUCWl+NNQJAzeUXqpoT9MgPQoYjnt
+ tHyGHbib
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:46, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
->
-> Now we can use "maxim,alert-low-soc-level" property with the values from
-> 1% up to 32% to configure alert interrupt threshold.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 52 +++++++++++++++++++++++--
->  1 file changed, 49 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index b7433e9ca7c2..2f4851608cfe 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -29,6 +29,9 @@
->  #define MAX17040_DELAY         1000
->  #define MAX17040_BATTERY_FULL  95
->
-> +#define MAX17040_ATHD_MASK             0xFFC0
-> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
-> +
->  struct max17040_chip {
->         struct i2c_client               *client;
->         struct delayed_work             work;
-> @@ -43,6 +46,8 @@ struct max17040_chip {
->         int soc;
->         /* State Of Charge */
->         int status;
-> +       /* Low alert threshold from 32% to 1% of the State of Charge */
-> +       u32 low_soc_alert_threshold;
->  };
->
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -99,6 +104,28 @@ static void max17040_reset(struct i2c_client *client)
->         max17040_write_reg(client, MAX17040_CMD, 0x0054);
->  }
->
-> +static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
-> +       u32 level)
-> +{
-> +       int ret;
-> +       u16 data;
-> +
-> +       /* check if level is between 1% and 32% */
-> +       if (level > 0 && level < 33) {
-> +               level = 32 - level;
-> +               data = max17040_read_reg(client, MAX17040_RCOMP);
-> +               /* clear the alrt bit and set LSb 5 bits */
-> +               data &= MAX17040_ATHD_MASK;
-> +               data |= level;
-> +               max17040_write_reg(client, MAX17040_RCOMP, data);
-> +               ret = 0;
-> +       } else {
-> +               ret = -EINVAL;
-> +       }
+On 5/28/19 10:05 AM, Hans Verkuil wrote:
+> On 5/28/19 9:53 AM, Dariusz Marcinkiewicz wrote:
+>> On Fri, May 24, 2019 at 11:21 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>>
+>>> Hi Dariusz,
+>>>
+>>> I did some more testing with the Khadas VIM2 and found another problem,
+>>> something that will, unfortunately, require some redesign.
+>>>
+>> ...
+>>>
+>>> The other problem is in the CEC driver: it creates the CEC device as
+>>> soon as the HDMI device is found (cec_notifier_parse_hdmi_phandle).
+>>>
+>>> But that doesn't mean that the HDMI device also had registered itself
+>>> as a CEC notifier.
+>>>
+>>> Until now that never mattered: as long as the HDMI device was found
+>>> the CEC adapter would function fine, it would just have no physical
+>>> address until so notified by the HDMI device once it registered its
+>>> CEC notifier.
+>>>
+>>> But if we want to have valid connector info during the lifetime of
+>>> the CEC adapter, then this no longer works.
+>>>
+>>> I'm not entirely sure how to handle this.
+>>>
+>>> Another issue here is that when the HDMI driver removes the notifier,
+>>> then it should also zero the connector info. Remember that both the
+>>> HDMI and the CEC drivers can be loaded and unloaded independently from
+>>> one another.
+>>>
+>> Given all of the above, what do you think about coming back to the v1
+>> of the patch, where a connector info could be set on an adapter at any
+>> time and an event was used to notify userland when that happened? That
+>> approach seems to cover all the scenarios mentioned above.
+> 
+> That's just hiding the real problems :-)
+> 
+> I hope to spend some time on CEC tomorrow and I'll get back to you then.
 
-This is unusual way of handling error... when you parse DTS, you
-accept any value for "level" (even incorrect one). You validate the
-value later when setting it and show an error... however you ignore
-the error of max17040_write_reg() here... This is correct but looks
-unusual.
+Unfortunately I had too many other things going on to spend time on this.
 
-Best regards,
-Krzysztof
+Hopefully next week.
+
+Regards,
+
+	Hans
+
