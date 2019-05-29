@@ -2,150 +2,111 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769E5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3117BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442E62424D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559166937;
-	bh=8tg6OtL5MFGzZKrJoMJB7UCVwhRYE9ecDuehrbylaEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UdgCKGvvYNqcNZpk1NqqvdrZgXApqp679ausnrNxEzLxHklKVv2kOohHUzESDvRrp
-	 iOmET5JJGu6LcupVdywXBnPVoFksPewaqbpIDZsggZWHKeyPLikarRW1Yq9hM3l0wC
-	 c8lmhxVg1uR8rCBeIvoq8uoj6LSXcKqPxsanY6Bk=
+	by mail.kernel.org (Postfix) with ESMTP id 1396D2424E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfE2Vzg (ORCPT
+        id S1726454AbfE2WBi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:55:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 18:01:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55476 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfE2Vzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:55:35 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726054AbfE2WBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 18:01:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5D32424C;
-        Wed, 29 May 2019 21:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559166934;
-        bh=8tg6OtL5MFGzZKrJoMJB7UCVwhRYE9ecDuehrbylaEg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uhsNXG1CTmyoHxGkmUUcWP5rPoURLlTpMYJVekDNvfwdm/eOFkHvMHKeM4JjEuAc8
-         2VKe2MncqyaKKOOJHRxttOwx0NK5u7lAsgRIxwS+1YJv/JMNGUbCdeCRwMuDi2Gerj
-         Yu1KlCX5j42F2LegJ7N3zdmUXvzd52OLnb59Zrew=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 95E1A3C08D3; Wed, 29 May 2019 23:55:30 +0200 (CEST)
-Date:   Wed, 29 May 2019 23:55:30 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv6 3/4] drm/omap: add framedone interrupt support
-Message-ID: <20190529215530.mi3fjlsaziq22mw5@earth.universe>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <20190523200756.25314-4-sebastian.reichel@collabora.com>
- <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E3A630917AA;
+        Wed, 29 May 2019 22:01:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BB01189D4;
+        Wed, 29 May 2019 22:01:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     James Morris <jmorris@namei.org>
+cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] keys: Miscellany
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gk4bpbyorxuwmmmt"
-Content-Disposition: inline
-In-Reply-To: <9eb23a5d-438e-7b25-e7cb-8b734a150e43@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18288.1559167295.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 29 May 2019 23:01:35 +0100
+Message-ID: <18289.1559167295@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 29 May 2019 22:01:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi James,
 
---gk4bpbyorxuwmmmt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here are some miscellaneous keyrings fixes and improvements intended for
+the next merge window, if you could pull them please.
 
-Hi Tomi,
+ (1) Fix a bunch of warnings from sparse, including missing RCU bits and
+     kdoc-function argument mismatches
 
-On Tue, May 28, 2019 at 01:19:01PM +0300, Tomi Valkeinen wrote:
-> Hi Sebastian,
->=20
-> On 23/05/2019 23:07, Sebastian Reichel wrote:
->=20
-> > @@ -302,6 +328,30 @@ void omap_crtc_vblank_irq(struct drm_crtc *crtc)
-> >   	DBG("%s: apply done", omap_crtc->name);
-> >   }
-> > +void omap_crtc_framedone_irq(struct drm_crtc *crtc, uint32_t irqstatus)
-> > +{
-> > +	struct omap_crtc *omap_crtc =3D to_omap_crtc(crtc);
-> > +
-> > +	if (!omap_crtc->framedone_handler) {
-> > +		dev_warn(omap_crtc->base.dev->dev, "no framedone handler?");
-> > +		return;
-> > +	}
->=20
-> This triggers on normal displays.
->=20
-> FRAMEDONE is an interrupt we get when DISPC's output videoport is being
-> turned off. It's raised after the last frame has been finished (i.e. the
-> DISPC is truly done with that videoport).
->
-> We get it for both conventional displays (when the display is turned off)
-> and for DSI command mode (when a single frame has been sent), as in both
-> cases the videoport is disabled after the operation. For conventional
-> displays, you can think FRAMEDONE as the last vsync.
+ (2) Implement a keyctl to allow a key to be moved from one keyring to
+     another, with the option of prohibiting key replacement in the
+     destination keyring.
 
-Ok, but it should only trigger when framedone irq is enabled. This
-commit adds the required infrastructure, but does not call=20
-omap_irq_enable_framedone() anywhere. The next commit enables it,
-but only for manually updated displays.
+ (3) Grant Link permission to possessors of request_key_auth tokens so that
+     upcall servicing daemons can more easily arrange things such that only
+     the necessary auth key is passed to the actual service program, and
+     not all the auth keys a daemon might possesss.
 
-> We also have special handling for FRAMEDONE in omap_crtc_set_enabled(),
-> which is used to get the drm driver to wait for FRAMEDONE when disabling =
-the
-> display. I wonder if this separate framedone handling might somehow confl=
-ict
-> with that code. And/or should these be somehow combined.
+Changes: I made the change you suggested on patch 6 and added the
+reviewed-by's to patches 1-5 and 7.
 
-Oh sorry, I missed the part that omap_irq_wait_init() actually
-enables the framedone irq. It should be enough to just drop the
-warning (and the curly brackets) to keep existing behaviour. The
-code exits early with the above warning for any existing code (since
-that does not register a framedone handler). DSI on the other hand
-does not reach the omap_irq_wait_init() part. Regarding combining
-the logic: I don't think there is anything to combine right now.
-It should be possible to simplify the logic after DSI has been
-converted to drm_panel style, since this will move the update logic
-for the screen content from the panel driver to DSI core.
+David
+---
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-TLDR: It's enough to remove the warning. Do you need a new
-submission for this?
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
--- Sebastian
+are available in the Git repository at:
 
---gk4bpbyorxuwmmmt
-Content-Type: application/pgp-signature; name="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-misc-20190529
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to 39de363a48ae151d766512c8e73a5564a3096c82:
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzu/88ACgkQ2O7X88g7
-+ppQsBAAoKxzg9EBL5zgLidy/H5+kl5O9fBNmxwIG1is6UEYr59RggjmuhjPrWTt
-x5PAX6d8E+wVjKftGMTPBhswhf0p2TAUbx9cmnYk4lUj0y4ldpmtIy8AlBVOIy4d
-I6KEacBFwh58XOkHhAJoQSjUpoaVAMG98bJmebk11Vo+XAB6czmihkFyaN0d8YJ/
-Sw6KRFcvJatiCUEvRFoSwE8lKiimpHW163jUiT1ChOp/F5etGMli7mMmWNGskdvk
-zM8KbbcmbV3lnyGO5xEunK7T60sWE6djb7dQokd5bTCWXvG9Pm+sB/cLkktou0KY
-jPhOdga5Pwq1rXVWgeGbz9mLiKtN0MBpNW62hso560lXJbd64a6D61FTQ6PQC/4g
-vT0eWS5e+ZrqJnC7AMyYtbCUq7LEwbMKDel0VAX0/ZHC0nMUhJ7AKVir6PeL0YoM
-mCOi8WrTGc6AIeVfVCZLv3jCf69SnjA1OKaMD63JuchgMhAQsO/sm44+YbvO7MA7
-nFzDF9CobrlVWOWAgpbKJXG1MmSzZa4wbrTdro+qV4ZqRdVMD/KVGBZViEMNBhhk
-RsdEKM+dORLozb7oavHnXPs/VrT6A67AOkNcfDTSyFhSzJKdNohF4TvEuX9GiQGa
-HE2cRWUnFIljtvyKld/yhZ2cNck8RQKOXQmXXAC4XwdA9NqMNjQ=
-=wUyO
------END PGP SIGNATURE-----
+  keys: Grant Link permission to possessers of request_key auth keys (2019-05-29 22:34:52 +0100)
 
---gk4bpbyorxuwmmmt--
+----------------------------------------------------------------
+Miscellaneous keyrings development
+
+----------------------------------------------------------------
+David Howells (7):
+      keys: sparse: Fix key_fs[ug]id_changed()
+      keys: sparse: Fix incorrect RCU accesses
+      keys: sparse: Fix kdoc mismatches
+      keys: Break bits out of key_unlink()
+      keys: Make __key_link_begin() handle lockdep nesting
+      keys: Add a keyctl to move a key between keyrings
+      keys: Grant Link permission to possessers of request_key auth keys
+
+ Documentation/security/keys/core.rst |  21 +++++
+ include/linux/key.h                  |  13 ++-
+ include/uapi/linux/keyctl.h          |   3 +
+ kernel/cred.c                        |   4 +-
+ security/keys/compat.c               |   3 +
+ security/keys/internal.h             |   3 +-
+ security/keys/key.c                  |   6 +-
+ security/keys/keyctl.c               |  56 ++++++++++-
+ security/keys/keyring.c              | 178 ++++++++++++++++++++++++++++++-----
+ security/keys/process_keys.c         |  22 ++---
+ security/keys/request_key.c          |   4 +-
+ security/keys/request_key_auth.c     |   4 +-
+ 12 files changed, 269 insertions(+), 48 deletions(-)
