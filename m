@@ -2,161 +2,85 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00646C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9549F23BAD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B657C23BB5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wPNQdOcN"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="CEz/AAKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfE2Pom (ORCPT
+        id S1727103AbfE2Pov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:44:42 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46556 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfE2Pol (ORCPT
+        Wed, 29 May 2019 11:44:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36962 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfE2Pou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:44:41 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x144so1242608ywd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:44:41 -0700 (PDT)
+        Wed, 29 May 2019 11:44:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 20so136698pgr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:44:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UzvX+fHwwsVK/rYT0lCyOiKU2IYlx0wYtIIUBRbu7rI=;
-        b=wPNQdOcNDJpcN8SLZ3QoXpbTi5+UGW9J1bJY4DkqqyBqOI5d3yqzNACNWIULW+15uA
-         IOXbGpvkbYBV0VebvqxyIL8ibS8C+tAyRbVca1/XXkDA4xi9WNrW/FL80v5lLwXrn6WX
-         cwhMZKxdm4TSwzUMarPMwb5BPTzYFDP5T/Ff+/xk4GmpGLuIB99ZDBFE5ZsPst2thb98
-         KdZKvl1cychGGc0G2K0seDV4UyZX6QAlop/QAK4INAj89+MOLqABeimnQbx0EAjB+tY6
-         Hst//WxZmOF9GBbIbUWdiIPxGEGXGapkxHSeWkuEL+nez7jMLVZmRFPRVONUbF3V+1jb
-         nIBQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5rb0csxEYpq6VfGz5/QVGNKPlo9rHsx48NwguhVphjA=;
+        b=CEz/AAKkGLOaVc6lKqbFaOc50JrPG1TariHgp5nHwAf4jc9op0iyz3MxM7nZQO/ymz
+         TKSA2wwMayYrX89UdiTQxgkG4S2uhqZZfbfJxJVrGdU/vGSjR0D9qbnlCv3hPvxbf04h
+         Ptmo3H9PVCcjr5mewqD05lu0+wKuy3MLedN6FiIdjWSRebWK1w/ufeqTcilgHIHBazbc
+         tyoemTy21uGhYOqr9lyIgiAn/tR8SfT65+AmsE1LktTtLpWu7PLifc6+sL7ywovtk1bi
+         74jY3Z9dWSAxMmcGS8tt10gNmMq+Ozl+YJCCkookIzFLu2enYs7QRr8eHmDBbvyKGl4B
+         9HTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UzvX+fHwwsVK/rYT0lCyOiKU2IYlx0wYtIIUBRbu7rI=;
-        b=U579i1/kMZ945Q85I21gHCAu3/nDQfKLl4A9W6cqljzWYY5N3rTHT9hV5nOp1t+PTu
-         lQHgWUz2e2Mj/Z/v11lAdLZrhwjASlgWKobvnGaiPsDt7fXM7U+ZwpQUhpVwWcOTFTIh
-         MxXKGTB6B3XuRYULED7XQGrBlNIIiNNpPRYfXTlqgwtH/QSRlauUk3TMlmZ3npEm0NHj
-         yoxKevGXInlAkSvJTzdYK/yIa59dEPhzwA/1BzUYaBmVjp1YVjbJz5bVhEJIx3kusonS
-         ulpYl++pdc3eQdRzuZ5ozfWGAzBWVkB8WJM3gFaLQkShL9e3BGpQqTWukS3xI7GgKspe
-         VcZA==
-X-Gm-Message-State: APjAAAWVdpHDNvqbCwhE9WOrmYMmuM1b5qov2tBa5Y73OgYRogu97BbW
-        nnAg7PVNg4zWSoUReoGO1XVFP3HCMRaHuqN8MTE8zQ==
-X-Google-Smtp-Source: APXvYqzA+PBa1BbnJDLnJot49Cdhzw+OKvDs168TcBrvjO423z/o9cDuc2+4zCLPwjWJyT1pCgHVlblOYoJI3350nLM=
-X-Received: by 2002:a81:59c2:: with SMTP id n185mr60560151ywb.21.1559144680103;
- Wed, 29 May 2019 08:44:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5rb0csxEYpq6VfGz5/QVGNKPlo9rHsx48NwguhVphjA=;
+        b=XUSGvNLUGg7iYFQVbiqaiThjtVF7cIp+qLtQTeknMfeESgJtvavX1/TSU2NLyXVWHV
+         UORJyXn11ehv8yHu6fk6OIt2qvgJnrzdLd1ZpCdNiDN6evS2HSGUnTOG7q72kmWwGur9
+         R763bIpDue405abjLKQD4My3Zdq0GwE5XiKzuVezoYeCND9yGr9JhH5tlreJvckqU7Rb
+         xKH38In233XSbOJgoxAy5C13H9IZ0yewiBDdFYapDRKR8ZudXwAAhNwLaHDiVodHNJDI
+         28dd+Da2F2fn8rtc5U5T3vUTtCDkt7gwbP8R3XDArTxdq3yYgpIRitOp0fmcU1FEjNXU
+         re8Q==
+X-Gm-Message-State: APjAAAWsUwOF2Wu8fiQjcprZV32bbDDJxSyJA2WwI5mRECKR7FkC+Cpm
+        f6AK7Sl/5mYS//NvyJnp66cFxw==
+X-Google-Smtp-Source: APXvYqwzUrKfcPoy1hsbTCw6ESg7o3qVXGDDyPIfLq5La7nokllnQ2NESefsdh56kWG23ear160irQ==
+X-Received: by 2002:a63:e953:: with SMTP id q19mr14654295pgj.313.1559144690141;
+        Wed, 29 May 2019 08:44:50 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:a47c])
+        by smtp.gmail.com with ESMTPSA id u123sm34317pfu.67.2019.05.29.08.44.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 08:44:49 -0700 (PDT)
+Date:   Wed, 29 May 2019 11:44:47 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Fix recent_rotated history
+Message-ID: <20190529154447.GA28937@cmpxchg.org>
+References: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
 MIME-Version: 1.0
-References: <1559117459-27353-1-git-send-email-92siuyang@gmail.com>
- <CANn89iLxxiX+4E7EURNKb=xRkk97rPaKTkpSc6Yu7fZbiwPT6w@mail.gmail.com> <CAKgHYH2uW=iSUM1j5pLhaQXpm35XK2rWq45M2Yih1-Dn=es0SA@mail.gmail.com>
-In-Reply-To: <CAKgHYH2uW=iSUM1j5pLhaQXpm35XK2rWq45M2Yih1-Dn=es0SA@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 29 May 2019 08:44:27 -0700
-Message-ID: <CANn89iJ1qoP9PpJZVcatvdtRX4SqUrKrWDfer1hdid+gxYQXhA@mail.gmail.com>
-Subject: Re: [PATCH] ipv4: tcp_input: fix stack out of bounds when parsing TCP options.
-To:     Yang Xiao <92siuyang@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 8:11 AM Yang Xiao <92siuyang@gmail.com> wrote:
->
-> Indeed, condition opsize < 2 and opsize > length can deduce that length >= 2.
-> However, before the condition (if opsize < 2), there may be one-byte
-> out-of-bound access in line 12.
-> I'm not sure whether I have put it very clearly.
+On Tue, May 28, 2019 at 07:09:02PM +0300, Kirill Tkhai wrote:
+> Johannes pointed that after commit 886cf1901db9
+> we lost all zone_reclaim_stat::recent_rotated
+> history. This commit fixes that.
+> 
+> Fixes: 886cf1901db9 "mm: move recent_rotated pages calculation to shrink_inactive_list()"
+> Reported-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-Maybe I should have been clear about the 320 bytes we have at the end
-of skb->head
-
-This is the struct skb_shared_info
-
-So reading one byte, 'out-of-bound' here is harmless.
-
-Whatever value is read, we will return early without ever looking at a
-following byte.
-
-
->
-> On Wed, May 29, 2019 at 10:20 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Wed, May 29, 2019 at 1:10 AM Young Xiao <92siuyang@gmail.com> wrote:
-> > >
-> > > The TCP option parsing routines in tcp_parse_options function could
-> > > read one byte out of the buffer of the TCP options.
-> > >
-> > > 1         while (length > 0) {
-> > > 2                 int opcode = *ptr++;
-> > > 3                 int opsize;
-> > > 4
-> > > 5                 switch (opcode) {
-> > > 6                 case TCPOPT_EOL:
-> > > 7                         return;
-> > > 8                 case TCPOPT_NOP:        /* Ref: RFC 793 section 3.1 */
-> > > 9                         length--;
-> > > 10                        continue;
-> > > 11                default:
-> > > 12                        opsize = *ptr++; //out of bound access
-> > >
-> > > If length = 1, then there is an access in line2.
-> > > And another access is occurred in line 12.
-> > > This would lead to out-of-bound access.
-> > >
-> > > Therefore, in the patch we check that the available data length is
-> > > larger enough to pase both TCP option code and size.
-> > >
-> > > Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> > > ---
-> > >  net/ipv4/tcp_input.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > > index 20f6fac..9775825 100644
-> > > --- a/net/ipv4/tcp_input.c
-> > > +++ b/net/ipv4/tcp_input.c
-> > > @@ -3791,6 +3791,8 @@ void tcp_parse_options(const struct net *net,
-> > >                         length--;
-> > >                         continue;
-> > >                 default:
-> > > +                       if (length < 2)
-> > > +                               return;
-> > >                         opsize = *ptr++;
-> > >                         if (opsize < 2) /* "silly options" */
-> > >                                 return;
-> >
-> > In practice we are good, since we have at least 320 bytes of room there,
-> > and the test done later catches silly options.
-> >
-> > if (opsize < 2) /* "silly options" */
-> >     return;
-> > if (opsize > length)   /* remember, opsize >= 2 here */
-> >      return; /* don't parse partial options */
-> >
-> > I guess adding yet another conditional will make this code obviously
-> > correct for all eyes
-> > and various tools.
-> >
-> > Thanks.
-> >
-> > Signed-off-by: Eric Dumazet <edumazet@google.com>
->
->
->
-> --
-> Best regards!
->
-> Young
-> -----------------------------------------------------------
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
