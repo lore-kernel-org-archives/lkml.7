@@ -2,219 +2,161 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61FCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A129EC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23B24105
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559159180;
-	bh=5tFwDDtbnfAvg3Ud/TCBvvuyOzI9S67cXcgjH0QlSi0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=S2MjIjk0FueRc8BPWsanzBt7N+tf9tssjwsmjOobD7Zp/yczL2SMooRZTX+9Yixe3
-	 uEyR0Gj/FkGKss/sh+jwbG3ImS2Ee1f7ZiY+W4lNZ9K1FLFcSA6KLt+MkqoR8usRD8
-	 NU3bbFF8yal7UdlfqLsw40HgetZnmJi/4VlZaRKQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7AA9C24109
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:47:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VUV/TH24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfE2TqT (ORCPT
+        id S1726396AbfE2Tr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:46:19 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:53972 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfE2TqT (ORCPT
+        Wed, 29 May 2019 15:47:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41314 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfE2Tr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:46:19 -0400
-Received: by mail-it1-f194.google.com with SMTP id m141so6016299ita.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:46:18 -0700 (PDT)
+        Wed, 29 May 2019 15:47:29 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l25so3264047otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+eutwUzWw7yIEf2kITpPbDuWCOhlPFyyl9kfwZe7DzQ=;
-        b=ZmJ08OpkIGvwOSk6cIloQd1jQuyQO5dTJyhas0jAo6u5UQvuA1piCpkwgE0PgkUcuA
-         F7REJwjQomNqtqabhTX7VnUCd2qibyaFMsabu3qFRI6I2T/nLH2y7dIrl3raAAwRpjtY
-         wfn0UKWaSb32oiL5yNFF6Hwa/Hc6Z3MYMo8wM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=po7nNPdV4b+/ItlBB/fXRxecISnzmHJt6X6owiL7qm8=;
+        b=VUV/TH24+FRJuxJNnyr+AjmyvKUjz4FEshfH/A28h+3XyiKxlYhHN/o4simuvwTVH6
+         5bNqwjBV+8LwHKZZC/4SRV/Ugc01Y1q6MWeb/zq2+kMx0FXlEVZjMkZWCMxJBCV4RuvN
+         u28lWCrKlPI727QqkPdJM0aRgKlpau+iaJC/i7cDC5oCNmvgDmo+gDAklAliZYJ3v5zt
+         2wlwNmFjqmpi4fs09d95lyjqQXuU8HsP2W/Q838wVXJZoEax5KHBX//ZDEsU03IjFtcb
+         gjk1HiImcD96DT/3dznxGeJd2FuflT1V/E/a+Ef54vPbKJpILqYnd7EWWc5+O5BCt4S3
+         aw/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+eutwUzWw7yIEf2kITpPbDuWCOhlPFyyl9kfwZe7DzQ=;
-        b=sJm1mk7HLuPNygm4v6/0jnkHHE6X5VcoirgtVkF1+G/o6xvxlkdI15cDy/Onov8SJO
-         YFlNEBJewLeeZfdOKp7nn2QBGSnA1PneNkfyi+h3/gU46g41fU86ZF9WkmvD3+kXXnqk
-         lDKpkMgnIU5JHdLaPk9xaXSkVWvt7bpXbm9P9SzRagUa+nZMwtzHt8IGlVH8yffvsfMn
-         1MOcxMHAegx+5vx+/eikd/+tVrok0t6u+6w4WMr1EfkWyHGWY3/l1kfgVBw9Rl1HVj9N
-         LfO5WY/hBd+I5pgsyH/57gcsKxOQ1VrCJ1w5YujscS23i/kRY7KDvTY/07rER2PeR4mQ
-         DDAQ==
-X-Gm-Message-State: APjAAAVAWdyoIC134DmeSik3wK48FZs5xnxjA6Zzoeh7Zh69nCLMVUyD
-        kQw4Q9qNVHvhTAl5Lfmw7tve1Q==
-X-Google-Smtp-Source: APXvYqxuVn+L94+vSLieuWGz5DDC+w1DLNr916cnmtQdZ6Yl1TiU64n5TfLD78gFxuOE2b/Iwm52rw==
-X-Received: by 2002:a24:468e:: with SMTP id j136mr8428959itb.116.1559159178125;
-        Wed, 29 May 2019 12:46:18 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 62sm135387itx.8.2019.05.29.12.46.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 12:46:17 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     valentina.manea.m@gmail.com, shuah@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usbip: usbip_host: fix stub_dev lock context imbalance regression
-Date:   Wed, 29 May 2019 13:46:15 -0600
-Message-Id: <20190529194615.18765-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=po7nNPdV4b+/ItlBB/fXRxecISnzmHJt6X6owiL7qm8=;
+        b=ZyBXSWUojZiolc8Eb599lIs3jzzkBr7UtJO1cR8Z1npNSngLR3gQWGIvLYzMiKpjir
+         bKFFX3bGULuvRIWEl0GajV5pwuuGSnTR4newF7X9kk7eXOrjjSfJql/j52X5TdiZ51/B
+         Jmho4qLG/SeyH5b0u8nh9M3V8tzJIhtUTzkMlzvjVgqCOQeLDelwxhkHwE12D1IVXtAF
+         j4lOdY7mL4iN5eEqp4Ja/Q04Dqezxiq8WvfVHZX2DJ/8BE54nalFRGmn7J17ZY1ueEM8
+         63AqeCVMonvuODqwq86m2R0SDHDX3CSyBS9wN1wp7SDGfvXqt5bB1mrUf+452JLMvtZb
+         BN/g==
+X-Gm-Message-State: APjAAAUk1/3wcECDKxssq5oPpf93LH5q5I7nnQoBSRaSvQu4kbiRXueq
+        DPVfs41InJu86DYaJcrXrFsnTYvT5pZx9KydsIYRAA==
+X-Google-Smtp-Source: APXvYqxbsVRKe9lyZnKmrRME8/o+NSuf6H78hum/ejTHCvM3Xt5ZTKrdg8WXWMD1bfhyz3HdJN4rPpWo9Wtka4SjK7k=
+X-Received: by 2002:a05:6830:1283:: with SMTP id z3mr413216otp.228.1559159247777;
+ Wed, 29 May 2019 12:47:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
+ <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+ <14347.1559127657@warthog.procyon.org.uk> <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com>
+ <4552118F-BE9B-4905-BF0F-A53DC13D5A82@amacapital.net> <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
+ <CAG48ez2S+i2wxpWXVGpEAprgY9gtjxyejLfbZtrqu5YOkQ81Nw@mail.gmail.com> <0cd823ca-4733-19ef-c13e-ed5ac8c63a0f@schaufler-ca.com>
+In-Reply-To: <0cd823ca-4733-19ef-c13e-ed5ac8c63a0f@schaufler-ca.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 29 May 2019 21:47:01 +0200
+Message-ID: <CAG48ez0X7rKw-qfZm9i+8OLq7YccBRtV3aF-7hkQsfWaiTbuXg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse context imbalance regression introduced in
-a patch that fixed sleeping function called from invalid context bug.
+On Wed, May 29, 2019 at 9:28 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> On 5/29/2019 11:11 AM, Jann Horn wrote:
+> > On Wed, May 29, 2019 at 7:46 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >> On 5/29/2019 10:13 AM, Andy Lutomirski wrote:
+> >>>> On May 29, 2019, at 8:53 AM, Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >>>>> On 5/29/2019 4:00 AM, David Howells wrote:
+> >>>>> Jann Horn <jannh@google.com> wrote:
+> >>>>>
+> >>>>>>> +void post_mount_notification(struct mount *changed,
+> >>>>>>> +                            struct mount_notification *notify)
+> >>>>>>> +{
+> >>>>>>> +       const struct cred *cred = current_cred();
+> >>>>>> This current_cred() looks bogus to me. Can't mount topology changes
+> >>>>>> come from all sorts of places? For example, umount_mnt() from
+> >>>>>> umount_tree() from dissolve_on_fput() from __fput(), which could
+> >>>>>> happen pretty much anywhere depending on where the last reference gets
+> >>>>>> dropped?
+> >>>>> IIRC, that's what Casey argued is the right thing to do from a security PoV.
+> >>>>> Casey?
+> >>>> You need to identify the credential of the subject that triggered
+> >>>> the event. If it isn't current_cred(), the cred needs to be passed
+> >>>> in to post_mount_notification(), or derived by some other means.
+> >>> Taking a step back, why do we care who triggered the event?  It seems to me that we should care whether the event happened and whether the *receiver* is permitted to know that.
+> >> There are two filesystems, "dot" and "dash". I am not allowed
+> >> to communicate with Fred on the system, and all precautions have
+> >> been taken to ensure I cannot. Fred asks for notifications on
+> >> all mount activity. I perform actions that result in notifications
+> >> on "dot" and "dash". Fred receives notifications and interprets
+> >> them using Morse code. This is not OK. If Wilma, who *is* allowed
+> >> to communicate with Fred, does the same actions, he should be
+> >> allowed to get the messages via Morse.
+> > In other words, a classic covert channel. You can't really prevent two
+> > cooperating processes from communicating through a covert channel on a
+> > modern computer.
+>
+> That doesn't give you permission to design them in.
+> Plus, the LSMs that implement mandatory access controls
+> are going to want to intervene. No unclassified user
+> should see notifications caused by Top Secret users.
 
-kbuild test robot reported on:
+But that's probably because they're worried about *side* channels, not
+covert channels?
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git  usb-linus
+Talking about this in the context of (small) side channels: The
+notification types introduced in this patch are mostly things that a
+user would be able to observe anyway if they polled /proc/self/mounts,
+right? It might make sense to align access controls based on that - if
+you don't want it to be possible to observe events happening on some
+mount points through this API, you should probably lock down
+/proc/*/mounts equivalently, by introducing an LSM hook for "is @cred
+allowed to see @mnt" or something like that - and if you want to
+compare two cred structures, you could record the cred structure that
+is responsible for the creation of the mount point, or something like
+that.
 
-Regressions in current branch:
+For some of the other patches, I guess things get more tricky because
+the notification exposes new information that wasn't really available
+before.
 
-drivers/usb/usbip/stub_dev.c:399:9: sparse: sparse: context imbalance in 'stub_probe' - different lock contexts for basic block
-drivers/usb/usbip/stub_dev.c:418:13: sparse: sparse: context imbalance in 'stub_disconnect' - different lock contexts for basic block
-drivers/usb/usbip/stub_dev.c:464:1-10: second lock on line 476
+> >  You can transmit information through the scheduler,
+> > through hyperthread resource sharing, through CPU data caches, through
+> > disk contention, through page cache state, through RAM contention, and
+> > probably dozens of other ways that I can't think of right now.
+>
+> Yeah, and there's been a lot of activity to reduce those,
+> which are hard to exploit, as opposed to this, which would
+> be trivial and obvious.
+>
+> > There
+> > have been plenty of papers that demonstrated things like an SSH
+> > connection between two virtual machines without network access running
+> > on the same physical host (<https://gruss.cc/files/hello.pdf>),
+> > communication between a VM and a browser running on the host system,
+> > and so on.
+>
+> So you're saying we shouldn't have mode bits on files because
+> spectre/meltdown makes them pointless?
 
-Error ids grouped by kconfigs:
-
-recent_errors
-├── i386-allmodconfig
-│   └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
-├── x86_64-allmodconfig
-│   ├── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_disconnect-different-lock-contexts-for-basic-block
-│   └── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_probe-different-lock-contexts-for-basic-block
-└── x86_64-allyesconfig
-    └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
-
-This is a real problem in an error leg where spin_lock() is called on an
-already held lock.
-
-Fix the imbalance in stub_probe() and stub_disconnect().
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- drivers/usb/usbip/stub_dev.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/usb/usbip/stub_dev.c b/drivers/usb/usbip/stub_dev.c
-index d094c96643d2..7931e6cecc70 100644
---- a/drivers/usb/usbip/stub_dev.c
-+++ b/drivers/usb/usbip/stub_dev.c
-@@ -326,14 +326,17 @@ static int stub_probe(struct usb_device *udev)
- 		 * See driver_probe_device() in driver/base/dd.c
- 		 */
- 		rc = -ENODEV;
--		goto sdev_free;
-+		if (!busid_priv)
-+			goto sdev_free;
-+
-+		goto call_put_busid_priv;
- 	}
- 
- 	if (udev->descriptor.bDeviceClass == USB_CLASS_HUB) {
- 		dev_dbg(&udev->dev, "%s is a usb hub device... skip!\n",
- 			 udev_busid);
- 		rc = -ENODEV;
--		goto sdev_free;
-+		goto call_put_busid_priv;
- 	}
- 
- 	if (!strcmp(udev->bus->bus_name, "vhci_hcd")) {
-@@ -342,7 +345,7 @@ static int stub_probe(struct usb_device *udev)
- 			udev_busid);
- 
- 		rc = -ENODEV;
--		goto sdev_free;
-+		goto call_put_busid_priv;
- 	}
- 
- 
-@@ -361,6 +364,9 @@ static int stub_probe(struct usb_device *udev)
- 	save_status = busid_priv->status;
- 	busid_priv->status = STUB_BUSID_ALLOC;
- 
-+	/* release the busid_lock */
-+	put_busid_priv(busid_priv);
-+
- 	/*
- 	 * Claim this hub port.
- 	 * It doesn't matter what value we pass as owner
-@@ -373,9 +379,6 @@ static int stub_probe(struct usb_device *udev)
- 		goto err_port;
- 	}
- 
--	/* release the busid_lock */
--	put_busid_priv(busid_priv);
--
- 	rc = stub_add_files(&udev->dev);
- 	if (rc) {
- 		dev_err(&udev->dev, "stub_add_files for %s\n", udev_busid);
-@@ -395,11 +398,17 @@ static int stub_probe(struct usb_device *udev)
- 	spin_lock(&busid_priv->busid_lock);
- 	busid_priv->sdev = NULL;
- 	busid_priv->status = save_status;
--sdev_free:
--	stub_device_free(sdev);
-+	spin_unlock(&busid_priv->busid_lock);
-+	/* lock is released - go to free */
-+	goto sdev_free;
-+
-+call_put_busid_priv:
- 	/* release the busid_lock */
- 	put_busid_priv(busid_priv);
- 
-+sdev_free:
-+	stub_device_free(sdev);
-+
- 	return rc;
- }
- 
-@@ -435,7 +444,9 @@ static void stub_disconnect(struct usb_device *udev)
- 	/* get stub_device */
- 	if (!sdev) {
- 		dev_err(&udev->dev, "could not get device");
--		goto call_put_busid_priv;
-+		/* release busid_lock */
-+		put_busid_priv(busid_priv);
-+		return;
- 	}
- 
- 	dev_set_drvdata(&udev->dev, NULL);
-@@ -465,7 +476,7 @@ static void stub_disconnect(struct usb_device *udev)
- 	if (!busid_priv->shutdown_busid)
- 		busid_priv->shutdown_busid = 1;
- 	/* release busid_lock */
--	put_busid_priv(busid_priv);
-+	spin_unlock(&busid_priv->busid_lock);
- 
- 	/* shutdown the current connection */
- 	shutdown_busid(busid_priv);
-@@ -480,10 +491,9 @@ static void stub_disconnect(struct usb_device *udev)
- 
- 	if (busid_priv->status == STUB_BUSID_ALLOC)
- 		busid_priv->status = STUB_BUSID_ADDED;
--
--call_put_busid_priv:
- 	/* release busid_lock */
--	put_busid_priv(busid_priv);
-+	spin_unlock(&busid_priv->busid_lock);
-+	return;
- }
- 
- #ifdef CONFIG_PM
--- 
-2.17.1
-
+spectre/meltdown are vulnerabilities that are being mitigated.
+Microarchitectural covert channels are an accepted fact and I haven't
+heard of anyone seriously considering trying to get rid of them all.
