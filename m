@@ -6,65 +6,65 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58644C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65975C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2359E239BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311EE239BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="d7qZ7oQx"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KF7LRI9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfE2OR3 (ORCPT
+        id S1727360AbfE2OR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:17:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53158 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbfE2OR2 (ORCPT
+        Wed, 29 May 2019 10:17:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51730 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfE2OR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:17:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y3so1815570wmm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:17:26 -0700 (PDT)
+        Wed, 29 May 2019 10:17:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f10so1823626wmb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=c3tkqZh517BY6AR/S6xMnJ7Cpq7UtW1QuIk6bwoE9sc=;
-        b=d7qZ7oQxeIxjAcRQK6bOotSK2OrSTIHA+cK1XesmK7rGtdNFC5OXWnXwqg6+AUOza0
-         v+OeA+1NYvzAc7Enhl9AVn/rXOpCvThdYZp7tjixv2ZHS6b1YguPgOjE5NrEeiggzxt/
-         nJiZgYqVizY+NlTGbzQLferXXqqVMIxdw2JQjuP8eJRVbV0L0IsOvSNFs+cBqG2I4tRc
-         4ypGM43rph7DBt3g5YfOt5h3no1wSMjKpuGKgv9vV/EdqJkFLd0EuCU+UNtjPWoZgz2c
-         p9Er+UOkNW4RCGHf043WYibs2IjbjbxfwLGhrh7qqIL3orvuscbNPP4x+/UjlDYKYWzl
-         7AkQ==
+        bh=v7C3c6MQIY3CiheB5n/mnPTuxee+MqjjRtfJwGq9axQ=;
+        b=KF7LRI9ZvSGluIcDB5qACOh33uHyZsA5WNrmZYh7hCTmXU4rD6gbjfECMq0857HXtd
+         2NiVcak4pGkaMTuPBH+pBBFbAZ96TREPEID/6uhPJDTvgVuI/fbDmfQ6F0nZ0AsQhrFK
+         Uc8xtzmy18iyWKE032S1kB3XlZP0WCRO66gUE4wfK/U8loSCS/W+zsgFUONfKABufBji
+         lU7nzPKWjkH281RJlY8zFsyzPaGpsHcNLVp0LceB9oVox7MCXVeAuULzlsFJs/d6yAyL
+         qecGAPp5FImqYLmPJmozFjEAAjjgcEXETb2AckhhoGQ3dVuUWu8HyWuNFwc0xi0oJGQv
+         aFgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=c3tkqZh517BY6AR/S6xMnJ7Cpq7UtW1QuIk6bwoE9sc=;
-        b=NSgG1HyFNBML6CHDbdPz/TTG0N6NyhXxi/yFsSgF8hwM7i+WHPr9RnVyP4ncPrvrF0
-         scv3b5MupkBEYprNZ50pMkQXy7Ja/OAQjn3+fOmR3NTgwHA5GRtNuw2KyEsNH2kBQJMn
-         pTz+QtogNoUoZ/56DQKynmuzt9gRSSYkLD2cT8x47w4fE8IVuY8oJzC26NsPE7Wc7MXP
-         fU6zPBJPk5oo236x+XlxY0e9hq2tdPVsZNhBD4ctE/VvXAxBW4ccG67yx9IDeUSyOFIF
-         X1siPv0jocQvEK4hmsDHDuUJoivD/P2at8jqeDy9RjVDFOP/bKn3gQUocjwv4k0oE592
-         +dXA==
-X-Gm-Message-State: APjAAAWZ8wJwK5XWWnhae6X9HxdFZtNjXqWKGVtsGJGZ+whO4pu+Y5KA
-        FhG3pjug++WrLMUKqUnIXYe4wUd7Y109wg==
-X-Google-Smtp-Source: APXvYqy+bZBmoM9YkQhFkVcs3V6POwoQx1UEKI0oVjleSevoBo6qB01xpruDbjYGHMlXfRuBN0Ap1w==
-X-Received: by 2002:a1c:a483:: with SMTP id n125mr6153746wme.172.1559139445406;
-        Wed, 29 May 2019 07:17:25 -0700 (PDT)
+        bh=v7C3c6MQIY3CiheB5n/mnPTuxee+MqjjRtfJwGq9axQ=;
+        b=YCimr+9AcBFIMXhp1Q0I1YCv2wrU5ZxaDe1UNfAuwIQgJD9RiM1pJWOjD4HNgUqrOj
+         ci534uSdVdbo8xH8uItJ6nB448x+ZhsNQj6kRQ48Ml5e2ybDJgqjbgBYLhlDy+J/bFsJ
+         VNsFdnTXXUV4zgeH6CtX8sKz1P/EG9RPOsW1NiqkI++wPnrd6IRXuKVjQEw9c0n1qzLI
+         JOZwOCKepJlExTg/SG2drNKtLLp+7m5fxyQso1xvwDo3YusD1qceYe5LU9QFBsz5xoIH
+         RA6W3/g9vT0awRCMNQ5V+yS0M7dlbZa4fj+AlPP3TfyB4kiAMRrPN//ZcPJzhRXvhcvI
+         TEgw==
+X-Gm-Message-State: APjAAAUco1Aztqq2iJBT4RTPzEZHdPIyaWxU3ao2XXSklH/HxqYro47e
+        vy/Bw2lLBhFGRShFDNzhvlfUCA==
+X-Google-Smtp-Source: APXvYqw6WVhYQ7Wxf9DJm8mNsv9yDKvgSkVVRgsZsq4Vb+4e2Mo8aq1BtO9CwxAo8z9he0zNJ0QiOw==
+X-Received: by 2002:a1c:7a0d:: with SMTP id v13mr7265358wmc.10.1559139473364;
+        Wed, 29 May 2019 07:17:53 -0700 (PDT)
 Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id u14sm6901110wrt.75.2019.05.29.07.17.24
+        by smtp.gmail.com with ESMTPSA id n7sm6537928wrw.64.2019.05.29.07.17.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 07:17:24 -0700 (PDT)
-Subject: Re: [PATCH 08/10] arm64: dts: meson-gxbb-vega-s95: enable SARADC
+        Wed, 29 May 2019 07:17:52 -0700 (PDT)
+Subject: Re: [PATCH 03/10] arm64: dts: meson-gxbb-wetek: enable SARADC
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        christianshewitt@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20190527132200.17377-1-narmstrong@baylibre.com>
- <20190527132200.17377-9-narmstrong@baylibre.com>
- <CAFBinCAbFDsT_6+mA4EGy1Tv8_Qkb7mDDbGbwygiKjDDtX79MA@mail.gmail.com>
+ <20190527132200.17377-4-narmstrong@baylibre.com>
+ <CAFBinCBJwVT0uMx--NPuuAYS7k2Zx-X-Ew+qNmRQiPV+Cmv=KA@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -117,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <9a33178f-0379-173a-675f-50023c7931a9@baylibre.com>
-Date:   Wed, 29 May 2019 16:17:23 +0200
+Message-ID: <471c24af-ad63-3986-6265-1cf62ce45cb0@baylibre.com>
+Date:   Wed, 29 May 2019 16:17:52 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCAbFDsT_6+mA4EGy1Tv8_Qkb7mDDbGbwygiKjDDtX79MA@mail.gmail.com>
+In-Reply-To: <CAFBinCBJwVT0uMx--NPuuAYS7k2Zx-X-Ew+qNmRQiPV+Cmv=KA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -131,20 +131,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/2019 20:24, Martin Blumenstingl wrote:
-> On Mon, May 27, 2019 at 3:23 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On 27/05/2019 20:15, Martin Blumenstingl wrote:
+> On Mon, May 27, 2019 at 3:22 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
->> Add SARARC node and associated regulator to support reading the
->> ADC inputs on the Vega S95
-> I'm curious: is this the same problem than on the Wetek boards (where
-> SCPI hwmon reads garbage if SAR ADC is disabled)?
+>> From: Christian Hewitt <christianshewitt@gmail.com>
+>>
+>> Enable SARADC on Wetek Boards.
+> as far I as remember there's a story behind this (and it would be nice
+> to have it documented here):
+> some of the SCPI firmware revisions don't enable the SAR ADC clock
+> when reading the SoCs temperature.
+> if the SAR ADC is disabled in Linux then the common clock framework
+> will disable the SAR ADC clock.
+> now, when the SCPI firmware uses the SAR ADC to read the SoC
+> temperature we only get garbage.
+> 
+> enabling the SAR ADC in Linux "fixes" this issue
 
-Yes
+Yes seems to be this issue solved here
 
 > 
->> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> in any case:
+> with that:
 > Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > 
 
