@@ -2,107 +2,148 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9978C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E289C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836C620B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YJ4KaPKd"
+	by mail.kernel.org (Postfix) with ESMTP id 2DC3320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfE2I4v (ORCPT
+        id S1726512AbfE2I44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:56:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60718 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfE2I4v (ORCPT
+        Wed, 29 May 2019 04:56:56 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:38349 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbfE2I4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:56:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yoN+qjMhQOqFfhB9c55JTuMYWset936oLOIvZ9uv87s=; b=YJ4KaPKdKZ1jLs40LqPjsyPk6
-        uyds6tzKQVpfr03EZu5CgRrAYZtgDRLu5KiSI+pE8dGeGCNLQD8yx7G1JrhDQIIHFWfl9BRox4HUg
-        iDTe+WXBl5e74NeCuPlZTSeNVbX+d1wjL9NfeSDukchNfw0KObzXmvymR7eTLd7m/OBPlj4kmfBTv
-        EcNKA556PaJqaymOdEHRufll94IcIYNRGOWtAeNRsW6NvfHttmADbxrrS4MhLc6LxNtQN7p8zhUm7
-        iXpGVIbKJQBORe7knNzZZ4hYYfuSp+Yyq80iIWptFl5woTWE6YltecvczEB9vWVaEvsVRH3MUNYQF
-        yAIdt2c9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVuNh-0002hC-Ei; Wed, 29 May 2019 08:56:21 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E8915201A7E42; Wed, 29 May 2019 10:56:18 +0200 (CEST)
-Date:   Wed, 29 May 2019 10:56:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: "nosmt" breaks resuming from hibernation (was Re: [5.2-rc1
- regression]: nvme vs. hibernation)
-Message-ID: <20190529085618.GH2623@hirez.programming.kicks-ass.net>
-References: <nycvar.YFH.7.76.1905241706280.1962@cbobk.fhfr.pm>
- <20190524154429.GE15192@localhost.localdomain>
- <nycvar.YFH.7.76.1905250023380.1962@cbobk.fhfr.pm>
- <92a15981-dfdc-0ac9-72ee-920555a3c1a4@oracle.com>
- <nycvar.YFH.7.76.1905271126480.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905281709130.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905282118070.1962@cbobk.fhfr.pm>
+        Wed, 29 May 2019 04:56:53 -0400
+Received: from [IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae] ([IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id VuO8h4USX3qlsVuO9hsPNJ; Wed, 29 May 2019 10:56:51 +0200
+Subject: Re: [PATCH 4/4] media: xilinx: fix leaked of_node references
+To:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Patrice Chotard <patrice.chotard@st.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
+ <1557126318-21487-5-git-send-email-wen.yang99@zte.com.cn>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <e557b5a7-524b-56e0-0642-7f9c04c136f9@xs4all.nl>
+Date:   Wed, 29 May 2019 10:56:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905282118070.1962@cbobk.fhfr.pm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557126318-21487-5-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCNcQwo2tuDr/le+vUGvfG5jmsmcDf9YkYYz99PHycHPmKjCwQlYKvxglDv57a3asuiBY5gKxAEKqAKjFc3lu2ZDtAslmARGu7eN1mc1tICkwrBtrRHf
+ jETldO7ENIaH2fYtCZa/jD7AxE9q1CAbUGMt1a8I5v5wFd7bSIxyT7b/3sKSZp7oJMDyr6CUNt6HoGn2YWiU5+GcUsoXjpM8Pc+shfRL1wxAx3m4MqOPgmB8
+ nsusfRls9FAQ0N3gedQv9uF1D0i7yN02Xg0g5gDG4nGL2N7GiZ2FQPIaW+ie4kwQ/Gj2ZsAegb4rK8gMy8dhNhKhysa5bTmT2uKO+ReHJJ2w5he2Csd/Vl4p
+ l8l28GeEUPq0xeflpZ2iE0cHY81U0zQfutkAM7pGNxk5AEGrsR0y6xpoXw9981qK4kklNbnqvb3aVKIdYUCwmTCofERU0yrjY4lk25P+4JpgzTEZHdnaMuH4
+ nl6AbgRZYZoa66bsIu3U2qHzj2GHmXFvoJIW23v+ACJSAD8d9g403vBZc/tvdYSdn2OFqot0GZg0YegL02ignZKzTGObZ3Je5nqDEh9PuWlx4KeGDDwKdwqI
+ zVaalO86OUNbdiaWzg8SWOK9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 09:22:14PM +0200, Jiri Kosina wrote:
-> On Tue, 28 May 2019, Jiri Kosina wrote:
+On 5/6/19 9:05 AM, Wen Yang wrote:
+> The call to of_get_child_by_name returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
 > 
-> > [ some x86/PM folks added ]
-> > 
-> > I isolated this to 'nosmt' being present in the "outer" (resuming) kernel, 
-> > and am still not sure whether this is x86 issue or nvme/PCI/blk-mq issue.
-> > 
-> > For the newcomers to this thread: on my thinkpad x270, 'nosmt' reliably 
-> > breaks resume from hibernation; after the image is read out from disk and 
-> > attempt is made to jump to the old kernel, machine reboots.
-
+> Detected by coccinelle with the following warnings:
+> drivers/media/platform/xilinx/xilinx-vipp.c:487:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
+> drivers/media/platform/xilinx/xilinx-vipp.c:491:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
 > 
-> Thomas figured it out (and this should be really more widespread than just 
-> my machine :) ).
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Patrice Chotard <patrice.chotard@st.com>
+> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
+>  drivers/media/platform/exynos4-is/media-dev.c | 1 +
+
+Huh? This patch changes exynos4 as well, not just xilinx.
+
+Please split this up into two patches, one for each driver.
+
+>  drivers/media/platform/xilinx/xilinx-vipp.c   | 8 +++++---
+>  3 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> nosmt forces HT siblings to mwait, but that explodes after %cr3 change 
-> during resume, as the mwait target address is all of a sudden not valid 
-> anymore for neither of the hyperthreads.
+> diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+> index 02da0b0..25df4c6 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-is.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-is.c
+> @@ -809,6 +809,7 @@ static int fimc_is_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  
+>  	is->pmu_regs = of_iomap(node, 0);
+> +	of_node_put(node);
+>  	if (!is->pmu_regs)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+> index 463f2d8..a31dacf 100644
+> --- a/drivers/media/platform/exynos4-is/media-dev.c
+> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+> @@ -450,6 +450,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
+>  	else
+>  		pd->fimc_bus_type = pd->sensor_bus_type;
+>  
+> +	of_node_put(np);
+>  	if (WARN_ON(index >= ARRAY_SIZE(fmd->sensor))) {
+>  		of_node_put(rem);
+>  		return -EINVAL;
+> diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
+> index edce040..307717c 100644
+> --- a/drivers/media/platform/xilinx/xilinx-vipp.c
+> +++ b/drivers/media/platform/xilinx/xilinx-vipp.c
+> @@ -472,7 +472,7 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
+>  {
+>  	struct device_node *ports;
+>  	struct device_node *port;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	ports = of_get_child_by_name(xdev->dev->of_node, "ports");
+>  	if (ports == NULL) {
+> @@ -484,11 +484,13 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
+>  		ret = xvip_graph_dma_init_one(xdev, port);
+>  		if (ret < 0) {
+>  			of_node_put(port);
+> -			return ret;
+> +			goto out_put_node;
 
-ARGH!!! But also, you wrote:
+Just do a break here,
 
-> > I verified that it succesfully makes it to the point where restore_image()
-> > is called from swsusp_arch_resume() (and verified that only BSP is alive
-> > at that time), but the old kernel never comes back and triplefault-like
-> > reboot happens.
+>  		}
+>  	}
+>  
+> -	return 0;
+> +out_put_node:
 
-which means that even without nosmt all 'other' CPUs are offline. And
-when I look at resume_target_kernel() I see it call
-hibernate_resume_nonboot_cpu_disable().
+and drop this label.
 
-So how is the SMT offline different from that offline? afaict they all
-get into play_dead()->native_play_dead()->mwait_play_dead().
+> +	of_node_put(ports);
+> +	return ret;
+>  }
+>  
+>  static void xvip_graph_cleanup(struct xvip_composite_device *xdev)
+> 
 
+Regards,
+
+	Hans
