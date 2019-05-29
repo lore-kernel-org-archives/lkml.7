@@ -2,145 +2,102 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74037C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32024315
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D0924336
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172014;
-	bh=BEBELwXfQYhjtWaio7ViiW8ZsVmTLumZzieRffAOy44=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=husWzVVXHVggXKQnhKBgAgujTaQt+38Y8LicLv7ksf8Go1DqjlCr9D//X5EuJWAI1
-	 aK1wyMYlhP9BiCVhcnML/w/2VWcrYctq85/uK5J3LFnFcoVsZgn64Gb8mXl819RcD6
-	 adUAcvK7sieimJzwN2LvTQUfphEZJQtJTJ3dkVfY=
+	s=default; t=1559172243;
+	bh=cOnr9cD0bU96kABaEzgXc3vrNs1wra7Rvj4pZ0fcnzI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g499sORZVBfXnp3fhJpBbNtgQwZjuzboL41bk0Z/MpTk7U/U90hSjQO8VBu+npXba
+	 HUZr6h7NaK0loDQWBb3EWZVaCLKDpGWenUHILZF9raLZWIF/6hlB7TSEJW33O1K+YA
+	 7i37Wa7FKZpSsDP0d+Ji2TNtKdNoKyrPPEmTy5/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfE2XUM (ORCPT
+        id S1726697AbfE2XYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:20:12 -0400
-Received: from casper.infradead.org ([85.118.1.10]:38662 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfE2XUM (ORCPT
+        Wed, 29 May 2019 19:24:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49070 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfE2XYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:20:12 -0400
+        Wed, 29 May 2019 19:24:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HxAos5nfvGsI/xjg+zDGTU3seNu/Mutb6DCGcKjvXw8=; b=L/HjP6UGpJkvCYRqZTyA1WFFKR
-        WxnIrcPjYcS5QRbPWQD9qI7L8w/f17R4osvGmBYeMmT1GYAi4Dfytxp2sxncOp9RKOwxAXcIuVTLH
-        HaMQGsPRBYBqEVD+amoV3g3gJKEIxzzPM6hpWUYmibTFMPohDjnAPdgtHUgIdrMF/nTl1imZGWkEn
-        +dlFFOaxRz7p2OQL7nWafEBzYG+WB+O4bUwbOqcqrL75JQqARBsAMAhqQcwsgqfgVSoUvECaVR42B
-        3mqMmg6Hgtjj65Fps7/+8J897Lh7cIDqt9opaFmKTP7BjNWvAckmPN/lr1V/4Aya24GszmI4Ps8U+
-        9jKdW0Kg==;
-Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7rd-0004DZ-JC; Wed, 29 May 2019 23:20:09 +0000
-Date:   Wed, 29 May 2019 20:20:05 -0300
+        bh=1DGih5hxjM3hCpgxfZAZGkcczMEB+Oahf4kiHIhmR2E=; b=YquDx8C/wGbwAhowj6901ldCuk
+        v0Qije4lyOHJB6BozDmJSn/jC5TFTFY10RKQDQQrMTlRQF2i3r3DlJd7M1ORzfmJN/tKJnR/uYc7l
+        wwpM3AO1/i9pZPGThbdto34o4nEdLiwcxLhFJxJy4YIbdR1eZbfmH3n6i7rUZOibFU/S0cJiRGiLq
+        6IUw1CGVhAqNWYeb003h/1YpTx9G0IxripXhSVHHuLO3B/NIiQmW+FJt+hSZ32NSdK8wkTRs0Jivg
+        fitw81aJUhhxcx5VHoiFEe7WIWHbg8c7x7GBZn3MSHzPnISEHYhztKRh7Fe/TmlS77B2SJA3xKLrc
+        oMS1UNYg==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW7vL-0005Re-2m; Wed, 29 May 2019 23:23:59 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hW7vI-0007wn-Hb; Wed, 29 May 2019 20:23:56 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] docs: by default, build docs a lot faster with
- Sphinx >= 1.7
-Message-ID: <20190529202005.04dcd4a0@coco.lan>
-In-Reply-To: <20190529170202.65c7f9ca@lwn.net>
-References: <cover.1558955082.git.mchehab+samsung@kernel.org>
-        <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
-        <20190529170202.65c7f9ca@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Karsten Keil <isdn@linux-pingi.de>, netdev@vger.kernel.org
+Subject: [PATCH 02/22] isdn: mISDN: remove a bogus reference to a non-existing doc
+Date:   Wed, 29 May 2019 20:23:33 -0300
+Message-Id: <2a135f7a5ee5b165ea62d4be211e9fd8c012f6cc.1559171394.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 29 May 2019 17:02:02 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+The mISDN driver was added on those commits:
 
-> On Mon, 27 May 2019 08:07:40 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > Since Sphinx version 1.7, it is possible to use "-jauto" in
-> > order to speedup documentation builds. On older versions,
-> > while -j was already supported, one would need to set the
-> > number of threads manually.
-> > 
-> > So, if SPHINXOPTS is not provided, add -jauto, in order to
-> > speed up the build. That makes it *a lot* times faster than
-> > without -j.
-> > 
-> > If one really wants to slow things down, it can just use:
-> > 
-> > 	make SPHINXOPTS=-j1 htmldocs
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  Documentation/Makefile | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/Makefile b/Documentation/Makefile
-> > index 380e24053d6f..794233d05789 100644
-> > --- a/Documentation/Makefile
-> > +++ b/Documentation/Makefile
-> > @@ -28,6 +28,8 @@ ifeq ($(HAVE_SPHINX),0)
-> >  
-> >  else # HAVE_SPHINX
-> >  
-> > +SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
-> > +  
-> 
-> So this totally fails to work for me with any version of sphinx, and I'm
-> not enough of a Perl person to figure it out.  Sometimes I'll see the
-> sphinx-build output, i.e.:
-> 
->     sphinx-build 1.8.4
-> 
-> and sometimes (like with 2.0) I don't, but I never get -jauto regardless.
+	960366cf8dbb ("Add mISDN DSP")
+	1b2b03f8e514 ("Add mISDN core files")
+	04578dd330f1 ("Define AF_ISDN and PF_ISDN")
+	e4ac9bc1f668 ("Add mISDN driver")
 
-Hmm... with 2.0.0 --version prints the version.
+None of them added a Documentation/isdn/mISDN.cert file.
+Also, whatever were supposed to be written there on that time,
+probably doesn't make any sense nowadays, as I doubt isdn would
+have any massive changes.
 
-	$ sphinx-build --version
-	sphinx-build 2.0.0
+So, let's just get rid of the broken reference, in order to
+shut up a warning produced by ./scripts/documentation-file-ref-check.
 
-Afaikt, only too old versions will output it with a different format:
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ drivers/isdn/mISDN/dsp_core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/drivers/isdn/mISDN/dsp_core.c b/drivers/isdn/mISDN/dsp_core.c
+index cd036e87335a..038e72a84b33 100644
+--- a/drivers/isdn/mISDN/dsp_core.c
++++ b/drivers/isdn/mISDN/dsp_core.c
+@@ -4,8 +4,6 @@
+  *		Karsten Keil (keil@isdn4linux.de)
+  *
+  *		This file is (c) under GNU PUBLIC LICENSE
+- *		For changes and modifications please read
+- *		../../../Documentation/isdn/mISDN.cert
+  *
+  * Thanks to    Karsten Keil (great drivers)
+  *              Cologne Chip (great chips)
+-- 
+2.21.0
 
-	$ sphinx-build --version
-	Sphinx (sphinx-build) 1.2
-
-
-> Not sure what's going on here?
-
-Do you have SPHINXOPTS already set on your environment? If so, Makefile
-will not override the existing environment.
-
-Here, if I call it by hand (replacing $$1 by $1), it does the right
-thing. For example:
-
-1.8.4:
-
-	$ sphinx-build --version
-	sphinx-build 1.8.4
-	$ perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto\n" if ($1 >= "1.7") } ;} close IN'
-	-jauto
-
-2.0.0:
-	$ sphinx-build --version
-	sphinx-build 2.0.0
-	(sphinx_2.0) $ perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto\n" if ($1 >= "1.7") } ;} close IN'
--jauto
-
-
-Thanks,
-Mauro
