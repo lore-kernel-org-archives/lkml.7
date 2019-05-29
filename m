@@ -2,127 +2,102 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAC6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E697C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F082075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hYOi8BkF"
+	by mail.kernel.org (Postfix) with ESMTP id 283CB2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 04:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfE2ETi (ORCPT
+        id S1726008AbfE2EWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 00:19:38 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]:44564 "EHLO
-        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfE2ETi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 00:19:38 -0400
-Received: by mail-qt1-f173.google.com with SMTP id m2so937403qtp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 21:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FnqQyLt42DZ9noxJLCU2V14s5enRSAf3rpEHwRX9Kzo=;
-        b=hYOi8BkFEY0SXxqQqLEZF9NnP9Pbvi1wS7yC9BK9JmRFXUan60kY7zFDXyLITqTDUS
-         7ll6TdMYTzb7zrvvduAaFLWu3eONcUAliDarfOiByT5Tx+eF5Mcj8TPYuztHIg075hAh
-         AaICUAmx02EeefvpAqjSqQcUnil3D9/4DGJhU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FnqQyLt42DZ9noxJLCU2V14s5enRSAf3rpEHwRX9Kzo=;
-        b=mgQCRMGxltS+1+uzn7RB8zGcEX2dvAXzwhvkuea8JwjcNCKGPOa4Q7Kl2YW+JNEcPM
-         lgJ1rjdHvcXLx9qWsiO0msT4Iyj4inoKy0UE7jzT4z76VOgQpzwsFW5+26auBJqk5wrE
-         Byd7oaGLgxwFpnXDLTPCLa5TNwlx+HSRclIE7o+agrWfAT6jqWZmJmNUx2afp1Cqn802
-         xBos3o9qw08J60hz2pOJ7XZe0i40yYIW6q5Bfkh4gUl9lA0kYtWs9DkgIVZDbe4uK/AF
-         blbsk6fU/rtFgksCeGMbBfuXSLRVHEdzETv9hPZxrySmw1snLKXJR7eZWqSjHclCsICw
-         YApA==
-X-Gm-Message-State: APjAAAWU00AZbf8Mjlfh6wJn9AJl+sDgHxL2WAbwi9+m8qK/OedZGPcr
-        rORMeM6YZIRk0qCpYTQCKrsV7hb3jTUuXhU60hbHCw==
-X-Google-Smtp-Source: APXvYqxQjVrzoCeL6L4KHpLXuAIIoAai4JlsMWOYefX4hqGGu7mkiavfm3JE86Sp3YUok2L/Ps2IUpK+ghjSMUbbU7I=
-X-Received: by 2002:a0c:b66f:: with SMTP id q47mr23601745qvf.102.1559103577129;
- Tue, 28 May 2019 21:19:37 -0700 (PDT)
+        Wed, 29 May 2019 00:22:06 -0400
+Received: from ozlabs.org ([203.11.71.1]:36779 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfE2EWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 00:22:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45DHbm6RTRz9s4V;
+        Wed, 29 May 2019 14:21:55 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+In-Reply-To: <20190528153224.GE20758@fuggles.cambridge.arm.com>
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com> <20190528140103.GT2623@hirez.programming.kicks-ass.net> <20190528153224.GE20758@fuggles.cambridge.arm.com>
+Date:   Wed, 29 May 2019 14:21:54 +1000
+Message-ID: <877ea9q49p.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190519092537.69053-1-jitao.shi@mediatek.com> <20190519092537.69053-2-jitao.shi@mediatek.com>
-In-Reply-To: <20190519092537.69053-2-jitao.shi@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 29 May 2019 12:19:11 +0800
-Message-ID: <CAJMQK-jST7mtoo-1C-8hU+O4x+_gOF0CuwToPwc=HJe86HDRHA@mail.gmail.com>
-Subject: Re: [v3 1/7] drm/mediatek: move mipi_dsi_host_register to probe
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        CK Hu <ck.hu@mediatek.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Inki Dae <inki.dae@samsung.com>,
-        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, lkml <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 9:25 AM Jitao Shi <jitao.shi@mediatek.com> wrote:
+Will Deacon <will.deacon@arm.com> writes:
+> On Tue, May 28, 2019 at 04:01:03PM +0200, Peter Zijlstra wrote:
+>> On Tue, May 28, 2019 at 08:31:29PM +0800, Young Xiao wrote:
+>> > When a kthread calls call_usermodehelper() the steps are:
+>> >   1. allocate current->mm
+>> >   2. load_elf_binary()
+>> >   3. populate current->thread.regs
+>> > 
+>> > While doing this, interrupts are not disabled. If there is a perf
+>> > interrupt in the middle of this process (i.e. step 1 has completed
+>> > but not yet reached to step 3) and if perf tries to read userspace
+>> > regs, kernel oops.
+>
+> This seems to be because pt_regs(current) gives NULL for kthreads on Power.
 
-> @@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->                 return ret;
->         }
->
-> -       ret = mipi_dsi_host_register(&dsi->host);
-> -       if (ret < 0) {
-> -               dev_err(dev, "failed to register DSI host: %d\n", ret);
-> -               goto err_ddp_comp_unregister;
-> -       }
-> -
->         ret = mtk_dsi_create_conn_enc(drm, dsi);
->         if (ret) {
->                 DRM_ERROR("Encoder create failed with %d\n", ret);
-> @@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->         return 0;
->
->  err_unregister:
-> -       mipi_dsi_host_unregister(&dsi->host);
-> -err_ddp_comp_unregister:
->         mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
->         return ret;
->  }
-> @@ -1097,31 +1089,37 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->
->         dsi->host.ops = &mtk_dsi_ops;
->         dsi->host.dev = dev;
-> +       dsi->dev = dev;
-> +       ret = mipi_dsi_host_register(&dsi->host);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to register DSI host: %d\n", ret);
-> +               return ret;
-> +       }
->
-Since mipi_dsi_host_register() is moved from .bind to .probe,
-mipi_dsi_host_unregister() should also be moved from .unbind to
-.remove?
+Right, we've done that since roughly forever in copy_thread():
 
-Thanks
+int copy_thread(unsigned long clone_flags, unsigned long usp,
+		unsigned long kthread_arg, struct task_struct *p)
+{
+	...
+	/* Copy registers */
+	sp -= sizeof(struct pt_regs);
+	childregs = (struct pt_regs *) sp;
+	if (unlikely(p->flags & PF_KTHREAD)) {
+		/* kernel thread */
+		memset(childregs, 0, sizeof(struct pt_regs));
+		childregs->gpr[1] = sp + sizeof(struct pt_regs);
+                ...
+		p->thread.regs = NULL;	/* no user register state */
+
+See commit from 2002:
+  https://github.com/mpe/linux-fullhistory/commit/c0a96c0918d21d8a99270e94d9c4a4a322d04581#diff-edb76bfcc84905163f34d24d2aad3f3aR187
+
+> From the initial report [1], it doesn't look like the mm isn't initialised,
+> but rather than we're dereferencing a NULL pt_regs pointer somehow for the
+> current task (see previous comment). I don't see how that can happen on
+> arm64, given that we put the pt_regs on the kernel stack which is allocated
+> during fork.
+
+We have the regs on the stack too (see above), but we're explicitly
+NULL'ing the link from task->thread.
+
+Looks like on arm64 and x86 there is no link from task->thread, instead
+you get from task to pt_regs via task_stack_page().
+
+That actually seems potentially fishy given the comment on
+task_stack_page() about the stack going away for exiting tasks. We
+should probably be NULL'ing the regs pointer in free_thread_stack() or
+similar. Though that race mustn't be happening because other arches
+would see it.
+
+Or are we just wrong and kthreads should have non-NULL regs? I can't
+find another arch that does the same as us.
+
+cheers
