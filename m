@@ -2,150 +2,225 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF034C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC24C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AEC241C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A09C241C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGarFcfC"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="AfFmHZA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfE2VBe (ORCPT
+        id S1726668AbfE2VCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:01:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35441 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfE2VBd (ORCPT
+        Wed, 29 May 2019 17:02:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33994 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfE2VCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:01:33 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w1so4391102qts.2;
-        Wed, 29 May 2019 14:01:33 -0700 (PDT)
+        Wed, 29 May 2019 17:02:42 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i11so4006206edn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 14:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=IqFTu1LTscqVcgDNBc6n7nyvkiZAcoSFBwufVwMCfYA=;
-        b=eGarFcfCrXvNTDu5JN2TfWGZ3WiqhLAJLXCMADnnuIqD4K/GX2/VyfTo2QclV37Sl1
-         uZol26oPFrEH42Dy4su9z9wTBH9a1EQnsp69Xgp9rK6f5glScC7QJfekJEmJYfgALxbl
-         t4XWucS0p8oeTVOSOl/rAbZ2Qcc5ypgCdgLevdQ4w6rSSLe5NjcBluTYDrRd8NXy3AZu
-         uHz6V/hKNwSKZVpCWbF6z49cCc+ArS7s8eNN5vGvkHpWskaHGVoSudALVfEAdXg537Ar
-         5F6ckyV5PPqc/3FrJb4UQjEPmDGnIX/NxPbURGxXeHTkJjG8PpXVZ/DyOs/2fR6ycm3g
-         pQaQ==
+        d=posk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Px0QqNXBx7zb8DTbIgHM/u4AHM3hp5BrmRWZ2MUl+c=;
+        b=AfFmHZA9P6Vj1FUFXm32F5wcN9QjZQ8Gr++foUi9M4Z60gUbc/YtzwRB4u72etrH/G
+         QoI7xJZhvcPglm6kFyoZ2dNxc4Z5DetfDnpmTK3M6btz5CK3SFs6Kh8URQ118ib5evBZ
+         JUDkfqqu5SwYOIged3UZvy2LD3d+xMt3osF8wJWf8rsUC1LCG5mmcbnRCKkW6C92GjAt
+         vgTX1kOK4VuRjAxZMY/FzQekMcNbCg0k+UL3THdW9soa44sMoKKBizBhEDrIsLWtlqpm
+         unKBC6nnNfPCDeMQj+jQucrtGyzYa8/Z71UJUdPQmUDh0HH0T3gAbrLEpjL78lvSYddI
+         6YFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=IqFTu1LTscqVcgDNBc6n7nyvkiZAcoSFBwufVwMCfYA=;
-        b=abN59aVJLymp/ZUU0J5EkPncM7K6HHFezzlTYaWf/xx6nz9lVRxN+RkEv9migLAb32
-         wd1QPissbU4t37MveVr1/a3c6rQV8u5dRwaQUeP/zaJzcmvCAPzaJkgOQ3Lj25O9oSIz
-         hzQydS9Ydhv4TIXwut7pxEucuyKyi6nZbosE7teOCg618LKl7QB2Ghjw5h7wqPf22Gii
-         1V+ohTOAJwAd8dhunTE2Ll+fmMkIFOlQXVjbxPJZKZod0X/Rt6oU0QZnvGPe5oHmh4bo
-         a71L7iSJ7ZPxNh+fbLnht1GbebEJQ0DTZnNdgyoYeClNDAXmjRg/HTcihrLemTEHjRAQ
-         fyow==
-X-Gm-Message-State: APjAAAUbdGnm3R4LgXhDQgS+Uggh5ezxOBxopffwD7MrzMI/B4ts/Q2x
-        Tr2fz5gtI4YYy6CWPXgluMUm1umN
-X-Google-Smtp-Source: APXvYqy2FlZ7mbHoYCLu7hVom5grdbupVpBdf4SCgnveLJ/g5oAGABAjfqRJ4vryMr0T5KUols07dA==
-X-Received: by 2002:a0c:d604:: with SMTP id c4mr74851qvj.27.1559163692354;
-        Wed, 29 May 2019 14:01:32 -0700 (PDT)
-Received: from ?IPv6:2001:470:1d:7b6::245? (dragonstone.xogium.me. [2001:470:1d:7b6::245])
-        by smtp.googlemail.com with ESMTPSA id y18sm320524qtc.90.2019.05.29.14.01.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 14:01:31 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: armada-3720-espressobin: correct spi node
-To:     Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190527111614.3694-1-tmn505@gmail.com>
-From:   Ellie Reeves <ellierevves@gmail.com>
-Message-ID: <ee0c69a8-d4fe-7a13-f193-0703dab543d1@gmail.com>
-Date:   Wed, 29 May 2019 17:01:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Firefox/52.0 SeaMonkey/2.49.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Px0QqNXBx7zb8DTbIgHM/u4AHM3hp5BrmRWZ2MUl+c=;
+        b=oNeBNRWF2WdWp/PK0MvyOgJ3CDRjhHkj3suv0cn26pJu4lR4I9rvTP9nylspMNdooU
+         4JPKH/RoD2cbPR+RIk9l5CqT54VDuh5jo0/IayKPREsVtpbs0vPfQ94eLO2kZfXrcjz+
+         lfMYNxLnlmW8DF+Fkf3KKXcdARFG8WSomO6Ep1IMonMXH0BsureSGVgfczvq8LESESXH
+         z6RZc+CskNHTRvjezNKzQiiPlHFLgP3zVUnFV+5Q0IqLMY8FINde3lqo7C0sfrXWpKYG
+         FxrYN40lvv/pCMS6AJrwZ9XgdrqnIvCii8J7oHqNj1R87PE4Cplx4WHXcDAmDqjw+VDt
+         aIbQ==
+X-Gm-Message-State: APjAAAVd4LSWhDIZxQZhIz2dAOLQ792iWtPmolegCioPBt1JVBzhRZQs
+        oYq+MKdrZ5CdK0nOF7N/3dGt7Tqd4zYAbvFQc1UmTw==
+X-Google-Smtp-Source: APXvYqzjL5MUYoBAy8DVwWU8o8EztO46lH9ZOukgHNK96rSaPoD+Ll+/SrzWBmOI5/wuign7t+FYZ4Tu2E4KYXWpBAU=
+X-Received: by 2002:a17:906:c103:: with SMTP id h3mr207937ejz.232.1559163760745;
+ Wed, 29 May 2019 14:02:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190527111614.3694-1-tmn505@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1559129225.git.vpillai@digitalocean.com> <c1fd166d42ded9cc9839eb2722174549059dd36f.1559129225.git.vpillai@digitalocean.com>
+In-Reply-To: <c1fd166d42ded9cc9839eb2722174549059dd36f.1559129225.git.vpillai@digitalocean.com>
+From:   Peter Oskolkov <posk@posk.io>
+Date:   Wed, 29 May 2019 14:02:30 -0700
+Message-ID: <CAFTs51V+z-zjGaMAysdR4pPPKJO4rWVekjzRk3mc+wMwwYbvDg@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 16/16] sched: Debug bits...
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        subhra.mazumdar@oracle.com, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-yes, I agree on this personally. I meant to correct this myself or at 
-least try to, but I didn't have time, as I was the one that found out 
-how they did their partition layout previously, this used to be good so 
-I asked Uwe Kleine-König if he could get this patch upstreamed, but as 
-it is I myself upgraded U-Boot and cannot make use of it anymore.
-Thanks
+On Wed, May 29, 2019 at 1:37 PM Vineeth Remanan Pillai
+<vpillai@digitalocean.com> wrote:
+>
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> Not-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Tomasz Maciej Nowak a écrit :
-> The manufacturer of this board, ships it with various SPI NOR chips and
-> increments U-Boot bootloader version along the time. There is no way to
-> tell which is placed on the board since no revision bump takes place.
-> This creates two issues.
-> 
-> The first, cosmetic. Since the NOR chip may differ, there's message on
-> boot stating that kernel expected w25q32dw and found different one. To
-> correct this, remove optional device-specific compatible string. Being
-> here lets replace bogus "spi-flash" compatible string with proper one.
-> 
-> The second is linked to partitions layout, it changed after commit:
-> 81e7251252 ("arm64: mvebu: config: move env to the end of the 4MB boot
-> device") in Marvells downstream U-Boot fork [1], shifting environment
-> location to the end of boot device. Since the new boards will have U-Boot
-> with this change, it'll lead to improper results writing or reading from
-> these partitions. We can't tell if users will update bootloader to recent
-> version provided on manufacturer website, so lets drop partitons layout.
-> 
-> 1. https://github.com/MarvellEmbeddedProcessors/u-boot-marvell.git
-> 
-> Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+No commit message, not-signed-off-by...
+
 > ---
->   .../dts/marvell/armada-3720-espressobin.dts    | 18 +-----------------
->   1 file changed, 1 insertion(+), 17 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> index 6be019e1888e..fbcf03f86c96 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -95,25 +95,9 @@
->   
->   	flash@0 {
->   		reg = <0>;
-> -		compatible = "winbond,w25q32dw", "jedec,spi-flash";
-> +		compatible = "jedec,spi-nor";
->   		spi-max-frequency = <104000000>;
->   		m25p,fast-read;
-> -
-> -		partitions {
-> -			compatible = "fixed-partitions";
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -
-> -			partition@0 {
-> -				label = "uboot";
-> -				reg = <0 0x180000>;
-> -			};
-> -
-> -			partition@180000 {
-> -				label = "ubootenv";
-> -				reg = <0x180000 0x10000>;
-> -			};
-> -		};
->   	};
->   };
->   
-> 
+>  kernel/sched/core.c | 44 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 42 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 5b8223c9a723..90655c9ad937 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -92,6 +92,10 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
+>
+>         int pa = __task_prio(a), pb = __task_prio(b);
+>
+> +       trace_printk("(%s/%d;%d,%Lu,%Lu) ?< (%s/%d;%d,%Lu,%Lu)\n",
+> +                    a->comm, a->pid, pa, a->se.vruntime, a->dl.deadline,
+> +                    b->comm, b->pid, pb, b->se.vruntime, b->dl.deadline);
+> +
+>         if (-pa < -pb)
+>                 return true;
+>
+> @@ -246,6 +250,8 @@ static void __sched_core_enable(void)
+>
+>         static_branch_enable(&__sched_core_enabled);
+>         stop_machine(__sched_core_stopper, (void *)true, NULL);
+> +
+> +       printk("core sched enabled\n");
+>  }
+>
+>  static void __sched_core_disable(void)
+> @@ -254,6 +260,8 @@ static void __sched_core_disable(void)
+>
+>         stop_machine(__sched_core_stopper, (void *)false, NULL);
+>         static_branch_disable(&__sched_core_enabled);
+> +
+> +       printk("core sched disabled\n");
+>  }
+>
+>  void sched_core_get(void)
+> @@ -3707,6 +3715,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>                         put_prev_task(rq, prev);
+>                         set_next_task(rq, next);
+>                 }
+> +
+> +               trace_printk("pick pre selected (%u %u %u): %s/%d %lx\n",
+> +                            rq->core->core_task_seq,
+> +                            rq->core->core_pick_seq,
+> +                            rq->core_sched_seq,
+> +                            next->comm, next->pid,
+> +                            next->core_cookie);
+> +
+>                 return next;
+>         }
+>
+> @@ -3786,6 +3802,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>                          */
+>                         if (i == cpu && !need_sync && !p->core_cookie) {
+>                                 next = p;
+> +                               trace_printk("unconstrained pick: %s/%d %lx\n",
+> +                                            next->comm, next->pid, next->core_cookie);
+> +
+>                                 goto done;
+>                         }
+>
+> @@ -3794,6 +3813,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>
+>                         rq_i->core_pick = p;
+>
+> +                       trace_printk("cpu(%d): selected: %s/%d %lx\n",
+> +                                    i, p->comm, p->pid, p->core_cookie);
+> +
+>                         /*
+>                          * If this new candidate is of higher priority than the
+>                          * previous; and they're incompatible; we need to wipe
+> @@ -3810,6 +3832,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>                                 rq->core->core_cookie = p->core_cookie;
+>                                 max = p;
+>
+> +                               trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
+> +
+>                                 if (old_max) {
+>                                         for_each_cpu(j, smt_mask) {
+>                                                 if (j == i)
+> @@ -3837,6 +3861,7 @@ next_class:;
+>         rq->core->core_pick_seq = rq->core->core_task_seq;
+>         next = rq->core_pick;
+>         rq->core_sched_seq = rq->core->core_pick_seq;
+> +       trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
+>
+>         /*
+>          * Reschedule siblings
+> @@ -3862,11 +3887,20 @@ next_class:;
+>                 if (i == cpu)
+>                         continue;
+>
+> -               if (rq_i->curr != rq_i->core_pick)
+> +               if (rq_i->curr != rq_i->core_pick) {
+> +                       trace_printk("IPI(%d)\n", i);
+>                         resched_curr(rq_i);
+> +               }
+>
+>                 /* Did we break L1TF mitigation requirements? */
+> -               WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
+> +               if (unlikely(!cookie_match(next, rq_i->core_pick))) {
+> +                       trace_printk("[%d]: cookie mismatch. %s/%d/0x%lx/0x%lx\n",
+> +                                    rq_i->cpu, rq_i->core_pick->comm,
+> +                                    rq_i->core_pick->pid,
+> +                                    rq_i->core_pick->core_cookie,
+> +                                    rq_i->core->core_cookie);
+> +                       WARN_ON_ONCE(1);
+> +               }
+>         }
+>
+>  done:
+> @@ -3905,6 +3939,10 @@ static bool try_steal_cookie(int this, int that)
+>                 if (p->core_occupation > dst->idle->core_occupation)
+>                         goto next;
+>
+> +               trace_printk("core fill: %s/%d (%d->%d) %d %d %lx\n",
+> +                            p->comm, p->pid, that, this,
+> +                            p->core_occupation, dst->idle->core_occupation, cookie);
+> +
+>                 p->on_rq = TASK_ON_RQ_MIGRATING;
+>                 deactivate_task(src, p, 0);
+>                 set_task_cpu(p, this);
+> @@ -6501,6 +6539,8 @@ int sched_cpu_starting(unsigned int cpu)
+>                 WARN_ON_ONCE(rq->core && rq->core != core_rq);
+>                 rq->core = core_rq;
+>         }
+> +
+> +       printk("core: %d -> %d\n", cpu, cpu_of(core_rq));
+>  #endif /* CONFIG_SCHED_CORE */
+>
+>         sched_rq_cpu_starting(cpu);
+> --
+> 2.17.1
+>
