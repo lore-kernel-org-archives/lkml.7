@@ -2,191 +2,132 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFF5C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33F4C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403C4240BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:54:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="cqFqy9eC"
+	by mail.kernel.org (Postfix) with ESMTP id B46DD240BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfE2Sy3 (ORCPT
+        id S1726426AbfE2SzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:54:29 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46982 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfE2Sy3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:54:29 -0400
-Received: by mail-vs1-f68.google.com with SMTP id l125so2618200vsl.13;
-        Wed, 29 May 2019 11:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WCvRfjMaoe8atosMw9vpL+AtU6nrgPQCPjhnaZzCbsM=;
-        b=cqFqy9eCxa8h1FX1mKoort4lffCfK4CG9Y5YoL6yBFhj42AIuHaGLifCq2qqybuccK
-         bYiD17z+z9hHq6GfuISDiPNqa6fPd4N/9SpVQMuXKdf5GCzpptWEPr4GSlDlPB04snbt
-         sUrogDzeTnr4zOgdqoIucUlU/9wk5fQF+HF3cwTCOgVD+lyuFdGQUKXxs69XcB0dCNju
-         ia/Xdlgo2TAYtwZlUQ3pPL2tlv9ImA7tBWOK7YEMAt2MYnAw26XjNc+vd4iTwtYctuyi
-         AeUUUJUeemgC1aoAMksRvZvvFXbHobcNoXlcbRJQJwGXFT9naPvzi/o9kLyEcu7iMjzQ
-         zkYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WCvRfjMaoe8atosMw9vpL+AtU6nrgPQCPjhnaZzCbsM=;
-        b=ljK+9tPIuSSJcpP/m7H8PAxPuXGl4ThWdTn2no7a7gUiK/ItbWVNAd7/PzGLtZQzcB
-         Iyhp7v1DcKu2OCJNi1seYxt4cdoWFqbmXT353MhWbxrzeHpf2ky3Y+jV3Ya0LqXVlXRA
-         hnQbDvywcmFXkxx8egwSSKhdWcxR35/bMLZ+i3535tOToB+ANSfu8yS1ZcxfBekbyOOP
-         yYV4vN+/WJKQY+RFalUw3dDlvBo69kuQqD5PkZldNuJ1UwSpQSKfw8xe2n8BbVsTY7jn
-         o0U8xnTiItj7b+yvJCjvTf0n6tsl8tzlULY7ydAuIFfJa8SgIrwKJz1a9hVrc2AVoSo+
-         JO9w==
-X-Gm-Message-State: APjAAAWHlcUbNNB/uUobPTjqho2LuluUeo9LjDH/A3O38WrgseSJP30o
-        Z17/2XNiOVi7tInz/H5Y/y34XrZxlWZSJIn03BA=
-X-Google-Smtp-Source: APXvYqziLHhX9A6iAge8aPXbfuG8rZVv36yFfLC/qNQR8rQn8NiS7O4UxAwF5EPDRQOYx9qg6L+kNbIkswgeivhZ5vk=
-X-Received: by 2002:a67:de99:: with SMTP id r25mr47937874vsk.215.1559156067660;
- Wed, 29 May 2019 11:54:27 -0700 (PDT)
+        Wed, 29 May 2019 14:55:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40376 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfE2SzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:55:24 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 498013097031;
+        Wed, 29 May 2019 18:55:24 +0000 (UTC)
+Received: from [10.10.122.41] (ovpn-122-41.rdu2.redhat.com [10.10.122.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EAB861B9B;
+        Wed, 29 May 2019 18:55:21 +0000 (UTC)
+Subject: Re: [PATCH] nbd: fix crash when the blksize is zero
+To:     xiubli@redhat.com, josef@toxicpanda.com, axboe@kernel.dk,
+        nbd@other.debian.org
+References: <20190527054438.13548-1-xiubli@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        atumball@redhat.com
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5CEED598.7080703@redhat.com>
+Date:   Wed, 29 May 2019 13:55:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-References: <20190529151003.hzmesyoiopnbcgkb@aura.draconx.ca> <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
-In-Reply-To: <ceecedad1b650f703a12ec3424493c4a73d1e20e.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 29 May 2019 14:54:16 -0400
-Message-ID: <CAN-5tyHws9bO5Yuj9FTn6EdcPcY5QGK0419aBbujU7Ugt4_6uQ@mail.gmail.com>
-Subject: Re: PROBLEM: oops spew with Linux 5.1.5 (NFS regression?)
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "nbowler@draconx.ca" <nbowler@draconx.ca>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Olga.Kornievskaia@netapp.com" <Olga.Kornievskaia@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190527054438.13548-1-xiubli@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 29 May 2019 18:55:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 1:14 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Wed, 2019-05-29 at 11:10 -0400, Nick Bowler wrote:
-> > Hi,
-> >
-> > I upgraded to Linux 5.1.5 on one machine yesterday, and this morning
-> > I
-> > happened noticed a large amount of backtraces in the log.  It appears
-> > that the system oopsed 62 times over a period of about 5 minutes,
-> > producing about half a megabyte of log messages, after which the
-> > messages stopped.  No idea what action (if any) triggered these.
-> >
-> > However, other than the noise in the logs there is nothing obviously
-> > broken, but I thought I should report the spews anyway.  I was
-> > running
-> > 5.0.9 previously and have not seen any similar errors.  The first
-> > couple
-> > spews are appended.  All 64 faults look very similar to these ones,
-> > with
-> > the same faulting address and the same rpc_check_timeout function at
-> > the
-> > top of the backtrace.
->
-> OK, I think this is the same problem that Olga was seeing (Cced), and
-> it looks like I missed the use-after-free issue when the server returns
-> a credential error when she asked.
-
-I think this is actually different than what I encountered for the
-umount case but the trigger is the same -- failing validation.
-
-I tried to reproduce Nick's oops on 5.2-rc but haven't been able to
-(but I'm not confident I produced the right trigger conditions. will
-try 5.1).
-
-
->
-> I believe that the following patch should fix it:
->
-> 8<------------------------------------------------------------------
-> From 33905f5a7d1d200db8eeb3f4ea8670c9da4cb64d Mon Sep 17 00:00:00 2001
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Date: Wed, 29 May 2019 12:49:52 -0400
-> Subject: [PATCH] SUNRPC: Fix a use after free when a server rejects the
->  RPCSEC_GSS credential
->
-> The addition of rpc_check_timeout() to call_decode causes an Oops
-> when the RPCSEC_GSS credential is rejected.
-> The reason is that rpc_decode_header() will call xprt_release() in
-> order to free task->tk_rqstp, which is needed by rpc_check_timeout()
-> to check whether or not we should exit due to a soft timeout.
->
-> The fix is to move the call to xprt_release() into call_decode() so
-> we can perform it after rpc_check_timeout().
->
-> Reported-by: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-> Reported-by: Nick Bowler <nbowler@draconx.ca>
-> Fixes: cea57789e408 ("SUNRPC: Clean up")
-> Cc: stable@vger.kernel.org # v5.1+
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+On 05/27/2019 12:44 AM, xiubli@redhat.com wrote:
+> From: Xiubo Li <xiubli@redhat.com>
+> 
+> This will allow the blksize to be set zero and then use 1024 as
+> default.
+> 
+> Signed-off-by: Xiubo Li <xiubli@redhat.com>
 > ---
->  net/sunrpc/clnt.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
->
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index d6e57da56c94..4c02c37fa774 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -2426,17 +2426,21 @@ call_decode(struct rpc_task *task)
->                 return;
->         case -EAGAIN:
->                 task->tk_status = 0;
-> -               /* Note: rpc_decode_header() may have freed the RPC slot */
-> -               if (task->tk_rqstp == req) {
-> -                       xdr_free_bvec(&req->rq_rcv_buf);
-> -                       req->rq_reply_bytes_recvd = 0;
-> -                       req->rq_rcv_buf.len = 0;
-> -                       if (task->tk_client->cl_discrtry)
-> -                               xprt_conditional_disconnect(req->rq_xprt,
-> -                                                           req->rq_connect_cookie);
-> -               }
-> +               xdr_free_bvec(&req->rq_rcv_buf);
-> +               req->rq_reply_bytes_recvd = 0;
-> +               req->rq_rcv_buf.len = 0;
-> +               if (task->tk_client->cl_discrtry)
-> +                       xprt_conditional_disconnect(req->rq_xprt,
-> +                                                   req->rq_connect_cookie);
->                 task->tk_action = call_encode;
->                 rpc_check_timeout(task);
-> +               break;
-> +       case -EKEYREJECTED:
-> +               task->tk_action = call_reserve;
-> +               rpc_check_timeout(task);
-> +               rpcauth_invalcred(task);
-> +               /* Ensure we obtain a new XID if we retry! */
-> +               xprt_release(task);
->         }
+>  drivers/block/nbd.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index 053958a..4c1de1c 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -135,6 +135,8 @@ struct nbd_cmd {
+>  
+>  #define NBD_MAGIC 0x68797548
+>  
+> +#define NBD_DEF_BLKSIZE 1024
+> +
+>  static unsigned int nbds_max = 16;
+>  static int max_part = 16;
+>  static struct workqueue_struct *recv_workqueue;
+> @@ -1237,6 +1239,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+>  		nbd_config_put(nbd);
 >  }
->
-> @@ -2572,11 +2576,7 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
->                         break;
->                 task->tk_cred_retry--;
->                 trace_rpc__stale_creds(task);
-> -               rpcauth_invalcred(task);
-> -               /* Ensure we obtain a new XID! */
-> -               xprt_release(task);
-> -               task->tk_action = call_reserve;
-> -               return -EAGAIN;
-> +               return -EKEYREJECTED;
->         case rpc_autherr_badcred:
->         case rpc_autherr_badverf:
->                 /* possibly garbled cred/verf? */
-> --
-> 2.21.0
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+>  
+> +static bool nbd_is_valid_blksize(unsigned long blksize)
+> +{
+> +	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
+> +		blksize > PAGE_SIZE)
+> +		return false;
+> +	return true;
+> +}
+> +
+>  /* Must be called with config_lock held */
+>  static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+>  		       unsigned int cmd, unsigned long arg)
+> @@ -1252,8 +1262,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+>  	case NBD_SET_SOCK:
+>  		return nbd_add_socket(nbd, arg, false);
+>  	case NBD_SET_BLKSIZE:
+> -		if (!arg || !is_power_of_2(arg) || arg < 512 ||
+> -		    arg > PAGE_SIZE)
+> +		if (!arg)
+> +			arg = NBD_DEF_BLKSIZE;
+> +		if (!nbd_is_valid_blksize(arg))
+>  			return -EINVAL;
+>  		nbd_size_set(nbd, arg,
+>  			     div_s64(config->bytesize, arg));
+> @@ -1333,7 +1344,7 @@ static struct nbd_config *nbd_alloc_config(void)
+>  	atomic_set(&config->recv_threads, 0);
+>  	init_waitqueue_head(&config->recv_wq);
+>  	init_waitqueue_head(&config->conn_wait);
+> -	config->blksize = 1024;
+> +	config->blksize = NBD_DEF_BLKSIZE;
+>  	atomic_set(&config->live_connections, 0);
+>  	try_module_get(THIS_MODULE);
+>  	return config;
+> @@ -1769,6 +1780,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+>  	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
+>  		u64 bsize =
+>  			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
+> +		if (!bsize)
+> +			bsize = NBD_DEF_BLKSIZE;
+> +		if (!nbd_is_valid_blksize(bsize))
+> +			return -EINVAL;
+
+You can't only return here. You need to also drop the mutex, do
+nbd_put, and drop config_refs reference.
+
+Maybe you want to move this check to the beginning of the function with
+the NBD_ATTR_SIZE_BYTES sanity check since the error handling is easier
+there.
+
+
+>  		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
+>  	}
+>  	if (info->attrs[NBD_ATTR_TIMEOUT]) {
+> 
+
