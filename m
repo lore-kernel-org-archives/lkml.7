@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EFEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5861C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6A224284
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D182377D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="W488NziP"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="IhDJTlpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfE2WQd (ORCPT
+        id S1726697AbfE2WRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:16:33 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40363 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfE2WQb (ORCPT
+        Wed, 29 May 2019 18:17:22 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40464 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfE2WRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:16:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q62so4085648ljq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:16:29 -0700 (PDT)
+        Wed, 29 May 2019 18:17:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a9so1949194lff.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Oz7cGsD/P4AYjrQuzbhSqhrqwPvDYoZyUjrCxUd5apo=;
-        b=W488NziPak7bX8NLwk8X91sVgaISEiHHggxPCEy5FTn4IJfjT1bBLLNUdZubDFWtPH
-         7KoVKeHGWUJXYe/3LbLZBn7H5JwyXSUSceIdUccTOeecjr9Rha/esMd2v5J0QgIJpV+r
-         w04dPFkQRPrhrAhVz6CVOLfdZR28+WrUYuPXRMr/nyIluc9YhOFeRWVGdDt44wALPWrq
-         PIABiusmnwb5q3e6jTuVcyQq9WGF/T14PHNRDSG8TQJ0AL3qJIxSz6hon1W/8m1HgZoD
-         RpTG7XBD0QK5YboiITTVwFV0joTjp8gpqwSWpkPmVhJkcpSP6IsYCYIr59Rl1ujOgBWb
-         A8AA==
+        bh=fIvU+ha0PviU/sibSkvPHyTumVcfp/XuVnG8TGWl1tg=;
+        b=IhDJTlpcamR/KqtIXXIXgJdfXAsLI2C+ZEXAuUNYlKWGn6wHjE6fpIPNIeDhT7ycQ8
+         57igNJrmJ5BNTBnviUUG/OZd+IF7VgnoVis5ZCCvJxb17ZrBByYBXhXN+ZRYNnc3FRIy
+         brSYU1jvKSGa+TNQ8WETswSfhGeqztSbfJ7L/bGXevP+zB/TZdI4CXbRsu2J41G+yDwo
+         qMRxFM1D7xND12GCJwbw+whugNAe6MnXELtdl7/PWacMAbHfg0mkPJsrxG4ICI+/4Bgd
+         Umpf4FN+xj/KrTwt5uEEEDaa00hFCmx8k3DNIvdAxi+WqGo7sS1kO5oJBoew7DOwAn5i
+         7ioA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Oz7cGsD/P4AYjrQuzbhSqhrqwPvDYoZyUjrCxUd5apo=;
-        b=p+gGTHxFuJo0H71f/lpH1lH9LXZr4TcV/gZra59Igmjyc2biSFzmI012k8erjaWJS6
-         IpOMiQU5WFlCQywDYGxlVzQTwEkKEetc5OkLvcTsOY5WIK/FY44mhE6vTNWype24BXjL
-         /yM/henTS+47JmQiywGQy+qtERXuYlA05Xv+YYW9sXn565WkPXs/PkfnWnQlaifPlIXO
-         8f+CepacuVpHLjsMVbm/2nQ0OX4/LsOE8DrD/v9iaaKTgFriS9GRpTenSe2+y6RMSelk
-         zds0EezPZStuAPUe978Gva36KQmUo4tDQZxG0d5WyK7VuxV6NC7OKssb+wg2KIv9jksQ
-         sgtg==
-X-Gm-Message-State: APjAAAVAIH4CpJY+u1SJ8TBr4ItVjSuogHxC1MHXIIm72Ab6ZajEd1IS
-        rLeegqNFkBQ4CrGXqEqF9S0IZyQNlQKGsHUVzyagzY4=
-X-Google-Smtp-Source: APXvYqzfNdl8873L36TO9hSNPPYmytZePE3WW4+a9ltLKODcsNQS6Y9bUNbWImIKz7mxDt4DEezNtHhuOjvLWIqNvZM=
-X-Received: by 2002:a2e:3e14:: with SMTP id l20mr137436lja.40.1559168188869;
- Wed, 29 May 2019 15:16:28 -0700 (PDT)
+        bh=fIvU+ha0PviU/sibSkvPHyTumVcfp/XuVnG8TGWl1tg=;
+        b=Jc9X/uJJT3ru1Vd9/cI0Xw3/qkFuq8AO9IZ7IKyNVlmLg21DEdk+qIRhBSYE62H8hx
+         uR4AgAbpB7lQipIFvgJ8r2bGL251Rsrf1ctOxfvcoe1kI8GQB/gxbJEgq6SGcMHVjhxU
+         kql8+RVWzQH8VmvbYpxMkqkw99vJ2ZSS8pFcTwkNsCprV8mwQKiKjR61QdVZLhN3sl17
+         0UXniTZvi/24s7sD5mH6YevfoTjZsmmK7KRBObp9LfYn2XFdBpz1IT7OlmYlmhrZbklx
+         2OCYsNUNPUN0JWS/uZlJT/1M0Vanqd/UpNbCgFyOmN7wRWxTGEAbRtOedJgPfCse8r/g
+         l+fQ==
+X-Gm-Message-State: APjAAAV2sW8Inm8pFW2XfgkKHoUy1Vp5pglzLmSSna6QgpNJ0mOiTNzg
+        z3EFXqHSuPNVkbug1k7zmsQhktOHPxrTLwNPOUy1
+X-Google-Smtp-Source: APXvYqyxrQhJxL6YTK1IQrRGp/CVZ4FR/LfHLvH12rSsobg2OWRzTR6O4bHJaXr5UpPyFchEPI025JnE2t3cIS5I/r8=
+X-Received: by 2002:a19:c301:: with SMTP id t1mr140375lff.137.1559168239261;
+ Wed, 29 May 2019 15:17:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <0785ee2644804f3ec6af1243cc0dcf89709c1fd4.1554732921.git.rgb@redhat.com>
-In-Reply-To: <0785ee2644804f3ec6af1243cc0dcf89709c1fd4.1554732921.git.rgb@redhat.com>
+References: <cover.1554732921.git.rgb@redhat.com> <423ed5e5c5e4ed7c3e26ac7d2bd7c267aaae777c.1554732921.git.rgb@redhat.com>
+In-Reply-To: <423ed5e5c5e4ed7c3e26ac7d2bd7c267aaae777c.1554732921.git.rgb@redhat.com>
 From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 29 May 2019 18:16:18 -0400
-Message-ID: <CAHC9VhRV-0LSEcRvPO1uXtKdpEQsaLZnBV3T=zcMTZPN5ugz5w@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 08/10] audit: add containerid filtering
+Date:   Wed, 29 May 2019 18:17:08 -0400
+Message-ID: <CAHC9VhQ9t-mvJGNCzArjg+MTGNXcZbVrWV4=RUD5ML_bHqua1Q@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 09/10] audit: add support for containerid to
+ network namespaces
 To:     Richard Guy Briggs <rgb@redhat.com>
 Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         Linux-Audit Mailing List <linux-audit@redhat.com>,
@@ -76,79 +77,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 >
-> Implement audit container identifier filtering using the AUDIT_CONTID
-> field name to send an 8-character string representing a u64 since the
-> value field is only u32.
+> Audit events could happen in a network namespace outside of a task
+> context due to packets received from the net that trigger an auditing
+> rule prior to being associated with a running task.  The network
+> namespace could be in use by multiple containers by association to the
+> tasks in that network namespace.  We still want a way to attribute
+> these events to any potential containers.  Keep a list per network
+> namespace to track these audit container identifiiers.
 >
-> Sending it as two u32 was considered, but gathering and comparing two
-> fields was more complex.
+> Add/increment the audit container identifier on:
+> - initial setting of the audit container identifier via /proc
+> - clone/fork call that inherits an audit container identifier
+> - unshare call that inherits an audit container identifier
+> - setns call that inherits an audit container identifier
+> Delete/decrement the audit container identifier on:
+> - an inherited audit container identifier dropped when child set
+> - process exit
+> - unshare call that drops a net namespace
+> - setns call that drops a net namespace
 >
-> The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
->
-> Please see the github audit kernel issue for the contid filter feature:
->   https://github.com/linux-audit/audit-kernel/issues/91
-> Please see the github audit userspace issue for filter additions:
->   https://github.com/linux-audit/audit-userspace/issues/40
+> Please see the github audit kernel issue for contid net support:
+>   https://github.com/linux-audit/audit-kernel/issues/92
 > Please see the github audit testsuiite issue for the test case:
 >   https://github.com/linux-audit/audit-testsuite/issues/64
 > Please see the github audit wiki for the feature overview:
 >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
 > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
 > Acked-by: Neil Horman <nhorman@tuxdriver.com>
 > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 > ---
->  include/linux/audit.h      |  1 +
->  include/uapi/linux/audit.h |  5 ++++-
->  kernel/audit.h             |  1 +
->  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
->  kernel/auditsc.c           |  4 ++++
->  5 files changed, 57 insertions(+), 1 deletion(-)
+>  include/linux/audit.h | 19 +++++++++++
+>  kernel/audit.c        | 88 +++++++++++++++++++++++++++++++++++++++++++++++++--
+>  kernel/nsproxy.c      |  4 +++
+>  3 files changed, 108 insertions(+), 3 deletions(-)
 
 ...
 
-> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> index 63f8b3f26fab..407b5bb3b4c6 100644
-> --- a/kernel/auditfilter.c
-> +++ b/kernel/auditfilter.c
-> @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
->         }
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 6c742da66b32..996213591617 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -376,6 +384,75 @@ static struct sock *audit_get_sk(const struct net *net)
+>         return aunet->sk;
 >  }
 >
-> +int audit_comparator64(u64 left, u32 op, u64 right)
+> +void audit_netns_contid_add(struct net *net, u64 contid)
 > +{
-> +       switch (op) {
-> +       case Audit_equal:
-> +               return (left == right);
-> +       case Audit_not_equal:
-> +               return (left != right);
-> +       case Audit_lt:
-> +               return (left < right);
-> +       case Audit_le:
-> +               return (left <= right);
-> +       case Audit_gt:
-> +               return (left > right);
-> +       case Audit_ge:
-> +               return (left >= right);
-> +       case Audit_bitmask:
-> +               return (left & right);
-> +       case Audit_bittest:
-> +               return ((left & right) == right);
-> +       default:
-> +               BUG();
+> +       struct audit_net *aunet;
+> +       struct list_head *contid_list;
+> +       struct audit_contid *cont;
+> +
+> +       if (!net)
+> +               return;
+> +       if (!audit_contid_valid(contid))
+> +               return;
+> +       aunet = net_generic(net, audit_net_id);
+> +       if (!aunet)
+> +               return;
+> +       contid_list = &aunet->contid_list;
+> +       spin_lock(&aunet->contid_list_lock);
+> +       list_for_each_entry_rcu(cont, contid_list, list)
+> +               if (cont->id == contid) {
+> +                       refcount_inc(&cont->refcount);
+> +                       goto out;
+> +               }
+> +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> +       if (cont) {
+> +               INIT_LIST_HEAD(&cont->list);
 
-A little birdy mentioned the BUG() here as a potential issue and while
-I had ignored it in earlier patches because this is likely a
-cut-n-paste from another audit comparator function, I took a closer
-look this time.  It appears as though we will never have an invalid op
-value as audit_data_to_entry()/audit_to_op() ensure that the op value
-is a a known good value.  Removing the BUG() from all the audit
-comparators is a separate issue, but I think it would be good to
-remove it from this newly added comparator; keeping it so that we
-return "0" in the default case seems reasoanble.
+I thought you were going to get rid of this INIT_LIST_HEAD() call?
 
-> +               return 0;
+> +               cont->id = contid;
+> +               refcount_set(&cont->refcount, 1);
+> +               list_add_rcu(&cont->list, contid_list);
 > +       }
+> +out:
+> +       spin_unlock(&aunet->contid_list_lock);
 > +}
 
 --
