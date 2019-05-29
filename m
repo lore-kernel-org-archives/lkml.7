@@ -2,206 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E767C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7203C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B1520B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8735520B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfE2IMP convert rfc822-to-8bit (ORCPT
+        id S1726836AbfE2IMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:12:15 -0400
-Received: from prv1-mh.provo.novell.com ([137.65.248.33]:48275 "EHLO
-        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfE2IMO (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:6:1>);
-        Wed, 29 May 2019 04:12:14 -0400
-Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
-        with Novell_GroupWise; Wed, 29 May 2019 02:12:13 -0600
-Message-Id: <5CEE3ED8020000F900068B85@prv1-mh.provo.novell.com>
-X-Mailer: Novell GroupWise Internet Agent 18.1.1 
-Date:   Wed, 29 May 2019 02:12:08 -0600
-From:   "Gang He" <ghe@suse.com>
-To:     <jlbec@evilplan.org>, <mark@fasheh.com>, <jiangqi903@gmail.com>,
-        "Wengang" <wen.gang.wang@oracle.com>
-Cc:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Ocfs2-devel] [PATCH 1/2] ocfs2: add last unlock times in
- locking_state
-References: <20190523104047.14794-1-ghe@suse.com>
- <66083663-1d25-437b-ce98-07d200f446ab@oracle.com>
-In-Reply-To: <66083663-1d25-437b-ce98-07d200f446ab@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+        Wed, 29 May 2019 04:12:37 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32970 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725987AbfE2IMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:12:37 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id B955EF4EA408DABF67B7;
+        Wed, 29 May 2019 09:12:35 +0100 (IST)
+Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 29 May 2019 09:12:35 +0100
+Received: from lhreml702-chm.china.huawei.com (10.201.108.51) by
+ lhreml703-chm.china.huawei.com (10.201.108.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 29 May 2019 09:12:35 +0100
+Received: from lhreml702-chm.china.huawei.com ([10.201.68.197]) by
+ lhreml702-chm.china.huawei.com ([10.201.68.197]) with mapi id 15.01.1713.004;
+ Wed, 29 May 2019 09:12:35 +0100
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     linyunsheng <linyunsheng@huawei.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH net-next] net: link_watch: prevent starvation when
+ processing linkwatch wq
+Thread-Topic: [PATCH net-next] net: link_watch: prevent starvation when
+ processing linkwatch wq
+Thread-Index: AQHVFC5nEodOM+qRr0+2+lmmmK658aZ/ADQAgACpOACAAhO6YA==
+Date:   Wed, 29 May 2019 08:12:35 +0000
+Message-ID: <cddd414bbf454cbaa8321a92f0d1b9b2@huawei.com>
+References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
+ <20190527075838.5a65abf9@hermes.lan>
+ <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
+In-Reply-To: <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.226.43]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wengang,
-
->>> On 2019/5/29 at 1:22, in message
-<66083663-1d25-437b-ce98-07d200f446ab@oracle.com>, Wengang
-<wen.gang.wang@oracle.com> wrote:
-> Hi Gang,
-> 
-> This idea sounds cool!
-> Some comments in lines:
-> 
-> On 05/23/2019 03:40 AM, Gang He wrote:
->> ocfs2 file system uses locking_state file under debugfs to dump
->> each ocfs2 file system's dlm lock resources, but the dlm lock
->> resources in memory are becoming more and more after the files
->> were touched by the user. it will become a bit difficult to analyze
->> these dlm lock resource records in locking_state file by the upper
->> scripts, though some files are not active for now, which were
->> accessed long time ago.
->> Then, I'd like to add last pr/ex unlock times in locking_state file
->> for each dlm lock resource record, the the upper scripts can use
->> last unlock time to filter inactive dlm lock resource record.
->>
->> Signed-off-by: Gang He <ghe@suse.com>
->> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
->> ---
->>   fs/ocfs2/dlmglue.c | 21 +++++++++++++++++----
->>   fs/ocfs2/ocfs2.h   |  1 +
->>   2 files changed, 18 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
->> index af405586c5b1..dccf4136f8c1 100644
->> --- a/fs/ocfs2/dlmglue.c
->> +++ b/fs/ocfs2/dlmglue.c
->> @@ -448,7 +448,7 @@ static void ocfs2_update_lock_stats(struct 
-> ocfs2_lock_res *res, int level,
->>   				    struct ocfs2_mask_waiter *mw, int ret)
->>   {
->>   	u32 usec;
->> -	ktime_t kt;
->> +	ktime_t last, kt;
->>   	struct ocfs2_lock_stats *stats;
->>   
->>   	if (level == LKM_PRMODE)
->> @@ -458,7 +458,8 @@ static void ocfs2_update_lock_stats(struct 
-> ocfs2_lock_res *res, int level,
->>   	else
->>   		return;
->>   
->> -	kt = ktime_sub(ktime_get(), mw->mw_lock_start);
->> +	last = ktime_get();
-> Will ktime_get_real() be better than ktime_get() here?
-> Per description,
-> ktime_get:
-> Useful for reliable timestamps and measuring short time intervals 
-> accurately. Starts at system boot time but stops during suspend.
-> ktime_get_real:
-> Returns the time in relative to the UNIX epoch starting in 1970 using 
-> the Coordinated Universal Time (UTC), same as gettimeofday() user space.
-> 
-> Since ktime_get() returnis time since boot time, this value is 
-> meaningless when compared to those from a different node in cluster, right?
-Ok, maybe we can use ktime_get_real_seconds to get the seconds, but we 
-need to use 64bit time64_t type to save the value and dump to the user-space.
-
-Thanks
-Gang
-
-> 
-> And we need a "__kernel_long_t" to rather than a "u32"?
-> 
-> 
->> +	kt = ktime_sub(last, mw->mw_lock_start);
->>   	usec = ktime_to_us(kt);
->>   
->>   	stats->ls_gets++;
->> @@ -474,6 +475,8 @@ static void ocfs2_update_lock_stats(struct 
-> ocfs2_lock_res *res, int level,
->>   
->>   	if (ret)
->>   		stats->ls_fail++;
->> +
->> +	stats->ls_last = ktime_to_timespec(last).tv_sec;
->>   }
->>   
-> Though maybe ocfs2_update_lock_stats() is designed to be called for each 
-> successful lock request,
-> seems current code calls it even when it returns with -EAGAIN which 
-> breaks the design.  That's not introduced by your change, well, it may 
-> lead to wrong stats...
-> 
-> thanks,
-> wengang
-> 
->>   static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res 
-> *lockres)
->> @@ -3093,8 +3096,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, 
-> void *v, loff_t *pos)
->>    *	- Lock stats printed
->>    * New in version 3
->>    *	- Max time in lock stats is in usecs (instead of nsecs)
->> + * New in version 4
->> + *	- Add last pr/ex unlock times in secs
->>    */
->> -#define OCFS2_DLM_DEBUG_STR_VERSION 3
->> +#define OCFS2_DLM_DEBUG_STR_VERSION 4
->>   static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->>   {
->>   	int i;
->> @@ -3145,6 +3150,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
-> *v)
->>   # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
->>   # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
->>   # define lock_refresh(_l)		((_l)->l_lock_refresh)
->> +# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
->> +# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
->>   #else
->>   # define lock_num_prmode(_l)		(0)
->>   # define lock_num_exmode(_l)		(0)
->> @@ -3155,6 +3162,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
-> *v)
->>   # define lock_max_prmode(_l)		(0)
->>   # define lock_max_exmode(_l)		(0)
->>   # define lock_refresh(_l)		(0)
->> +# define lock_last_prmode(_l)		(0)
->> +# define lock_last_exmode(_l)		(0)
->>   #endif
->>   	/* The following seq_print was added in version 2 of this output */
->>   	seq_printf(m, "%u\t"
->> @@ -3165,6 +3174,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
-> *v)
->>   		   "%llu\t"
->>   		   "%u\t"
->>   		   "%u\t"
->> +		   "%u\t"
->> +		   "%u\t"
->>   		   "%u\t",
->>   		   lock_num_prmode(lockres),
->>   		   lock_num_exmode(lockres),
->> @@ -3174,7 +3185,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
-> *v)
->>   		   lock_total_exmode(lockres),
->>   		   lock_max_prmode(lockres),
->>   		   lock_max_exmode(lockres),
->> -		   lock_refresh(lockres));
->> +		   lock_refresh(lockres),
->> +		   lock_last_prmode(lockres),
->> +		   lock_last_exmode(lockres));
->>   
->>   	/* End the line */
->>   	seq_printf(m, "\n");
->> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
->> index 1f029fbe8b8d..8efa022684f4 100644
->> --- a/fs/ocfs2/ocfs2.h
->> +++ b/fs/ocfs2/ocfs2.h
->> @@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
->>   
->>   	/* Storing max wait in usecs saves 24 bytes per inode */
->>   	u32		ls_max;		/* Max wait in USEC */
->> +	u32		ls_last;	/* Last unlock time in SEC */
->>   };
->>   #endif
->>   
+PiBGcm9tOiBuZXRkZXYtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bmV0ZGV2LW93bmVy
+QHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFl1bnNoZW5nIExpbg0KPiBTZW50OiBUdWVz
+ZGF5LCBNYXkgMjgsIDIwMTkgMjowNCBBTQ0KPiANCj4gT24gMjAxOS81LzI3IDIyOjU4LCBTdGVw
+aGVuIEhlbW1pbmdlciB3cm90ZToNCj4gPiBPbiBNb24sIDI3IE1heSAyMDE5IDA5OjQ3OjU0ICsw
+ODAwDQo+ID4gWXVuc2hlbmcgTGluIDxsaW55dW5zaGVuZ0BodWF3ZWkuY29tPiB3cm90ZToNCj4g
+Pg0KPiA+PiBXaGVuIHVzZXIgaGFzIGNvbmZpZ3VyZWQgYSBsYXJnZSBudW1iZXIgb2YgdmlydHVh
+bCBuZXRkZXYsIHN1Y2gNCj4gPj4gYXMgNEsgdmxhbnMsIHRoZSBjYXJyaWVyIG9uL29mZiBvcGVy
+YXRpb24gb2YgdGhlIHJlYWwgbmV0ZGV2DQo+ID4+IHdpbGwgYWxzbyBjYXVzZSBpdCdzIHZpcnR1
+YWwgbmV0ZGV2J3MgbGluayBzdGF0ZSB0byBiZSBwcm9jZXNzZWQNCj4gPj4gaW4gbGlua3dhdGNo
+LiBDdXJyZW50bHksIHRoZSBwcm9jZXNzaW5nIGlzIGRvbmUgaW4gYSB3b3JrIHF1ZXVlLA0KPiA+
+PiB3aGljaCBtYXkgY2F1c2Ugd29ya2VyIHN0YXJ2YXRpb24gcHJvYmxlbSBmb3Igb3RoZXIgd29y
+ayBxdWV1ZS4NCg0KDQpJIHRoaW5rIHdlIGhhZCBhbHJlYWR5IGRpc2N1c3NlZCBhYm91dCB0aGlz
+IGludGVybmFsbHkgYW5kIHVzaW5nIHNlcGFyYXRlDQp3b3JrcXVldWUgd2l0aCBXUV9VTkJPVU5E
+IHNob3VsZCBzb2x2ZSB0aGlzIHByb2JsZW0uIEhOUzMgZHJpdmVyIHdhcyBzaGFyaW5nDQp3b3Jr
+cXVldWUgd2l0aCB0aGUgc3lzdGVtIHdvcmtxdWV1ZS4gDQoNCg0KPiA+PiBUaGlzIHBhdGNoIHJl
+bGVhc2VzIHRoZSBjcHUgd2hlbiBsaW5rIHdhdGNoIHdvcmtlciBoYXMgcHJvY2Vzc2VkDQo+ID4+
+IGEgZml4ZWQgbnVtYmVyIG9mIG5ldGRldicgbGluayB3YXRjaCBldmVudCwgYW5kIHNjaGVkdWxl
+IHRoZQ0KPiA+PiB3b3JrIHF1ZXVlIGFnYWluIHdoZW4gdGhlcmUgaXMgc3RpbGwgbGluayB3YXRj
+aCBldmVudCByZW1haW5pbmcuDQoNCg0KV2UgbmVlZCBwcm9wZXIgZXhhbXBsZXMvdXNlLWNhc2Vz
+IGJlY2F1c2Ugb2Ygd2hpY2ggd2UgcmVxdWlyZSBhYm92ZQ0Ka2luZCBvZiBjby1vcGVyYXRpdmUg
+c2NoZWR1bGluZy4gVG91Y2hpbmcgdGhlIGNvbW1vbiBzaGFyZWQgcXVldWUgbG9naWMNCndoaWNo
+IHNvbGlkIGFyZ3VtZW50IG1pZ2h0IGludml0ZSBmb3IgbW9yZSBwcm9ibGVtIHRvIG90aGVyIG1v
+ZHVsZXMuDQoNCg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBZdW5zaGVuZyBMaW4gPGxpbnl1bnNoZW5n
+QGh1YXdlaS5jb20+DQo+ID4NCj4gPiBXaHkgbm90IHB1dCBsaW5rIHdhdGNoIGluIGl0cyBvd24g
+d29ya3F1ZXVlIHNvIGl0IGlzIHNjaGVkdWxlZA0KPiA+IHNlcGFyYXRlbHkgZnJvbSB0aGUgc3lz
+dGVtIHdvcmtxdWV1ZT8NCj4gDQo+IEZyb20gdGVzdGluZyBhbmQgZGVidWdpbmcsIHRoZSB3b3Jr
+cXVldWUgcnVucyBvbiB0aGUgY3B1IHdoZXJlIHRoZQ0KPiB3b3JrcXVldWUgaXMgc2NoZWR1bGUg
+d2hlbiB1c2luZyBub3JtYWwgd29ya3F1ZXVlLCBldmVuIHVzaW5nIGl0cw0KPiBvd24gd29ya3F1
+ZXVlIGluc3RlYWQgb2Ygc3lzdGVtIHdvcmtxdWV1ZS4gU28gaWYgdGhlIGNwdSBpcyBidXN5DQo+
+IHByb2Nlc3NpbmcgdGhlIGxpbmt3YXRjaCBldmVudCwgaXQgaXMgbm90IGFibGUgdG8gcHJvY2Vz
+cyBvdGhlcg0KPiB3b3JrcXVldWUnIHdvcmsgd2hlbiB0aGUgd29ya3F1ZXVlIGlzIHNjaGVkdWxl
+ZCBvbiB0aGUgc2FtZSBjcHUuDQo+IA0KPiBVc2luZyB1bmJvdW5kIHdvcmtxdWV1ZSBtYXkgc29s
+dmUgdGhlIGNwdSBzdGFydmF0aW9uIHByb2JsZW0uDQoNClsuLi5dDQoNCj4gQnV0IHRoZSBfX2xp
+bmt3YXRjaF9ydW5fcXVldWUgaXMgY2FsbGVkIHdpdGggcnRubF9sb2NrLCBzbyBpZiBpdA0KPiB0
+YWtlcyBhIGxvdCB0aW1lIHRvIHByb2Nlc3MsIG90aGVyIG5lZWQgdG8gdGFrZSB0aGUgcnRubF9s
+b2NrIG1heQ0KPiBub3QgYmUgYWJsZSB0byBtb3ZlIGZvcndhcmQuDQoNClBsZWFzZSBoZWxwIG1l
+IGluIHVuZGVyc3RhbmRpbmcsIEFyZSB5b3UgdHJ5aW5nIHRvIHBpdGNoIHRoaXMgcGF0Y2gNCnRv
+IHNvbHZlIG1vcmUgZ2VuZXJhbCBzeXN0ZW0gaXNzdWUgT1Igc3RpbGwgeW91ciBhcmd1bWVudC9j
+b25jZXJuDQppcyByZWxhdGVkIHRvIHRoZSBITlMzIGRyaXZlciBwcm9ibGVtIG1lbnRpb25lZCBp
+biB0aGlzIHBhdGNoPw0KDQpTYWxpbC4NCg0KDQoNCg0KDQoNCg0K
