@@ -2,55 +2,137 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E89C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8552C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD1523E7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9984623E7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfE2Q7S (ORCPT
+        id S1726818AbfE2Q7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:59:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:49490 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfE2Q7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:59:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDDF0341;
-        Wed, 29 May 2019 09:59:17 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9681C3F5AF;
-        Wed, 29 May 2019 09:59:16 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:59:06 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, linux-riscv@lists.infradead.org, palmer@sifive.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH v2 0/2] tools: PCI: Fix broken pcitest compilation
-Message-ID: <20190529165856.GA25642@redmoon>
-References: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
+        Wed, 29 May 2019 12:59:42 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:50967 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfE2Q7m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:59:42 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hW1vJ-0002nK-FP; Wed, 29 May 2019 12:59:39 -0400
+Date:   Wed, 29 May 2019 12:59:06 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] sctp: deduplicate identical skb_checksum_ops
+Message-ID: <20190529165906.GD31099@hmswarspite.think-freely.org>
+References: <20190529153941.12166-1-mcroce@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190529153941.12166-1-mcroce@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:17:59PM -0700, Alan Mikhak wrote:
-> This patchset fixes a compiler error and two warnings that resulted in a
-> broken compilation of pcitest.
+On Wed, May 29, 2019 at 05:39:41PM +0200, Matteo Croce wrote:
+> The same skb_checksum_ops struct is defined twice in two different places,
+> leading to code duplication. Declare it as a global variable into a common
+> header instead of allocating it on the stack on each function call.
+> bloat-o-meter reports a slight code shrink.
 > 
->  tools/pci/pcitest.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> add/remove: 1/1 grow/shrink: 0/10 up/down: 128/-1282 (-1154)
+> Function                                     old     new   delta
+> sctp_csum_ops                                  -     128    +128
+> crc32c_csum_ops                               16       -     -16
+> sctp_rcv                                    6616    6583     -33
+> sctp_packet_pack                            4542    4504     -38
+> nf_conntrack_sctp_packet                    4980    4926     -54
+> execute_masked_set_action                   6453    6389     -64
+> tcf_csum_sctp                                575     428    -147
+> sctp_gso_segment                            1292    1126    -166
+> sctp_csum_check                              579     412    -167
+> sctp_snat_handler                            957     772    -185
+> sctp_dnat_handler                           1321    1132    -189
+> l4proto_manip_pkt                           2536    2313    -223
+> Total: Before=359297613, After=359296459, chg -0.00%
+> 
+> Reviewed-by: Xin Long <lucien.xin@gmail.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  include/net/sctp/checksum.h | 12 +++++++-----
+>  net/sctp/offload.c          |  7 +------
+>  2 files changed, 8 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/net/sctp/checksum.h b/include/net/sctp/checksum.h
+> index 314699333bec..5a9bb09f32b6 100644
+> --- a/include/net/sctp/checksum.h
+> +++ b/include/net/sctp/checksum.h
+> @@ -43,19 +43,21 @@ static inline __wsum sctp_csum_combine(__wsum csum, __wsum csum2,
+>  						   (__force __u32)csum2, len);
+>  }
+>  
+> +static const struct skb_checksum_ops sctp_csum_ops = {
+> +	.update  = sctp_csum_update,
+> +	.combine = sctp_csum_combine,
+> +};
+> +
+>  static inline __le32 sctp_compute_cksum(const struct sk_buff *skb,
+>  					unsigned int offset)
+>  {
+>  	struct sctphdr *sh = (struct sctphdr *)(skb->data + offset);
+> -	const struct skb_checksum_ops ops = {
+> -		.update  = sctp_csum_update,
+> -		.combine = sctp_csum_combine,
+> -	};
+>  	__le32 old = sh->checksum;
+>  	__wsum new;
+>  
+>  	sh->checksum = 0;
+> -	new = ~__skb_checksum(skb, offset, skb->len - offset, ~(__wsum)0, &ops);
+> +	new = ~__skb_checksum(skb, offset, skb->len - offset, ~(__wsum)0,
+> +			      &sctp_csum_ops);
+>  	sh->checksum = old;
+>  
+>  	return cpu_to_le32((__force __u32)new);
+> diff --git a/net/sctp/offload.c b/net/sctp/offload.c
+> index edfcf16e704c..dac46dfadab5 100644
+> --- a/net/sctp/offload.c
+> +++ b/net/sctp/offload.c
+> @@ -103,11 +103,6 @@ static const struct net_offload sctp6_offload = {
+>  	},
+>  };
+>  
+> -static const struct skb_checksum_ops crc32c_csum_ops = {
+> -	.update  = sctp_csum_update,
+> -	.combine = sctp_csum_combine,
+> -};
+> -
+>  int __init sctp_offload_init(void)
+>  {
+>  	int ret;
+> @@ -120,7 +115,7 @@ int __init sctp_offload_init(void)
+>  	if (ret)
+>  		goto ipv4;
+>  
+> -	crc32c_csum_stub = &crc32c_csum_ops;
+> +	crc32c_csum_stub = &sctp_csum_ops;
+>  	return ret;
+>  
+>  ipv4:
+> -- 
+> 2.21.0
+> 
+> 
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 
-Applied to pci/misc for v5.3, thanks.
-
-Lorenzo
