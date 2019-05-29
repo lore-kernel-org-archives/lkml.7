@@ -2,165 +2,138 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA582C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA33C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BFC2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F562070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:41:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pEGWv8XI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfE2Jk6 (ORCPT
+        id S1726581AbfE2JlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:40:58 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37601 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725874AbfE2Jk6 (ORCPT
+        Wed, 29 May 2019 05:41:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35085 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfE2JlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:40:58 -0400
-Received: from [IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae] ([IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Vv4oh5D803qlsVv4phsgAe; Wed, 29 May 2019 11:40:55 +0200
-Subject: Re: [PATCH] media: atmel: atmel-isc: split driver into driver base
- and isc
-To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     ksloat@aampglobal.com
-References: <1557392634-11090-1-git-send-email-eugen.hristev@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f52b31cf-87e8-dd00-8b6d-46b02f383507@xs4all.nl>
-Date:   Wed, 29 May 2019 11:40:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 05:41:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so1249993wrv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=f4sEI9yG6GpMwqHITTXcIshL6zD0jAjZRybb4dnfs7U=;
+        b=pEGWv8XIyBlPvoBMuLhmJCRnsakkEZvpMkDr63LRYi25eLXJnV1RzXsBbMgi3iZIYj
+         ExH1tQ4KjTdkrims0DrRkrkNoZnhI+CBoSPEf6r/PhVTlaOqT+0kuIuFdy9JnCnHm/C2
+         fuRwh2MJDJMKDmybw+7wm4OwR3GmgqPrIrk5QfkQGOCK03VtX3rgtaM/fD9XMqa+8M+C
+         iFyBrpOj0AZlxJrHjoQF4OUIAI0I0W9c2moVukJcm61YqREWq9PaXv/t00+2GioyiBmO
+         LLNVM3R0n4kBjL23YyCePBMkCjXy24zxsZZZFkuPd3eMPl9rPVUw5izRkehAk0TDfoPY
+         k07w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=f4sEI9yG6GpMwqHITTXcIshL6zD0jAjZRybb4dnfs7U=;
+        b=qHYPO+BKG17xIVfhRH6pEYlX9snuNlOVLNj3Q7RPmB8rUp363nmzxGbnUsSHtFlxRU
+         aMstn19pyYDO2k9Y77Aznv2XB965e/5SgUgzcYOFh9rXT0oV9mKxX+4kI3bgck67m1Lk
+         XLX2+Ktv/l2aRCNecUN7WLoirMlWZq6KVfSMOEWGRnuXgQoKxPz44mVIj6RRQwFElvM1
+         1dvBVyE6Bhi7XHQDDnEIwIZAAZIRaeluHlUDHPYi3J9DnzJQlYkM+TCnMrsHc+BSUWUk
+         HYxZ6RREKsfgDF5cNAUVZZ3hm9KN1BXpXOmPF8VoD8IiPbBOtlXnoE/1hRhKSxlM/T+6
+         cX8A==
+X-Gm-Message-State: APjAAAWalvw1MpWRz7vLw0Rb+ur6e7yMbT56MjlwLq3G7j9qoyV2Vii2
+        et9YQDTseulBPVtHTCJNTYJoIQ==
+X-Google-Smtp-Source: APXvYqybPz/dJgD/pPZK0boCv7Be6LJq3uXqA8v5HAX5Laduz+DAmgPPLkF2uW55sxcJpAGjkvuELQ==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr73549530wrj.182.1559122877662;
+        Wed, 29 May 2019 02:41:17 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f20sm4727482wmh.22.2019.05.29.02.41.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 02:41:17 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Karsten Merker <merker@debian.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: Testing the recent RISC-V DT patchsets
+In-Reply-To: <20190528153542.jfkkwycyc3vu6hld@excalibur.cnev.de>
+References: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com> <alpine.DEB.2.21.9999.1905280105110.20842@viisi.sifive.com> <86o93mpqbx.fsf@baylibre.com> <20190528153542.jfkkwycyc3vu6hld@excalibur.cnev.de>
+Date:   Wed, 29 May 2019 11:41:11 +0200
+Message-ID: <86zhn54myw.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <1557392634-11090-1-git-send-email-eugen.hristev@microchip.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfJO+Rck8XgIgDzqDevl/WtnQwXsXIDnXPhT4hBPRHrf86UcQBfn9Dxa4P0CTosG8i9EfYGoRksbLIWwJYFG/lhEJALVx3f5j1l3xq8FhkPVfvc+Xesl+
- 18k/JX+0oHLsacve0GzsZZbqcIYRU6xnyGiQTwpqXPmLEgBfhfjyRU/8ik2ynIdLg1Z02Bek5kNN1LpP7KkSI/XdoQSPp4P0nxRtK0a4jjWdge+LwaND6qoz
- +XdByEiJ+zT7EXTAaZkJbYBy229jBlp/FqHvIxXOpxi0A7tR3mv9SvxKd3vMrb0dkeOQfcWDwqYp+RjXDYGwe4IJiG4+SaNjZ+0l1ELzfTvFWOsiNohumedN
- wAN1dXU9eJCddwcmTvn2hmcs6hCmV6TVa3wdZzLsw2FcUxtbBu+tDEE+zfqGBhCHfKmmYCVUQjBi4tuKj8l4vrhklMPDYw==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 11:09 AM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> This splits the Atmel ISC driver into a common base: atmel-isc-base.c
-> and the driver probe/dt part , atmel-isc.c
-> This is needed to keep a common ground for the sensor controller which will
-> be reused.
-> The atmel-isc will use the common symbols inside the atmel-isc-base
-> Future driver will also use the same symbols and redefine different aspects,
-> for a different version of the ISC.
-> This is done to avoid complete code duplication by creating a totally
-> different driver for the new variant of the ISC.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> 
+On Tue 28 May 2019 at 17:35, Karsten Merker <merker@debian.org> wrote:
+
+> On Tue, May 28, 2019 at 05:10:42PM +0200, Loys Ollivier wrote:
+>> On Tue 28 May 2019 at 01:32, Paul Walmsley <paul.walmsley@sifive.com> wr=
+ote:
+>>=20
+>> > An update for those testing RISC-V patches: here's a new branch of=20
+>> > riscv-pk/bbl that doesn't try to read or modify the DT data at all, wh=
+ich=20
+>> > should be useful until U-Boot settles down.
+> [...]
+>> > Here is an Linux kernel branch with updated DT data that can be booted=
+=20
+>> > with the above bootloader:
+>> >
+>> >    https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1-e=
+xperimental
+>> >
+>> > A sample boot log follows, using a 'defconfig' build from that branch.=
+=20=20
+>>=20
+>> Thanks Paul, I can confirm that it works.
+>>=20
+>> Something is still unclear to myself.
+>> Using FSBL + riscv-pk/bbl the linux kernel + device tree boots.
+>> Neither FSBL nor riscv-pk/bbl are modifying the DT.
+>>=20
+>> Using FSBL + OpenSBI + U-Boot the same kernel + device tree hangs on
+>> running /init.
+>>=20
+>> Would you have any pointer on what riscv-pk does that OpenSBI/U-boot doe=
+sn't ?
+>> Or maybe it is the other way around - OpenSBI/U-boot does something that
+>> extra that should not happen.
+>
 > Hello,
-> 
-> This patch applies on top of my other patches:
-> 
-> media: atmel: atmel-isc: make try_fmt error less verbose
-> media: atmel: atmel-isc: add support for DO_WHITE_BALANCE
-> media: atmel: atmel-isc: reworked white balance feature
-> 
-> Thanks !
-> 
->  MAINTAINERS                                   |    2 +
->  drivers/media/platform/atmel/Makefile         |    1 +
->  drivers/media/platform/atmel/atmel-isc-base.c | 2144 +++++++++++++++++++++++
->  drivers/media/platform/atmel/atmel-isc.c      | 2311 +------------------------
->  drivers/media/platform/atmel/atmel-isc.h      |  210 +++
->  5 files changed, 2372 insertions(+), 2296 deletions(-)
->  create mode 100644 drivers/media/platform/atmel/atmel-isc-base.c
->  create mode 100644 drivers/media/platform/atmel/atmel-isc.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 878588c..8799779 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10110,6 +10110,8 @@ M:	Eugen Hristev <eugen.hristev@microchip.com>
->  L:	linux-media@vger.kernel.org
->  S:	Supported
->  F:	drivers/media/platform/atmel/atmel-isc.c
-> +F:	drivers/media/platform/atmel/atmel-isc.h
-> +F:	drivers/media/platform/atmel/atmel-isc-base.c
->  F:	drivers/media/platform/atmel/atmel-isc-regs.h
->  F:	Documentation/devicetree/bindings/media/atmel-isc.txt
->  
-> diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
-> index 27000d0..9c8566e 100644
-> --- a/drivers/media/platform/atmel/Makefile
-> +++ b/drivers/media/platform/atmel/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
->  obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
-> +obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc-base.o
+>
+> I don't know which version of OpenSBI you are using, but there is
+> a problem with the combination of kernel 5.2-rc1 and OpenSBI
+> versions before commit
+>
+>   https://github.com/riscv/opensbi/commit/4e2cd478208531c47343290f15b577d=
+40c82649c
+>
+> that can result in a hang on executing init, so in case you
+> should be using an older OpenSBI build that might be the source
+> of the problem that you are experiencing.
+>
 
-This doesn't work. If a module consists of two sources, then you must make sure
-those sources do not have the same name as the module.
-
-So you have to rename atmel-isc.c.
-
-See e.g. drivers/media/platform/rcar-vin/Makefile on how that's done for
-CONFIG_VIDEO_RCAR_VIN.
-
-<snip>
-
-> diff --git a/drivers/media/platform/atmel/atmel-isc.h b/drivers/media/platform/atmel/atmel-isc.h
-> new file mode 100644
-> index 0000000..1e285f1
-> --- /dev/null
-> +++ b/drivers/media/platform/atmel/atmel-isc.h
-> @@ -0,0 +1,210 @@
-
-<snip>
-
-> +
-> +#if defined(CONFIG_VIDEO_ATMEL_ISC)
-
-Why this #if???
-
-> +#define ATMEL_ISC_NAME "atmel-isc"
-> +#endif
-> +
-> +#endif
-> 
-
-If I configure atmel-isc as a module, then I get these errors:
-
-  CC [M]  drivers/media/platform/atmel/atmel-isc-base.o
-drivers/media/platform/atmel/atmel-isc-base.c: In function ‘isc_querycap’:
-drivers/media/platform/atmel/atmel-isc-base.c:906:23: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
-
-  strscpy(cap->driver, ATMEL_ISC_NAME, sizeof(cap->driver));
-                       ^~~~~~~~~~~~~~
-                       CTL_MAXNAME
-drivers/media/platform/atmel/atmel-isc-base.c:906:23: note: each undeclared identifier is reported only once for each function it appears in
-
-drivers/media/platform/atmel/atmel-isc-base.c: In function ‘isc_async_complete’:
-drivers/media/platform/atmel/atmel-isc-base.c:2063:22: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
-
-  strscpy(vdev->name, ATMEL_ISC_NAME, sizeof(vdev->name));
-                      ^~~~~~~~~~~~~~
-                      CTL_MAXNAME
-drivers/media/platform/atmel/atmel-isc.c: In function ‘atmel_isc_probe’:
-drivers/media/platform/atmel/atmel-isc.c:180:11: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
-
-           ATMEL_ISC_NAME, isc);
-           ^~~~~~~~~~~~~~
-           CTL_MAXNAME
-
-Probably related to one or both of my comments above.
+Hello Karsten,
+That was it ! This fixes the issue I had on init execution.
+Good catch, thanks a lot for the help !
 
 Regards,
+Loys
 
-	Hans
+
+> Regards,
+> Karsten
+> --=20
+> Ich widerspreche hiermit ausdr=C3=BCcklich der Nutzung sowie der
+> Weitergabe meiner personenbezogenen Daten f=C3=BCr Zwecke der Werbung
+> sowie der Markt- oder Meinungsforschung.
+
