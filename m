@@ -2,188 +2,77 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F0C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B27C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A15724374
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172652;
-	bh=LI/SipH9I2k+fGVj863RGRAG5O4wgRHhltiAO+zLezo=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=uYtfKfe4jeR/8QX1f2DATL0ZGFbeIXbr0cjUN6AEJYgjxOWhv/0D5W+RA6GQeFcpi
-	 GOqQ2yNE1APUdHPkYrBjQqEe2bUbZNz6GzeLqOI8D5g9qKFHhc5GFUqLxYlvvZs4hO
-	 Pob4pdJoO3tewKuQ164g1l83mUJcys/SJYUC5Hkc=
+	by mail.kernel.org (Postfix) with ESMTP id 5557C24378
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfE2Xav (ORCPT
+        id S1726599AbfE2Xce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfE2Xav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:30:51 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7E5924371;
-        Wed, 29 May 2019 23:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559172649;
-        bh=LI/SipH9I2k+fGVj863RGRAG5O4wgRHhltiAO+zLezo=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=Wp9wUtgtuKs4M89aPqIkYP3bYXkyWNF0DHHm8tvmzDhDY6pHnpwAa+R5eBW5kYbJo
-         RNNDoQTzrigmV31NWRZrI9ht/hodt3h9VstLMeQU+QTP0ey7QmYJTTljkc9k2PH5On
-         dBK7ZQcYfw4FszlZRVa3C5UGWnq3UFnAu1Pa3Uo8=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 29 May 2019 19:32:34 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:42020 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726189AbfE2Xcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:32:33 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4TNVk1Q018708
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 May 2019 19:31:47 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 444C0420481; Wed, 29 May 2019 19:31:46 -0400 (EDT)
+Date:   Wed, 29 May 2019 19:31:46 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Trevor Bourget <tgb.kernel@gmail.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com
+Subject: Re: [PATCH] vt: configurable number of console devices
+Message-ID: <20190529233146.GA3671@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Trevor Bourget <tgb.kernel@gmail.com>, Jiri Slaby <jslaby@suse.cz>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        dhowells@redhat.com
+References: <20190528043117.169987-1-tgb.kernel@gmail.com>
+ <b52aaaed-5efb-ae1f-68c0-80b150388219@suse.cz>
+ <CAG0f_nYQSn8eFHH3EcV4zxia0C6v7PfCvXybx40em9KgtzMGqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
-        jonathanh@nvidia.com, linus.walleij@linaro.org,
-        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
-        tglx@linutronix.de, thierry.reding@gmail.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 04/12] clk: tegra: add support for peripheral clock suspend and resume
-User-Agent: alot/0.8.1
-Date:   Wed, 29 May 2019 16:30:48 -0700
-Message-Id: <20190529233049.A7E5924371@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG0f_nYQSn8eFHH3EcV4zxia0C6v7PfCvXybx40em9KgtzMGqQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-05-28 16:08:48)
-> This patch implements peripheral clock context save and restore
-> to support system suspend and resume operation.
+On Wed, May 29, 2019 at 03:09:11PM -0700, Trevor Bourget wrote:
+> Sorry, I hadn't registered that was uapi. You are right, as a
+> configuration setting it's an odd thing to expose there.
+> That define won't really be any use to user space except for type
+> range validation, and as such it would actually be unhelpful for it to
+> be other than 63.
+> 
+> I will add if defined(__KERNEL__) to improve that, so that it will be
+> constant for uapi.
 
-Again, why?
+It's by design that MAX_NR_CONSOLES is defined in a uapi header.
+There are userspace programs that rely on this value (they use it to
+declare arrays, so the version that we export to userspace MUST be
+largest value that any kernel might support).
 
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 6f2862eddad7..08b788766564 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -81,6 +81,10 @@ static struct clk **clks;
->  static int clk_num;
->  static struct clk_onecell_data clk_data;
-> =20
-> +#ifdef CONFIG_PM_SLEEP
-> +static u32 *periph_ctx;
-> +#endif
+That being said, I've done an eyeball inspection to see how manytes
+might be saved if we were to shirnk MAX_NR_CONSOLES, and... I don't
+see that many bytes.  Maybe 24 bytes per console, so that maximum
+savings would less than 1.5k?   Am I missing something?
 
-Please move this into the ifdef below.
+Yes, we should all worry about kernel bloat; but it's not clear to me
+this is a great place to start.  :-)
 
-> +
->  /* Handlers for SoC-specific reset lines */
->  static int (*special_reset_assert)(unsigned long);
->  static int (*special_reset_deassert)(unsigned long);
-> @@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int=
- clkid)
->         }
->  }
-> =20
-> +#ifdef CONFIG_PM_SLEEP
-> +void tegra_clk_periph_suspend(void __iomem *clk_base)
-> +{
-> +       int i, idx;
-> +
-> +       idx =3D 0;
-> +       for (i =3D 0; i < periph_banks; i++, idx++)
-> +               periph_ctx[idx] =3D
-> +                       readl_relaxed(clk_base + periph_regs[i].rst_reg);
-> +
-> +       for (i =3D 0; i < periph_banks; i++, idx++)
-> +               periph_ctx[idx] =3D
-> +                       readl_relaxed(clk_base + periph_regs[i].enb_reg);
-> +}
-> +
-> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
-k_base)
-> +{
-> +       int i;
-> +
-> +       WARN_ON(count !=3D periph_banks);
-> +
-> +       for (i =3D 0; i < count; i++)
-> +               writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_=
-reg);
-> +}
-> +
-> +void tegra_clk_periph_resume(void __iomem *clk_base)
-> +{
-> +       int i, idx;
-> +
-> +       idx =3D 0;
-> +       for (i =3D 0; i < periph_banks; i++, idx++)
-> +               writel_relaxed(periph_ctx[idx],
-> +                              clk_base + periph_regs[i].rst_reg);
-> +
-> +       /* ensure all resets have propagated */
-> +       fence_udelay(2, clk_base);
-> +       tegra_read_chipid();
-> +
-> +       for (i =3D 0; i < periph_banks; i++, idx++)
-> +               writel_relaxed(periph_ctx[idx],
-> +                              clk_base + periph_regs[i].enb_reg);
-> +
-> +       /* ensure all enables have propagated */
-> +       fence_udelay(2, clk_base);
-> +       tegra_read_chipid();
-> +}
-> +
-> +static int tegra_clk_suspend_ctx_init(int banks)
-> +{
-> +       int err =3D 0;
-> +
-> +       periph_ctx =3D kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNE=
-L);
-
-Is this kcalloc(2 * banks, sizeof(*periph_ctx)... ?
-
-> +       if (!periph_ctx)
-> +               err =3D -ENOMEM;
-> +
-> +       return err;
-> +}
-> +#endif
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
-ks)
->  {
->         clk_base =3D regs;
-> @@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *r=
-egs, int num, int banks)
->         periph_banks =3D banks;
-> =20
->         clks =3D kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
-> -       if (!clks)
-> +       if (!clks) {
->                 kfree(periph_clk_enb_refcnt);
-> +               return NULL;
-> +       }
-> =20
->         clk_num =3D num;
-> =20
-> +#ifdef CONFIG_PM_SLEEP
-
-Can you use if (IS_ENABLED(CONFIG_PM_SLEEP)) here?
-
-> +       if (tegra_clk_suspend_ctx_init(banks)) {
-> +               kfree(periph_clk_enb_refcnt);
-> +               kfree(clks);
-> +               return NULL;
-> +       }
-> +#endif
->         return clks;
->  }
-> =20
+					- Ted
