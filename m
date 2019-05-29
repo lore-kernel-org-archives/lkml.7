@@ -2,104 +2,225 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535D5C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC223C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3868B23F22
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0AC23F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwDk6jze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfE2RRj (ORCPT
+        id S1726776AbfE2RTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 13:17:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15582 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfE2RRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 13:17:39 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A17B6309B15E;
-        Wed, 29 May 2019 17:17:33 +0000 (UTC)
-Received: from treble (ovpn-123-24.rdu2.redhat.com [10.10.123.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C4D0210027CA;
-        Wed, 29 May 2019 17:17:28 +0000 (UTC)
-Date:   Wed, 29 May 2019 12:17:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-Message-ID: <20190529171726.obom7xql72bgbjhc@treble>
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm>
- <20190529161028.a6kpywzpjazgql5u@treble>
- <nycvar.YFH.7.76.1905291818470.1962@cbobk.fhfr.pm>
+        Wed, 29 May 2019 13:19:06 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38354 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2RTG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 13:19:06 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l3so3562667qtj.5;
+        Wed, 29 May 2019 10:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PHew1bwj+G4UeKjddNBQfMUrkfTOT1qFTesYJ9KdpWY=;
+        b=JwDk6jzeFDTUav/+WuVHCptvci536u+S/rlqaHbXcsjTa64fzeibrl+DNgQa1p9t8i
+         Kt6nNlPUBAMO/sKtf7c6ZrdjnNRccqHMUmz8iUUnlxUCwpkpVl9ABFPClawbs9cwhTWE
+         p/adcFl1UyPm58/ETETPO5HEKX1Ft+TY6vU1AHC02jwNAOCMnYmMkJAyVLUYrLELSd7e
+         NfMJtF2p8neLmV4FGcNHCWGVgf+0nF62L1CWRUv8cLe94EsausanrdA1VwHp06dipN9G
+         g125fVGdgz7nT0XZfIAtFKshrs+RNJcg0b3em81PqqPgq7XScM9Wk1vx0cH57kCTlzjr
+         K8iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PHew1bwj+G4UeKjddNBQfMUrkfTOT1qFTesYJ9KdpWY=;
+        b=AeiO6L8Gu/3lpm1GLRbXKQ5ys/qJIGDffKmCK5tIgYr+AXXX6wGY+8IZeIzUEgiT8l
+         MPIMvEXT74w6fyWs5CtEi2PC3O3wNvmz6r6lDcD8eoKjvIT7ZqGgU2YybpSwPCDuzd++
+         BsMH8OkaUp/TaIFtaVXnhstT+Fcdso+B75K3OnHoSaxhYb5VoECXOYAtx0IxSiSZtFw2
+         yRfsluGX0a3eUCc+AGT2VH+Wgwf04lIhAJ4YYXndIvGQbqpKJCad4e0dpZeRS3ojIuBc
+         s1wNRR954QUNKTCrQ7HLsHH18GswcuEKMJ7YZHQZjIz9Td//5AjoQ07dy6EwRLTVE/IZ
+         s0LQ==
+X-Gm-Message-State: APjAAAVbNrfewt60XzmfTWt2/e04FsCZWcrt1ewsi+8eEZrwNyMemgFG
+        nQRsZ0Lvmf5TR/sF1Ch5Kw9wJxl3jjNr/yTdkZ1uwyzTk+Y=
+X-Google-Smtp-Source: APXvYqxlBB0dep/EPOGen5JaqTJdqhQonTOtlTbcJ3wsUcdbnPO0knRk7DEYFdun/hcIwR3Ea1j46FqigGDb8pzfvBs=
+X-Received: by 2002:ac8:2617:: with SMTP id u23mr102472823qtu.141.1559150344534;
+ Wed, 29 May 2019 10:19:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905291818470.1962@cbobk.fhfr.pm>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 29 May 2019 17:17:38 +0000 (UTC)
+References: <20190529163616.8418-1-mrostecki@opensuse.org>
+In-Reply-To: <20190529163616.8418-1-mrostecki@opensuse.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 29 May 2019 10:18:53 -0700
+Message-ID: <CAEf4BzbajeCeWbS8=Y+E-TxY5m5DnHkco7UriU96mNn-knqc4Q@mail.gmail.com>
+Subject: Re: [PATCH bpf v3] libbpf: Return btf_fd for load_sk_storage_btf
+To:     Michal Rostecki <mrostecki@opensuse.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 06:26:59PM +0200, Jiri Kosina wrote:
-> On Wed, 29 May 2019, Josh Poimboeuf wrote:
-> 
-> > hibernation_restore() is called by user space at runtime, via ioctl or 
-> > sysfs.  So I think this still doesn't fix the case where you've disabled 
-> > CPUs at runtime via sysfs, and then resumed from hibernation.  Or are we 
-> > declaring that this is not a supported scenario?
-> 
-> Yeah I personally find that scenario awkward :) Anyway, cpuhp_smt_enable() 
-> is going to online even those potentially "manually" offlined CPUs, isn't 
-> it?
-> 
-> Are you perhaps suggesting to call enable_nonboot_cpus() instead of 
-> cpuhp_smt_enable() here to make it more explicit?
+On Wed, May 29, 2019 at 9:35 AM Michal Rostecki <mrostecki@opensuse.org> wrote:
+>
+> Before this change, function load_sk_storage_btf expected that
+> libbpf__probe_raw_btf was returning a BTF descriptor, but in fact it was
+> returning an information about whether the probe was successful (0 or
+> 1). load_sk_storage_btf was using that value as an argument of the close
+> function, which was resulting in closing stdout and thus terminating the
+> process which called that function.
+>
+> That bug was visible in bpftool. `bpftool feature` subcommand was always
+> exiting too early (because of closed stdout) and it didn't display all
+> requested probes. `bpftool -j feature` or `bpftool -p feature` were not
+> returning a valid json object.
+>
+> This change remnames the libbpf__probe_raw_btf function to
 
-Maybe, but I guess that wouldn't work as-is because it relies on
-the frozen_cpus mask.  
+typo: remnames -> renames
 
-But maybe this is just a scenario we don't care about anyway?
+> libbpf__load_raw_btf, which now returns a BTF descriptor, as expected in
+> load_sk_storage_btf.
+>
+> v2:
+> - Fix typo in the commit message.
+>
+> v3:
+> - Simplify BTF descriptor handling in bpf_object__probe_btf_* functions.
+> - Rename libbpf__probe_raw_btf function to libbpf__load_raw_btf and
+> return a BTF descriptor.
+>
+> Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> ---
 
-I still have the question about whether we could make mwait_play_dead()
-monitor a fixed address.  If we could get that to work, that seems more
-robust to me.
+Thanks!
 
-Another question.  With your patch, if booted with nosmt, is SMT still
-disabled after you resume from hibernation?  I don't see how SMT would
-get disabled again.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-> > Is there are reason why maxcpus= doesn't do the CR4.MCE booted_once
-> > dance?
-> 
-> I am not sure whether it's really needed. My understanding is that the MCE 
-> issue happens only after primary sibling has been brought up; if that 
-> never happened, MCE wouldn't be broadcasted to that core at all in the 
-> first place.
-> 
-> But this needs to be confirmed by Intel.
-
-Right, but can't maxcpus= create scenarios where only the primary
-sibling has been brought up?
-
-Anyway, Thomas indicated on IRC that maxcpus= may be deprecated and
-should probably be documented as such.  So maybe it's another scenario
-we don't care about.
-
--- 
-Josh
+>  tools/lib/bpf/libbpf.c          | 28 ++++++++++++++++------------
+>  tools/lib/bpf/libbpf_internal.h |  4 ++--
+>  tools/lib/bpf/libbpf_probes.c   | 13 ++++---------
+>  3 files changed, 22 insertions(+), 23 deletions(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 197b574406b3..5d046cc7b207 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -1645,14 +1645,16 @@ static int bpf_object__probe_btf_func(struct bpf_object *obj)
+>                 /* FUNC x */                                    /* [3] */
+>                 BTF_TYPE_ENC(5, BTF_INFO_ENC(BTF_KIND_FUNC, 0, 0), 2),
+>         };
+> -       int res;
+> +       int btf_fd;
+>
+> -       res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+> -                                   strs, sizeof(strs));
+> -       if (res < 0)
+> -               return res;
+> -       if (res > 0)
+> +       btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
+> +                                     strs, sizeof(strs));
+> +       if (btf_fd >= 0) {
+>                 obj->caps.btf_func = 1;
+> +               close(btf_fd);
+> +               return 1;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -1670,14 +1672,16 @@ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
+>                 BTF_TYPE_ENC(3, BTF_INFO_ENC(BTF_KIND_DATASEC, 0, 1), 4),
+>                 BTF_VAR_SECINFO_ENC(2, 0, 4),
+>         };
+> -       int res;
+> +       int btf_fd;
+>
+> -       res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+> -                                   strs, sizeof(strs));
+> -       if (res < 0)
+> -               return res;
+> -       if (res > 0)
+> +       btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
+> +                                     strs, sizeof(strs));
+> +       if (btf_fd >= 0) {
+>                 obj->caps.btf_datasec = 1;
+> +               close(btf_fd);
+> +               return 1;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
+> index f3025b4d90e1..dfab8012185c 100644
+> --- a/tools/lib/bpf/libbpf_internal.h
+> +++ b/tools/lib/bpf/libbpf_internal.h
+> @@ -34,7 +34,7 @@ do {                          \
+>  #define pr_info(fmt, ...)      __pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
+>  #define pr_debug(fmt, ...)     __pr(LIBBPF_DEBUG, fmt, ##__VA_ARGS__)
+>
+> -int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+> -                         const char *str_sec, size_t str_len);
+> +int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
+> +                        const char *str_sec, size_t str_len);
+>
+>  #endif /* __LIBBPF_LIBBPF_INTERNAL_H */
+> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+> index 5e2aa83f637a..6635a31a7a16 100644
+> --- a/tools/lib/bpf/libbpf_probes.c
+> +++ b/tools/lib/bpf/libbpf_probes.c
+> @@ -133,8 +133,8 @@ bool bpf_probe_prog_type(enum bpf_prog_type prog_type, __u32 ifindex)
+>         return errno != EINVAL && errno != EOPNOTSUPP;
+>  }
+>
+> -int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+> -                         const char *str_sec, size_t str_len)
+> +int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
+> +                        const char *str_sec, size_t str_len)
+>  {
+>         struct btf_header hdr = {
+>                 .magic = BTF_MAGIC,
+> @@ -157,14 +157,9 @@ int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+>         memcpy(raw_btf + hdr.hdr_len + hdr.type_len, str_sec, hdr.str_len);
+>
+>         btf_fd = bpf_load_btf(raw_btf, btf_len, NULL, 0, false);
+> -       if (btf_fd < 0) {
+> -               free(raw_btf);
+> -               return 0;
+> -       }
+>
+> -       close(btf_fd);
+>         free(raw_btf);
+> -       return 1;
+> +       return btf_fd;
+>  }
+>
+>  static int load_sk_storage_btf(void)
+> @@ -190,7 +185,7 @@ static int load_sk_storage_btf(void)
+>                 BTF_MEMBER_ENC(23, 2, 32),/* struct bpf_spin_lock l; */
+>         };
+>
+> -       return libbpf__probe_raw_btf((char *)types, sizeof(types),
+> +       return libbpf__load_raw_btf((char *)types, sizeof(types),
+>                                      strs, sizeof(strs));
+>  }
+>
+> --
+> 2.21.0
+>
