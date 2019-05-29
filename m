@@ -2,108 +2,142 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969BCC28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE2C2396B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D24239B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PRVorFm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfE2ONF (ORCPT
+        id S1727028AbfE2OQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:13:05 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:55202 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727056AbfE2ONF (ORCPT
+        Wed, 29 May 2019 10:16:38 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32880 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfE2OQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:13:05 -0400
-Received: (qmail 1762 invoked by uid 2102); 29 May 2019 10:13:04 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 29 May 2019 10:13:04 -0400
-Date:   Wed, 29 May 2019 10:13:04 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in submit_rx_urb/usb_submit_urb
-In-Reply-To: <0000000000004da71e058a06318b@google.com>
-Message-ID: <Pine.LNX.4.44L0.1905291006110.1536-100000@iolanthe.rowland.org>
+        Wed, 29 May 2019 10:16:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n18so2194891otq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LPIxbFckpmqavIl60mnhGb6C8rcrkiaOP2OfEidBo5E=;
+        b=PRVorFm2Okq9hP5kqFH4ZiGr/E/Zu5eJY3MGXXFHxfdpmEdO3GutJJMHvfi09HYlYk
+         SnDTz9Jq0D6SvbjJsXUxw5SPAGf64dGBdkqzG7gBAtOGooyMlAvl8mmczoLi90evYR0A
+         PoHHqSU1LxoqR2wdSfJkTL18f/IZSr+Mc0D+armTgiJNv2KbxIbIGzPnKannBmXr5ZoL
+         onXscwCND5pzd7qsQ+4DRiaG4VALoZaDIZlGVD+Au9+DrLehAtdeFUdLTVj+n3sjvpTd
+         19cYxGogHm6iK4AXItVQ8hkyokyg4Cjwng+d2g0cb8MTYxZRlHB62qmC+BHhUJPQbJyg
+         MxTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LPIxbFckpmqavIl60mnhGb6C8rcrkiaOP2OfEidBo5E=;
+        b=R+ioCNvKC9Npc1KmkntDmvh6qTsvNlB1vv8vC6l9RlfL+JLL+Omo8N1lx1rFRt1RmW
+         zY5KX8kOJCdU6J1gSqSUJlf/zmHEzWXN9RRa9BODCWF3sIoGC6J4dR3f6MTYlisyquXo
+         nrAvgMPx6wXRzLQvfxxY2tCoid4ZQMT0B9/FjHXK0cVSff8+RtjhUQiAjSP6cCsiZBQk
+         dV9hcbudIRQ0VqBkWurZH3yvYgXoIRCFGf0bPRtyfATo+5cDq5FP9r0RxR9PXCsYVj1J
+         RcOEpe04Ko66+dwatKtQvAgRnwyEHvIFxfJhe/evTg7v2sdZ+qNQPy9H8k+wlUPtWzRT
+         iIHQ==
+X-Gm-Message-State: APjAAAVR0GP9T3q38ZjZ3h7GiNa0Fo/vMPiN3QyHBYwSjYajqT7Bcsbv
+        iwU1j8Q3SpIzL+1bfmCYs0Q5gYv3QlW4+KhJvNA7hg==
+X-Google-Smtp-Source: APXvYqwFTJrhrhEsjfOGtxnb29he2Fqyf9z7Tcu+GzobGgP0NfT3JF16fdsQq+/5jwCnLYlKlqDC3v5fUc8xIPyeFeo=
+X-Received: by 2002:a9d:7f8b:: with SMTP id t11mr37188otp.110.1559139396903;
+ Wed, 29 May 2019 07:16:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <155905934373.7587.10824503964531598726.stgit@warthog.procyon.org.uk>
+ <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com> <24577.1559134719@warthog.procyon.org.uk>
+In-Reply-To: <24577.1559134719@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 29 May 2019 16:16:10 +0200
+Message-ID: <CAG48ez0Ugv=cfj-v6DaYma0HgyiBjpykSkCr7mCAcMx13LEncg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] vfs: Add superblock notifications
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019, syzbot wrote:
+On Wed, May 29, 2019 at 2:58 PM David Howells <dhowells@redhat.com> wrote:
+> Jann Horn <jannh@google.com> wrote:
+> > It might make sense to require that the path points to the root inode
+> > of the superblock? That way you wouldn't be able to do this on a bind
+> > mount that exposes part of a shared filesystem to a container.
+>
+> Why prevent that?  It doesn't prevent the container denizen from watching a
+> bind mount that exposes the root of a shared filesystem into a container.
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=143d5972a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c309d28e15db39c5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
-> 
-> usb 2-1: Direct firmware load for prism2_ru.fw failed with error -2
-> prism2_usb 2-1:0.191 (unnamed net_device) (uninitialized): prism2_usb:  
-> Firmware not available, but not essential
-> prism2_usb 2-1:0.191 (unnamed net_device) (uninitialized): prism2_usb: can  
-> continue to use card anyway.
-> ------------[ cut here ]------------
-> usb 2-1: BOGUS urb xfer, pipe 3 != type 1
-> WARNING: CPU: 0 PID: 5587 at drivers/usb/core/urb.c:477  
-> usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 5587 Comm: kworker/0:2 Not tainted 5.2.0-rc1+ #9
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x292/0x6df kernel/panic.c:218
->   __warn.cold+0x20/0x45 kernel/panic.c:575
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-> Code: 4d 85 ed 74 2c e8 b8 de e5 fd 4c 89 f7 e8 b0 7e 11 ff 41 89 d8 44 89  
-> e1 4c 89 ea 48 89 c6 48 c7 c7 80 a3 17 86 e8 73 9b bb fd <0f> 0b e9 20 f4  
-> ff ff e8 8c de e5 fd 4c 89 f2 48 b8 00 00 00 00 00
-> RSP: 0018:ffff8881cb876f98 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-> RDX: 0000000000040000 RSI: ffffffff812824fd RDI: ffffed103970ede5
-> RBP: ffff8881d33a5c00 R08: ffff8881cbf5b000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
-> R13: ffff8881d2fa3918 R14: ffff8881d5feab20 R15: ffff8881d60e8008
->   submit_rx_urb+0x2e1/0x3e0 drivers/staging/wlan-ng/hfa384x_usb.c:353
->   hfa384x_drvr_start+0x1cb/0x420 drivers/staging/wlan-ng/hfa384x_usb.c:2484
->   prism2sta_ifstate+0x2ea/0x4a0 drivers/staging/wlan-ng/prism2sta.c:471
->   prism2sta_probe_usb.cold+0x1c8/0x49e  
-> drivers/staging/wlan-ng/prism2usb.c:112
+Well, yes, but if you expose the root of the shared filesystem to the
+container, the container is probably meant to have a higher level of
+access than if only a bind mount is exposed? But I don't know.
 
-The problem is that hfa384x_create() in hfa384x_usb.c assumes ep1-IN
-and ep2-OUT exist and are bulk endpoints, without actually checking.
+> It probably makes sense to permit the LSM to rule on whether a watch may be
+> emplaced, however.
 
-Since this function does not return an error code, it's not clear how 
-to respond when the expected endpoints do not exist.
+We should have some sort of reasonable policy outside of LSM code
+though - the kernel should still be secure even if no LSMs are built
+into it.
 
-Alan Stern
+> > > +                       }
+> > > +               }
+> > > +               up_write(&s->s_umount);
+> > > +               if (ret < 0)
+> > > +                       kfree(watch);
+> > > +       } else if (s->s_watchers) {
+> >
+> > This should probably have something like a READ_ONCE() for clarity?
+>
+> Note that I think I'll rearrange this to:
+>
+>         } else {
+>                 ret = -EBADSLT;
+>                 if (s->s_watchers) {
+>                         down_write(&s->s_umount);
+>                         ret = remove_watch_from_object(s->s_watchers, wqueue,
+>                                                        s->s_unique_id, false);
+>                         up_write(&s->s_umount);
+>                 }
+>         }
+>
+> I'm not sure READ_ONCE() is necessary, since s_watchers can only be
+> instantiated once and the watch list then persists until the superblock is
+> deactivated.  Furthermore, by the time deactivate_locked_super() is called, we
+> can't be calling sb_notify() on it as it's become inaccessible.
+>
+> So if we see s->s_watchers as non-NULL, we should not see anything different
+> inside the lock.  In fact, I should be able to rewrite the above to:
+>
+>         } else {
+>                 ret = -EBADSLT;
+>                 wlist = s->s_watchers;
+>                 if (wlist) {
+>                         down_write(&s->s_umount);
+>                         ret = remove_watch_from_object(wlist, wqueue,
+>                                                        s->s_unique_id, false);
+>                         up_write(&s->s_umount);
+>                 }
+>         }
 
+I'm extremely twitchy when it comes to code like this because AFAIK
+gcc at least used to sometimes turn code that read a value from memory
+and then used it multiple times into something with multiple memory
+reads, leading to critical security vulnerabilities; see e.g. slide 36
+of <https://www.blackhat.com/docs/us-16/materials/us-16-Wilhelm-Xenpwn-Breaking-Paravirtualized-Devices.pdf>.
+I am not aware of any spec that requires the compiler to only perform
+one read from the memory location in code like this.
