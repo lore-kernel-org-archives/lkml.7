@@ -2,107 +2,87 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E880AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B801C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2A022CD1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H0/es3dS"
+	by mail.kernel.org (Postfix) with ESMTP id E91A922CD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfE2NvE (ORCPT
+        id S1727481AbfE2Nv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:51:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41142 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE2NvE (ORCPT
+        Wed, 29 May 2019 09:51:28 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53759 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfE2Nv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:51:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IpEYYRtOcuoBCe0NJPft5Tkz/UAzt+RuLMsB2MN2GaE=; b=H0/es3dSmh57wK1K3O8+kBAg3
-        ChXfTK85OzhoOPfgTevzcNUrAqF6pQpqmybER+BZc+AVcUbvYZpA8jiqqYbcgy/Ixvs/EXzVCBKuL
-        gWbl33SyM+tWo/GpkuFb9/pJWPfbVYxYvZE5dyEpx6SY+BfMCidVAlyRjZf1/htQPJ20px3gEuHzd
-        PNI6EPxn01Ft3nIv//XLyAPLpH2i8bxEJ3lkzj3fLxr4KeLindTwHAFIl6fUh+VnkWSIb6DURsTEa
-        N1IRGMF+BF96BbGkldDqaqslVHn8XV2FOcH4RYBCSvu4OxxuhWfMzGibLOdXGqBwD3jU8iQtW+k8Z
-        LQ1T6AKBQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVyxf-0004uF-Rj; Wed, 29 May 2019 13:49:48 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2EC04201CF1B6; Wed, 29 May 2019 15:49:46 +0200 (CEST)
-Date:   Wed, 29 May 2019 15:49:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190529134946.GY2623@hirez.programming.kicks-ass.net>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190529102038.GO2623@hirez.programming.kicks-ass.net>
- <20190529083930.5541130e@oasis.local.home>
- <20190529131957.GV2623@hirez.programming.kicks-ass.net>
- <20190529094213.3e344965@oasis.local.home>
+        Wed, 29 May 2019 09:51:27 -0400
+Received: from [207.225.69.115] (helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hVyzD-0003i8-Nl; Wed, 29 May 2019 15:51:24 +0200
+Date:   Wed, 29 May 2019 06:51:12 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-spdx@vger.kernel.org
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
+In-Reply-To: <20190529131300.GV3274@piout.net>
+Message-ID: <alpine.DEB.2.21.1905290645490.2940@nanos.tec.linutronix.de>
+References: <20190521133257.GA21471@kroah.com> <20190529131300.GV3274@piout.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529094213.3e344965@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 09:42:13AM -0400, Steven Rostedt wrote:
-> > And the preempt_irqoff tracer had better also consume the IRQ events,
-> > and if it does that it can DTRT without extra bits on, even with that
-> > race.
-> > 
-> > Consider:
-> > 
-> > 	preempt_disable()
-> > 	  preempt_count += 1;
-> > 	  <IRQ>
-> > 	    trace_irq_enter();
-> > 
-> > 	    trace_irq_exit();
-> > 	  </IRQ>
-> > 	  trace_preempt_disable();
-> > 
-> > 	/* does stuff */
-> > 
-> > 	preempt_enable()
-> > 	  preempt_count -= 1;
-> > 	  trace_preempt_enable();
-> > 
-> > You're saying preempt_irqoff() fails to connect the two because of the
-> > hole between trace_irq_exit() and trace_preempt_disable() ?
-> > 
-> > But trace_irq_exit() can see the raised preempt_count and set state
-> > for trace_preempt_disable() to connect.
-> 
-> That's basically what I was suggesting as the solution to this ;-)
+Alexandre,
 
-You were wanting changes to preempt_disable() and task_struct, neither
-of which is required. The above only needs some per-cpu storage in the
-tracer implementation.
+On Wed, 29 May 2019, Alexandre Belloni wrote:
+
+> Hello,
+> 
+> On 21/05/2019 15:32:57+0200, Greg KH wrote:
+> >   - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
+> 
+> I'm very confused by those two tags because they are not mentioned in
+> the SPDX 2.1 specification or the kernel documentation and seem to just
+> be from https://spdx.org/ids-howi which doesn't seem to be versionned
+> anywhere.
+
+  https://spdx.org/licenses/
+
+is versioned. It's at version 3.5 and the -only/-or-later tags have been
+introduced in version 3.0. See 
+
+  https://spdx.org/licenses/GPL-2.0
+
+> While I understand the rationale behind those, I believe the correct way
+> of introducing them would be first to add them in the spec and
+> documentation and then make use of them.
+
+Well, the problem was that people started to use them and argued that they
+are the new standard, which is true. So we decided to allow both. See:
+
+  9376ff9ba298 ("LICENSES/GPL2.0: Add GPL-2.0-only/or-later as valid identifiers")
+
+> Now, what should we do with all the GPL-2.0 and GPL-2.0+ tags that we
+> have?
+
+Nothing. Leave them alone. Both are valid and tools have to deal with them
+anyway.
+
+Thanks,
+
+	tglx
