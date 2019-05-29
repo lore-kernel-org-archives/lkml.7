@@ -2,120 +2,120 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE00C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA6AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77079216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732F22070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDXcEte/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lAFV5d7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfE2JoE (ORCPT
+        id S1726137AbfE2JqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:44:04 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43316 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2JoE (ORCPT
+        Wed, 29 May 2019 05:46:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52474 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfE2JqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:44:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z5so1742420lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FsyAy8xqOnydsiC3KSfkSrEFY+z1J//IAa+nI1nutTI=;
-        b=vDXcEte//MSO2iH2sG4khq5ViiD28SNgFCtI5qzbkiY5tcqIpruUVlVLlvAVXcNdav
-         O4VL/26sBkI/wW28Kiih8UHel/KkN7upj3INbhFvdJ/sYayYctclBVXar1Ct2BxthCme
-         dGee6sy0Y5ZFF2SV8v0z25UZFStWLIYOqWTUICzz2PbNMzNM9hmVmnBnRRhAdasz1j2B
-         DpdFJ/YIrMoDOIipK0sPN1t+/AwnQLCwswyVgKaPWpKrCSxqEVONBAI6vWP5CUHzYOGp
-         ZwBHLuQSuPMxNFaYGDeR9SWDMf8DKbhP5KUuFqQyfIrYmsQxYfOH2l2+1WzdloC3JqW+
-         1hfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FsyAy8xqOnydsiC3KSfkSrEFY+z1J//IAa+nI1nutTI=;
-        b=TPmZDu1WSyFulj2YWen+8qe5RlG04w4eKxoeRi5xCxUaaNiEN8FHPztOgms60F8M+v
-         AZXlEZp0uYHlxrrWyn6zQhTSPYBFytAGB5cBDNcozJfcnuA7i5nyjspIaJv56HiUXmdp
-         P4o/dpSs7CUSkEtOWhmDhx1426e6G3fWLEx/7BCdKWTdPvi9RcJGQQ2ul7GMsNd5DLw2
-         8uWlsguTZ22PQ3Va+IB6w5O3h4R1q9/4wFMg2l6PDOKxhN33s0RlxJECIXnn7Uy5PX/r
-         ckYyuMmmxVMnxe95wJ1nJD/SrSe3eHNiJdsTS2ysHkKfLmak+8aeIH3k/68Zez6TXK1c
-         Sa4Q==
-X-Gm-Message-State: APjAAAW8m7+Cd7qqExkFnZXidbXSdEimaj4pK9qe+7SoxACYPFlEc/zI
-        ii3vQdQklKdvRlOAYCvVAsaUkw==
-X-Google-Smtp-Source: APXvYqzIzt4h98MbTFCbO+4J4b5ysB/kMM0PWXSMXtD/Zr6zkhMYrC88dIesOB35SgN/SkTi/ptccA==
-X-Received: by 2002:a2e:5d8e:: with SMTP id v14mr67005110lje.106.1559123042285;
-        Wed, 29 May 2019 02:44:02 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-72.NA.cust.bahnhof.se. [158.174.22.72])
-        by smtp.gmail.com with ESMTPSA id x28sm1141761lfc.2.2019.05.29.02.44.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 02:44:01 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>, stable@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: qcom: Ensure that PERST is asserted for at least 100 ms
-Date:   Wed, 29 May 2019 11:43:52 +0200
-Message-Id: <20190529094352.5961-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 29 May 2019 05:46:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ynLC/A1PZWZKFWVRq0ZWVkXzNlwLp37v/DNdYCI54TQ=; b=lAFV5d7S2l4izwN7C2cekbkik
+        iJ8GEfwS4n4a0Ubs7px2GgBs4MmosXaZMGMLY7usb5dVBVhDC4DlSHxC72Nkd1hpujIs6ctrZYw7M
+        YT71sv3nGy0KZydXd9LFb5oJx8kf/Bn/6tqunM90OTl+iiu6O7q6YS49jGGbyJz9ccOkFD1C4MUS2
+        VjatY1CAUq1FyyODrtGgszkwxul4nWNxIoBVl988YpYY5VQwriXLHnJvnYwj/vQkMltqUnwyYgGG7
+        eemxzlO8wn72soIv9XBQDwtL45uIEdzG3n7vvzqI8mkejqnprm+/7L6VmWR5JQ0NuQtUBxW+zJcPA
+        8Xk10Lgbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVv9j-0006BG-4Q; Wed, 29 May 2019 09:45:59 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D0D30201A7E42; Wed, 29 May 2019 11:45:56 +0200 (CEST)
+Date:   Wed, 29 May 2019 11:45:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        acme@kernel.org, mark.rutland@arm.com
+Subject: Re: [RFC 5/7] arm64: pmu: Add hook to handle pmu-related undefined
+ instructions
+Message-ID: <20190529094556.GJ2623@hirez.programming.kicks-ass.net>
+References: <20190528150320.25953-1-raphael.gault@arm.com>
+ <20190528150320.25953-6-raphael.gault@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528150320.25953-6-raphael.gault@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there is only a 1 ms sleep after asserting PERST.
+On Tue, May 28, 2019 at 04:03:18PM +0100, Raphael Gault wrote:
+> +static int emulate_pmu(struct pt_regs *regs, u32 insn)
+> +{
+> +	u32 sys_reg, rt;
+> +	u32 pmuserenr;
+> +
+> +	sys_reg = (u32)aarch64_insn_decode_immediate(AARCH64_INSN_IMM_16, insn) << 5;
+> +	rt = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
+> +	pmuserenr = read_sysreg(pmuserenr_el0);
+> +
+> +	if ((pmuserenr & (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR)) !=
+> +	    (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR))
+> +		return -EINVAL;
+> +
 
-Reading the datasheets for different endpoints, some require PERST to be
-asserted for 10 ms in order for the endpoint to perform a reset, others
-require it to be asserted for 50 ms.
+I would really prefer there to be a comment here that explain how the
+'0' value works. Maybe something like:
 
-Several SoCs using this driver uses PCIe Mini Card, where we don't know
-what endpoint will be plugged in.
+	/*
+	 * Userspace is expected to only use this in the context of the
+	 * scheme described in the struct perf_event_mmap_page comments.
+	 *
+	 * Given that context, we can only get here if we got migrated
+	 * between getting the register index and doing the MSR read.
+	 * This in turn implies we'll fail the sequence and retry, so
+	 * any value returned is 'good', all we need is to be non-fatal.
+	 */
 
-The PCI Express Card Electromechanical Specification specifies:
-"On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
-the power rails achieving specified operating limits."
+> +	pt_regs_write_reg(regs, rt, 0);
 
-Add a sleep of 100 ms before deasserting PERST, in order to ensure that
-we are compliant with the spec.
+And given the above, we don't even need to do this, we can simply
+preserve whatever garbage was in the register and return to userspace.
 
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: stable@vger.kernel.org # 4.5+
----
-Changes since v1:
-Move the sleep into qcom_ep_reset_deassert()
+The only thing we really need is for the trap to be non-fatal.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0ed235d560e3..5d1713069d14 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -178,6 +178,8 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
- 
- static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
- {
-+	/* Ensure that PERST has been asserted for at least 100 ms */
-+	msleep(100);
- 	gpiod_set_value_cansleep(pcie->reset, 0);
- 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
- }
--- 
-2.21.0
-
+> +
+> +	arm64_skip_faulting_instruction(regs, 4);
+> +	return 0;
+> +}
+> +
+> +/*
+> + * This hook will only be triggered by mrs
+> + * instructions on PMU registers. This is mandatory
+> + * in order to have a consistent behaviour even on
+> + * big.LITTLE systems.
+> + */
+> +static struct undef_hook pmu_hook = {
+> +	.instr_mask = 0xffff8800,
+> +	.instr_val  = 0xd53b8800,
+> +	.fn = emulate_pmu,
+> +};
+> +
+> +static int __init enable_pmu_emulation(void)
+> +{
+> +	register_undef_hook(&pmu_hook);
+> +	return 0;
+> +}
+> +
+> +core_initcall(enable_pmu_emulation);
