@@ -2,127 +2,244 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9B4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6804C46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7D62070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8507321670
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfE2JiJ (ORCPT
+        id S1726225AbfE2Jjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:38:09 -0400
-Received: from m9783.mail.qiye.163.com ([220.181.97.83]:2787 "EHLO
-        m9783.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfE2JiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:38:09 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 05:38:06 EDT
-Received: from localhost (unknown [120.132.1.243])
-        by m9783.mail.qiye.163.com (Hmail) with ESMTPA id A1BD9C1A9B;
-        Wed, 29 May 2019 17:31:24 +0800 (CST)
-Date:   Wed, 29 May 2019 03:04:46 +0800
-From:   Yao Liu <yotta.liu@ucloud.cn>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        nbd <nbd@other.debian.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] nbd: fix connection timed out error after
- reconnecting to server
-Message-ID: <20190528190446.GA21513@192-168-150-246.7~>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <20190524130740.zfypc2j3q5e3gryr@MacBook-Pro-91.local.dhcp.thefacebook.com>
- <20190527180743.GA20702@192-168-150-246.7~>
- <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
+        Wed, 29 May 2019 05:39:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17604 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725894AbfE2Jjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 05:39:53 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A197A194D203AE1D13FD;
+        Wed, 29 May 2019 17:39:50 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
+ 17:39:41 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <t-kristo@ti.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <tony@atomide.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3] clk: ti: Remove unused functions
+Date:   Wed, 29 May 2019 17:39:37 +0800
+Message-ID: <20190529093937.21748-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190512100328.27136-1-yuehaibing@huawei.com>
+References: <20190512100328.27136-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528165758.zxfrv6fum4vwcv4e@MacBook-Pro-91.local>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01OQkJCQ0xMT05JQ05ZV1koWUFJQjdXWS1ZQUlXWQ
-        kOFx4IWUFZNTQpNjo3JCkuNz5ZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NAw6Hzo4Ezg3USJLOikVPU09
-        OggaCRlVSlVKTk5CSklJSUNPQ05IVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SUtVSkhJVUpVSU9IWVdZCAFZQU5OSU43Bg++
-X-HM-Tid: 0a6b02ee10a32085kuqya1bd9c1a9b
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:57:59PM -0400, Josef Bacik wrote:
-> On Tue, May 28, 2019 at 02:07:43AM +0800, Yao Liu wrote:
-> > On Fri, May 24, 2019 at 09:07:42AM -0400, Josef Bacik wrote:
-> > > On Fri, May 24, 2019 at 05:43:54PM +0800, Yao Liu wrote:
-> > > > Some I/O requests that have been sent succussfully but have not yet been
-> > > > replied won't be resubmitted after reconnecting because of server restart,
-> > > > so we add a list to track them.
-> > > > 
-> > > > Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-> > > 
-> > > Nack, this is what the timeout stuff is supposed to handle.  The commands will
-> > > timeout and we'll resubmit them if we have alive sockets.  Thanks,
-> > > 
-> > > Josef
-> > > 
-> > 
-> > On the one hand, if num_connections == 1 and the only sock has dead,
-> > then we do nbd_genl_reconfigure to reconnect within dead_conn_timeout,
-> > nbd_xmit_timeout will not resubmit commands that have been sent
-> > succussfully but have not yet been replied. The log is as follows:
-> >  
-> > [270551.108746] block nbd0: Receive control failed (result -104)
-> > [270551.108747] block nbd0: Send control failed (result -32)
-> > [270551.108750] block nbd0: Request send failed, requeueing
-> > [270551.116207] block nbd0: Attempted send on invalid socket
-> > [270556.119584] block nbd0: reconnected socket
-> > [270581.161751] block nbd0: Connection timed out
-> > [270581.165038] block nbd0: shutting down sockets
-> > [270581.165041] print_req_error: I/O error, dev nbd0, sector 5123224 flags 8801
-> > [270581.165149] print_req_error: I/O error, dev nbd0, sector 5123232 flags 8801
-> > [270581.165580] block nbd0: Connection timed out
-> > [270581.165587] print_req_error: I/O error, dev nbd0, sector 844680 flags 8801
-> > [270581.166184] print_req_error: I/O error, dev nbd0, sector 5123240 flags 8801
-> > [270581.166554] block nbd0: Connection timed out
-> > [270581.166576] print_req_error: I/O error, dev nbd0, sector 844688 flags 8801
-> > [270581.167124] print_req_error: I/O error, dev nbd0, sector 5123248 flags 8801
-> > [270581.167590] block nbd0: Connection timed out
-> > [270581.167597] print_req_error: I/O error, dev nbd0, sector 844696 flags 8801
-> > [270581.168021] print_req_error: I/O error, dev nbd0, sector 5123256 flags 8801
-> > [270581.168487] block nbd0: Connection timed out
-> > [270581.168493] print_req_error: I/O error, dev nbd0, sector 844704 flags 8801
-> > [270581.170183] print_req_error: I/O error, dev nbd0, sector 5123264 flags 8801
-> > [270581.170540] block nbd0: Connection timed out
-> > [270581.173333] block nbd0: Connection timed out
-> > [270581.173728] block nbd0: Connection timed out
-> > [270581.174135] block nbd0: Connection timed out
-> >  
-> > On the other hand, if we wait nbd_xmit_timeout to handle resubmission,
-> > the I/O requests will have a big delay. For example, if timeout time is 30s,
-> > and from sock dead to nbd_genl_reconfigure returned OK we only spend
-> > 2s, the I/O requests will still be handled by nbd_xmit_timeout after 30s.
-> 
-> We have to wait for the full timeout anyway to know that the socket went down,
-> so it'll be re-submitted right away and then we'll wait on the new connection.
-> 
-> Now we could definitely have requests that were submitted well after the first
-> thing that failed, so their timeout would be longer than simply retrying them,
-> but we have no idea of knowing which ones timed out and which ones didn't.  This
-> way lies pain, because we have to matchup tags with handles.  This is why we
-> rely on the generic timeout infrastructure, so everything is handled correctly
-> without ending up with duplicate submissions/replies.  Thanks,
-> 
-> Josef
-> 
+They are not used any more since
+commit 7558562a70fb ("clk: ti: Drop legacy clk-3xxx-legacy code")
 
-But as I mentioned before, if num_connections == 1, nbd_xmit_timeout won't re-submit
-commands and I/O error will occur. Should we change the condition
-		if (config->num_connections > 1)
-to
-		if (config->num_connections >= 1)
-?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v3: remove ti_clk_build_component_div and _get_div_table_from_setup
+v2: also remove mux/div unused functions
+---
+ drivers/clk/ti/divider.c | 85 ----------------------------------------
+ drivers/clk/ti/gate.c    | 30 --------------
+ drivers/clk/ti/mux.c     | 31 ---------------
+ 3 files changed, 146 deletions(-)
+
+diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
+index 4786e0ebc2e8..6cb863c13648 100644
+--- a/drivers/clk/ti/divider.c
++++ b/drivers/clk/ti/divider.c
+@@ -425,91 +425,6 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
+ 	return 0;
+ }
+ 
+-static const struct clk_div_table *
+-_get_div_table_from_setup(struct ti_clk_divider *setup, u8 *width)
+-{
+-	const struct clk_div_table *table = NULL;
+-
+-	ti_clk_parse_divider_data(setup->dividers, setup->num_dividers,
+-				  setup->max_div, setup->flags, width,
+-				  &table);
+-
+-	return table;
+-}
+-
+-struct clk_hw *ti_clk_build_component_div(struct ti_clk_divider *setup)
+-{
+-	struct clk_omap_divider *div;
+-	struct clk_omap_reg *reg;
+-	int ret;
+-
+-	if (!setup)
+-		return NULL;
+-
+-	div = kzalloc(sizeof(*div), GFP_KERNEL);
+-	if (!div)
+-		return ERR_PTR(-ENOMEM);
+-
+-	reg = (struct clk_omap_reg *)&div->reg;
+-	reg->index = setup->module;
+-	reg->offset = setup->reg;
+-
+-	if (setup->flags & CLKF_INDEX_STARTS_AT_ONE)
+-		div->flags |= CLK_DIVIDER_ONE_BASED;
+-
+-	if (setup->flags & CLKF_INDEX_POWER_OF_TWO)
+-		div->flags |= CLK_DIVIDER_POWER_OF_TWO;
+-
+-	div->table = _get_div_table_from_setup(setup, &div->width);
+-	if (IS_ERR(div->table)) {
+-		ret = PTR_ERR(div->table);
+-		kfree(div);
+-		return ERR_PTR(ret);
+-	}
+-
+-
+-	div->shift = setup->bit_shift;
+-	div->latch = -EINVAL;
+-
+-	return &div->hw;
+-}
+-
+-struct clk *ti_clk_register_divider(struct ti_clk *setup)
+-{
+-	struct ti_clk_divider *div = setup->data;
+-	struct clk_omap_reg reg = {
+-		.index = div->module,
+-		.offset = div->reg,
+-	};
+-	u8 width;
+-	u32 flags = 0;
+-	u8 div_flags = 0;
+-	const struct clk_div_table *table;
+-	struct clk *clk;
+-
+-	if (div->flags & CLKF_INDEX_STARTS_AT_ONE)
+-		div_flags |= CLK_DIVIDER_ONE_BASED;
+-
+-	if (div->flags & CLKF_INDEX_POWER_OF_TWO)
+-		div_flags |= CLK_DIVIDER_POWER_OF_TWO;
+-
+-	if (div->flags & CLKF_SET_RATE_PARENT)
+-		flags |= CLK_SET_RATE_PARENT;
+-
+-	table = _get_div_table_from_setup(div, &width);
+-	if (IS_ERR(table))
+-		return (struct clk *)table;
+-
+-	clk = _register_divider(NULL, setup->name, div->parent,
+-				flags, &reg, div->bit_shift,
+-				width, -EINVAL, div_flags, table);
+-
+-	if (IS_ERR(clk))
+-		kfree(table);
+-
+-	return clk;
+-}
+-
+ static struct clk_div_table *
+ __init ti_clk_get_div_table(struct device_node *node)
+ {
+diff --git a/drivers/clk/ti/gate.c b/drivers/clk/ti/gate.c
+index 504c0e91cdc7..42389558418c 100644
+--- a/drivers/clk/ti/gate.c
++++ b/drivers/clk/ti/gate.c
+@@ -131,36 +131,6 @@ static struct clk *_register_gate(struct device *dev, const char *name,
+ 	return clk;
+ }
+ 
+-struct clk_hw *ti_clk_build_component_gate(struct ti_clk_gate *setup)
+-{
+-	struct clk_hw_omap *gate;
+-	struct clk_omap_reg *reg;
+-	const struct clk_hw_omap_ops *ops = &clkhwops_wait;
+-
+-	if (!setup)
+-		return NULL;
+-
+-	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+-	if (!gate)
+-		return ERR_PTR(-ENOMEM);
+-
+-	reg = (struct clk_omap_reg *)&gate->enable_reg;
+-	reg->index = setup->module;
+-	reg->offset = setup->reg;
+-
+-	gate->enable_bit = setup->bit_shift;
+-
+-	if (setup->flags & CLKF_NO_WAIT)
+-		ops = NULL;
+-
+-	if (setup->flags & CLKF_INTERFACE)
+-		ops = &clkhwops_iclk_wait;
+-
+-	gate->ops = ops;
+-
+-	return &gate->hw;
+-}
+-
+ static void __init _of_ti_gate_clk_setup(struct device_node *node,
+ 					 const struct clk_ops *ops,
+ 					 const struct clk_hw_omap_ops *hw_ops)
+diff --git a/drivers/clk/ti/mux.c b/drivers/clk/ti/mux.c
+index b7f9a4f068bf..0069e7cf3ebc 100644
+--- a/drivers/clk/ti/mux.c
++++ b/drivers/clk/ti/mux.c
+@@ -164,37 +164,6 @@ static struct clk *_register_mux(struct device *dev, const char *name,
+ 	return clk;
+ }
+ 
+-struct clk *ti_clk_register_mux(struct ti_clk *setup)
+-{
+-	struct ti_clk_mux *mux;
+-	u32 flags;
+-	u8 mux_flags = 0;
+-	struct clk_omap_reg reg;
+-	u32 mask;
+-
+-	mux = setup->data;
+-	flags = CLK_SET_RATE_NO_REPARENT;
+-
+-	mask = mux->num_parents;
+-	if (!(mux->flags & CLKF_INDEX_STARTS_AT_ONE))
+-		mask--;
+-
+-	mask = (1 << fls(mask)) - 1;
+-	reg.index = mux->module;
+-	reg.offset = mux->reg;
+-	reg.ptr = NULL;
+-
+-	if (mux->flags & CLKF_INDEX_STARTS_AT_ONE)
+-		mux_flags |= CLK_MUX_INDEX_ONE;
+-
+-	if (mux->flags & CLKF_SET_RATE_PARENT)
+-		flags |= CLK_SET_RATE_PARENT;
+-
+-	return _register_mux(NULL, setup->name, mux->parents, mux->num_parents,
+-			     flags, &reg, mux->bit_shift, mask, -EINVAL,
+-			     mux_flags, NULL);
+-}
+-
+ /**
+  * of_mux_clk_setup - Setup function for simple mux rate clock
+  * @node: DT node for the clock
+-- 
+2.17.1
+
+
