@@ -2,129 +2,123 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55259C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FC62405D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE8E24061
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8c2oA5F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YIfCt4yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfE2SW0 (ORCPT
+        id S1727521AbfE2SWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:22:26 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44842 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfE2SW0 (ORCPT
+        Wed, 29 May 2019 14:22:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38610 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2SWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:22:26 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g18so2993114otj.11;
-        Wed, 29 May 2019 11:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=amJi0jbjD9M6vUHKgUTYZgac6U4sNICfW2Wh2jnSQXI=;
-        b=R8c2oA5Fl36xHbwRZd3mPECu98msS2gC5wxHUo1gjNyD42EJWz14QKvHjGofU1qbos
-         snZb+IxY8/sp9K3ckuwl7SAOOde9Lc9Bd/0Ju1zOgMki4HJZ/W7+GEOw+/6nFV9Shc7N
-         tdzmCJifBTO8UHIPOnv9S3TIo05p8AA4gOML2aZD49Oj06qsQT0cYgHTGcl/oJuEeqpA
-         TzHC+Z32hjbRXqaMM3ZqP3gw33B5+wc/keNRFb7SJgLZTeEP3UvQinmq9pyfzCiYHaUs
-         uNqV8278AmSpyNisgMzDNToAR0XdeDErauSyPCdVZSG6nW206TH7+VrwdH8uz5zxkpfh
-         9BzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=amJi0jbjD9M6vUHKgUTYZgac6U4sNICfW2Wh2jnSQXI=;
-        b=ZlDPOTSo0GriI009l4yAIJSsOSnFCQpp5pSg9hsUAB9xfOZxtN/S1padtRb6D/7WWG
-         CNMXemGwShM8kYMXEi+g70cktzxyHdsUP/9mYtiShUhQUJWW1r3htq0H6HX8oGQTZggw
-         RrZycFDKrZZV1nzOwofpnrvx1aa0B1vREoDqsP5JQRYzlmbYGtWJLHhp3718GnRTWitX
-         ubeQ2PMHrhJOnLs3D1YLN7c1fLnx/dMJ+pBU0ca6mS3AxoD/Hp0YXAzTOZ8b8h3z5c1d
-         O52H8UH7dZHnKdG587SwFmQkkdFuCiD/R9wAUZRg4eydXg6egDinv6/UVAtkJm1DCbJQ
-         7bzg==
-X-Gm-Message-State: APjAAAX4tZMj+tAa+sB+n09WZ240zkqjTjnA4zt6vhVeVVlJ3e7QqGOO
-        RXqkIuhF7O1BL8r6pZZdbKA=
-X-Google-Smtp-Source: APXvYqy6PhVo7GdXSqPk35HHEzvt77Cl8Mfv8o7XWp1rLaQgOadm5LbsmmBsvUWFA4R59/KnVTZeHQ==
-X-Received: by 2002:a9d:7a4d:: with SMTP id z13mr172718otm.246.1559154145557;
-        Wed, 29 May 2019 11:22:25 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id t139sm122687oie.21.2019.05.29.11.22.24
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 11:22:24 -0700 (PDT)
-Subject: Re: [RFC PATCH v3] rtl8xxxu: Improve TX performance of RTL8723BU on
- rtl8xxxu driver
-To:     Chris Chiu <chiu@endlessm.com>, jes.sorensen@gmail.com,
-        kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-References: <20190529050335.72061-1-chiu@endlessm.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <5f5e262d-aadb-cca0-8576-879735366a73@lwfinger.net>
-Date:   Wed, 29 May 2019 13:22:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 14:22:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=46u7yWH7SEbkA+LGUDG+c1CeWmaboYlcCKtUzEnRpo8=; b=YIfCt4yrE3A4keXkYIi7JRIyx
+        DIgQER+VsVxJJ0t+VdSGG6VF0tK5H87d+mbDQYY7AzUdJK3zGlBl/1jWQ41sDtNqQmkwRDdyJgkyZ
+        Sjp/L/jB8y2DFH0nTYWSiJ9X+goO9gGWW/HirZu+iT/ufJdU/BitgcUik6T3/D+APf8LdmemSFnB0
+        LsvI4AJ7OtILMHg4O8Q7c0XLb0A6sr1UVAwhvRK5GFMjo00KZwdKGdk8tO6UqbqvAsSNMWrAXf+81
+        ckcngmi+jYUFgs3mMddy/Q3Y+7oxDixoE+OAPeR3AHX083gVTIU2TkIjSUWXeLe1ZRW8SbIZx7q/p
+        DLuA+3JHw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW3Cp-0000m8-Va; Wed, 29 May 2019 18:21:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A1B03201B3992; Wed, 29 May 2019 20:21:42 +0200 (CEST)
+Date:   Wed, 29 May 2019 20:21:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
+        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
+ due to a preempt_counter change
+Message-ID: <20190529182142.GF2623@hirez.programming.kicks-ass.net>
+References: <cover.1559051152.git.bristot@redhat.com>
+ <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
+ <20190529083357.GF2623@hirez.programming.kicks-ass.net>
+ <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
+ <20190529102038.GO2623@hirez.programming.kicks-ass.net>
+ <94669b5a-06dd-e9bf-cfb6-b5d507a90946@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190529050335.72061-1-chiu@endlessm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94669b5a-06dd-e9bf-cfb6-b5d507a90946@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 12:03 AM, Chris Chiu wrote:
-> We have 3 laptops which connect the wifi by the same RTL8723BU.
-> The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
-> They have the same problem with the in-kernel rtl8xxxu driver, the
-> iperf (as a client to an ethernet-connected server) gets ~1Mbps.
-> Nevertheless, the signal strength is reported as around -40dBm,
-> which is quite good. From the wireshark capture, the tx rate for each
-> data and qos data packet is only 1Mbps. Compare to the driver from
-> https://github.com/lwfinger/rtl8723bu, the same iperf test gets ~12
-> Mbps or more. The signal strength is reported similarly around
-> -40dBm. That's why we want to improve.
+On Wed, May 29, 2019 at 03:51:31PM +0200, Daniel Bristot de Oliveira wrote:
+> On 29/05/2019 12:20, Peter Zijlstra wrote:
 
-The driver at GitHub was written by Realtek. I only published it in a prominent 
-location, and fix it for kernel API changes. I would say "the Realtek driver at 
-https://...", and every mention of "Larry's driver" should say "Realtek's 
-driver". That attribution is more correct.
+> > I'm not sure I follow, IRQs disabled fully implies !preemptible. I don't
+> > see how the model would be more pessimistic than reality if it were to
+> > use this knowledge.
 > 
-> After reading the source code of the rtl8xxxu driver and Larry's, the
-> major difference is that Larry's driver has a watchdog which will keep
-> monitoring the signal quality and updating the rate mask just like the
-> rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
-> And this kind of watchdog also exists in rtlwifi driver of some specific
-> chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
-> the same member function named dm_watchdog and will invoke the
-> corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
-> mask.
+> Maybe I did not expressed myself well... and the example was not good either.
 > 
-> With this commit, the tx rate of each data and qos data packet will
-> be 39Mbps (MCS4) with the 0xF00000 as the tx rate mask. The 20th bit
-> to 23th bit means MCS4 to MCS7. It means that the firmware still picks
-> the lowest rate from the rate mask and explains why the tx rate of
-> data and qos data is always lowest 1Mbps because the default rate mask
-> passed is always 0xFFFFFFF ranges from the basic CCK rate, OFDM rate,
-> and MCS rate. However, with Larry's driver, the tx rate observed from
-> wireshark under the same condition is almost 65Mbps or 72Mbps.
+> "IRQs disabled fully implies !preemptible" is a "to big" step. In modeling (or
+> mathematical reasoning?), a good practice is to break the properties into small
+> piece, and then build more complex reasoning/implications using these "small
+> properties."
 > 
-> I believe the firmware of RTL8723BU may need fix. And I think we
-> can still bring in the dm_watchdog as rtlwifi to improve from the
-> driver side. Please leave precious comments for my commits and
-> suggest what I can do better. Or suggest if there's any better idea
-> to fix this. Thanks.
+> Doing "big steps" makes you prone "miss interpretations", creating ambiguity.
+> Then, -RT people are prone to be pessimist, non-RT optimistic, and so on... and
+> that is what models try to avoid.
+
+You already construct the big model out of small generators, this is
+just one more of those little generators.
+
+> For instance, explaining this using words is contradictory:>
+> > Any !0 preempt_count(), which very much includes (Hard)IRQ and SoftIRQ
+> > counts, means non-preemptible.
 > 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> One might argue that, the preemption of a thread always takes place with
+> preempt_count() != 0, because __schedule() is always called with preemption
+> disabled, so the preemption takes place while in non-preemptive.
 
-I have not tested this patch, but I plan to soon.
+Yeah, I know about that one; you've used it in your talks. Also, you've
+modeled the schedule preempt disable as a special state. If you want we
+can actually make it a special bit in the preempt_count word too, the
+patch shouldn't be too hard, although it would make no practical
+difference.
 
-Larry
+> - WAIT But you (daniel) wants to fake the atomicity between preempt_disable and
+> its tracepoint!
+> 
+> Yes, I do, but this is a very straightforward step/assumption: the atomicity is
+> about the real-event and the tracepoint that notifies it. It is not about two
+> different events.
+> 
+> That is why it is worth letting the modeling rules to clarify the behavior of
+> system, without doing non-obvious implication in the code part, so we can have a
+> model that fits better in the Linux actions/events to avoid ambiguity.
 
+You can easily build a little shim betwen the model and the tracehooks
+that fix this up if you don't want to stick it in the model proper.
 
+All the information is there. Heck you can even do that 3/3 thing
+internally I think.
