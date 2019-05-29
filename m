@@ -2,128 +2,115 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FF2C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDECC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D09240BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8985240D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559156224;
+	bh=S92FRQ7dyKYko217YiiM11iAM5GvH8wftShpAUwcqsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P/MKA06BNmrmyi3oisx2ykSe7j91URCl7TikGg1fxLA7E2vbYtTSvEjv+Vg1hK4jO
+	 52T/iZ4gbTmuRUpR/62CuOf7HMAT/syw56Xc2oKAc5rkdGUhelmh/tCbJGpjaHXkmx
+	 Mw7CvgLShnvzcdBMkg0LTwb0nxEyEjqVhapiUY6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfE2S5C (ORCPT
+        id S1726686AbfE2S5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:57:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41056 "EHLO mx1.redhat.com"
+        Wed, 29 May 2019 14:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfE2S5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725956AbfE2S5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 14:57:01 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C55F30C1B92;
-        Wed, 29 May 2019 18:56:41 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A9CF5C5DF;
-        Wed, 29 May 2019 18:56:28 +0000 (UTC)
-Date:   Wed, 29 May 2019 12:56:27 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alan Tull <atull@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Steve Sistare <steven.sistare@oracle.com>,
-        Wu Hao <hao.wu@intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: add account_locked_vm utility function
-Message-ID: <20190529125627.0cb5b704@x1.home>
-In-Reply-To: <20190528150424.tjbaiptpjhzg7y75@ca-dmjordan1.us.oracle.com>
-References: <de375582-2c35-8e8a-4737-c816052a8e58@ozlabs.ru>
-        <20190524175045.26897-1-daniel.m.jordan@oracle.com>
-        <20190525145118.bfda2d75a14db05a001e49ad@linux-foundation.org>
-        <20190528150424.tjbaiptpjhzg7y75@ca-dmjordan1.us.oracle.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 05F98240BF;
+        Wed, 29 May 2019 18:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559156221;
+        bh=S92FRQ7dyKYko217YiiM11iAM5GvH8wftShpAUwcqsk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yrY04BA/fXWeYpgp3ZTfjEb/TMsbPETo+eYApOvOZpQUZ5u9hwZ0jl9+CjquaDjWn
+         F6TZxtUW3whkczMuSa5Gp62U988vvNIQEY6qmtmVGTiVtyiFZ+Fu3LqbN1eJetYVza
+         DtQCHGq7hVfaimNRdlSBMXtvf4QHXUKNJ5yLq6OA=
+Date:   Wed, 29 May 2019 14:57:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: Re: [PATCH AUTOSEL 5.0 070/317] driver core: platform: Fix the usage
+ of platform device name(pdev->name)
+Message-ID: <20190529185700.GJ12898@sasha-vm>
+References: <20190522192338.23715-1-sashal@kernel.org>
+ <20190522192338.23715-70-sashal@kernel.org>
+ <20190522200452.GA3598@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 29 May 2019 18:57:01 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190522200452.GA3598@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 11:04:24 -0400
-Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+On Wed, May 22, 2019 at 10:04:52PM +0200, Greg Kroah-Hartman wrote:
+>On Wed, May 22, 2019 at 03:19:31PM -0400, Sasha Levin wrote:
+>> From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>>
+>> [ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+>>
+>> Platform core is using pdev->name as the platform device name to do
+>> the binding of the devices with the drivers. But, when the platform
+>> driver overrides the platform device name with dev_set_name(),
+>> the pdev->name is pointing to a location which is freed and becomes
+>> an invalid parameter to do the binding match.
+>>
+>> use-after-free instance:
+>>
+>> [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+>> [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+>> [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+>> 			G S      W  O      4.19.30+ #3
+>> [   33.346835] Hardware name: MTP (DT)
+>> [   33.350419] Call trace:
+>> [   33.352941]  dump_backtrace+0x0/0x3b8
+>> [   33.356713]  show_stack+0x24/0x30
+>> [   33.360119]  dump_stack+0x160/0x1d8
+>> [   33.363709]  print_address_description+0x84/0x2e0
+>> [   33.368549]  kasan_report+0x26c/0x2d0
+>> [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+>> [   33.377248]  strcmp+0x8c/0xb0
+>> [   33.380306]  platform_match+0x70/0x1f8
+>> [   33.384168]  __driver_attach+0x78/0x3a0
+>> [   33.388111]  bus_for_each_dev+0x13c/0x1b8
+>> [   33.392237]  driver_attach+0x4c/0x58
+>> [   33.395910]  bus_add_driver+0x350/0x560
+>> [   33.399854]  driver_register+0x23c/0x328
+>> [   33.403886]  __platform_driver_register+0xd0/0xe0
+>>
+>> So, use dev_name(&pdev->dev), which fetches the platform device name from
+>> the kobject(dev->kobj->name) of the device instead of the pdev->name.
+>>
+>> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/base/platform.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>This patch was broken and got reverted in commit 391c0325cc5f ("Revert
+>"driver core: platform: Fix the usage of platform device
+>name(pdev->name)"") so please do not include it here, or anywhere.
 
-> On Sat, May 25, 2019 at 02:51:18PM -0700, Andrew Morton wrote:
-> > On Fri, 24 May 2019 13:50:45 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
-> >   
-> > > locked_vm accounting is done roughly the same way in five places, so
-> > > unify them in a helper.  Standardize the debug prints, which vary
-> > > slightly, but include the helper's caller to disambiguate between
-> > > callsites.
-> > > 
-> > > Error codes stay the same, so user-visible behavior does too.  The one
-> > > exception is that the -EPERM case in tce_account_locked_vm is removed
-> > > because Alexey has never seen it triggered.
-> > > 
-> > > ...
-> > >
-> > > --- a/include/linux/mm.h
-> > > +++ b/include/linux/mm.h
-> > > @@ -1564,6 +1564,25 @@ long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-> > >  int get_user_pages_fast(unsigned long start, int nr_pages,
-> > >  			unsigned int gup_flags, struct page **pages);
-> > >  
-> > > +int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
-> > > +			struct task_struct *task, bool bypass_rlim);
-> > > +
-> > > +static inline int account_locked_vm(struct mm_struct *mm, unsigned long pages,
-> > > +				    bool inc)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	if (pages == 0 || !mm)
-> > > +		return 0;
-> > > +
-> > > +	down_write(&mm->mmap_sem);
-> > > +	ret = __account_locked_vm(mm, pages, inc, current,
-> > > +				  capable(CAP_IPC_LOCK));
-> > > +	up_write(&mm->mmap_sem);
-> > > +
-> > > +	return ret;
-> > > +}  
-> > 
-> > That's quite a mouthful for an inlined function.  How about uninlining
-> > the whole thing and fiddling drivers/vfio/vfio_iommu_type1.c to suit. 
-> > I wonder why it does down_write_killable and whether it really needs
-> > to...  
-> 
-> Sure, I can uninline it.  vfio changelogs don't show a particular reason for
-> _killable[1].  Maybe Alex has something to add.  Otherwise I'll respin without
-> it since the simplification seems worth removing _killable.
-> 
-> [1] 0cfef2b7410b ("vfio/type1: Remove locked page accounting workqueue")
+Dropped everywhere, thanks!
 
-A userspace vfio driver maps DMA via an ioctl through this path, so I
-believe I used killable here just to be friendly that it could be
-interrupted and we could fall out with an errno if it were stuck here.
-No harm, no foul, the user's mapping is aborted and unwound.  If we're
-deadlocked or seriously contended on mmap_sem, maybe we're already in
-trouble, but it seemed like a valid and low hanging use case for
-killable.  Thanks,
-
-Alex
+--
+Thanks,
+Sasha
