@@ -2,90 +2,118 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30773C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A05C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F163C2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F6E21881
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MYTZvabu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKsyjAaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfE2Nao (ORCPT
+        id S1727237AbfE2NcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:30:44 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35708 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfE2Nan (ORCPT
+        Wed, 29 May 2019 09:32:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44178 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfE2NcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JhvQcxsDOAi99i8nAmNAWnYo8mb5wQBh82wJuM9KB6k=; b=MYTZvabuIfIQiLPnTjcRrxTpg
-        Fej6YenqPFI3Wa4z0+9Jo+9gIik1GxE8Jz34Eu3O3U/NBon3cr1ZAPWP5kn26P8pV9+BjP1Fgr9Y5
-        7s9eCeZkmEOwaeuwhSaGE7wZP/3euBRdIrAUW1seXpdTxueQCRCUxrOWuhYYAVJjK1AoBp5akjeGd
-        0OC6hhsaWuXMJbmYJpq7PnjIuE7Ad2+D9xTTd6oOjvRq97Uh8FXF0TYwH23mv3j8hJN7JsWKK+EWD
-        JQNbGmlzYp99BmgRIFEOjvdEoCQD7KfLsX9gF5a0eNv4rQAlHzMbzmGLDd9n1fqFZEd+5xZB25VQR
-        HL0GoZ2Bw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVye0-0005Hi-2q; Wed, 29 May 2019 13:29:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D86EA201DA64E; Wed, 29 May 2019 15:29:26 +0200 (CEST)
-Date:   Wed, 29 May 2019 15:29:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190529132926.GV2650@hirez.programming.kicks-ass.net>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190529102038.GO2623@hirez.programming.kicks-ass.net>
- <20190529083930.5541130e@oasis.local.home>
- <20190529131957.GV2623@hirez.programming.kicks-ass.net>
+        Wed, 29 May 2019 09:32:13 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c5so1067356pll.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjrQ8YCtSkpAgdCS1Bxq9uio+64j2BPS+VlWEqnS1x4=;
+        b=FKsyjAaZbhgsZt0VI/1vjpIfNTSoCjtAeNeLOXgQC3wpDG4RUNnX5zPZMPMZsuQaIo
+         40NB7Y4wyRFLxptQJJ5yuTrKoqJaLVGi6M4CysGYv5qgkcxITCKEC7qmvme9RQ9e/c+z
+         4vhiLjdGlsqKj0oZmtkxSfjR+BJT2RwjP9diFeZB80n+xsvo+oQH3Qcjs+4Na3uppCal
+         Dt3F2whceB2r+qmDa4Aq+eSiBUabt7JlMv8xE4Ww5SGMB8yF/CIm5lTC3qHzm4P37qle
+         NmDBqSvs+0Q/DYkTk1s1OInMZTP94gSLJOyOQkq6hkzQ3OCiL5h7jUd4CpU6og1UoHs+
+         WteQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjrQ8YCtSkpAgdCS1Bxq9uio+64j2BPS+VlWEqnS1x4=;
+        b=NQntyT6+nGc5TTdbdjQzLnIsGrMlrjHOEDK8okMbrxxc5GyYjBvaYpcyHHBUYJjf44
+         sfLZc7VgxcJh+S3g+ecm0oCrxFd6Qaew0YY0yAShbPzKMxgA8+4OtCnCTaRJ/FMrzfJE
+         Q1wnTJZLDN0G1Jx4WlIPXShRM+UmYwgWl4UOk5pTyBa/ls3vvF6TXf62nTkKso2Zw2Io
+         vI7R5/ZrxDL15IfZTqWsW60ldCHGbUG3IeyLGY27gLoZC17OmJQ/Nhx7JfCRhakzoUTy
+         hSF3PZSJd3CLZNeWpXnsWbz9zh7KUQnAAV73WQbZQCDWOjP5q89wDNkxQNh7SXDgBXv3
+         5ipA==
+X-Gm-Message-State: APjAAAXZNXT6oDt/uACfkQ1zlypy2BC8qoLo5q01ouKIVRw+qq11+dWI
+        lcJWL3NK16FdQiJkJ0ay39U=
+X-Google-Smtp-Source: APXvYqxAlISnkMtdxhX9AYkgEjmgN6zPwOOFdovx3E5sQRi3ga6aPxLv0Ylit+uesEHueVvIwACd6Q==
+X-Received: by 2002:a17:902:3103:: with SMTP id w3mr63855663plb.187.1559136727724;
+        Wed, 29 May 2019 06:32:07 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.67.155])
+        by smtp.gmail.com with ESMTPSA id j22sm10763595pfh.71.2019.05.29.06.32.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:32:06 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        gregkh@linuxfoundation.org, straube.linux@gmail.com,
+        payal.s.kshirsagar.98@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: rtl8712: Remove initialisations
+Date:   Wed, 29 May 2019 19:01:54 +0530
+Message-Id: <20190529133154.6750-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529131957.GV2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 03:19:57PM +0200, Peter Zijlstra wrote:
-> On Wed, May 29, 2019 at 08:39:30AM -0400, Steven Rostedt wrote:
-> > I believe I see what Daniel is talking about, but I hate the proposed
-> > solution ;-)
-> > 
-> > First, if you care about real times that the CPU can't preempt
-> > (preempt_count != 0 or interrupts disabled), then you want the
-> > preempt_irqsoff tracer. The preempt_tracer is more academic where it
-> > just shows you when we disable preemption via the counter. But even
-> > with the preempt_irqsoff tracer you may not get the full length of time
-> > due to the above explained race.
-> 
-> IOW, that tracer gives a completely 'make believe' number? What's the
-> point? Just delete the pure preempt tracer.
+Remove initialisations of multiple variables as these initial values are
+never used.
+Issue found with Coccinelle.
 
-Alternatively, fix the preempt tracer by having it completely disregard
-IRQs.
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/rtl8712/rtl871x_mp.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/staging/rtl8712/rtl871x_mp.c b/drivers/staging/rtl8712/rtl871x_mp.c
+index ba379506da3f..edd3da05fc06 100644
+--- a/drivers/staging/rtl8712/rtl871x_mp.c
++++ b/drivers/staging/rtl8712/rtl871x_mp.c
+@@ -709,20 +709,18 @@ static u32 GetPhyRxPktCounts(struct _adapter *pAdapter, u32 selbit)
+ 
+ u32 r8712_GetPhyRxPktReceived(struct _adapter *pAdapter)
+ {
+-	u32 OFDM_cnt = 0, CCK_cnt = 0, HT_cnt = 0;
++	u32 OFDM_cnt = GetPhyRxPktCounts(pAdapter, OFDM_MPDU_OK_BIT);
++	u32 CCK_cnt  = GetPhyRxPktCounts(pAdapter, CCK_MPDU_OK_BIT);
++	u32 HT_cnt   = GetPhyRxPktCounts(pAdapter, HT_MPDU_OK_BIT);
+ 
+-	OFDM_cnt = GetPhyRxPktCounts(pAdapter, OFDM_MPDU_OK_BIT);
+-	CCK_cnt = GetPhyRxPktCounts(pAdapter, CCK_MPDU_OK_BIT);
+-	HT_cnt = GetPhyRxPktCounts(pAdapter, HT_MPDU_OK_BIT);
+ 	return OFDM_cnt + CCK_cnt + HT_cnt;
+ }
+ 
+ u32 r8712_GetPhyRxPktCRC32Error(struct _adapter *pAdapter)
+ {
+-	u32 OFDM_cnt = 0, CCK_cnt = 0, HT_cnt = 0;
++	u32 OFDM_cnt = GetPhyRxPktCounts(pAdapter, OFDM_MPDU_FAIL_BIT);
++	u32 CCK_cnt  = GetPhyRxPktCounts(pAdapter, CCK_MPDU_FAIL_BIT);
++	u32 HT_cnt   = GetPhyRxPktCounts(pAdapter, HT_MPDU_FAIL_BIT);
+ 
+-	OFDM_cnt = GetPhyRxPktCounts(pAdapter, OFDM_MPDU_FAIL_BIT);
+-	CCK_cnt = GetPhyRxPktCounts(pAdapter, CCK_MPDU_FAIL_BIT);
+-	HT_cnt = GetPhyRxPktCounts(pAdapter, HT_MPDU_FAIL_BIT);
+ 	return OFDM_cnt + CCK_cnt + HT_cnt;
+ }
+-- 
+2.19.1
+
