@@ -2,161 +2,73 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A129EC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105CCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA9C24109
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C2924109
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VUV/TH24"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aZ+H6638"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfE2Tr3 (ORCPT
+        id S1726399AbfE2Ts7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:47:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41314 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfE2Tr3 (ORCPT
+        Wed, 29 May 2019 15:48:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45724 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfE2Ts6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:47:29 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l25so3264047otp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=po7nNPdV4b+/ItlBB/fXRxecISnzmHJt6X6owiL7qm8=;
-        b=VUV/TH24+FRJuxJNnyr+AjmyvKUjz4FEshfH/A28h+3XyiKxlYhHN/o4simuvwTVH6
-         5bNqwjBV+8LwHKZZC/4SRV/Ugc01Y1q6MWeb/zq2+kMx0FXlEVZjMkZWCMxJBCV4RuvN
-         u28lWCrKlPI727QqkPdJM0aRgKlpau+iaJC/i7cDC5oCNmvgDmo+gDAklAliZYJ3v5zt
-         2wlwNmFjqmpi4fs09d95lyjqQXuU8HsP2W/Q838wVXJZoEax5KHBX//ZDEsU03IjFtcb
-         gjk1HiImcD96DT/3dznxGeJd2FuflT1V/E/a+Ef54vPbKJpILqYnd7EWWc5+O5BCt4S3
-         aw/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=po7nNPdV4b+/ItlBB/fXRxecISnzmHJt6X6owiL7qm8=;
-        b=ZyBXSWUojZiolc8Eb599lIs3jzzkBr7UtJO1cR8Z1npNSngLR3gQWGIvLYzMiKpjir
-         bKFFX3bGULuvRIWEl0GajV5pwuuGSnTR4newF7X9kk7eXOrjjSfJql/j52X5TdiZ51/B
-         Jmho4qLG/SeyH5b0u8nh9M3V8tzJIhtUTzkMlzvjVgqCOQeLDelwxhkHwE12D1IVXtAF
-         j4lOdY7mL4iN5eEqp4Ja/Q04Dqezxiq8WvfVHZX2DJ/8BE54nalFRGmn7J17ZY1ueEM8
-         63AqeCVMonvuODqwq86m2R0SDHDX3CSyBS9wN1wp7SDGfvXqt5bB1mrUf+452JLMvtZb
-         BN/g==
-X-Gm-Message-State: APjAAAUk1/3wcECDKxssq5oPpf93LH5q5I7nnQoBSRaSvQu4kbiRXueq
-        DPVfs41InJu86DYaJcrXrFsnTYvT5pZx9KydsIYRAA==
-X-Google-Smtp-Source: APXvYqxbsVRKe9lyZnKmrRME8/o+NSuf6H78hum/ejTHCvM3Xt5ZTKrdg8WXWMD1bfhyz3HdJN4rPpWo9Wtka4SjK7k=
-X-Received: by 2002:a05:6830:1283:: with SMTP id z3mr413216otp.228.1559159247777;
- Wed, 29 May 2019 12:47:27 -0700 (PDT)
+        Wed, 29 May 2019 15:48:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OLgwDGpkIUZU8BMYV5tPlIqkgGPiffjQ+cEUtOoxAWs=; b=aZ+H6638Jr/eJP0r9vD0KZOpZ
+        Q1YIKRNl65MHD/BNONUIH2B8tKseMs0w+wEioKPL0iKwh81FIbuGWIZtRDJ6D9WdJUVI7X9Ht/z++
+        0vR/yJRNbp4zW+UDATrpA/AtNqjdTkQWo+qR6sHknI9YyqmF2MyeS84krXwWRxI8h7lS+Ur++4Juu
+        eU93kc6SKCDgxQa7TTwyAJahGzjffDvHdSn4/jYBH/GlXXh6lBa1bcTl7cY+t9cI4FB/xzrlD/Su3
+        GGXvQyfSr+0xvyFE11rK50ZOUejNc3WniZr2FLkzFQ2QGlOhNia2FlRjwoOH++DuqySvTe35ynqvg
+        5RhkqLWeg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW4ZA-0008Gb-LH; Wed, 29 May 2019 19:48:52 +0000
+Date:   Wed, 29 May 2019 12:48:52 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab_common.c: fix possible spectre-v1 in
+ kmalloc_slab()
+Message-ID: <20190529194852.GA23461@bombadil.infradead.org>
+References: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com>
 MIME-Version: 1.0
-References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
- <14347.1559127657@warthog.procyon.org.uk> <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com>
- <4552118F-BE9B-4905-BF0F-A53DC13D5A82@amacapital.net> <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
- <CAG48ez2S+i2wxpWXVGpEAprgY9gtjxyejLfbZtrqu5YOkQ81Nw@mail.gmail.com> <0cd823ca-4733-19ef-c13e-ed5ac8c63a0f@schaufler-ca.com>
-In-Reply-To: <0cd823ca-4733-19ef-c13e-ed5ac8c63a0f@schaufler-ca.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 29 May 2019 21:47:01 +0200
-Message-ID: <CAG48ez0X7rKw-qfZm9i+8OLq7YccBRtV3aF-7hkQsfWaiTbuXg@mail.gmail.com>
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:28 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> On 5/29/2019 11:11 AM, Jann Horn wrote:
-> > On Wed, May 29, 2019 at 7:46 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >> On 5/29/2019 10:13 AM, Andy Lutomirski wrote:
-> >>>> On May 29, 2019, at 8:53 AM, Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >>>>> On 5/29/2019 4:00 AM, David Howells wrote:
-> >>>>> Jann Horn <jannh@google.com> wrote:
-> >>>>>
-> >>>>>>> +void post_mount_notification(struct mount *changed,
-> >>>>>>> +                            struct mount_notification *notify)
-> >>>>>>> +{
-> >>>>>>> +       const struct cred *cred = current_cred();
-> >>>>>> This current_cred() looks bogus to me. Can't mount topology changes
-> >>>>>> come from all sorts of places? For example, umount_mnt() from
-> >>>>>> umount_tree() from dissolve_on_fput() from __fput(), which could
-> >>>>>> happen pretty much anywhere depending on where the last reference gets
-> >>>>>> dropped?
-> >>>>> IIRC, that's what Casey argued is the right thing to do from a security PoV.
-> >>>>> Casey?
-> >>>> You need to identify the credential of the subject that triggered
-> >>>> the event. If it isn't current_cred(), the cred needs to be passed
-> >>>> in to post_mount_notification(), or derived by some other means.
-> >>> Taking a step back, why do we care who triggered the event?  It seems to me that we should care whether the event happened and whether the *receiver* is permitted to know that.
-> >> There are two filesystems, "dot" and "dash". I am not allowed
-> >> to communicate with Fred on the system, and all precautions have
-> >> been taken to ensure I cannot. Fred asks for notifications on
-> >> all mount activity. I perform actions that result in notifications
-> >> on "dot" and "dash". Fred receives notifications and interprets
-> >> them using Morse code. This is not OK. If Wilma, who *is* allowed
-> >> to communicate with Fred, does the same actions, he should be
-> >> allowed to get the messages via Morse.
-> > In other words, a classic covert channel. You can't really prevent two
-> > cooperating processes from communicating through a covert channel on a
-> > modern computer.
->
-> That doesn't give you permission to design them in.
-> Plus, the LSMs that implement mandatory access controls
-> are going to want to intervene. No unclassified user
-> should see notifications caused by Top Secret users.
+On Wed, May 29, 2019 at 08:37:28PM +0800, Dianzhang Chen wrote:
+> The `size` in kmalloc_slab() is indirectly controlled by userspace via syscall: poll(defined in fs/select.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
+> The `size` can be controlled from: poll -> do_sys_poll -> kmalloc -> __kmalloc -> kmalloc_slab.
+> 
+> Fix this by sanitizing `size` before using it to index size_index.
 
-But that's probably because they're worried about *side* channels, not
-covert channels?
+I think it makes more sense to sanitize size in size_index_elem(),
+don't you?
 
-Talking about this in the context of (small) side channels: The
-notification types introduced in this patch are mostly things that a
-user would be able to observe anyway if they polled /proc/self/mounts,
-right? It might make sense to align access controls based on that - if
-you don't want it to be possible to observe events happening on some
-mount points through this API, you should probably lock down
-/proc/*/mounts equivalently, by introducing an LSM hook for "is @cred
-allowed to see @mnt" or something like that - and if you want to
-compare two cred structures, you could record the cred structure that
-is responsible for the creation of the mount point, or something like
-that.
+ static inline unsigned int size_index_elem(unsigned int bytes)
+ {
+-	return (bytes - 1) / 8;
++	return array_index_nospec((bytes - 1) / 8, ARRAY_SIZE(size_index));
+ }
 
-For some of the other patches, I guess things get more tricky because
-the notification exposes new information that wasn't really available
-before.
-
-> >  You can transmit information through the scheduler,
-> > through hyperthread resource sharing, through CPU data caches, through
-> > disk contention, through page cache state, through RAM contention, and
-> > probably dozens of other ways that I can't think of right now.
->
-> Yeah, and there's been a lot of activity to reduce those,
-> which are hard to exploit, as opposed to this, which would
-> be trivial and obvious.
->
-> > There
-> > have been plenty of papers that demonstrated things like an SSH
-> > connection between two virtual machines without network access running
-> > on the same physical host (<https://gruss.cc/files/hello.pdf>),
-> > communication between a VM and a browser running on the host system,
-> > and so on.
->
-> So you're saying we shouldn't have mode bits on files because
-> spectre/meltdown makes them pointless?
-
-spectre/meltdown are vulnerabilities that are being mitigated.
-Microarchitectural covert channels are an accepted fact and I haven't
-heard of anyone seriously considering trying to get rid of them all.
+(untested)
