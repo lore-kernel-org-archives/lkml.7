@@ -2,107 +2,95 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7169FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8285C07542
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E7E208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE18E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lkJyzDP2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1iCH5bp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfE2HkC (ORCPT
+        id S1726852AbfE2HkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:40:02 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:39686 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726057AbfE2HkB (ORCPT
+        Wed, 29 May 2019 03:40:25 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:37069 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfE2HkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:40:01 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 305D0C263A;
-        Wed, 29 May 2019 07:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559115584; bh=u0bHvq09qbXFfPIAKp6YPrwchkqDTwxdAG0Y1BAOgdk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=lkJyzDP25Iq5Bo1MkV7iN3kRiuFWrghtGGqU3Xu15XD6DGkmrZI7mPOucZQPcX281
-         /3XhmhGqVJEOtctZctfG9bKvjGYFF3JZjyaURA28P+YVo1r5hEcZxhm571aN26dbrd
-         qw+1xHh8xk+/Iz64V1t+Iqj+fdW8AWDQq/LMlpn3o6r89wsXuo9eCrZATweQ3EaPEH
-         pPKdptPsTFlx/0EnN3fG/Fx9g6hG67rKjHFhuoM7Q7IvrV6VpTRqJidrxwHCvLZalE
-         QWryRDqmQIzyaAghUme5LnU+WnwIYs4PyNZzjjHS0CIH7Lnr1C5DoRQ9cTFghvDj+M
-         RQLMD2AF8w2DQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 74DCBA0070;
-        Wed, 29 May 2019 07:39:52 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 May 2019 00:39:51 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 29 May 2019 09:39:49 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Biao Huang <biao.huang@mediatek.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
-        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Subject: RE: [v4, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Topic: [v4, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Index: AQHVFb9bD/NyYV8x/ESH/6Rc+9wGiKaBtu5A
-Date:   Wed, 29 May 2019 07:39:49 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B932F51@DE02WEMBXB.internal.synopsys.com>
-References: <1559093924-7791-1-git-send-email-biao.huang@mediatek.com>
- <1559093924-7791-2-git-send-email-biao.huang@mediatek.com>
-In-Reply-To: <1559093924-7791-2-git-send-email-biao.huang@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 May 2019 03:40:24 -0400
+Received: by mail-yb1-f195.google.com with SMTP id l66so439268ybf.4;
+        Wed, 29 May 2019 00:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uf3XOVAHfXPCfr8dRyPpWkbOd4puvL3Lbr0iJDk5Q1I=;
+        b=C1iCH5bpm711M72M5wAAm0k0Bt6GL6CJyoDkgSHvbUnNwNQYbdMRkND6Vpr8qgJX82
+         lErBtEWsqcfIM9vfpnHcox926VPvuk9LKTzIFg+n04RgowmsU4r5AhUwZF+lhv/f0cTP
+         9qFhKjr+T7stLtNiN5WfMxsQL7BoUKeGP7HsLF0XxEABHFaKJ/XXKurM5FUvSZvm2vn1
+         r09nsiiputvR6gZRit0BfEFUZd+ioZYtCk9qPMK0Nc/+mMSqRfSed8sn3gcoebfb9/+z
+         xTdMYFBm+BjWp51NS/OMiuhvikkDavrlP4VtaqIPU7h9jWV63c6GtghCzx9v8K7O8iS/
+         K6Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uf3XOVAHfXPCfr8dRyPpWkbOd4puvL3Lbr0iJDk5Q1I=;
+        b=SVPVmoVNuI82G1b4Ml6vyAtul5FcvhW2T9UXX4fhGsn+9SSzm9UQx+tsmE92EKfCuw
+         ZTJd+559kN7VfZcG/bQ483QcNPt+zqy/FI+PsRTcKnNYbz5k0sT6bsJwBdo2dkBHzoos
+         WklGtL2wRWKCIP5/aOyTa88SgYwtlAF6TuAmtUDEqBKjjVZcG1qDjYgwNrIchKZUA9oq
+         wXyy52UD9lyZD/KFYMxSzNbdAYamu7blPyXYG8Gqp91sjNV9Fx7Mm+ptzYfki0DEC3uH
+         LRx2kVOdI3f4yo2cdEQ9fHswyGjO0WBrxj+pRMAEN1yoiuwx7P8RR02M8Gq2YeoLkmTL
+         9c8Q==
+X-Gm-Message-State: APjAAAUXECDPrEEO+spvtCt7rSD+k5oUEdSP9J+r7l9O+MHrIf/MUgmR
+        OkvpD2USwibfWjnaez/7YJQ6kl8uOP3KL4xGrRs=
+X-Google-Smtp-Source: APXvYqwZABQOcup+HXgYpJiSytFgde+d348ySrWsdcR9Kv4BV37H74k/0aqOaZHjIz1K+LhGOCYMbvlhdcakMq/WNQw=
+X-Received: by 2002:a25:4489:: with SMTP id r131mr6122190yba.14.1559115623559;
+ Wed, 29 May 2019 00:40:23 -0700 (PDT)
 MIME-Version: 1.0
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com> <22971.1559112346@warthog.procyon.org.uk>
+In-Reply-To: <22971.1559112346@warthog.procyon.org.uk>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 29 May 2019 10:40:11 +0300
+Message-ID: <CAOQ4uxiBMmDg2Rn2+jsexTdK7g25J7WD79chDdRvofrvC_PLXQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
-Date: Wed, May 29, 2019 at 02:38:44
+On Wed, May 29, 2019 at 9:45 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> > I am interested to know how you envision filesystem notifications would
+> > look with this interface.
+>
+> What sort of events are you thinking of by "filesystem notifications"?  You
+> mean things like file changes?
 
->  	} else if (!netdev_mc_empty(dev)) {
-> -		u32 mc_filter[2];
-> +		u32 mc_filter[8];
->  		struct netdev_hw_addr *ha;
+I mean all the events provided by
+http://man7.org/linux/man-pages/man7/fanotify.7.html
 
-The reverse christmas tree also applies here.
-
-I also see some coding-style errors, like missing line breaks, etc...=20
-that checkpatch should complain about.
-
-Also, please run this patch against stmmac selftests and add the output=20
-to the commit log.
+Which was recently (v4.20) extended to support watching a super block
+and more recently (v5.1) extended to support watching directory entry
+modifications.
 
 Thanks,
-Jose Miguel Abreu
+Amir.
