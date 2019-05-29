@@ -2,29 +2,29 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6968C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3277CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F872070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164B52070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfE2KZp (ORCPT
+        id S1726911AbfE2KZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:25:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40602 "EHLO
+        Wed, 29 May 2019 06:25:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40606 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfE2KZp (ORCPT
+        with ESMTP id S1726689AbfE2KZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:25:45 -0400
+        Wed, 29 May 2019 06:25:47 -0400
 Received: from 1.general.smb.uk.vpn ([10.172.193.28] helo=canonical.com)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <stefan.bader@canonical.com>)
-        id 1hVvmB-0003iZ-1C; Wed, 29 May 2019 10:25:43 +0000
+        id 1hVvmC-0003is-8q; Wed, 29 May 2019 10:25:44 +0000
 From:   Stefan Bader <stefan.bader@canonical.com>
 To:     stable <stable@vger.kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,85 +34,127 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Andy Whitcroft <andy.whitcroft@canonical.com>,
         Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH 0/4] ipv6: frags: fixups for linux-4.4.y
-Date:   Wed, 29 May 2019 12:25:38 +0200
-Message-Id: <20190529102542.17742-1-stefan.bader@canonical.com>
+Subject: [PATCH 2/4] ip: fail fast on IP defrag errors
+Date:   Wed, 29 May 2019 12:25:40 +0200
+Message-Id: <20190529102542.17742-3-stefan.bader@canonical.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190529102542.17742-1-stefan.bader@canonical.com>
+References: <20190529102542.17742-1-stefan.bader@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While this backport proposal is based on the 4.4.y stable tree, it
-might also apply in some form to any stable tree which backported
+From: Peter Oskolkov <posk@google.com>
 
- 05c0b86b96: "ipv6: frags: rewrite ip6_expire_frag_queue()"
+The current behavior of IP defragmentation is inconsistent:
+- some overlapping/wrong length fragments are dropped without
+  affecting the queue;
+- most overlapping fragments cause the whole frag queue to be dropped.
 
-While this made ip6_expire_frag_queue() similar to ip_exire(),
-it did not follow the additional changes to ip_expire() which
-were also backported:
+This patch brings consistency: if a bad fragment is detected,
+the whole frag queue is dropped. Two major benefits:
+- fail fast: corrupted frag queues are cleared immediately, instead of
+  by timeout;
+- testing of overlapping fragments is now much easier: any kind of
+  random fragment length mutation now leads to the frag queue being
+  discarded (IP packet dropped); before this patch, some overlaps were
+  "corrected", with tests not seeing expected packet drops.
 
- fa0f527358: "ip: use rb trees for IP frag queue."
+Note that in one case (see "if (end&7)" conditional) the current
+behavior is preserved as there are concerns that this could be
+legitimate padding.
 
- a4fd284a1f: "ip: process in-order fragments efficiently"
+Signed-off-by: Peter Oskolkov <posk@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 
-The former of the two not only adds handling for rb trees, but
-also modifies ip_expire() to take the first skb off the queue
-before using it for the sending the icmp message. This also got
-rid of the need to protect the skb by incrementing its reference
-count (which is the reason for the crash in ip6_expire_frag_queue()).
+(backported from commit 0ff89efb524631ac9901b81446b453c29711c376)
+[smb: context adjustments and ignoring those changes already done
+      in backport for "net: ipv4: do not handle duplicate fragments
+      as overlapping"]
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+---
+ net/ipv4/ip_fragment.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-My first approach was do those changes in ip6_expire_frag_queue(),
-but only the former of the two can be done without problems. The
-latter uses code which is only locally defined in ipv4/ip_fragment.c.
-
-This was changed upstream in 5.1 when moving code around to be shared
-
-  c23f35d19d: "net: IP defrag: encapsulate rbtree defrag code into
-               callable functions"
-
-And while backporting that I found the two other changes which sounded
-like one might want them backported, too. Maybe even more since the
-second (ip: fail fast on IP defrag errors) is already partially
-included in the backport of "net: ipv4: do not handle duplicate
-fragments as overlapping".
-
-Though I do realize that "net: IP defrag: encapsulate rbtree
-defrag code into callable functions" is rather large and for
-that reason maybe not qualifying as a stable backport.
-So I would like to ask what the net-developers think about
-this.
-
-Thanks,
-Stefan
-
-
-
-0001: v4.20: ipv4: ipv6: netfilter: Adjust the frag mem limit when
-             truesize changes
-0002: v4.20: ip: fail fast on IP defrag errors
-0003: v5.1 : net: IP defrag: encapsulate rbtree defrag code into
-             callable functions
-0004: n/a  : ipv6: frags: Use inet_frag_pull_head() in
-             ip6_expire_frag_queue()
-
-Jiri Wiesner (1):
-  ipv4: ipv6: netfilter: Adjust the frag mem limit when truesize changes
-
-Peter Oskolkov (2):
-  ip: fail fast on IP defrag errors
-  net: IP defrag: encapsulate rbtree defrag code into callable functions
-
-Stefan Bader (1):
-  ipv6: frags: Use inet_frag_pull_head() in ip6_expire_frag_queue()
-
- include/net/inet_frag.h                 |  16 +-
- net/ipv4/inet_fragment.c                | 293 +++++++++++++++++++++++
- net/ipv4/ip_fragment.c                  | 294 +++---------------------
- net/ipv6/netfilter/nf_conntrack_reasm.c |   8 +-
- net/ipv6/reassembly.c                   |  20 +-
- 5 files changed, 359 insertions(+), 272 deletions(-)
-
+diff --git a/net/ipv4/ip_fragment.c b/net/ipv4/ip_fragment.c
+index 5387e6ab78d7..a53652c8c0fd 100644
+--- a/net/ipv4/ip_fragment.c
++++ b/net/ipv4/ip_fragment.c
+@@ -382,7 +382,7 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
+ 		 */
+ 		if (end < qp->q.len ||
+ 		    ((qp->q.flags & INET_FRAG_LAST_IN) && end != qp->q.len))
+-			goto err;
++			goto discard_qp;
+ 		qp->q.flags |= INET_FRAG_LAST_IN;
+ 		qp->q.len = end;
+ 	} else {
+@@ -394,20 +394,20 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
+ 		if (end > qp->q.len) {
+ 			/* Some bits beyond end -> corruption. */
+ 			if (qp->q.flags & INET_FRAG_LAST_IN)
+-				goto err;
++				goto discard_qp;
+ 			qp->q.len = end;
+ 		}
+ 	}
+ 	if (end == offset)
+-		goto err;
++		goto discard_qp;
+ 
+ 	err = -ENOMEM;
+ 	if (!pskb_pull(skb, skb_network_offset(skb) + ihl))
+-		goto err;
++		goto discard_qp;
+ 
+ 	err = pskb_trim_rcsum(skb, end - offset);
+ 	if (err)
+-		goto err;
++		goto discard_qp;
+ 
+ 	/* Note : skb->rbnode and skb->dev share the same location. */
+ 	dev = skb->dev;
+@@ -434,7 +434,7 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
+ 		/* This is the common case: skb goes to the end. */
+ 		/* Detect and discard overlaps. */
+ 		if (offset < prev_tail->ip_defrag_offset + prev_tail->len)
+-			goto discard_qp;
++			goto overlap;
+ 		if (offset == prev_tail->ip_defrag_offset + prev_tail->len)
+ 			ip4_frag_append_to_last_run(&qp->q, skb);
+ 		else
+@@ -457,7 +457,7 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
+ 				 end <= skb1_run_end)
+ 				goto err; /* No new data, potential duplicate */
+ 			else
+-				goto discard_qp; /* Found an overlap */
++				goto overlap; /* Found an overlap */
+ 		} while (*rbn);
+ 		/* Here we have parent properly set, and rbn pointing to
+ 		 * one of its NULL left/right children. Insert skb.
+@@ -494,15 +494,18 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
+ 		skb->_skb_refdst = 0UL;
+ 		err = ip_frag_reasm(qp, skb, prev_tail, dev);
+ 		skb->_skb_refdst = orefdst;
++		if (err)
++			inet_frag_kill(&qp->q);
+ 		return err;
+ 	}
+ 
+ 	skb_dst_drop(skb);
+ 	return -EINPROGRESS;
+ 
++overlap:
++	IP_INC_STATS_BH(net, IPSTATS_MIB_REASM_OVERLAPS);
+ discard_qp:
+ 	inet_frag_kill(&qp->q);
+-	IP_INC_STATS_BH(net, IPSTATS_MIB_REASM_OVERLAPS);
+ err:
+ 	kfree_skb(skb);
+ 	return err;
 -- 
 2.17.1
 
