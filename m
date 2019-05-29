@@ -2,81 +2,86 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3D6C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7EB23BA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C01E23BAA
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559142656;
+	bh=Mr53O7RleTzao/dC3tr4uYgD841gD6k8Bfp9NeUAZNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tELJ9Hu0xOVHJNJV4/M5y3351MGdxPtbF1QHHfGvW7CXZkMpUR7guMKl0j2y8qlCs
+	 m3FGnCT5EW3sdKTiYSnYYDslaEHBlnAvXMgjPUvIwrnXE0CNgBNlkEqTj/hNcFWrQR
+	 v5vauSRy4MdLH1IjJYt0Ke2Xn4Hwb0xbgUepJs0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfE2PKa (ORCPT
+        id S1726946AbfE2PKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:10:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47804 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfE2PKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:10:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29A15341;
-        Wed, 29 May 2019 08:10:30 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77E1D3F5AF;
-        Wed, 29 May 2019 08:10:26 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:10:23 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFT PATCH v5 4/5] arm: Use common cpu_topology structure and
- functions.
-Message-ID: <20190529151023.GB13155@e107155-lin>
-References: <20190524000653.13005-1-atish.patra@wdc.com>
- <20190524000653.13005-5-atish.patra@wdc.com>
+        Wed, 29 May 2019 11:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbfE2PKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:10:55 -0400
+Received: from localhost (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD4C23B8C;
+        Wed, 29 May 2019 15:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559142654;
+        bh=Mr53O7RleTzao/dC3tr4uYgD841gD6k8Bfp9NeUAZNk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cyZDYlLhz99DlaSRHVOISk3X1d11X1h9Fiz3jTrszIeyByTGLo2bl0E7oNhgidbW/
+         VJ8N+GNkh9ZZy3qTa+Vmy92q5T2mmnFSfExvTgnpUfERO9Qe7mgd5l1GOtalC9z9xE
+         RTTffwT/PNMfhmHHx+8OlwnVhmiphlqO2+oGPpvk=
+Date:   Wed, 29 May 2019 08:10:53 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+Message-ID: <20190529151053.GA10231@kroah.com>
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
+ <20190529142504.GC32147@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524000653.13005-5-atish.patra@wdc.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190529142504.GC32147@quack2.suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 05:06:51PM -0700, Atish Patra wrote:
-> Currently, ARM32 and ARM64 uses different data structures to represent
-> their cpu topologies. Since, we are moving the ARM64 topology to common
-> code to be used by other architectures, we can reuse that for ARM32 as
-> well.
+On Wed, May 29, 2019 at 04:25:04PM +0200, Jan Kara wrote:
+> > I am not asking that you implement fs_notify() before merging sb_notify()
+> > and I understand that you have a use case for sb_notify().
+> > I am asking that you show me the path towards a unified API (how a
+> > typical program would look like), so that we know before merging your
+> > new API that it could be extended to accommodate fsnotify events
+> > where the final result will look wholesome to users.
 > 
-> Take this opprtunity to remove the redundant functions from ARM32 and
-> reuse the common code instead.
-> 
+> Are you sure we want to combine notification about file changes etc. with
+> administrator-type notifications about the filesystem? To me these two
+> sound like rather different (although sometimes related) things.
 
-Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+This patchset is looking to create a "generic" kernel notification
+system, so I think the question is valid.  It's up to the requestor to
+ask for the specific type of notification.
 
---
-Regards,
-Sudeep
+thanks,
+
+greg k-h
