@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6643AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DE2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A61B21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E6E223A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559137161;
-	bh=B11Yj+8sxnTDyXtrPmHvMLu7liezdbxl0bQPc7HC/I4=;
+	s=default; t=1559137166;
+	bh=MXRccYpMlxmLylgfI2aT3DcFzrsYYCm6L+HeoEY6cCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=drn6IpAKDG6W/w2lSsOW1xjIfvr9tLtWxFQWPL9U4AFzAYJa+fraGiYLnHOUv47CF
-	 /8vX2h0XNems8J03rw8nNyqzofqbSQayihoew/N3/PYjbs25AQuc7QaPy5SHWDP1Bl
-	 NHme3NXhbQsgvOaK/6rSZ31+HGEfon4XoYocrmzk=
+	b=gYC89g75XV5bwoXZNZMsJPyadWktc0ugiR/y4zhqbPp6FQEwBazfPeSxLva7D9UWT
+	 ofHPicrfTKcNW+Y+FQxIC8Y4uB1d80oxAi8I+9J6s6cp73G4OLrC4rnEsxal8xaHth
+	 kkbBU45i1kX/W17QEBv1bj40SZrbGZFdUAiwdWOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfE2NjU (ORCPT
+        id S1727460AbfE2NjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 09:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfE2NjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:39:18 -0400
+        id S1726863AbfE2NjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:39:22 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.85])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339D822353;
-        Wed, 29 May 2019 13:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE56920883;
+        Wed, 29 May 2019 13:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559137157;
-        bh=B11Yj+8sxnTDyXtrPmHvMLu7liezdbxl0bQPc7HC/I4=;
+        s=default; t=1559137161;
+        bh=MXRccYpMlxmLylgfI2aT3DcFzrsYYCm6L+HeoEY6cCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbNQ6SBW2kWNlPR3LtXz5+0QdRwH8m+K/uT+AmSwS8N83mX9Evl4jnrxS6fINQ0zM
-         N0HlKY9aG3QAcE3wkYzJfsko48jVMYhS1Ovb4yS64F7uC8GxkbcpytcvIBApZyGSJc
-         KTGXfoxiHms+ylCPw9kASKy3pn/fJTWwZpPuTgg8=
+        b=OTN6QXYBu4/OqKB41StjquJULPTxTxqioK4Cpexz0bvIzrxVu5/R+cpTLnoPD0Ukp
+         jSc6xkmCFHOHjBbQr3CaFuUzs7vBCCXDDTGU85zVY7gM93zm7768zMVpkZj6FdYATA
+         //zTjK7LjiO/b0uEyXwvjbC+l0sADNZUdBeEbZM8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,11 +46,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 37/41] perf scripts python: exported-sql-viewer.py: Add support for pyside2
-Date:   Wed, 29 May 2019 10:36:01 -0300
-Message-Id: <20190529133605.21118-38-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 38/41] perf scripts python: export-to-sqlite.py: Add support for pyside2
+Date:   Wed, 29 May 2019 10:36:02 -0300
+Message-Id: <20190529133605.21118-39-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
@@ -67,112 +67,90 @@ pyside2 is the future for pyside support.
 
 Note pyside use Qt4 whereas pyside2 uses Qt5.
 
-Committer testing:
-
-On a system with just:
-
-  # rpm -qa| grep -i pyside
-  python2-pyside-1.2.4-7.fc29.x86_64
-  #
-
-Running:
-
-  $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db &
-  [1] 7438
-
-Makes it use the pyside 1 files:
-
-  $ grep -i pyside /proc/7438/maps | cut -d ' ' -f 6- | sort -u
-     /usr/lib64/libpyside-python2.7.so.1.2.4
-     /usr/lib64/python2.7/site-packages/PySide/QtCore.so
-     /usr/lib64/python2.7/site-packages/PySide/QtGui.so
-     /usr/lib64/python2.7/site-packages/PySide/QtSql.so
-  $ rpm -qf /usr/lib64/libpyside-python2.7.so.1.2.4
-  python2-pyside-1.2.4-7.fc29.x86_64
-  $
-
-To get PySide2 I guess one needs to do:
-
-  $ pip install PySide2
-
-But thats a 142MiB download I can't do right now, perhaps before pushing
-upstream...
-
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190412113830.4126-4-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190412113830.4126-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 28 ++++++++++++++-----
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ tools/perf/scripts/python/export-to-sqlite.py | 44 ++++++++++++++++---
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 498b79454012..6fe553258ce5 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -105,10 +105,23 @@ except ImportError:
- 	glb_nsz = 16
- import re
- import os
--from PySide.QtCore import *
--from PySide.QtGui import *
+diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
+index bf271fbc3a88..f617e518332f 100644
+--- a/tools/perf/scripts/python/export-to-sqlite.py
++++ b/tools/perf/scripts/python/export-to-sqlite.py
+@@ -21,6 +21,26 @@ import datetime
+ # provides LGPL-licensed Python bindings for Qt.  You will also need the package
+ # libqt4-sql-sqlite for Qt sqlite3 support.
+ #
++# Examples of installing pyside:
++#
++# ubuntu:
++#
++#	$ sudo apt-get install python-pyside.qtsql libqt4-sql-psql
++#
++#	Alternately, to use Python3 and/or pyside 2, one of the following:
++#
++#		$ sudo apt-get install python3-pyside.qtsql libqt4-sql-psql
++#		$ sudo apt-get install python-pyside2.qtsql libqt5sql5-psql
++#		$ sudo apt-get install python3-pyside2.qtsql libqt5sql5-psql
++# fedora:
++#
++#	$ sudo yum install python-pyside
++#
++#	Alternately, to use Python3 and/or pyside 2, one of the following:
++#		$ sudo yum install python3-pyside
++#		$ pip install --user PySide2
++#		$ pip3 install --user PySide2
++#
+ # An example of using this script with Intel PT:
+ #
+ #	$ perf record -e intel_pt//u ls
+@@ -49,7 +69,16 @@ import datetime
+ # difference is  the 'transaction' column of the 'samples' table which is
+ # renamed 'transaction_' in sqlite because 'transaction' is a reserved word.
+ 
 -from PySide.QtSql import *
-+
- pyside_version_1 = True
-+if not "--pyside-version-1" in sys.argv:
++pyside_version_1 = True
++if not "pyside-version-1" in sys.argv:
 +	try:
-+		from PySide2.QtCore import *
-+		from PySide2.QtGui import *
 +		from PySide2.QtSql import *
-+		from PySide2.QtWidgets import *
 +		pyside_version_1 = False
 +	except:
 +		pass
 +
 +if pyside_version_1:
-+	from PySide.QtCore import *
-+	from PySide.QtGui import *
 +	from PySide.QtSql import *
-+
- from decimal import *
- from ctypes import *
- from multiprocessing import Process, Array, Value, Event
-@@ -2755,7 +2768,7 @@ class WindowMenu():
- 			action = self.window_menu.addAction(label)
- 			action.setCheckable(True)
- 			action.setChecked(sub_window == self.mdi_area.activeSubWindow())
--			action.triggered.connect(lambda x=nr: self.setActiveSubWindow(x))
-+			action.triggered.connect(lambda a=None,x=nr: self.setActiveSubWindow(x))
- 			self.window_menu.addAction(action)
- 			nr += 1
  
-@@ -3115,14 +3128,14 @@ class MainWindow(QMainWindow):
- 			event = event.split(":")[0]
- 			if event == "branches":
- 				label = "All branches" if branches_events == 1 else "All branches " + "(id=" + dbid + ")"
--				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda x=dbid: self.NewBranchView(x), self))
-+				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewBranchView(x), self))
- 				label = "Selected branches" if branches_events == 1 else "Selected branches " + "(id=" + dbid + ")"
--				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda x=dbid: self.NewSelectedBranchView(x), self))
-+				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewSelectedBranchView(x), self))
+ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ 	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+@@ -69,11 +98,12 @@ def printdate(*args, **kw_args):
+         print(datetime.datetime.today(), *args, sep=' ', **kw_args)
  
- 	def TableMenu(self, tables, menu):
- 		table_menu = menu.addMenu("&Tables")
- 		for table in tables:
--			table_menu.addAction(CreateAction(table, "Create a new window containing a table view", lambda t=table: self.NewTableView(t), self))
-+			table_menu.addAction(CreateAction(table, "Create a new window containing a table view", lambda a=None,t=table: self.NewTableView(t), self))
+ def usage():
+-	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
+-	printerr("where:	columns		'all' or 'branches'");
+-	printerr("		calls		'calls' => create calls and call_paths table");
+-	printerr("		callchains	'callchains' => create call_paths table");
+-	raise Exception("Too few arguments")
++	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>] [<pyside-version-1>]");
++	printerr("where:  columns            'all' or 'branches'");
++	printerr("        calls              'calls' => create calls and call_paths table");
++	printerr("        callchains         'callchains' => create call_paths table");
++	printerr("        pyside-version-1   'pyside-version-1' => use pyside version 1");
++	raise Exception("Too few or bad arguments")
  
- 	def NewCallGraph(self):
- 		CallGraphWindow(self.glb, self)
-@@ -3365,6 +3378,7 @@ def Main():
- 	usage_str =	"exported-sql-viewer.py [--pyside-version-1] <database name>\n" \
- 			"   or: exported-sql-viewer.py --help-only"
- 	ap = argparse.ArgumentParser(usage = usage_str, add_help = False)
-+	ap.add_argument("--pyside-version-1", action='store_true')
- 	ap.add_argument("dbname", nargs="?")
- 	ap.add_argument("--help-only", action='store_true')
- 	args = ap.parse_args()
+ if (len(sys.argv) < 2):
+ 	usage()
+@@ -95,6 +125,8 @@ for i in range(3,len(sys.argv)):
+ 		perf_db_export_calls = True
+ 	elif (sys.argv[i] == "callchains"):
+ 		perf_db_export_callchains = True
++	elif (sys.argv[i] == "pyside-version-1"):
++		pass
+ 	else:
+ 		usage()
+ 
 -- 
 2.20.1
 
