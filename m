@@ -2,101 +2,67 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06863C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F07C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1AB208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:17:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ih+BF/Hh"
+	by mail.kernel.org (Postfix) with ESMTP id 788622075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfE2KRA (ORCPT
+        id S1726735AbfE2KRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:17:00 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:41796 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbfE2KRA (ORCPT
+        Wed, 29 May 2019 06:17:12 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2482 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2KRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:17:00 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 26E42C0B58;
-        Wed, 29 May 2019 10:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559125028; bh=qAsqi8gX5SUaVnl2yseXi4eGkqxzuYPQST0EcBGFiwk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ih+BF/HhLRpZoP3ea08rPVyFlnL16rjTQLdog92/33d09M2v38RE3mQA0P+dP7Zsv
-         W4EDk1P+4225x5TACrIGDqdWwMLpBg55BjmxyUhzS0ksEC5fHn+w1LSRsD+Z+uQ+sr
-         cln2Sisj/46hpGvIwQi7fhJeVDLofIE7LZJbgvsAizgKdtdi6JhqdFTzIS2bWSzRj0
-         LlogmNWN5pxa1bGHcEIpLeGfJr/7el9C60Z4Bvr0c9SnhmYlvPi87AeYQk2pOcPKiQ
-         Mu9jKXa3qsr6fxFuy8en3cLyD7p/1OCoCP9Dc3Llt65zEZRBXy3V0MYYE1ub98tVUC
-         3IKFQqjqnrxPg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 55990A0104;
-        Wed, 29 May 2019 10:16:53 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 May 2019 03:16:53 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 29 May 2019 12:16:50 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Voon Weifeng <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH net-next v4 1/5] net: stmmac: enable clause 45 mdio
- support
-Thread-Topic: [PATCH net-next v4 1/5] net: stmmac: enable clause 45 mdio
- support
-Thread-Index: AQHVFfyg4wQZ8d4GK06AR51mcY/UpqaB4qwA
-Date:   Wed, 29 May 2019 10:16:50 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9333BC@DE02WEMBXB.internal.synopsys.com>
-References: <1559149107-14631-1-git-send-email-weifeng.voon@intel.com>
- <1559149107-14631-2-git-send-email-weifeng.voon@intel.com>
-In-Reply-To: <1559149107-14631-2-git-send-email-weifeng.voon@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+        Wed, 29 May 2019 06:17:12 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15cee5c1c5ec-e1cb0; Wed, 29 May 2019 18:17:01 +0800 (CST)
+X-RM-TRANSID: 2ee15cee5c1c5ec-e1cb0
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[223.105.0.243])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95cee5c1c2ed-2ea11;
+        Wed, 29 May 2019 18:17:01 +0800 (CST)
+X-RM-TRANSID: 2ee95cee5c1c2ed-2ea11
+From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
+To:     ysato@users.sourceforge.jp, dalias@libc.org
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sh/intc: Fix obsolete function
+Date:   Wed, 29 May 2019 18:16:11 +0800
+Message-Id: <1559124971-13074-1-git-send-email-dingxiang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Voon Weifeng <weifeng.voon@intel.com>
-Date: Wed, May 29, 2019 at 17:58:23
+simple_strtoul is obsolete, use kstrtoul instead.
 
-> +static void stmmac_mdio_c45_setup(struct stmmac_priv *priv, int phyreg,
-> +				  u32 *val, u32 *data)
-> +{
-> +	unsigned int reg_shift =3D priv->hw->mii.reg_shift;
-> +	unsigned int reg_mask =3D priv->hw->mii.reg_mask;
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+---
+ drivers/sh/intc/userimask.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reverse christmas tree here. You also should align the function variables=20
-with the opening parenthesis of the function here and in the remaining=20
-series.
+diff --git a/drivers/sh/intc/userimask.c b/drivers/sh/intc/userimask.c
+index 87d69e7..d1d8e9b 100644
+--- a/drivers/sh/intc/userimask.c
++++ b/drivers/sh/intc/userimask.c
+@@ -33,7 +33,8 @@
+ {
+ 	unsigned long level;
+ 
+-	level = simple_strtoul(buf, NULL, 10);
++	if (kstrtoul(buf, 10, &level))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Minimal acceptable IRQ levels are in the 2 - 16 range, but
+-- 
+1.9.1
 
-Otherwise this patch looks good to me.
 
-Thanks,
-Jose Miguel Abreu
+
