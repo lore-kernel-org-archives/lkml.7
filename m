@@ -2,43 +2,43 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DA3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF52C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D58122387
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB7B223BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559137094;
-	bh=LI+1NE8W6QnWQh+jNaxqjajm5NEEX9BIy8mk3cg+sxU=;
+	s=default; t=1559137100;
+	bh=0tvvsOA4AV2rfSmW8ewQZsHktFYVyoGn6efovM8weyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKH1APWXUiHJ9FDpcn1VjrNRBzZm1TOjIrcl87YYBANV74YbgzQkXdmyrSiXWD0e5
-	 lmE2fPYxBtXBqrvfmgtdvvvn6/MoSYEP6XE4yFiCSzDXgt0Sxs7vuCJaqS4Zhwnozh
-	 jIzsxzVkl2//jGVkLWpnGUCSl3PoKyVSc6gGJpJE=
+	b=f2bi6t69spyBiGa+bYO2cmj5fHpvAjgwZ6dL9C/1Sq+vcYRAHmksDRtHXsma+lGPU
+	 W3nMWn1ZBOBEeSSRK0d9oeMsdxmOWYaa6ck9scG0KlN+cwjFn54FHBlxKUj1qF8w+k
+	 7+r0E35dF/lFuApO0fvAF2EXXsg/ZB1xGjin+d5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfE2NiN (ORCPT
+        id S1727670AbfE2NiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:38:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 09:38:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfE2NiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:38:12 -0400
+        id S1727171AbfE2NiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:38:18 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.85])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3F622389;
-        Wed, 29 May 2019 13:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC772190D;
+        Wed, 29 May 2019 13:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559137092;
-        bh=LI+1NE8W6QnWQh+jNaxqjajm5NEEX9BIy8mk3cg+sxU=;
+        s=default; t=1559137097;
+        bh=0tvvsOA4AV2rfSmW8ewQZsHktFYVyoGn6efovM8weyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CB+HQ+YQPNVs3dR5q8x1iesKF4+W+tlGP/6Cn6Gma6EZy7Sch47WUwSXWk+bKUB4y
-         65PrMjg9jduUZ07WM/Nq9rAnHnQL42aIceVsk0A2nFd8L+FqprJd4S2JjDEO5Ppwx7
-         idnTC2kOAP2YmePa5jxSgGuS98dDyOinzD2NFonc=
+        b=zC1W2qNwkO9PIY//9YS9QIqHxsB4YXYElKrxednWT80k/ZGiiKsx35Qi99wFbWP8w
+         m7P3oDuN9nvCKiorRU+OU38Cjhdle/c7wM0unqKSzcklO/2Srz0NB+8Y1HkgGjc+e8
+         4TxXJ5MhfyRu3byZ9BQFwWWUGeZuz5FFr268XMeE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -52,9 +52,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stanislav Fomichev <sdf@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 24/41] perf dso: Simplify dso_cache__read function
-Date:   Wed, 29 May 2019 10:35:48 -0300
-Message-Id: <20190529133605.21118-25-acme@kernel.org>
+Subject: [PATCH 25/41] perf dso: Add BPF DSO read and size hooks
+Date:   Wed, 29 May 2019 10:35:49 -0300
+Message-Id: <20190529133605.21118-26-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
@@ -67,8 +67,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need for the while loop now, also we can connect two (ret >
-0) condition legs together.
+Add BPF related code into DSO reading paths to return size (bpf_size)
+and read the BPF code (bpf_read).
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Song Liu <songliubraving@fb.com>
@@ -77,50 +77,95 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190508132010.14512-5-jolsa@kernel.org
+[ Use uintptr_t when casting from u64 to u8 pointers ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ tools/perf/util/dso.c | 49 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7734f50a6912..1e6a045adb8c 100644
+index 1e6a045adb8c..1fb18292c2d3 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -823,25 +823,20 @@ static ssize_t
- dso_cache__read(struct dso *dso, struct machine *machine,
- 		u64 offset, u8 *data, ssize_t size)
+@@ -9,6 +9,8 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <libgen.h>
++#include <bpf/libbpf.h>
++#include "bpf-event.h"
+ #include "compress.h"
+ #include "namespaces.h"
+ #include "path.h"
+@@ -706,6 +708,44 @@ bool dso__data_status_seen(struct dso *dso, enum dso_data_status_seen by)
+ 	return false;
+ }
+ 
++static ssize_t bpf_read(struct dso *dso, u64 offset, char *data)
++{
++	struct bpf_prog_info_node *node;
++	ssize_t size = DSO__DATA_CACHE_SIZE;
++	u64 len;
++	u8 *buf;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	len = node->info_linear->info.jited_prog_len;
++	buf = (u8 *)(uintptr_t)node->info_linear->info.jited_prog_insns;
++
++	if (offset >= len)
++		return -1;
++
++	size = (ssize_t)min(len - offset, (u64)size);
++	memcpy(data, buf + offset, size);
++	return size;
++}
++
++static int bpf_size(struct dso *dso)
++{
++	struct bpf_prog_info_node *node;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	dso->data.file_size = node->info_linear->info.jited_prog_len;
++	return 0;
++}
++
+ static void
+ dso_cache__free(struct dso *dso)
  {
-+	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
- 	struct dso_cache *cache;
- 	struct dso_cache *old;
- 	ssize_t ret;
+@@ -832,7 +872,11 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	if (!cache)
+ 		return -ENOMEM;
  
--	do {
--		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
--
--		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
--		if (!cache)
--			return -ENOMEM;
--
--		ret = file_read(dso, machine, cache_offset, cache->data);
-+	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
-+	if (!cache)
-+		return -ENOMEM;
- 
-+	ret = file_read(dso, machine, cache_offset, cache->data);
-+	if (ret > 0) {
+-	ret = file_read(dso, machine, cache_offset, cache->data);
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		ret = bpf_read(dso, cache_offset, cache->data);
++	else
++		ret = file_read(dso, machine, cache_offset, cache->data);
++
+ 	if (ret > 0) {
  		cache->offset = cache_offset;
  		cache->size   = ret;
--	} while (0);
--
+@@ -941,6 +985,9 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR)
+ 		return -1;
  
--	if (ret > 0) {
- 		old = dso_cache__insert(dso, cache);
- 		if (old) {
- 			/* we lose the race */
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return bpf_size(dso);
++
+ 	return file_size(dso, machine);
+ }
+ 
 -- 
 2.20.1
 
