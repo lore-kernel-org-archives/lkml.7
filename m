@@ -2,117 +2,71 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5479CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB9CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295F224231
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bv1ATfN1"
+	by mail.kernel.org (Postfix) with ESMTP id 2D22C24234
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559166316;
+	bh=una0/e/8ySmlj4JhQmei5RgTXmPxhXe5myJTjKTrpTo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=dXPITW2iedtLroV2D5j74jmA6KiOaZ3/9wLXho9oqgwztNFK64pahF1ZQ9454I8AP
+	 iRaVNUC8glCunfMqmwgZkGUGQLREET9/b2WafRfKXVH9bIvBH0sEDf4NINIJ4xPQOl
+	 YPsEvuCkibffbQmYy4iOEwFBGOKc8UbWB4w2SJ3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfE2VhN (ORCPT
+        id S1726498AbfE2VpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:37:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46325 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfE2VhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:37:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r7so2729863wrr.13;
-        Wed, 29 May 2019 14:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Z/j/DHIs2LqXKNaoMidLfEH1GNjBTo+f8bWLzrCEysU=;
-        b=Bv1ATfN1zsW6uwRy1fi6lD0r6158DlYKWB1iHSlxbtZLTCLWO48hXOcjLTsvfukM0c
-         uZc4mQN63CrBjtfNEUsMTEtqpBcbKwC8WvG/VJpaOnQtqewPJV/WX9/R+IRegg7koMZr
-         VkzIgnSs2A2SdDmY9ufjuzDt0yG6U+rt+L5orEXCmkmyNfXJJ9F2rKialWY+BzlZz4qQ
-         HZ7dcmKvt2ZEC1dnGoxlgH+zq2w5L/QqStA145O3dGzkb3aPy111zy6YvwuF5HLgl3gz
-         9p+hUA9e5didovXiUbxrZ36gTbwPScINaO+bhd1EDrizJQbqTRxhKWnsLyKiAdXU9DjR
-         xtsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Z/j/DHIs2LqXKNaoMidLfEH1GNjBTo+f8bWLzrCEysU=;
-        b=SZT2aKqYn5zrJEWvq9t0WIoPmTmibX1bKJ7PpeaaammIkW0b9BR4cBpgbjQJxHS8hX
-         qbC91okrs7McV3Oywq5cz/pzKs8dgPewMouiUJ50so3rStNxKcWG2JtcLSqbMneJGQx0
-         eLfl3Hmlbf1KQtfiYkiMLbr6Tx7HuuB8shiRDcSf4UKl0Uz6BwGNxVnpy51IW3JnY8Iy
-         FXT2NYVvscRMZead9fnW5Oe7+wHD3SFM3o5t9m6Mw8FNxWvs3zKiOn8Mif61o+pe6PIu
-         hUpZiHvh37EYL0g5tJph7jkcGl1Oetg+SZLXkiWeVFeX5aaoe6N0GsvuSaEFuIUEhPzb
-         0hkQ==
-X-Gm-Message-State: APjAAAWKPBHHJ77mtwoJLikU6V2d+KEGn+GXGJS95bdrLLeAOy1zxo1R
-        mqMWM2yQxZNyGcLEHa4Jdgybdg8=
-X-Google-Smtp-Source: APXvYqz5Xs2abGWOV1nrmofmFEGyNuelZ+2JOzdItYbOs4FrMLpP6BFT+kh/GE1JcLfJTv/k9T06/A==
-X-Received: by 2002:a5d:4fc1:: with SMTP id h1mr105094wrw.323.1559165831399;
-        Wed, 29 May 2019 14:37:11 -0700 (PDT)
-Received: from avx2 ([46.53.251.224])
-        by smtp.gmail.com with ESMTPSA id 67sm1083679wmd.38.2019.05.29.14.37.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 14:37:10 -0700 (PDT)
-Date:   Thu, 30 May 2019 00:37:08 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH] elf: align AT_RANDOM bytes
-Message-ID: <20190529213708.GA10729@avx2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 29 May 2019 17:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfE2VpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 17:45:15 -0400
+Subject: Re: [GIT PULL] tracing: Avoid memory leak in predicate_parse()
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559166314;
+        bh=una0/e/8ySmlj4JhQmei5RgTXmPxhXe5myJTjKTrpTo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=HWFIQZ+NGH+ALEaMlTs1wgDAjjE3OG4hpDuq7ZaOsA66Wdg7rTbsws2Zv20nKYFt5
+         twvIocejfFDS5n+8582cudo0rbYX46kFKLfUfz2h5bE++7nUsEE8Szi0ZyFOv+ULB0
+         9YiHNhRADIBo6oCIvYtvCs0v/g56vrJsBUdf5Fyc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190528225834.7428baf9@gandalf.local.home>
+References: <20190528225834.7428baf9@gandalf.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190528225834.7428baf9@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.2-rc2
+X-PR-Tracked-Commit-Id: dfb4a6f2191a80c8b790117d0ff592fd712d3296
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9e82b4a91d46a690de3cbbe6960667caa508b27a
+Message-Id: <155916631448.28954.7396701337136352142.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 May 2019 21:45:14 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tomas Bortoli <tomasbortoli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AT_RANDOM content is always misaligned on x86_64:
+The pull request you sent on Tue, 28 May 2019 22:58:34 -0400:
 
-	$ LD_SHOW_AUXV=1 /bin/true | grep AT_RANDOM
-	AT_RANDOM:       0x7fff02101019
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.2-rc2
 
-glibc copies first few bytes for stack protector stuff, aligned
-access should be slightly faster.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9e82b4a91d46a690de3cbbe6960667caa508b27a
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+Thank you!
 
- fs/binfmt_elf.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
-
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -144,11 +144,15 @@ static int padzero(unsigned long elf_bss)
- #define STACK_ALLOC(sp, len) ({ \
- 	elf_addr_t __user *old_sp = (elf_addr_t __user *)sp; sp += len; \
- 	old_sp; })
-+#define STACK_ALIGN(sp, align)	\
-+	((typeof(sp))(((unsigned long)sp + (int)align - 1) & ~((int)align - 1)))
- #else
- #define STACK_ADD(sp, items) ((elf_addr_t __user *)(sp) - (items))
- #define STACK_ROUND(sp, items) \
- 	(((unsigned long) (sp - items)) &~ 15UL)
- #define STACK_ALLOC(sp, len) ({ sp -= len ; sp; })
-+#define STACK_ALIGN(sp, align)	\
-+	((typeof(sp))((unsigned long)sp & ~((int)align - 1)))
- #endif
- 
- #ifndef ELF_BASE_PLATFORM
-@@ -217,6 +221,12 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 			return -EFAULT;
- 	}
- 
-+	/*
-+	 * glibc copies first bytes for stack protector purposes
-+	 * which are misaligned on x86_64 because strlen("x86_64") + 1 == 7.
-+	 */
-+	p = STACK_ALIGN(p, sizeof(long));
-+
- 	/*
- 	 * Generate 16 random bytes for userspace PRNG seeding.
- 	 */
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
