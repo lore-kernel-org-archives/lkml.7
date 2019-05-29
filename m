@@ -2,181 +2,144 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9E2C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF628C072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DD521019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A774721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZLRd7AY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TI6pGipG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfE2COi (ORCPT
+        id S1726568AbfE2CPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:14:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33193 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfE2COg (ORCPT
+        Tue, 28 May 2019 22:15:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35163 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfE2CPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:14:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so3413318wmh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 19:14:34 -0700 (PDT)
+        Tue, 28 May 2019 22:15:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p26so1131852edr.2;
+        Tue, 28 May 2019 19:15:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PgN9lZYSW6MUtr26KWEiWvJfTzaEUZF1csnSpUPQerE=;
-        b=lZLRd7AY1yFOgFozQ18TnhvB00PzlNJpD55vnKrhDjOMnW7ajh1Ok4sEbMRnEoBVaX
-         B/aGZaf8y14SOTxFdYiEm6YiJHsAP9F4sI00qMWR53fBqkcZQMOnxYZGxBtZ9ZNayNnx
-         yiByKnKWAbYSuHhVxXc1cJzAuVmJeDuVpsAyQMZjdQatNjbqggdOcxpJVrvZv4FkcHHw
-         F4CZte41m0l+hJqTWmpLJnb1Kquc1o3xCUZC2mja8SY3yHKiy8kgcci1FcLHGxV3d8AT
-         XUON3TtXabGyL2duGSLLvsHjm0iRg/xasGElpEVOzIJxBKenfCLehopRhrQuq3UTw9Be
-         2X3A==
+        bh=MVuq7lYaXanQ2+muRBv1fL9MjUsN0jmBARMWs3+IXa4=;
+        b=TI6pGipGG6Tmo7+0fwdqTp7wV3+aiOpsbht6be1dsWP2ku4I1dSCYO4gVu6KPzUuZS
+         NnX8I9sQKcYRBPlwfle7uM66O8mHfggCXWP7BGbCb3beoGCVCid6ik75HNmMbeMgjHvx
+         eDZwhDHipnxUE0I4rPjzPGXq1mqPyXndXUFxPWkR2kT3LLfC7nZ+KKyae6VYlFh6cKhT
+         j9rZFyCnO3myUsy15l36yvHsrhFRGq9XCTJfVpBKyVSLJJ4x955ScGyl4wGeAJdPEkCD
+         Tky+G1WtRi6GRjqJGi33sUaYvVSc0yMtncd6Rtxl2+KeBIHLIY3iWAJsvyyyqSwWxUrY
+         lutw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PgN9lZYSW6MUtr26KWEiWvJfTzaEUZF1csnSpUPQerE=;
-        b=IX6cakKC2bSAHpRI0hmddZGKFQaUPY9cvLpJWV8J3oF2hT+gybCdwPE6c4RssTMn6f
-         LMhwRgLkpWXOcaf3vqRGSWMWW+A17GTwTtkRHzXQqqw0mM5cMjjW2XHheN/JlGg4eVk0
-         YpkpfBab7Qt1EQlgxgiG9x+nbrXIxp9KnIySdVE5785oEpcAyQOaVw8zFBhmMv85ldTP
-         tze5Wa7D+jQBMzL8LqzhetmQsptXCaF0yithDTL4sm/V1pvfasMN7eVSpxMDqJVPDH0Z
-         NHYoj1Ib7HVR6PCB4ADFnjD8QCMT6YSni4pUfD95n2x3KxrkYA899eMochjVooaEjbrf
-         wz7A==
-X-Gm-Message-State: APjAAAVsyUr7NfU0QbHXRKV1muKYwLvlA0Se4pmkNHgZJGKcvSYdeWRI
-        f9/jzTQIfIfJh28FsCiCyj3hhVxx2nyqKTXqgxBs5g==
-X-Google-Smtp-Source: APXvYqwV5Z/Yh3VSHZzh2tY/Yfn0Vg2NBiPtNn1HworED7jgWcefE36Pti2Ya0dkyOrfzoNvX0CONroxn1ejKSEkF94=
-X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr5349103wml.164.1559096074170;
- Tue, 28 May 2019 19:14:34 -0700 (PDT)
+        bh=MVuq7lYaXanQ2+muRBv1fL9MjUsN0jmBARMWs3+IXa4=;
+        b=br4Y9QlqKW0SJKIAK8GX1l053V1ZlJ4H3Ds+QmjpCbudfWLfkfoyDscMbQHSmUFWXE
+         aFjyqL/ikpbm+TJIfYTR6M9vfRE/HI7iLwHc0P4QedYYcqGo52d2S5Gj1EzZ4qvkdoq3
+         B6YqwaAtSIj8Ca6fNYEGSCY2u0GEUiJZBFypPsWwlHzQSDpBCgalRWO3OMZXfiTu5xDm
+         nAYhfoOaCee6TJAevaFX6PuDpax4VGq4V9jUoEHI4mReUhOu7fn07SkexSs5HmICM3xh
+         FH2sbfkkuLyYyaBoBH0ZzgGfBLUUg4qsJBtDvT8xC7ukETW1UMiMQihv91AO/J08xzHY
+         JGoQ==
+X-Gm-Message-State: APjAAAVeiHvwhxczgfO1y6Awur3fcjdwebKs+rULlfKv8rtNOuHw45YD
+        fiXrBh4+rOD7ECQkoKPSnJuvyTN12J2vI0BLfLE=
+X-Google-Smtp-Source: APXvYqyOg5fgYNs1hVcgXxnSIALAf/v2b0IbtA6UkMpm8Me8LtYEdvXve0H0HiVXQItgpL6SOU+F0L3Z0HgnhF+z4oc=
+X-Received: by 2002:a05:6402:1484:: with SMTP id e4mr2931835edv.57.1559096103705;
+ Tue, 28 May 2019 19:15:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190528235627.1315-2-olteanv@gmail.com>
-In-Reply-To: <20190528235627.1315-2-olteanv@gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 28 May 2019 19:14:22 -0700
-Message-ID: <CALAqxLWjT0ZJerFa+BVCKW+-ws6DYFy7kqEfNVK8ioGdY=VQeQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/5] timecounter: Add helper for reconstructing
- partial timestamps
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, "David S. Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
+References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp>
+In-Reply-To: <20190529011705.GA12977@basecamp>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 28 May 2019 19:14:50 -0700
+Message-ID: <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 4:58 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+On Tue, May 28, 2019 at 6:17 PM Brian Masney <masneyb@onstation.org> wrote:
 >
-> Some PTP hardware offers a 64-bit free-running counter whose snapshots
-> are used for timestamping, but only makes part of that snapshot
-> available as timestamps (low-order bits).
+> On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
+> > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
+> >
+> > > Here is a patch series that adds initial display support for the LG
+> > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
+> > > of these patches are RFC until we can get it fully working.
+> > >
+> > > The phones boots into terminal mode, however there is a several second
+> > > (or more) delay when writing to tty1 compared to when the changes are
+> > > actually shown on the screen. The following errors are in dmesg:
+> >
+> > I tested to apply patches 2-6 and got the console up on the phone as well.
+> > I see the same timouts, and I also notice the update is slow in the
+> > display, as if the DSI panel was running in low power (LP) mode.
+> >
+> > Was booting this to do some other work, but happy to see the progress!
 >
-> In that case, timecounter/cyclecounter users must bring the cyclecounter
-> and timestamps to the same bit width, and they currently have two
-> options of doing so:
+> Thanks!
 >
-> - Trim the higher bits of the timecounter itself to the number of bits
->   of the timestamps.  This might work for some setups, but if the
->   wraparound of the timecounter in this case becomes high (~10 times per
->   second) then this causes additional strain on the system, which must
->   read the clock that often just to avoid missing the wraparounds.
+> I've had three people email me off list regarding the display working on
+> 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
+> this email is to get some more information out publicly.
 >
-> - Reconstruct the timestamp by racing to read the PTP time within one
->   wraparound cycle since the timestamp was generated.  This is
->   preferable when the wraparound time is small (do a time-critical
->   readout once vs doing it periodically), and it has no drawback even
->   when the wraparound is comfortably sized.
+> I pushed up a branch to my github with 15 patches applied against 4.17
+> that has a working display:
 >
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> ---
->  include/linux/timecounter.h |  7 +++++++
->  kernel/time/timecounter.c   | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
+> https://github.com/masneyb/linux/commits/display-works-4.17
 >
-> diff --git a/include/linux/timecounter.h b/include/linux/timecounter.h
-> index 2496ad4cfc99..03eab1f3bb9c 100644
-> --- a/include/linux/timecounter.h
-> +++ b/include/linux/timecounter.h
-> @@ -30,6 +30,9 @@
->   *     by the implementor and user of specific instances of this API.
->   *
->   * @read:              returns the current cycle value
-> + * @partial_tstamp_mask:bitmask in case the hardware emits timestamps
-> + *                     which only capture low-order bits of the full
-> + *                     counter, and should be reconstructed.
->   * @mask:              bitmask for two's complement
->   *                     subtraction of non 64 bit counters,
->   *                     see CYCLECOUNTER_MASK() helper macro
-> @@ -38,6 +41,7 @@
->   */
->  struct cyclecounter {
->         u64 (*read)(const struct cyclecounter *cc);
-> +       u64 partial_tstamp_mask;
->         u64 mask;
->         u32 mult;
->         u32 shift;
-> @@ -136,4 +140,7 @@ extern u64 timecounter_read(struct timecounter *tc);
->  extern u64 timecounter_cyc2time(struct timecounter *tc,
->                                 u64 cycle_tstamp);
+> It's in low speed mode but its usable. The first 10 patches are in
+> mainline now and the last 5 are in essence this patch series with the
+> exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
+> There's a slightly different version of that patch in mainline now.
 >
-> +extern u64 cyclecounter_reconstruct(const struct cyclecounter *cc,
-> +                                   u64 ts_partial);
-> +
->  #endif
-> diff --git a/kernel/time/timecounter.c b/kernel/time/timecounter.c
-> index 85b98e727306..d4657d64e38d 100644
-> --- a/kernel/time/timecounter.c
-> +++ b/kernel/time/timecounter.c
-> @@ -97,3 +97,36 @@ u64 timecounter_cyc2time(struct timecounter *tc,
->         return nsec;
->  }
->  EXPORT_SYMBOL_GPL(timecounter_cyc2time);
-> +
-> +/**
-> + * cyclecounter_reconstruct - reconstructs @ts_partial
-> + * @cc:                Pointer to cycle counter.
-> + * @ts_partial:        Typically RX or TX NIC timestamp, provided by hardware as
-> + *             the lower @partial_tstamp_mask bits of the cycle counter,
-> + *             sampled at the time the timestamp was collected.
-> + *             To reconstruct into a full @mask bit-wide timestamp, the
-> + *             cycle counter is read and the high-order bits (up to @mask) are
-> + *             filled in.
-> + *             Must be called within one wraparound of @partial_tstamp_mask
-> + *             bits of the cycle counter.
-> + */
-> +u64 cyclecounter_reconstruct(const struct cyclecounter *cc, u64 ts_partial)
-> +{
-> +       u64 ts_reconstructed;
-> +       u64 cycle_now;
-> +
-> +       cycle_now = cc->read(cc);
-> +
-> +       ts_reconstructed = (cycle_now & ~cc->partial_tstamp_mask) |
-> +                           ts_partial;
-> +
-> +       /* Check lower bits of current cycle counter against the timestamp.
-> +        * If the current cycle counter is lower than the partial timestamp,
-> +        * then wraparound surely occurred and must be accounted for.
-> +        */
-> +       if ((cycle_now & cc->partial_tstamp_mask) <= ts_partial)
-> +               ts_reconstructed -= (cc->partial_tstamp_mask + 1);
-> +
-> +       return ts_reconstructed;
-> +}
-> +EXPORT_SYMBOL_GPL(cyclecounter_reconstruct);
+> I'm planning to work on the msm8974 interconnect support once some of
+> the outstanding interconnect patches for the msm kms/drm driver arrive
+> in mainline. I'd really like to understand why the display works on
+> 4.17 with those patches though. I assume that it's related to the
+> vblank events not working properly? Let me preface this with I'm a
+> total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
+> looking for these events in the atomic commits before the migration?
+> See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
+> helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
+> call that was added.
 
-Hrm. Is this actually generic? Would it make more sense to have the
-specific implementations with this quirk implement this in their
-read() handler? If not, why?
+interconnect probably good to get going anyways (and I need to find
+some time to respin those mdp5/dpu patches) but I guess not related to
+what you see (ie. I'd expect interconnect issue would trigger
+underflow irq's)..
 
-thanks
--john
+I'm not entirely sure why atomic would break things but cmd mode
+panels aren't especially well tested.  I can't find it now but there
+was a thread (or IRC discussion?) that intf2vblank() should be
+returning MDP5_IRQ_PING_PONG_<n>_DONE instead of
+MDP5_IRQ_PING_PONG_<n>_RD_PTR, which seems likely and possibly related
+to vblank timing issues..
+
+BR,
+-R
+
+
+
+>
+> Brian
