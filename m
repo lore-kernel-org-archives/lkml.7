@@ -2,143 +2,100 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0743C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06393C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CACD2342C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3D12342E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kI9WNicJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ODjvl20h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfE2OFi (ORCPT
+        id S1727254AbfE2OGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:05:38 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44292 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbfE2OFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:05:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w13so1862608wru.11;
-        Wed, 29 May 2019 07:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OdP3KRebtRtoVUv0qXGZAHMYjFS2Zd6QzuriBo5GTh0=;
-        b=kI9WNicJ7W5vf1GVJAKRkpGR30yq0Fx7XJvJh9lqjzeWg3BXdFmwmZNxE5EUdf5OVg
-         kapIrWWmre7HyOP/6tByX8NJJnTg2YYUiA6SibRKjr51hE+eni3tSdPpCtJtEFsZUUAh
-         fMxeEz9lLVfByl1LtX8mJGKnt0p95BWJf1LZPPTo3E5HBFj1NSwUe76armQdLu+GhiS7
-         8KYLBZ/CG9lFEt/HFd9z6AC5CU60JIBOGbmDeRovXMidU89bZ19DOCr4tMABbEuFL1CT
-         XmdBg+ZVlvJUOWs0kbsoWz3WqlaXOqWtfr2RYKuBEmsYbCt8Bh677u6BpthcAB6dXjDu
-         nG2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OdP3KRebtRtoVUv0qXGZAHMYjFS2Zd6QzuriBo5GTh0=;
-        b=pjHlbT5nPDwc3nX3yo19zHo3eWBJj5IRPyY3pW5tMg8y7c+OoGJM0XWW7A6RcsP2bk
-         /F+vZlyg+uSKLkdMFHKz0IV7QU29/Nb0spCF+SuKKHjoY0xTXvRQqG4yhgN9Stqn9l7l
-         OIJMWk6NneWLrkBT6ofaJ2qHFfWXs6h/xn4PUVhZIar3x4ohyqtBkUGPuSahvdaHZh9f
-         2hpchjTgdASne2ut9HgPnduB0e7YwgRnEqHQ+KzdWKay4VnYeFp3xCehbuaDSRelAojc
-         p6y4zn9pkeSPaQGXsmxd2gz0KsYAQoFH/PtZ5GPMz/bQ/calQ8ToL4C2C84SYIMAbxlm
-         cbWQ==
-X-Gm-Message-State: APjAAAXO9kDkUXTH8vCQdUtU0EHZ4sW61XZ43dWqt6IzOvObvp1P+V67
-        YfAOHPLtJ2RAdOXI02hNBMk=
-X-Google-Smtp-Source: APXvYqznD6mFjagAWebxU1mZ1y6DLk1J4imu/nA2x1SyZeP06Df/2ZVAnFU5osuGbxgrvhEkxOkcLw==
-X-Received: by 2002:adf:fd09:: with SMTP id e9mr307567wrr.292.1559138735670;
-        Wed, 29 May 2019 07:05:35 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id e10sm1008232wme.3.2019.05.29.07.05.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 07:05:34 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:05:33 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 12/12] soc/tegra: pmc: configure tegra deep sleep
- control settings
-Message-ID: <20190529140533.GC17679@ulmo>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-13-git-send-email-skomatineni@nvidia.com>
+        Wed, 29 May 2019 10:06:19 -0400
+Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:26081
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727056AbfE2OGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:06:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=geXcXOklRqydgUESMTOFmhViXuj+TaNfMYLXO1KDqDA=;
+ b=ODjvl20h+UKNssizeIAKowbwJpWmCZqCxe+PpO0ajQPlUdfR5HKr3JXNMK/2QceZaH23CP+llXQ3nlPyjmtVBUjuAkhkkmsSjpNQLlk8gn5czxdYjvECfY9s3DqQPh5gmPX8VsXNkSnOKZLifg/pURfMcNhrx91eJVtgqzK8a+k=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
+ VI1PR04MB4927.eurprd04.prod.outlook.com (20.177.49.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.17; Wed, 29 May 2019 14:06:12 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8d0e:de86:9b49:b40]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8d0e:de86:9b49:b40%7]) with mapi id 15.20.1922.021; Wed, 29 May 2019
+ 14:06:12 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "noring@nocrew.org" <noring@nocrew.org>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>
+Subject: Re: [PATCH v7 0/5] prerequisites for device reserved local mem rework
+Thread-Topic: [PATCH v7 0/5] prerequisites for device reserved local mem
+ rework
+Thread-Index: AQHVFglQMB1lnLjYnE2Z8bn8+67UAKaB+N+AgAAA+wCAAClrAA==
+Date:   Wed, 29 May 2019 14:06:12 +0000
+Message-ID: <5b8164b3-74a3-9ba4-8c28-61a14ec57a39@nxp.com>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529113427.GC11952@kroah.com> <20190529113758.GA9399@lst.de>
+In-Reply-To: <20190529113758.GA9399@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b95a83b-5881-4c73-ef93-08d6e43eceda
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB4927;
+x-ms-traffictypediagnostic: VI1PR04MB4927:
+x-microsoft-antispam-prvs: <VI1PR04MB49271964249C41C427B1A782EC1F0@VI1PR04MB4927.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39860400002)(366004)(199004)(189003)(36756003)(66446008)(6436002)(6512007)(53936002)(64756008)(66556008)(31686004)(76116006)(73956011)(2906002)(66574012)(5660300002)(316002)(8676002)(81156014)(26005)(86362001)(6246003)(3846002)(4744005)(6116002)(76176011)(53546011)(6506007)(66476007)(44832011)(31696002)(102836004)(478600001)(186003)(25786009)(110136005)(14454004)(54906003)(99286004)(4326008)(256004)(8936002)(71190400001)(229853002)(81166006)(66946007)(68736007)(305945005)(7736002)(71200400001)(486006)(446003)(66066001)(6486002)(476003)(2616005)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4927;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PzPdfdAE9mkBKiL6fPxlR5v7HEbmTgvv+dUb0J7Y8bE73kd0xlTj+o5aKBGVPvvUKMJA+zn49cyqwg6IrV9ikXButWUlDBamUqplZDmgAxGafv2HV87MuBZAq8p4nQJFpCNzZGrz8sSdWahHdKubSOiRLp4l2gnVT7G+3jammCxCav/NP++GbViBaccGOEiMCCqHZuo6VN2qghtqqjR9qZWv04iu1Q37IYq5iC8EmYLXfQyr35bX1UGxhc4jar+Nki2BX5CL1mgo8chjt6/wzyWhLmhSlmr0rgnblQ5JS7PXRb1ReHW550h86gvhwlUaJNYSEq5zKbVLpZYMdUiAAySMuWQdqL4D+cPcG5U1rNDS/kcQlKPgM7Ws2YmhOQWkOH45ow2idXcvLIZT6TwZxw2Jtx3kNvyPWd1z8NRe5Nc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B85DCE3956045E4FBD46AE8083B95DAA@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
-Content-Disposition: inline
-In-Reply-To: <1559084936-4610-13-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b95a83b-5881-4c73-ef93-08d6e43eceda
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 14:06:12.7994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: laurentiu.tudor@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4927
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---4jXrM3lyYWu4nBt5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 28, 2019 at 04:08:56PM -0700, Sowjanya Komatineni wrote:
-> Tegra210 and prior Tegra chips have power request signal polarity,
-> deep sleep entry and wake related timings which are platform specific
-> that should be configured before entering into deep sleep.
->=20
-> Below are the timings specific configurations for deep sleep and wake.
-> - Core rail power-on stabilization timer
-> - OSC clock stabilization timer after SOC rail power is stabilized.
-> - Core power off time is the minimum wake delay to keep the system
-> in deep sleep state irrespective of any quick wake event.
->=20
-> These values depends on the discharge time of regulators and turn OFF
-> time of the PMIC to allow the complete system to finish entering into
-> deep sleep state.
->=20
-> These values vary based on the platform design and are specified
-> through the device tree.
->=20
-> This patch has implementation to configure these configurations which
-> are must to have for deep sleep state.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |  7 +++++++
->  drivers/soc/tegra/pmc.c                        | 18 ++++++++++++++++++
->  2 files changed, 25 insertions(+)
-
-Please split up the DT and driver changes into separate patches.
-
-Thierry
-
---4jXrM3lyYWu4nBt5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzuka0ACgkQ3SOs138+
-s6FCsA//fh/p3ojaGOHMfFLR+qGf638G/KcNXtTMp68llwb1ViJHJc22xgK1KWD2
-lpWXSemALJE5XOhe/8AzMk9JW8VBf01LyGTw8bD04Pd0w3rpmhQLQropO6kyPLwc
-jFjYmIKk0cQUHb8DdpEHapIP3zTNyb9qmI2PVD0qQgu0VKChkP9K8DdOHM7ivMw7
-iMNYTLvx+58br9bk7mwjafZhSUtyVxFmHLIB1QdG9tFsJ3gPoAZoDpno3ZqnxPEs
-F8G3smiqAmTIC/GG3VX0wkjTGH7Jwydkl7b/jEMt9ahoLZd3+UB2IHkqkC0aOyAe
-yg6cpE7y/KAtDkIL/zonFQ+vXcyq0Wpt5OvL/cTHrejkJYiOlfJjT08W48aF7w7g
-gJ3GX/FinqeHj6RbL/wIUn2cUZjWoxFLZR/omEaKhRFWJH8btiUmNTUcyAvwqljF
-KLuFUiFjPckzkLYYvBAJiZiFq79gplX6awktiZSV1i5JmGVl/pmlLDM01ptStFhO
-stzU65AN8C4IOzZ/l5INhjq05I66bVL7vCiOfFy2UNL/BiGXIIogJ+f4RnqKEmB5
-6YuUSFfUEyuApVIRzPCOPU/v8Km+NphHNGLyKryAj1Q8lhtnSYbEVX9GPX/6s/Wh
-9DFpVpgVSP8hbLJK2YGx5jkO2FEYDnEG2y8GRCY+dUud5VAASAg=
-=A2bx
------END PGP SIGNATURE-----
-
---4jXrM3lyYWu4nBt5--
+SGkgQ2hyaXN0b3BoLA0KDQpPbiAyOS4wNS4yMDE5IDE0OjM3LCBDaHJpc3RvcGggSGVsbHdpZyB3
+cm90ZToNCj4gT24gV2VkLCBNYXkgMjksIDIwMTkgYXQgMDQ6MzQ6MjdBTSAtMDcwMCwgR3JlZyBL
+SCB3cm90ZToNCj4+IFJldmlld2VkLWJ5OiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51
+eGZvdW5kYXRpb24ub3JnPg0KPj4NCj4+IENocmlzdG9waCwgdGhpcyBpcyBnb2luZyB0aHJvdWdo
+IHlvdXIgdHJlZSwgcmlnaHQ/DQo+IA0KPiBZZXMsIEknbGwgcNGWY2sgaXQgdXAuDQo+IA0KDQpU
+aGFua3MsIGhvcGUgdGhpcyB0aW1lIGV2ZXJ5dGhpbmcgaXMgZmluZS4NCldoZW4geW91IGdldCB0
+aGUgdGltZSwgcGxlYXNlIGxldCBtZSBrbm93IHlvdXIgaWRlYXMgb24gdGhlIG5leHQgc3RlcHMu
+DQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
