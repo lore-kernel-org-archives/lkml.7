@@ -2,156 +2,165 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF0EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA582C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56ED42070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BFC2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfE2Jko (ORCPT
+        id S1726548AbfE2Jk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:40:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43681 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2Jkm (ORCPT
+        Wed, 29 May 2019 05:40:58 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:37601 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbfE2Jk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:40:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l17so1209588wrm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:40:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j0hlqpO7DoKf0qS7cy3GbaeQGV5MXFN+9TtToWsTFR4=;
-        b=Uo1WZSoyhUVGRj2+3MOJxfJXM+P7v0LSEDHlcQSFGEhHHPCaoqk1454kY5k+dzExg9
-         us2AtiZjrMNOPDi64X95de+ylMMtOL6qNtz3pQUP52aPgOW94RuGLiVmLDp8+g0VPYAh
-         6Mi0M2qTjKFeF6Mfc8gdi0Cp75PrGNfrrNxS0MNa5laFBesch2XEdoI2trSj8VP9p+kU
-         DU/WPlQ5+bPV907ofgyW8fIOLZXl5I8bF1IQGA8sxmXbXEH87c1yJVE+GFIF20Ga0kT5
-         RQn5VL2hIaKWCJhqeCJJYdMd9e1Ub8ulDQbynjSwcboBJ/xCCoA9If0IeDnHej8BR0R7
-         uqDQ==
-X-Gm-Message-State: APjAAAUUrheAjiwhxS16IxaXvZTLvFr6FO5P76B85ln41J/bWULnRTc/
-        Eawrys8po8JYBvfpIY+eaYEN8A==
-X-Google-Smtp-Source: APXvYqyRIrS086KqDZkfV5shjvt8JPfS49t4cis64k1qznhZfvFuYib2I/GTimQKUmJBe4apkmsFfQ==
-X-Received: by 2002:a5d:4089:: with SMTP id o9mr6276933wrp.6.1559122836612;
-        Wed, 29 May 2019 02:40:36 -0700 (PDT)
-Received: from t460s.bristot.redhat.com ([193.205.81.200])
-        by smtp.gmail.com with ESMTPSA id f3sm2461336wre.93.2019.05.29.02.40.35
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 02:40:35 -0700 (PDT)
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping due
- to a preempt_counter change
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
-Date:   Wed, 29 May 2019 11:40:34 +0200
+        Wed, 29 May 2019 05:40:58 -0400
+Received: from [IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae] ([IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id Vv4oh5D803qlsVv4phsgAe; Wed, 29 May 2019 11:40:55 +0200
+Subject: Re: [PATCH] media: atmel: atmel-isc: split driver into driver base
+ and isc
+To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     ksloat@aampglobal.com
+References: <1557392634-11090-1-git-send-email-eugen.hristev@microchip.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f52b31cf-87e8-dd00-8b6d-46b02f383507@xs4all.nl>
+Date:   Wed, 29 May 2019 11:40:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190529083357.GF2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <1557392634-11090-1-git-send-email-eugen.hristev@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfJO+Rck8XgIgDzqDevl/WtnQwXsXIDnXPhT4hBPRHrf86UcQBfn9Dxa4P0CTosG8i9EfYGoRksbLIWwJYFG/lhEJALVx3f5j1l3xq8FhkPVfvc+Xesl+
+ 18k/JX+0oHLsacve0GzsZZbqcIYRU6xnyGiQTwpqXPmLEgBfhfjyRU/8ik2ynIdLg1Z02Bek5kNN1LpP7KkSI/XdoQSPp4P0nxRtK0a4jjWdge+LwaND6qoz
+ +XdByEiJ+zT7EXTAaZkJbYBy229jBlp/FqHvIxXOpxi0A7tR3mv9SvxKd3vMrb0dkeOQfcWDwqYp+RjXDYGwe4IJiG4+SaNjZ+0l1ELzfTvFWOsiNohumedN
+ wAN1dXU9eJCddwcmTvn2hmcs6hCmV6TVa3wdZzLsw2FcUxtbBu+tDEE+zfqGBhCHfKmmYCVUQjBi4tuKj8l4vrhklMPDYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 10:33, Peter Zijlstra wrote:
-> On Tue, May 28, 2019 at 05:16:23PM +0200, Daniel Bristot de Oliveira wrote:
->> The preempt_disable/enable tracepoint only traces in the disable <-> enable
->> case, which is correct. But think about this case:
->>
->> ---------------------------- %< ------------------------------
->> 	THREAD					IRQ
->> 	   |					 |
->> preempt_disable() {
->>     __preempt_count_add(1)
->> 	------->	    smp_apic_timer_interrupt() {
->> 				preempt_disable()
->> 				    do not trace (preempt count >= 1)
->> 				    ....
->> 				preempt_enable()
->> 				    do not trace (preempt count >= 1)
->> 			    }
->>     trace_preempt_disable();
->> }
->> ---------------------------- >% ------------------------------
->>
->> The tracepoint will be skipped.
+On 5/9/19 11:09 AM, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> .... for the IRQ. But IRQs are not preemptible anyway, so what the
-> problem?
-
-
-right, they are.
-
-exposing my problem in a more specific way:
-
-To show in a model that an event always takes place with preemption disabled,
-but not necessarily with IRQs disabled, it is worth having the preemption
-disable events separated from IRQ disable ones.
-
-The main reason is that, although IRQs disabled postpone the execution of the
-scheduler, it is more pessimistic, as it also delays IRQs. So the more precise
-the model is, the less pessimistic the analysis will be.
-
-But there are other use-cases, for instance:
-
-(Steve, correct me if I am wrong)
-
-The preempt_tracer will not notice a "preempt disabled" section in an IRQ
-handler if the problem above happens.
-
-(Yeah, I know these problems are very specific... but...)
-
->> To avoid skipping the trace, the change in the counter should be "atomic"
->> with the start/stop, w.r.t the interrupts.
->>
->> Disable interrupts while the adding/starting stopping/subtracting.
+> This splits the Atmel ISC driver into a common base: atmel-isc-base.c
+> and the driver probe/dt part , atmel-isc.c
+> This is needed to keep a common ground for the sensor controller which will
+> be reused.
+> The atmel-isc will use the common symbols inside the atmel-isc-base
+> Future driver will also use the same symbols and redefine different aspects,
+> for a different version of the ISC.
+> This is done to avoid complete code duplication by creating a totally
+> different driver for the new variant of the ISC.
 > 
->> +static inline void preempt_add_start_latency(int val)
->> +{
->> +	unsigned long flags;
->> +
->> +	raw_local_irq_save(flags);
->> +	__preempt_count_add(val);
->> +	preempt_latency_start(val);
->> +	raw_local_irq_restore(flags);
->> +}
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
 > 
->> +static inline void preempt_sub_stop_latency(int val)
->> +{
->> +	unsigned long flags;
->> +
->> +	raw_local_irq_save(flags);
->> +	preempt_latency_stop(val);
->> +	__preempt_count_sub(val);
->> +	raw_local_irq_restore(flags);
->> +}
+> Hello,
 > 
-> That is hideously expensive :/
+> This patch applies on top of my other patches:
+> 
+> media: atmel: atmel-isc: make try_fmt error less verbose
+> media: atmel: atmel-isc: add support for DO_WHITE_BALANCE
+> media: atmel: atmel-isc: reworked white balance feature
+> 
+> Thanks !
+> 
+>  MAINTAINERS                                   |    2 +
+>  drivers/media/platform/atmel/Makefile         |    1 +
+>  drivers/media/platform/atmel/atmel-isc-base.c | 2144 +++++++++++++++++++++++
+>  drivers/media/platform/atmel/atmel-isc.c      | 2311 +------------------------
+>  drivers/media/platform/atmel/atmel-isc.h      |  210 +++
+>  5 files changed, 2372 insertions(+), 2296 deletions(-)
+>  create mode 100644 drivers/media/platform/atmel/atmel-isc-base.c
+>  create mode 100644 drivers/media/platform/atmel/atmel-isc.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 878588c..8799779 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10110,6 +10110,8 @@ M:	Eugen Hristev <eugen.hristev@microchip.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Supported
+>  F:	drivers/media/platform/atmel/atmel-isc.c
+> +F:	drivers/media/platform/atmel/atmel-isc.h
+> +F:	drivers/media/platform/atmel/atmel-isc-base.c
+>  F:	drivers/media/platform/atmel/atmel-isc-regs.h
+>  F:	Documentation/devicetree/bindings/media/atmel-isc.txt
+>  
+> diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
+> index 27000d0..9c8566e 100644
+> --- a/drivers/media/platform/atmel/Makefile
+> +++ b/drivers/media/platform/atmel/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
+>  obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
+> +obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc-base.o
 
-Yeah... :-( Is there another way to provide such "atomicity"?
+This doesn't work. If a module consists of two sources, then you must make sure
+those sources do not have the same name as the module.
 
-Can I use the argument "if one has these tracepoints enabled, they are not
-considering it as a hot-path?"
+So you have to rename atmel-isc.c.
 
--- Daniel
+See e.g. drivers/media/platform/rcar-vin/Makefile on how that's done for
+CONFIG_VIDEO_RCAR_VIN.
+
+<snip>
+
+> diff --git a/drivers/media/platform/atmel/atmel-isc.h b/drivers/media/platform/atmel/atmel-isc.h
+> new file mode 100644
+> index 0000000..1e285f1
+> --- /dev/null
+> +++ b/drivers/media/platform/atmel/atmel-isc.h
+> @@ -0,0 +1,210 @@
+
+<snip>
+
+> +
+> +#if defined(CONFIG_VIDEO_ATMEL_ISC)
+
+Why this #if???
+
+> +#define ATMEL_ISC_NAME "atmel-isc"
+> +#endif
+> +
+> +#endif
+> 
+
+If I configure atmel-isc as a module, then I get these errors:
+
+  CC [M]  drivers/media/platform/atmel/atmel-isc-base.o
+drivers/media/platform/atmel/atmel-isc-base.c: In function ‘isc_querycap’:
+drivers/media/platform/atmel/atmel-isc-base.c:906:23: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
+
+  strscpy(cap->driver, ATMEL_ISC_NAME, sizeof(cap->driver));
+                       ^~~~~~~~~~~~~~
+                       CTL_MAXNAME
+drivers/media/platform/atmel/atmel-isc-base.c:906:23: note: each undeclared identifier is reported only once for each function it appears in
+
+drivers/media/platform/atmel/atmel-isc-base.c: In function ‘isc_async_complete’:
+drivers/media/platform/atmel/atmel-isc-base.c:2063:22: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
+
+  strscpy(vdev->name, ATMEL_ISC_NAME, sizeof(vdev->name));
+                      ^~~~~~~~~~~~~~
+                      CTL_MAXNAME
+drivers/media/platform/atmel/atmel-isc.c: In function ‘atmel_isc_probe’:
+drivers/media/platform/atmel/atmel-isc.c:180:11: error: ‘ATMEL_ISC_NAME’ undeclared (first use in this function); did you mean ‘CTL_MAXNAME’?
+
+           ATMEL_ISC_NAME, isc);
+           ^~~~~~~~~~~~~~
+           CTL_MAXNAME
+
+Probably related to one or both of my comments above.
+
+Regards,
+
+	Hans
