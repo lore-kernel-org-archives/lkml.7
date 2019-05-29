@@ -2,104 +2,69 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF0AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FBC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD1721019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559128568;
-	bh=ymvUg06cR3uVZAead0DxphjXjeUzgb2DfPShyNmSrOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HNSg0KBNeFiNFdRjlmzrV387wpsayrjEDpGkkrIvn3BHhX/Wo6fb+9xYuLzJwpxxA
-	 wbcRWTeyrOQDcYuxG8W3W2LtC2GD/W3lK6VLcmJygSGeqNAavYmi8YMzfDtlE/AroX
-	 XNsFMtHl+HK4+GgixpJP32qq74jZgOXjUUohzlQI=
+	by mail.kernel.org (Postfix) with ESMTP id 901E320B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfE2LQI (ORCPT
+        id S1726863AbfE2LQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:16:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40862 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfE2LQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:16:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ymvUg06cR3uVZAead0DxphjXjeUzgb2DfPShyNmSrOo=; b=xbHC+5IWGUh9LKH0aRq2nPxa4
-        LwaWJNwmKQv6ACpskI7sYOoUkKbMyixIy+n4hidK/Xkgm8J5i2QkajPPUG+Q151eYhiqqtkLe4XX1
-        UMbr7tF+RfSPxyhkga2xetXnRgB7ZxwrP2d4eyWc9Qhg5e9cuuNju+Xtz2LKqOM+KdOm0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hVwYl-0004pw-Ml; Wed, 29 May 2019 11:15:55 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id AD492440046; Wed, 29 May 2019 12:15:54 +0100 (BST)
-Date:   Wed, 29 May 2019 12:15:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "david@lechnology.com" <david@lechnology.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Robby Cai <robby.cai@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: Issue: regmap: use debugfs even when no device
-Message-ID: <20190529111554.GO2456@sirena.org.uk>
-References: <VI1PR0402MB3600F0FB1A031BE502588C93FF1E0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <20190528132632.GJ2456@sirena.org.uk>
- <VI1PR0402MB3600AD425469BAF9BCC5CC2FFF1F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+        Wed, 29 May 2019 07:16:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfE2LQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 07:16:30 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0C786300CA98;
+        Wed, 29 May 2019 11:16:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D7B55D756;
+        Wed, 29 May 2019 11:16:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2SAKbPeChAf06GMazMPPThFM+OR00abRZafAP7v+ptKw@mail.gmail.com>
+References: <CAG48ez2SAKbPeChAf06GMazMPPThFM+OR00abRZafAP7v+ptKw@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk> <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <10418.1559084686@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kUBUi7JBpjcBtem/"
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB3600AD425469BAF9BCC5CC2FFF1F0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <15838.1559128587.1@warthog.procyon.org.uk>
+Date:   Wed, 29 May 2019 12:16:27 +0100
+Message-ID: <15839.1559128587@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 29 May 2019 11:16:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jann Horn <jannh@google.com> wrote:
 
---kUBUi7JBpjcBtem/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I don't really know. I guess it depends on how it's being used? If
+> someone decides to e.g. make a file browser that installs watches for
+> a bunch of mountpoints for some fancy sidebar showing the device
+> mounts on the system, or something like that, that probably shouldn't
+> inhibit unmounting... I don't know if that's a realistic use case.
 
-On Wed, May 29, 2019 at 01:33:46AM +0000, Andy Duan wrote:
+In such a use case, I would envision the browser putting a watch on "/".  A
+watch sees all events in the subtree rooted at that point and you must apply a
+filter that filters them out if you're not interested (filter on
+WATCH_INFO_IN_SUBTREE using info_filter and info_mask).
 
-> Correct, regmap without device also has issue when power if off, because =
-regmap
-> doesn't implement runtime pm for the device, but maybe device driver impl=
-ement
-> the runtime pm for the device.=20
-
-> So regmap how to manage the clock and power when access registers by debu=
-gfs ?
-
-Like I say the basic recommendation is to use a cache.
-
---kUBUi7JBpjcBtem/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzuaekACgkQJNaLcl1U
-h9D7agf/dSRk9A2I23hG8npW4JstXPO1trIkiV7i6P6GTvY9ujiGfWA1Q5JcHH4F
-K5pVSvuD5gGnSpY3OaPsJv15NW9E6K3XPZmkc/TP4nbbiHM3DZLeXByF/5h9mYtM
-LEl6SzxaIrwt5IQ3HdyppH3Ipp0wf7C7RxomSwlTU5PMxu1nGSIRcjtCWJBGGM6J
-YAWCP6flJL7Ddcibvx4dhxv5VPFLMg9YEfZNWZYnAk1/YECxgW5SbSsMFqtJNTw6
-DokoaLn8K0xCuYfsZnSI3qnIlYXhIcI5Inloylgl+6fzpKf3BRBd+Zcy/DD1ALex
-KHMcrFAr5lEAQXSV9mpdpYo4RvEzkw==
-=+KcL
------END PGP SIGNATURE-----
-
---kUBUi7JBpjcBtem/--
+David
