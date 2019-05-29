@@ -2,142 +2,106 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969BCC28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD486C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D24239B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PRVorFm2"
+	by mail.kernel.org (Postfix) with ESMTP id 98EF6239B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfE2OQi (ORCPT
+        id S1727183AbfE2ORB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:16:38 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32880 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfE2OQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:16:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n18so2194891otq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LPIxbFckpmqavIl60mnhGb6C8rcrkiaOP2OfEidBo5E=;
-        b=PRVorFm2Okq9hP5kqFH4ZiGr/E/Zu5eJY3MGXXFHxfdpmEdO3GutJJMHvfi09HYlYk
-         SnDTz9Jq0D6SvbjJsXUxw5SPAGf64dGBdkqzG7gBAtOGooyMlAvl8mmczoLi90evYR0A
-         PoHHqSU1LxoqR2wdSfJkTL18f/IZSr+Mc0D+armTgiJNv2KbxIbIGzPnKannBmXr5ZoL
-         onXscwCND5pzd7qsQ+4DRiaG4VALoZaDIZlGVD+Au9+DrLehAtdeFUdLTVj+n3sjvpTd
-         19cYxGogHm6iK4AXItVQ8hkyokyg4Cjwng+d2g0cb8MTYxZRlHB62qmC+BHhUJPQbJyg
-         MxTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LPIxbFckpmqavIl60mnhGb6C8rcrkiaOP2OfEidBo5E=;
-        b=R+ioCNvKC9Npc1KmkntDmvh6qTsvNlB1vv8vC6l9RlfL+JLL+Omo8N1lx1rFRt1RmW
-         zY5KX8kOJCdU6J1gSqSUJlf/zmHEzWXN9RRa9BODCWF3sIoGC6J4dR3f6MTYlisyquXo
-         nrAvgMPx6wXRzLQvfxxY2tCoid4ZQMT0B9/FjHXK0cVSff8+RtjhUQiAjSP6cCsiZBQk
-         dV9hcbudIRQ0VqBkWurZH3yvYgXoIRCFGf0bPRtyfATo+5cDq5FP9r0RxR9PXCsYVj1J
-         RcOEpe04Ko66+dwatKtQvAgRnwyEHvIFxfJhe/evTg7v2sdZ+qNQPy9H8k+wlUPtWzRT
-         iIHQ==
-X-Gm-Message-State: APjAAAVR0GP9T3q38ZjZ3h7GiNa0Fo/vMPiN3QyHBYwSjYajqT7Bcsbv
-        iwU1j8Q3SpIzL+1bfmCYs0Q5gYv3QlW4+KhJvNA7hg==
-X-Google-Smtp-Source: APXvYqwFTJrhrhEsjfOGtxnb29he2Fqyf9z7Tcu+GzobGgP0NfT3JF16fdsQq+/5jwCnLYlKlqDC3v5fUc8xIPyeFeo=
-X-Received: by 2002:a9d:7f8b:: with SMTP id t11mr37188otp.110.1559139396903;
- Wed, 29 May 2019 07:16:36 -0700 (PDT)
+        Wed, 29 May 2019 10:17:01 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33178 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbfE2ORB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:17:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:17:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,527,1549958400"; 
+   d="scan'208";a="179591712"
+Received: from irsmsx101.ger.corp.intel.com ([163.33.3.153])
+  by fmsmga002.fm.intel.com with ESMTP; 29 May 2019 07:16:59 -0700
+Received: from irsmsx103.ger.corp.intel.com ([169.254.3.133]) by
+ IRSMSX101.ger.corp.intel.com ([169.254.1.10]) with mapi id 14.03.0415.000;
+ Wed, 29 May 2019 15:16:58 +0100
+From:   "Zavras, Alexios" <alexios.zavras@intel.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>
+Subject: RE: [GIT PULL] SPDX update for 5.2-rc1 - round 1
+Thread-Topic: [GIT PULL] SPDX update for 5.2-rc1 - round 1
+Thread-Index: AQHVFiBRwj4Amv2o30qKXyQ2uEjvW6aCFsaQ
+Date:   Wed, 29 May 2019 14:16:58 +0000
+Message-ID: <27E3B830FA35C7429A77DAEEDEB7344771E641C9@IRSMSX103.ger.corp.intel.com>
+References: <20190521133257.GA21471@kroah.com>
+ <20190529131300.GV3274@piout.net>
+In-Reply-To: <20190529131300.GV3274@piout.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.181]
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905934373.7587.10824503964531598726.stgit@warthog.procyon.org.uk>
- <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com> <24577.1559134719@warthog.procyon.org.uk>
-In-Reply-To: <24577.1559134719@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 29 May 2019 16:16:10 +0200
-Message-ID: <CAG48ez0Ugv=cfj-v6DaYma0HgyiBjpykSkCr7mCAcMx13LEncg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] vfs: Add superblock notifications
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 2:58 PM David Howells <dhowells@redhat.com> wrote:
-> Jann Horn <jannh@google.com> wrote:
-> > It might make sense to require that the path points to the root inode
-> > of the superblock? That way you wouldn't be able to do this on a bind
-> > mount that exposes part of a shared filesystem to a container.
->
-> Why prevent that?  It doesn't prevent the container denizen from watching a
-> bind mount that exposes the root of a shared filesystem into a container.
 
-Well, yes, but if you expose the root of the shared filesystem to the
-container, the container is probably meant to have a higher level of
-access than if only a bind mount is exposed? But I don't know.
+> -----Original Message-----
+> From: linux-spdx-owner@vger.kernel.org <linux-spdx-owner@vger.kernel.org>
+> On Behalf Of Alexandre Belloni
+> Sent: Wednesday, 29 May, 2019 15:13
+> Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
+> 
+> Hello,
+> 
+> On 21/05/2019 15:32:57+0200, Greg KH wrote:
+> >   - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
+> 
+> I'm very confused by those two tags because they are not mentioned in the
+> SPDX 2.1 specification or the kernel documentation and seem to just be from
+> https://spdx.org/ids-howi which doesn't seem to be versionned anywhere.
+> While I understand the rationale behind those, I believe the correct way of
+> introducing them would be first to add them in the spec and documentation
+> and then make use of them.
 
-> It probably makes sense to permit the LSM to rule on whether a watch may be
-> emplaced, however.
+The "GPL-2.0-only" and "GPL-2.0-or-later" are license short identifiers.
+They do not belong to the SPDX spec, but rather on the license list.
+They were introduced in the SPDX License List v3.0 (current version is 3.5):
+https://spdx.org/licenses/ 
 
-We should have some sort of reasonable policy outside of LSM code
-though - the kernel should still be secure even if no LSMs are built
-into it.
+It seems the examples in the kernel documentation use identifiers
+from earlier versions of the license list.
 
-> > > +                       }
-> > > +               }
-> > > +               up_write(&s->s_umount);
-> > > +               if (ret < 0)
-> > > +                       kfree(watch);
-> > > +       } else if (s->s_watchers) {
-> >
-> > This should probably have something like a READ_ONCE() for clarity?
->
-> Note that I think I'll rearrange this to:
->
->         } else {
->                 ret = -EBADSLT;
->                 if (s->s_watchers) {
->                         down_write(&s->s_umount);
->                         ret = remove_watch_from_object(s->s_watchers, wqueue,
->                                                        s->s_unique_id, false);
->                         up_write(&s->s_umount);
->                 }
->         }
->
-> I'm not sure READ_ONCE() is necessary, since s_watchers can only be
-> instantiated once and the watch list then persists until the superblock is
-> deactivated.  Furthermore, by the time deactivate_locked_super() is called, we
-> can't be calling sb_notify() on it as it's become inaccessible.
->
-> So if we see s->s_watchers as non-NULL, we should not see anything different
-> inside the lock.  In fact, I should be able to rewrite the above to:
->
->         } else {
->                 ret = -EBADSLT;
->                 wlist = s->s_watchers;
->                 if (wlist) {
->                         down_write(&s->s_umount);
->                         ret = remove_watch_from_object(wlist, wqueue,
->                                                        s->s_unique_id, false);
->                         up_write(&s->s_umount);
->                 }
->         }
 
-I'm extremely twitchy when it comes to code like this because AFAIK
-gcc at least used to sometimes turn code that read a value from memory
-and then used it multiple times into something with multiple memory
-reads, leading to critical security vulnerabilities; see e.g. slide 36
-of <https://www.blackhat.com/docs/us-16/materials/us-16-Wilhelm-Xenpwn-Breaking-Paravirtualized-Devices.pdf>.
-I am not aware of any spec that requires the compiler to only perform
-one read from the memory location in code like this.
+> Now, what should we do with all the GPL-2.0 and GPL-2.0+ tags that we have?
+
+These are still valid identifiers (albeit deprecated), 
+so there is no urgent need to have them replaced.
+
+-- zvr -
+Intel Deutschland GmbH
+Registered Address: Am Campeon 10-12, 85579 Neubiberg, Germany
+Tel: +49 89 99 8853-0, www.intel.de
+Managing Directors: Christin Eisenschmid, Gary Kershaw
+Chairperson of the Supervisory Board: Nicole Lau
+Registered Office: Munich
+Commercial Register: Amtsgericht Muenchen HRB 186928
+
