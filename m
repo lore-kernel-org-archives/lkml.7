@@ -6,116 +6,69 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC090C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E226C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B5B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3094021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfE2M6s (ORCPT
+        id S1727092AbfE2M65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:58:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40474 "EHLO mx1.redhat.com"
+        Wed, 29 May 2019 08:58:57 -0400
+Received: from foss.arm.com ([217.140.101.70]:45536 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfE2M6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:58:48 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D63E9C07188B;
-        Wed, 29 May 2019 12:58:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CA8C5D9D6;
-        Wed, 29 May 2019 12:58:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com>
-References: <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905934373.7587.10824503964531598726.stgit@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] vfs: Add superblock notifications
+        id S1725936AbfE2M65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:58:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D0C80D;
+        Wed, 29 May 2019 05:58:56 -0700 (PDT)
+Received: from [10.162.41.181] (p8cg001049571a15.blr.arm.com [10.162.41.181])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1BA63F59C;
+        Wed, 29 May 2019 05:58:54 -0700 (PDT)
+Subject: Re: [PATCH 0/4] arm64/mm: Fixes and cleanups for do_page_fault()
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+References: <1559133285-27986-1-git-send-email-anshuman.khandual@arm.com>
+ <20190529124120.GF4485@fuggles.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <e5834e61-d6ac-39cc-6cbf-70b80b841db0@arm.com>
+Date:   Wed, 29 May 2019 18:29:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24576.1559134719.1@warthog.procyon.org.uk>
-Date:   Wed, 29 May 2019 13:58:39 +0100
-Message-ID: <24577.1559134719@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 29 May 2019 12:58:48 +0000 (UTC)
+In-Reply-To: <20190529124120.GF4485@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
 
-> It might make sense to require that the path points to the root inode
-> of the superblock? That way you wouldn't be able to do this on a bind
-> mount that exposes part of a shared filesystem to a container.
 
-Why prevent that?  It doesn't prevent the container denizen from watching a
-bind mount that exposes the root of a shared filesystem into a container.
-
-It probably makes sense to permit the LSM to rule on whether a watch may be
-emplaced, however.
-
-> > +                       ret = add_watch_to_object(watch, s->s_watchers);
-> > +                       if (ret == 0) {
-> > +                               spin_lock(&sb_lock);
-> > +                               s->s_count++;
-> > +                               spin_unlock(&sb_lock);
+On 05/29/2019 06:11 PM, Will Deacon wrote:
+> Hi Anshuman,
 > 
-> Why do watches hold references on the superblock they're watching?
-
-Fair point.  It was necessary at one point, but I don't think it is now.  I'll
-see if I can remove it.  Note that it doesn't stop a superblock from being
-unmounted and destroyed.
-
-> > +                       }
-> > +               }
-> > +               up_write(&s->s_umount);
-> > +               if (ret < 0)
-> > +                       kfree(watch);
-> > +       } else if (s->s_watchers) {
+> On Wed, May 29, 2019 at 06:04:41PM +0530, Anshuman Khandual wrote:
+>> This series contains some fixes and cleanups for page fault handling in
+>> do_page_fault(). This has been boot tested on arm64 platform along with
+>> some stress test but just build tested on others.
 > 
-> This should probably have something like a READ_ONCE() for clarity?
+> These all seem to be cleanups, which is fine, but I just wanted to make
+> sure I'm not missing something that should be aiming for 5.2. Are there
+> actually fixes in this series?
 
-Note that I think I'll rearrange this to:
+The following one might qualify (I would not insist though) but right now
+this is not very problematic.
 
-	} else {
-		ret = -EBADSLT;
-		if (s->s_watchers) {
-			down_write(&s->s_umount);
-			ret = remove_watch_from_object(s->s_watchers, wqueue,
-						       s->s_unique_id, false);
-			up_write(&s->s_umount);
-		}
-	}
+- arm64/mm: Drop mmap_sem before calling __do_kernel_fault() 
 
-I'm not sure READ_ONCE() is necessary, since s_watchers can only be
-instantiated once and the watch list then persists until the superblock is
-deactivated.  Furthermore, by the time deactivate_locked_super() is called, we
-can't be calling sb_notify() on it as it's become inaccessible.
+> 
+> (in future, it's best to post fixes separately so I don't miss them)
 
-So if we see s->s_watchers as non-NULL, we should not see anything different
-inside the lock.  In fact, I should be able to rewrite the above to:
-
-	} else {
-		ret = -EBADSLT;
-		wlist = s->s_watchers;
-		if (wlist) {
-			down_write(&s->s_umount);
-			ret = remove_watch_from_object(wlist, wqueue,
-						       s->s_unique_id, false);
-			up_write(&s->s_umount);
-		}
-	}
-
-David
+Sure will do.
