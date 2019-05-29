@@ -2,252 +2,121 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800EDC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C245FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635CF2436D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACFE24359
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9y1ILos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfE2XZ6 (ORCPT
+        id S1726893AbfE2X06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:25:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62140 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbfE2XZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:25:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 16:25:57 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 29 May 2019 16:25:56 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id DE0F55802C9;
-        Wed, 29 May 2019 16:25:56 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190529225714.GE28250@google.com>
- <20190529230426.GB5108@araj-mobl1.jf.intel.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <e93c7b6b-c414-6e0f-7983-9a46c67acb92@linux.intel.com>
-Date:   Wed, 29 May 2019 16:24:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 19:26:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38113 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfE2X05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:26:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g13so6235343edu.5;
+        Wed, 29 May 2019 16:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4MYDvvkcBMpD3vTFCGd0htlT0GxbUehOqYVwE/XNQ9w=;
+        b=r9y1ILosMv1HdLnsdsAP+MOj8XoPRuEhpX+827w9xBOQ4atic97Pj5M57pj7RqdciP
+         o4NSSKU+sBsW+S00Z3Q9wK2lJpFLwI9hObrUubudDFxx5f2aH6wKfZv71g1B4NB8Ijg7
+         wVbYcgqIUIUm2gMwMYvxncCQqmVzUIrGYMRGSmHJiKOn0Bv1nNYKwRm1laaQkp2lNxxR
+         hOr02yrpjt7u07lHY5gfV0YLdBNIRb6c3uS4t3npWort/GbChtnyUMV0Ta0DSNqK/lvf
+         hCrjWka+iETsxPTS106cV3W4ZLjeOJSzoQUXpTqOdDwWcIXp6nK7DYoPtDHHPc4Yx2hf
+         cuLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4MYDvvkcBMpD3vTFCGd0htlT0GxbUehOqYVwE/XNQ9w=;
+        b=RF6GwOPDuvuQ8Nz58geNBG2Ra68mpikEV6G4KXgOBBJXZIvAFhezUNrjO97YBKDJWU
+         pbpu2MZLKnUXSjXFcXG4+0MSfrbVuX/XIwQWZwm/eXGVo8dUxqtndmfVTgjYdSEAu6r3
+         gOCDI3zsyIYh9Baork7LD4zVkJemrBeEaK7eUSfF6+fAQ3gehn7q284CoXeCdKWVBS72
+         uhZe8Bq0R+RrIuWImletxYL3/czdtCwPKUiy20vRJ4Ana9q2qtblIAtELefxYDKKQy1i
+         fvzmvf+KZAah7kw60AhqzaebQWGfr0vrJudq0OmHjuQkvBw07TT8e2QkFSIWcUuVOupX
+         1qGQ==
+X-Gm-Message-State: APjAAAWu8LPQmjBZCiVZlyki8D1xDRsu7UuYysAAAta3OzXqf7i6Wr9y
+        fg/Qlw969ijK6040R12JlSFrGedbSJQAZgwR45w=
+X-Google-Smtp-Source: APXvYqwnheto+zYvIaHfRrjE+flVSb0ynWBD4Kqor0qxUvVvN3xWwpreCuaWW1NOsE9qA9ag86vzCURZDstGO6tJSe8=
+X-Received: by 2002:a05:6402:1543:: with SMTP id p3mr1047442edx.108.1559172415592;
+ Wed, 29 May 2019 16:26:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529230426.GB5108@araj-mobl1.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1559171394.git.mchehab+samsung@kernel.org> <c8f6ddd2d538e36f6036681f5756f6ea9499039f.1559171394.git.mchehab+samsung@kernel.org>
+In-Reply-To: <c8f6ddd2d538e36f6036681f5756f6ea9499039f.1559171394.git.mchehab+samsung@kernel.org>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 30 May 2019 02:26:44 +0300
+Message-ID: <CA+h21hqtfh1KTZXXC+Hmf7JUkXpWwjtJU_KS_u-wcjnWA3pLZA@mail.gmail.com>
+Subject: Re: [PATCH 21/22] docs: net: sja1105.rst: fix table format
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/29/19 4:04 PM, Raj, Ashok wrote:
-> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
->> On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>
->>> When IOMMU tries to enable PRI for VF device in
->>> iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
->>> VF device is currently broken in PCIE driver. Current implementation
->>> expects the given PCIe device (PF & VF) to implement PRI capability
->>> before enabling the PRI support. But this assumption is incorrect. As
->>> per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
->>> use the Page Request Interface (PRI) of the PF and not implement it.
->>> Hence we need to create exception for handling the PRI support for PCIe
->>> VF device.
->>>
->>> Since PRI is shared between PF/VF devices, following rules should apply.
->>>
->>> 1. Enable PRI in VF only if its already enabled in PF.
->>> 2. When enabling/disabling PRI for VF, instead of configuring the
->>> registers just increase/decrease the usage count (pri_ref_cnt) of PF.
->>> 3. Disable PRI in PF only if pr_ref_cnt is zero.
->> s/pr_ref_cnt/pri_ref_cnt/
->>
->>> Cc: Ashok Raj <ashok.raj@intel.com>
->>> Cc: Keith Busch <keith.busch@intel.com>
->>> Suggested-by: Ashok Raj <ashok.raj@intel.com>
->>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> ---
->>>   drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
->>>   include/linux/pci.h |  1 +
->>>   2 files changed, 52 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>> index 97c08146534a..5582e5d83a3f 100644
->>> --- a/drivers/pci/ats.c
->>> +++ b/drivers/pci/ats.c
->>> @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->>>   	u16 control, status;
->>>   	u32 max_requests;
->>>   	int pos;
->>> +	struct pci_dev *pf;
->>>   
->>>   	if (WARN_ON(pdev->pri_enabled))
->>>   		return -EBUSY;
->>>   
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>> -	if (!pos)
->>> +
->>> +	if (pdev->is_virtfn) {
->>> +		/*
->>> +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
->>> +		 * Capability.
->>> +		 */
->>> +		if (pos) {
->>> +			dev_err(&pdev->dev, "VF must not implement PRI");
->>> +			return -EINVAL;
->>> +		}
->> This seems gratuitous.  It finds implementation errors, but since we
->> correctly use the PF here anyway, it doesn't *need* to prevent PRI on
->> the VF from working.
->>
->> I think you should just have:
->>
->>    if (pdev->is_virtfn) {
->>      pf = pci_physfn(pdev);
->>      if (!pf->pri_enabled)
->>        return -EINVAL;
-> This would be incorrect. Since if we never did any bind_mm to the PF
-> PRI would not have been enabled. Currently this is done in the IOMMU
-> driver, and not in the device driver.
+On Thu, 30 May 2019 at 02:24, Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
 >
-> I suppose we should enable PF capability if its not enabled. Same
-> comment would be applicable for PASID as well.
-
-I am currently working on a fix to handle the bind issue (VF binding 
-before PF). My next version will have this update.
-
-But, regarding VF spec compliance checks, Is there any issue in having 
-them in enable code ? Perhaps I can change dev_err to dev_warn and not 
-return error if it found implementation errors. I found it useful to 
-have them because it helped me in finding some faulty devices during my 
-testing. Let me know your comments.
-
+> There's a table there with produces two warnings when built
+> with Sphinx:
 >
+>     Documentation/networking/dsa/sja1105.rst:91: WARNING: Block quote ends without a blank line; unexpected unindent.
+>     Documentation/networking/dsa/sja1105.rst:91: WARNING: Block quote ends without a blank line; unexpected unindent.
 >
->>      pdev->pri_enabled = 1;
->>      atomic_inc(&pf->pri_ref_cnt);
->>    }
->>
->>    pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>    if (!pos)
->>      return -EINVAL;
->>
->>> +		pf = pci_physfn(pdev);
->>> +
->>> +		/* If VF config does not match with PF, return error */
->>> +		if (!pf->pri_enabled)
->>> +			return -EINVAL;
->>> +
->>> +		pdev->pri_reqs_alloc = pf->pri_reqs_alloc;
->> Is there any point in setting vf->pri_reqs_alloc?  I don't think it's
->> used for anything since pri_reqs_alloc is only used to write the PF
->> capability, and we only do that for the PF.
->>
->>> +		pdev->pri_enabled = 1;
->>> +
->>> +		/* Increment PF PRI refcount */
->> Superfluous comment, since that's exactly what the code says.  It's
->> always good when the code is so clear that it doesn't require comments :)
->>
->>> +		atomic_inc(&pf->pri_ref_cnt);
->>> +
->>> +		return 0;
->>> +	}
->>> +
->>> +	if (pdev->is_physfn && !pos)
->>>   		return -EINVAL;
->>>   
->>>   	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
->>> @@ -202,7 +229,6 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
->>>   	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
->>>   
->>>   	pdev->pri_enabled = 1;
->>> -
->>>   	return 0;
->>>   }
->>>   EXPORT_SYMBOL_GPL(pci_enable_pri);
->>> @@ -217,10 +243,27 @@ void pci_disable_pri(struct pci_dev *pdev)
->>>   {
->>>   	u16 control;
->>>   	int pos;
->>> +	struct pci_dev *pf;
->>>   
->>>   	if (WARN_ON(!pdev->pri_enabled))
->>>   		return;
->>>   
->>> +	/* All VFs should be disabled before disabling PF */
->>> +	if (atomic_read(&pdev->pri_ref_cnt))
->>> +		return;
->>> +
->>> +	if (pdev->is_virtfn) {
->>> +		/* Since VF shares PRI with PF, use PF config. */
->>> +		pf = pci_physfn(pdev);
->>> +
->>> +		/* Decrement PF PRI refcount */
->>> +		atomic_dec(&pf->pri_ref_cnt);
->>> +
->>> +		pdev->pri_enabled = 0;
->>> +
->>> +		return;
->>> +	}
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return;
->>> @@ -246,6 +289,9 @@ void pci_restore_pri_state(struct pci_dev *pdev)
->>>   	if (!pdev->pri_enabled)
->>>   		return;
->>>   
->>> +	if (pdev->is_virtfn)
->>> +		return;
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return;
->>> @@ -270,6 +316,9 @@ int pci_reset_pri(struct pci_dev *pdev)
->>>   	if (WARN_ON(pdev->pri_enabled))
->>>   		return -EBUSY;
->>>   
->>> +	if (pdev->is_virtfn)
->>> +		return 0;
->>> +
->>>   	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
->>>   	if (!pos)
->>>   		return -EINVAL;
->>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>> index 77448215ef5b..699c79c99a39 100644
->>> --- a/include/linux/pci.h
->>> +++ b/include/linux/pci.h
->>> @@ -450,6 +450,7 @@ struct pci_dev {
->>>   #endif
->>>   #ifdef CONFIG_PCI_PRI
->>>   	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
->>> +	atomic_t	pri_ref_cnt;	/* Number of VFs with PRI enabled */
->>>   #endif
->>>   #ifdef CONFIG_PCI_PASID
->>>   	u16		pasid_features;
->>> -- 
->>> 2.20.1
->>>
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+> It will still produce a table, but the html output is wrong, as
+> it won't interpret the second line as the continuation for the
+> first ones, because identation doesn't match.
+>
+> After the change, the output looks a way better and we got rid
+> of two warnings.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/networking/dsa/sja1105.rst | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/networking/dsa/sja1105.rst b/Documentation/networking/dsa/sja1105.rst
+> index ea7bac438cfd..cb2858dece93 100644
+> --- a/Documentation/networking/dsa/sja1105.rst
+> +++ b/Documentation/networking/dsa/sja1105.rst
+> @@ -86,13 +86,13 @@ functionality.
+>  The following traffic modes are supported over the switch netdevices:
+>
+>  +--------------------+------------+------------------+------------------+
+> -|                    | Standalone |   Bridged with   |   Bridged with   |
+> -|                    |    ports   | vlan_filtering 0 | vlan_filtering 1 |
+> +|                    | Standalone | Bridged with     | Bridged with     |
+> +|                    | ports      | vlan_filtering 0 | vlan_filtering 1 |
+>  +====================+============+==================+==================+
+>  | Regular traffic    |     Yes    |       Yes        |  No (use master) |
+>  +--------------------+------------+------------------+------------------+
+>  | Management traffic |     Yes    |       Yes        |       Yes        |
+> -|    (BPDU, PTP)     |            |                  |                  |
+> +| (BPDU, PTP)        |            |                  |                  |
+>  +--------------------+------------+------------------+------------------+
+>
+>  Switching features
+> --
+> 2.21.0
+>
 
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
