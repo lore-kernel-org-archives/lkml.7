@@ -2,163 +2,127 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC50C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E5CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5618A20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E046821E6E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="HE9E00Ev"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stSrV1RE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfE2W5R (ORCPT
+        id S1726547AbfE2W7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:57:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40364 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfE2W5Q (ORCPT
+        Wed, 29 May 2019 18:59:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35037 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfE2W7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:57:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u17so2598258pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:57:16 -0700 (PDT)
+        Wed, 29 May 2019 18:59:01 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so1688576plo.2;
+        Wed, 29 May 2019 15:59:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ccsFrMe6KP8aiz8EyYKirxWsnxkvhC/brM0NiqqoSf0=;
-        b=HE9E00EvJ7o8sB9u2IBisHlbg8URix/DMrkDq4JGbmITr2VrN3s9bocIka9bOjVbSx
-         XKjZuu1jeBy8klRSNbkhUj+zTwSokHfMq6/fPdW1tvDTdY2Ln5FWZPl4jyJQhJoorS0U
-         lBjyThtI+5+YK2Z8a1kGNCEIw0pUngfWmMtSyvmi7q28Dq4UoCwQudZDb3NmzCJAiZJo
-         muuq+5j8JFJggBKvWWGN7lJHG48lfw8D5np8mpFEbC1mv4bWF6DdacLSkSQGpkkmadBw
-         VUekQcV0HcvWDJbUqFIG4sU0Rkdxsb3Hy8yMvT9vosUtmEZTkCiN/qXLpMCiCOAWzhB3
-         08fw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iRXiq08eonK9BxjJjymdgHQ4qGSvRUxD96bZCDtUMV8=;
+        b=stSrV1REP7r/iO0UySmKgfFQfgnoSywv5NEtp+3mDh+GJouFI80ivyUakPvqig8Azk
+         YgB10Lri9r0RC0ld01sWyFm0/h8uTiv14UMm9g9A5G5CsmRxkOYkpXzsBxF+Q17278tr
+         Px91blXo6+fUgF+HLBAuoi2qy4+OyklLJPHr9DZt3StO0PqO4rhu88kqA9lQuNlnPgvN
+         yn07ols/kBnUXU7GcG4++x6XMFl1njQt5KNlxr6O8HGncwNDZXgKxrpK6qctCadJc6WV
+         PlenhQY9FKgMHji+69msD05gr+N6JwIZ2G+9zzgd1/be20BaLEw4xZLahuoCFZPzkVjy
+         dljg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ccsFrMe6KP8aiz8EyYKirxWsnxkvhC/brM0NiqqoSf0=;
-        b=F7XRcbxKE3B7e8pQRiKIoIXYRo5ymHfiguzyH2rICZRRep0rFOGm0iWFOd2IvimWKx
-         kA7hqVc0MAB2zJIQpRgjAfHIZtUngSsP7vNtuG4zwP70836zYsrwJVQuGPAt+GvxomNm
-         EtWDWv5Mt+D/pmDLUEWjAp6qyNVQp21VQeTTXLy5YcTKJ3SQBt3bIF2yfG+gC5Ea+L48
-         v7m2zslCAvfTYDRxw2O671qY3xlDnPeGB5QgCLQ0MB/1lDfQXscDfwINy6wDi1eztxCH
-         KfFKPDsw/NGtRBi+6eZnpNbUmALuwZcDFamkbyuepAEkcOxmkKBqwQ6TzIcwrju6Y/3P
-         ih4g==
-X-Gm-Message-State: APjAAAW/Gn1M6Y7dtxqQFgDkSZzihVKwDYMR9Dg8r293vzHFgztL6rd0
-        AtIzvyttHYjUY7jG8saQcH98h4X8wNkERg==
-X-Google-Smtp-Source: APXvYqw6Z+KcPoaQ5yIAnQ055ieAIXfUyBwwmKI99T3gUkL7mzAPKw5N2QmTZmBFV/yvhC9n3STIcw==
-X-Received: by 2002:a62:fb10:: with SMTP id x16mr162681pfm.112.1559170635534;
-        Wed, 29 May 2019 15:57:15 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id r44sm532812pjb.13.2019.05.29.15.57.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 15:57:14 -0700 (PDT)
-Subject: Re: [PATCH] mm/page_io: fix a crash in do_task_dead()
-To:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>
-Cc:     hch@lst.de, peterz@infradead.org, oleg@redhat.com,
-        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1559156813-30681-1-git-send-email-cai@lca.pw>
- <20190529154424.c0fe2758cf5af42ff258714a@linux-foundation.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <73a24780-6760-926b-40be-7a31562704d8@kernel.dk>
-Date:   Wed, 29 May 2019 16:57:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iRXiq08eonK9BxjJjymdgHQ4qGSvRUxD96bZCDtUMV8=;
+        b=lIKICgNdqe8nW2pKu226NZHVZM8dO147F1gPugTsGpbLhr+u77QJgdAbjF+H9EJliV
+         co0r9aaHsm/01TP7b2Cyf4PtXgARL1FqwtP546o7fbtGrHUe9tTbqQYX6Or/ZuQSh8ZB
+         eizX9HMXEVRFSRqeobl0F2MVczZggy8ZaDS+6CixDAqtymuKuYXIHSMK7MFBVIDPX+2d
+         qHRKeScffwtFuvPEBX0fZAItVFafPrThHQ7RIh3Vut44mFuWsCFnfxNj3x0/rGq9DHMI
+         aAFLMvrqwyxhcPV6clVPSPIbr5+X68caQIfNJUB5ZNRmloxEinib9djDeNGOTILY+ABo
+         wyuA==
+X-Gm-Message-State: APjAAAWHIOXWTNUGk8NgirbSn5jLAVC43aodSaCxCwAYd1zVBiCX5/j2
+        NpGFKQfI7s2fz3+lzJJNhYX/3H8sV8Q=
+X-Google-Smtp-Source: APXvYqx96A2IXwPpSqyQ4BjLhdKAVqBGtW28Z6W8F3//efV2DHQ3i/2tcwUQ5QxYVU6xOHShEZbpJA==
+X-Received: by 2002:a17:902:b601:: with SMTP id b1mr458014pls.117.1559170740954;
+        Wed, 29 May 2019 15:59:00 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id s66sm822586pfb.37.2019.05.29.15.58.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 15:59:00 -0700 (PDT)
+Date:   Wed, 29 May 2019 15:57:48 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx: Add mclk0 clock for SAI
+Message-ID: <20190529225742.GA17556@Asurada-Nvidia.nvidia.com>
+References: <20190528132034.3908-1-daniel.baluta@nxp.com>
+ <20190528132034.3908-2-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190529154424.c0fe2758cf5af42ff258714a@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528132034.3908-2-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 4:44 PM, Andrew Morton wrote:
-> On Wed, 29 May 2019 15:06:53 -0400 Qian Cai <cai@lca.pw> wrote:
+On Tue, May 28, 2019 at 01:21:00PM +0000, Daniel Baluta wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
 > 
->> The commit 0619317ff8ba ("block: add polled wakeup task helper")
->> replaced wake_up_process() with blk_wake_io_task() in
->> end_swap_bio_read() which triggers a crash when running heavy swapping
->> workloads.
->>
->> [T114538] kernel BUG at kernel/sched/core.c:3462!
->> [T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
->> [T114538] Call trace:
->> [T114538]  do_task_dead+0xf0/0xf8
->> [T114538]  do_exit+0xd5c/0x10fc
->> [T114538]  do_group_exit+0xf4/0x110
->> [T114538]  get_signal+0x280/0xdd8
->> [T114538]  do_notify_resume+0x720/0x968
->> [T114538]  work_pending+0x8/0x10
->>
->> This is because shortly after set_special_state(TASK_DEAD),
->> end_swap_bio_read() is called from an interrupt handler that revive the
->> task state to TASK_RUNNING causes __schedule() to return and trip the
->> BUG() later.
->>
->> [  C206] Call trace:
->> [  C206]  dump_backtrace+0x0/0x268
->> [  C206]  show_stack+0x20/0x2c
->> [  C206]  dump_stack+0xb4/0x108
->> [  C206]  blk_wake_io_task+0x7c/0x80
->> [  C206]  end_swap_bio_read+0x22c/0x31c
->> [  C206]  bio_endio+0x3d8/0x414
->> [  C206]  dec_pending+0x280/0x378 [dm_mod]
->> [  C206]  clone_endio+0x128/0x2ac [dm_mod]
->> [  C206]  bio_endio+0x3d8/0x414
->> [  C206]  blk_update_request+0x3ac/0x924
->> [  C206]  scsi_end_request+0x54/0x350
->> [  C206]  scsi_io_completion+0xf0/0x6f4
->> [  C206]  scsi_finish_command+0x214/0x228
->> [  C206]  scsi_softirq_done+0x170/0x1a4
->> [  C206]  blk_done_softirq+0x100/0x194
->> [  C206]  __do_softirq+0x350/0x790
->> [  C206]  irq_exit+0x200/0x26c
->> [  C206]  handle_IPI+0x2e8/0x514
->> [  C206]  gic_handle_irq+0x224/0x228
->> [  C206]  el1_irq+0xb8/0x140
->> [  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
->> [  C206]  do_task_dead+0x88/0xf8
->> [  C206]  do_exit+0xd5c/0x10fc
->> [  C206]  do_group_exit+0xf4/0x110
->> [  C206]  get_signal+0x280/0xdd8
->> [  C206]  do_notify_resume+0x720/0x968
->> [  C206]  work_pending+0x8/0x10
->>
->> Before the offensive commit, wake_up_process() will prevent this from
->> happening by taking the pi_lock and bail out immediately if TASK_DEAD is
->> set.
->>
->> if (!(p->state & TASK_NORMAL))
->> 	goto out;
+> Audio MCLK source option is selected with a 4:1 MUX
+> controller using MCLK Select bits in SAI xCR2 register.
 > 
-> Nice description, thanks.
+> On imx6/7 mclk0 and mclk1 always point to the same clock
+> source. Anyhow, this is no longer true for imx8.
 > 
-> And...  ouch.  blk_wake_io_task() is a scary thing - changing a task to
-> TASK_RUNNING state from interrupt context.  I wonder whether the
-> assumptions which that is making hold true in all situations even after
-> this change.
+> For this reason, we need to add mclk0 and handle it
+> in a generic way in SAI driver.
 > 
-> Is polled block IO important enough for doing this stuff?
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6sx.dtsi | 6 ++++--
+>  arch/arm/boot/dts/imx6ul.dtsi | 9 ++++++---
+>  arch/arm/boot/dts/imx7s.dtsi  | 9 ++++++---
 
-Andrew, you missed the improved patch, you were CC'ed on that one too
-and I queued it up a few hours ago:
+These are dtsi/dts files that have SAI missing mclk0:
+arch/arm/boot/dts/imx6ul.dtsi
+arch/arm/boot/dts/imx6sx.dtsi
+arch/arm/boot/dts/ls1021a.dtsi
+arch/arm/boot/dts/imx7s.dtsi
+arch/arm/boot/dts/vfxxx.dtsi
+arch/arm64/boot/dts/freescale/imx8mq.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
 
-http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=6f3ead091fe2a8fb57a5996fe8b94237a896c6e9
+Would it be possible for you to update the others also?
 
-Please drop this one.
-
->> Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
-> 
-> That will be needing a cc:stable, no?
-
-Also added that when I did.
-
--- 
-Jens Axboe
-
+Thanks
+Nicolin
