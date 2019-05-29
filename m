@@ -2,114 +2,156 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938A821873
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB02081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WcqJPV36"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KB/ZAgwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfE2NO5 (ORCPT
+        id S1727139AbfE2NPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:14:57 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34210 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbfE2NO4 (ORCPT
+        Wed, 29 May 2019 09:15:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42523 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfE2NPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:14:56 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v18so2048640lfi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:14:56 -0700 (PDT)
+        Wed, 29 May 2019 09:15:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 33so1352748pgv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zo8/tL88lhYZ8ZmjXhe5I0ivQ63AMHIIXfJiG0SngrI=;
-        b=WcqJPV36GoYCJyCKWssunS/8jjCOcm7506dwRBLhvYgsNR0UdI2bR6S+PaChd3NF+e
-         P+/GUrP8I1gxdIuXwHh6CxrPM6FsQK897PtueXW2sc688u6UEVtahdPaDHpbLdURczG/
-         exuh5TP/Fn7NuWWJubwb5BOU06YIqB0/o8baMnCRHH/ihY5uaT1si7LXcC8p9MWXL18d
-         oOzuzN3xy5AjXeHWyQmqeSM1pM2ZeR9RQEvA5xn86EDD7CpzITSwgBRLK8NSiZHIhZG2
-         4dGKz3NjhIgq/QlLySTSs2ZLnXWGPjQaDD2AF5PW0kac6rHkp3GF9xtJmzZ2Gi7XnFzZ
-         e6Cw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN5neQLEPuy8rf1hiSBhjEvuwhf5Or8I1z3QH2reqRo=;
+        b=KB/ZAgwVtpsscHpxRL2WxEnZSjd07Gwyz2fitS1PZiXG05ZDobhExv0V3qnjvyd5u1
+         IQ9J9BTglpmDw0bu8hG5dkRuNsrk8peU3jiDOnhitl1YfMgq1x1OG9zwddO7K8QCiQcL
+         yYbEaDkBlTyxSKY5Az8//PsZMu9hRaHjjylWtv8Mm93hliHX8wl/rQmOu0UpzUa5z2Ni
+         syP6arMk6/g+h0pRaE6Z+/OuQQeogHLblUZyFQ7mxjFdi1JCizncxqQ0NBZB8438Fz7l
+         4XmvoJJsbeEcOSlCIZsRYFNiKQqi74X096iz9lgxtysgSLcsgL3/+sac2FmVr1HTYWFh
+         CvZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zo8/tL88lhYZ8ZmjXhe5I0ivQ63AMHIIXfJiG0SngrI=;
-        b=Ls6ULa/ri8kfVTHTQeu35CEzIVd34hD852uw4wTejDWI+bep3+hE+/afynH23jRTJ4
-         CfYtQWYcGSSdXHGwsq67ri/An2vIgAhPKeUEQEruyRRqqLUK4aUVVYZt1pT+dmxdoqkj
-         dgWQtU0WXnnKrZQ9REPxeoUpLdLyYBbTZZWW+fM3HiWud4t5PEbpmblpv8o1O/2llNBG
-         Uh+JNmu2qzKkCNoJw+9k7iN7cWXZAtf8eysap5LXEsvsYFhxRybDnS8RE9BriGooTaDE
-         CJbfgdCjrwX6pJAdqJmhU+Ehz8QxnJHvQRfbcx0QbXSPxPLH3h5NkSxnnIHq2XAEhXQG
-         VyXw==
-X-Gm-Message-State: APjAAAWCxAgsBnDB1tIWdtBqGUCu2Xdhg3+Nowwg9jauW0Skq21sLaiE
-        wThnMUZsuaxhUDs1h7Q6lQFAkNEw6Y7BRwFIsBZN
-X-Google-Smtp-Source: APXvYqw1iYjVpziXjswrmlU2rI862bFdoZ/LKvGEmuAIzGxOxKMlkrc2fuaVbN9QOa1jFVN2h6hTKGffJR8WNirL26o=
-X-Received: by 2002:ac2:4358:: with SMTP id o24mr5608001lfl.13.1559135695377;
- Wed, 29 May 2019 06:14:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN5neQLEPuy8rf1hiSBhjEvuwhf5Or8I1z3QH2reqRo=;
+        b=irihqoydtV5wgXYCtenlU6E6DFQJKGET4EB3myWnklLBLcxjdrmp30NtWnNUulsA/j
+         Exyo3LljcNmNmPHp9sAjhZNdTsjmH5CJ/oaiunxsDQwzu1VVDPZc7pinKwbU214iPeMW
+         0kaTZt6RlL0mnkKSxY0tM1PoTD9Zh6HbWxvCv7/HWtUV2wcTysFmSZwUGajvCbKFrjXc
+         jXMSyfgjZBAnGwDgpD0OdhnpYSYEhGq/C93S1Ov0N3+mS5CB+s1mLXZEnQVaedtj3zrr
+         2gC1syd9SX8/yRZcxYwQxPtlL/E2nHw82rwNa0BUmrF2RQoLTzPdIY+Ig6E7Uy/yns2G
+         +KEw==
+X-Gm-Message-State: APjAAAWOnxO7AEXLefpB1oBfszKG5yr8nJeLfgT54FkPKvPqyDbvl/+8
+        PI+1qFI4O6QWKjkpHU0MRRI=
+X-Google-Smtp-Source: APXvYqxqk6JDonQnV/wxu8JWsy8K0bS3rk427TwK4U+WoZy6ABfTmVuXj+UIawze5M0YKtA8Sa13ig==
+X-Received: by 2002:a62:4d03:: with SMTP id a3mr152436226pfb.2.1559135747593;
+        Wed, 29 May 2019 06:15:47 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.67.155])
+        by smtp.gmail.com with ESMTPSA id o6sm17900752pfo.164.2019.05.29.06.15.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:15:46 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de, qader.aymen@gmail.com,
+        kim.jamie.bradley@gmail.com, keescook@chromium.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: rts5208: Remove negations
+Date:   Wed, 29 May 2019 18:45:31 +0530
+Message-Id: <20190529131531.6368-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
- <CAHC9VhRW9f6GbhvvfifbOzd9p=PgdB2gq1E7tACcaqvfb85Y8A@mail.gmail.com>
- <3299293.RYyUlNkVNy@x2> <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
-In-Reply-To: <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 29 May 2019 09:14:44 -0400
-Message-ID: <CAHC9VhScO5yfnM2tn=_6OKtuU5P_LukPfmnE06E0hVE-2e++uw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
-To:     Richard Guy Briggs <rgb@redhat.com>,
-        Steve Grubb <sgrubb@redhat.com>
-Cc:     Dan Walsh <dwalsh@redhat.com>, Neil Horman <nhorman@tuxdriver.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Mrunal Patel <mpatel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 8:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-05-28 19:00, Steve Grubb wrote:
-> > On Tuesday, May 28, 2019 6:26:47 PM EDT Paul Moore wrote:
-> > > On Tue, May 28, 2019 at 5:54 PM Daniel Walsh <dwalsh@redhat.com> wrote:
+Previously return variable fake_para was being negated before return.
+For simplification, fake_para can be changed to valid_para, which is
+returned without negation (corresponding values swapped accordingly).
+Further, the function names check_sd_current_prior and check_sd_speed_prior
+can be changed to valid_sd_current_prior and valid_sd_speed_prior
+respectively for greater clarity on the purpose of the functions.
 
-...
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/rts5208/rtsx_chip.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> > > > Mrunal Patel (maintainer of CRI-O) and I have reviewed the API, and
-> > > > believe this is something we can work on in the container runtimes team
-> > > > to implement the container auditing code in CRI-O and Podman.
-> > >
-> > > Thanks Dan.  If I pulled this into a branch and built you some test
-> > > kernels to play with, any idea how long it might take to get a proof
-> > > of concept working on the cri-o side?
-> >
-> > We'd need to merge user space patches and let them use that instead of the
-> > raw interface. I'm not going to merge user space until we are pretty sure the
-> > patch is going into the kernel.
->
-> I have an f29 test rpm of the userspace bits if that helps for testing:
->         http://people.redhat.com/~rbriggs/ghak90/git-1db7e21/
->
-> Here's what it contains (minus the last patch):
->         https://github.com/linux-audit/audit-userspace/compare/master...rgbriggs:ghau40-containerid-filter.v7.0
-
-Yes, exactly.  Just as I plan to start making some test kernels for
-people to play with (assuming v6 looks okay), I think it would be good
-if Steve could make a test build of the latest audit userspace with
-the audit container ID patches.  It really shouldn't be that hard, and
-the benefits should far outweigh any time spent generating the
-tree/builds.
-
+diff --git a/drivers/staging/rts5208/rtsx_chip.c b/drivers/staging/rts5208/rtsx_chip.c
+index 76c35f3c0208..17c4131f5f62 100644
+--- a/drivers/staging/rts5208/rtsx_chip.c
++++ b/drivers/staging/rts5208/rtsx_chip.c
+@@ -598,38 +598,38 @@ int rtsx_reset_chip(struct rtsx_chip *chip)
+ 	return STATUS_SUCCESS;
+ }
+ 
+-static inline int check_sd_speed_prior(u32 sd_speed_prior)
++static inline int valid_sd_speed_prior(u32 sd_speed_prior)
+ {
+-	bool fake_para = false;
++	bool valid_para = true;
+ 	int i;
+ 
+ 	for (i = 0; i < 4; i++) {
+ 		u8 tmp = (u8)(sd_speed_prior >> (i * 8));
+ 
+ 		if ((tmp < 0x01) || (tmp > 0x04)) {
+-			fake_para = true;
++			valid_para = false;
+ 			break;
+ 		}
+ 	}
+ 
+-	return !fake_para;
++	return valid_para;
+ }
+ 
+-static inline int check_sd_current_prior(u32 sd_current_prior)
++static inline int valid_sd_current_prior(u32 sd_current_prior)
+ {
+-	bool fake_para = false;
++	bool valid_para = true;
+ 	int i;
+ 
+ 	for (i = 0; i < 4; i++) {
+ 		u8 tmp = (u8)(sd_current_prior >> (i * 8));
+ 
+ 		if (tmp > 0x03) {
+-			fake_para = true;
++			valid_para = false;
+ 			break;
+ 		}
+ 	}
+ 
+-	return !fake_para;
++	return valid_para;
+ }
+ 
+ static int rts5208_init(struct rtsx_chip *chip)
+@@ -796,13 +796,13 @@ int rtsx_init_chip(struct rtsx_chip *chip)
+ 		chip->rw_fail_cnt[i] = 0;
+ 	}
+ 
+-	if (!check_sd_speed_prior(chip->sd_speed_prior))
++	if (!valid_sd_speed_prior(chip->sd_speed_prior))
+ 		chip->sd_speed_prior = 0x01040203;
+ 
+ 	dev_dbg(rtsx_dev(chip), "sd_speed_prior = 0x%08x\n",
+ 		chip->sd_speed_prior);
+ 
+-	if (!check_sd_current_prior(chip->sd_current_prior))
++	if (!valid_sd_current_prior(chip->sd_current_prior))
+ 		chip->sd_current_prior = 0x00010203;
+ 
+ 	dev_dbg(rtsx_dev(chip), "sd_current_prior = 0x%08x\n",
 -- 
-paul moore
-www.paul-moore.com
+2.19.1
+
