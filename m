@@ -2,97 +2,142 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AF2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF29EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1923C23CE6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:08:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Alfsrw1M"
+	by mail.kernel.org (Postfix) with ESMTP id AF35A23D05
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfE2QID (ORCPT
+        id S1727132AbfE2QJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:08:03 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46770 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfE2QIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:08:02 -0400
-Received: by mail-qk1-f194.google.com with SMTP id a132so1781073qkb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:08:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fsh0TYYc8CcoupHMZiwDZqdBbvSIVmD8HEtsKuwww8s=;
-        b=Alfsrw1MVw34ZMTuaGUxB/ZqEsRTzwdDj0vXoeivqbB0oyFDAIptz8nj+2u3RnZVnL
-         jAkqVvr3hZEHvsxwiYYKjvuRy7L8SLIhoM+iZgtk5APZMQBzygh9x3JvHKhqPFu/GrrJ
-         kqGcJ+4PNJWFHh0cl4JFydycISRCpMv5JilO8aoH2kakAl1Mi0oy29buspX8OLIcOer+
-         W9VeGsHHmC2Hpz7uOpb43qDTXKM5z7HFAmmCW9GMnylg1VwbyjEkEALrhGNBr4HBgwej
-         fJJLOLQjrUhhQHtbgpuLOJpQx1Rz9CupCAMAWIFCV3X3WV6h7ciLKihet+bDXWlb6XQv
-         mYRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fsh0TYYc8CcoupHMZiwDZqdBbvSIVmD8HEtsKuwww8s=;
-        b=DMZ5vKsa1GBplD6RtKf5WxMvNxhVtA0Gz5cUtQC3VwiCW18kt8NVuX4lBq0owJQsKn
-         u5OiD6YNCkbm845UjvM1SCxP7ZqLW+4mnh+9C4tUNtVD+M4u9TtjCSzN5fU5+e0ssT2X
-         GHFLsft4z6qLkVVT0trY9SoY/SsrNTBvsuJCg7utfLdH5OxLi4wWoGgFXeyndnWbPDtI
-         5XeMxCB+XoehHD00DetYZ4JtxbvC8xufTzkWrIWTEPpygYH7kKwVGJpkuc2p5AjVUk9O
-         E+XikP863lzXMnHRLKJzJYlS3+SXqToEalTn3y0iKUAcIgLeG2AuMIuifc6g1MGtM19v
-         XNyw==
-X-Gm-Message-State: APjAAAXAd5OKupiGW2jjnDUu7k/pQkDIM1F5GBsZDuvMj+Xsi8/RCTMl
-        eLvULUQrx48AGo8qP57iInS8LuDVF1Q=
-X-Google-Smtp-Source: APXvYqxR4BNFqVP5+qkd0J3oYODmAEzobBbmiVkKU9yYgPMKGfDxqubNW01C3jR16936S7t0IZ85Xw==
-X-Received: by 2002:a05:620a:13f9:: with SMTP id h25mr9603277qkl.283.1559146081685;
-        Wed, 29 May 2019 09:08:01 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id r186sm518843qkd.95.2019.05.29.09.08.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 09:08:01 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hW17Q-0001kD-Je; Wed, 29 May 2019 13:08:00 -0300
-Date:   Wed, 29 May 2019 13:08:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mlx5: avoid 64-bit division
-Message-ID: <20190529160800.GA6680@ziepe.ca>
-References: <20190520111902.7104DE0184@unicorn.suse.cz>
+        Wed, 29 May 2019 12:09:46 -0400
+Received: from mail.us.es ([193.147.175.20]:54564 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfE2QJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:09:45 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 23EE9C328E
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:09:43 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 15451DA704
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:09:43 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id EEB98DA711; Wed, 29 May 2019 18:09:42 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id BAFD5DA704;
+        Wed, 29 May 2019 18:09:40 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 29 May 2019 18:09:40 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 90D8D4265A31;
+        Wed, 29 May 2019 18:09:40 +0200 (CEST)
+Date:   Wed, 29 May 2019 18:09:40 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH net v2] ethtool: Drop check for vlan etype and vlan tci
+ when parsing flow_rule
+Message-ID: <20190529160940.k2hnuoauaa4y2rga@salvia>
+References: <20190529151344.31267-1-maxime.chevallier@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520111902.7104DE0184@unicorn.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190529151344.31267-1-maxime.chevallier@bootlin.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
-> Commit 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-> breaks i386 build by introducing three 64-bit divisions. As the divisor
-> is MLX5_SW_ICM_BLOCK_SIZE() which is always a power of 2, we can replace
-> the division with bit operations.
+On Wed, May 29, 2019 at 05:13:44PM +0200, Maxime Chevallier wrote:
+> When parsing an ethtool flow spec to build a flow_rule, the code checks
+> if both the vlan etype and the vlan tci are specified by the user to add
+> a FLOW_DISSECTOR_KEY_VLAN match.
 > 
-> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> However, when the user only specified a vlan etype or a vlan tci, this
+> check silently ignores these parameters.
+> 
+> For example, the following rule :
+> 
+> ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
+> 
+> will result in no error being issued, but the equivalent rule will be
+> created and passed to the NIC driver :
+> 
+> ethtool -N eth0 flow-type udp4 action -1 loc 0
+> 
+> In the end, neither the NIC driver using the rule nor the end user have
+> a way to know that these keys were dropped along the way, or that
+> incorrect parameters were entered.
+> 
+> This kind of check should be left to either the driver, or the ethtool
+> flow spec layer.
+> 
+> This commit makes so that ethtool parameters are forwarded as-is to the
+> NIC driver.
+> 
+> Since none of the users of ethtool_rx_flow_rule_create are using the
+> VLAN dissector, I don't think this qualifies as a regression.
+> 
+> Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 > ---
->  drivers/infiniband/hw/mlx5/cmd.c  | 9 +++++++--
->  drivers/infiniband/hw/mlx5/main.c | 2 +-
->  2 files changed, 8 insertions(+), 3 deletions(-)
+> V2: Added Fixes: tag, targetted to -net.
+> 
+>  net/core/ethtool.c | 31 ++++++++++++++-----------------
+>  1 file changed, 14 insertions(+), 17 deletions(-)
+> 
+> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> index 4a593853cbf2..2fe86893e9b5 100644
+> --- a/net/core/ethtool.c
+> +++ b/net/core/ethtool.c
+> @@ -3010,26 +3010,23 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+>  		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
+>  		const struct ethtool_flow_ext *ext_m_spec = &fs->m_ext;
+>  
+> -		if (ext_m_spec->vlan_etype &&
+> -		    ext_m_spec->vlan_tci) {
+> -			match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
+> -			match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
+> +		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
+> +		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
 
-Applied to for-rc, thanks
+Could you just check for ext_m_spec->vlan_etype, then set vlan_tpid
+accordingly? ie.
 
-Jason
+        if (ext_m_spec->vlan_etype) {
+		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
+		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
+        }
+        if (ext_m_spec->vlan_tci) {
+                match->key.vlan.vlan_id = ...;
+                match->mask.vlan.vlan_id = ...;
+                match->key.vlan.vlan_priority = ...;
+                match->mask.vlan.vlan_priority = ...;
+        }
+
+        if (ext_m_spec->vlan_etype ||
+            ext_m_spec->vlan_tci) {
+		match->dissector.used_keys |=
+			BIT(FLOW_DISSECTOR_KEY_VLAN);
+		match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
+			offsetof(struct ethtool_rx_flow_key, vlan);
+        }
+
+Something like this above.
