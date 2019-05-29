@@ -2,112 +2,236 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2B5C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE195C072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DCE21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34AF21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="C9rPPdfa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVXxzt3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfE2Cqu (ORCPT
+        id S1726470AbfE2Cxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:46:50 -0400
-Received: from onstation.org ([52.200.56.107]:41642 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbfE2Cqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:46:50 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id AF6A73E93F;
-        Wed, 29 May 2019 02:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1559098009;
-        bh=aRBBhy0Kk6XSGsl/Ftb8O8lFKtAxihQWGmXQEY0I06w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C9rPPdfaKmSr7mTVb+0Lk2lfnDbgZbDzftRQhz3hjeRFgTNa0pRlOicd50dvk90EX
-         taUjiI1yBvgyypyXxKqtcP+/7WALm3KK7iRwqrpZxCxjplv7JEC7NEX91fCSLCDA4F
-         l27G7XLjh2AtIX3DNrY7JEldf2XaU3DKwU7EsExo=
-Date:   Tue, 28 May 2019 22:46:48 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5
- display support
-Message-ID: <20190529024648.GA13436@basecamp>
-References: <20190509020352.14282-1-masneyb@onstation.org>
- <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp>
- <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
- <20190529013713.GA13245@basecamp>
- <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+        Tue, 28 May 2019 22:53:37 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43614 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfE2Cxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 22:53:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so402899pgv.10;
+        Tue, 28 May 2019 19:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IRbOxDloc34+bVD1clrnHE8qeNgQWI5zIDtydL1C1Nk=;
+        b=SVXxzt3Szs/n4Egthe5l0wstUwHu0GteoKDAV1UOOTMEs4O42+JUV93q+YzJyiNbHS
+         y/Hrj+22ObeUhL9Llc6jnyxaaAhGn/yaYUNnI1J4TB05rzceiu9GQCVnIP08Mppaj1QT
+         Xkt0T9CIf4OWKlsTUUMkviEwe4Bn2+CGNhx0M5IY2sN31sDsU5GYOtR6Ep/Oh9/kON/O
+         9FPEErzHqo47d/ZlI+2KFsDWa+Fs4N1GptqE/yqqkQ9n+1AparOin8QDEiCvDTss6o1h
+         bFqeI9VJOVud2nwvWzMv227PCqhKFrVyoSb3eCQ8WvTbCWGtvbUKIzfoEwqQPH7x8gwe
+         Y9JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IRbOxDloc34+bVD1clrnHE8qeNgQWI5zIDtydL1C1Nk=;
+        b=RyD3URBBUo87M/UnQWRgtUrUWcfroRl26l5QYjMNpjz4M03e6VuaUkbtMgli15ZUa1
+         BNbfyQP0sKvsoPn6sGNPnSZjy7D0DL+Fq5nmMNS8p0+EppCeARgw1Y/F/vHE0/PLYKnk
+         z/x4YlRBLznu57tiPEpAycOTJb5wA2aat00t3hn6oHI7kUfKHe5i/IO9aojj4yHFvFGe
+         NN6IOC115yvzl3rH5zBtjg6P9xZN65OqtkwJLfrsBT7ILiP7AetCpvx5exidOaK+le1m
+         9/edQhbF31ffyHfb/GOU8TQjHvSZelaqsOS+mZJKZvLMdaYMaY4cYb/A1pplHubNh/11
+         t+Lg==
+X-Gm-Message-State: APjAAAW7qJlmcpEdQ8uFzMM158wDwL1ei9gvs0g+mPIplcRDu1MtHP+X
+        PnJE6ZusESS8MWks/JI5a20=
+X-Google-Smtp-Source: APXvYqwSGGDaSrL60LvaJmFCEVVVRHqpXuqZZDAXAzAI/Eqcp7AQAAnqTtBorkEQgcScBJHiEeOuLQ==
+X-Received: by 2002:a63:4826:: with SMTP id v38mr10318770pga.417.1559098415428;
+        Tue, 28 May 2019 19:53:35 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id x24sm3893935pjq.27.2019.05.28.19.53.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 19:53:34 -0700 (PDT)
+Date:   Tue, 28 May 2019 19:53:32 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, daniel.lezcano@linaro.org,
+        rui.zhang@intel.com
+Subject: Re: [PATCH] arm64: dts: ls1028a: Add Thermal Monitor Unit node
+Message-ID: <20190529025331.GB2419@localhost.localdomain>
+References: <20190425082640.37982-1-andy.tang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+In-Reply-To: <20190425082640.37982-1-andy.tang@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
-> > > Do you know if the nexus 5 has a video or command mode panel?  There
-> > > is some glitchyness with vblanks and command mode panels.
-> >
-> > Its in command mode. I know this because I see two 'pp done time out'
-> > messages, even on 4.17. Based on my understanding, the ping pong code is
-> > only applicable for command mode panels.
+On Thu, Apr 25, 2019 at 04:26:40PM +0800, Yuantian Tang wrote:
+> The Thermal Monitoring Unit (TMU) monitors and reports the
+> temperature from 2 remote temperature measurement sites
+> located on ls1028a chip.
+> Add TMU dts node to enable this feature.
 > 
-> Actually, the ping pong element exists in both modes, but 'pp done
-> time out' is a good indicator that it is command mode.
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+
+I dont see anything wrong from a thermal standpoint.
+
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
+
+Please get this via your arch tree maintainer to avoid merge conflicts.
+
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  114 ++++++++++++++++++++++++
+>  1 files changed, 114 insertions(+), 0 deletions(-)
 > 
-> Are you also seeing vblank timeouts?
-
-Yes, here's a snippet of the first one.
-
-[    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
-[    2.556020] [CRTC:49:crtc-0] vblank wait timed out
-[    2.556023] Modules linked in:
-[    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
-[    2.556038] Hardware name: Generic DT based system
-[    2.556056] Workqueue: events deferred_probe_work_func
-...
-
-> Do you have busybox?
-> 
-> Can you run -
-> sudo busybox devmem 0xFD900614
-> sudo busybox devmem 0xFD900714
-> sudo busybox devmem 0xFD900814
-> sudo busybox devmem 0xFD900914
-> sudo busybox devmem 0xFD900A14
-
-# busybox devmem 0xFD900614
-0x00020020
-# busybox devmem 0xFD900714
-0x00000000
-# busybox devmem 0xFD900814
-0x00000000
-# busybox devmem 0xFD900914
-0x00000000
-# busybox devmem 0xFD900A14
-0x00000000
-
-I get the same values with the mainline kernel and 4.17.
-
-Brian
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index b045812..a25f5fc 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -29,6 +29,7 @@
+>  			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&l2>;
+>  			cpu-idle-states = <&CPU_PH20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -39,6 +40,7 @@
+>  			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&l2>;
+>  			cpu-idle-states = <&CPU_PH20>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		l2: l2-cache {
+> @@ -398,6 +400,118 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		tmu: tmu@1f00000 {
+> +			compatible = "fsl,qoriq-tmu";
+> +			reg = <0x0 0x1f80000 0x0 0x10000>;
+> +			interrupts = <0 23 0x4>;
+> +			fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
+> +			fsl,tmu-calibration = <0x00000000 0x00000024
+> +					       0x00000001 0x0000002b
+> +					       0x00000002 0x00000031
+> +					       0x00000003 0x00000038
+> +					       0x00000004 0x0000003f
+> +					       0x00000005 0x00000045
+> +					       0x00000006 0x0000004c
+> +					       0x00000007 0x00000053
+> +					       0x00000008 0x00000059
+> +					       0x00000009 0x00000060
+> +					       0x0000000a 0x00000066
+> +					       0x0000000b 0x0000006d
+> +
+> +					       0x00010000 0x0000001c
+> +					       0x00010001 0x00000024
+> +					       0x00010002 0x0000002c
+> +					       0x00010003 0x00000035
+> +					       0x00010004 0x0000003d
+> +					       0x00010005 0x00000045
+> +					       0x00010006 0x0000004d
+> +					       0x00010007 0x00000045
+> +					       0x00010008 0x0000005e
+> +					       0x00010009 0x00000066
+> +					       0x0001000a 0x0000006e
+> +
+> +					       0x00020000 0x00000018
+> +					       0x00020001 0x00000022
+> +					       0x00020002 0x0000002d
+> +					       0x00020003 0x00000038
+> +					       0x00020004 0x00000043
+> +					       0x00020005 0x0000004d
+> +					       0x00020006 0x00000058
+> +					       0x00020007 0x00000063
+> +					       0x00020008 0x0000006e
+> +
+> +					       0x00030000 0x00000010
+> +					       0x00030001 0x0000001c
+> +					       0x00030002 0x00000029
+> +					       0x00030003 0x00000036
+> +					       0x00030004 0x00000042
+> +					       0x00030005 0x0000004f
+> +					       0x00030006 0x0000005b
+> +					       0x00030007 0x00000068>;
+> +			little-endian;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		thermal-zones {
+> +			core-cluster {
+> +				polling-delay-passive = <1000>;
+> +				polling-delay = <5000>;
+> +				thermal-sensors = <&tmu 0>;
+> +
+> +				trips {
+> +					core_cluster_alert: core-cluster-alert {
+> +						temperature = <85000>;
+> +						hysteresis = <2000>;
+> +						type = "passive";
+> +					};
+> +
+> +					core_cluster_crit: core-cluster-crit {
+> +						temperature = <95000>;
+> +						hysteresis = <2000>;
+> +						type = "critical";
+> +					};
+> +				};
+> +
+> +				cooling-maps {
+> +					map0 {
+> +						trip = <&core_cluster_alert>;
+> +						cooling-device =
+> +							<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +					};
+> +				};
+> +			};
+> +
+> +			ddr-controller {
+> +				polling-delay-passive = <1000>;
+> +				polling-delay = <5000>;
+> +				thermal-sensors = <&tmu 1>;
+> +
+> +				trips {
+> +					ddr_controller_alert: ddr-controller-alert {
+> +						temperature = <85000>;
+> +						hysteresis = <2000>;
+> +						type = "passive";
+> +					};
+> +
+> +					ddr_controller_crit: ddr-controller-crit {
+> +						temperature = <95000>;
+> +						hysteresis = <2000>;
+> +						type = "critical";
+> +					};
+> +				};
+> +
+> +				cooling-maps {
+> +					map0 {
+> +						trip = <&ddr_controller_alert>;
+> +						cooling-device =
+> +							<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+>  			compatible = "pci-host-ecam-generic";
+>  			reg = <0x01 0xf0000000 0x0 0x100000>;
