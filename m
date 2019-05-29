@@ -2,104 +2,111 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C5DC28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DABFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560DB21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juZrse+P"
+	by mail.kernel.org (Postfix) with ESMTP id 3AE24208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfE2Mji (ORCPT
+        id S1727141AbfE2Mj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:39:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36793 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfE2Mjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:39:36 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d21so1025725plr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 05:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/kUApmsHSgHDArihyUOta/cOfsm+uYS/iQzyr+N/nRo=;
-        b=juZrse+P5GXwZ9Mr9TkKumoLScyloKiktxo5FhhDWNI7LcrTnkDaRqPI33pWp7lXci
-         4Ogtx/AQdl1KsvONOwuev6kNPUPM7CSDW1fzkPN+LGbHwi7km0sPP4OMeR93q1fgBzye
-         acY72AJ8WkHQrDvdd8IHCMJnECysgVh5O2ooFvvhKi4JczqhdeEOyMJTbXpGqB8ammkC
-         OTDsmGibDQ53bftt6AioXhgzAP2WDApUJVAb6tXG/l01IivWJOuWNv3mwvb48Xi5K71X
-         XNHfJPlGTIDtNpYOj+rLNhh01dazq3y2O90/r7WVLu8jPnmVSDPbTRjhO3pUdkogLqLZ
-         ISCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/kUApmsHSgHDArihyUOta/cOfsm+uYS/iQzyr+N/nRo=;
-        b=o5IE+gtl4YimMPSj4fw5P8fMA8PfRtXIu4CYdNw9V6mAZGGNpVyhd7nGb2oaxPJSE8
-         B7lf55j7Fe03Qrpk48D0p3kpReTwSgqAELyHkJ0fn5iNDdnMpfCx5muqNirL9EL0Gc7f
-         CAvhiOZBuXtuShEGPaGkUQcQsb6yOxd/6vbTHQOhIChxGLh1WJ6qaMrXg9zPE8s/cUo8
-         WsewDlYu6/jfzoeXkcXtMoPWj7eqjCia4pknVRfPza0OcLEezrq9UvRKjTK8NnloL1ZC
-         eaMtSJh3jHkoQMGCoJfy3PGq8EYWy7GuCn4hr+OXgX2Kb2LbZ4MaRT9lQgPPLiOVCiDX
-         ZFvA==
-X-Gm-Message-State: APjAAAWxR+bn+Nxqej3XBM1POpjATmDE1tOzBzJM+GR69vLkISDnmr3Z
-        o6VqTjd8trQDOGIlj7nWIzQ=
-X-Google-Smtp-Source: APXvYqym4WR0k80SWtZ3I58trWkxoQJvuHmi/gCo6ctyQsvseOeEK4n+4Ibn1SPRYLidkJjLphA2mQ==
-X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr3670959plb.129.1559133576415;
-        Wed, 29 May 2019 05:39:36 -0700 (PDT)
-Received: from tom-pc.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id 124sm19018905pfe.124.2019.05.29.05.39.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 29 May 2019 05:39:35 -0700 (PDT)
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-To:     cl@linux.com
-Cc:     penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Dianzhang Chen <dianzhangchen0@gmail.com>
-Subject: [PATCH] mm/slab_common.c: fix possible spectre-v1 in kmalloc_slab()
-Date:   Wed, 29 May 2019 20:37:28 +0800
-Message-Id: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 May 2019 08:39:56 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45222 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbfE2Mj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:39:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8569080D;
+        Wed, 29 May 2019 05:39:55 -0700 (PDT)
+Received: from [10.1.196.108] (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2E023F59C;
+        Wed, 29 May 2019 05:39:53 -0700 (PDT)
+Subject: Re: [RFC 4/7] arm64: pmu: Add function implementation to update event
+ index in userpage.
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190528150320.25953-1-raphael.gault@arm.com>
+ <20190528150320.25953-5-raphael.gault@arm.com>
+ <20190529094659.GK2623@hirez.programming.kicks-ass.net>
+ <42a937dd-5cf6-6738-6f69-005fce64138f@arm.com>
+ <d6f40c6c-6a73-bd7f-e384-050bd9428631@arm.com>
+ <0100f2bd-7940-0b81-4c03-205b295a048f@arm.com>
+ <20190529123256.GT2623@hirez.programming.kicks-ass.net>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <7178bdfe-92d0-22b5-60cf-b67a976dc6a2@arm.com>
+Date:   Wed, 29 May 2019 13:39:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190529123256.GT2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `size` in kmalloc_slab() is indirectly controlled by userspace via syscall: poll(defined in fs/select.c), hence leading to a potential exploitation of the Spectre variant 1 vulnerability.
-The `size` can be controlled from: poll -> do_sys_poll -> kmalloc -> __kmalloc -> kmalloc_slab.
+Hi Peter,
 
-Fix this by sanitizing `size` before using it to index size_index.
+On 5/29/19 1:32 PM, Peter Zijlstra wrote:
+> On Wed, May 29, 2019 at 01:25:46PM +0100, Raphael Gault wrote:
+>> Hi Robin, Hi Peter,
+>>
+>> On 5/29/19 11:50 AM, Robin Murphy wrote:
+>>> On 29/05/2019 11:46, Raphael Gault wrote:
+>>>> Hi Peter,
+>>>>
+>>>> On 5/29/19 10:46 AM, Peter Zijlstra wrote:
+>>>>> On Tue, May 28, 2019 at 04:03:17PM +0100, Raphael Gault wrote:
+>>>>>> +static int armv8pmu_access_event_idx(struct perf_event *event)
+>>>>>> +{
+>>>>>> +    if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
+>>>>>> +        return 0;
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * We remap the cycle counter index to 32 to
+>>>>>> +     * match the offset applied to the rest of
+>>>>>> +     * the counter indeces.
+>>>>>> +     */
+>>>>>> +    if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
+>>>>>> +        return 32;
+>>>>>> +
+>>>>>> +    return event->hw.idx;
+>>>>>
+>>>>> Is there a guarantee event->hw.idx is never 0? Or should you, just like
+>>>>> x86, use +1 here?
+>>>>>
+>>>>
+>>>> You are right, I should use +1 here. Thanks for pointing that out.
+>>>
+>>> Isn't that already the case though, since we reserve index 0 for the
+>>> cycle counter? I'm looking at ARMV8_IDX_TO_COUNTER() here...
+>>>
+>>
+>> Well the current behaviour is correct and takes care of the zero case with
+>> the ARMV8_IDX_CYCLE_COUNTER check. But using ARMV8_IDX_TO_COUNTER() and add
+>> 1 would also work. However this seems indeed redundant with the current
+>> value held in event->hw.idx.
+> 
+> Note that whatever you pick now will become ABI. Also note that the
+> comment/pseudo-code in perf_event_mmap_page suggests to use idx-1 for
+> the actual hardware access.
+> 
 
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
----
- mm/slab_common.c | 2 ++
- 1 file changed, 2 insertions(+)
+Indeed that's true. As for the pseudo-code in perf_event_mmap_page. It 
+is compatible with what I do here. The two approach are only different 
+in form but it is in both case necessary to subtract 1 on the returned 
+value in order to access the correct hardware counter.
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba..41c7e34 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -21,6 +21,7 @@
- #include <asm/tlbflush.h>
- #include <asm/page.h>
- #include <linux/memcontrol.h>
-+#include <linux/nospec.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/kmem.h>
-@@ -1056,6 +1057,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
- 		if (!size)
- 			return ZERO_SIZE_PTR;
- 
-+		size = array_index_nospec(size, 193);
- 		index = size_index[size_index_elem(size)];
- 	} else {
- 		if (WARN_ON_ONCE(size > KMALLOC_MAX_CACHE_SIZE))
+Thank you,
+
 -- 
-2.7.4
-
+Raphael Gault
