@@ -2,85 +2,109 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56630C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C285C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5FA20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269F720B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ujCnVLHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfE2I70 (ORCPT
+        id S1726104AbfE2JDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:59:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17603 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfE2I7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:59:25 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7F31D5AE3A8FF4DC23B1;
-        Wed, 29 May 2019 16:59:23 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
- 16:59:13 +0800
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-To:     David Miller <davem@davemloft.net>
-CC:     <hkallweit1@gmail.com>, <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>
-References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
- <20190528.235806.323127882998745493.davem@davemloft.net>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
-Date:   Wed, 29 May 2019 16:59:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 29 May 2019 05:03:48 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60844 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2JDs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 05:03:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DQecSnjdhg6zaZt0Sm+a9voWoeWmhZYoxUEy6QCaRzg=; b=ujCnVLHXd3svo0YUlFR+yRj41
+        NfM8tDeaWnjSh4BH8141kURu7wQ4RIBK4RryFX7XjTYCAPKHQTTE568TKC7nKa3OwddUxxADTNb/K
+        O1FGblx9WzUKZb+yn07+yc5QIO4BhwIubOxLXuwpdwrrqxi2YyA8bUlVfU53ZhBvqyQklYmODyFDB
+        TsJACk7PpPhbAr7HcA4UKNXCuHt0HIgfA0TKe/SEEh0sIhzS781jKbAOOn73xcFTVBhhn1p0SsafH
+        MkjVKuzIYtswUA0BP+KjJIyS6m3ySpsPWkZCibV/0snf5/ct28YMIH7LN0hhxggX5MCnCxMX6yQkH
+        pJIQMWO3g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVuUd-0002lp-SK; Wed, 29 May 2019 09:03:32 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 56E9C201A7E42; Wed, 29 May 2019 11:03:30 +0200 (CEST)
+Date:   Wed, 29 May 2019 11:03:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190529090330.GI2623@hirez.programming.kicks-ass.net>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
 MIME-Version: 1.0
-In-Reply-To: <20190528.235806.323127882998745493.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/29 14:58, David Miller wrote:
-> From: Yunsheng Lin <linyunsheng@huawei.com>
-> Date: Mon, 27 May 2019 09:47:54 +0800
-> 
->> When user has configured a large number of virtual netdev, such
->> as 4K vlans, the carrier on/off operation of the real netdev
->> will also cause it's virtual netdev's link state to be processed
->> in linkwatch. Currently, the processing is done in a work queue,
->> which may cause worker starvation problem for other work queue.
->>
->> This patch releases the cpu when link watch worker has processed
->> a fixed number of netdev' link watch event, and schedule the
->> work queue again when there is still link watch event remaining.
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> 
-> Why not rtnl_unlock(); yield(); rtnl_lock(); every "100" events
-> processed?
-> 
-> That seems better than adding all of this overhead to reschedule the
-> workqueue every 100 items.
+On Tue, May 28, 2019 at 11:31:45PM +0200, Jiri Kosina wrote:
 
-One minor concern, the above solution does not seem to solve the cpu
-starvation for other normal workqueue which was scheduled on the same
-cpu as linkwatch. Maybe I misunderstand the workqueue or there is other
-consideration here? :)
+> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> index a7d966964c6f..bde8ce1f6c6c 100644
+> --- a/arch/x86/power/cpu.c
+> +++ b/arch/x86/power/cpu.c
+> @@ -299,9 +299,20 @@ int hibernate_resume_nonboot_cpu_disable(void)
+>  	 * address in its instruction pointer may not be possible to resolve
+>  	 * any more at that point (the page tables used by it previously may
+>  	 * have been overwritten by hibernate image data).
+> +	 *
+> +	 * First, make sure that we wake up all the potentially disabled SMT
+> +	 * threads which have been initially brought up and then put into
+> +	 * mwait/cpuidle sleep.
+> +	 * Those will be put to proper (not interfering with hibernation
+> +	 * resume) sleep afterwards, and the resumed kernel will decide itself
+> +	 * what to do with them.
+>  	 */
+>  	smp_ops.play_dead = resume_play_dead;
 
-Anyway, I will implemet it as you suggested and test it before posting V2.
-Thanks.
+Oooh, teh yuck!, but this explains my confusion from the other thread.
 
-> 
-> .
-> 
+> +	ret = cpuhp_smt_enable();
+> +	if (ret)
+> +		goto out;
+>  	ret = disable_nonboot_cpus();
+> +out:
+>  	smp_ops.play_dead = play_dead;
+>  	return ret;
+>  }
+
+I think you can avoid the goto like:
+
+	ret = cpuhp_smt_enable();
+	if (ret)
+		return ret;
+
+	smp_ops.play_dead = resume_play_dead;
+	ret = disable_nonboot_cpus();
+	smp_ops.play_dead = play_dead;
+	return ret;
+
+We don't need the play dead change to online CPUs.
 
