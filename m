@@ -2,118 +2,166 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF920C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDC6C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBE82070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OfcezbJf"
+	by mail.kernel.org (Postfix) with ESMTP id 68568217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559125928;
+	bh=tSyB8R9LSCvDZM0gfCgG+2cjclheMogFDxE5DrDOEOk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=o3A1LtkkQ6bY7auXRHmikkoOClFaKPzO3oz5H6GSu+Ty5Iry0KtJ08IX05hCghVyc
+	 1aMWI8jzpPZNZz+l8om5OdqnUAJJwTfDQehIVweS/wiOxAJ8qNcJe2Ry0nLftLDCCe
+	 K+mz4StrW2rjT5hsV2bOzBLFm+gyu5GOxUG9OeHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfE2Ka7 (ORCPT
+        id S1726787AbfE2KcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:30:59 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:42298 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725990AbfE2Ka6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:30:58 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 29 May 2019 06:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfE2KcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:32:07 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id ABC78C0B59;
-        Wed, 29 May 2019 10:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559125866; bh=L/zcOt3uTfx3QhugJlownAMFQSm3dP+6sx2sVmiAnyQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=OfcezbJfSbiSnMClNxogVHod+fr2745De2QQ7yOrncJNWbJ4Kr7y50mxqm6okcCs/
-         Si0HOCdbJBNGEzsuQUYrUt4C9vmhQ9K7tdaf1g3GBjpoJ2F/i0IXtouSu0mokP22ry
-         sB0FBWiv6mm25LRF6Toev9LeuvfoW1/Kj/SJyUYQ0YUCNVha/M7+cK0FsXJjDrJ5gV
-         ArF+B4G5fLTtD6CsqGcK4Z3lDZlw/8YGGL5IS4oKxnM8/xqW+v2AkcA34F2gWMJ45b
-         4BeKIsRZdmUNzlOCTqRAHcoWQ6SOgtOJaNEhU3/EAmBdm+eBbWLySxOkGrXS2nozbR
-         kpofpnVlRFBSQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 55124A00A3;
-        Wed, 29 May 2019 10:30:49 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 May 2019 03:30:49 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 29 May 2019 12:30:47 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Biao Huang <biao.huang@mediatek.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        "jianguo.zhang@mediatek.com" <jianguo.zhang@mediatek.com>,
-        "boon.leong.ong@intel.com" <boon.leong.ong@intel.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Subject: RE: [v5, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Topic: [v5, PATCH] net: stmmac: add support for hash table size
- 128/256 in dwmac4
-Thread-Index: AQHVFgFMgnlWoV6tbES+hcM7ZfkqbqaB5uaw
-Date:   Wed, 29 May 2019 10:30:46 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9334CE@DE02WEMBXB.internal.synopsys.com>
-References: <1559122268-22545-1-git-send-email-biao.huang@mediatek.com>
- <1559122268-22545-2-git-send-email-biao.huang@mediatek.com>
-In-Reply-To: <1559122268-22545-2-git-send-email-biao.huang@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 0787421721;
+        Wed, 29 May 2019 10:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559125926;
+        bh=tSyB8R9LSCvDZM0gfCgG+2cjclheMogFDxE5DrDOEOk=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=P5l7mvrYQpdnqXe/9pQu4/3eUvCtSn1lisXJrdp4GmIP/xBunN5o33lLawdTA3QrG
+         ITgdZHdfivXS6ZTG2JSf6ozrCLQo03I+JsYTEK8D/FqHjGkkywNXkC8918sRRSpBOa
+         X6ohzL8SBf2QZTTB9eJB5VZon2Tk34Hqhi3R/9PI=
+Date:   Wed, 29 May 2019 12:32:02 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] x86/power: Fix 'nosmt' vs. hibernation triple fault during
+ resume
+In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
-Date: Wed, May 29, 2019 at 10:31:08
+From: Jiri Kosina <jkosina@suse.cz>
 
-> 1. get hash table size in hw feature reigster, and add support
-> for taller hash table(128/256) in dwmac4.
-> 2. only clear GMAC_PACKET_FILTER bits used in this function,
-> to avoid side effect to functions of other bits.
->=20
-> stmmac selftests output log:
-> 	ethtool -t eth0
-> 	The test result is FAIL
-> 	The test extra info:
-> 	 1. MAC Loopback                 0
-> 	 2. PHY Loopback                 -95
-> 	 3. MMC Counters                 0
-> 	 4. EEE                          -95
-> 	 5. Hash Filter MC               0
-> 	 6. Perfect Filter UC            0
-> 	 7. MC Filter                    0
-> 	 8. UC Filter                    0
-> 	 9. Flow Control                 1
+As explained in
 
-Thanks for testing, this patch looks good to me.
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
-Do you want to check why Flow Control selftest is failing ?
+we always, no matter what, have to bring up x86 HT siblings during boot at 
+least once in order to avoid first MCE bringing the system to its knees.
 
+That means that whenever 'nosmt' is supplied on the kernel command-line, 
+all the HT siblings are as a result sitting in mwait or cpudile after 
+going through the online-offline cycle at least once.
 
-Thanks,
-Jose Miguel Abreu
+This causes a serious issue though when a kernel, which saw 'nosmt' on its 
+commandline, is going to perform resume from hibernation: if the resume 
+from the hibernated image is successful, cr3 is flipped in order to point 
+to the address space of the kernel that is being resumed, which in turn 
+means that all the HT siblings are all of a sudden mwaiting on address 
+which is no longer valid.
+
+That results in triple fault shortly after cr3 is switched, and machine 
+reboots.
+
+Fix this by always waking up all the SMT siblings before initiating the 
+'restore from hibernation' process; this guarantees that all the HT 
+siblings will be properly carried over to the resumed kernel waiting in 
+resume_play_dead(), and acted upon accordingly afterwards, based on the 
+target kernel configuration.
+
+Cc: stable@vger.kernel.org # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+---
+
+v1 -> v2:
+	restructure error handling as suggested by peterz
+	add Rafael's ack
+
+ arch/x86/power/cpu.c | 10 ++++++++++
+ include/linux/cpu.h  |  2 ++
+ kernel/cpu.c         |  2 +-
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index a7d966964c6f..513ce09e9950 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable(void)
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
+ 	 */
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 3813fe45effd..b5523552a607 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -201,10 +201,12 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
+ #else
+ # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
+ #endif
+ 
+ /*
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f2ef10460698..3ff5ce0e4132 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+
+-- 
+Jiri Kosina
+SUSE Labs
+
