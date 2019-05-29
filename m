@@ -2,104 +2,209 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C8C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7DDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FBC208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:54:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="b7fhwy9K"
+	by mail.kernel.org (Postfix) with ESMTP id A481F208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfE2JyJ (ORCPT
+        id S1726626AbfE2J51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:54:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34515 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfE2JyI (ORCPT
+        Wed, 29 May 2019 05:57:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36702 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfE2J5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:54:08 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j24so1820343ljg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lNs/p+JI3D1zMvTvnIvX3YzQkmwKplKfx1eyegHlUGs=;
-        b=b7fhwy9KHyUHN1+JlY54Izh0UyO3XPFFISf05d3A09WpwVuLvrThPkOQMuiPkXAHd2
-         av6G2ajatkgXHfRYOzoCM73Yl7wigIk/GrANkMIGKS0APqqPU8ml399Qb+v4pbmh3kd6
-         8y9/xQ49KErSRP5pPjn1hWTvlBpTrg8GTFRC8fdrGE++BIime5+AGff2+5UUnMDQfXFk
-         Vvh7BeWG2cAK2O6qE/SzBVHqhgh019YeN0H0NM71HAyAE0UoVUa5bk1oPzWvK9d3Fo2o
-         tImwEqaC5PM0ibTBMRTPr956imoYfWybaalHs2WbQ4RmAaj5VaZ3Zwvh9WBR09VmmcFc
-         Ap+w==
+        Wed, 29 May 2019 05:57:25 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a8so2838921edx.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:57:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lNs/p+JI3D1zMvTvnIvX3YzQkmwKplKfx1eyegHlUGs=;
-        b=YyT2eUrSv8qvW5n0Ux2ZgpzPMV9c/zjnvBVFYt0jDDHvNZau50TiVIz+zrVHXt7HX3
-         emNi5sxXEOjcxEv5KocWIUQYG/zYTHyEwy6pSdbcV4TkOqHDwHseG8Nn76Au+GZxIzVP
-         dItK/7RdcX4nQ9lm7gTfs8vyMwnpc2j0MF/ZQgmOFpLWhAZOKgzUKoham0BX/e+xNOgq
-         TE1mLvctzUQBlVhyXrHUsrOhLcdl11qcu0cLtf/iCqlVpcJBwfissV7v6WQqAW3OhsGU
-         gJYM/SestfGtdDF6NxMMpO4hlPQwGRC+Rh09LWKNcfCibgPzdni3qE+DSHxa1FCP0QJ0
-         SI2Q==
-X-Gm-Message-State: APjAAAWKe3F+IcpbCxrzc8KUgPGzKdLA6JBdIdVxuxn7/iAfRGH7hfEd
-        A1zU4PzVr10Pz6WFeuAMOU3QhzkeeD4=
-X-Google-Smtp-Source: APXvYqy3vMRQTqltRLbu1to0t8Uw2L6vp3NNLrEAEyPljntAyQr8TzYLsDyYWbDU7gEOUTVGvhAhRg==
-X-Received: by 2002:a2e:9193:: with SMTP id f19mr26590199ljg.111.1559123646154;
-        Wed, 29 May 2019 02:54:06 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.1])
-        by smtp.gmail.com with ESMTPSA id g81sm3390192lfg.22.2019.05.29.02.54.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 02:54:05 -0700 (PDT)
-Subject: Re: [PATCH bpf] libbpf: Return btf_fd in libbpf__probe_raw_btf
-To:     Michal Rostecki <mrostecki@opensuse.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190529082941.9440-1-mrostecki@opensuse.org>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <e28170e1-cf06-87ef-812b-9b9e6185d925@cogentembedded.com>
-Date:   Wed, 29 May 2019 12:53:42 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        bh=y53TCSsKTwv22KtbB3ddc4kHEiT+bShgIe40w1C8rMU=;
+        b=ON48xYcDy6j5xGXVcNk6UjJQBOGrqWy5nOJZgPy2aE/FqglBzvFJdVfPmOxxpxvF+W
+         JkZwx/rkAwRETLrgw4hvSNiY7dKy0HKW7Y/8/PLqpb7pbCvCC56oEJNb/JRITJiPp481
+         be7pcNPBI7e9j1/1Df63sOf2MBvEE8RkrxJaAG0tbo/SmNG/0dZzbjXcn3zXHYDpla59
+         nm8bTCqoOqS+cB172i6Fy33GRET5mkl0ciEJPiFZ1XVPOowD89QAtcqjAFA5mtG3KZMq
+         Pk9qLJbM1DUAwZlZBVgrrlP7z18h+a0pkhJD+grX2JxmdAj4y1awt5INXRzOmvpZxLrT
+         Iq0w==
+X-Gm-Message-State: APjAAAVsmNo1MI2DtqSeMnJfh+il3pwvUJU1vTS7dW4sDzmS5UalfTpY
+        o/TOpVta4qt2P6fCeYgnyWq/9Alti8g=
+X-Google-Smtp-Source: APXvYqwNHlzl9kDv8S9x+Dd8wJ1lRnWXnH4Y32FWMp33oafgyOQFZtLTd7J1a0aKoDkTQgOPNhq0yQ==
+X-Received: by 2002:a50:b56a:: with SMTP id z39mr134800736edd.91.1559123838596;
+        Wed, 29 May 2019 02:57:18 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:1c0c:6c86:46e0:a7ad:5246:f04d])
+        by smtp.gmail.com with ESMTPSA id l11sm2726493ejr.46.2019.05.29.02.57.17
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 02:57:17 -0700 (PDT)
+Subject: Re: [PATCH] iio: accel: add missing sensor for some 2-in-1 based
+ ultrabooks
+To:     =?UTF-8?Q?Lu=c3=ads_Ferreira?= <luis@aurorafoss.org>
+Cc:     jic23@kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <c2f3c22c-d491-17e7-ede7-54f9df11e064@redhat.com>
+ <20190402160433.15810-1-luis@aurorafoss.org>
+ <55a52a4e-01d1-2f4c-25e3-0047537bef86@redhat.com>
+ <CAPyOxm8DyFjRxeL9QFHGW084cg5vhsKrwqGFy5rp8MEEZ3AHEQ@mail.gmail.com>
+ <c34e15ec4be9d783c7134491639eb176@_>
+ <9d8458a1-fc47-0727-4dc8-1d1eb185886d@redhat.com>
+ <CAPyOxm9Q0Chq+TVjyK1eFWXCSJb0d-pttnEFVRB0Sw4QZnMM+Q@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <96658776-bd09-4b2d-2049-f2b213d60f8a@redhat.com>
+Date:   Wed, 29 May 2019 11:57:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190529082941.9440-1-mrostecki@opensuse.org>
+In-Reply-To: <CAPyOxm9Q0Chq+TVjyK1eFWXCSJb0d-pttnEFVRB0Sw4QZnMM+Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi,
 
-On 29.05.2019 11:29, Michal Rostecki wrote:
-
-> Function load_sk_storage_btf expects that libbpf__probe_raw_btf is
-> returning a btf descriptor, but before this change it was returning
-> an information about whether the probe was successful (0 or 1).
-> load_sk_storage_btf was using that value as an argument to the close
-> function, which was resulting in closing stdout and thus terminating the
-> process which used that dunction.
-
-    Function? :-)
-
-> That bug was visible in bpftool. `bpftool feature` subcommand was always
-> exiting too early (because of closed stdout) and it didn't display all
-> requested probes. `bpftool -j feature` or `bpftool -p feature` were not
-> returning a valid json object.
+On 5/23/19 2:03 PM, Luís Ferreira wrote:
+> Hi Hams,
 > 
-> Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
-> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
-[...]
+> https://github.com/systemd/systemd/pull/12322
+> https://github.com/hadess/iio-sensor-proxy/pull/262
+> 
+> As all the pull requests to systemd and iio-sensor-proxy has already
+> been merged, I just need your review on this:
+> https://github.com/systemd/systemd/pull/12449
+> 
+> Then, I guess this patch is ready to go. Please let me know if theres any issue.
 
-MBR, Sergei
+Thank you for your work on this. I've given a favorable review to the
+
+last systemd  pull-req.
+
+Regards,
+
+Hans
+
+
+> On Wed, 17 Apr 2019 at 16:08, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 15-04-19 17:40, luis@aurorafoss.org wrote:
+>>> April 6, 2019 10:36 AM, "Hans de Goede" <hdegoede@redhat.com> wrote:
+>>>
+>>> Hi,
+>>>
+>>>> Yes that seems the best way forward with this.
+>>>>
+>>>> Note I think "base" is better then "keyboard" for the sensor which
+>>>> is in the base/keyboard. But neither is perfect, so go which whatever
+>>>> you prefer.
+>>>
+>>> Reference to:
+>>> - https://github.com/hadess/iio-sensor-proxy/pull/262 > - https://github.com/systemd/systemd/pull/12322
+>>
+>> Thank you for your work on this, I see that Bastien has
+>> already reviewed the iio-sensor-proxy changes.
+>>
+>> I've just added one small remark to the systemd changes,
+>> except for that small remark the systemd changes look good to me.
+>>
+>> Regards,
+>>
+>> Hams
+>>
+>>
+>>
+>>
+>>>> On 06-04-19 01:01, Luís Ferreira wrote:
+>>>>
+>>>>> Hi,
+>>>>> Basically we need to come up with a convention to (optionally) indicate
+>>>>
+>>>> the sensors location with a udev attribute set by:
+>>>> /lib/udev/hwdb.d/60-sensor.hwdb
+>>>>> So should we start adding `ACCEL_LOCATION=display` and
+>>>>> `ACCEL_LOCATION=keyboard` attributes to that file and patch
+>>>>> iio-sensor-proxy to ignore the keyboard ones as a first step ?
+>>>>
+>>>> Yes that seems the best way forward with this.
+>>>>
+>>>> Note I think "base" is better then "keyboard" for the sensor which
+>>>> is in the base/keyboard. But neither is perfect, so go which whatever
+>>>> you prefer.
+>>>>
+>>>> Thanks & Regards,
+>>>>
+>>>> Hans
+>>>>
+>>>>> On Wed, 3 Apr 2019 at 10:10, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 02-04-19 18:04, Luís Ferreira wrote:
+>>>>> Some ultrabooks, like Teclast F6 Pro, use KIOX010A sensor on display
+>>>>> and KIOX020A sensor on keyboard base, to detect tablet mode or screen
+>>>>> orientation.
+>>>>
+>>>> I deliberately left out the KIOX020A id for now, because currently
+>>>> userspace cannot really deal with having 2 sensors.
+>>>>
+>>>> See:
+>>>> https://github.com/systemd/systemd/issues/6557
+>>>> https://github.com/hadess/iio-sensor-proxy/issues/166
+>>>>
+>>>> Basically we need to come up with a convention to (optionally) indicate
+>>>> the sensors location with a udev attribute set by:
+>>>> /lib/udev/hwdb.d/60-sensor.hwdb
+>>>>
+>>>> And then patch iio-sensor-proxy to consume that attribute and ignore
+>>>> the one which has e.g. ACCEL_LOCATION=keyboard in its udev properties
+>>>>
+>>>> Ignoring would be a first step, maybe later it can do something useful
+>>>> with it, see e.g. : https://github.com/alesguzik/linux_detect_tablet_mode
+>>>>
+>>>> IMHO we really should minimally get code in place for iio-sensor-proxy
+>>>> to ignore the keyboard accelerometer before merging this patch.
+>>>>
+>>>> I realize that having the code in place will not magically get it on
+>>>> all users machines, but I believe this is the minimum which needs to
+>>>> happen before we push this out and potentially breaks people screen
+>>>> rotation.
+>>>>
+>>>> I've had working on this on my TODO list for a long long time now,
+>>>> but -ENOTIME. If you have some time to work on this then that would
+>>>> be great.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>>>> Signed-off-by: Luís Ferreira <luis@aurorafoss.org>
+>>>>> ---
+>>>>> drivers/iio/accel/kxcjk-1013.c | 1 +
+>>>>> 1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
+>>>>> index 7096e577b23f..9a5e445facc1 100644
+>>>>> --- a/drivers/iio/accel/kxcjk-1013.c
+>>>>> +++ b/drivers/iio/accel/kxcjk-1013.c
+>>>>> @@ -1492,6 +1492,7 @@ static const struct acpi_device_id kx_acpi_match[] = {
+>>>>> {"KIOX0009", KXTJ21009},
+>>>>> {"KIOX000A", KXCJ91008},
+>>>>> {"KIOX010A", KXCJ91008}, /* KXCJ91008 inside the display of a 2-in-1 */
+>>>>> + {"KIOX020A", KXCJ91008},
+>>>>> {"KXTJ1009", KXTJ21009},
+>>>>> {"KXJ2109", KXTJ21009},
+>>>>> {"SMO8500", KXCJ91008},
