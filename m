@@ -2,134 +2,79 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB334C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C66CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09DE23B5C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559142021;
-	bh=bYiranAi895/NjKUTPX6vKqk8K7WSCczMh8oc0zU6X0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X7CxeX3n+5Smq0hnb5QqkIaIbeFz3uKpRfEj9WsLgpn/IfI3fZApdyjC8xxuidD+Y
-	 D+WwwHNwrTKKL/yc67WqhiSEplNydbh3478huP14CKk/kqasLVfZ9QdY1/92x3C12D
-	 kyOTkzNPk93OcSMCPPXP3bfuevISQIRJ03BRLTTs=
+	by mail.kernel.org (Postfix) with ESMTP id 1562623B55
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfE2PAV (ORCPT
+        id S1726841AbfE2PAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:00:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfE2PAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:00:20 -0400
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2FC23B6B;
-        Wed, 29 May 2019 15:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559142019;
-        bh=bYiranAi895/NjKUTPX6vKqk8K7WSCczMh8oc0zU6X0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JipIPQ6Pcr9drnwT2YhTdXdIY32GOe68LiMkl3Cov3na5JFk9BHYoT/BIpADt0o/6
-         Y0CTxVDEYqCg/SREpRAn8AC5G47k/ZODCQAU3cxONpINB9DbNUIiXBj5NivM0B1TwH
-         hG4+5f9xsXXVE1QcveQIGOxzSE6SlTXXA5dRyJMI=
-Received: by mail-lj1-f174.google.com with SMTP id q62so2792587ljq.7;
-        Wed, 29 May 2019 08:00:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWbAiikIrDZmvYzYJHArGmoJRHiLJFmJqHQ1D4kIeDC0NLegeSf
-        SfE/bBJGDlMjz0sv5y55J3iBKNVu4NVa3g9S7+o=
-X-Google-Smtp-Source: APXvYqwjLMuAJjajnkiA9vjKloiYF6lUhLhDlQgaGfMY8Rd6UXQclDmRa8DBOLTFrlK3GW69/ObI1iLSbgT31JBZO+s=
-X-Received: by 2002:a2e:9601:: with SMTP id v1mr22273608ljh.60.1559142017603;
- Wed, 29 May 2019 08:00:17 -0700 (PDT)
+        Wed, 29 May 2019 11:00:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17624 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726069AbfE2PAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:00:38 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 42974EB7D7499281D36F;
+        Wed, 29 May 2019 23:00:35 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
+ 23:00:16 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bgolaszewski@baylibre.com>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] eeprom: at24: Remove set but not used variable 'addr'
+Date:   Wed, 29 May 2019 22:59:54 +0800
+Message-ID: <20190529145954.14500-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-6-matheus@castello.eng.br>
-In-Reply-To: <20190527022258.32748-6-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 29 May 2019 17:00:06 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
-Message-ID: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] power: supply: max17040: Send uevent in SOC and
- status change
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:23, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> Notify core through power_supply_changed() in case of changes in state
-> of charge and power supply status. This is useful for user-space to
-> efficiently update current battery level.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 61e6fcfea8a1..34278845cfe5 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -176,6 +176,9 @@ static void max17040_get_online(struct i2c_client *client)
->  static void max17040_get_status(struct i2c_client *client)
->  {
->         struct max17040_chip *chip = i2c_get_clientdata(client);
-> +       int last_status;
-> +
-> +       last_status = chip->status;
->
->         if (!chip->pdata || !chip->pdata->charger_online
->                         || !chip->pdata->charger_enable) {
-> @@ -194,6 +197,9 @@ static void max17040_get_status(struct i2c_client *client)
->
->         if (chip->soc > MAX17040_BATTERY_FULL)
->                 chip->status = POWER_SUPPLY_STATUS_FULL;
-> +
-> +       if (last_status != chip->status)
-> +               power_supply_changed(chip->battery);
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Why splitting it from max17040_work()? It seems logical to check soc
-and status at the same time.
+drivers/misc/eeprom/at24.c: In function at24_make_dummy_client:
+drivers/misc/eeprom/at24.c:514:21: warning: variable addr set but not used [-Wunused-but-set-variable]
 
-Best regards,
-Krzysztof
+It's not used since commit e7308628d0ae ("eeprom:
+at24: use devm_i2c_new_dummy_device()")
 
->  }
->
->  static void max17040_get_of_data(struct max17040_chip *chip)
-> @@ -217,10 +223,18 @@ static void max17040_check_changes(struct i2c_client *client)
->  static void max17040_work(struct work_struct *work)
->  {
->         struct max17040_chip *chip;
-> +       int last_soc;
->
->         chip = container_of(work, struct max17040_chip, work.work);
-> +
-> +       /* store SOC for check change */
-> +       last_soc = chip->soc;
->         max17040_check_changes(chip->client);
->
-> +       /* check changes and send uevent */
-> +       if (chip->soc >= 0 && last_soc != chip->soc)
-> +               power_supply_changed(chip->battery);
-> +
->         queue_delayed_work(system_power_efficient_wq, &chip->work,
->                            MAX17040_DELAY);
->  }
-> --
-> 2.20.1
->
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/misc/eeprom/at24.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index ba8e73812644..fa730bb342e8 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -511,13 +511,11 @@ static int at24_make_dummy_client(struct at24_data *at24, unsigned int index,
+ 				  struct regmap_config *regmap_config)
+ {
+ 	struct i2c_client *base_client, *dummy_client;
+-	unsigned short int addr;
+ 	struct regmap *regmap;
+ 	struct device *dev;
+ 
+ 	base_client = at24->client[0].client;
+ 	dev = &base_client->dev;
+-	addr = base_client->addr + index;
+ 
+ 	dummy_client = devm_i2c_new_dummy_device(dev, base_client->adapter,
+ 						 base_client->addr + index);
+-- 
+2.17.1
+
+
