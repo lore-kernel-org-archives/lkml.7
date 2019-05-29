@@ -2,162 +2,153 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64997C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CD1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB5B2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551372070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1vaQKuyI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAcxVAnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfE2M3U (ORCPT
+        id S1727158AbfE2M3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:29:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60332 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfE2M3T (ORCPT
+        Wed, 29 May 2019 08:29:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33848 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfE2M3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:29:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TCJCj6092062;
-        Wed, 29 May 2019 12:28:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=jzu0gfRpeQr3lgZAMVrA/Jz6k5UK87AqDwjxA5c2LmQ=;
- b=1vaQKuyIXrl4Lavh2BCp1tqrAF5BiatSmm4JFgYdlAeaRhTGPPUaf3Al+g+zR7NbxlqK
- Ea4ZZTz3z2ZRpQL6BAb2F6J30EgBEYuj5W2Z/5xCrGRBvgLaMPRUG++Ahdp1Tujrmm0c
- bXxxEF8qIis/FR0ag9z3oxi5udUbhXMTwHi9C5w9fgDUpjf+f04UDTynvD+H+CWMJj6D
- UyLW9a4MrJ/L37GccUfCmwfKy6UUCFG6g6L+mJZe3r1vsgd+kBX6okbilh4tyIBMIvE6
- rIKcMi4n+6PFkSBnKb4m8wmvr2auITqsV6z888wn1Q7OiOrcTmTHOBWhrloUAZqHaBUA yQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2spw4thb42-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 12:28:41 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TCRqcG188755;
-        Wed, 29 May 2019 12:28:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2srbdxc11q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 12:28:40 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TCSdpR030656;
-        Wed, 29 May 2019 12:28:39 GMT
-Received: from [192.168.14.112] (/79.183.226.58)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 05:28:39 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v2 2/3] KVM: X86: Implement PV sched yield hypercall
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <1559004795-19927-3-git-send-email-wanpengli@tencent.com>
-Date:   Wed, 29 May 2019 15:28:35 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D119BC9B-3097-4453-BC17-5AE532EDB995@oracle.com>
-References: <1559004795-19927-1-git-send-email-wanpengli@tencent.com>
- <1559004795-19927-3-git-send-email-wanpengli@tencent.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9271 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290082
+        Wed, 29 May 2019 08:29:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n19so1552966pfa.1;
+        Wed, 29 May 2019 05:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D0hd+8IlrFbrljX6rJkpYHeRy73O1oI/e5niWGIamB0=;
+        b=mAcxVAnnohWG0y0fKP3zZRtJ9Mq0fbqgBgbd4Te568VAQB3iC2NRJZx8MOVbhSgVcr
+         q8uc64x9OhD6j9rUpMYGLmCNyP1h1cV+BfcIG4EojhVN5o8jt392WMo/kv8XytBo80xK
+         OV2w3cwm+8XzT0+SIxTZUNxaRlzRRs+o5qOu4+ZMdypBR3n0PABL/WxuFy4P9cP/yfC1
+         iDYaaGIzeDN6KAeKfiT0f7VIwfPdr15Su8dUO3rpVjmSIzAZp/vZJE3qkB7R1FCCbcUJ
+         khffaKH2byom1uPVcgLmy/EwaNhHiFU7slPfaxV6E4CjL4IEwznlwVjYiciKcB7hzmVG
+         nYSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D0hd+8IlrFbrljX6rJkpYHeRy73O1oI/e5niWGIamB0=;
+        b=YifM5zGCQvPFNVWVcfNY+x9buWa1yJLbvNKD0WIGvjFuWJOH/evQvazdqSA9O6laVR
+         wRgT9UBEcJXxh+VaQxkjrjtwzsTyofoQ8PvkCzsmYRqQJk4OWINsUgmTiyrWcsNRxD6Q
+         fwk426hK1uWeUHKp98/5KrSTJljuEJN7SqW0Rxd4uH5k+RFGkUjhn4536KaoQ4TWDmZI
+         d+rVIe6XOAFTZEpaIvdAVym1K/HwEVoXGD6w1AsVB5Tzd9Yc1JnnZ9WrPJNZskVPicwP
+         nWbzLnLk6GyTElEjJbWHM1Ca4n7Y89f6XatA3nwhkc+fyR2vgis6USI5Y96Oc0ZRlQ0I
+         eaNg==
+X-Gm-Message-State: APjAAAWfIAxqpeSa4ZslJpp5ARLtSLSQwHrosyTsKK3zZxiU93734CCx
+        kilytnSOewVf5/DJ1bU8wkM=
+X-Google-Smtp-Source: APXvYqx5fy9AgEt2qQxAINvAfQ7/rstW4D1Ukhfvs2SC4vzPunCtOtYiz4IblPd8BUa9WuA1D242cg==
+X-Received: by 2002:a63:d04b:: with SMTP id s11mr138152208pgi.187.1559132978396;
+        Wed, 29 May 2019 05:29:38 -0700 (PDT)
+Received: from [10.44.0.192] ([103.48.210.53])
+        by smtp.gmail.com with ESMTPSA id y16sm17439175pfl.140.2019.05.29.05.29.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 05:29:37 -0700 (PDT)
+From:   Greg Ungerer <gregungerer00@gmail.com>
+X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
+Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sergei Poselenov <sposelenov@emcraft.com>
+References: <20190524201817.16509-1-jannh@google.com>
+ <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
+ <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+ <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
+ <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
+Message-ID: <889fc718-b662-8235-5d60-9d330e77cf18@linux-m68k.org>
+Date:   Wed, 29 May 2019 22:29:31 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 29/5/19 10:05 pm, Arnd Bergmann wrote:
+> On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
+>> On 27/5/19 11:38 pm, Jann Horn wrote:
+>>> On Sat, May 25, 2019 at 11:43 PM Andrew Morton
+>>> <akpm@linux-foundation.org> wrote:
+>>>> On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com> wrote:
+>>>>> load_flat_shared_library() is broken: It only calls load_flat_file() if
+>>>>> prepare_binprm() returns zero, but prepare_binprm() returns the number of
+>>>>> bytes read - so this only happens if the file is empty.
+>>>>
+>>>> ouch.
+>>>>
+>>>>> Instead, call into load_flat_file() if the number of bytes read is
+>>>>> non-negative. (Even if the number of bytes is zero - in that case,
+>>>>> load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
+>>>>>
+>>>>> In addition, remove the code related to bprm creds and stop using
+>>>>> prepare_binprm() - this code is loading a library, not a main executable,
+>>>>> and it only actually uses the members "buf", "file" and "filename" of the
+>>>>> linux_binprm struct. Instead, call kernel_read() directly.
+>>>>>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
+>>>>> Signed-off-by: Jann Horn <jannh@google.com>
+>>>>> ---
+>>>>> I only found the bug by looking at the code, I have not verified its
+>>>>> existence at runtime.
+>>>>> Also, this patch is compile-tested only.
+>>>>> It would be nice if someone who works with nommu Linux could have a
+>>>>> look at this patch.
+>>>>
+>>>> 287980e49ffc was three years ago!  Has it really been broken for all
+>>>> that time?  If so, it seems a good source of freed disk space...
+>>>
+>>> Maybe... but I didn't want to rip it out without having one of the
+>>> maintainers confirm that this really isn't likely to be used anymore.
+>>
+>> I have not used shared libraries on m68k non-mmu setups for
+>> a very long time. At least 10 years I would think.
+> 
+> I think Emcraft have a significant customer base running ARM NOMMU
+> Linux, I wonder whether they would have run into this (adding
+> Sergei to Cc).
+> My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
+> 
+> The only architectures I see that enable binfmt-flat are sh, xtensa
+> and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
 
-> On 28 May 2019, at 3:53, Wanpeng Li <kernellwp@gmail.com> wrote:
->=20
-> From: Wanpeng Li <wanpengli@tencent.com>
->=20
-> The target vCPUs are in runnable state after vcpu_kick and suitable=20
-> as a yield target. This patch implements the sched yield hypercall.
->=20
-> 17% performace increase of ebizzy benchmark can be observed in an=20
-> over-subscribe environment. (w/ kvm-pv-tlb disabled, testing TLB flush=20=
+m68k uses enables it too. It is the only binary format supported
+when running no-mmu on m68k. (You can use it with MMU enabled too
+if you really want too).
 
-> call-function IPI-many since call-function is not easy to be trigged=20=
+The shared flat format has been used on m68k in the past (it was
+originally developed on m68k platforms). But I haven't used them
+for a long time (probably 10 years at least) on m68k.
 
-> by userspace workload).
->=20
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> arch/x86/kvm/x86.c | 24 ++++++++++++++++++++++++
-> 1 file changed, 24 insertions(+)
->=20
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index e7e57de..2ceef51 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7172,6 +7172,26 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu =
-*vcpu)
-> 	kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
-> }
->=20
-> +void kvm_sched_yield(struct kvm *kvm, u64 dest_id)
-> +{
-> +	struct kvm_vcpu *target;
-> +	struct kvm_apic_map *map;
-> +
-> +	rcu_read_lock();
-> +	map =3D rcu_dereference(kvm->arch.apic_map);
-> +
-> +	if (unlikely(!map))
-> +		goto out;
-> +
-
-We should have a bounds-check here on =E2=80=9Cdest_id=E2=80=9D.
-
--Liran
-
-> +	if (map->phys_map[dest_id]->vcpu) {
-> +		target =3D map->phys_map[dest_id]->vcpu;
-> +		kvm_vcpu_yield_to(target);
-> +	}
-> +
-> +out:
-> +	rcu_read_unlock();
-> +}
-> +
-> int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
-> {
-> 	unsigned long nr, a0, a1, a2, a3, ret;
-> @@ -7218,6 +7238,10 @@ int kvm_emulate_hypercall(struct kvm_vcpu =
-*vcpu)
-> 	case KVM_HC_SEND_IPI:
-> 		ret =3D kvm_pv_send_ipi(vcpu->kvm, a0, a1, a2, a3, =
-op_64_bit);
-> 		break;
-> +	case KVM_HC_SCHED_YIELD:
-> +		kvm_sched_yield(vcpu->kvm, a0);
-> +		ret =3D 0;
-> +		break;
-> 	default:
-> 		ret =3D -KVM_ENOSYS;
-> 		break;
-> --=20
-> 2.7.4
->=20
+Regards
+Greg
 
