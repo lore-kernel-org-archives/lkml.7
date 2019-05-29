@@ -2,151 +2,67 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D16C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13D52081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFA521872
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfE2MWp (ORCPT
+        id S1726881AbfE2MWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:22:45 -0400
-Received: from verein.lst.de ([213.95.11.211]:54430 "EHLO newverein.lst.de"
+        Wed, 29 May 2019 08:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfE2MWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:22:44 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 93FF968AFE; Wed, 29 May 2019 14:22:19 +0200 (CEST)
-Date:   Wed, 29 May 2019 14:22:19 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: truncate dma masks to what dma_addr_t
- can hold
-Message-ID: <20190529122219.GA9982@lst.de>
-References: <20190521124729.23559-1-hch@lst.de> <20190521124729.23559-2-hch@lst.de> <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk> <20190521131503.GA5258@lst.de>
+        id S1726791AbfE2MWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:22:53 -0400
+Received: from oasis.local.home (unknown [12.156.218.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74BF92081C;
+        Wed, 29 May 2019 12:22:51 +0000 (UTC)
+Date:   Wed, 29 May 2019 08:22:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
+        linux-kernel@vger.kernel.org, williams@redhat.com,
+        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC 1/3] softirq: Use preempt_latency_stop/start to trace
+ preemption
+Message-ID: <20190529082248.76bb7a6c@oasis.local.home>
+In-Reply-To: <20190529093056.GA146079@google.com>
+References: <cover.1559051152.git.bristot@redhat.com>
+        <b6bb4705efb0c01c11008ae3c46bc74555245303.1559051152.git.bristot@redhat.com>
+        <20190529093056.GA146079@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521131503.GA5258@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Russell,
+On Wed, 29 May 2019 05:30:56 -0400
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-any additional comments on this series?
+> Yes, I think so. Also this patch changes CALLER_ADDR0 passed to the
+> tracepoint because there's one more level of a non-inlined function call
+> in the call chain right?  Very least the changelog should document this
+> change in functional behavior, IMO.
 
-On Tue, May 21, 2019 at 03:15:03PM +0200, Christoph Hellwig wrote:
-> On Tue, May 21, 2019 at 02:04:37PM +0100, Russell King - ARM Linux admin wrote:
-> > So how does the driver negotiation for >32bit addresses work if we don't
-> > fail for large masks?
-> > 
-> > I'm thinking about all those PCI drivers that need DAC cycles for >32bit
-> > addresses, such as e1000, which negotiate via (eg):
-> > 
-> >         /* there is a workaround being applied below that limits
-> >          * 64-bit DMA addresses to 64-bit hardware.  There are some
-> >          * 32-bit adapters that Tx hang when given 64-bit DMA addresses
-> >          */
-> >         pci_using_dac = 0;
-> >         if ((hw->bus_type == e1000_bus_type_pcix) &&
-> >             !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
-> >                 pci_using_dac = 1;
-> >         } else {
-> >                 err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> >                 if (err) {
-> >                         pr_err("No usable DMA config, aborting\n");
-> >                         goto err_dma;
-> >                 }
-> >         }
-> > 
-> > and similar.  If we blindly trunate the 64-bit to 32-bit, aren't we
-> > going to end up with PCI cards using DAC cycles to a host bridge that
-> > do not support DAC cycles?
-> 
-> In general PCI devices just use DAC cycles when they need it.  I only
-> know of about a handful of devices that need to negotiate their
-> addressing mode, and those already use the proper API for that, which
-> is dma_get_required_mask.
-> 
-> The e1000 example is a good case of how the old API confused people.
-> First it only sets the 64-bit mask for devices which can support it,
-> which is good, but then it sets the NETIF_F_HIGHDMA flag only if we
-> set a 64-bit mask, which is completely unrelated to the DMA mask,
-> it just means the driver can handle sk_buff fragments that do not
-> have a kernel mapping, which really is a driver and not a hardware
-> issue.
-> 
-> So what this driver really should do is something like:
-> 
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> index 551de8c2fef2..d9236083da94 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-> +++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> @@ -925,7 +925,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	static int cards_found;
->  	static int global_quad_port_a; /* global ksp3 port a indication */
-> -	int i, err, pci_using_dac;
-> +	int i, err;
->  	u16 eeprom_data = 0;
->  	u16 tmp = 0;
->  	u16 eeprom_apme_mask = E1000_EEPROM_APME;
-> @@ -996,16 +996,11 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	 * 64-bit DMA addresses to 64-bit hardware.  There are some
->  	 * 32-bit adapters that Tx hang when given 64-bit DMA addresses
->  	 */
-> -	pci_using_dac = 0;
-> -	if ((hw->bus_type == e1000_bus_type_pcix) &&
-> -	    !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
-> -		pci_using_dac = 1;
-> -	} else {
-> -		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> -		if (err) {
-> -			pr_err("No usable DMA config, aborting\n");
-> -			goto err_dma;
-> -		}
-> +	err = dma_set_mask_and_coherent(&pdev->dev,
-> +		DMA_BIT_MASK(hw->bus_type == e1000_bus_type_pcix ? 64 : 32));
-> +	if (err) {
-> +		pr_err("No usable DMA config, aborting\n");
-> +		goto err_dma;
->  	}
->  
->  	netdev->netdev_ops = &e1000_netdev_ops;
-> @@ -1047,19 +1042,15 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	netdev->priv_flags |= IFF_SUPP_NOFCS;
->  
-> -	netdev->features |= netdev->hw_features;
-> +	netdev->features |= netdev->hw_features | NETIF_F_HIGHDMA;
->  	netdev->hw_features |= (NETIF_F_RXCSUM |
->  				NETIF_F_RXALL |
->  				NETIF_F_RXFCS);
->  
-> -	if (pci_using_dac) {
-> -		netdev->features |= NETIF_F_HIGHDMA;
-> -		netdev->vlan_features |= NETIF_F_HIGHDMA;
-> -	}
-> -
->  	netdev->vlan_features |= (NETIF_F_TSO |
->  				  NETIF_F_HW_CSUM |
-> -				  NETIF_F_SG);
-> +				  NETIF_F_SG |
-> +				  NETIF_F_HIGHDMA);
->  
->  	/* Do not set IFF_UNICAST_FLT for VMWare's 82545EM */
->  	if (hw->device_id != E1000_DEV_ID_82545EM_COPPER ||
-> 
----end quoted text---
+This sounds more like a break in behavior not a functional change. I
+guess moving it to a header and making it a static __always_inline
+should be fine though.
+
+-- Steve
