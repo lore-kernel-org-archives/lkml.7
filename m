@@ -2,95 +2,145 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1DBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609BEC072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B44C21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AA421883
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UsG7LOHi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loJI8CmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfE2DFC (ORCPT
+        id S1726557AbfE2DFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:05:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39623 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfE2DFC (ORCPT
+        Tue, 28 May 2019 23:05:47 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36456 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfE2DFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:05:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so619424pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 20:05:01 -0700 (PDT)
+        Tue, 28 May 2019 23:05:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so435857pgb.3;
+        Tue, 28 May 2019 20:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/03tKsWhiHmUnWe2CD0WCy6TKjmI9CNaKQ1QHLmZ1sA=;
-        b=UsG7LOHi4eGxUeX0NsezAKQLnu5ULqBGWBytqwhY0xSGZCUI1EZwHAWwZ+xPeIlCnU
-         LkbCKPTk3EFCU8u4Ly0VI9J9BZIkSXH6XjqyAmH+vlD5kVyjd4f9ALgrekbXJlZHUKz3
-         ZT8BoO7Fij/rcMZOSCfoyfdZtRSzjOcSOdB00=
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yae+joByYceDAtdWhJGQ+9TqNvlrFL7154XbmhADCzk=;
+        b=loJI8CmBiDK4QXBglvOWt2m+NRvAhk4f5Dpdw5nuyIoVvwObyRmIIUVGmvd+FJfS/V
+         ojqBViP2eZMFN4PrCjFp2vYaQP/xmsQowtHlPbbltDN9JTV/MQUAciCuFbIyOsUa62NC
+         mT99NxZ1PC/nn6YWjHryuP+TmQUNFLHbDlidgSRKaGnUoexUoJM4CDsYz88VUbdqoT5X
+         6wtYHSrpu4+CwzrqBfOvCvGZnImijdLv6e+on6dB3VxcHbH8DABwY7Zky1fnpEeDB2aF
+         Cks3yYjP8tOWQbmD6QGz2QKW1VTSqye9kFjf0txnn8VNvPTFsPduE0rIuGIDpf1tVZ9z
+         A3vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/03tKsWhiHmUnWe2CD0WCy6TKjmI9CNaKQ1QHLmZ1sA=;
-        b=DdtRdPYLhPoXX3zYjPgBshl4OQ0o5bxhbEq9Jwj+swsd7f43vZ85ChVSrCN+0JbCYU
-         uK/A+kc4PI+qRtBhcjccSez4VCLX5Dt+8gCz9ScSIwgr1EyHme97Sm6uzBBzwi1+W1Gk
-         U6GiFh1ZwmWVPOH3WXcySBFk8ULbso9a+ztEcUvVAxk/TqwdV6iiIIrFpoifDz9xWf1H
-         IzPPoclzwmA+eZmeVS5BKTN5xbZ/gC6/SkIx2bdyDFqbqhLPcAmjq9lI2nrRAOri70UH
-         N5vV/HVjgk7kLu2sP+3DgMFrOqwFTHADzT/qqamUKKEPxQuUfbkQVDwxlTktobHgYIEG
-         hxkw==
-X-Gm-Message-State: APjAAAXxjQy+wO6T/xQ+h293JXT74SdU/vYU8AmOV4/zdTRbXzpbC+XW
-        UhT5ooJMJA+xfoymHOwzcpozYhw5huY=
-X-Google-Smtp-Source: APXvYqy3KnvoJzyM65mWSVHCSRVd7NiAGi6YeXj8jQZi1cZxBdi377u8uo5PVjYL4iYNQf/N7R+L8A==
-X-Received: by 2002:a17:90a:248:: with SMTP id t8mr9545652pje.119.1559099101509;
-        Tue, 28 May 2019 20:05:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g8sm3553933pjs.23.2019.05.28.20.04.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 20:05:00 -0700 (PDT)
-Date:   Tue, 28 May 2019 20:04:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: test_overflow: Avoid taining the kernel and fix
- wrap size
-Message-ID: <201905282004.A12656ECBF@keescook>
-References: <201905281550.4E3CB258F@keescook>
- <7cf0e30a7309008a81cc65e692511a1e8e6b544f.camel@perches.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yae+joByYceDAtdWhJGQ+9TqNvlrFL7154XbmhADCzk=;
+        b=dhZmTmuL0Ijn3H/ew3LI5SFp5+Hta6Tr47CFc5DEntnP7PnyVaS3L55bH/sIARA/PC
+         01Z5VFOaJDn6A/Of5x6en4ahuivWYfHOkcuJOLdyRjZoLzW1yX0CiwY6Dhe1zBC47xvD
+         WwGfcUa6nTUdP2icaA/x5RkX5VPLU9cXC6Fq4pAZe9rsHyOXjoTTtkoG6WMoAJcBawWh
+         +osyBVOATr66QcToxALUmgo/k2DSjwJHln4DXOB/scMKQyREqawoM5RlWVSPkIW91AeK
+         FebhV3P8WBRBivey6RH4myc+N/m4VWkerIHS18iyz0GhehK489aDnYIISCZyNjpGayp8
+         RMLA==
+X-Gm-Message-State: APjAAAVg/wdbcLQYKI5rbTlEwazeGpZinkFwS/bDIuKeAqQ3uCIZGX95
+        GngHE6GvmQY84FqW2SO8eJk=
+X-Google-Smtp-Source: APXvYqyyAaMniytWmPWiZn/pkCsfkmPCIhT/hrGDPfJcVMyRDShfxmyDZOZFAswfsVwf7gqBNJ+SfQ==
+X-Received: by 2002:a65:44cb:: with SMTP id g11mr134373637pgs.193.1559099146241;
+        Tue, 28 May 2019 20:05:46 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id f10sm12830922pgq.73.2019.05.28.20.05.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 20:05:45 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:05:43 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] thermal/drivers/of: Add a get_temp_id callback function
+Message-ID: <20190529030542.GA2654@localhost.localdomain>
+References: <20190416172203.4679-1-daniel.lezcano@linaro.org>
+ <20190423154430.GA16014@localhost.localdomain>
+ <bc10d520-4d15-74d6-0dc2-fd63df8d9a21@linaro.org>
+ <ff407865-8606-60c2-62d8-60ae96d1984d@linaro.org>
+ <CAHQ1cqG-cb=1hyO8oeV4k-6Pq4q+aqhH8RPx04i2oPTNhAhiVg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7cf0e30a7309008a81cc65e692511a1e8e6b544f.camel@perches.com>
+In-Reply-To: <CAHQ1cqG-cb=1hyO8oeV4k-6Pq4q+aqhH8RPx04i2oPTNhAhiVg@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:40:06PM -0700, Joe Perches wrote:
-> On Tue, 2019-05-28 at 15:51 -0700, Kees Cook wrote:
-> > This adds __GFP_NOWARN to the kmalloc()-portions of the overflow test to
-> > avoid tainting the kernel. Additionally fixes up the math on wrap size
-> > to be architecture and page size agnostic.
-> []
-> > diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-> []
-> > @@ -486,16 +486,17 @@ static int __init test_overflow_shift(void)
-> []
-> > +#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
-> []
-> > +#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP | __GFP_NOWARN)
+On Thu, May 23, 2019 at 07:48:56PM -0700, Andrey Smirnov wrote:
+> On Mon, Apr 29, 2019 at 9:51 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+> >
+> > On 24/04/2019 01:08, Daniel Lezcano wrote:
+> > > On 23/04/2019 17:44, Eduardo Valentin wrote:
+> > >> Hello,
+> > >>
+> > >> On Tue, Apr 16, 2019 at 07:22:03PM +0200, Daniel Lezcano wrote:
+> > >>> Currently when we register a sensor, we specify the sensor id and a data
+> > >>> pointer to be passed when the get_temp function is called. However the
+> > >>> sensor_id is not passed to the get_temp callback forcing the driver to
+> > >>> do extra allocation and adding back pointer to find out from the sensor
+> > >>> information the driver data and then back to the sensor id.
+> > >>>
+> > >>> Add a new callback get_temp_id() which will be called if set. It will
+> > >>> call the get_temp_id() with the sensor id.
+> > >>>
+> > >>> That will be more consistent with the registering function.
+> > >>
+> > >> I still do not understand why we need to have a get_id callback.
+> > >> The use cases I have seen so far, which I have been intentionally rejecting, are
+> > >> mainly solvable by creating other compatible entries. And really, if you
+> > >> have, say a bandgap, chip that supports multiple sensors, but on
+> > >> SoC version A it has 5 sensors, and on SoC version B it has only 4,
+> > >> or on SoC version C, it has 5 but they are either logially located
+> > >> in different places (gpu vs iva regions), these are all cases in which
+> > >> you want a different compatible!
+> > >>
+> > >> Do you mind sharing why you need a get sensor id callback?
+> > >
+> > > It is not a get sensor id callback, it is a get_temp callback which pass
+> > > the sensor id.
+> > >
+> > > See in the different drivers, it is a common pattern there is a
+> > > structure for the driver, then a structure for the sensor. When the
+> > > get_temp is called, the callback needs info from the sensor structure
+> > > and from the driver structure, so a back pointer to the driver structure
+> > > is added in the sensor structure.
+> >
+
+Do you mind sending a patch showing how one could convert an existing
+driver to use this new API?
+
+> > Hi Eduardo,
+> >
+> > does the explanation clarifies the purpose of this change?
+> >
 > 
-> seems redundant.
+> Eduardo, did you ever have a chance to revisit this thread? I would
+> really like to make some progress on this one to unblock my i.MX8MQ
+> hwmon series.
 
-Whoops. Missed that one. Fixing...
+The problem I have with this patch is that it is an API which resides
+only in of-thermal. Growing APIs on DT only diverges of-thermal from
+thermal core and platform drivers.
 
--- 
-Kees Cook
+Besides, this patch needs to document the API in Documention/
+
+> 
+> Thanks,
+> Andrey Smirnov
