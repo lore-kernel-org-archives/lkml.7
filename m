@@ -2,96 +2,108 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894FCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B377BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C1B23DE8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8618923DF2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gy54YSWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfE2QjA (ORCPT
+        id S1727261AbfE2QkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:39:00 -0400
-Received: from foss.arm.com ([217.140.101.70]:49276 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfE2QjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:39:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B84DE341;
-        Wed, 29 May 2019 09:38:59 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E64703F5AF;
-        Wed, 29 May 2019 09:38:56 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:38:54 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, acme@redhat.com, eranian@google.com,
-        fweisbec@gmail.com, jolsa@redhat.com
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190529163854.GN31777@lakrids.cambridge.arm.com>
-References: <20190528173228.GW2623@hirez.programming.kicks-ass.net>
- <20190529091733.GA4485@fuggles.cambridge.arm.com>
- <20190529101042.GN2623@hirez.programming.kicks-ass.net>
- <20190529102022.GC4485@fuggles.cambridge.arm.com>
- <20190529125557.GU2623@hirez.programming.kicks-ass.net>
- <20190529130521.GA11023@fuggles.cambridge.arm.com>
- <20190529132515.GW2623@hirez.programming.kicks-ass.net>
- <20190529143510.GA11154@fuggles.cambridge.arm.com>
- <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
- <20190529162435.GM31777@lakrids.cambridge.arm.com>
+        Wed, 29 May 2019 12:40:07 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35645 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfE2QkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:40:07 -0400
+Received: by mail-vs1-f67.google.com with SMTP id q13so2343282vso.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Esfl3nvaEBw2uCWEGOwNd1KcpJR7qnstyVJ5GKtC10=;
+        b=gy54YSWi28xfcPumIcxdQBpxiv38UYPyQki2rU5FibosdeZ6MlUtt9mGYX3pMzpi1J
+         eVhOA5uX5C/8oMK59ewu0GTbMw/NJWIUQ8b/ZIBDbt98ekfp++OMeCkgUOCvHQqDoN8q
+         DaT+H9TyYWJTCERqolLABJA2fLCqFKB1pboH6qY+GtugTcyXA1u2hJOOP4KVS5o8T1W0
+         Nc3mxPD+goAx+22GUHKIz3rE9eBxPxsWhYqcyXvXu+t7PAS8w0XKOkNJlFUXgc+fItQU
+         niid+sGwkxSgn5eDnRpH3eTcty2oJDRMsOtoLpYvHkC93a4vKqdqfiIJhAnbRHUedyz6
+         NvjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Esfl3nvaEBw2uCWEGOwNd1KcpJR7qnstyVJ5GKtC10=;
+        b=iBKflaAMJrZvbYxujYaNGI4gyFLFItrtTPEj9EmxqIzVW2H9xglagRhoBzJS0awq2V
+         +1Ae0S+ZRq8M3xyvSGTOwSMprJZkdkfqJkLOtOAOZUln//pMM+PgDPsPOoGXRUxhY95R
+         gg1Su+smThxx4AYpCRouFzb82bl2rXxcVtDaIxmpYnSrN8B1SWGZohgn51nGdm9GTmsJ
+         rB0NSCQH8tvVtuK8wtJj3Gb0O+gqgFs5LT4onmExNBTHIIRXdp2IQJwf0zklGWYvasMF
+         D23d8MEeznnOmvnibTh76hQo1Qx7WlloraKW+cgnN/N6evpWMao0ACOIApn2F1GbtwR7
+         qfIg==
+X-Gm-Message-State: APjAAAUIxAAqfiOCve5bY1vwlsY0Wha3o9+9ajywRQYNdmBKckfb8OSY
+        gW9KS+1HyxkUcKeKnIK1SvuIH2d6V1a/2D8qx6Q=
+X-Google-Smtp-Source: APXvYqwhVWfGociEat3pJKeWFTfSJFNJ89kc9w5M4Opt5Pu3UHJ1E0/+S9NVwIgBcTxJaDoqMh03meYLgWch4Id81Lc=
+X-Received: by 2002:a67:ea58:: with SMTP id r24mr5616881vso.60.1559148004894;
+ Wed, 29 May 2019 09:40:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529162435.GM31777@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com> <20190529162532.GG18589@dhcp22.suse.cz>
+In-Reply-To: <20190529162532.GG18589@dhcp22.suse.cz>
+From:   Dianzhang Chen <dianzhangchen0@gmail.com>
+Date:   Thu, 30 May 2019 00:39:53 +0800
+Message-ID: <CAFbcbMDJB0uNjTa9xwT9npmTdqMJ1Hez3CyeOCjjrLF2W0Wprw@mail.gmail.com>
+Subject: Re: [PATCH] mm/slab_common.c: fix possible spectre-v1 in kmalloc_slab()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 05:24:36PM +0100, Mark Rutland wrote:
-> On Wed, May 29, 2019 at 06:19:55PM +0200, Peter Zijlstra wrote:
-> > On Wed, May 29, 2019 at 03:35:10PM +0100, Will Deacon wrote:
-> > > On Wed, May 29, 2019 at 03:25:15PM +0200, Peter Zijlstra wrote:
-> > > > On Wed, May 29, 2019 at 02:05:21PM +0100, Will Deacon wrote:
-> > > > > On Wed, May 29, 2019 at 02:55:57PM +0200, Peter Zijlstra wrote:
-> > > > 
-> > > > > >  	if (user_mode(regs)) {
-> > > > > 
-> > > > > Hmm, so it just occurred to me that Mark's observation is that the regs
-> > > > > can be junk in some cases. In which case, should we be checking for
-> > > > > kthreads first?
-> > > > 
-> > > > task_pt_regs() can return garbage, but @regs is the exception (or
-> > > > perf_arch_fetch_caller_regs()) regs, and for those user_mode() had
-> > > > better be correct.
-> > > 
-> > > So what should we report for the idle task?
-> > 
-> > If an interrupt hits the idle task, @regs would be !user_mode(regs),
-> > we'll find current->flags & PF_KTHREAD (idle not having passed through
-> > exec()) and therefore we'll take ABI_NONE for the user regs.
-> > 
-> > Or am I not getting it?
-> 
-> If the contents of task_pt_regs(current) is garbage, then the result of
-> user_mode(task_pt_regs(current)) is also garbage, no?
+It's come from `192+1`.
 
-Ugh; I was being thick here and assuming regs was the result of
-task_pt_regs() when it's actually the interrupted regs.
 
-Sorry for the noise.
+The more code fragment is:
 
-Generally speaking though, if we ever task task_pt_regs() of an idle
-task we'll get junk, and user_mode() could be true.
 
-Thanks,
-Mark.
+if (size <= 192) {
+
+    if (!size)
+
+        return ZERO_SIZE_PTR;
+
+    size = array_index_nospec(size, 193);
+
+    index = size_index[size_index_elem(size)];
+
+}
+
+
+Sine array_index_nospec(index, size) can clamp the index within the
+range of [0, size), so in order to make the `size<=192`, need to clamp
+the index in the range of [0, 192+1) .
+
+On Thu, May 30, 2019 at 12:25 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 29-05-19 20:37:28, Dianzhang Chen wrote:
+> [...]
+> > @@ -1056,6 +1057,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
+> >               if (!size)
+> >                       return ZERO_SIZE_PTR;
+> >
+> > +             size = array_index_nospec(size, 193);
+> >               index = size_index[size_index_elem(size)];
+>
+> What is this 193 magic number?
+> --
+> Michal Hocko
+> SUSE Labs
