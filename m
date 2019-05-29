@@ -2,176 +2,130 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C8BC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC03FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD2121721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559117231;
-	bh=ScR9YltuATO8hZaRvIXjIF3UkwUgNcVP6kdAbFyB1MA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=H9a5dnzS65hUAPsCL/7iSqPpBQfaPkkRl61Hjvx1SAVEPMDauDndF13B01uyRxvGG
-	 upkyM9grtWTObDWZiaXol7pmn9EYAqD4q6abjKG6UhZfrWyzek0j6HFtyremurmrS3
-	 Qfy53CQZWlQfFVGkYct11TCwuXYNVW0htrz3bmdo=
+	by mail.kernel.org (Postfix) with ESMTP id 855AF20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="DvHdwxZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfE2IHL (ORCPT
+        id S1726470AbfE2IIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:07:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39030 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfE2IHK (ORCPT
+        Wed, 29 May 2019 04:08:32 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38732 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfE2IIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:07:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r7so1136458otn.6;
-        Wed, 29 May 2019 01:07:09 -0700 (PDT)
+        Wed, 29 May 2019 04:08:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g13so2343343edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X55S31ao8CfYMehdctXfzJQFFMsU0ZFkppGUTIESvkI=;
+        b=DvHdwxZbhyi3JQ17yrFCBVFILG9oxWRqQorXQBbfNMQbnN8YbiVPExbIjs05xuS6s4
+         RrvSJHQYAs3QQ+qJk+dZfwVfVVvY+qXkg81SmYNRsZBDBf08Yof2IdKKDkQz21dEy6vm
+         L+WXv2nKXsarLezipgqpzLvOPptiHdm7b5gV8jZKlwcVrkXmwf20nNW8i2JmlutHBAn5
+         eSQfFQ+Fbv51uy1DIA3WxzijQ4vpMgbugqlk4yAec5p5VRJU8RtVGQRKfcpotEOKIY0d
+         k9rsY0qQqW+3hNX/G+FgxYjVDC/mO884jyhyXyIXfMA9+5aUwTsqTA98ncrDK344QAuw
+         7mjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yy0bNJQFbJVnqRK14UZwcJgtjydcVuENrHNgGXOjxVU=;
-        b=h3ACObFHGzl33KgF49CHSRFqZXuHpCmxzH1zpEimy53aE4QST4sSVqA0BLp06u27J/
-         wkD7+8IGqOkMlBlktWZ30yE/tFFKiKhKxk9VMQBRg2UEucC2MIfxdKSo+jua2bMQdLm4
-         jCQAoSYnTrY1IQkw1nuaJ9Q8vCMDKYrhUozOYh0Me2HP6r7/q+up4RonISGteKTD36K7
-         OXQ2YjihExSU5YALLOP2pAa3QGRf7o623yg7BS6/QbyutxsFnkEVq7HWnwzacQJCScg9
-         677dHlQuHF7yXOGsEws01Wzoh+WZ5HoCky3DGL6iVC11fM07hKTCZBJiUCfEv30ordrS
-         3ThQ==
-X-Gm-Message-State: APjAAAVHZoHdKdIeCkKvLtB0HQyZw5SZWGheMpEJXXIhNDql3hhs9ly4
-        yTqrugGs3hTJVdjKeng4GlZQe0j6myQVyjlSg4MKdg==
-X-Google-Smtp-Source: APXvYqxcufdDhH+ZaS5I6ADG9FWcI34ncwUCnVHXLBjEmakZrufmDYQ9toaeib3Ryqj5ER4NGEJ4iZN3xnhyR6yzylI=
-X-Received: by 2002:a05:6830:1694:: with SMTP id k20mr50371613otr.262.1559117229494;
- Wed, 29 May 2019 01:07:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X55S31ao8CfYMehdctXfzJQFFMsU0ZFkppGUTIESvkI=;
+        b=FIaZm8pEZ9dvsnepzNWYbl2vPMvU186gH9phUVP33N/TB/sTiTndv7nSL1EViRZfF1
+         HyHXw9EviVqiJKAS/7RMRC9tra6GySlBLDN1zN6ZalV5SzJJ6ZEieXxh+fYPvA/P7Lvx
+         usmn1IL6X95BGUJ+zFBdNQKpF/+wG1cBAILJDLfxEDKeNCZQHi2lg7a5w/rLMJvEGv3p
+         bPp+usJCGztgEACXVzL9xUEL/EgcZZ7K/wosQki5mMYnwjOn61poHMoBPKnlNwmabY3V
+         yYBM0FH4CuKBrQ6OEA6lMCG0kLxNfzYkdrC/fm5dhTSVZYx+4ZO4DCfAaaSlHEQb+2Xe
+         PL7g==
+X-Gm-Message-State: APjAAAUUDMQsI07J+pFGPKj5TJF4Pnv6Gei7gP3aFX6BQgxYH50Yt5lR
+        0meFB/CSTPfWBgDzXJ9Ue3Vbx+SHkkXn4Q==
+X-Google-Smtp-Source: APXvYqyxDyVCDea9bDd1l2EC8hcbEtDWlZ8Dk3yuHbGVJvqjuySoL1bR38CeVbp+JazIYUXhPBHnlQ==
+X-Received: by 2002:a17:906:6d3:: with SMTP id v19mr69214570ejb.46.1559117307851;
+        Wed, 29 May 2019 01:08:27 -0700 (PDT)
+Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.googlemail.com with ESMTPSA id p18sm792916ejr.61.2019.05.29.01.08.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 01:08:27 -0700 (PDT)
+Subject: Re: [PATCH 1/5] lightnvm: Fix uninitialized pointer in
+ nvm_remove_tgt()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Igor Konopko <igor.j.konopko@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190528142424.19626-1-geert@linux-m68k.org>
+ <20190528142424.19626-2-geert@linux-m68k.org>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <4b666e32-04b6-228a-691d-0745fa48a57f@lightnvm.io>
+Date:   Wed, 29 May 2019 10:08:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 29 May 2019 10:06:57 +0200
-Message-ID: <CAJZ5v0h995q0rLj_32Xshd5TRTT9A9rFjYn3C1jfQ=koB1PAnw@mail.gmail.com>
-Subject: Re: [PATCH] x86/power: Fix 'nosmt' vs. hibernation triple fault
- during resume
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190528142424.19626-2-geert@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:31 PM Jiri Kosina <jikos@kernel.org> wrote:
->
-> From: Jiri Kosina <jkosina@suse.cz>
->
-> As explained in
->
->         0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
->
-> we always, no matter what, have to bring up x86 HT siblings during boot at
-> least once in order to avoid first MCE bringing the system to its knees.
->
-> That means that whenever 'nosmt' is supplied on the kernel command-line,
-> all the HT siblings are as a result sitting in mwait or cpudile after
-> going through the online-offline cycle at least once.
->
-> This causes a serious issue though when a kernel, which saw 'nosmt' on its
-> commandline, is going to perform resume from hibernation: if the resume
-> from the hibernated image is successful, cr3 is flipped in order to point
-> to the address space of the kernel that is being resumed, which in turn
-> means that all the HT siblings are all of a sudden mwaiting on address
-> which is no longer valid.
->
-> That results in triple fault shortly after cr3 is switched, and machine
-> reboots.
->
-> Fix this by always waking up all the SMT siblings before initiating the
-> 'restore from hibernation' process; this guarantees that all the HT
-> siblings will be properly carried over to the resumed kernel waiting in
-> resume_play_dead(), and acted upon accordingly afterwards, based on the
-> target kernel configuration.
->
-> Cc: stable@vger.kernel.org # v4.19+
-> Debugged-by: Thomas Gleixner <tglx@linutronix.de>
-> Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
-> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-
-I can take this or, in case it is better to route it through x86:
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
+On 5/28/19 4:24 PM, Geert Uytterhoeven wrote:
+> With gcc 4.1:
+> 
+>      drivers/lightnvm/core.c: In function ‘nvm_remove_tgt’:
+>      drivers/lightnvm/core.c:510: warning: ‘t’ is used uninitialized in this function
+> 
+> Indeed, if no NVM devices have been registered, t will be an
+> uninitialized pointer, and may be dereferenced later.  A call to
+> nvm_remove_tgt() can be triggered from userspace by issuing the
+> NVM_DEV_REMOVE ioctl on the lightnvm control device.
+> 
+> Fix this by preinitializing t to NULL.
+> 
+> Fixes: 843f2edbdde085b4 ("lightnvm: do not remove instance under global lock")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > ---
->  arch/x86/power/cpu.c | 11 +++++++++++
->  include/linux/cpu.h  |  2 ++
->  kernel/cpu.c         |  2 +-
->  3 files changed, 14 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-> index a7d966964c6f..bde8ce1f6c6c 100644
-> --- a/arch/x86/power/cpu.c
-> +++ b/arch/x86/power/cpu.c
-> @@ -299,9 +299,20 @@ int hibernate_resume_nonboot_cpu_disable(void)
->          * address in its instruction pointer may not be possible to resolve
->          * any more at that point (the page tables used by it previously may
->          * have been overwritten by hibernate image data).
-> +        *
-> +        * First, make sure that we wake up all the potentially disabled SMT
-> +        * threads which have been initially brought up and then put into
-> +        * mwait/cpuidle sleep.
-> +        * Those will be put to proper (not interfering with hibernation
-> +        * resume) sleep afterwards, and the resumed kernel will decide itself
-> +        * what to do with them.
->          */
->         smp_ops.play_dead = resume_play_dead;
-> +       ret = cpuhp_smt_enable();
-> +       if (ret)
-> +               goto out;
->         ret = disable_nonboot_cpus();
-> +out:
->         smp_ops.play_dead = play_dead;
->         return ret;
->  }
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index 3813fe45effd..b5523552a607 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -201,10 +201,12 @@ enum cpuhp_smt_control {
->  extern enum cpuhp_smt_control cpu_smt_control;
->  extern void cpu_smt_disable(bool force);
->  extern void cpu_smt_check_topology(void);
-> +extern int cpuhp_smt_enable(void);
->  #else
->  # define cpu_smt_control               (CPU_SMT_NOT_IMPLEMENTED)
->  static inline void cpu_smt_disable(bool force) { }
->  static inline void cpu_smt_check_topology(void) { }
-> +static inline int cpuhp_smt_enable(void) { return 0; }
->  #endif
->
->  /*
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index f2ef10460698..3ff5ce0e4132 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
->         return ret;
->  }
->
-> -static int cpuhp_smt_enable(void)
-> +int cpuhp_smt_enable(void)
->  {
->         int cpu, ret = 0;
->
->
-> --
-> Jiri Kosina
-> SUSE Labs
+>   drivers/lightnvm/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
+> index 0df7454832efe082..aa017f48eb8c588c 100644
+> --- a/drivers/lightnvm/core.c
+> +++ b/drivers/lightnvm/core.c
+> @@ -492,7 +492,7 @@ static void __nvm_remove_target(struct nvm_target *t, bool graceful)
+>    */
+>   static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
+>   {
+> -	struct nvm_target *t;
+> +	struct nvm_target *t = NULL;
+>   	struct nvm_dev *dev;
+>   
+>   	down_read(&nvm_lock);
+> 
+
+Thanks Geert. Would you like me to carry the patch?
