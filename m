@@ -2,137 +2,89 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DD5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5379C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB7C23AFE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:51:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PRu92ve5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PUY+3yOp"
+	by mail.kernel.org (Postfix) with ESMTP id 8AEFD23AB8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfE2Ov4 (ORCPT
+        id S1726753AbfE2Owr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:51:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46762 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfE2Ov4 (ORCPT
+        Wed, 29 May 2019 10:52:47 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:54874 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2Owr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:51:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CDDBC60A63; Wed, 29 May 2019 14:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559141514;
-        bh=wB2s6eG/yS7NJpG9iQQVkTE5phJzfMsxILOMCQ9VtJk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=PRu92ve5m+yFMyE9ZOAdUy7oR9ClsAMW+nPqlk0MeENffS9VWqE4AG9Bk2Fl2uVTe
-         wsdxUerQ3mWSqESfJ09yzyx0wUvIqu/SucsItWJYlTRAMxSnXU3LFte+BPXUxihO8x
-         3CCwJ/JB9AKhd+x6pYKiS0YfM3vEae3r2NClMWoM=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C6DE60741;
-        Wed, 29 May 2019 14:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559141513;
-        bh=wB2s6eG/yS7NJpG9iQQVkTE5phJzfMsxILOMCQ9VtJk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=PUY+3yOpoSS6ECOQcR7KVN3EseXspgVDwsrgZ2LmWoKOYCAxv9uR0r7CR5blyzPFa
-         63L6qrquF0de4y/HH33Ihl1Y7nVLLuOoUVQIE6BXGxLh52uP0dToSPOekIusE1vIQI
-         D9zR5uLY8FF9zhHUEcF1rgdALzzb2MFTlRHnWWd0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C6DE60741
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Madhan Mohan R <MadhanMohan.R@cypress.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "open list\:ARM\/Rockchip SoC..." 
-        <linux-rockchip@lists.infradead.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        brcm80211-dev-list@cypress.com, Double Lo <double.lo@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>
-Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
-References: <20190517225420.176893-2-dianders@chromium.org>
-        <20190528121833.7D3A460A00@smtp.codeaurora.org>
-        <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
-Date:   Wed, 29 May 2019 17:51:47 +0300
-In-Reply-To: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
-        (Doug Anderson's message of "Tue, 28 May 2019 08:51:53 -0700")
-Message-ID: <87h89d2u0s.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 29 May 2019 10:52:47 -0400
+Received: from p200300d06f28ff00b92b307fdbdaf2b9.dip0.t-ipconnect.de ([2003:d0:6f28:ff00:b92b:307f:dbda:f2b9] helo=somnus.fritz.box)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <anna-maria@linutronix.de>)
+        id 1hVzwZ-0005zw-9x; Wed, 29 May 2019 16:52:43 +0200
+Date:   Wed, 29 May 2019 16:52:37 +0200 (CEST)
+From:   Anna-Maria Gleixner <anna-maria@linutronix.de>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Haris Okanovic <haris.okanovic@ni.com>
+Subject: Re: [patch 0/3] do not raise timer softirq unconditionally (spinlockless
+ version)
+In-Reply-To: <20190415201213.600254019@amt.cnet>
+Message-ID: <alpine.DEB.2.21.1905291651500.1395@somnus>
+References: <20190415201213.600254019@amt.cnet>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug Anderson <dianders@chromium.org> writes:
+Hi,
 
-> Hi,
->
-> On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->>
->> Douglas Anderson <dianders@chromium.org> wrote:
->>
->> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
->> > sdio_aos") we disabled something called "command decode in sdio_aos"
->> > for a whole bunch of Broadcom SDIO WiFi parts.
->> >
->> > After that patch landed I find that my kernel log on
->> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
->> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
->> >
->> > This seems to happen every time the Broadcom WiFi transitions out of
->> > sleep mode.  Reverting the part of the commit that affects the WiFi on
->> > my boards fixes the problem for me, so that's what this patch does.
->> >
->> > Note that, in general, the justification in the original commit seemed
->> > a little weak.  It looked like someone was testing on a SD card
->> > controller that would sometimes die if there were CRC errors on the
->> > bus.  This used to happen back in early days of dw_mmc (the controller
->> > on my boards), but we fixed it.  Disabling a feature on all boards
->> > just because one SD card controller is broken seems bad.  ...so
->> > instead of just this patch possibly the right thing to do is to fully
->> > revert the original commit.
->> >
->> > Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
->> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>
->> I don't see patch 2 in patchwork and I assume discussion continues.
->
-> Apologies.  I made sure to CC you individually on all the patches but
-> didn't think about the fact that you use patchwork to manage and so
-> didn't ensure all patches made it to all lists (by default each patch
-> gets recipients individually from get_maintainer).  I'll make sure to
-> fix for patch set #2.  If you want to see all the patches, you can at
-> least find them on lore.kernel.org linked from the cover:
->
-> https://lore.kernel.org/patchwork/cover/1075373/
+I had a look at the queue and have several questions about your
+implementation. 
 
-No worries, I had the thread on my email but was just too busy to check.
-So I instead wrote down my thought process so that somebode can correct
-me in case I have misunderstood. I usually do that when it's not clear
-what the next action should be.
+First of all, I had some troubles to understand your commit messages. So I
+first had to read the code and then tried to understand the commit
+messages. It is easier, if it works the other way round.
 
--- 
-Kalle Valo
+On Mon, 15 Apr 2019, Marcelo Tosatti wrote:
+
+> For isolated CPUs, we'd like to skip awakening ktimersoftd
+> (the switch to and then back from ktimersoftd takes 10us in
+> virtualized environments, in addition to other OS overhead,
+> which exceeds telco requirements for packet forwarding for
+> 5G) from the sched tick.
+
+You would like to prevent raising the timer softirq in general from the
+sched tick for isolated CPUs? Or you would like to prevent raising the
+timer softirq if no pending timer is available?
+
+Nevertheless, this change is not PREEMPT_RT specific. It is a NOHZ
+dependand change. So it would be nice, if the queue is against
+mainline. But please correct me, if I'm wrong.
+
+[...]
+
+> This patchset reduces cyclictest latency from 25us to 14us
+> on my testbox. 
+> 
+
+A lot of information is missing: How does your environment looks like for
+this test, what is your workload,...?
+
+Did you also run other tests?
+
+Thanks,
+
+	Anna-Maria
