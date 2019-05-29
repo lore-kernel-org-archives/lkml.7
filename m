@@ -2,132 +2,156 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D466C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69F1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E673023CA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895B623CB8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:01:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u05Zb0tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfE2P7O (ORCPT
+        id S1726857AbfE2QBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:59:14 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:56652 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfE2P7N (ORCPT
+        Wed, 29 May 2019 12:01:07 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36442 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfE2QBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:59:13 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hW0yt-0000xT-LR; Wed, 29 May 2019 09:59:11 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hW0ys-0007IP-SG; Wed, 29 May 2019 09:59:11 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org
-References: <20190529113157.227380-1-jannh@google.com>
-Date:   Wed, 29 May 2019 10:59:06 -0500
-In-Reply-To: <20190529113157.227380-1-jannh@google.com> (Jann Horn's message
-        of "Wed, 29 May 2019 13:31:57 +0200")
-Message-ID: <87v9xtz1yt.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Wed, 29 May 2019 12:01:07 -0400
+Received: by mail-yw1-f66.google.com with SMTP id e68so1293773ywf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XPrHCbcCsNef2jSZM/g/XQcezPiyqyIiC5REnh0/eSU=;
+        b=u05Zb0trAPOZWtt+gcSapUiKAhRmlKzjqRravknOondeT/3wa6ADIj8DY7WfXOyOLH
+         fMJMu9Q+2QLQKPNqpzfdlikJSWDoozUo+ep+yElgkrB07qG6DxzjbFOGSDR0DDwBdpib
+         MV4TCgjHYk7KN0kP42CwWaFEu4bOCRnUJQPF08DFFI04VYgqDROaZ+Ec87P6gS+M+Lyf
+         jwl1VZ94mKViet2J/Qz0H2dYP1PRGLJD3JSCqt1g7oorovfWQX5VAWjPX8vjxGtwurcB
+         mswhIDPfza+bD3GdvMi8Vl+sGU+u9VECrmn3EpAK6PQzyU29oFdf1iA5x5CaLa3d0XiN
+         B+hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XPrHCbcCsNef2jSZM/g/XQcezPiyqyIiC5REnh0/eSU=;
+        b=ovpfLkLQGh0fd3f3VI0Crh2RlyMYB+25j3ujzGbculBwUK7N9D4JRydhqT80cSzrZU
+         kOTT6DjWfCEayyE2tYBnWVbGAs/Af8+M4tbclnLr/Tusw+9/Flxm6vDkfuByr17AsPRG
+         2naQeYrnd/FEgT06kTKlyrP+ji/vtlmj0PfhPv4GehpGQ0jSDbJLTLabgC2tXAceIsSp
+         JgKXPSSSi9emc6wSArjPHUXbZBvNh+uGFRafIJIuyx2M6MTIdETHMDJDBXHH2VCk0dYN
+         GU618cacvt7uUmlAo5grCigP+vQnjN2aUqHgM728z3q8L0+cOVjdAn1Mnw5gngTXIhQa
+         q1Eg==
+X-Gm-Message-State: APjAAAUYpa4xST8Q1hltq7ryUviZEfGXUTFGeLqTY9KWSKeBL7G9zBzl
+        B0YjNKI4YpK5l3clU9RZP1a1uTZAT2ryImlySkdOg41wK+HY7Q==
+X-Google-Smtp-Source: APXvYqwfxD9KIX8UqVjT1h6eHKGyi7P+1pkf9cBDw9YJsI/OY+BmVcm2eVABC+x9PT5lSCxxPsKn+fs9F+HYQe0nEp8=
+X-Received: by 2002:a81:6946:: with SMTP id e67mr44438984ywc.424.1559145665722;
+ Wed, 29 May 2019 09:01:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hW0ys-0007IP-SG;;;mid=<87v9xtz1yt.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+HZZhP+I6gkJd2bJSMtuTonAEQcH3Rs7I=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <e070e241-fb65-a5b0-3155-7380a9203bcf@molgen.mpg.de>
+ <8627ea1e-8e51-c425-97f6-aeb57176e11a@gmail.com> <eb730f01-0c6d-0589-36cc-7193d64c1ee8@molgen.mpg.de>
+In-Reply-To: <eb730f01-0c6d-0589-36cc-7193d64c1ee8@molgen.mpg.de>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 29 May 2019 09:00:54 -0700
+Message-ID: <CANn89i+VvwMaHy2Br-0CcC3gPQ+PmG3Urpn4KpqL0P7XBykmcw@mail.gmail.com>
+Subject: Re: Driver has suspect GRO implementation, TCP performance may be compromised.
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> writes:
-
-> Restore the read memory barrier in __ptrace_may_access() that was deleted
-> a couple years ago. Also add comments on this barrier and the one it pairs
-> with to explain why they're there (as far as I understand).
-
-My bad.
-
-When I made that change I could not figure out what that barrier was
-for, and it did not appear necessary.
-
-Do you happen to know of any real world problems?
-
-Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-If no one else would prefer to pick this up I will grab it.  I have
-another bug fix I already queueing for 5.2-rcX.
-
-Thank you,
-Eric
-
+On Wed, May 29, 2019 at 7:49 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
 >
-> Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
-> (I have no clue whatsoever what the relevant tree for this is, but I
-> guess Oleg is the relevant maintainer?)
+> Dear Eric,
 >
->  kernel/cred.c   |  9 +++++++++
->  kernel/ptrace.c | 10 ++++++++++
->  2 files changed, 19 insertions(+)
 >
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index 45d77284aed0..07e069d00696 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -450,6 +450,15 @@ int commit_creds(struct cred *new)
->  		if (task->mm)
->  			set_dumpable(task->mm, suid_dumpable);
->  		task->pdeath_signal = 0;
-> +		/*
-> +		 * If a task drops privileges and becomes nondumpable,
-> +		 * the dumpability change must become visible before
-> +		 * the credential change; otherwise, a __ptrace_may_access()
-> +		 * racing with this change may be able to attach to a task it
-> +		 * shouldn't be able to attach to (as if the task had dropped
-> +		 * privileges without becoming nondumpable).
-> +		 * Pairs with a read barrier in __ptrace_may_access().
-> +		 */
->  		smp_wmb();
->  	}
->  
-> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-> index 5710d07e67cf..e54452c2954b 100644
-> --- a/kernel/ptrace.c
-> +++ b/kernel/ptrace.c
-> @@ -324,6 +324,16 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
->  	return -EPERM;
->  ok:
->  	rcu_read_unlock();
-> +	/*
-> +	 * If a task drops privileges and becomes nondumpable (through a syscall
-> +	 * like setresuid()) while we are trying to access it, we must ensure
-> +	 * that the dumpability is read after the credentials; otherwise,
-> +	 * we may be able to attach to a task that we shouldn't be able to
-> +	 * attach to (as if the task had dropped privileges without becoming
-> +	 * nondumpable).
-> +	 * Pairs with a write barrier in commit_creds().
-> +	 */
-> +	smp_rmb();
->  	mm = task->mm;
->  	if (mm &&
->  	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+> Thank you for the quick reply.
+>
+> On 05/28/19 19:18, Eric Dumazet wrote:
+> > On 5/28/19 8:42 AM, Paul Menzel wrote:
+>
+> >> Occasionally, Linux outputs the message below on the workstation Dell
+> >> OptiPlex 5040 MT.
+> >>
+> >>     TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised.
+> >>
+> >> Linux 4.14.55 and Linux 5.2-rc2 show the message, and the WWW also
+> >> gives some hits [1][2].
+> >>
+> >> ```
+> >> $ sudo ethtool -i net00
+> >> driver: e1000e
+> >> version: 3.2.6-k
+> >> firmware-version: 0.8-4
+> >> expansion-rom-version:
+> >> bus-info: 0000:00:1f.6
+> >> supports-statistics: yes
+> >> supports-test: yes
+> >> supports-eeprom-access: yes
+> >> supports-register-dump: yes
+> >> supports-priv-flags: no
+> >> ```
+> >>
+> >> Can the driver e1000e be improved?
+> >>
+> >> Any idea, what triggers this, as I do not see it every boot? Download
+> >> of big files?
+> >>
+> > Maybe the driver/NIC can receive frames bigger than MTU, although this would be strange.
+> >
+> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > index c61edd023b352123e2a77465782e0d32689e96b0..cb0194f66125bcba427e6e7e3cacf0c93040ef61 100644
+> > --- a/net/ipv4/tcp_input.c
+> > +++ b/net/ipv4/tcp_input.c
+> > @@ -150,8 +150,10 @@ static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb,
+> >                 rcu_read_lock();
+> >                 dev = dev_get_by_index_rcu(sock_net(sk), skb->skb_iif);
+> >                 if (!dev || len >= dev->mtu)
+> > -                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
+> > -                               dev ? dev->name : "Unknown driver");
+> > +                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised."
+> > +                               " len %u mtu %u\n",
+> > +                               dev ? dev->name : "Unknown driver",
+> > +                               len, dev ? dev->mtu : 0);
+> >                 rcu_read_unlock();
+> >         }
+> >  }
+>
+> I applied your patch on commit 9fb67d643 (Merge tag 'pinctrl-v5.2-2' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl):
+>
+>      [ 5507.291769] TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised. len 1856 mtu 1500
+
+
+The 'GRO' in the warning can be probably ignored, since this NIC does
+not implement its own GRO.
+
+You can confirm this with this debug patch:
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c
+b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 0e09bede42a2bd2c912366a68863a52a22def8ee..014a43ce77e09664bda0568dd118064b006acd67
+100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -561,6 +561,9 @@ static void e1000_receive_skb(struct e1000_adapter *adapter,
+        if (staterr & E1000_RXD_STAT_VP)
+                __vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), tag);
+
++       if (skb->len > netdev->mtu)
++               pr_err_ratelimited("received packet bigger (%u) than
+MTU (%u)\n",
++                                  skb->len, netdev->mtu);
+        napi_gro_receive(&adapter->napi, skb);
+ }
