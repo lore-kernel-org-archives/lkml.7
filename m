@@ -2,135 +2,108 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70AFC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC51C07542
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A16D21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE37020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRPwuWuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfE2DWw (ORCPT
+        id S1726522AbfE2DZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:22:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58200 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfE2DWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:22:52 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D2D51308425C;
-        Wed, 29 May 2019 03:22:51 +0000 (UTC)
-Received: from [10.72.12.48] (ovpn-12-48.pek2.redhat.com [10.72.12.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D46731972B;
-        Wed, 29 May 2019 03:22:42 +0000 (UTC)
-Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-References: <20190528105623.27983-1-sgarzare@redhat.com>
- <20190528105623.27983-4-sgarzare@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
-Date:   Wed, 29 May 2019 11:22:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 28 May 2019 23:25:06 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]:37667 "EHLO
+        mail-qt1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfE2DZF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 23:25:05 -0400
+Received: by mail-qt1-f177.google.com with SMTP id y57so879328qtk.4;
+        Tue, 28 May 2019 20:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f7jMmQ805XOFY1RecqIVsVKw8Wv7KaR0RUM1pyfgUNQ=;
+        b=DRPwuWuL/d0tw86uQzToWiIfQ6wc0zZIS1jaaw/T8sWSFM2acw763vSGft/xi08iad
+         gxVSzCzu4SiHbDcCByxnp+8ennWhTV7bJUvkVOHf8t9anDxPkjTl4v7zo0l0XAqGPIqP
+         bNkq83uEEqbU9XzGdw397olRRzw8BbutNaGU11FOqwlCe7ZJ/F2rwz2zWzVYQXXa6IZY
+         nsjIUElDgKDMN6gHNSd8NRPExxhlj7BQIhvJnlm5zj9t67LGy4odr81zPvCkDBQAOft3
+         9z+UmPdCI9K+n33dM/ZNjYTrlBxjGHcSnUNdk0539NvzeN64vrdJs6LAYL+03+redAYa
+         EpDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f7jMmQ805XOFY1RecqIVsVKw8Wv7KaR0RUM1pyfgUNQ=;
+        b=B7Rvs/9tml6yJHoDRPyKaRGc2A+9aUNxtCyZxq+AAuAMdsy3wLJ5kQZLEOZMU+q2jA
+         8eoLfhM2bPezFQIpKCNqaoeIGv/pklOTzXjEvYqd22Iab/AtHc8LKuuvCiDCMtXxr2xc
+         vq76WVgqx2DnB0rhGyVwWkKM+/6cwCmK+z0VwzG5euUdQkZKbac06f0MdacpTQ4daB5U
+         +YQu8n026TGr+P8JKHG/SNSahKx7nsoildMu9IDQE+znhG5P8FqwZYK7l1/LeZ3Hm54E
+         WUjcP6dNk0c/C7qO/Sk8fRfSl8i5lEbg0W9lMeUoZtHDGC2ct1Hpat687Glbb6pIHKzX
+         kufQ==
+X-Gm-Message-State: APjAAAXV2qJI76RlOGiWn3FWFSwE6tfJaPWzEUJXh6RHxgHPgz/Z9GKB
+        btP6sz0xCFN/hw0z+jfpHNX0M9zcAqiAJU+sHJZeww==
+X-Google-Smtp-Source: APXvYqyQaS4Gps42wNqA6MZscB8fnWZF+JqILV/ghhZz4CwMVOpKhu6zOI1HDLjhfBZY/kYQI+K1ISr4PAR0c2W0bFw=
+X-Received: by 2002:ac8:1205:: with SMTP id x5mr86437682qti.284.1559100304524;
+ Tue, 28 May 2019 20:25:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190528105623.27983-4-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 29 May 2019 03:22:51 +0000 (UTC)
+References: <20190524142713.360c0c10@canb.auug.org.au> <CAH2r5msm9TfC8f5WNOyD-9g01u9m-UNPuk_XPp3Ykhc4u7+Rtg@mail.gmail.com>
+In-Reply-To: <CAH2r5msm9TfC8f5WNOyD-9g01u9m-UNPuk_XPp3Ykhc4u7+Rtg@mail.gmail.com>
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+Date:   Wed, 29 May 2019 11:24:52 +0800
+Message-ID: <CADJHv_tzocJ6heXoAa176zJU+8cP+3t8bXqxQDjZ4rm_FOiA=g@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the cifs tree
+To:     Steve French <smfrench@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/5/28 下午6:56, Stefano Garzarella wrote:
-> We flush all pending works before to call vdev->config->reset(vdev),
-> but other works can be queued before the vdev->config->del_vqs(vdev),
-> so we add another flush after it, to avoid use after free.
+On Fri, May 24, 2019 at 10:14 PM Steve French <smfrench@gmail.com> wrote:
 >
-> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
->   net/vmw_vsock/virtio_transport.c | 23 +++++++++++++++++------
->   1 file changed, 17 insertions(+), 6 deletions(-)
+> fixed and repushed to cifs-2.6.git for-next
+
+Thanks!
+
+[resend including mail lists]
+
 >
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index e694df10ab61..ad093ce96693 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -660,6 +660,15 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
->   	return ret;
->   }
->   
-> +static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
-> +{
-> +	flush_work(&vsock->loopback_work);
-> +	flush_work(&vsock->rx_work);
-> +	flush_work(&vsock->tx_work);
-> +	flush_work(&vsock->event_work);
-> +	flush_work(&vsock->send_pkt_work);
-> +}
-> +
->   static void virtio_vsock_remove(struct virtio_device *vdev)
->   {
->   	struct virtio_vsock *vsock = vdev->priv;
-> @@ -668,12 +677,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->   	mutex_lock(&the_virtio_vsock_mutex);
->   	the_virtio_vsock = NULL;
->   
-> -	flush_work(&vsock->loopback_work);
-> -	flush_work(&vsock->rx_work);
-> -	flush_work(&vsock->tx_work);
-> -	flush_work(&vsock->event_work);
-> -	flush_work(&vsock->send_pkt_work);
-> -
->   	/* Reset all connected sockets when the device disappear */
->   	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
->   
-> @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->   	vsock->event_run = false;
->   	mutex_unlock(&vsock->event_lock);
->   
-> +	/* Flush all pending works */
-> +	virtio_vsock_flush_works(vsock);
-> +
->   	/* Flush all device writes and interrupts, device will not use any
->   	 * more buffers.
->   	 */
-> @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->   	/* Delete virtqueues and flush outstanding callbacks if any */
->   	vdev->config->del_vqs(vdev);
->   
-> +	/* Other works can be queued before 'config->del_vqs()', so we flush
-> +	 * all works before to free the vsock object to avoid use after free.
-> +	 */
-> +	virtio_vsock_flush_works(vsock);
-
-
-Some questions after a quick glance:
-
-1) It looks to me that the work could be queued from the path of 
-vsock_transport_cancel_pkt() . Is that synchronized here?
-
-2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run 
-still needed? It looks to me we've already done except that we need 
-flush rx_work in the end since send_pkt_work can requeue rx_work.
-
-Thanks
-
-
-> +
->   	kfree(vsock);
->   	mutex_unlock(&the_virtio_vsock_mutex);
->   }
+> On Thu, May 23, 2019 at 11:27 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > In commit
+> >
+> >   f875253b5fe6 ("fs/cifs/smb2pdu.c: fix buffer free in SMB2_ioctl_free")
+> >
+> > Fixes tag
+> >
+> >   Fixes: 2c87d6a ("cifs: Allocate memory for all iovs in smb2_ioctl")
+> >
+> > has these problem(s):
+> >
+> >   - SHA1 should be at least 12 digits long
+> >     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+> >     or later) just making sure it is not set (or set to "auto").
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+>
+>
+>
+> --
+> Thanks,
+>
+> Steve
