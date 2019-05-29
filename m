@@ -2,115 +2,213 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1B2C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CBDC07542
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174B121019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4969E216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSd6RavH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfE2G2A (ORCPT
+        id S1726163AbfE2Gds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 02:28:00 -0400
-Received: from shell.v3.sk ([90.176.6.54]:40965 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbfE2G2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 02:28:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id BC1881048EC;
-        Wed, 29 May 2019 08:27:56 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id qKbt9HKp92yJ; Wed, 29 May 2019 08:27:49 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 332101048ED;
-        Wed, 29 May 2019 08:27:49 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id tXFwvtFdL22f; Wed, 29 May 2019 08:27:47 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 73F761048EC;
-        Wed, 29 May 2019 08:27:47 +0200 (CEST)
-Message-ID: <d8518bc65fd909723904637b19332760768f73e7.camel@v3.sk>
-Subject: Re: linux-next: Tree for May 28 (platform/olpc/olpc-xo175-ec)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Lennert Buytenhek <buytenh@wantstofly.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Date:   Wed, 29 May 2019 08:27:45 +0200
-In-Reply-To: <68b2b71a-970b-8e0e-1ee3-e05a51c3bdf2@infradead.org>
-References: <20190528145838.23b73e25@canb.auug.org.au>
-         <68b2b71a-970b-8e0e-1ee3-e05a51c3bdf2@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 29 May 2019 02:33:48 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:43629 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfE2Gdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 02:33:47 -0400
+Received: by mail-yb1-f194.google.com with SMTP id n145so372589ybg.10;
+        Tue, 28 May 2019 23:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yENNg7cJ89dNJXBOI0oAIdYRt7Ra6atK2tYz8p0gMCg=;
+        b=gSd6RavHCdQA6U4PmK50WU7ujwJFo5fxoJGlDl+i6xOvDAKDtBpghDDm0UIcMJ1ZlU
+         /aFHtGuF1bHEqxQJVd15Budgd3S9h4YJFeiyLo45rxhzARoBSJebbdrzA0YZpTTVqEYb
+         lSF2E9NzXeBFPdV8Lx+IBYhxY511yYJgLeJOOqjg9mmcuWw8GR6BzqMA0kxhJIjhC/7a
+         80JkV/Di3vv9PZtwM/LWYu4EkvfW28oVckVL8hJ8W0KEj1QRFONAs3K5vyC0Z6OVuZmL
+         cO3Art9UkR+Pe6p6QueAGoQSVAJZWkE8ESlqRnuiuYQUG8jRt4SdqwWPcwwnynIV7yxX
+         4yAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yENNg7cJ89dNJXBOI0oAIdYRt7Ra6atK2tYz8p0gMCg=;
+        b=p0k8OEzNgbMmJwHut6h3wTLGgZWUCQEujQQ9riWJ1gURsUgoFJqAzFADXNrKkZvLYq
+         tCzVR0KDRz+B7jXNk67rWqasc6F0RAWPhGylEznFkB//XMaaFajQ+KlpPtZsKgBu5BqW
+         7wOVc/qzEUtrF0hu/yokN6HdqMGlZfxSjXZm9QErbrNyMZMRYimZkoAB3SAh+qYaCwkB
+         xs29sTpbUxFadaSGKktoDlibIH1nYtVNt+NYKYigeRwJ18+Rn0hnVTEDxPPsV9ln+8W/
+         AiRx3ms9uqdABcBAD9cRMExzKSjFe75rhRUDW7jtXSgo+zfYKI4Q1Es4R8NOzW1CqTY4
+         FU5w==
+X-Gm-Message-State: APjAAAUizDDwygy6YqyCsbw5RXndhLkMTC+4xo6FgYUOTHg8XzKa45oL
+        2FZvhEBjYyzMALoW9GLw0mTt0OYtZbWqeH2vvaU=
+X-Google-Smtp-Source: APXvYqw6mhDaSRkRnU+dl3Ic5kIIYX8fjw8ZnGYUgNxTD9y/LjYm69ByqIvjP7UucT+m0cDy12RZjAOWaXE0FMJVtOo=
+X-Received: by 2002:a25:8109:: with SMTP id o9mr28076017ybk.132.1559111626228;
+ Tue, 28 May 2019 23:33:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 29 May 2019 09:33:35 +0300
+Message-ID: <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-28 at 11:05 -0700, Randy Dunlap wrote:
-> On 5/27/19 9:58 PM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20190524:
-> > 
-> 
-> on x86, there are some issues with drivers/platform/olpc/olpc-xo175-ec.c:
-> 
-> a. when CONFIG_SPI is not set/enabled:
-> 
-> WARNING: unmet direct dependencies detected for SPI_SLAVE
->   Depends on [n]: SPI [=n]
->   Selected by [y]:
->   - OLPC_XO175_EC [=y] && (ARCH_MMP || COMPILE_TEST [=y])
-> 
-> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_remove':
-> olpc-xo175-ec.c:(.text+0x79): undefined reference to `spi_slave_abort'
-> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_send_command':
-> olpc-xo175-ec.c:(.text+0x24d): undefined reference to `spi_async'
-> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_cmd':
-> olpc-xo175-ec.c:(.text+0xb3c): undefined reference to `spi_slave_abort'
-> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_spi_driver_init':
-> olpc-xo175-ec.c:(.init.text+0xa): undefined reference to `__spi_register_driver'
-> 
-> b. when CONFIG_INPUT is not set/enabled:
-> 
-> ERROR: "input_register_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> ERROR: "input_set_capability" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> ERROR: "devm_input_allocate_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> ERROR: "input_event" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> 
-> c. when some power mgt. Kconfig symbol is not set/enabled:
-> 
-> ERROR: "power_supply_put" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> ERROR: "power_supply_changed" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> ERROR: "power_supply_get_by_name" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
-> 
-> d. drivers/platform/olpc/Kconfig needs to use "menuconfig" like all of the other
->    Kconfig files in drivers/platform/ so that its menu is listed in the correct
->    place in *config interfaces.
+On Tue, May 28, 2019 at 7:03 PM David Howells <dhowells@redhat.com> wrote:
+>
+>
+> Hi Al,
+>
+> Here's a set of patches to add a general variable-length notification queue
+> concept and to add sources of events for:
+>
+>  (1) Mount topology events, such as mounting, unmounting, mount expiry,
+>      mount reconfiguration.
+>
+>  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+>      errors (not complete yet).
+>
+>  (3) Block layer events, such as I/O errors.
+>
+>  (4) Key/keyring events, such as creating, linking and removal of keys.
+>
+> One of the reasons for this is so that we can remove the issue of processes
+> having to repeatedly and regularly scan /proc/mounts, which has proven to
+> be a system performance problem.  To further aid this, the fsinfo() syscall
+> on which this patch series depends, provides a way to access superblock and
+> mount information in binary form without the need to parse /proc/mounts.
+>
+>
+> Design decisions:
+>
+>  (1) A misc chardev is used to create and open a ring buffer:
+>
+>         fd = open("/dev/watch_queue", O_RDWR);
+>
+>      which is then configured and mmap'd into userspace:
+>
+>         ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
+>         ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+>         buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
+>                    MAP_SHARED, fd, 0);
+>
+>      The fd cannot be read or written (though there is a facility to use
+>      write to inject records for debugging) and userspace just pulls data
+>      directly out of the buffer.
+>
+>  (2) The ring index pointers are stored inside the ring and are thus
+>      accessible to userspace.  Userspace should only update the tail
+>      pointer and never the head pointer or risk breaking the buffer.  The
+>      kernel checks that the pointers appear valid before trying to use
+>      them.  A 'skip' record is maintained around the pointers.
+>
+>  (3) poll() can be used to wait for data to appear in the buffer.
+>
+>  (4) Records in the buffer are binary, typed and have a length so that they
+>      can be of varying size.
+>
+>      This means that multiple heterogeneous sources can share a common
+>      buffer.  Tags may be specified when a watchpoint is created to help
+>      distinguish the sources.
+>
+>  (5) The queue is reusable as there are 16 million types available, of
+>      which I've used 4, so there is scope for others to be used.
+>
+>  (6) Records are filterable as types have up to 256 subtypes that can be
+>      individually filtered.  Other filtration is also available.
+>
+>  (7) Each time the buffer is opened, a new buffer is created - this means
+>      that there's no interference between watchers.
+>
+>  (8) When recording a notification, the kernel will not sleep, but will
+>      rather mark a queue as overrun if there's insufficient space, thereby
+>      avoiding userspace causing the kernel to hang.
+>
+>  (9) The 'watchpoint' should be specific where possible, meaning that you
+>      specify the object that you want to watch.
+>
+> (10) The buffer is created and then watchpoints are attached to it, using
+>      one of:
+>
+>         keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
+>         mount_notify(AT_FDCWD, "/", 0, fd, 0x02);
+>         sb_notify(AT_FDCWD, "/mnt", 0, fd, 0x03);
+>
+>      where in all three cases, fd indicates the queue and the number after
+>      is a tag between 0 and 255.
+>
+> (11) The watch must be removed if either the watch buffer is destroyed or
+>      the watched object is destroyed.
+>
+>
+> Things I want to avoid:
+>
+>  (1) Introducing features that make the core VFS dependent on the network
+>      stack or networking namespaces (ie. usage of netlink).
+>
+>  (2) Dumping all this stuff into dmesg and having a daemon that sits there
+>      parsing the output and distributing it as this then puts the
+>      responsibility for security into userspace and makes handling
+>      namespaces tricky.  Further, dmesg might not exist or might be
+>      inaccessible inside a container.
+>
+>  (3) Letting users see events they shouldn't be able to see.
+>
+>
+> Further things that could be considered:
+>
+>  (1) Adding a keyctl call to allow a watch on a keyring to be extended to
+>      "children" of that keyring, such that the watch is removed from the
+>      child if it is unlinked from the keyring.
+>
+>  (2) Adding global superblock event queue.
+>
+>  (3) Propagating watches to child superblock over automounts.
+>
 
-Hi
+David,
 
-Thanks for the heads up.
+I am interested to know how you envision filesystem notifications would
+look with this interface.
 
-I think YueHaibing <yuehaibing@huawei.com> sent in patches for a. and
-b. -- I'll follow up with the fixes for the rest.
+fanotify can certainly benefit from providing a ring buffer interface to read
+events.
 
-> :(
+From what I have seen, a common practice of users is to monitor mounts
+(somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
+It'd be good if those users can use a single watch mechanism/API for
+watching the mount namespace and filesystem events within mounts.
 
-:(
+A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
+It provides users with two complete different mechanisms to watch error
+and filesystem events. That is generally not a good thing to have.
 
-Lubo
+I am not asking that you implement fs_notify() before merging sb_notify()
+and I understand that you have a use case for sb_notify().
+I am asking that you show me the path towards a unified API (how a
+typical program would look like), so that we know before merging your
+new API that it could be extended to accommodate fsnotify events
+where the final result will look wholesome to users.
 
+Thanks,
+Amir.
