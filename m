@@ -2,141 +2,130 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08B6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EABCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D6B20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30F720B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oJVqjQo2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCUeomwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE2IPL (ORCPT
+        id S1726791AbfE2IQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:15:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60158 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfE2IPL (ORCPT
+        Wed, 29 May 2019 04:16:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33583 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfE2IQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=89kkSP52+zBKcZ9ALivlFqEaMzzWrvtjO+agUKAHnOM=; b=oJVqjQo2y8YcIXnHP+5L/MvpV
-        vHfYUbt99zS50CB6X1toAOhgyGkCeWoQl/bNZYSAEOkhseZ2Xp0vSoFSfbMsNW3jsn0snwKlUqytT
-        mquaK38l/XRgCmTjXD45+uFHxBhB3CSdycIoI0nsl8GQyCdBafgvuV10e9JUGMLM1MKg9RRz/1Hpp
-        Ob4ybRN6OJ4Tg9j225ZsN+RoZRg6RdcF2R7avRie9gP/1iGi42WDvE8MXYIrecDYEo6c0dTgwZmOu
-        FC+WapUb173WTWRWna+MBEm6zHgKELT+vteeLOT9UdX+n38J9DqWhSvU15S/lTZQueCHGrjSyvBWb
-        bcufIsYjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVtjf-0002Qa-IT; Wed, 29 May 2019 08:14:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 07E57201A7E42; Wed, 29 May 2019 10:14:58 +0200 (CEST)
-Date:   Wed, 29 May 2019 10:14:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-Subject: Re: [PATCH 2/9] perf/x86/intel: Basic support for metrics counters
-Message-ID: <20190529081457.GD2623@hirez.programming.kicks-ass.net>
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-3-kan.liang@linux.intel.com>
+        Wed, 29 May 2019 04:16:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id n17so2416781edb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7YPMPnQHiZSTC9SMTzMeKs5svVKQA9+Mqdsa3E0VpUY=;
+        b=FCUeomwuDfmxN1h0D6lV5jxZ/wMPiVvSLh+6vD04triShbrg3N711tx0v+ndzNVEut
+         2qCPkBPgtAw9eb+yFx75vkwC6YOZW12ysDv0DmzpxYe3GlWLvMHwTwBbXbXcXXrCiOAg
+         jmEA6ghVGNubW01UhbwRBlGDePYEPq3Sngg6MkkbWzwmwzyjk+oeg5KHQEmsSQ+ZDDNY
+         wPehJjrTlpk+2DpeU0cq1Cthqz2lQIjBEF8L7C5av2+8fQx4JshBLGvtIDyM7otQGz9k
+         r8VWyntEcUUna8khcjBtK1Dst2OuhpzG0hg6YoSouQ3CZfrn3jcG0ZNtJ9i6O+pip3vy
+         G+EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7YPMPnQHiZSTC9SMTzMeKs5svVKQA9+Mqdsa3E0VpUY=;
+        b=bU/hkJik7NO3tqQbe2XPL1QXSKV++WprTRX+4jrtS2A/uEwNeFBGWzQUfhIcEjcfdE
+         tu+9YflXf/N6PVDfEUlTZ3M/Ik35obfhNN2Pz3SKCmu3Jdw+K6JH0cWUMBERuxfIMRjN
+         LBUU0NWqCT4UxVzHAKTzhgGJarS5eVKMIAPOW/ZNBtYrg2TzCl42vLjOmMCPp1wFaZeR
+         HpvZL7nj4/B5YQRNf7qF3qj769iK+oS69DYv5f2jEcx9kt4hIuVRBftluwkZ2dLLP7Kw
+         VRKlwq5K3Qn/afPlthSaq18+mwpgo2mUI5xF0oyi9nl78dpHV8ZL8CROCHNBeiNAXeUz
+         1azA==
+X-Gm-Message-State: APjAAAWSvmERJ7cgOvCm1rbDqojzQzzTW3/PJMh+2ZHSxI5POVFwrkkl
+        kMb1ycziMpRSoRsbm0bLjQQ=
+X-Google-Smtp-Source: APXvYqyKhTr9oxvChieY3z2xPala89CEJgfs4hhkYLjCMkL87W1gCcKCNRuP3pQL6cv2kPCr346y7A==
+X-Received: by 2002:a50:8e81:: with SMTP id w1mr134921402edw.271.1559117761693;
+        Wed, 29 May 2019 01:16:01 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id a17sm4835118edt.63.2019.05.29.01.16.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 01:16:00 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] iommu/dma: Fix condition check in iommu_dma_unmap_sg
+Date:   Wed, 29 May 2019 01:15:32 -0700
+Message-Id: <20190529081532.73585-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521214055.31060-3-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang warns:
 
-On Tue, May 28, 2019 at 02:20:53PM -0400, Liang, Kan wrote:
-> On 5/28/2019 8:05 AM, Peter Zijlstra wrote:
-> > On Tue, May 21, 2019 at 02:40:48PM -0700, kan.liang@linux.intel.com wrote:
+drivers/iommu/dma-iommu.c:897:6: warning: logical not is only applied to
+the left hand side of this comparison [-Wlogical-not-parentheses]
+        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+            ^                                 ~~
+drivers/iommu/dma-iommu.c:897:6: note: add parentheses after the '!' to
+evaluate the comparison first
+        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+            ^
+             (                                    )
+drivers/iommu/dma-iommu.c:897:6: note: add parentheses around left hand
+side expression to silence this warning
+        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+            ^
+            (                                )
+1 warning generated.
 
-> @@ -2155,9 +2155,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
->  		return;
->  	}
->  
-> -	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
-> -	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
-> +	__clear_bit(hwc->idx, cpuc->enabled_events);
-> +
-> +	/*
-> +	 * When any other slots sharing event is still enabled,
-> +	 * cancel the disabling.
-> +	 */
-> +	if (is_any_slots_idx(hwc->idx) &&
-> +	    (*(u64 *)&cpuc->enabled_events & INTEL_PMC_MSK_ANY_SLOTS))
-> +		return;
-> +
-> +	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->reg_idx);
-> +	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->reg_idx);
-> +	cpuc->intel_cp_status &= ~(1ull << hwc->reg_idx);
->  
->  	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
->  		intel_pmu_disable_fixed(hwc);
+Judging from the rest of the commit and the conditional in
+iommu_dma_map_sg, either
 
-> @@ -2242,18 +2252,19 @@ static void intel_pmu_enable_event(struct perf_event *event)
->  	}
->  
->  	if (event->attr.exclude_host)
-> -		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
-> +		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->reg_idx);
->  	if (event->attr.exclude_guest)
-> -		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
-> +		cpuc->intel_ctrl_host_mask |= (1ull << hwc->reg_idx);
->  
->  	if (unlikely(event_is_checkpointed(event)))
-> -		cpuc->intel_cp_status |= (1ull << hwc->idx);
-> +		cpuc->intel_cp_status |= (1ull << hwc->reg_idx);
->  
->  	if (unlikely(event->attr.precise_ip))
->  		intel_pmu_pebs_enable(event);
->  
->  	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-> -		intel_pmu_enable_fixed(event);
-> +		if (!__test_and_set_bit(hwc->idx, cpuc->enabled_events))
-> +			intel_pmu_enable_fixed(event);
->  		return;
->  	}
->  
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index 7ae2912f16de..dd6c86a758f7 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -203,6 +203,7 @@ struct cpu_hw_events {
->  	unsigned long		active_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
->  	unsigned long		running[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
->  	int			enabled;
-> +	unsigned long		enabled_events[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
->  
->  	int			n_events; /* the # of events in the below arrays */
->  	int			n_added;  /* the # last events in the below arrays;
+    if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
 
-> > Also, why do we need that whole enabled_events[] array. Do we really not
-> > have that information elsewhere?
-> 
-> No. We don't have a case that several events share a counter at the same
-> time. We don't need to check if other events are enabled when we try to
-> disable a counter. So we don't save such information.
-> But we have to do it for metrics events.
+or
+    if ((attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
 
-So you have x86_pmu.disable() clear the bit, and x86_pmu.enable() set
-the bit, and then, if you look at arch/x86/events/core.c that doesn't
-look redundant?
+was intended, not a combination of the two.
 
-That is, explain to me how exactly this new enabled_events[] is different
-from active_mask[].
+I personally think that the former is easier to understand so use that.
+
+Fixes: 06d60728ff5c ("iommu/dma: move the arm64 wrappers to common code")
+Link: https://github.com/ClangBuiltLinux/linux/issues/497
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/iommu/dma-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 0cd49c2d3770..0dee374fc64a 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -894,7 +894,7 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+ 	struct scatterlist *tmp;
+ 	int i;
+ 
+-	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
++	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+ 		iommu_dma_sync_sg_for_cpu(dev, sg, nents, dir);
+ 
+ 	/*
+-- 
+2.22.0.rc1
+
