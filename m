@@ -2,116 +2,80 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A371FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A04EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5718F21874
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0C3208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfE2Kya (ORCPT
+        id S1726612AbfE2KzQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:54:30 -0400
-Received: from mail-oln040092069023.outbound.protection.outlook.com ([40.92.69.23]:8935
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725894AbfE2Kya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:54:30 -0400
-Received: from AM5EUR02FT056.eop-EUR02.prod.protection.outlook.com
- (10.152.8.54) by AM5EUR02HT133.eop-EUR02.prod.protection.outlook.com
- (10.152.9.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Wed, 29 May
- 2019 10:54:27 +0000
-Received: from VI1PR03MB4206.eurprd03.prod.outlook.com (10.152.8.60) by
- AM5EUR02FT056.mail.protection.outlook.com (10.152.9.107) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1922.16 via Frontend Transport; Wed, 29 May 2019 10:54:27 +0000
-Received: from VI1PR03MB4206.eurprd03.prod.outlook.com
- ([fe80::883e:1bd6:cd36:5fb0]) by VI1PR03MB4206.eurprd03.prod.outlook.com
- ([fe80::883e:1bd6:cd36:5fb0%4]) with mapi id 15.20.1922.021; Wed, 29 May 2019
- 10:54:27 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-CC:     Jonas Karlman <jonas@kwiboo.se>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] media: dt-bindings: rockchip: Document RK3328 VPU binding
-Thread-Topic: [PATCH] media: dt-bindings: rockchip: Document RK3328 VPU
- binding
-Thread-Index: AQHVFgzihlhmdNUSwkKzxCU6ATy8kQ==
-Date:   Wed, 29 May 2019 10:54:27 +0000
-Message-ID: <VI1PR03MB4206A833FF54A3235571896CAC1F0@VI1PR03MB4206.eurprd03.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P193CA0088.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:88::29) To VI1PR03MB4206.eurprd03.prod.outlook.com
- (2603:10a6:803:51::23)
-x-incomingtopheadermarker: OriginalChecksum:A37DCEC0744D90776D608EE1B853CCB01D945B1C56F5D83F60FBFFE7190CF193;UpperCasedChecksum:BCA00BE91E788EF7747F9C0F3BC2D1C4FB5121767231C16A3BDDE41AA21B026F;SizeAsReceived:7665;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [8XddgOlttuYKrvkyvGFKAR8D4EwiBt50]
-x-microsoft-original-message-id: <20190529105409.23451-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:AM5EUR02HT133;
-x-ms-traffictypediagnostic: AM5EUR02HT133:
-x-microsoft-antispam-message-info: OpOkS7wTfOIL24rblTBMu0c9zLFBmICSHEM4mTrzlzj0LrmJj4GH9pzyEseBqk2Gk4FpKe3QiyU1WBiIM4Lhb6302/36mJF5Ic9viF4sKGtWk1RsFupY21YvsLb7D2tsy5G89SMDwCaAJttrB+DfQjFiyhTWEeapxTbzr7nc9kSTp3FKN5Iqae9aQygScT03
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 May 2019 06:55:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34742 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfE2KzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:55:16 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 92A5430B2443;
+        Wed, 29 May 2019 10:55:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B4BC2F2A0;
+        Wed, 29 May 2019 10:55:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
+References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 096f17cb-7919-43b3-67ff-08d6e42403fd
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 10:54:27.1629
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT133
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13969.1559127310.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 29 May 2019 11:55:10 +0100
+Message-ID: <13970.1559127310@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 29 May 2019 10:55:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VXBkYXRlIGRldmljZXRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciBSb2NrY2hpcCBWUFUg
-b24gUkszMzI4Lg0KDQpTaWduZWQtb2ZmLWJ5OiBKb25hcyBLYXJsbWFuIDxqb25hc0Brd2lib28u
-c2U+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0
-IHwgMTggKysrKysrKysrKysrKysrKy0tDQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMo
-KyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvcm9ja2NoaXAtdnB1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0DQppbmRleCAzNWRjNDY0YWQ3Yzgu
-LjMzOTI1MmQ5YzUxNSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZWRpYS9yb2NrY2hpcC12cHUudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvcm9ja2NoaXAtdnB1LnR4dA0KQEAgLTEsMTQgKzEsMTcgQEANCiBk
-ZXZpY2UtdHJlZSBiaW5kaW5ncyBmb3Igcm9ja2NoaXAgVlBVIGNvZGVjDQogDQogUm9ja2NoaXAg
-KFZpZGVvIFByb2Nlc3NpbmcgVW5pdCkgcHJlc2VudCBpbiB2YXJpb3VzIFJvY2tjaGlwIHBsYXRm
-b3JtcywNCi1zdWNoIGFzIFJLMzI4OCBhbmQgUkszMzk5Lg0KK3N1Y2ggYXMgUkszMjg4LCBSSzMz
-MjggYW5kIFJLMzM5OS4NCiANCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIC0gY29tcGF0aWJsZTog
-dmFsdWUgc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nDQogCQkicm9ja2NoaXAscmszMjg4
-LXZwdSI7DQorCQkicm9ja2NoaXAscmszMzI4LXZwdSI7DQogCQkicm9ja2NoaXAscmszMzk5LXZw
-dSI7DQogLSBpbnRlcnJ1cHRzOiBlbmNvZGluZyBhbmQgZGVjb2RpbmcgaW50ZXJydXB0IHNwZWNp
-ZmllcnMNCi0tIGludGVycnVwdC1uYW1lczogc2hvdWxkIGJlICJ2ZXB1IiBhbmQgInZkcHUiDQor
-LSBpbnRlcnJ1cHQtbmFtZXM6IHNob3VsZCBiZQ0KKwkJInZlcHUiLCAidmRwdSIgb24gUkszMjg4
-IGFuZCBSSzMzOTksDQorCQkidmRwdSIgb24gUkszMzI4Lg0KIC0gY2xvY2tzOiBwaGFuZGxlIHRv
-IFZQVSBhY2xrLCBoY2xrIGNsb2Nrcw0KIC0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAiYWNsayIg
-YW5kICJoY2xrIg0KIC0gcG93ZXItZG9tYWluczogcGhhbmRsZSB0byBwb3dlciBkb21haW4gbm9k
-ZQ0KQEAgLTI3LDMgKzMwLDE0IEBAIFNvQy1zcGVjaWZpYyBEVCBlbnRyeToNCiAJCXBvd2VyLWRv
-bWFpbnMgPSA8JnBvd2VyIFJLMzI4OF9QRF9WSURFTz47DQogCQlpb21tdXMgPSA8JnZwdV9tbXU+
-Ow0KIAl9Ow0KKw0KKwl2cHU6IHZpZGVvLWNvZGVjQGZmMzUwMDAwIHsNCisJCWNvbXBhdGlibGUg
-PSAicm9ja2NoaXAscmszMzI4LXZwdSI7DQorCQlyZWcgPSA8MHgwIDB4ZmYzNTAwMDAgMHgwIDB4
-ODAwPjsNCisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA5IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0K
-KwkJaW50ZXJydXB0LW5hbWVzID0gInZkcHUiOw0KKwkJY2xvY2tzID0gPCZjcnUgQUNMS19WUFU+
-LCA8JmNydSBIQ0xLX1ZQVT47DQorCQljbG9jay1uYW1lcyA9ICJhY2xrIiwgImhjbGsiOw0KKwkJ
-cG93ZXItZG9tYWlucyA9IDwmcG93ZXIgUkszMzI4X1BEX1ZQVT47DQorCQlpb21tdXMgPSA8JnZw
-dV9tbXU+Ow0KKwl9Ow0KLS0gDQoyLjE3LjENCg0K
+Jann Horn <jannh@google.com> wrote:
+
+> > +                       /* Global root? */
+> > +                       if (mnt != parent) {
+> > +                               cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
+> > +                               mnt = parent;
+> > +                               cursor.mnt = &mnt->mnt;
+> > +                               continue;
+> > +                       }
+> > +                       break;
+> 
+> (nit: this would look clearer if you inverted the condition and wrote
+> it as "if (mnt == parent) break;", then you also wouldn't need that
+> "continue" or the braces)
+
+It does look better with the logic inverted, but you *do* still need the
+continue.  After the if-statement, there is:
+
+	cursor.dentry = cursor.dentry->d_parent;
+
+which we need to skip.  It might make sense to move that into an
+else-statement from an aesthetic point of view.
+
+David
