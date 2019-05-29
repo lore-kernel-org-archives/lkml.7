@@ -4,66 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB9CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6758C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D22C24234
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4EB24239
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559166316;
-	bh=una0/e/8ySmlj4JhQmei5RgTXmPxhXe5myJTjKTrpTo=;
+	s=default; t=1559166318;
+	bh=MslAkn0MjKtReq/x6B4kRuRZHNL2td+pBIK0ZIkcHME=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=dXPITW2iedtLroV2D5j74jmA6KiOaZ3/9wLXho9oqgwztNFK64pahF1ZQ9454I8AP
-	 iRaVNUC8glCunfMqmwgZkGUGQLREET9/b2WafRfKXVH9bIvBH0sEDf4NINIJ4xPQOl
-	 YPsEvuCkibffbQmYy4iOEwFBGOKc8UbWB4w2SJ3c=
+	b=WdLzMMK0/nKGcxR3Dnh6kTECE5NYVjY39c4uUstUp1c/VgD/zu8Qq0SI/pm2MVIE9
+	 pP/AE8AZj2e9YenKXMwZ1lq3Y/WczvozfmqPuc97fK0u2Jt8idTndbuz9KLREn86Wl
+	 hTbz4RVBDcD5q3Ay63V1AEn0ujk6E2ek7E7sBprE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfE2VpP (ORCPT
+        id S1726581AbfE2VpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60350 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 17:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfE2VpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726311AbfE2VpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 17:45:15 -0400
-Subject: Re: [GIT PULL] tracing: Avoid memory leak in predicate_parse()
+Subject: Re: [GIT PULL] Fixes for sphinx 2.0 docs build failures
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559166314;
-        bh=una0/e/8ySmlj4JhQmei5RgTXmPxhXe5myJTjKTrpTo=;
+        s=default; t=1559166315;
+        bh=MslAkn0MjKtReq/x6B4kRuRZHNL2td+pBIK0ZIkcHME=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HWFIQZ+NGH+ALEaMlTs1wgDAjjE3OG4hpDuq7ZaOsA66Wdg7rTbsws2Zv20nKYFt5
-         twvIocejfFDS5n+8582cudo0rbYX46kFKLfUfz2h5bE++7nUsEE8Szi0ZyFOv+ULB0
-         9YiHNhRADIBo6oCIvYtvCs0v/g56vrJsBUdf5Fyc=
+        b=sIZqpnZVbBRDbZma5yyNI9XS7j8ZM5fZw2Rl+q440CLzSqv3/8XSjnwPr4vNoTMpW
+         2Bqnwzmwqd9dR6AJSwgzX1shvSmWBKMFgip0IdFJ+ewN9gotLvt9qRDaU/WD3ASEvd
+         tGp3Ik0XlJ2aeMim3VTHLL+sgg0OHO0CvhcZa3dM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190528225834.7428baf9@gandalf.local.home>
-References: <20190528225834.7428baf9@gandalf.local.home>
+In-Reply-To: <20190529095408.1429a5ab@lwn.net>
+References: <20190529095408.1429a5ab@lwn.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190528225834.7428baf9@gandalf.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
- trace-v5.2-rc2
-X-PR-Tracked-Commit-Id: dfb4a6f2191a80c8b790117d0ff592fd712d3296
+X-PR-Tracked-Message-Id: <20190529095408.1429a5ab@lwn.net>
+X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-5.2-fixes2
+X-PR-Tracked-Commit-Id: 551bd3368a7b3cfef01edaade8970948d178d40a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9e82b4a91d46a690de3cbbe6960667caa508b27a
-Message-Id: <155916631448.28954.7396701337136352142.pr-tracker-bot@kernel.org>
-Date:   Wed, 29 May 2019 21:45:14 +0000
-To:     Steven Rostedt <rostedt@goodmis.org>
+X-PR-Merge-Commit-Id: bec7550cca106c3ccc061e3e625516af63054fe4
+Message-Id: <155916631500.28954.14280541442507821303.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 May 2019 21:45:15 +0000
+To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tomas Bortoli <tomasbortoli@gmail.com>
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 28 May 2019 22:58:34 -0400:
+The pull request you sent on Wed, 29 May 2019 09:54:08 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.2-rc2
+> git://git.lwn.net/linux.git tags/docs-5.2-fixes2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9e82b4a91d46a690de3cbbe6960667caa508b27a
+https://git.kernel.org/torvalds/c/bec7550cca106c3ccc061e3e625516af63054fe4
 
 Thank you!
 
