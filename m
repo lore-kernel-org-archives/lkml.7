@@ -2,145 +2,222 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D809C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18718240FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1BB240FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="M+ksa92q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfUUAWvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfE2Tat (ORCPT
+        id S1726192AbfE2Tdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:30:49 -0400
-Received: from onstation.org ([52.200.56.107]:43656 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfE2Tat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:30:49 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 178A03E80A;
-        Wed, 29 May 2019 19:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1559158247;
-        bh=4hAGm9jsyCI3/b1K5x1cRkJ1u1uCXrMQWlcs3/4kggk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M+ksa92qE21lR6e9FRGoYaTcjW/5xYMh2O6q3svhEEVNnlww909FH3ozeFmK2mYX8
-         q0OlKznqgdlYhJwRwZnqRlzVFquhcBzQeeiPNzMY3Oou0dqnRup+0sI8Pf84BNFKSw
-         mNC/tiVgUSeZGfFmu+0kjBQfTQ+FsQmaMGqLGM4g=
-Date:   Wed, 29 May 2019 15:30:46 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5
- display support
-Message-ID: <20190529193046.GA19876@basecamp>
-References: <20190509020352.14282-1-masneyb@onstation.org>
- <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp>
- <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
- <20190529013713.GA13245@basecamp>
- <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
- <20190529024648.GA13436@basecamp>
- <CAOCk7NpC93ACr4jFm7SBOKSvFJSDhq2byX6BAYPX29BuYEkWnQ@mail.gmail.com>
- <20190529102822.GA15027@basecamp>
- <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
+        Wed, 29 May 2019 15:33:53 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33411 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfE2Tdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 15:33:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y17so3076070lfe.0;
+        Wed, 29 May 2019 12:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X4Z3SqYBRU5CnhsUgVz5EBro7b9YhlHplxl+AsDpg3g=;
+        b=AfUUAWvNQ+0SWuHNzMDdoUzKSDFpnqMP5l7v/fYDP2fHKixUiEFn+qk6f8asiWo3hF
+         nirIYf7lQ3nntinbNpqC843gd+vo4iAXf9ZEa4nz+4zfhF3yayI/Hsoze88asTtOiDx+
+         RdOPu7JoAxYi8TKB8WWPq0SIhORMryA1m51Hp8XDDBIkT/tJw1krbwcAfBZt6iYp//Ne
+         bqkw4zPGNRp3nMgmyT7iSSp5dNppRnCb5JJ1nOOoYD0KrK+G++ys/8P8gqaO68aTq05l
+         E8P5mqIH4PFR8QamY1j3kJ2tkeRmK+P1yHeLzMM4I0d+UxuinekLyRLZy2vCsZujQScI
+         dyWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X4Z3SqYBRU5CnhsUgVz5EBro7b9YhlHplxl+AsDpg3g=;
+        b=fnSjno6s7gT/v7EOk7TCu/1cKktSU5QYR9UnvM5q1YWarbw8tcSZawNU+56YCnDpvD
+         ZJLWyAarIyBEiZqWw4Icf6sPOpwrzjDOiP3L88GgiulbCrMqVdqOhpopvBtKntf9vkqZ
+         E62V0xhaiIzomYL+5U4F/U744igdi2UJw2RhmhU9c+rvVTbQCCoyePuEeLJgaN1usSi9
+         pWbc9tITtT6hXHrNWNVDp6vye494P9cb+Tu54leJmiZk3z253RA1826paCJZNw8Oh7WP
+         eKQ1ZgKpC5ub/dDbAflxoBiLIb+QKKkHOKVyZkjZL7Elob5JEbBG0sZS8LIubHcG805C
+         lXIw==
+X-Gm-Message-State: APjAAAW51D4EHJmNkqJKvX/iwQUCQpPyfZRFxZC7fXjmafjcuIOhj4lm
+        KfsLQKgYAvF1e587N/OtMxx2KVL6
+X-Google-Smtp-Source: APXvYqxvssSSQUHtgkxfWoSya6zYLc3xaLhVuLB8bIWAr9w0v0183Exr4x65M1oltwOClE3oMcqJKg==
+X-Received: by 2002:a19:4017:: with SMTP id n23mr8725171lfa.112.1559158428625;
+        Wed, 29 May 2019 12:33:48 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id p1sm46460ljj.1.2019.05.29.12.33.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 12:33:47 -0700 (PDT)
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+ <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+ <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
+Date:   Wed, 29 May 2019 22:32:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
+In-Reply-To: <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:41:31AM -0600, Jeffrey Hugo wrote:
-> On Wed, May 29, 2019 at 4:28 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > On Tue, May 28, 2019 at 08:53:49PM -0600, Jeffrey Hugo wrote:
-> > > On Tue, May 28, 2019 at 8:46 PM Brian Masney <masneyb@onstation.org> wrote:
-> > > >
-> > > > On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
-> > > > > > > Do you know if the nexus 5 has a video or command mode panel?  There
-> > > > > > > is some glitchyness with vblanks and command mode panels.
-> > > > > >
-> > > > > > Its in command mode. I know this because I see two 'pp done time out'
-> > > > > > messages, even on 4.17. Based on my understanding, the ping pong code is
-> > > > > > only applicable for command mode panels.
-> > > > >
-> > > > > Actually, the ping pong element exists in both modes, but 'pp done
-> > > > > time out' is a good indicator that it is command mode.
-> > > > >
-> > > > > Are you also seeing vblank timeouts?
-> > > >
-> > > > Yes, here's a snippet of the first one.
-> > > >
-> > > > [    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
-> > > > [    2.556020] [CRTC:49:crtc-0] vblank wait timed out
-> > > > [    2.556023] Modules linked in:
-> > > > [    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
-> > > > [    2.556038] Hardware name: Generic DT based system
-> > > > [    2.556056] Workqueue: events deferred_probe_work_func
-> > > > ...
-> > > >
-> > > > > Do you have busybox?
-> > > > >
-> > > > > Can you run -
-> > > > > sudo busybox devmem 0xFD900614
-> > > > > sudo busybox devmem 0xFD900714
-> > > > > sudo busybox devmem 0xFD900814
-> > > > > sudo busybox devmem 0xFD900914
-> > > > > sudo busybox devmem 0xFD900A14
-> > > >
-> > > > # busybox devmem 0xFD900614
-> > > > 0x00020020
-> > >
-> > > Ok, so CTL_0 path, command mode, ping pong 0, with the output going to DSI 1.
-> > >
-> > > Next one please:
-> > >
-> > > busybox devmem 0xFD912D30
-> >
-> > It's 0x00000000 on mainline and 4.17. I used the following script to
-> > dump the entire mdp5 memory region and attached the dump from 4.17 and
-> > 5.2rc1.
-> >
+29.05.2019 21:14, Sowjanya Komatineni пишет:
 > 
-> ok, 0 means autorefresh is not on.  Which is fine.  My next guess
-> would be the vblank code checking the hardware vblank counter, which
-> doesn't exist.
-> In video mode, there is a frame counter which increments, which can be
-> used as the vblank counter.  Unfortunately, that hardware isn't active
-> in command mode, and there isn't an equivalent.
+> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
+>> 29.05.2019 2:08, Sowjanya Komatineni пишет:
+>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>> and registers them to syscore so the pinmux settings are restored
+>>> before the devices resume.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 68
+>>> +++++++++++++++++++++++++++++++-
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>>>   7 files changed, 75 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> index a5008c066bac..bdc47e62c457 100644
+>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> @@ -28,11 +28,18 @@
+>>>   #include <linux/pinctrl/pinmux.h>
+>>>   #include <linux/pinctrl/pinconf.h>
+>>>   #include <linux/slab.h>
+>>> +#include <linux/syscore_ops.h>
+>>>     #include "../core.h"
+>>>   #include "../pinctrl-utils.h"
+>>>   #include "pinctrl-tegra.h"
+>>>   +#define EMMC2_PAD_CFGPADCTRL_0            0x1c8
+>>> +#define EMMC4_PAD_CFGPADCTRL_0            0x1e0
+>>> +#define EMMC_DPD_PARKING            (0x1fff << 14)
+>>> +
+>>> +static struct tegra_pmx *pmx;
+>>> +
+>>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+>>>   {
+>>>       return readl(pmx->regs[bank] + reg);
+>>> @@ -629,6 +636,50 @@ static void
+>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>       }
+>>>   }
+>>>   +static int __maybe_unused tegra_pinctrl_suspend(void)
+>>> +{
+>>> +    u32 *backup_regs = pmx->backup_regs;
+>>> +    u32 *regs;
+>>> +    int i, j;
+>>> +
+>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>> +        regs = pmx->regs[i];
+>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>> +            *backup_regs++ = readl(regs++);
+>>> +    }
+>>> +
+>>> +    return pinctrl_force_sleep(pmx->pctl);
+>>> +}
+>>> +
+>>> +static void __maybe_unused tegra_pinctrl_resume(void)
+>>> +{
+>>> +    u32 *backup_regs = pmx->backup_regs;
+>>> +    u32 *regs;
+>>> +    u32 val;
+>>> +    int i, j;
+>>> +
+>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>> +        regs = pmx->regs[i];
+>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>> +            writel(*backup_regs++, regs++);
+>>> +    }
+>>> +
+>>> +    if (pmx->soc->has_park_padcfg) {
+>>> +        val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>> +        val &= ~EMMC_DPD_PARKING;
+>>> +        pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>> +
+>>> +        val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>> +        val &= ~EMMC_DPD_PARKING;
+>>> +        pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>> +    }
+>>> +}
+>>>
+>> But the CFGPADCTRL registers are already programmed by restoring the
+>> backup_regs and hence the relevant EMMC's are already unparked. Hence
+>> why do you need to force-unpark both of the EMMC's? What if EMMC is
+>> unpopulated on a board, why do you need to unpark it then?
 > 
-> So, the vblank code is going to read the register, and look for an
-> update, which will never happen, thus it will timeout.  There is a
-> backup path which uses timestamps (no hardware), which you can
-> activate with a quick hack - make max_vblank_count = 0 at the
-> following line
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c#L753
+> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTRL)
+> are not part of pinmux.
+> 
+> They are part of CFGPADCTRL register so pinctrl driver pingroup doesn't
+> include these registers.
 
-That fixed the issue!
+I'm looking at the tegra210_groups and it clearly has these both
+registers as a part of pinctrl setup because the rest of the bits
+configure drive of the pads.
 
-I previously observed that mdp5_get_vblank_counter, specifically
-mdp5_encoder_get_framecount, would always return 0.
+From pinctrl-tegra210.c:
 
-What's the best way to fix this in mainline? Set that to zero if any
-of the interface modes is MDP5_INTF_DSI_MODE_COMMAND?
+#define DRV_PINGROUP_REG_A		0x8d4	/* bank 0 */
 
-Brian
+DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
+DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
+
+...
+
+0xa9c - 0x8d4 = 0x1c8
+0xab4 - 0x8d4 = 0x1e0
+
+Hence the PARK bits are already getting unset by restoring the
+backup_regs because the CFGPADCTRL registers are a part of the "bank 0"
+registers.
+
+Am I still missing something?
+
+> backup_regs doesn't take care of this and need to handled separately for
+> Tegra210.
+> 
+> 
+> During resume we have to clear PARK bit for the pads on Tegra210 and
+> this is not related to presence/absence of eMMC on the board.
+
+Okay, thank you for the clarification.
+
+> PAD is parked during LP0 entry to have it in DPD mode and it stays in
+> DPD till its cleared by SW on resume.
+
+Yes, this is documented in the public TRM. My main point is that it
+looks like the PARK bits are unneedlessly getting unset twice in your
+code (and it still looks like that to me).
