@@ -2,400 +2,253 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC1C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51880241C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E7D241C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hVA2FqlD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P83qkCzw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="noTFofsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfE2U4k (ORCPT
+        id S1727036AbfE2U4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:56:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:32936 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfE2U4k (ORCPT
+        Wed, 29 May 2019 16:56:55 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13723 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfE2U4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:56:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BAF2D6119F; Wed, 29 May 2019 20:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559163398;
-        bh=cUIPIGctA4wgg/uQMmcfCltYmcPMsZcXek/F57krbj8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVA2FqlD5sSPHBF7dMppKb+Y6YGkkng9CJwtfwOrLvdIUDRhFC4VUVkSZZGFYCR4R
-         2RKjKkoq9ZwNgxbu1026tEESSvat34NI2etZ3CpqUt+mVezDubaloYby7Si8FYcPC1
-         S4eeRrI5yzZl0Xmlxs4hV6H5xPpBrtbJDG5i/IR0=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A5C661A64;
-        Wed, 29 May 2019 20:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559163359;
-        bh=cUIPIGctA4wgg/uQMmcfCltYmcPMsZcXek/F57krbj8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P83qkCzwhSOwkMKxEoS1lLkD3rpGdJPj2h0iGI1atM/hUMjDunUuJfaue+901h6sp
-         CxAh4OMZv2QDcIn/f0tsXhCWPMSNd1vXSXjAkuegx4bhcHTnjFDhLAJOKHgojYGf4V
-         CTzYjxQ/tBj3uZe6ERCtsuL2IGVhuOzYhdSFjQww=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A5C661A64
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
-        hoegsberg@google.com, dianders@chromium.org,
-        Sean Paul <sean@poorly.run>, Wen Yang <wen.yang99@zte.com.cn>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v3 16/16] drm/msm/a5xx: Support per-instance pagetables
-Date:   Wed, 29 May 2019 14:54:52 -0600
-Message-Id: <1559163292-4792-17-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559163292-4792-1-git-send-email-jcrouse@codeaurora.org>
-References: <1559163292-4792-1-git-send-email-jcrouse@codeaurora.org>
+        Wed, 29 May 2019 16:56:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ceef2120000>; Wed, 29 May 2019 13:56:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 May 2019 13:56:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 May 2019 13:56:52 -0700
+Received: from [10.110.103.86] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
+ 2019 20:56:47 +0000
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+ <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+ <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+ <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
+ <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
+ <34480b14-48da-2745-086d-6a8900c5a049@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <fc1f3c56-ab6b-478e-75d8-797d8e3bf21f@nvidia.com>
+Date:   Wed, 29 May 2019 13:56:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <34480b14-48da-2745-086d-6a8900c5a049@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559163412; bh=uEp2EpX/24T35nrjslXPsG1EZ2Y2KBOfwmJIp3kmRD8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=noTFofsAKnYJfnegT4/7ekbIW6rrqgClLMkwFIVltrxLAou3X2Ns9kLnBoS7ml7Rh
+         7eWzEH8WfzpkrrcTNrjHwCFSyfaJmTNuxB509eGWn7gByFNLNNZqZZ3NFh4L/W4Tla
+         kU8SCBtB3K/ZId0VyO0HxEbsXtZlRJQm6aVQBXyeryldLcg03Als+b1SJGVSrmkSPy
+         1yH35yXxfz1V7uSRdM5qQH2tB1Px33QQeRRjgFel1bq7TNLGUiK9JHRxAeSeYvhM4J
+         KJRPcMcvFnl7RbkyWb8Jyf7zH9Rj2sqntaJKFassUVKJV/PDVT2BUxvM8utMjHYnHb
+         0xov7Pfi0sGNw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for per-instance pagetables for 5XX targets. Create a support
-buffer for preemption to hold the SMMU pagetable information for a
-preempted ring, enable TTBR1 to support split pagetables and add the
-necessary PM4 commands to trigger a pagetable switch at the beginning
-of a user command.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+On 5/29/19 1:47 PM, Dmitry Osipenko wrote:
+> 29.05.2019 23:11, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 5/29/19 12:32 PM, Dmitry Osipenko wrote:
+>>> 29.05.2019 21:14, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
+>>>>> 29.05.2019 2:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>>>> and registers them to syscore so the pinmux settings are restored
+>>>>>> before the devices resume.
+>>>>>>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=
+=A0 | 68
+>>>>>> +++++++++++++++++++++++++++++++-
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 3 ++
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 =
+1 +
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c |=C2=A0 1 +
+>>>>>>  =C2=A0=C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 =
+1 +
+>>>>>>  =C2=A0=C2=A0 7 files changed, 75 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>> index a5008c066bac..bdc47e62c457 100644
+>>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>> @@ -28,11 +28,18 @@
+>>>>>>  =C2=A0=C2=A0 #include <linux/pinctrl/pinmux.h>
+>>>>>>  =C2=A0=C2=A0 #include <linux/pinctrl/pinconf.h>
+>>>>>>  =C2=A0=C2=A0 #include <linux/slab.h>
+>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>  =C2=A0=C2=A0 =C2=A0 #include "../core.h"
+>>>>>>  =C2=A0=C2=A0 #include "../pinctrl-utils.h"
+>>>>>>  =C2=A0=C2=A0 #include "pinctrl-tegra.h"
+>>>>>>  =C2=A0=C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
+>>>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
+>>>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
+>>>>>> +
+>>>>>> +static struct tegra_pmx *pmx;
+>>>>>> +
+>>>>>>  =C2=A0=C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32=
+ bank, u32
+>>>>>> reg)
+>>>>>>  =C2=A0=C2=A0 {
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] +=
+ reg);
+>>>>>> @@ -629,6 +636,50 @@ static void
+>>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 +static int __maybe_unused tegra_pinctrl_suspend(void)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
+>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
+>>>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->r=
+eg_bank_size[i] / 4; j++)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+*backup_regs++ =3D readl(regs++);
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 return pinctrl_force_sleep(pmx->pctl);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static void __maybe_unused tegra_pinctrl_resume(void)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
+>>>>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
+>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>> +=C2=A0=C2=A0=C2=A0 int i, j;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (j =3D 0; j < pmx->r=
+eg_bank_size[i] / 4; j++)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+writel(*backup_regs++, regs++);
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0=
+, EMMC2_PAD_CFGPADCTRL_0);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKI=
+NG;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, =
+EMMC2_PAD_CFGPADCTRL_0);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0=
+, EMMC4_PAD_CFGPADCTRL_0);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKI=
+NG;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, =
+EMMC4_PAD_CFGPADCTRL_0);
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +}
+>>>>>>
+>>>>> But the CFGPADCTRL registers are already programmed by restoring the
+>>>>> backup_regs and hence the relevant EMMC's are already unparked. Hence
+>>>>> why do you need to force-unpark both of the EMMC's? What if EMMC is
+>>>>> unpopulated on a board, why do you need to unpark it then?
+>>>> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTR=
+L)
+>>>> are not part of pinmux.
+>>>>
+>>>> They are part of CFGPADCTRL register so pinctrl driver pingroup doesn'=
+t
+>>>> include these registers.
+>>> I'm looking at the tegra210_groups and it clearly has these both
+>>> registers as a part of pinctrl setup because the rest of the bits
+>>> configure drive of the pads.
+>>>
+>>>  =C2=A0From pinctrl-tegra210.c:
+>>>
+>>> #define DRV_PINGROUP_REG_A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x=
+8d4=C2=A0=C2=A0=C2=A0 /* bank 0 */
+>>>
+>>> DRV_PINGROUP(sdmmc2, 0xa9c, 2,=C2=A0 6,=C2=A0 8,=C2=A0 6,=C2=A0 28, 2,=
+=C2=A0 30, 2),
+>>> DRV_PINGROUP(sdmmc4, 0xab4, 2,=C2=A0 6,=C2=A0 8,=C2=A0 6,=C2=A0 28, 2,=
+=C2=A0 30, 2),
+>>>
+>>> ...
+>>>
+>>> 0xa9c - 0x8d4 =3D 0x1c8
+>>> 0xab4 - 0x8d4 =3D 0x1e0
+>>>
+>>> Hence the PARK bits are already getting unset by restoring the
+>>> backup_regs because the CFGPADCTRL registers are a part of the "bank 0"
+>>> registers.
+>>>
+>>> Am I still missing something?
+>> DRV_PINGROUP parked_bit is -1 and will not be programmed so store and
+>> restore will not take care of it.
+>>
+>> Also EMMC PADCFG is the only padcfg register which has parked bit and
+>> for other IO pads its part of pinmux
+> You're storing raw values of all of the PINCTRL registers and then
+> restoring the raw values (if I'm not misreading that part on the patch),
+> it's absolutely meaningless that DRV_PINGROUP doesn't define the PARK bit=
+s.
+>
+> In a result, the backup_regs array contains raw CFGPADCTRL value with
+> the PARK bits being unset on store, that value is written out on the
+> restore as-is and hence the PARK bits are getting unset as well.
+>
+> And why DRV_PINGROUP misses PARK bits for the EMMC's? Looks like a
+> driver's drawback that need to be addressed.
 
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 120 +++++++++++++++++++++++++++++-
- drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  19 +++++
- drivers/gpu/drm/msm/adreno/a5xx_preempt.c |  70 +++++++++++++----
- 3 files changed, 192 insertions(+), 17 deletions(-)
+Parked bits from padcfg are available only for couple of EMMC registers.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 2f87c3e..fedd470 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -111,6 +111,59 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
- 	msm_gpu_retire(gpu);
- }
- 
-+static void a5xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-+	struct msm_file_private *ctx)
-+{
-+	u64 ttbr;
-+	u32 asid;
-+
-+	if (!msm_iommu_get_ptinfo(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	ttbr = ttbr | ((u64) asid) << 48;
-+
-+	/* Turn off protected mode */
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn on APIV mode to access critical regions */
-+	OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
-+	OUT_RING(ring, 1);
-+
-+	/* Make sure the ME is synchronized before staring the update */
-+	OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 3);
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, upper_32_bits(ttbr));
-+	OUT_RING(ring, 0);
-+
-+	/*
-+	 * Write the new TTBR0 to the preemption records - this will be used to
-+	 * reload the pagetable if the current ring gets preempted out.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, upper_32_bits(ttbr));
-+
-+	/* Invalidate the draw state so we start off fresh */
-+	OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-+	OUT_RING(ring, 0x40000);
-+	OUT_RING(ring, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off APRIV */
-+	OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off protected mode */
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 1);
-+}
-+
- static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 	struct msm_file_private *ctx)
- {
-@@ -126,6 +179,8 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 		return;
- 	}
- 
-+	a5xx_set_pagetable(gpu, ring, ctx);
-+
- 	OUT_PKT7(ring, CP_PREEMPT_ENABLE_GLOBAL, 1);
- 	OUT_RING(ring, 0x02);
- 
-@@ -1349,21 +1404,77 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
- }
- 
-+static struct msm_gem_address_space *a5xx_new_address_space(struct msm_gpu *gpu)
-+{
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-+	struct msm_gem_address_space *aspace;
-+	int ret;
-+
-+	/* Return the default pagetable if per instance tables don't work */
-+	if (!a5xx_gpu->per_instance_tables)
-+		return gpu->aspace;
-+
-+	aspace = msm_gem_address_space_create_instance(&gpu->pdev->dev,
-+		"gpu", 0x100000000ULL, 0x1ffffffffULL);
-+	if (IS_ERR(aspace))
-+		return aspace;
-+
-+	ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
-+	if (ret) {
-+		/* -ENODEV means that aux domains aren't supported */
-+		if (ret == -ENODEV)
-+			return gpu->aspace;
-+
-+		return ERR_PTR(ret);
-+	}
-+
-+	return aspace;
-+}
-+
- static struct msm_gem_address_space *
- a5xx_create_address_space(struct msm_gpu *gpu)
- {
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-+	struct device *dev = &gpu->pdev->dev;
- 	struct msm_gem_address_space *aspace;
- 	struct iommu_domain *iommu;
--	int ret;
-+	int ret, val = 1;
-+
-+	a5xx_gpu->per_instance_tables = false;
- 
- 	iommu = iommu_domain_alloc(&platform_bus_type);
- 	if (!iommu)
- 		return ERR_PTR(-ENXIO);
- 
--	iommu->geometry.aperture_start = 0x100000000ULL;
--	iommu->geometry.aperture_end = 0x1ffffffffULL;
-+	/* Try to enable split pagetables */
-+	if (iommu_domain_set_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val)) {
-+		/*
-+		 * If split pagetables aren't available we won't be able to do
-+		 * per-instance pagetables so set up the global va space at our
-+		 * susual location
-+		 */
-+		iommu->geometry.aperture_start = 0x100000000ULL;
-+		iommu->geometry.aperture_end = 0x1ffffffffULL;
-+	} else {
-+		/*
-+		 * If split pagetables are available then we might be able to do
-+		 * per-instance pagetables. Put the default va-space in TTBR1 to
-+		 * prepare
-+		 */
-+		iommu->geometry.aperture_start = 0xfffffff100000000ULL;
-+		iommu->geometry.aperture_end = 0xfffffff1ffffffffULL;
-+
-+		/*
-+		 * If both split pagetables and aux domains are supported we can
-+		 * do per_instance pagetables
-+		 */
-+		a5xx_gpu->per_instance_tables =
-+			iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX);
-+	}
- 
--	aspace = msm_gem_address_space_create(&gpu->pdev->dev, iommu, "gpu");
-+	aspace = msm_gem_address_space_create(dev, iommu, "gpu");
- 	if (IS_ERR(aspace)) {
- 		iommu_domain_free(iommu);
- 		DRM_DEV_ERROR(gpu->dev->dev, "failed to init mmu: %ld\n",
-@@ -1403,6 +1514,7 @@ static const struct adreno_gpu_funcs funcs = {
- 		.gpu_state_get = a5xx_gpu_state_get,
- 		.gpu_state_put = a5xx_gpu_state_put,
- 		.create_address_space = a5xx_create_address_space,
-+		.new_address_space = a5xx_new_address_space,
- 	},
- 	.get_timestamp = a5xx_get_timestamp,
- };
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-index 7d71860..82ceb9b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-@@ -45,6 +45,11 @@ struct a5xx_gpu {
- 
- 	atomic_t preempt_state;
- 	struct timer_list preempt_timer;
-+	struct a5xx_smmu_info *smmu_info;
-+	struct drm_gem_object *smmu_info_bo;
-+	uint64_t smmu_info_iova;
-+
-+	bool per_instance_tables;
- };
- 
- #define to_a5xx_gpu(x) container_of(x, struct a5xx_gpu, base)
-@@ -132,6 +137,20 @@ struct a5xx_preempt_record {
-  */
- #define A5XX_PREEMPT_COUNTER_SIZE (16 * 4)
- 
-+/*
-+ * This is a global structure that the preemption code uses to switch in the
-+ * pagetable for the preempted process - the code switches in whatever we
-+ * after preempting in a new ring.
-+ */
-+struct a5xx_smmu_info {
-+	uint32_t  magic;
-+	uint32_t  _pad4;
-+	uint64_t  ttbr0;
-+	uint32_t  asid;
-+	uint32_t  contextidr;
-+};
-+
-+#define A5XX_SMMU_INFO_MAGIC 0x3618CDA3UL
- 
- int a5xx_power_init(struct msm_gpu *gpu);
- void a5xx_gpmu_ucode_init(struct msm_gpu *gpu);
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-index 3d62310..1050409 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-@@ -12,6 +12,7 @@
-  */
- 
- #include "msm_gem.h"
-+#include "msm_mmu.h"
- #include "a5xx_gpu.h"
- 
- /*
-@@ -145,6 +146,15 @@ void a5xx_preempt_trigger(struct msm_gpu *gpu)
- 	a5xx_gpu->preempt[ring->id]->wptr = get_wptr(ring);
- 	spin_unlock_irqrestore(&ring->lock, flags);
- 
-+	/* Do read barrier to make sure we have updated pagetable info */
-+	rmb();
-+
-+	/* Set the SMMU info for the preemption */
-+	if (a5xx_gpu->smmu_info) {
-+		a5xx_gpu->smmu_info->ttbr0 = ring->memptrs->ttbr0;
-+		a5xx_gpu->smmu_info->contextidr = 0;
-+	}
-+
- 	/* Set the address of the incoming preemption record */
- 	gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_LO,
- 		REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_HI,
-@@ -221,9 +231,10 @@ void a5xx_preempt_hw_init(struct msm_gpu *gpu)
- 		a5xx_gpu->preempt[i]->rbase = gpu->rb[i]->iova;
- 	}
- 
--	/* Write a 0 to signal that we aren't switching pagetables */
-+	/* Tell the CP where to find the smmu_info buffer*/
- 	gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_LO,
--		REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI, 0);
-+		REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI,
-+		a5xx_gpu->smmu_info_iova);
- 
- 	/* Reset the preemption state */
- 	set_preempt_state(a5xx_gpu, PREEMPT_NONE);
-@@ -271,6 +282,34 @@ void a5xx_preempt_fini(struct msm_gpu *gpu)
- 
- 	for (i = 0; i < gpu->nr_rings; i++)
- 		msm_gem_kernel_put(a5xx_gpu->preempt_bo[i], gpu->aspace, true);
-+
-+	msm_gem_kernel_put(a5xx_gpu->smmu_info_bo, gpu->aspace, true);
-+}
-+
-+static int a5xx_smmu_info_init(struct msm_gpu *gpu)
-+{
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-+	struct a5xx_smmu_info *ptr;
-+	struct drm_gem_object *bo;
-+	u64 iova;
-+
-+	if (!a5xx_gpu->per_instance_tables)
-+		return 0;
-+
-+	ptr = msm_gem_kernel_new(gpu->dev, sizeof(struct a5xx_smmu_info),
-+		MSM_BO_UNCACHED, gpu->aspace, &bo, &iova);
-+
-+	if (IS_ERR(ptr))
-+		return PTR_ERR(ptr);
-+
-+	ptr->magic = A5XX_SMMU_INFO_MAGIC;
-+
-+	a5xx_gpu->smmu_info_bo = bo;
-+	a5xx_gpu->smmu_info_iova = iova;
-+	a5xx_gpu->smmu_info = ptr;
-+
-+	return 0;
- }
- 
- void a5xx_preempt_init(struct msm_gpu *gpu)
-@@ -284,17 +323,22 @@ void a5xx_preempt_init(struct msm_gpu *gpu)
- 		return;
- 
- 	for (i = 0; i < gpu->nr_rings; i++) {
--		if (preempt_init_ring(a5xx_gpu, gpu->rb[i])) {
--			/*
--			 * On any failure our adventure is over. Clean up and
--			 * set nr_rings to 1 to force preemption off
--			 */
--			a5xx_preempt_fini(gpu);
--			gpu->nr_rings = 1;
--
--			return;
--		}
-+		if (preempt_init_ring(a5xx_gpu, gpu->rb[i]))
-+			goto fail;
- 	}
- 
--	timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer, 0);
-+	if (a5xx_smmu_info_init(gpu))
-+		goto fail;
-+
-+	timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer,
-+		(unsigned long) a5xx_gpu);
-+
-+	return;
-+fail:
-+	/*
-+	 * On any failure our adventure is over. Clean up and
-+	 * set nr_rings to 1 to force preemption off
-+	 */
-+	a5xx_preempt_fini(gpu);
-+	gpu->nr_rings = 1;
- }
--- 
-2.7.4
+default PARK bits are set so stored value contains park bit set. on=20
+resume, after restoring park bit is cleared.
+
+on subsequence DPD entry, stored value contains park bit 0 and HW clamps=20
+park bit to logic 1 during DPD entry and cleared again on resume.
+
 
