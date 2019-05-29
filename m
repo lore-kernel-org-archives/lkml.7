@@ -2,174 +2,172 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED864C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BA8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B732B23CCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCDA23CCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="C5m+Zu7u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKSaLVai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfE2QER (ORCPT
+        id S1727120AbfE2QFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:04:17 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35239 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfE2QER (ORCPT
+        Wed, 29 May 2019 12:05:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33051 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfE2QFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:04:17 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a25so2566122lfg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:04:15 -0700 (PDT)
+        Wed, 29 May 2019 12:05:19 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w1so3065417ljw.0;
+        Wed, 29 May 2019 09:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fB+cE1ut8lOVdr24ZDohYBT90Ji3/h8bhXQdn1faj1w=;
-        b=C5m+Zu7u/SeSHtGLhmMKET9XoxgFL4mD6irfr1OzHmPMiWJG4UfEnieyQSYkdsDMbz
-         NztjNr31dmPXfzZ3lzJfnhB89ckJVnCG+7h6ahdNAD3nNBS4e5GBGT7Q1FfvYy9A/d2t
-         0el6ltxCkWdty489akWnO7C/D56fRp/QK9Gq1MjwNH7leTwcZQjo+IlSUGIig8cFaTMj
-         0L15j3WZSxzF3+3o5zoKI9TCExfFDg6cBQTBs9JTWpIB8kHa3JpZKusP6gcb+AMIQUQC
-         eUDOdkdjk2raExQ1k92WIgMi99ke3kB6JhKgkKl6aj9SVPgmPG4HF7X1pZT7PQ+Y3nOE
-         WAIQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3GGGJA3/I10hmN+FaID7oELuHlwizlwhFdAP02ZnolQ=;
+        b=mKSaLVai8fibO9xKHXtzRA7PDgGPWELFQ3E7x9Zz5tEvUAFreXll1s/5+3JW0i46wp
+         zj3796TIVoSku/Gaed0HWnuU/BgHtn4KQmUL7iMUiqk4RpEquAwKzVrJ7iRKzEh2vI4E
+         snMm3uGbiAdj6maldgD55Fagf9KcrF4rd64YueRxn5MSB0iS9BbsKWyzN9nGyXnc3zmN
+         1F10NBbNFwZwThR7f4KdP18gCSibcMvbs4bLL4D6H+8QETUTcfCZriRBitDXHjiUk54S
+         SH8AmdhJLF5qv51j7ZD/u/2DxQhkn1Yyc8DliOV32tdCjrnRwCKnrjjOU5NT6q0ljlz9
+         8PDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fB+cE1ut8lOVdr24ZDohYBT90Ji3/h8bhXQdn1faj1w=;
-        b=F4AQvaRSC9+y//YcaLNJa9UT4WV2C2LY4MQwIqxLcxbpKsWFDmxEfgne6qpXfsfqAY
-         0rVd1Rd9SpXosCFuAxg3jKzTK3gAz9S/1mipn86Di2y3Xc/B9eFPV0/UEkqY3AGHIMLT
-         n1T/n9ucXn/+lP3DF12ufQZM7K1qN4g4atxJKnRz+Ig4+/qZuZ9xhZv9vEnbwCtknz9x
-         jdkv+v7LhBi5EyMASgF1Lg5MVpGgw9MU9Q+K1c9aby9TDVOl3Kn5U1gw98CW7eC6PW5S
-         PkzjgnFb0AxbY57Ps8Oq4qbSR2t87pBKC2BfwuppJJVS2VbWsw8O0fY5z9KQKU/cKf5r
-         LsNg==
-X-Gm-Message-State: APjAAAXrlq+hbvG4HAsZfNmWYmQqmRyJO5qY1wGl72nFfClYlI3mLvJg
-        lYTXb8JkingFmAGa+gB/9WtzZVuE1zObCd87qO6X
-X-Google-Smtp-Source: APXvYqyArKmcXTpF9obffp6rqvd9jlGrddtztE9fceghduTlG/S8zQkl5yFpMpSrjd7E8vT35Mvy/bolgsx3MCM9V/0=
-X-Received: by 2002:a19:c301:: with SMTP id t1mr4444303lff.137.1559145850119;
- Wed, 29 May 2019 09:04:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco>
-In-Reply-To: <20190529153427.GB8959@cisco>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 29 May 2019 12:03:58 -0400
-Message-ID: <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3GGGJA3/I10hmN+FaID7oELuHlwizlwhFdAP02ZnolQ=;
+        b=uU0+5L9sWdMndFEfcRDNi7UdyIRrCtx9ZGmlJc0x8QW9YhIXSNkY0PfDGBsQ9JtcQO
+         1sa97dJB4K1gXYVE+GF6lWhM43Z2ExeNDh6W6xVuFG+p0Schka7qOe0ybOVYLc/wLeR0
+         fmMoU2TdS/MF0S6zxbyjgXooCpvhTrgzR19W4r5Xka6WlVYAk30MuYTH/VRjhl9kALUw
+         33szW8fATD3izVPgyWRUpbEyDs8m2IGHf7MiNuB+V7BXwFLCTm52L5m308npsgmCZrfN
+         olNToH0TyMsMd4tDhEvSk9U24u3sb0PCxAr5cSoWSwanGdFk7bhwqM/48zD+LqaLkna1
+         rBzA==
+X-Gm-Message-State: APjAAAXIT3RbyT9HbknnHVWZUMAb3GEZeNmDsj4w7q5iO6YjWwuU1kaG
+        /Y8G4+5MszORzpqdoPOVDmEH0TzaXvI=
+X-Google-Smtp-Source: APXvYqzLp5xKUGGGWBXOnT/y1XSI7KgHDiukVIOqLlK45IjtJk9lqFcIiFl87qV6vYJ1UK6yLhu4fA==
+X-Received: by 2002:a2e:8583:: with SMTP id b3mr42982443lji.136.1559145916644;
+        Wed, 29 May 2019 09:05:16 -0700 (PDT)
+Received: from otyshchenko.kyiv.epam.com (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id k18sm3537179ljk.70.2019.05.29.09.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 29 May 2019 09:05:15 -0700 (PDT)
+From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
+To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
+        linux@armlinux.org.uk, geert@linux-m68k.org,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: [PATCH V6] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI is available
+Date:   Wed, 29 May 2019 19:05:00 +0300
+Message-Id: <1559145900-5757-1-git-send-email-olekstysh@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:34 AM Tycho Andersen <tycho@tycho.ws> wrote:
->
-> On Wed, May 29, 2019 at 11:29:05AM -0400, Paul Moore wrote:
-> > On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > >
-> > > On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
-> > > > It is not permitted to unset the audit container identifier.
-> > > > A child inherits its parent's audit container identifier.
-> > >
-> > > ...
-> > >
-> > > >  /**
-> > > > + * audit_set_contid - set current task's audit contid
-> > > > + * @contid: contid value
-> > > > + *
-> > > > + * Returns 0 on success, -EPERM on permission failure.
-> > > > + *
-> > > > + * Called (set) from fs/proc/base.c::proc_contid_write().
-> > > > + */
-> > > > +int audit_set_contid(struct task_struct *task, u64 contid)
-> > > > +{
-> > > > +     u64 oldcontid;
-> > > > +     int rc = 0;
-> > > > +     struct audit_buffer *ab;
-> > > > +     uid_t uid;
-> > > > +     struct tty_struct *tty;
-> > > > +     char comm[sizeof(current->comm)];
-> > > > +
-> > > > +     task_lock(task);
-> > > > +     /* Can't set if audit disabled */
-> > > > +     if (!task->audit) {
-> > > > +             task_unlock(task);
-> > > > +             return -ENOPROTOOPT;
-> > > > +     }
-> > > > +     oldcontid = audit_get_contid(task);
-> > > > +     read_lock(&tasklist_lock);
-> > > > +     /* Don't allow the audit containerid to be unset */
-> > > > +     if (!audit_contid_valid(contid))
-> > > > +             rc = -EINVAL;
-> > > > +     /* if we don't have caps, reject */
-> > > > +     else if (!capable(CAP_AUDIT_CONTROL))
-> > > > +             rc = -EPERM;
-> > > > +     /* if task has children or is not single-threaded, deny */
-> > > > +     else if (!list_empty(&task->children))
-> > > > +             rc = -EBUSY;
-> > > > +     else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> > > > +             rc = -EALREADY;
-> > > > +     read_unlock(&tasklist_lock);
-> > > > +     if (!rc)
-> > > > +             task->audit->contid = contid;
-> > > > +     task_unlock(task);
-> > > > +
-> > > > +     if (!audit_enabled)
-> > > > +             return rc;
-> > >
-> > > ...but it is allowed to change it (assuming
-> > > capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
-> > > immediately useful since we still live in the world of majority
-> > > privileged containers if we didn't allow changing it, in addition to
-> > > un-setting it.
-> >
-> > The idea is that only container orchestrators should be able to
-> > set/modify the audit container ID, and since setting the audit
-> > container ID can have a significant effect on the records captured
-> > (and their routing to multiple daemons when we get there) modifying
-> > the audit container ID is akin to modifying the audit configuration
-> > which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
-> > is that you would only change the audit container ID from one
-> > set/inherited value to another if you were nesting containers, in
-> > which case the nested container orchestrator would need to be granted
-> > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > compromise).
->
-> But then don't you want some kind of ns_capable() instead (probably
-> not the obvious one, though...)? With capable(), you can't really nest
-> using the audit-id and user namespaces together.
+From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-You want capable() and not ns_capable() because you want to ensure
-that the orchestrator has the rights in the init_ns as changes to the
-audit container ID could have an auditing impact that spans the entire
-system.  Setting the audit container ID is equivalent to munging the
-kernel's audit configuration, and the audit configuration is not
-"namespaced" in any way.  The audit container ID work is about
-providing the right "container context" (as defined by userspace) with
-the audit records so that admins have a better understanding about
-what is going on in the system; it is very explicitly not creating an
-audit namespace.
+If PSCI is available then most likely we are running on PSCI-enabled
+U-Boot which, we assume, has already taken care of resetting CNTVOFF
+and updating counter module before switching to non-secure mode
+and we don't need to.
 
-At some point in the future we will want to support running multiple
-audit daemons, and have a configurable way of routing audit records
-based on the audit container ID, which will blur the line regarding
-audit namespaces, but even then I would argue we are not creating an
-audit namespace.
+As the psci_smp_available() helper always returns false if CONFIG_SMP
+is disabled, it can't be used safely as an indicator of PSCI usage.
+For that reason, we check for the mandatory PSCI operation to be
+available.
 
+Please note, an extra check to prevent secure_cntvoff_init() from
+being called for secondary CPUs in headsmp-apmu.S is not needed,
+as SMP code for APMU based system is not executed if PSCI is in use.
+
+Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+CC: Julien Grall <julien.grall@arm.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+---
+   You can find previous discussions here:
+   [v1]  https://lkml.org/lkml/2019/4/17/810
+   [v2]  https://lkml.org/lkml/2019/5/3/338
+   [v3]  https://lkml.org/lkml/2019/5/10/415
+   [RFC] https://lkml.org/lkml/2019/5/10/473
+   [v4]  https://lkml.org/lkml/2019/5/14/550
+   [v5]  https://lkml.org/lkml/2019/5/17/219
+
+   Changes in v2:
+      - Clarify patch subject/description
+      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
+        by using psci_smp_available()
+      - Check whether we are running on top of Xen, by using xen_domain()
+
+   Changes in v3:
+      - Don't check for the presence of Xen
+
+   Changes in v4:
+      - Don't use psci_smp_available() helper, check for psci_ops.cpu_on
+        directly
+      - Skip updating counter module if PSCI is available
+
+   Changes in v5:
+      - Check for psci_ops.cpu_on if CONFIG_ARM_PSCI_FW is defined
+
+   Changes in v6:
+      - Use reverse Xmas tree declaration order
+      - Use #ifdef instead of #if defined()
+      - Add Geert's R-b
+---
+ arch/arm/mach-shmobile/setup-rcar-gen2.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+index eea60b2..9e4bc18 100644
+--- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+@@ -17,6 +17,7 @@
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
++#include <linux/psci.h>
+ #include <asm/mach/arch.h>
+ #include <asm/secure_cntvoff.h>
+ #include "common.h"
+@@ -60,9 +61,24 @@ static unsigned int __init get_extal_freq(void)
+ 
+ void __init rcar_gen2_timer_init(void)
+ {
++	bool need_update = true;
+ 	void __iomem *base;
+ 	u32 freq;
+ 
++	/*
++	 * If PSCI is available then most likely we are running on PSCI-enabled
++	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
++	 * and updating counter module before switching to non-secure mode
++	 * and we don't need to.
++	 */
++#ifdef CONFIG_ARM_PSCI_FW
++	if (psci_ops.cpu_on)
++		need_update = false;
++#endif
++
++	if (need_update == false)
++		goto skip_update;
++
+ 	secure_cntvoff_init();
+ 
+ 	if (of_machine_is_compatible("renesas,r8a7745") ||
+@@ -102,6 +118,7 @@ void __init rcar_gen2_timer_init(void)
+ 
+ 	iounmap(base);
+ 
++skip_update:
+ 	of_clk_init(NULL);
+ 	timer_probe();
+ }
 -- 
-paul moore
-www.paul-moore.com
+2.7.4
+
