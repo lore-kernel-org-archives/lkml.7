@@ -2,129 +2,114 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9329CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDFFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E81A21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CF92081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gpWtvEz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfE2Ilh (ORCPT
+        id S1726240AbfE2Ilz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:41:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17619 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbfE2Ilg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:41:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4C206269DD259F2AAC39;
-        Wed, 29 May 2019 16:41:33 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
- 16:41:26 +0800
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-To:     Salil Mehta <salil.mehta@huawei.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
- <20190527075838.5a65abf9@hermes.lan>
- <a0fe690b-2bfa-7d1a-40c5-5fb95cf57d0b@huawei.com>
- <cddd414bbf454cbaa8321a92f0d1b9b2@huawei.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <aa8d92eb-5683-9b7d-1c3f-69eec30f3a61@huawei.com>
-Date:   Wed, 29 May 2019 16:41:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 29 May 2019 04:41:55 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60480 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2Ily (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ex7cwI1Y+T7IBQhxpqiVOAaTe/SzLACjja508VX2LQU=; b=gpWtvEz6EvTgc7TnciPDmZ0uZ
+        nx6WzAdVB3SRP9VM+MVa2CYPHzeMWWzyMVIbRoNzwNqi9536+ODL7a5KcpE9D0mETIaVnuCP7Ghbj
+        sxPjkMgUkCw/x78xOg15xQ+JR1isDEFx63hR5afjPWLdBhYEF4Qf9hZgiWpZ6HNKccLQh+ElgnplW
+        RiBArqSiFDwFMdesPZSRP/yhzWz0GJaYA5tKORPTWGSxAcQ96dVO40xuK2ditoUdPISAOmRnJ/s3v
+        LFtEQQlsXv394dFVSuvtKgMwEMhXQ8j9bHW+EhZmisHjMGbVaScf7bkXY8qP4EcasYZcMvig25eI6
+        chdgLXsMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVu9B-0002aD-8s; Wed, 29 May 2019 08:41:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D228E201A7E41; Wed, 29 May 2019 10:41:18 +0200 (CEST)
+Date:   Wed, 29 May 2019 10:41:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
+        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC 3/3] preempt_tracer: Use a percpu variable to control
+ traceble calls
+Message-ID: <20190529084118.GG2623@hirez.programming.kicks-ass.net>
+References: <cover.1559051152.git.bristot@redhat.com>
+ <9b0698774be3bb406e2b8b2c12dc1fb91532bff0.1559051152.git.bristot@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <cddd414bbf454cbaa8321a92f0d1b9b2@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b0698774be3bb406e2b8b2c12dc1fb91532bff0.1559051152.git.bristot@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/29 16:12, Salil Mehta wrote:
->> From: netdev-owner@vger.kernel.org [mailto:netdev-owner@vger.kernel.org] On Behalf Of Yunsheng Lin
->> Sent: Tuesday, May 28, 2019 2:04 AM
->>
->> On 2019/5/27 22:58, Stephen Hemminger wrote:
->>> On Mon, 27 May 2019 09:47:54 +0800
->>> Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>
->>>> When user has configured a large number of virtual netdev, such
->>>> as 4K vlans, the carrier on/off operation of the real netdev
->>>> will also cause it's virtual netdev's link state to be processed
->>>> in linkwatch. Currently, the processing is done in a work queue,
->>>> which may cause worker starvation problem for other work queue.
-> 
-> 
-> I think we had already discussed about this internally and using separate
-> workqueue with WQ_UNBOUND should solve this problem. HNS3 driver was sharing
-> workqueue with the system workqueue. 
+On Tue, May 28, 2019 at 05:16:24PM +0200, Daniel Bristot de Oliveira wrote:
+>  #if defined(CONFIG_PREEMPT) && (defined(CONFIG_DEBUG_PREEMPT) || \
+>  				defined(CONFIG_TRACE_PREEMPT_TOGGLE))
+> +
+> +DEFINE_PER_CPU(int, __traced_preempt_count) = 0;
+>  /*
+>   * If the value passed in is equal to the current preempt count
+>   * then we just disabled preemption. Start timing the latency.
+>   */
+>  void preempt_latency_start(int val)
+>  {
+> -	if (preempt_count() == val) {
+> +	int curr = this_cpu_read(__traced_preempt_count);
 
-Yes, using WQ_UNBOUND wq in hns3 solved the cpu starvation for hns3
-workqueue.
+We actually have this_cpu_add_return();
 
-But the rtnl_lock taken by linkwatch is still a problem for hns3's
-reset workqueue to do the down operation, which need a rtnl_lock.
+> +
+> +	if (!curr) {
+>  		unsigned long ip = get_lock_parent_ip();
+>  #ifdef CONFIG_DEBUG_PREEMPT
+>  		current->preempt_disable_ip = ip;
+>  #endif
+>  		trace_preempt_off(CALLER_ADDR0, ip);
+>  	}
+> +
+> +	this_cpu_write(__traced_preempt_count, curr + val);
+>  }
+>  
+>  static inline void preempt_add_start_latency(int val)
+> @@ -3200,8 +3206,12 @@ NOKPROBE_SYMBOL(preempt_count_add);
+>   */
+>  void preempt_latency_stop(int val)
+>  {
+> -	if (preempt_count() == val)
+> +	int curr = this_cpu_read(__traced_preempt_count) - val;
 
-> 
-> 
->>>> This patch releases the cpu when link watch worker has processed
->>>> a fixed number of netdev' link watch event, and schedule the
->>>> work queue again when there is still link watch event remaining.
-> 
-> 
-> We need proper examples/use-cases because of which we require above
-> kind of co-operative scheduling. Touching the common shared queue logic
-> which solid argument might invite for more problem to other modules.
-> 
-> 
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>
->>> Why not put link watch in its own workqueue so it is scheduled
->>> separately from the system workqueue?
->>
->> From testing and debuging, the workqueue runs on the cpu where the
->> workqueue is schedule when using normal workqueue, even using its
->> own workqueue instead of system workqueue. So if the cpu is busy
->> processing the linkwatch event, it is not able to process other
->> workqueue' work when the workqueue is scheduled on the same cpu.
->>
->> Using unbound workqueue may solve the cpu starvation problem.
-> 
-> [...]
-> 
->> But the __linkwatch_run_queue is called with rtnl_lock, so if it
->> takes a lot time to process, other need to take the rtnl_lock may
->> not be able to move forward.
-> 
-> Please help me in understanding, Are you trying to pitch this patch
-> to solve more general system issue OR still your argument/concern
-> is related to the HNS3 driver problem mentioned in this patch?
+this_cpu_sub_return();
 
-As about.
+> +
+> +	if (!curr)
+>  		trace_preempt_on(CALLER_ADDR0, get_lock_parent_ip());
+> +
+> +	this_cpu_write(__traced_preempt_count, curr);
+>  }
 
-> 
-> Salil.
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-
+Can't say I love this, but it is miles better than the last patch.
