@@ -2,183 +2,94 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D48C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE6FC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99682429A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="uDH3DgbA"
+	by mail.kernel.org (Postfix) with ESMTP id BA7092429C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559168958;
+	bh=sRuDFYFvafjXzg4Zs8n3IU0+t0X6gJgAOUfxV/kpjgw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LTamAuBdT740Cfc+3qS9hyX581e6cDv+PcoZ/Si7MgyV4JPeva9b2i9ccedwctrhY
+	 XqkEWO/Snsf1Quic/ETbk0k7/jtP3RTf3Rge8dJmY3Ch20xC88hmM9aC7BlEraWIZD
+	 HthXLlmCLAWLsILtYfLAciZelKEKTXNX1Z50d2hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfE2W2k (ORCPT
+        id S1726708AbfE2W3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:28:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44587 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfE2W2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:28:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c5so1644781pll.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sxlc+0BZVMGJBkklhDGCMx7b3nCRFgQD29T89CaCav0=;
-        b=uDH3DgbAe0Nn6uZaYSAgEAJNiDB6BDF/SuDggKMk+TzPiQYZumu8d83PNR+BSvvkjD
-         Zqgy1VvS2JR173DGBaMMLDmuLhmKeQfKXMNlQBW4bysvH4ieNup9nkRjVZOnltvcIRfr
-         Un/6jJdo23xTg/mEWqa20n0xKot6OMJNahZU8iLMCLL2z7ewLtQbJ+ax8N766OPUalEX
-         LmOHsG+B+hAfQLAOa3r/719u+3/4C10vzjsXK8xSeC0B1qMmi7ercJginmJWLiQ/Du9O
-         CdugUw32bHOBq8kpQNaof0wrf0z5h5vT0lQXg26TskQGxiFnhC9kzmnRUvkeCSa7Mkgu
-         eDtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sxlc+0BZVMGJBkklhDGCMx7b3nCRFgQD29T89CaCav0=;
-        b=PH73exe2SdEibB7qcFaQOwoYI0Kr6HT1B3yBizXTmWsjd4WXz1W6FMwJxfhaMWLEPs
-         IhKWtXeX9VOtErmaqb3whoef1hhoz3eFCmf02GQUNpA5yHbJ0FXpFTlNkm0H1LOCY232
-         M4xV8iPMixClfKXf5KJWrdjYgmgDcM7gg8Xm+grOllo6coRqCoQWdAWWRqYTrQy5rhC+
-         q7XeDq5VBWUQtuzw7Y9RG5N7+I3ol2cBitDbpTvP8OvY6MLUAjDRpZSIzF+eGPxnWmlY
-         ns6p5cWgqMA+1nhTwQECxGo6GNpNX/EHE4Pp4WEPMcJ1BZ5DXpfNh9x+jHidhaVlzbfg
-         zhIQ==
-X-Gm-Message-State: APjAAAWrQGq2+vGhNEeDfpEQ2a7DiecGtjEuMJ4rv9uPClZckl05mjwF
-        SABhyrgEXnhu03UMswhCNK5BYA==
-X-Google-Smtp-Source: APXvYqx6u4nIn/AIcvxi8a5nOwft+8sm1j1THFLIGuymwboILKVpX0Iml7oLKuGzIYvIJUQMu6yW9g==
-X-Received: by 2002:a17:902:24d:: with SMTP id 71mr340297plc.166.1559168918326;
-        Wed, 29 May 2019 15:28:38 -0700 (PDT)
-Received: from cisco ([2601:280:b:edbb:840:fa90:7243:7032])
-        by smtp.gmail.com with ESMTPSA id w187sm690493pfw.20.2019.05.29.15.28.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 15:28:37 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:28:35 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-Message-ID: <20190529222835.GD8959@cisco>
-References: <cover.1554732921.git.rgb@redhat.com>
- <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco>
- <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco>
- <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
+        Wed, 29 May 2019 18:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfE2W3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 18:29:17 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8E12429C;
+        Wed, 29 May 2019 22:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559168957;
+        bh=sRuDFYFvafjXzg4Zs8n3IU0+t0X6gJgAOUfxV/kpjgw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=am2vgzaqmJF9GMOAx47qRRaowbVYqHHgryyBB9+6F5I258o6ec6Wlmj9OSTJtoBsx
+         OQ34W2C+iqwZ2jHCLU58F67DHmaRuiqjpcQUZaS8Ur0ixUEp3QZ1RErUa+CuNNIh7E
+         vCL0zwXeiPZHQlqkGhplHONjU4EqD17BKVrch4Kg=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clk fixes for v5.2-rc2
+Date:   Wed, 29 May 2019 15:29:16 -0700
+Message-Id: <20190529222916.57086-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 12:03:58PM -0400, Paul Moore wrote:
-> On Wed, May 29, 2019 at 11:34 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> >
-> > On Wed, May 29, 2019 at 11:29:05AM -0400, Paul Moore wrote:
-> > > On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > >
-> > > > On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
-> > > > > It is not permitted to unset the audit container identifier.
-> > > > > A child inherits its parent's audit container identifier.
-> > > >
-> > > > ...
-> > > >
-> > > > >  /**
-> > > > > + * audit_set_contid - set current task's audit contid
-> > > > > + * @contid: contid value
-> > > > > + *
-> > > > > + * Returns 0 on success, -EPERM on permission failure.
-> > > > > + *
-> > > > > + * Called (set) from fs/proc/base.c::proc_contid_write().
-> > > > > + */
-> > > > > +int audit_set_contid(struct task_struct *task, u64 contid)
-> > > > > +{
-> > > > > +     u64 oldcontid;
-> > > > > +     int rc = 0;
-> > > > > +     struct audit_buffer *ab;
-> > > > > +     uid_t uid;
-> > > > > +     struct tty_struct *tty;
-> > > > > +     char comm[sizeof(current->comm)];
-> > > > > +
-> > > > > +     task_lock(task);
-> > > > > +     /* Can't set if audit disabled */
-> > > > > +     if (!task->audit) {
-> > > > > +             task_unlock(task);
-> > > > > +             return -ENOPROTOOPT;
-> > > > > +     }
-> > > > > +     oldcontid = audit_get_contid(task);
-> > > > > +     read_lock(&tasklist_lock);
-> > > > > +     /* Don't allow the audit containerid to be unset */
-> > > > > +     if (!audit_contid_valid(contid))
-> > > > > +             rc = -EINVAL;
-> > > > > +     /* if we don't have caps, reject */
-> > > > > +     else if (!capable(CAP_AUDIT_CONTROL))
-> > > > > +             rc = -EPERM;
-> > > > > +     /* if task has children or is not single-threaded, deny */
-> > > > > +     else if (!list_empty(&task->children))
-> > > > > +             rc = -EBUSY;
-> > > > > +     else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> > > > > +             rc = -EALREADY;
-> > > > > +     read_unlock(&tasklist_lock);
-> > > > > +     if (!rc)
-> > > > > +             task->audit->contid = contid;
-> > > > > +     task_unlock(task);
-> > > > > +
-> > > > > +     if (!audit_enabled)
-> > > > > +             return rc;
-> > > >
-> > > > ...but it is allowed to change it (assuming
-> > > > capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
-> > > > immediately useful since we still live in the world of majority
-> > > > privileged containers if we didn't allow changing it, in addition to
-> > > > un-setting it.
-> > >
-> > > The idea is that only container orchestrators should be able to
-> > > set/modify the audit container ID, and since setting the audit
-> > > container ID can have a significant effect on the records captured
-> > > (and their routing to multiple daemons when we get there) modifying
-> > > the audit container ID is akin to modifying the audit configuration
-> > > which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
-> > > is that you would only change the audit container ID from one
-> > > set/inherited value to another if you were nesting containers, in
-> > > which case the nested container orchestrator would need to be granted
-> > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > compromise).
-> >
-> > But then don't you want some kind of ns_capable() instead (probably
-> > not the obvious one, though...)? With capable(), you can't really nest
-> > using the audit-id and user namespaces together.
-> 
-> You want capable() and not ns_capable() because you want to ensure
-> that the orchestrator has the rights in the init_ns as changes to the
-> audit container ID could have an auditing impact that spans the entire
-> system.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Ok but,
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-> > > The current thinking
-> > > is that you would only change the audit container ID from one
-> > > set/inherited value to another if you were nesting containers, in
-> > > which case the nested container orchestrator would need to be granted
-> > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > compromise).
+are available in the Git repository at:
 
-won't work in user namespaced containers, because they will never be
-capable(CAP_AUDIT_CONTROL); so I don't think this will work for
-nesting as is. But maybe nobody cares :)
+  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
 
-Tycho
+for you to fetch changes up to 1cc54078d104f5b4d7e9f8d55362efa5a8daffdb:
+
+  clk: ti: clkctrl: Fix clkdm_clk handling (2019-05-21 11:43:40 -0700)
+
+----------------------------------------------------------------
+A few clk driver fixes
+
+ - Don't expose the SiFive clk driver on non-RISCV architectures
+
+ - Fix some bits describing clks in the imx8mm driver
+
+ - Always call clk domain code in the TI driver so non-legacy platforms
+   work
+
+----------------------------------------------------------------
+Paul Walmsley (1):
+      clk: sifive: restrict Kconfig scope for the FU540 PRCI driver
+
+Peng Fan (1):
+      clk: imx: imx8mm: fix int pll clk gate
+
+Tony Lindgren (1):
+      clk: ti: clkctrl: Fix clkdm_clk handling
+
+ drivers/clk/imx/clk-imx8mm.c | 12 ++++++------
+ drivers/clk/sifive/Kconfig   |  1 +
+ drivers/clk/ti/clkctrl.c     |  8 ++++----
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+
+-- 
+Sent by a computer through tubes
