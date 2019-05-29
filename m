@@ -2,129 +2,111 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5917DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D53C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF6021872
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078B12183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AKgbZi0K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhllIkwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfE2NYP (ORCPT
+        id S1727187AbfE2NZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:24:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58596 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfE2NYP (ORCPT
+        Wed, 29 May 2019 09:25:11 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34031 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfE2NZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:24:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UAADxwxT6tx6lBr1tunJYn8T5v+uyVuwmaIKsyOB1k8=; b=AKgbZi0KQ1t2Byq/+qYeTQlx8
-        5Zk6Wh1iPXKpKZjKkRe0R461W9XyCy56UX3A2h6knc4wXd0aEWQBIcBQ5cV8dp2iMnSPn2F4sXjDs
-        7U7GyCSUxopx6delIu2Odqo9AGVC2/4Y1YErsibRbj2Y7Os4fez8ueckeVNOs02iFqUmwU3Ps5Kqr
-        +cSOs01pQFgYSMx15l1nxBOU98MwJiQS/8Ohw6Hp8Uyv4SRiZMPwO3KZVF+ggau43CLLZeEUlLOUl
-        YG1iskTIMI6GwzZ0W8pYfWoIVl/pf8+SUXoA1A0jEvnfGBCW+hAqIvfrwpfMrYOwFMvj/o6Fva/bC
-        b4TlKMLfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVyUq-00012k-4l; Wed, 29 May 2019 13:20:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 91307201DB7FA; Wed, 29 May 2019 15:19:57 +0200 (CEST)
-Date:   Wed, 29 May 2019 15:19:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190529131957.GV2623@hirez.programming.kicks-ass.net>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190529102038.GO2623@hirez.programming.kicks-ass.net>
- <20190529083930.5541130e@oasis.local.home>
+        Wed, 29 May 2019 09:25:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n19so1650574pfa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fc0bMmRDevQdvcZymPuPXJYIf7p7D4ZnMyLrt05NU1Q=;
+        b=EhllIkwG6rXdSQe7QvJaCmmP69I4HJ5aCk+e6JLCT/uIwhqVWUQkV9ZlxJm+73DdqE
+         FnZTc4ERk39gUsFBOAeUbbVuhUgDPOv2U4LtAlAxrhQx0u5Le0eRXyzZplN2HbAnbb7r
+         KKyLv3svObFPiC+GWfqHDzmUSkBdY7FKjzABle/GARb4dLmRutCU/8nJD7y/QYtjNyor
+         hw4YcIc1LBVBmZlXP2L2JxXsWc5cWp6CJBskKUjIoUOUvRWCNDwUx9NyY1C931W9LEel
+         BcyZ0KwoQVlI6A7+goNb7viWimvwQNFLAKSe0aCuJ10YJvBf3Hz8yQi3wDXhPD/480Ch
+         C89w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fc0bMmRDevQdvcZymPuPXJYIf7p7D4ZnMyLrt05NU1Q=;
+        b=Horf/S+Dwdru744xpVgUq44aM6OEpI3LpgPZlgCbpkxfKQTA8uEk2G3WhMkdx7OWCl
+         QX9vk1+N+iiijUq8BbCgfOVx8tYZlWBOfXsg+cRyI6gtcNavlIyUBpTp1Crd1tFSi9gC
+         t6VkZjc963WAfr/vMukt8oCPaqLMsJV4ptLYeziYcapOcFn4aulTdjEVvRdulhUNR/kw
+         1t+HUVuo4Dtx3sPtN7veYl7dtK23/u49n3kfCVDf4xEFOayf1UDGXd+9oyipwf6GeN0B
+         b1mqjXHJxh06E0TEKnlFPJeMLP0FrrKahQwDcxNIHqmpOo8iXq8PxS+FgMTYpXCTfnHO
+         +YBQ==
+X-Gm-Message-State: APjAAAVdcIO00QZphmdFBq5cDtkZCAFjmM1FBpHCuwQTmgGuTjvc+zzl
+        +gD/qOmHxMiqVV0cJLVEGmE=
+X-Google-Smtp-Source: APXvYqz0h58Zk+4/mpryWNDyPJFYqURdAmcglB7phMR6hBDG9LWeOuIsrajsDXn56dZUX8G8uLPPDA==
+X-Received: by 2002:a65:530d:: with SMTP id m13mr44176772pgq.68.1559136310405;
+        Wed, 29 May 2019 06:25:10 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.67.155])
+        by smtp.gmail.com with ESMTPSA id k14sm33057573pga.5.2019.05.29.06.25.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:25:09 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        gregkh@linuxfoundation.org, himadri.18.07@gmail.com,
+        valdis.kletnieks@vt.edu, colin.king@canonical.com,
+        straube.linux@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: rtl8712: Remove return variable of different type
+Date:   Wed, 29 May 2019 18:54:57 +0530
+Message-Id: <20190529132457.6607-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529083930.5541130e@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:39:30AM -0400, Steven Rostedt wrote:
-> I believe I see what Daniel is talking about, but I hate the proposed
-> solution ;-)
-> 
-> First, if you care about real times that the CPU can't preempt
-> (preempt_count != 0 or interrupts disabled), then you want the
-> preempt_irqsoff tracer. The preempt_tracer is more academic where it
-> just shows you when we disable preemption via the counter. But even
-> with the preempt_irqsoff tracer you may not get the full length of time
-> due to the above explained race.
+The local return variable ret may be replaced directly by its value,
+especially since its type (uint) is not the same as the function's
+return type (int).
+Issue found with Coccinelle.
 
-IOW, that tracer gives a completely 'make believe' number? What's the
-point? Just delete the pure preempt tracer.
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-And the preempt_irqoff tracer had better also consume the IRQ events,
-and if it does that it can DTRT without extra bits on, even with that
-race.
+diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+index a7230c0c7b23..b424b8436fcf 100644
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -1577,7 +1577,7 @@ static int r8711_wx_get_enc(struct net_device *dev,
+ 				struct iw_request_info *info,
+ 				union iwreq_data *wrqu, char *keybuf)
+ {
+-	uint key, ret = 0;
++	uint key;
+ 	struct _adapter *padapter = netdev_priv(dev);
+ 	struct iw_point *erq = &(wrqu->encoding);
+ 	struct	mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
+@@ -1633,7 +1633,7 @@ static int r8711_wx_get_enc(struct net_device *dev,
+ 		erq->flags |= IW_ENCODE_DISABLED;
+ 		break;
+ 	}
+-	return ret;
++	return 0;
+ }
+ 
+ static int r8711_wx_get_power(struct net_device *dev,
+-- 
+2.19.1
 
-Consider:
-
-	preempt_disable()
-	  preempt_count += 1;
-	  <IRQ>
-	    trace_irq_enter();
-
-	    trace_irq_exit();
-	  </IRQ>
-	  trace_preempt_disable();
-
-	/* does stuff */
-
-	preempt_enable()
-	  preempt_count -= 1;
-	  trace_preempt_enable();
-
-You're saying preempt_irqoff() fails to connect the two because of the
-hole between trace_irq_exit() and trace_preempt_disable() ?
-
-But trace_irq_exit() can see the raised preempt_count and set state for
-trace_preempt_disable() to connect.
-
-> What I would recommend is adding a flag to the task_struct that gets
-> set before the __preempt_count_add() and cleared by the tracing
-> function. If an interrupt goes off during this time, it will start the
-> total time to record, and not end it on the trace_hardirqs_on() part.
-> Now since we set this flag before disabling preemption, what if we get
-> preempted before calling __preempt_count_add()?. Simple, have a hook in
-> the scheduler (just connect to the sched_switch tracepoint) that checks
-> that flag, and if it is set, it ends the preempt disable recording
-> time. Also on scheduling that task back in, if that flag is set, start
-> the preempt disable timer.
-
-I don't think that works, you also have to consider softirq. And yes you
-can make it more complicated, but I still don't see the point.
-
-And none of this is relevant for Daniels model stuff. He just needs to
-consider in-IRQ as !preempt.
