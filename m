@@ -2,199 +2,102 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE53AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E042413D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pb/HkhkN"
+	by mail.kernel.org (Postfix) with ESMTP id 997082414F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559161559;
+	bh=vT1x3YJLmXO5Jj7uD1a9dJ/SMNM2QZG0wLSPMjlR9mw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IFvaB40ofRGvf/4XTetsY6HVxR1/XstKkb9uvvil9DpF/U6/se3EJNKTLyDsJiUM9
+	 u+Ye/bSBASxIeyyqVay1aSDmTZB+C7er3CFvYjWOaAdN6GpbigqO5cOw5nPP/4CklE
+	 gfjFdOSyaE9+J5mtXvtnOeRFeQH9paUDl0WWVQlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfE2UXZ (ORCPT
+        id S1726522AbfE2UZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:23:25 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45626 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2UXZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:23:25 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f20so5559504edt.12;
-        Wed, 29 May 2019 13:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gj4vz0BGKXUgHJIxFFhu0LjPh9MmI0i8cM1MVMHpNXU=;
-        b=pb/HkhkNK9dn/jM5IxeXqJl+j0jRBb+Nn98t0z9L0oMjEduFBL/zlhPaGLiB8AUI3Q
-         0t5x+Yh2MOpB62mO/xj2m/eVYFHfW5hX10n6oLh+DtoIBRV3XBq8EU7FdVWTGDAwodHt
-         HuG7NzenFCvPZ5rpAcoQmuumbt7kEGWrfgqf3C7Jw2ee0mHXo0hW6G1nuSicWDVQ3rm7
-         KEltz5eWpQ3cU0Mljjo1yXP9Ts98PF8KQZZzbt4j98Vc15OpkVul4xslUBV5Mc6URt5s
-         9mmv11fwO22QS7TpHlKsZTb8HdOUq/fwAUprwLIW1lyqFtnmdHA+T7pIyZdQJPhBXoFg
-         hDAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gj4vz0BGKXUgHJIxFFhu0LjPh9MmI0i8cM1MVMHpNXU=;
-        b=Hq136Cg7E4NrJeX9fFTgW/JmykQkUBQw7ATKd4M9OMILl5uODaqvYj9D/qlEuKrLMp
-         fsGkdjlrZs065QVEuYyzuBkaB2vTF3sxWaELqXXNKLjCI4WCvQ2ufDFtky8EG2OADn0a
-         0yGhpBj8HH9eNm9lVFMlQ1FN03MlBYSh1O6YUeYOfGlc2jCG9hJXW58FpZiP6oTk8gaj
-         0w39bcERjIfSH4E46SuzLRImd2UuI9ljUC2GSv7EfwyPEP86ODr0x6Ey4jpqABORcvzG
-         GP1eIf+kRO9gAmPeA1v4EPPA3tYGVZ+D2dnAcxpteJK0ERlvaKSMUtZGvxB7uc1uQKfA
-         J+KQ==
-X-Gm-Message-State: APjAAAWEjHAMoID06HxLF1sycMe2fT/V5ffQxujJSWpw1x4iqRLCoY3b
-        b9zWWQA00nueOyh4jqoul0C5vx8p2A2tq7oB08U=
-X-Google-Smtp-Source: APXvYqzpgPq4A6VzBKdh+gPHSU3+JZoMyepYWUYiLS9a2Dw2j1Q+wH5/Kl9CUek8B/idodVdai5RsjMIlcY0h4D7FEA=
-X-Received: by 2002:a50:92a3:: with SMTP id k32mr165996eda.123.1559161403202;
- Wed, 29 May 2019 13:23:23 -0700 (PDT)
+        Wed, 29 May 2019 16:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfE2UZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 16:25:58 -0400
+Received: from localhost (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFFAB2414F;
+        Wed, 29 May 2019 20:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559161557;
+        bh=vT1x3YJLmXO5Jj7uD1a9dJ/SMNM2QZG0wLSPMjlR9mw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XLfGpxZsm9I0AwKE4GeDbzz2ESSBHRxuy06Fak0Il6k/f/uCqPH7u6wUgk5lXddnn
+         brZvZS4HLbfvK/9iaDyPmAw4O8ZfIDGfiPFWe8HPDklztE+gyHPL24wOeSDIEcepEn
+         3YnGWavkFzvYjZL/P8dkhVjG8H25211XYMaJplUU=
+Date:   Wed, 29 May 2019 13:25:57 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     valentina.manea.m@gmail.com, shuah@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usbip: usbip_host: fix stub_dev lock context imbalance
+ regression
+Message-ID: <20190529202557.GA27140@kroah.com>
+References: <20190529194615.18765-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190528235627.1315-2-olteanv@gmail.com>
- <CALAqxLWjT0ZJerFa+BVCKW+-ws6DYFy7kqEfNVK8ioGdY=VQeQ@mail.gmail.com>
-In-Reply-To: <CALAqxLWjT0ZJerFa+BVCKW+-ws6DYFy7kqEfNVK8ioGdY=VQeQ@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 29 May 2019 23:23:12 +0300
-Message-ID: <CA+h21hqV_YzunTa3BqXr76HYfFCUj2S+1tzqDotyh3rYd8HK2Q@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/5] timecounter: Add helper for reconstructing
- partial timestamps
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190529194615.18765-1-skhan@linuxfoundation.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 05:14, John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, May 28, 2019 at 4:58 PM Vladimir Oltean <olteanv@gmail.com> wrote:
-> >
-> > Some PTP hardware offers a 64-bit free-running counter whose snapshots
-> > are used for timestamping, but only makes part of that snapshot
-> > available as timestamps (low-order bits).
-> >
-> > In that case, timecounter/cyclecounter users must bring the cyclecounter
-> > and timestamps to the same bit width, and they currently have two
-> > options of doing so:
-> >
-> > - Trim the higher bits of the timecounter itself to the number of bits
-> >   of the timestamps.  This might work for some setups, but if the
-> >   wraparound of the timecounter in this case becomes high (~10 times per
-> >   second) then this causes additional strain on the system, which must
-> >   read the clock that often just to avoid missing the wraparounds.
-> >
-> > - Reconstruct the timestamp by racing to read the PTP time within one
-> >   wraparound cycle since the timestamp was generated.  This is
-> >   preferable when the wraparound time is small (do a time-critical
-> >   readout once vs doing it periodically), and it has no drawback even
-> >   when the wraparound is comfortably sized.
-> >
-> > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> > ---
-> >  include/linux/timecounter.h |  7 +++++++
-> >  kernel/time/timecounter.c   | 33 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >
-> > diff --git a/include/linux/timecounter.h b/include/linux/timecounter.h
-> > index 2496ad4cfc99..03eab1f3bb9c 100644
-> > --- a/include/linux/timecounter.h
-> > +++ b/include/linux/timecounter.h
-> > @@ -30,6 +30,9 @@
-> >   *     by the implementor and user of specific instances of this API.
-> >   *
-> >   * @read:              returns the current cycle value
-> > + * @partial_tstamp_mask:bitmask in case the hardware emits timestamps
-> > + *                     which only capture low-order bits of the full
-> > + *                     counter, and should be reconstructed.
-> >   * @mask:              bitmask for two's complement
-> >   *                     subtraction of non 64 bit counters,
-> >   *                     see CYCLECOUNTER_MASK() helper macro
-> > @@ -38,6 +41,7 @@
-> >   */
-> >  struct cyclecounter {
-> >         u64 (*read)(const struct cyclecounter *cc);
-> > +       u64 partial_tstamp_mask;
-> >         u64 mask;
-> >         u32 mult;
-> >         u32 shift;
-> > @@ -136,4 +140,7 @@ extern u64 timecounter_read(struct timecounter *tc);
-> >  extern u64 timecounter_cyc2time(struct timecounter *tc,
-> >                                 u64 cycle_tstamp);
-> >
-> > +extern u64 cyclecounter_reconstruct(const struct cyclecounter *cc,
-> > +                                   u64 ts_partial);
-> > +
-> >  #endif
-> > diff --git a/kernel/time/timecounter.c b/kernel/time/timecounter.c
-> > index 85b98e727306..d4657d64e38d 100644
-> > --- a/kernel/time/timecounter.c
-> > +++ b/kernel/time/timecounter.c
-> > @@ -97,3 +97,36 @@ u64 timecounter_cyc2time(struct timecounter *tc,
-> >         return nsec;
-> >  }
-> >  EXPORT_SYMBOL_GPL(timecounter_cyc2time);
-> > +
-> > +/**
-> > + * cyclecounter_reconstruct - reconstructs @ts_partial
-> > + * @cc:                Pointer to cycle counter.
-> > + * @ts_partial:        Typically RX or TX NIC timestamp, provided by hardware as
-> > + *             the lower @partial_tstamp_mask bits of the cycle counter,
-> > + *             sampled at the time the timestamp was collected.
-> > + *             To reconstruct into a full @mask bit-wide timestamp, the
-> > + *             cycle counter is read and the high-order bits (up to @mask) are
-> > + *             filled in.
-> > + *             Must be called within one wraparound of @partial_tstamp_mask
-> > + *             bits of the cycle counter.
-> > + */
-> > +u64 cyclecounter_reconstruct(const struct cyclecounter *cc, u64 ts_partial)
-> > +{
-> > +       u64 ts_reconstructed;
-> > +       u64 cycle_now;
-> > +
-> > +       cycle_now = cc->read(cc);
-> > +
-> > +       ts_reconstructed = (cycle_now & ~cc->partial_tstamp_mask) |
-> > +                           ts_partial;
-> > +
-> > +       /* Check lower bits of current cycle counter against the timestamp.
-> > +        * If the current cycle counter is lower than the partial timestamp,
-> > +        * then wraparound surely occurred and must be accounted for.
-> > +        */
-> > +       if ((cycle_now & cc->partial_tstamp_mask) <= ts_partial)
-> > +               ts_reconstructed -= (cc->partial_tstamp_mask + 1);
-> > +
-> > +       return ts_reconstructed;
-> > +}
-> > +EXPORT_SYMBOL_GPL(cyclecounter_reconstruct);
->
-> Hrm. Is this actually generic? Would it make more sense to have the
-> specific implementations with this quirk implement this in their
-> read() handler? If not, why?
+On Wed, May 29, 2019 at 01:46:15PM -0600, Shuah Khan wrote:
+> Fix the following sparse context imbalance regression introduced in
+> a patch that fixed sleeping function called from invalid context bug.
+> 
+> kbuild test robot reported on:
+> 
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git  usb-linus
+> 
+> Regressions in current branch:
+> 
+> drivers/usb/usbip/stub_dev.c:399:9: sparse: sparse: context imbalance in 'stub_probe' - different lock contexts for basic block
+> drivers/usb/usbip/stub_dev.c:418:13: sparse: sparse: context imbalance in 'stub_disconnect' - different lock contexts for basic block
+> drivers/usb/usbip/stub_dev.c:464:1-10: second lock on line 476
+> 
+> Error ids grouped by kconfigs:
+> 
+> recent_errors
+> ├── i386-allmodconfig
+> │   └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
+> ├── x86_64-allmodconfig
+> │   ├── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_disconnect-different-lock-contexts-for-basic-block
+> │   └── drivers-usb-usbip-stub_dev.c:sparse:sparse:context-imbalance-in-stub_probe-different-lock-contexts-for-basic-block
+> └── x86_64-allyesconfig
+>     └── drivers-usb-usbip-stub_dev.c:second-lock-on-line
+> 
+> This is a real problem in an error leg where spin_lock() is called on an
+> already held lock.
+> 
+> Fix the imbalance in stub_probe() and stub_disconnect().
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Hi John, Richard,
+I'll go add:
 
-It's not the cycle counter that needs reconstruction, but hardware
-timestamps based on it.  Hence not possible to add a workaround in the
-read() handler.
-If it's not desirable to have this helper function in the cyclecounter
-I'll move it to the driver in v2.
+Fixes: 0c9e8b3cad65 ("usbip: usbip_host: fix BUG: sleeping function called from invalid context")
+Cc: stable <stable@vger.kernel.org>
 
-Thanks,
--Vladimir
+as the patch this fixes was tagged for stable.
 
->
-> thanks
-> -john
+thanks,
+
+greg k-h
