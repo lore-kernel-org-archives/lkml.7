@@ -2,100 +2,65 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6358EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874AAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3771B2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJ55xB9e"
+	by mail.kernel.org (Postfix) with ESMTP id 66623205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfE2NMK (ORCPT
+        id S1727068AbfE2NMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:12:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40915 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfE2NMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:12:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so1606076pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0aWoIYcgxDupSGtN0AnAKiiYwQa97e1g6WE42QwvCM0=;
-        b=LJ55xB9eU8BGL+SzpCNDOjSwgkyqnlLfr0sD8Ar1E1DlrwJbHnBEjmaxJcloSeBguX
-         rqTwVYovi64cV45HbMYdlSE1z3ilqCrWQ5ZJ8Y8pqdtPHqL9hDKsQwzucw7d3RDaeZ4y
-         4cAiQ61+prb/BYYUYrMaHHsJzZ+V8vxq5SRMY1wr7RzmNRnc+SgbS5q80xAsTVnn1XZP
-         mT1QAYgyDammYmmpSDqHj2BxUeToJQm2QuCRjCNXrqp7qDSh0qDcCpjVUwb7mGBFZYFx
-         iLlmB9br7wU4cgIdH+DzupfAzZa12PdogkHp/4+VNyz470WbaHWafEXKGM7Co67x/dkp
-         ySBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0aWoIYcgxDupSGtN0AnAKiiYwQa97e1g6WE42QwvCM0=;
-        b=l1jwGSDGNQsjK4sjrdkp2NR2uEt/frxT9K/SbCbRJgoD1ABqMd7E/DSCdMXKcweE3I
-         VOOO0rRVx8X8ono+SbbBiZgc08i8/ieqNNdBbeqHvtDFCgB7uKCwhQ24B8kqzaF8XvsF
-         dT+G0QY8rPCDBMofLyt/dopmUDXYGRwH+CPhhoDKLBil4FMXvviEUQNXIGMIXSMoExYS
-         PIuaYTSY/0DH3pE8P1InphkedLcz9Dgvmo6j6padjdz2f/dtDgRwGn7f7KW806ZcrDCn
-         IelpGnxYL6gmkVgba4xkz0haBYdToPfOrA3Z75bZ7AxALBQI5ihgjl8153RTpmvkB2ns
-         VmcA==
-X-Gm-Message-State: APjAAAXV/Pe2SCX30yb+ZariXPop6hm0Ja1knvcm9eR6PPHGV2RJBjKY
-        OTttNueMQ/i2sakH+KqFbCM=
-X-Google-Smtp-Source: APXvYqzJHRrczMIc52hvYh1l+W+LUzYEuTuROsJXEpl1M7zRkak4KWjbVbYAZWR8O+FJv6rGIDQ/5g==
-X-Received: by 2002:a62:4e0c:: with SMTP id c12mr23624554pfb.17.1559135529196;
-        Wed, 29 May 2019 06:12:09 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.67.155])
-        by smtp.gmail.com with ESMTPSA id f10sm15915670pgo.14.2019.05.29.06.12.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:12:08 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, bnvandana@gmail.com,
-        madhumithabiw@gmail.com, matt.sickler@daktronics.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: kpc2000: Change to use DIV_ROUND_UP
-Date:   Wed, 29 May 2019 18:41:53 +0530
-Message-Id: <20190529131153.6260-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 29 May 2019 09:12:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43176 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbfE2NMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:12:15 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CD52DC05FBD7;
+        Wed, 29 May 2019 13:12:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EADF60487;
+        Wed, 29 May 2019 13:12:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguPTQ00zVjpwVQ4R8mEqE3aijCzNMAz6Wvr56xE-jfJag@mail.gmail.com>
+References: <CAJfpeguPTQ00zVjpwVQ4R8mEqE3aijCzNMAz6Wvr56xE-jfJag@mail.gmail.com> <155905621951.1304.5956310120238620025.stgit@warthog.procyon.org.uk> <155905622921.1304.8775688192987027250.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Ian Kent <raven@themaw.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer [ver #13]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <29054.1559135525.1@warthog.procyon.org.uk>
+Date:   Wed, 29 May 2019 14:12:05 +0100
+Message-ID: <29055.1559135525@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 29 May 2019 13:12:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use macro DIV_ROUND_UP instead of an equivalent sequence of operations.
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/kpc2000/kpc_dma/fileops.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> Would it make sense to use relayfs for the implementation of the
+> mapped ring buffer?
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index 254fee593399..7b17362461b8 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -28,10 +28,7 @@ unsigned int  count_pages(unsigned long iov_base, size_t iov_len)
- static inline
- unsigned int  count_parts_for_sge(struct scatterlist *sg)
- {
--	unsigned int sg_length = sg_dma_len(sg);
--
--	sg_length += (0x80000-1);
--	return (sg_length / 0x80000);
-+	return DIV_ROUND_UP(sg_dma_len(sg), 0x80000);
- }
- 
- /**********  Transfer Helpers  **********/
--- 
-2.19.1
+Note that I reposted the notification patches under the correct cover note
+later.  Could you repost your response there.
 
+Subject: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+
+David
