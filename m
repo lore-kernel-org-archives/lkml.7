@@ -2,132 +2,125 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C75AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6961C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3867121019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC3421734
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559129019;
+	bh=McAELd9X83y5uf1BerOqhmU3UNbPRNL3esrqC1Crr/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EYuJ/zvj2edH9cpRzcxsk1nMlvauAk9c9298b1HpCPlxIkhfwOsKoFVyphQjjU72/
+	 dsKiMd68rHkLcoLVFBcrPpl3TkTtTVFqVLVyw6Eyuh9haMblMYfvdOghz8HfoxlVZI
+	 9CPVhuYdp3/pNE4X9OOHVd/OrUjrIGFumsFVSSts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfE2LXf (ORCPT
+        id S1726791AbfE2LXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:23:35 -0400
-Received: from relay.sw.ru ([185.231.240.75]:48952 "EHLO relay.sw.ru"
+        Wed, 29 May 2019 07:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfE2LXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:23:35 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hVwg1-00037i-FP; Wed, 29 May 2019 14:23:25 +0300
-Subject: Re: [PATCH 3/3] asm-generic, x86: Add bitops instrumentation for
- KASAN
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-References: <20190528163258.260144-1-elver@google.com>
- <20190528163258.260144-3-elver@google.com>
- <20190528165036.GC28492@lakrids.cambridge.arm.com>
- <CACT4Y+bV0CczjRWgHQq3kvioLaaKgN+hnYEKCe5wkbdngrm+8g@mail.gmail.com>
- <CANpmjNNtjS3fUoQ_9FQqANYS2wuJZeFRNLZUq-ku=v62GEGTig@mail.gmail.com>
- <20190529100116.GM2623@hirez.programming.kicks-ass.net>
- <CANpmjNMvwAny54udYCHfBw1+aphrQmiiTJxqDq7q=h+6fvpO4w@mail.gmail.com>
- <20190529103010.GP2623@hirez.programming.kicks-ass.net>
- <CACT4Y+aVB3jK_M0-2D_QTq=nncVXTsNp77kjSwBwjqn-3hAJmA@mail.gmail.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <377465ba-3b31-31e7-0f9d-e0a5ab911ca4@virtuozzo.com>
-Date:   Wed, 29 May 2019 14:23:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725914AbfE2LXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 07:23:36 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18B920B1F;
+        Wed, 29 May 2019 11:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559129015;
+        bh=McAELd9X83y5uf1BerOqhmU3UNbPRNL3esrqC1Crr/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OM5NOuMbLNjTabGDh5c1RGgC+P8hNBmHsNvToIku8DC8bSi6hSWaVyNWDlgLes/Ih
+         3JBZygq8VnCDIV5HJOPoBDXFGEyWlp7a8XaNpgmuixo13REHhNauwNkUzxgA5hwOCY
+         QandglykZUmcAfpw4V6peTXTNmo3hyrHmTWY3xKk=
+Date:   Wed, 29 May 2019 04:23:34 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "noring@nocrew.org" <noring@nocrew.org>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>
+Subject: Re: [PATCH v7 2/5] USB: use genalloc for USB HCs with local memory
+Message-ID: <20190529112334.GA11368@kroah.com>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-3-laurentiu.tudor@nxp.com>
+ <20190529103838.GC7383@kroah.com>
+ <34a83e74-4c85-cf9f-54c3-b69b0dcb628e@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+aVB3jK_M0-2D_QTq=nncVXTsNp77kjSwBwjqn-3hAJmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34a83e74-4c85-cf9f-54c3-b69b0dcb628e@nxp.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/29/19 1:57 PM, Dmitry Vyukov wrote:
-> On Wed, May 29, 2019 at 12:30 PM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Wed, May 29, 2019 at 12:16:31PM +0200, Marco Elver wrote:
->>> On Wed, 29 May 2019 at 12:01, Peter Zijlstra <peterz@infradead.org> wrote:
->>>>
->>>> On Wed, May 29, 2019 at 11:20:17AM +0200, Marco Elver wrote:
->>>>> For the default, we decided to err on the conservative side for now,
->>>>> since it seems that e.g. x86 operates only on the byte the bit is on.
->>>>
->>>> This is not correct, see for instance set_bit():
->>>>
->>>> static __always_inline void
->>>> set_bit(long nr, volatile unsigned long *addr)
->>>> {
->>>>         if (IS_IMMEDIATE(nr)) {
->>>>                 asm volatile(LOCK_PREFIX "orb %1,%0"
->>>>                         : CONST_MASK_ADDR(nr, addr)
->>>>                         : "iq" ((u8)CONST_MASK(nr))
->>>>                         : "memory");
->>>>         } else {
->>>>                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
->>>>                         : : RLONG_ADDR(addr), "Ir" (nr) : "memory");
->>>>         }
->>>> }
->>>>
->>>> That results in:
->>>>
->>>>         LOCK BTSQ nr, (addr)
->>>>
->>>> when @nr is not an immediate.
->>>
->>> Thanks for the clarification. Given that arm64 already instruments
->>> bitops access to whole words, and x86 may also do so for some bitops,
->>> it seems fine to instrument word-sized accesses by default. Is that
->>> reasonable?
->>
->> Eminently -- the API is defined such; for bonus points KASAN should also
->> do alignment checks on atomic ops. Future hardware will #AC on unaligned
->> [*] LOCK prefix instructions.
->>
->> (*) not entirely accurate, it will only trap when crossing a line.
->>     https://lkml.kernel.org/r/1556134382-58814-1-git-send-email-fenghua.yu@intel.com
+On Wed, May 29, 2019 at 11:15:54AM +0000, Laurentiu Tudor wrote:
 > 
-> Interesting. Does an address passed to bitops also should be aligned,
-> or alignment is supposed to be handled by bitops themselves?
 > 
-
-It should be aligned. This even documented in Documentation/core-api/atomic_ops.rst:
-
-	Native atomic bit operations are defined to operate on objects aligned
-	to the size of an "unsigned long" C data type, and are least of that
-	size.  The endianness of the bits within each "unsigned long" are the
-	native endianness of the cpu.
-
-
-> This probably should be done as a separate config as not related to
-> KASAN per se. But obviously via the same
-> {atomicops,bitops}-instrumented.h hooks which will make it
-> significantly easier.
+> On 29.05.2019 13:38, Greg KH wrote:
+> > On Wed, May 29, 2019 at 01:28:40PM +0300, laurentiu.tudor@nxp.com wrote:
+> >> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> >>
+> >> For HCs that have local memory, replace the current DMA API usage
+> >> with a genalloc generic allocator to manage the mappings for these
+> >> devices. To help users, introduce a new HCD API,
+> >> usb_hcd_setup_local_mem() that will setup up the genalloc backing
+> >> up the device local memory. It will be used in subsequent patches.
+> >> This is in preparation for dropping the existing "coherent" dma
+> >> mem declaration APIs. Current implementation was relying on a short
+> >> circuit in the DMA API that in the end, was acting as an allocator
+> >> for these type of devices.
+> >> For sh arch to compile GENERIC_ALLOCATOR needs to be selected in
+> >> Kconfig.
+> >>
+> >> For context, see thread here: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F4%2F22%2F357&amp;data=02%7C01%7Claurentiu.tudor%40nxp.com%7Cade28e1f322c4502cd4808d6e421d0ba%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636947231220264072&amp;sdata=xvmzDztMbeD9GwlcAfx7bBoxhARWgB3vmQkqiE81Lbg%3D&amp;reserved=0
+> >>
+> >> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> >> Signed-off-by: Fredrik Noring <noring@nocrew.org>
+> >> Tested-by: Fredrik Noring <noring@nocrew.org>
+> >> Reported-by: kbuild test robot <lkp@intel.com>
+> >> ---
+> >>   drivers/usb/Kconfig         |  1 +
+> >>   drivers/usb/core/buffer.c   |  9 +++++++++
+> >>   drivers/usb/core/hcd.c      | 36 ++++++++++++++++++++++++++++++++++++
+> >>   drivers/usb/host/ohci-hcd.c | 23 ++++++++++++++++++-----
+> >>   drivers/usb/host/ohci-mem.c | 35 +++++++++++++++++++++++++++++++----
+> >>   drivers/usb/host/ohci.h     |  2 ++
+> >>   include/linux/usb/hcd.h     |  5 +++++
+> >>   7 files changed, 102 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+> >> index e4b27413f528..389c57d8eba7 100644
+> >> --- a/drivers/usb/Kconfig
+> >> +++ b/drivers/usb/Kconfig
+> >> @@ -45,6 +45,7 @@ config USB_ARCH_HAS_HCD
+> >>   config USB
+> >>   	tristate "Support for Host-side USB"
+> >>   	depends on USB_ARCH_HAS_HCD
+> >> +	select GENERIC_ALLOCATOR
+> > 
+> > Are there any arches that does not have GENERIC_ALLOCATOR?  I don't want
+> > to suddenly cut off a bunch of working systems from having USB support.
+> > 
 > 
+> lkp report mentions only sh, but even if there are others, I think that 
+> now having the explicit select should cover them, right?
 
-Agreed.
+As long as GENERIC_ALLOCATOR works on all arches, yes, that's fine, but
+please verify that this is the case.
+
+thanks,
+
+greg k-h
