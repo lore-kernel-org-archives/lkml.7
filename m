@@ -2,79 +2,86 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C66CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42671C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1562623B55
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229A423B5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfE2PAi (ORCPT
+        id S1726867AbfE2PAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:00:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726069AbfE2PAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:00:38 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 42974EB7D7499281D36F;
-        Wed, 29 May 2019 23:00:35 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
- 23:00:16 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bgolaszewski@baylibre.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] eeprom: at24: Remove set but not used variable 'addr'
-Date:   Wed, 29 May 2019 22:59:54 +0800
-Message-ID: <20190529145954.14500-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 29 May 2019 11:00:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:36443 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfE2PAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:00:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 08:00:48 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 29 May 2019 08:00:44 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Colin King <colin.king@canonical.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stuart Summers <stuart.summers@intel.com>,
+        Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+Subject: Re: [PATCH][next] drm/i915: fix uninitialized variable 'mask'
+In-Reply-To: <20190529142927.16699-1-colin.king@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190529142927.16699-1-colin.king@canonical.com>
+Date:   Wed, 29 May 2019 18:03:56 +0300
+Message-ID: <87o93l480z.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Wed, 29 May 2019, Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently mask is not initialized and so data is being bit-wise or'd into
+> a garbage value. Fix this by inintializing mask to zero.
+>
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: 1ac159e23c2c ("drm/i915: Expand subslice mask")
 
-drivers/misc/eeprom/at24.c: In function at24_make_dummy_client:
-drivers/misc/eeprom/at24.c:514:21: warning: variable addr set but not used [-Wunused-but-set-variable]
+This was already reverted for other reasons. Need to be fixed on the
+next round. For future reference, please Cc: author and reviewers of the
+referenced commit.
 
-It's not used since commit e7308628d0ae ("eeprom:
-at24: use devm_i2c_new_dummy_device()")
+BR,
+Jani.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/misc/eeprom/at24.c | 2 --
- 1 file changed, 2 deletions(-)
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/i915/gt/intel_sseu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/gt/intel_sseu.c b/drivers/gpu/drm/i915/gt/intel_sseu.c
+> index 763b811f2c9d..5a89672d98a2 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_sseu.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_sseu.c
+> @@ -41,7 +41,7 @@ void intel_sseu_copy_subslices(const struct sseu_dev_info *sseu, int slice,
+>  u32 intel_sseu_get_subslices(const struct sseu_dev_info *sseu, u8 slice)
+>  {
+>  	int i, offset = slice * sseu->ss_stride;
+> -	u32 mask;
+> +	u32 mask = 0;
+>  
+>  	GEM_BUG_ON(slice >= sseu->max_slices);
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index ba8e73812644..fa730bb342e8 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -511,13 +511,11 @@ static int at24_make_dummy_client(struct at24_data *at24, unsigned int index,
- 				  struct regmap_config *regmap_config)
- {
- 	struct i2c_client *base_client, *dummy_client;
--	unsigned short int addr;
- 	struct regmap *regmap;
- 	struct device *dev;
- 
- 	base_client = at24->client[0].client;
- 	dev = &base_client->dev;
--	addr = base_client->addr + index;
- 
- 	dummy_client = devm_i2c_new_dummy_device(dev, base_client->adapter,
- 						 base_client->addr + index);
 -- 
-2.17.1
-
-
+Jani Nikula, Intel Open Source Graphics Center
