@@ -2,94 +2,197 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93867C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85A1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2CB23A1B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ihI5KqDB"
+	by mail.kernel.org (Postfix) with ESMTP id 87CE523A1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfE2OYn (ORCPT
+        id S1727407AbfE2OZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:24:43 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:21814 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfE2OYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:24:42 -0400
-X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 10:24:41 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559139880;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=hEg459JKNjMZU93JrKXvFePGJVmrCgpuxqZhr0jzbp8=;
-        b=ihI5KqDB4pVEUqLq3JLZG6AIUhzUOWAqdVUiSi8AG9ych9hn2FqHEyY+yMngRmc1mL
-        xoczZSwZ2agM/mnvJxGakSnSNYREKR6dacmVEmd5Uv1dD/feXoGH0zfApnti1ghOHFdu
-        izs6Nou3TShL09IoySp8/vscBH7A7wn0Tyu2NhCoSspbs0fM9ewFsCf6vAu/9k6s50su
-        FJxKXYOtmS/CQZOlNbumRntdGke9qmwTVd4zeYjjm8INn6LIwFphQSeJkYtMXKDQMGwc
-        NoVQmyzigbDqaOWVATuQBKhVcdHjQetsBCUWQ0KfSPPyVEzLC8RmTP5rogZNiTa80pDQ
-        A0iA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbLvSf34ur"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id R0373fv4TEIIvuo
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 29 May 2019 16:18:18 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     David Gstir <david@sigma-star.at>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
-Subject: Re: Can an ahash driver be used through shash API?
-Date:   Wed, 29 May 2019 16:18:18 +0200
-Message-ID: <4256916.YlTHG9RRyR@tauon.chronox.de>
-In-Reply-To: <729A4150-93A0-456B-B7AB-6D3A446E600E@sigma-star.at>
-References: <729A4150-93A0-456B-B7AB-6D3A446E600E@sigma-star.at>
+        Wed, 29 May 2019 10:25:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41902 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726118AbfE2OZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:25:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 10E91AF42;
+        Wed, 29 May 2019 14:25:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 8E7301E3F53; Wed, 29 May 2019 16:25:04 +0200 (CEST)
+Date:   Wed, 29 May 2019 16:25:04 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+Message-ID: <20190529142504.GC32147@quack2.suse.cz>
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 29. Mai 2019, 16:04:47 CEST schrieb David Gstir:
-
-Hi David,
-
-> Hi!
+On Wed 29-05-19 09:33:35, Amir Goldstein wrote:
+> On Tue, May 28, 2019 at 7:03 PM David Howells <dhowells@redhat.com> wrote:
+> >
+> >
+> > Hi Al,
+> >
+> > Here's a set of patches to add a general variable-length notification queue
+> > concept and to add sources of events for:
+> >
+> >  (1) Mount topology events, such as mounting, unmounting, mount expiry,
+> >      mount reconfiguration.
+> >
+> >  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+> >      errors (not complete yet).
+> >
+> >  (3) Block layer events, such as I/O errors.
+> >
+> >  (4) Key/keyring events, such as creating, linking and removal of keys.
+> >
+> > One of the reasons for this is so that we can remove the issue of processes
+> > having to repeatedly and regularly scan /proc/mounts, which has proven to
+> > be a system performance problem.  To further aid this, the fsinfo() syscall
+> > on which this patch series depends, provides a way to access superblock and
+> > mount information in binary form without the need to parse /proc/mounts.
+> >
+> >
+> > Design decisions:
+> >
+> >  (1) A misc chardev is used to create and open a ring buffer:
+> >
+> >         fd = open("/dev/watch_queue", O_RDWR);
+> >
+> >      which is then configured and mmap'd into userspace:
+> >
+> >         ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
+> >         ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+> >         buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
+> >                    MAP_SHARED, fd, 0);
+> >
+> >      The fd cannot be read or written (though there is a facility to use
+> >      write to inject records for debugging) and userspace just pulls data
+> >      directly out of the buffer.
+> >
+> >  (2) The ring index pointers are stored inside the ring and are thus
+> >      accessible to userspace.  Userspace should only update the tail
+> >      pointer and never the head pointer or risk breaking the buffer.  The
+> >      kernel checks that the pointers appear valid before trying to use
+> >      them.  A 'skip' record is maintained around the pointers.
+> >
+> >  (3) poll() can be used to wait for data to appear in the buffer.
+> >
+> >  (4) Records in the buffer are binary, typed and have a length so that they
+> >      can be of varying size.
+> >
+> >      This means that multiple heterogeneous sources can share a common
+> >      buffer.  Tags may be specified when a watchpoint is created to help
+> >      distinguish the sources.
+> >
+> >  (5) The queue is reusable as there are 16 million types available, of
+> >      which I've used 4, so there is scope for others to be used.
+> >
+> >  (6) Records are filterable as types have up to 256 subtypes that can be
+> >      individually filtered.  Other filtration is also available.
+> >
+> >  (7) Each time the buffer is opened, a new buffer is created - this means
+> >      that there's no interference between watchers.
+> >
+> >  (8) When recording a notification, the kernel will not sleep, but will
+> >      rather mark a queue as overrun if there's insufficient space, thereby
+> >      avoiding userspace causing the kernel to hang.
+> >
+> >  (9) The 'watchpoint' should be specific where possible, meaning that you
+> >      specify the object that you want to watch.
+> >
+> > (10) The buffer is created and then watchpoints are attached to it, using
+> >      one of:
+> >
+> >         keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
+> >         mount_notify(AT_FDCWD, "/", 0, fd, 0x02);
+> >         sb_notify(AT_FDCWD, "/mnt", 0, fd, 0x03);
+> >
+> >      where in all three cases, fd indicates the queue and the number after
+> >      is a tag between 0 and 255.
+> >
+> > (11) The watch must be removed if either the watch buffer is destroyed or
+> >      the watched object is destroyed.
+> >
+> >
+> > Things I want to avoid:
+> >
+> >  (1) Introducing features that make the core VFS dependent on the network
+> >      stack or networking namespaces (ie. usage of netlink).
+> >
+> >  (2) Dumping all this stuff into dmesg and having a daemon that sits there
+> >      parsing the output and distributing it as this then puts the
+> >      responsibility for security into userspace and makes handling
+> >      namespaces tricky.  Further, dmesg might not exist or might be
+> >      inaccessible inside a container.
+> >
+> >  (3) Letting users see events they shouldn't be able to see.
+> >
+> >
+> > Further things that could be considered:
+> >
+> >  (1) Adding a keyctl call to allow a watch on a keyring to be extended to
+> >      "children" of that keyring, such that the watch is removed from the
+> >      child if it is unlinked from the keyring.
+> >
+> >  (2) Adding global superblock event queue.
+> >
+> >  (3) Propagating watches to child superblock over automounts.
+> >
 > 
-> I've done some testing with hardware acceleration of hash functions
-> and noticed that, when using the synchronous message digest API (shash),
-> some drivers are not usable. In my case the CAAM driver for SHA256.
-> Using the asynchronous interface (ahash), everything works as expected.
-> Looking at the driver source, the CAAM driver only implements the ahash
-> interface.
+> David,
 > 
-> I'm wondering if there a way to use an ahash driver through the shash
-> interface?
-
-Short: no.
+> I am interested to know how you envision filesystem notifications would
+> look with this interface.
 > 
-> I've seen that it does actually work the other way around, since
-> crypto_init_shash_ops_async() in crypto/shash.c takes care of translating
-> calls from ahash to shash and that's how the *-generic drivers are usable
-> through the ahash API.
+> fanotify can certainly benefit from providing a ring buffer interface to read
+> events.
+> 
+> From what I have seen, a common practice of users is to monitor mounts
+> (somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
+> It'd be good if those users can use a single watch mechanism/API for
+> watching the mount namespace and filesystem events within mounts.
+> 
+> A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
+> It provides users with two complete different mechanisms to watch error
+> and filesystem events. That is generally not a good thing to have.
+> 
+> I am not asking that you implement fs_notify() before merging sb_notify()
+> and I understand that you have a use case for sb_notify().
+> I am asking that you show me the path towards a unified API (how a
+> typical program would look like), so that we know before merging your
+> new API that it could be extended to accommodate fsnotify events
+> where the final result will look wholesome to users.
 
-The crypto_alloc_shash will only identify cipher implementations that were 
-registered with the CRYPTO_ALG_TYPE_SHASH flag. That flag is set when a cipher 
-is registered using crypto_register_shash.
+Are you sure we want to combine notification about file changes etc. with
+administrator-type notifications about the filesystem? To me these two
+sound like rather different (although sometimes related) things.
 
-Thus, ciphers registered with crypto_register_ahash will not bear this flag 
-and thus will not be found by the allocation function.
-
-Ciao
-Stephan
-
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
