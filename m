@@ -2,85 +2,103 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6C6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097A2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7EE21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559129670;
-	bh=5qqB+LkxFWgDdcgULhenSbq10dxUOlAU30DJl8fvWpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QbYHDE5rjGRlG+a8kGzWqniLam1AfGIKj4KijK2XbBwdiZ62BJstNerf+/zZPyxAT
-	 p9ZweCnCfuUg9515HwXli7LI9ATyLXZFmHq4b30iqC4ZL8tOWrN9weDVUV+2PgksLA
-	 ZRGf4JpMQGWE33fYFaT/xa/aTnP5mpQEu2EiP9Fo=
+	by mail.kernel.org (Postfix) with ESMTP id D330520B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3liTC6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfE2Le3 (ORCPT
+        id S1726870AbfE2Le3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 29 May 2019 07:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfE2Le2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35766 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfE2Le2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 07:34:28 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE2120B1F;
-        Wed, 29 May 2019 11:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559129668;
-        bh=5qqB+LkxFWgDdcgULhenSbq10dxUOlAU30DJl8fvWpI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yg88l+06JcDZRH85MGOkFgJs9WdzrVF9m1mDG5YhVhWhjzQuKHIC+vh0h9ixW5dmA
-         3gDhCyiwz9JrXQvWSIwm6CG5oQkHDMHK2i6Q0q8eqXagYZ12duIW4MLdEWeg64sJF0
-         RS+LZ6nBDFuXrtuKJEwgT0c3y/6WXku6RfVeKZ0s=
-Date:   Wed, 29 May 2019 04:34:27 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     laurentiu.tudor@nxp.com
-Cc:     hch@lst.de, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de
-Subject: Re: [PATCH v7 0/5] prerequisites for device reserved local mem rework
-Message-ID: <20190529113427.GC11952@kroah.com>
-References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+Received: by mail-wm1-f65.google.com with SMTP id w9so1368003wmi.0;
+        Wed, 29 May 2019 04:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lv+811UxRTiA1eeuITfBrlSYFc5i58j28rlvkjD03rM=;
+        b=U3liTC6ZJCIAPgF5ohxRWUtSnwmEiVfVxH123hEmKBAPGu1Y5oKRc8WphyyDe/PIM7
+         gGvxiCoFK+cdsXt9S2AV+ajjs3bFZeHbHZqG/y9gcDj/XxFQKm6bmDbmhjhcbqkBqyZW
+         EjAPYDtVXjDf2B2lWTE2T/vmI53a4MF2JoxInqrV2Z0zkV6fRqDxpQQvEmPwneoYFGB0
+         GzfZOG7hrw/pQQSMolG5O/ycikS1Vttz3N+wH0zjpJ+6dGd9kAFx+HZPlhoVFXovljBZ
+         Eb8VLEwZ1pVb5/V+NOOh5UcdlFxRePuLcNDv6BEB1zAKFbPPUqAYUhxa0v3PYs9yx1TE
+         xORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=lv+811UxRTiA1eeuITfBrlSYFc5i58j28rlvkjD03rM=;
+        b=PktOTs23TbjR8NCGwjVMt+F18vuWN1994TpJAoE0pVoPY9Cw/2oYEfauSs0l9jUCZF
+         CZtdAC+M7dDpI8N5ksYisqbRGvI07+4gXS/d6S4010K9vHP6wZI4izeREY3WdInx9uGn
+         SjawFBh9wM2270PNaf69lu/sE+dATszeS10xE0aP455tgP1kmj9vaQZ/cbKWyp7VdJZ9
+         XNRphED9hAGeu6PWbT8x2HslJRXd+7AbG93pj9QIs2xNwRCcLMoXhxSSjqpvEj3V0Ikt
+         269IYFZeI9rKkvfKdjwA+FYJqh5l8KPHkvTpLcaeFMaXUxzXSvXvUyyXXKGQkTjPJU0R
+         lj4A==
+X-Gm-Message-State: APjAAAW/dpglNOoXMUtBOvij6Yt7fmKRem54i1UHQv8MbVvc1/+JT3/2
+        1F+jafLmYsa000k//jzRjpE=
+X-Google-Smtp-Source: APXvYqxnCd912qjQWgtXe92WAl/vOIzwax4AWMMD54q443N3LcvMovQ4/4Lre+VsMfb/2oFNQMFFXA==
+X-Received: by 2002:a1c:487:: with SMTP id 129mr5896823wme.143.1559129666196;
+        Wed, 29 May 2019 04:34:26 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id d9sm15219388wro.26.2019.05.29.04.34.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 04:34:25 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 6A99211415A8; Wed, 29 May 2019 13:34:19 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hfsplus: Replace strncpy with memcpy
+Date:   Wed, 29 May 2019 13:33:41 +0200
+Message-Id: <20190529113341.11972-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 01:28:38PM +0300, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> 
-> For HCs that have local memory, replace the current DMA API usage
-> with a genalloc generic allocator to manage the mappings for these
-> devices.
-> This is in preparation for dropping the existing "coherent" dma
-> mem declaration APIs. Current implementation was relying on a short
-> circuit in the DMA API that in the end, was acting as an allocator
-> for these type of devices.
-> 
-> Only compiled tested, so any volunteers willing to test are most welcome.
-> 
-> Thank you!
-> 
-> For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+Function strncpy was used to copy a fixed size buffer. Since
+NUL-terminating string is not required here, prefer a memcpy function.
+The generated code (ppc32) remains the same.
 
-All look good to me:
+Silence the following warning triggered using W=1:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  fs/hfsplus/xattr.c:410:3: warning: 'strncpy' output truncated before terminating nul copying 4 bytes from a string of the same length [-Wstringop-truncation]
 
-Christoph, this is going through your tree, right?
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ fs/hfsplus/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index d5403b4004c9..bb0b27d88e50 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -407,7 +407,7 @@ static int copy_name(char *buffer, const char *xattr_name, int name_len)
+ 	int offset = 0;
+ 
+ 	if (!is_known_namespace(xattr_name)) {
+-		strncpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
++		memcpy(buffer, XATTR_MAC_OSX_PREFIX, XATTR_MAC_OSX_PREFIX_LEN);
+ 		offset += XATTR_MAC_OSX_PREFIX_LEN;
+ 		len += XATTR_MAC_OSX_PREFIX_LEN;
+ 	}
+-- 
+2.20.1
 
-greg k-h
