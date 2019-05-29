@@ -2,185 +2,126 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F17C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFA92070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLFATLFY"
+	by mail.kernel.org (Postfix) with ESMTP id 6BBF52070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfE2A64 (ORCPT
+        id S1726535AbfE2A7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 20:58:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39002 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfE2A64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 20:58:56 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g9so269466plm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 17:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dB5GfLc57cH6bwtQrAmsQw+qYEcHdnY9B3siLBUP8uk=;
-        b=tLFATLFYr4475dDD6gdRPblwkVp37ut14jAhMGAKgDqy/FEKqbNCpymi8UgGLXX0yc
-         ubeAhI9iPxmQHwjCNZ91dSqb3zokbVjGyh1avWonTN/AdxsPbQov+N9nBdITLIN30V6W
-         dnkWfainrxBlolQas37BhgY0HEx9GJ1wYUlFvPhEjPJycBTTMPXXQFwZJDn54kw2i4fK
-         A5dHihK96brpHAlFxR+FCRKmGnzSlDcq1vTQHIaJpJovkwOXj0CvmsJEanudE0DxjPDc
-         sUzR+c6lF/pOuJgirMBTDNB9FEWj+Bh8/RMQNjHT06KfX0Oz7bTPxMXdGt5P8VELGzQP
-         bvYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dB5GfLc57cH6bwtQrAmsQw+qYEcHdnY9B3siLBUP8uk=;
-        b=qzTvme/1BB6mcHNv1vIOl/sBhMccAUpAlJhDPp6RyJ7RrerEzkhcAwT++KXa14j3cy
-         15ZKUTdDWFfC5efVMViBvATCCrteBWffPfvxjqXHzDlQC2gFA1/l6TZLNJGsdgzx6v8e
-         6nY6FlffMzGrSzmagSVZqoAoOIJ4HgfIH6NY1mjb/DQFL91HGNmDJQxi2GGyN96iiwce
-         Ya60UWaGLQW0tfQQqDpVK65/HVJG4T6yO60BDV8mlDRQfAucp0t0qj56O5zSFxSK8gh7
-         JjCk/xcFTbn6NWz/t7wVZRAmGGnSw/yTGqDosOXLvYi93qDDzBJWeishFINce4A2eG7d
-         z0fQ==
-X-Gm-Message-State: APjAAAW3W/lK0lRVTtxYVPLRVrERevyuy3Bacbwmh84zVKtbEHSi13y9
-        jl3xdzPqeAeBjKkZko4oO42O6w==
-X-Google-Smtp-Source: APXvYqwxh6jDK5DVOgkaZM5rVzp3+LyBXrFZZTjYOOYOzEtNmwHBrNbU2n5KLBLmmwYvFxPSAjRXeQ==
-X-Received: by 2002:a17:902:704a:: with SMTP id h10mr47656719plt.294.1559091535018;
-        Tue, 28 May 2019 17:58:55 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z4sm16431588pfa.142.2019.05.28.17.58.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 17:58:53 -0700 (PDT)
-Date:   Tue, 28 May 2019 17:58:51 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Message-ID: <20190529005851.GA3923@builder>
-References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
- <20190502001955.10575-2-bjorn.andersson@linaro.org>
- <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
+        Tue, 28 May 2019 20:59:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60584 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbfE2A7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 20:59:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B66DC049D7C;
+        Wed, 29 May 2019 00:59:12 +0000 (UTC)
+Received: from [10.72.12.48] (ovpn-12-48.pek2.redhat.com [10.72.12.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C414760BF1;
+        Wed, 29 May 2019 00:59:04 +0000 (UTC)
+Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-2-sgarzare@redhat.com>
+ <3b275b52-63d9-d260-1652-8e8bf7dd679f@redhat.com>
+ <20190513172322.vcgenx7xk4v6r2ay@steredhat>
+ <f834c9e9-5d0e-8ebb-44e0-6d99b6284e5c@redhat.com>
+ <20190514163500.a7moalixvpn5mkcr@steredhat>
+ <034a5081-b4fb-011f-b5b7-fbf293c13b23@redhat.com>
+ <20190528164521.k2euedfcmtvvynew@steredhat.homenet.telecomitalia.it>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3f0019cc-29b5-1ddd-fbcf-d5f1716ca802@redhat.com>
+Date:   Wed, 29 May 2019 08:59:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcfcd3b4-99d2-7b10-e82d-b92e6bf37a33@mm-sol.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20190528164521.k2euedfcmtvvynew@steredhat.homenet.telecomitalia.it>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 29 May 2019 00:59:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 May 02:14 PDT 2019, Stanimir Varbanov wrote:
 
-> Hi Bjorn,
-> 
-> On 5/2/19 3:19 AM, Bjorn Andersson wrote:
-> > Before introducing the QCS404 platform, which uses the same PCIe
-> > controller as IPQ4019, migrate this to use the bulk clock API, in order
-> > to make the error paths slighly cleaner.
-> > 
-> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v2:
-> > - Defined QCOM_PCIE_2_4_0_MAX_CLOCKS
-> > 
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++------------------
-> >  1 file changed, 14 insertions(+), 35 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d560e3..d740cbe0e56d 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -112,10 +112,10 @@ struct qcom_pcie_resources_2_3_2 {
-> >  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
-> >  };
-> >  
-> > +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
-> >  struct qcom_pcie_resources_2_4_0 {
-> > -	struct clk *aux_clk;
-> > -	struct clk *master_clk;
-> > -	struct clk *slave_clk;
-> > +	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
-> > +	int num_clks;
-> >  	struct reset_control *axi_m_reset;
-> >  	struct reset_control *axi_s_reset;
-> >  	struct reset_control *pipe_reset;
-> > @@ -638,18 +638,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
-> >  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
-> >  	struct dw_pcie *pci = pcie->pci;
-> >  	struct device *dev = pci->dev;
-> > +	int ret;
-> >  
-> > -	res->aux_clk = devm_clk_get(dev, "aux");
-> > -	if (IS_ERR(res->aux_clk))
-> > -		return PTR_ERR(res->aux_clk);
-> > +	res->clks[0].id = "aux";
-> > +	res->clks[1].id = "master_bus";
-> > +	res->clks[2].id = "slave_bus";
-> >  
-> > -	res->master_clk = devm_clk_get(dev, "master_bus");
-> > -	if (IS_ERR(res->master_clk))
-> > -		return PTR_ERR(res->master_clk);
-> > +	res->num_clks = 3;
-> 
-> Use the new fresh define QCOM_PCIE_2_4_0_MAX_CLOCKS?
-> 
+On 2019/5/29 上午12:45, Stefano Garzarella wrote:
+> On Wed, May 15, 2019 at 10:48:44AM +0800, Jason Wang wrote:
+>> On 2019/5/15 上午12:35, Stefano Garzarella wrote:
+>>> On Tue, May 14, 2019 at 11:25:34AM +0800, Jason Wang wrote:
+>>>> On 2019/5/14 上午1:23, Stefano Garzarella wrote:
+>>>>> On Mon, May 13, 2019 at 05:58:53PM +0800, Jason Wang wrote:
+>>>>>> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+>>>>>>> +static struct virtio_vsock_buf *
+>>>>>>> +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_copy)
+>>>>>>> +{
+>>>>>>> +	struct virtio_vsock_buf *buf;
+>>>>>>> +
+>>>>>>> +	if (pkt->len == 0)
+>>>>>>> +		return NULL;
+>>>>>>> +
+>>>>>>> +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+>>>>>>> +	if (!buf)
+>>>>>>> +		return NULL;
+>>>>>>> +
+>>>>>>> +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
+>>>>>>> +	 * the new virtio_vsock_buf avoiding the copy, because we are sure that
+>>>>>>> +	 * we are not use more memory than that counted by the credit mechanism.
+>>>>>>> +	 */
+>>>>>>> +	if (zero_copy && pkt->len == pkt->buf_len) {
+>>>>>>> +		buf->addr = pkt->buf;
+>>>>>>> +		pkt->buf = NULL;
+>>>>>>> +	} else {
+>>>>>> Is the copy still needed if we're just few bytes less? We meet similar issue
+>>>>>> for virito-net, and virtio-net solve this by always copy first 128bytes for
+>>>>>> big packets.
+>>>>>>
+>>>>>> See receive_big()
+>>>>> I'm seeing, It is more sophisticated.
+>>>>> IIUC, virtio-net allocates a sk_buff with 128 bytes of buffer, then copies the
+>>>>> first 128 bytes, then adds the buffer used to receive the packet as a frag to
+>>>>> the skb.
+>>>> Yes and the point is if the packet is smaller than 128 bytes the pages will
+>>>> be recycled.
+>>>>
+>>>>
+>>> So it's avoid the overhead of allocation of a large buffer. I got it.
+>>>
+>>> Just a curiosity, why the threshold is 128 bytes?
+>>
+>>  From its name (GOOD_COPY_LEN), I think it just a value that won't lose much
+>> performance, e.g the size two cachelines.
+>>
+> Jason, Stefan,
+> since I'm removing the patches to increase the buffers to 64 KiB and I'm
+> adding a threshold for small packets, I would simplify this patch,
+> removing the new buffer allocation and copying small packets into the
+> buffers already queued (if there is a space).
+> In this way, I should solve the issue of 1 byte packets.
+>
+> Do you think could be better?
 
-As I replace it in patch 3/3 with a value different from "max clocks", I
-don't think it makes sense to use the define here. So I'm leaving this
-as is.
 
-> >  
-> > -	res->slave_clk = devm_clk_get(dev, "slave_bus");
-> > -	if (IS_ERR(res->slave_clk))
-> > -		return PTR_ERR(res->slave_clk);
-> > +	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-> > +	if (ret < 0)
-> > +		return ret;
-> >  
-> >  	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
-> >  	if (IS_ERR(res->axi_m_reset))
-> > @@ -719,9 +718,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
-> >  	reset_control_assert(res->axi_m_sticky_reset);
-> >  	reset_control_assert(res->pwr_reset);
-> >  	reset_control_assert(res->ahb_reset);
-> > -	clk_disable_unprepare(res->aux_clk);
-> > -	clk_disable_unprepare(res->master_clk);
-> > -	clk_disable_unprepare(res->slave_clk);
-> > +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
-> >  }
-> >  
-> >  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> > @@ -850,23 +847,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-> >  
-> >  	usleep_range(10000, 12000);
-> >  
-> > -	ret = clk_prepare_enable(res->aux_clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot prepare/enable iface clock\n");
-> > +	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-> > +	if (ret)
-> >  		goto err_clk_aux;
-> 
-> Maybe you have to change the name of the label too?
-> 
+I think so.
 
-Updated this and posted v5. Should be good to be merged now.
+Thanks
 
-Thanks for your reviews!
 
-Regards,
-Bjorn
+>
+> Thanks,
+> Stefano
