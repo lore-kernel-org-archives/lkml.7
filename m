@@ -2,133 +2,267 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E10C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C03FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A5124214
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66012421A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 21:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="weCrRJGr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ju0liY/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfE2VaC (ORCPT
+        id S1726535AbfE2VdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 17:30:02 -0400
-Received: from mail-eopbgr800074.outbound.protection.outlook.com ([40.107.80.74]:48218
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726189AbfE2VaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 17:30:01 -0400
+        Wed, 29 May 2019 17:33:15 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35488 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfE2VdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 17:33:14 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h11so4025577ljb.2;
+        Wed, 29 May 2019 14:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NvGgg2zOXK0CfpVwnqsUlEGhaIB8BTrOOnD28S2534g=;
- b=weCrRJGrcw19BfcL6MrzfZ5vpJnKT+xdj2+lE6+oo/XKbIghfrTRlxfwKY+C/sKEPwOdqIpbagI3BDXdP7JzF98uVKdovOkV3KtwDOJsZlBukf1RPQfTqahqMTWuAXjlwAoIbh5ERDedT2WLtUuPAzGBVNUE6xo3PowTm45C5QQ=
-Received: from DM6PR12MB3947.namprd12.prod.outlook.com (10.255.174.156) by
- DM6PR12MB2619.namprd12.prod.outlook.com (20.176.116.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Wed, 29 May 2019 21:29:58 +0000
-Received: from DM6PR12MB3947.namprd12.prod.outlook.com
- ([fe80::5964:8c3c:1b5b:c480]) by DM6PR12MB3947.namprd12.prod.outlook.com
- ([fe80::5964:8c3c:1b5b:c480%2]) with mapi id 15.20.1922.021; Wed, 29 May 2019
- 21:29:58 +0000
-From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
-To:     Colin King <colin.king@canonical.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Zeng, Oak" <Oak.Zeng@amd.com>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] drm/amdkfd: fix null pointer dereference on dev
-Thread-Topic: [PATCH][next] drm/amdkfd: fix null pointer dereference on dev
-Thread-Index: AQHVFjBCaD/NqbYM90qWqX83f23XTKaCnvEA
-Date:   Wed, 29 May 2019 21:29:58 +0000
-Message-ID: <caa18dab-ac66-a909-1d94-3dc5604971da@amd.com>
-References: <20190529150734.18120-1-colin.king@canonical.com>
-In-Reply-To: <20190529150734.18120-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-clientproxiedby: YTOPR0101CA0026.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::39) To DM6PR12MB3947.namprd12.prod.outlook.com
- (2603:10b6:5:1cb::28)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f05e16e4-a41c-4100-fe8a-08d6e47cccb0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2619;
-x-ms-traffictypediagnostic: DM6PR12MB2619:
-x-microsoft-antispam-prvs: <DM6PR12MB2619AF60555BE877914D50C9921F0@DM6PR12MB2619.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0052308DC6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(396003)(376002)(136003)(199004)(189003)(58126008)(8676002)(6486002)(6512007)(81166006)(68736007)(73956011)(71200400001)(486006)(6246003)(54906003)(110136005)(476003)(6436002)(86362001)(71190400001)(31696002)(2201001)(66476007)(66556008)(64756008)(66446008)(4326008)(66946007)(446003)(65826007)(6636002)(316002)(53546011)(81156014)(2501003)(305945005)(6506007)(26005)(25786009)(256004)(14444005)(64126003)(31686004)(229853002)(14454004)(52116002)(5660300002)(76176011)(478600001)(99286004)(3846002)(65806001)(6116002)(65956001)(72206003)(7736002)(2616005)(11346002)(8936002)(2906002)(102836004)(53936002)(186003)(386003)(66066001)(36756003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2619;H:DM6PR12MB3947.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: P7mYtFDx4WcjP8s3+WcrbTEr4iHd0bHJqCOKXWekomMaa85ADTo2tQgLFksoCLYa3MG/HHe2al7ZvJxsm5YKZN6tlcmttiyPsWwZBbHeNhKsGQ8SeBH1YWbmHadBrp+V+lBYIC0gyFLKwXx09RkqzwnZuUUBhZoLT8C4jKHIS56aPdyqzJ99/CnkH90n+ZrDraCY2Y3gL67rUmPSS7Td+8Ux21b3lrDydVMPpkJACzy4Qx3kCg8phyWtBUhESSp4sKjZhdvrmiemGxg4BqCifuJS8GlhZ44nCM4gfMHwO6QaEoe5xxF2WYPdfpOscIW1aNcoqi6ghkU5mBLryZ7sKhlNdVphvHXMEVJmw4B9kdEOmHxXZz8C3Og/e7wB5mZlvDGcZre0eh9HzBoEmkzOqEeNkuzpGD+j9+agWEQZhcs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5DDDE1C51BFA0C4CA50EF3091B91A1F2@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pIbOKPck1X/JUuinczJIk1KdcUB0Rf3n6WcFy12YsU4=;
+        b=ju0liY/10KkiIN96iskUBDFs0kGd48XPEHw6oJpOJB4pSqm9WsHFj0Qj7OY2lciOgu
+         7xbUfSbdcpKBXGJpti8sFV89ynm9+1B9OKv1m//RZDzHAZkh4cTzzmyhmAAIKRvw1LIn
+         qqZTncndW4PDtn8SRPoNdHX+2PXxHdKowvJOLSSq6615LPZsLVxb9wCof3aJsnSS1eFm
+         ZRy3gNPltpoV3likuTWlznWrQpBjpjOa03xZvK11hxvwp3+gpjdIxVaIEJ8nE0XloxAZ
+         KRwxNCyoHUF/po5LKz4vg9vjKTipdE3kQQfSiNEcwolL2PfuO6KAGtGvXwbr+Wb5lhcA
+         UqlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pIbOKPck1X/JUuinczJIk1KdcUB0Rf3n6WcFy12YsU4=;
+        b=ZG7agHBVQ3Bvet/jjQoqGJ70VnGhhw464z0HwV1Dt5IMGNAhh3+bP5Sx7WwMw/FFdZ
+         RFiZogtGGbvYl8JszfD+bUC1wsLH/Fz7ZDv/3jUZ4Z8T4WxEULWgPSkWyXH8qeV9ZRrh
+         Bo+p8x8YDAY3a42U/gReXVx+8gYGJEzMlxVFxHennK+vdB+at3WZY4bRi+4Q3I2qAa+m
+         DF9CI9jj+0AXcJG/T/+yH3438UO+obR/gR+eAJ9uF883MTYj+JQLtZoItT0o7/pSWqpX
+         +16CEA1z5LIWe5jxFOW/3ZRZ3lQFKOT8pK1WnqnBmAPjPqmUHTFCDAPHGoiIGfn3BIa1
+         TGrg==
+X-Gm-Message-State: APjAAAWkmiVmT1CGh/goziN/aOCuPi44/AB03aaYId8p+uZQNoKQxj55
+        xX5fGeDvfjvvOO19rjzGLRtAAHkR
+X-Google-Smtp-Source: APXvYqwcp3sodt6iclLB1Tjq95fVrCfVBg+ucyM+o/Zbv61jEjFHPp70mDzRNwsbJjaLUYDMR43+hw==
+X-Received: by 2002:a2e:7216:: with SMTP id n22mr42675ljc.42.1559165590586;
+        Wed, 29 May 2019 14:33:10 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id k16sm94014lje.30.2019.05.29.14.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 14:33:09 -0700 (PDT)
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+ <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+ <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
+ <11fe4d9a-6d8e-bc4f-b764-a849571fb6b0@gmail.com>
+ <0f087659-cdde-9f89-55a2-d399ee539431@nvidia.com>
+ <34480b14-48da-2745-086d-6a8900c5a049@gmail.com>
+ <fc1f3c56-ab6b-478e-75d8-797d8e3bf21f@nvidia.com>
+ <5e074715-fd8c-908a-b880-9f1fd03a244f@gmail.com>
+ <c4e9fc53-f457-3e1d-8c73-8b98c30d9c69@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <33707409-3a5c-c49b-20fb-130e3fa9f3b6@gmail.com>
+Date:   Thu, 30 May 2019 00:33:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f05e16e4-a41c-4100-fe8a-08d6e47cccb0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 21:29:58.3261
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fkuehlin@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2619
+In-Reply-To: <c4e9fc53-f457-3e1d-8c73-8b98c30d9c69@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNS0yOSAxMTowNyBhLm0uLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBGcm9tOiBDb2xp
-biBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPg0KPiBUaGUgcG9pbnRlciBk
-ZXYgaXMgc2V0IHRvIG51bGwgeWV0IGl0IGlzIGJlaW5nIGRlcmVmZXJlbmNlZCB3aGVuDQo+IGNo
-ZWNraW5nIGRldi0+ZHFtLT5zY2hlZF9wb2xpY3kuICBGaXggdGhpcyBieSBwZXJmb3JtaW5nIHRo
-ZSBjaGVjaw0KPiBvbiBkZXYtPmRxbS0+c2NoZWRfcG9saWN5IGFmdGVyIGRldiBoYXMgYmVlbiBh
-c3NpZ25lZCBhbmQgbnVsbA0KPiBjaGVja2VkLiAgQWxzbyByZW1vdmUgdGhlIHJlZHVuZGFudCBu
-dWxsIGFzc2lnbm1lbnQgdG8gZGV2Lg0KPg0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiRXhwbGlj
-aXQgbnVsbCBkZXJlZmVyZW5jZSIpDQo+IEZpeGVzOiAxYTA1OGMzMzc2NzYgKCJkcm0vYW1ka2Zk
-OiBOZXcgSU9DVEwgdG8gYWxsb2NhdGUgcXVldWUgR1dTIikNCj4gU2lnbmVkLW9mZi1ieTogQ29s
-aW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEZl
-bGl4IEt1ZWhsaW5nIDxGZWxpeC5LdWVobGluZ0BhbWQuY29tPg0KDQpUaGFua3MhDQoNCiDCoCBG
-ZWxpeA0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9jaGFyZGV2
-LmMgfCA3ICsrKystLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRl
-bGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRrZmQv
-a2ZkX2NoYXJkZXYuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9jaGFyZGV2LmMN
-Cj4gaW5kZXggYWFiMmFhNmMxZGVlLi5lYTgyODI4ZmRjNzYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1ka2ZkL2tmZF9jaGFyZGV2LmMNCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9hbWRrZmQva2ZkX2NoYXJkZXYuYw0KPiBAQCAtMTU3MiwxMCArMTU3Miw5IEBAIHN0
-YXRpYyBpbnQga2ZkX2lvY3RsX2FsbG9jX3F1ZXVlX2d3cyhzdHJ1Y3QgZmlsZSAqZmlsZXAsDQo+
-ICAgew0KPiAgIAlpbnQgcmV0dmFsOw0KPiAgIAlzdHJ1Y3Qga2ZkX2lvY3RsX2FsbG9jX3F1ZXVl
-X2d3c19hcmdzICphcmdzID0gZGF0YTsNCj4gLQlzdHJ1Y3Qga2ZkX2RldiAqZGV2ID0gTlVMTDsN
-Cj4gKwlzdHJ1Y3Qga2ZkX2RldiAqZGV2Ow0KPiAgIA0KPiAtCWlmICghaHdzX2d3c19zdXBwb3J0
-IHx8DQo+IC0JCWRldi0+ZHFtLT5zY2hlZF9wb2xpY3kgPT0gS0ZEX1NDSEVEX1BPTElDWV9OT19I
-V1MpDQo+ICsJaWYgKCFod3NfZ3dzX3N1cHBvcnQpDQo+ICAgCQlyZXR1cm4gLUVJTlZBTDsNCj4g
-ICANCj4gICAJZGV2ID0ga2ZkX2RldmljZV9ieV9pZChhcmdzLT5ncHVfaWQpOw0KPiBAQCAtMTU4
-Myw2ICsxNTgyLDggQEAgc3RhdGljIGludCBrZmRfaW9jdGxfYWxsb2NfcXVldWVfZ3dzKHN0cnVj
-dCBmaWxlICpmaWxlcCwNCj4gICAJCXByX2RlYnVnKCJDb3VsZCBub3QgZmluZCBncHUgaWQgMHgl
-eFxuIiwgYXJncy0+Z3B1X2lkKTsNCj4gICAJCXJldHVybiAtRUlOVkFMOw0KPiAgIAl9DQo+ICsJ
-aWYgKGRldi0+ZHFtLT5zY2hlZF9wb2xpY3kgPT0gS0ZEX1NDSEVEX1BPTElDWV9OT19IV1MpDQo+
-ICsJCXJldHVybiAtRUlOVkFMOw0KPiAgIA0KPiAgIAltdXRleF9sb2NrKCZwLT5tdXRleCk7DQo+
-ICAgCXJldHZhbCA9IHBxbV9zZXRfZ3dzKCZwLT5wcW0sIGFyZ3MtPnF1ZXVlX2lkLCBhcmdzLT5u
-dW1fZ3dzID8gZGV2LT5nd3MgOiBOVUxMKTsNCg==
+30.05.2019 0:27, Sowjanya Komatineni пишет:
+> 
+> On 5/29/19 2:25 PM, Dmitry Osipenko wrote:
+>> 29.05.2019 23:56, Sowjanya Komatineni пишет:
+>>> On 5/29/19 1:47 PM, Dmitry Osipenko wrote:
+>>>> 29.05.2019 23:11, Sowjanya Komatineni пишет:
+>>>>> On 5/29/19 12:32 PM, Dmitry Osipenko wrote:
+>>>>>> 29.05.2019 21:14, Sowjanya Komatineni пишет:
+>>>>>>> On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
+>>>>>>>> 29.05.2019 2:08, Sowjanya Komatineni пишет:
+>>>>>>>>> This patch adds suspend and resume support for Tegra pinctrl
+>>>>>>>>> driver
+>>>>>>>>> and registers them to syscore so the pinmux settings are restored
+>>>>>>>>> before the devices resume.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>> ---
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra.c    | 68
+>>>>>>>>> +++++++++++++++++++++++++++++++-
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>>>>>>>>>      drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>>>>>>>>>      7 files changed, 75 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>>>>> index a5008c066bac..bdc47e62c457 100644
+>>>>>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>>>>>> @@ -28,11 +28,18 @@
+>>>>>>>>>      #include <linux/pinctrl/pinmux.h>
+>>>>>>>>>      #include <linux/pinctrl/pinconf.h>
+>>>>>>>>>      #include <linux/slab.h>
+>>>>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>>>>        #include "../core.h"
+>>>>>>>>>      #include "../pinctrl-utils.h"
+>>>>>>>>>      #include "pinctrl-tegra.h"
+>>>>>>>>>      +#define EMMC2_PAD_CFGPADCTRL_0            0x1c8
+>>>>>>>>> +#define EMMC4_PAD_CFGPADCTRL_0            0x1e0
+>>>>>>>>> +#define EMMC_DPD_PARKING            (0x1fff << 14)
+>>>>>>>>> +
+>>>>>>>>> +static struct tegra_pmx *pmx;
+>>>>>>>>> +
+>>>>>>>>>      static inline u32 pmx_readl(struct tegra_pmx *pmx, u32
+>>>>>>>>> bank, u32
+>>>>>>>>> reg)
+>>>>>>>>>      {
+>>>>>>>>>          return readl(pmx->regs[bank] + reg);
+>>>>>>>>> @@ -629,6 +636,50 @@ static void
+>>>>>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>>>>>>          }
+>>>>>>>>>      }
+>>>>>>>>>      +static int __maybe_unused tegra_pinctrl_suspend(void)
+>>>>>>>>> +{
+>>>>>>>>> +    u32 *backup_regs = pmx->backup_regs;
+>>>>>>>>> +    u32 *regs;
+>>>>>>>>> +    int i, j;
+>>>>>>>>> +
+>>>>>>>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>>>>>>>> +        regs = pmx->regs[i];
+>>>>>>>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>>>>>>>> +            *backup_regs++ = readl(regs++);
+>>>>>>>>> +    }
+>>>>>>>>> +
+>>>>>>>>> +    return pinctrl_force_sleep(pmx->pctl);
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>> +static void __maybe_unused tegra_pinctrl_resume(void)
+>>>>>>>>> +{
+>>>>>>>>> +    u32 *backup_regs = pmx->backup_regs;
+>>>>>>>>> +    u32 *regs;
+>>>>>>>>> +    u32 val;
+>>>>>>>>> +    int i, j;
+>>>>>>>>> +
+>>>>>>>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>>>>>>>> +        regs = pmx->regs[i];
+>>>>>>>>> +        for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+>>>>>>>>> +            writel(*backup_regs++, regs++);
+>>>>>>>>> +    }
+>>>>>>>>> +
+>>>>>>>>> +    if (pmx->soc->has_park_padcfg) {
+>>>>>>>>> +        val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>>>>>>>> +        val &= ~EMMC_DPD_PARKING;
+>>>>>>>>> +        pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>>>>>>>> +
+>>>>>>>>> +        val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>>>>>>>> +        val &= ~EMMC_DPD_PARKING;
+>>>>>>>>> +        pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>>>>>>>> +    }
+>>>>>>>>> +}
+>>>>>>>>>
+>>>>>>>> But the CFGPADCTRL registers are already programmed by restoring
+>>>>>>>> the
+>>>>>>>> backup_regs and hence the relevant EMMC's are already unparked.
+>>>>>>>> Hence
+>>>>>>>> why do you need to force-unpark both of the EMMC's? What if EMMC is
+>>>>>>>> unpopulated on a board, why do you need to unpark it then?
+>>>>>>> PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and
+>>>>>>> EMMC4_PAD_CFGPADCTRL)
+>>>>>>> are not part of pinmux.
+>>>>>>>
+>>>>>>> They are part of CFGPADCTRL register so pinctrl driver pingroup
+>>>>>>> doesn't
+>>>>>>> include these registers.
+>>>>>> I'm looking at the tegra210_groups and it clearly has these both
+>>>>>> registers as a part of pinctrl setup because the rest of the bits
+>>>>>> configure drive of the pads.
+>>>>>>
+>>>>>>    From pinctrl-tegra210.c:
+>>>>>>
+>>>>>> #define DRV_PINGROUP_REG_A        0x8d4    /* bank 0 */
+>>>>>>
+>>>>>> DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
+>>>>>> DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>> 0xa9c - 0x8d4 = 0x1c8
+>>>>>> 0xab4 - 0x8d4 = 0x1e0
+>>>>>>
+>>>>>> Hence the PARK bits are already getting unset by restoring the
+>>>>>> backup_regs because the CFGPADCTRL registers are a part of the
+>>>>>> "bank 0"
+>>>>>> registers.
+>>>>>>
+>>>>>> Am I still missing something?
+>>>>> DRV_PINGROUP parked_bit is -1 and will not be programmed so store and
+>>>>> restore will not take care of it.
+>>>>>
+>>>>> Also EMMC PADCFG is the only padcfg register which has parked bit and
+>>>>> for other IO pads its part of pinmux
+>>>> You're storing raw values of all of the PINCTRL registers and then
+>>>> restoring the raw values (if I'm not misreading that part on the
+>>>> patch),
+>>>> it's absolutely meaningless that DRV_PINGROUP doesn't define the PARK
+>>>> bits.
+>>>>
+>>>> In a result, the backup_regs array contains raw CFGPADCTRL value with
+>>>> the PARK bits being unset on store, that value is written out on the
+>>>> restore as-is and hence the PARK bits are getting unset as well.
+>>>>
+>>>> And why DRV_PINGROUP misses PARK bits for the EMMC's? Looks like a
+>>>> driver's drawback that need to be addressed.
+>>> Parked bits from padcfg are available only for couple of EMMC registers.
+>>>
+>>> default PARK bits are set so stored value contains park bit set. on
+>>> resume, after restoring park bit is cleared.
+>> TRM says that the PARK bits are set on HW reset (and on DPD IIUC) and
+>> then SW should unset the bits. I assume that the PARK bits of the EMMC
+>> pads are unset by bootloader and that's why it doesn't cause problems
+>> for kernel, in oppose to PARK bits of the rest of pinmux that are unset
+>> by the driver in tegra_pinctrl_clear_parked_bits() on driver's probe.
+>>
+>>> on subsequence DPD entry, stored value contains park bit 0 and HW clamps
+>>> park bit to logic 1 during DPD entry and cleared again on resume.
+>> I assume that EMMC won't work properly if pads are "parked" and the PARK
+>> bits should be in unset state on kernel boot-up as I wrote above, hence
+>> stored value should always contain 0 for the EMMC PARK bits. No?
+> 
+> On bootup, pads still works. PARK bit is to keep pads in DPD once they
+> enter into DPD (LP0) and on resume they need to be cleared to be out of DPD
+> 
+> 
+
+Ah okay, thank you for the clarification.
+
+Indeed, it will be better to unset the PARK bits in
+pinctrl_clear_parked_bits, as you suggested in the other email. Seems it
+should be simple to turn parked_bit into parked_bitmask.
