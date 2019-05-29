@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42394C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385D4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1938223D28
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F9723D60
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfE2QYm (ORCPT
+        id S1726969AbfE2QZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:24:42 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48962 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfE2QYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:24:42 -0400
+        Wed, 29 May 2019 12:25:34 -0400
+Received: from foss.arm.com ([217.140.101.70]:49016 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfE2QZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:25:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47F7E341;
-        Wed, 29 May 2019 09:24:41 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7572A3F5AF;
-        Wed, 29 May 2019 09:24:38 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:24:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6340715AD;
+        Wed, 29 May 2019 09:25:33 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D9723F5AF;
+        Wed, 29 May 2019 09:25:30 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:25:28 +0100
+From:   Will Deacon <will.deacon@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, acme@redhat.com, eranian@google.com,
-        fweisbec@gmail.com, jolsa@redhat.com
+Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au,
+        acme@redhat.com, eranian@google.com, fweisbec@gmail.com,
+        jolsa@redhat.com
 Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190529162435.GM31777@lakrids.cambridge.arm.com>
+Message-ID: <20190529162528.GB12420@fuggles.cambridge.arm.com>
 References: <20190528153224.GE20758@fuggles.cambridge.arm.com>
  <20190528173228.GW2623@hirez.programming.kicks-ass.net>
  <20190529091733.GA4485@fuggles.cambridge.arm.com>
@@ -51,7 +51,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,8 +81,13 @@ On Wed, May 29, 2019 at 06:19:55PM +0200, Peter Zijlstra wrote:
 > 
 > Or am I not getting it?
 
-If the contents of task_pt_regs(current) is garbage, then the result of
-user_mode(task_pt_regs(current)) is also garbage, no?
+Sorry, I'm not trying to catch you out! Just trying to understand what the
+semantics are supposed to be.
 
-Thanks,
-Mark.
+I do find the concept of user_mode(regs) bizarre for the idle task. By the
+above, we definitely have a bug on arm64 (user_mode(regs) tends to be
+true for the idle task), and I couldn't figure out how you avoided it on
+x86. I guess it happens to work because the stack is zero-initialised or
+something?
+
+Will
