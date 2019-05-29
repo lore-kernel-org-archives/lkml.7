@@ -2,135 +2,182 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B852DC04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F4AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B58E21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCE021721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdijjK50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfE2Ce3 (ORCPT
+        id S1726512AbfE2Ceg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:34:29 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37206 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbfE2Ce3 (ORCPT
+        Tue, 28 May 2019 22:34:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40072 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfE2Cef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:34:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TSvOYQ4_1559097264;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSvOYQ4_1559097264)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 29 May 2019 10:34:25 +0800
-Subject: Re: [RFC PATCH 0/3] Make deferred split shrinker memcg aware
-To:     David Rientjes <rientjes@google.com>
-Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        shakeelb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        Tue, 28 May 2019 22:34:35 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d30so384549pgm.7;
+        Tue, 28 May 2019 19:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=h4HAswLo5xWylyhxHYQaGkQiPnSlTO4ftDNVwHlm10E=;
+        b=BdijjK50B4yGs2xl1j13xH1Nea+/zyun0B4RhsO/A6piYaISkz9mwd6HXAxV2giSbx
+         /ZctzsJGZcwcb6rR1cXFLB1ORIxZInUr8qObA+0Kc2EYTzos0bOxznQKvBWp52FWx9sU
+         dnZT37oa67uXnAM/fpDYfj0b63duM6O86iOG2MbrtN7xzw8H1zqf1S/r2YbZVQ1VQgI8
+         n5kAWrQxtAejzSfZs3Z4sO6CqokjNVtnhS1DKQAIEdsxXdif1mpd0D5V2ffK+dMgFlZG
+         0BoOpbnAoycIkR4BoAZZc6Dso7Syz39z8/EDZykdtz1XupQSyrcCYH8MkVG1A1s3PRLt
+         cz6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=h4HAswLo5xWylyhxHYQaGkQiPnSlTO4ftDNVwHlm10E=;
+        b=paCgnMLxpKyv0pmSoa2JWUak+oZ8gMSTgvXlpxFr6FiAu9wtqhRBHrPdSeRS8fNkSV
+         4u0JO8L58yepnHuAmepNd9snKraSf8AUGDbBQxhyzEsVTUhg8IRTsDiCc2rgriTEQjIt
+         f4mgmpXwaRsKt7yw+mtBPLLduN/38+N50RoBlixHGJu2Yh/eECHem7yOiFLGjdjLbYNw
+         cVFXfW6PHT6yaCnjbQvKxfq8U7OAZ5M54LVKJepiprs6P6lPYRBkFMU0xwkCuvsHoKkj
+         RyaJ9nTUeVY+pHxJGvuWXrTSdSpc3DasJLNZjuzBKjrw4NIYgNBGxW/yXvbHtln8jb3Z
+         NTVg==
+X-Gm-Message-State: APjAAAU5MEPc5eKLTxCoWn8yVQvsnQ2QcMcQ3sCayghYVO2UZioHV2Ht
+        qBMHwxIEykc7j4RQgOXwUYFpun3+
+X-Google-Smtp-Source: APXvYqyofbBxvyS5ovPaLMDcXQsE5q3ulrvYaBAWd1va1isSW/QGyl9IdZGEFFsHVqa9GjNYBISZ+w==
+X-Received: by 2002:a17:90a:ae10:: with SMTP id t16mr9470350pjq.51.1559097274267;
+        Tue, 28 May 2019 19:34:34 -0700 (PDT)
+Received: from localhost ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id f16sm10422064pja.18.2019.05.28.19.34.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 19:34:32 -0700 (PDT)
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <2e23bd8c-6120-5a86-9e9e-ab43b02ce150@linux.alibaba.com>
-Date:   Wed, 29 May 2019 10:34:24 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Cc:     Stephen Boyd <sboyd@kernel.org>, bot@kernelci.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        kernel-build-reports@lists.linaro.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 1/1] Revert "drivers: thermal: tsens: Add new operation to check if a sensor is enabled"
+Date:   Tue, 28 May 2019 19:34:26 -0700
+Message-Id: <1559097266-12780-1-git-send-email-edubezval@gmail.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <CAJ=6tTqOW5s_dhEuy3su+R6=tUY_ZiuAuCMG1A8Y-Lz-aHXw2Q@mail.gmail.com>
+References: <CAJ=6tTqOW5s_dhEuy3su+R6=tUY_ZiuAuCMG1A8Y-Lz-aHXw2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This reverts commit 3e6a8fb3308419129c7a52de6eb42feef5a919a0.
 
+Cc: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Suggested-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reported-by: Andy Gross <andygro@gmail.com>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+---
 
-On 5/29/19 9:22 AM, David Rientjes wrote:
-> On Tue, 28 May 2019, Yang Shi wrote:
->
->> I got some reports from our internal application team about memcg OOM.
->> Even though the application has been killed by oom killer, there are
->> still a lot THPs reside, page reclaim doesn't reclaim them at all.
->>
->> Some investigation shows they are on deferred split queue, memcg direct
->> reclaim can't shrink them since THP deferred split shrinker is not memcg
->> aware, this may cause premature OOM in memcg.  The issue can be
->> reproduced easily by the below test:
->>
-> Right, we've also encountered this.  I talked to Kirill about it a week or
-> so ago where the suggestion was to split all compound pages on the
-> deferred split queues under the presence of even memory pressure.
->
-> That breaks cgroup isolation and perhaps unfairly penalizes workloads that
-> are running attached to other memcg hierarchies that are not under
-> pressure because their compound pages are now split as a side effect.
-> There is a benefit to keeping these compound pages around while not under
-> memory pressure if all pages are subsequently mapped again.
+Added this for next -rc, as per request.
 
-Yes, I do agree. I tried other approaches too, it sounds making deferred 
-split queue per memcg is the optimal one.
+ drivers/thermal/qcom/tsens-common.c | 14 --------------
+ drivers/thermal/qcom/tsens-v0_1.c   |  1 -
+ drivers/thermal/qcom/tsens-v2.c     |  1 -
+ drivers/thermal/qcom/tsens.c        |  5 -----
+ drivers/thermal/qcom/tsens.h        |  1 -
+ 5 files changed, 22 deletions(-)
 
->
->> $ cgcreate -g memory:thp
->> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
->> $ cgexec -g memory:thp ./transhuge-stress 4000
->>
->> transhuge-stress comes from kernel selftest.
->>
->> It is easy to hit OOM, but there are still a lot THP on the deferred split
->> queue, memcg direct reclaim can't touch them since the deferred split
->> shrinker is not memcg aware.
->>
-> Yes, we have seen this on at least 4.15 as well.
->
->> Convert deferred split shrinker memcg aware by introducing per memcg deferred
->> split queue.  The THP should be on either per node or per memcg deferred
->> split queue if it belongs to a memcg.  When the page is immigrated to the
->> other memcg, it will be immigrated to the target memcg's deferred split queue
->> too.
->>
->> And, move deleting THP from deferred split queue in page free before memcg
->> uncharge so that the page's memcg information is available.
->>
->> Reuse the second tail page's deferred_list for per memcg list since the same
->> THP can't be on multiple deferred split queues at the same time.
->>
->> Remove THP specific destructor since it is not used anymore with memcg aware
->> THP shrinker (Please see the commit log of patch 2/3 for the details).
->>
->> Make deferred split shrinker not depend on memcg kmem since it is not slab.
->> It doesn't make sense to not shrink THP even though memcg kmem is disabled.
->>
->> With the above change the test demonstrated above doesn't trigger OOM anymore
->> even though with cgroup.memory=nokmem.
->>
-> I'm curious if your internal applications team is also asking for
-> statistics on how much memory can be freed if the deferred split queues
-> can be shrunk?  We have applications that monitor their own memory usage
-
-No, but this reminds me. The THPs on deferred split queue should be 
-accounted into available memory too.
-
-> through memcg stats or usage and proactively try to reduce that usage when
-> it is growing too large.  The deferred split queues have significantly
-> increased both memcg usage and rss when they've upgraded kernels.
->
-> How are your applications monitoring how much memory from deferred split
-> queues can be freed on memory pressure?  Any thoughts on providing it as a
-> memcg stat?
-
-I don't think they have such monitor. I saw rss_huge is abormal in memcg 
-stat even after the application is killed by oom, so I realized the 
-deferred split queue may play a role here.
-
-The memcg stat doesn't have counters for available memory as global 
-vmstat. It may be better to have such statistics, or extending 
-reclaimable "slab" to shrinkable/reclaimable "memory".
-
->
-> Thanks!
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index 928e8e8..528df88 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -64,20 +64,6 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
+ 	}
+ }
+ 
+-bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id)
+-{
+-	u32 val;
+-	int ret;
+-
+-	if ((hw_id > (priv->num_sensors - 1)) || (hw_id < 0))
+-		return -EINVAL;
+-	ret = regmap_field_read(priv->rf[SENSOR_EN], &val);
+-	if (ret)
+-		return ret;
+-
+-	return val & (1 << hw_id);
+-}
+-
+ static inline int code_to_degc(u32 adc_code, const struct tsens_sensor *s)
+ {
+ 	int degc, num, den;
+diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+index a319283..6f26fad 100644
+--- a/drivers/thermal/qcom/tsens-v0_1.c
++++ b/drivers/thermal/qcom/tsens-v0_1.c
+@@ -334,7 +334,6 @@ static const struct reg_field tsens_v0_1_regfields[MAX_REGFIELDS] = {
+ 	/* CTRL_OFFSET */
+ 	[TSENS_EN]     = REG_FIELD(SROT_CTRL_OFF, 0,  0),
+ 	[TSENS_SW_RST] = REG_FIELD(SROT_CTRL_OFF, 1,  1),
+-	[SENSOR_EN]    = REG_FIELD(SROT_CTRL_OFF, 3, 13),
+ 
+ 	/* ----- TM ------ */
+ 	/* INTERRUPT ENABLE */
+diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+index 1099069..0a4f2b8 100644
+--- a/drivers/thermal/qcom/tsens-v2.c
++++ b/drivers/thermal/qcom/tsens-v2.c
+@@ -44,7 +44,6 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+ 	/* CTRL_OFF */
+ 	[TSENS_EN]     = REG_FIELD(SROT_CTRL_OFF,    0,  0),
+ 	[TSENS_SW_RST] = REG_FIELD(SROT_CTRL_OFF,    1,  1),
+-	[SENSOR_EN]    = REG_FIELD(SROT_CTRL_OFF,    3, 18),
+ 
+ 	/* ----- TM ------ */
+ 	/* INTERRUPT ENABLE */
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 36b0b52..0627d86 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -85,11 +85,6 @@ static int tsens_register(struct tsens_priv *priv)
+ 	struct thermal_zone_device *tzd;
+ 
+ 	for (i = 0;  i < priv->num_sensors; i++) {
+-		if (!is_sensor_enabled(priv, priv->sensor[i].hw_id)) {
+-			dev_err(priv->dev, "sensor %d: disabled\n",
+-				priv->sensor[i].hw_id);
+-			continue;
+-		}
+ 		priv->sensor[i].priv = priv;
+ 		priv->sensor[i].id = i;
+ 		tzd = devm_thermal_zone_of_sensor_register(priv->dev, i,
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index eefe384..2fd9499 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -315,7 +315,6 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *pt1, u32 *pt2, u32 mo
+ int init_common(struct tsens_priv *priv);
+ int get_temp_tsens_valid(struct tsens_priv *priv, int i, int *temp);
+ int get_temp_common(struct tsens_priv *priv, int i, int *temp);
+-bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id);
+ 
+ /* TSENS target */
+ extern const struct tsens_plat_data data_8960;
+-- 
+2.1.4
 
