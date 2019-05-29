@@ -2,190 +2,172 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DB3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6947723B05
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6154023B99
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfE2Pm0 convert rfc822-to-8bit (ORCPT
+        id S1726897AbfE2PnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:42:26 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37331 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfE2Pm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:42:26 -0400
-Received: by mail-it1-f193.google.com with SMTP id s16so4312819ita.2;
-        Wed, 29 May 2019 08:42:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/j7gWc8iISYWxGlnTZ+LY1ElrHO5aM1K4ex0tPbofbE=;
-        b=B/RRMPUKUApeaYKft0QoYUBC5VzOTf2pMIqlpodaEjubpmljUbmzKdPBg+fydFJefn
-         XK+HygnMZt/5vXwHJmWZmnQOzmuzHc5nehMzvNnuMR4GcE9SEiCSqYBq4QP0t/aa79bY
-         etrqQbn7S1/SbpsBu1Nvhurcvz0/n2C7VKjvO7ZoXSt+loAkC28udOomgAEKM5dEggZ6
-         OEcez4bQW2pC7sVdhpSqDTMUzSzVBTmyKqSzXM2admlT1HC0aKBGVHQVzLU7BiMx5hD3
-         2NqvpvgQwdQhU0kZw0xuwfkaIgc/VSFpj8R0cIQE2tpEdqKqX7v4v3vCuYMEF0KMeE9R
-         c1mg==
-X-Gm-Message-State: APjAAAWyZ2A2Hu3JIiR4nm3ebdh4neGf3VTa+kAKFvQjpXrGs8AkHALe
-        9Qo2kH1KFtmMDUsCNj211IEaa0uE/8ljzwPZAEs=
-X-Google-Smtp-Source: APXvYqxx5oCnY0ckeXgGB+mbjowC9PFLcxwUeTiuKxwAnSfLcvoimR2T5iJwjxqjFjmj4DF/QeOL++us1RCXTMjmKUU=
-X-Received: by 2002:a24:6583:: with SMTP id u125mr7911125itb.168.1559144543170;
- Wed, 29 May 2019 08:42:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521161102.29620-1-peron.clem@gmail.com> <20190529153255.40038-1-tomeu.vizoso@collabora.com>
- <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
-In-Reply-To: <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
-From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Date:   Wed, 29 May 2019 17:42:12 +0200
-Message-ID: <CAAObsKCWJmx-TKyiHFvUaDtGOpz8SXNOBFK3AbmUWW7KprD2Rw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: Add GPU operating points for H6
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Wed, 29 May 2019 11:43:22 -0400
+Received: from ou.quest-ce.net ([195.154.187.82]:48665 "EHLO ou.quest-ce.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfE2PnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:43:22 -0400
+Received: from [2a01:e35:39f2:1220:9dd7:c176:119b:4c9d] (helo=opteyam2)
+        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <ydroneaud@opteya.com>)
+        id 1hW0iU-000B3I-RX; Wed, 29 May 2019 17:42:15 +0200
+Message-ID: <1058006e0df4b52b3e53c7b3202c04140899aeb5.camel@opteya.com>
+From:   Yann Droneaud <ydroneaud@opteya.com>
+To:     Christian Brauner <christian@brauner.io>, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        jannh@google.com
+Cc:     fweimer@redhat.com, oleg@redhat.com, arnd@arndb.de,
+        dhowells@redhat.com, Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
+Date:   Wed, 29 May 2019 17:42:14 +0200
+In-Reply-To: <20190529152237.10719-1-christian@brauner.io>
+References: <20190529152237.10719-1-christian@brauner.io>
+Organization: OPTEYA
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:9dd7:c176:119b:4c9d
+X-SA-Exim-Mail-From: ydroneaud@opteya.com
+Subject: Re: [PATCH v1 1/2] fork: add clone3
+X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
+X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 17:37, Clément Péron <peron.clem@gmail.com> wrote:
->
-> Hi Tomeu,
->
-> On Wed, 29 May 2019 at 17:33, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> >
-> > The GPU driver needs them to change the clock frequency and regulator
-> > voltage depending on the load.
->
-> As requested by Maxime, I have dropped these OPP table as It's taken
-> from vendor and untested with Panfrost.
->
-> https://lore.kernel.org/patchwork/patch/1060374/
+Le mercredi 29 mai 2019 à 17:22 +0200, Christian Brauner a écrit :
+> This adds the clone3 system call.
+> 
+> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index b4cba953040a..6bc3e3d17150 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -2472,7 +2475,96 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+>  		 unsigned long, tls)
+>  #endif
+>  {
+> -	return _do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr, tls);
+> +	struct kernel_clone_args args = {
+> +		.flags = clone_flags,
+> +		.stack = newsp,
+> +		.pidfd = parent_tidptr,
+> +		.parent_tidptr = parent_tidptr,
+> +		.tls = tls,
+> +		.child_tidptr = child_tidptr,
+> +	};
+> +
+> +	/* clone(CLONE_PIDFD) uses parent_tidptr to return a pidfd */
+> +	if ((clone_flags & CLONE_PIDFD) && (clone_flags & CLONE_PARENT_SETTID))
+> +		return -EINVAL;
+> +
+> +	return _do_fork(&args);
+> +}
+> +
+> +static bool clone3_flags_valid(u64 flags)
+> +{
+> +	if (flags & CLONE_DETACHED)
+> +		return false;
+> +
+> +	if (flags & ~CLONE_MAX)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> +				     struct clone_args __user *uargs,
+> +				     size_t size)
+> +{
+> +	struct clone_args args;
+> +
+> +	if (unlikely(size > PAGE_SIZE))
+> +		return -E2BIG;
+> +
+> +	if (unlikely(size < sizeof(struct clone_args)))
+> +		return -EINVAL;
+> +
+> +	if (unlikely(!access_ok(uargs, size)))
+> +		return -EFAULT;
+> +
+> +	if (size > sizeof(struct clone_args)) {
+> +		unsigned char __user *addr;
+> +		unsigned char __user *end;
+> +		unsigned char val;
+> +
+> +		addr = (void __user *)uargs + sizeof(struct clone_args);
+> +		end = (void __user *)uargs + size;
+> +
+> +		for (; addr < end; addr++) {
+> +			if (get_user(val, addr))
+> +				return -EFAULT;
+> +			if (val)
+> +				return -E2BIG;
 
-Ok, guess this series should wait then until we can run Panfrost on it
-and check how DVFS is working.
+Should be -EINVAL: having something after the structure should be
+handled just like an invalid flags, while still allowing future
+userspace program to probe for support for newer feature.
 
-Thanks,
+> +		}
+> +
+> +		size = sizeof(struct clone_args);
+> +	}
+> +
+> +	if (copy_from_user(&args, uargs, size))
+> +		return -EFAULT;
+> +
+> +	if (!clone3_flags_valid(args.flags))
+> +		return -EINVAL;
+> +
+> +	memset(kargs, 0, sizeof(*kargs));
+> +
+> +	kargs->flags = args.flags;
+> +	kargs->child_tidptr = u64_to_user_ptr(args.child_tidptr);
+> +	kargs->parent_tidptr = u64_to_user_ptr(args.parent_tidptr);
+> +	kargs->pidfd = u64_to_user_ptr(args.pidfd);
+> +	kargs->stack = args.stack;
+> +	kargs->stack_size = args.stack_size;
+> +	kargs->tls = args.tls;
+> +
+> +	return 0;
+> +}
+> +
+> +SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
+> +{
+> +	int err;
+> +
+> +	struct kernel_clone_args kargs;
+> +
+> +	err = copy_clone_args_from_user(&kargs, uargs, size);
+> +	if (err)
+> +		return err;
+> +
+> +	return _do_fork(&kargs);
+>  }
+>  #endif
+>  
 
-Tomeu
+Regards.
 
-> Regards,
-> Clément
->
-> >
-> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> > Cc: Clément Péron <peron.clem@gmail.com>
-> >
-> > ---
-> >
-> > Feel free to pick up this patch if you are going to keep pushing this
-> > series forward.
-> >
-> > Thanks,
-> >
-> > Tomeu
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 66 ++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > index 6aad06095c40..decf7b56e2df 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -157,6 +157,71 @@
-> >                         allwinner,sram = <&ve_sram 1>;
-> >                 };
-> >
-> > +               gpu_opp_table: opp-table2 {
-> > +                       compatible = "operating-points-v2";
-> > +
-> > +                       opp00 {
-> > +                               opp-hz = /bits/ 64 <756000000>;
-> > +                               opp-microvolt = <1040000>;
-> > +                       };
-> > +                       opp01 {
-> > +                               opp-hz = /bits/ 64 <624000000>;
-> > +                               opp-microvolt = <950000>;
-> > +                       };
-> > +                       opp02 {
-> > +                               opp-hz = /bits/ 64 <576000000>;
-> > +                               opp-microvolt = <930000>;
-> > +                       };
-> > +                       opp03 {
-> > +                               opp-hz = /bits/ 64 <540000000>;
-> > +                               opp-microvolt = <910000>;
-> > +                       };
-> > +                       opp04 {
-> > +                               opp-hz = /bits/ 64 <504000000>;
-> > +                               opp-microvolt = <890000>;
-> > +                       };
-> > +                       opp05 {
-> > +                               opp-hz = /bits/ 64 <456000000>;
-> > +                               opp-microvolt = <870000>;
-> > +                       };
-> > +                       opp06 {
-> > +                               opp-hz = /bits/ 64 <432000000>;
-> > +                               opp-microvolt = <860000>;
-> > +                       };
-> > +                       opp07 {
-> > +                               opp-hz = /bits/ 64 <420000000>;
-> > +                               opp-microvolt = <850000>;
-> > +                       };
-> > +                       opp08 {
-> > +                               opp-hz = /bits/ 64 <408000000>;
-> > +                               opp-microvolt = <840000>;
-> > +                       };
-> > +                       opp09 {
-> > +                               opp-hz = /bits/ 64 <384000000>;
-> > +                               opp-microvolt = <830000>;
-> > +                       };
-> > +                       opp10 {
-> > +                               opp-hz = /bits/ 64 <360000000>;
-> > +                               opp-microvolt = <820000>;
-> > +                       };
-> > +                       opp11 {
-> > +                               opp-hz = /bits/ 64 <336000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp12 {
-> > +                               opp-hz = /bits/ 64 <312000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp13 {
-> > +                               opp-hz = /bits/ 64 <264000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +                       opp14 {
-> > +                               opp-hz = /bits/ 64 <216000000>;
-> > +                               opp-microvolt = <810000>;
-> > +                       };
-> > +               };
-> > +
-> >                 gpu: gpu@1800000 {
-> >                         compatible = "allwinner,sun50i-h6-mali",
-> >                                      "arm,mali-t720";
-> > @@ -168,6 +233,7 @@
-> >                         clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-> >                         clock-names = "core", "bus";
-> >                         resets = <&ccu RST_BUS_GPU>;
-> > +                       operating-points-v2 = <&gpu_opp_table>;
-> >                         status = "disabled";
-> >                 };
-> >
-> > --
-> > 2.20.1
-> >
+-- 
+Yann Droneaud
+OPTEYA
+
+
