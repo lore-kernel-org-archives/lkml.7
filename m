@@ -2,77 +2,76 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88801C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F52C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DDA208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0760B208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 06:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6RbDwFu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rU4iITG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfE2G73 (ORCPT
+        id S1726522AbfE2G76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 02:59:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46684 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfE2G73 (ORCPT
+        Wed, 29 May 2019 02:59:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46688 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfE2G75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 02:59:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so967290pfm.13;
-        Tue, 28 May 2019 23:59:29 -0700 (PDT)
+        Wed, 29 May 2019 02:59:57 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bb3so628528plb.13;
+        Tue, 28 May 2019 23:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=E0bgQPgSMP42ZfwbXSuWmab92jZuGUt5fjUbtxPvUiM=;
-        b=q6RbDwFuYeqmLObYFuGGv3IhcdW/xXwSAuFrYppBH6OO+8L3KNxSk+IKK4E5ymQFV3
-         XhJbNHq6X7ey6lX8G0pV8nLJb+loJ/alNZktblCVwnT7ATMhZTPF0rahL4loLOQC3lKC
-         BxMOT+4Dqr4qlc1+yRXKKXbMUkMbFj6JV5kI1wmp/zuMYu8i6W+P66kOxN2NY7ymNNBO
-         qjLiEgCI92ckzR09fz9Et6YGDUki/35FRp4a+hZdwK7LlS+Ba8yFV+goftBnPhDiqH+u
-         xnTJjYvEV9b4xEm57R3rjZFIzne99Wof9cDEatUwMMImPPcPDbdTNTiFf4ElRwOfmnpc
-         PeZA==
+        b=rU4iITG5VmFx4XAjZ9SqdhuxUFPZ5ojPBvVmPgPP/iEB6Zl/SxjPjIhLou+meUEEfo
+         aE4bNXDzRYOC52gv/f5psxBu4D6JI7J6aOPwmyzHEcDMbGLTHhck2r15OHzLmzlbdGJL
+         ZxzX9vyrueX+suCwX9Z7LOdPfuG1sHClnSaZTFHe16dyt5wMErqzI0FE+56QgZgrDG8u
+         xmLcJgBSPX7ytWo6jVTC8OqdPumPG6Yp0P5f6jBe8QSAi1BZT4qzCR0OCuNHMmSVCzfK
+         zt2xQpFO3cRe92LHNxjXUGN40xSP3L+QKjWQXcus4oiZaeS93tMwmAl/ycm41hJHFZck
+         4FtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=E0bgQPgSMP42ZfwbXSuWmab92jZuGUt5fjUbtxPvUiM=;
-        b=DvS8Evkcb5vWJB5CcklEgz7U6jEuF0TygEModraJBLUslvcVn4RDPGDI5w27nw8Fxq
-         sYDE14GBhHiWkUVr6+CgagtEFZDbzoPNR3e2UIdrbpqxnJd8ewUpvsZxibcoJAwyyp7n
-         VzfMZlY/PU38GQBVuE/vS9ZMfC2yP4du6Ea3Yj/gwVkm+ZXS7k8C0aYg6TJCUr37chH0
-         8aGu1agpwNspZT2cjY+POpnAM0HjJHQkI/Sm0RGgyYMGTqfB2yG0KIWWKqBC/DbckBpT
-         HLPNGJIdwPH+LMDzK8h50jPhEeGOmPV85czZxQdQqs7Ri+eF8xpq6yaFKhuXtTi2fCJX
-         8UHQ==
-X-Gm-Message-State: APjAAAX0NxJCSi//Mhf+T9hGD5WcyGrkmqc7cWrZoHuEUuq7NTsbW8FG
-        HFESueChxmr1Vzy1Y9xyJKg=
-X-Google-Smtp-Source: APXvYqygMFesjpxG7whDDRrd9WqbksrEbmnXXra+/oJvA7nDyHOwRoOVRjJk7SUc3+UOQxSR30RXgw==
-X-Received: by 2002:a63:5601:: with SMTP id k1mr6195259pgb.367.1559113168357;
-        Tue, 28 May 2019 23:59:28 -0700 (PDT)
+        b=Bte+Gjt0r8eZmrNx/cHxEPb4qYfecWA5sBNeuifWz1fV+cQykw8rDx5XgCIC5hvrAI
+         TxO4v383v8dA/3ZtuNNiulgAM+G/q0wTIWtHszjPtsUXft8v0Vxiz+MZOdFpcRcawaup
+         cjIkWGqWs3mWQ+63wvXIwyJqMTnDNZqhWUJPf3w9TbGU9Ssl3GWjOcnDLbNwraoqo67f
+         +sfbrALLrWYLEDy/c7pt0rsrRo3f1JkUQiUDD52TLWjV0nxqphn5fqAWKIIHkxzn5xRd
+         0TZ/WAaYYXhYmVY8BIbPXFtieLTNkeWm2Q2v4i5dKqwK9VlychoLB5ol0oOu3yH6SCad
+         2alg==
+X-Gm-Message-State: APjAAAU/RK3eq0vUxIXzXr9+saZrmpjaX4ZF9LsdTf/H4W4IuSB3bUnM
+        qsG/76Bnw2vKDsIV+iz5WUuQoplJ0t8=
+X-Google-Smtp-Source: APXvYqwF0bRsJzR50vWxAWCgVKZ565U++Ct5+ACgxT7OgKqHLP7z1VO2l4M9Il82ZYGhPqwdHZzBZg==
+X-Received: by 2002:a17:902:9305:: with SMTP id bc5mr39755419plb.193.1559113196710;
+        Tue, 28 May 2019 23:59:56 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id l20sm16207663pff.102.2019.05.28.23.59.23
+        by smtp.gmail.com with ESMTPSA id g19sm13460036pgj.75.2019.05.28.23.59.55
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 28 May 2019 23:59:27 -0700 (PDT)
+        Tue, 28 May 2019 23:59:56 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-usb@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Felipe Balbi <balbi@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: [PATCH] usb: phy: mxs: Disable external charger detect in mxs_phy_hw_init()
-Date:   Tue, 28 May 2019 23:59:04 -0700
-Message-Id: <20190529065904.4548-1-andrew.smirnov@gmail.com>
+Date:   Tue, 28 May 2019 23:59:48 -0700
+Message-Id: <20190529065948.5492-1-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
