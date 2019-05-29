@@ -2,238 +2,247 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ACAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492A7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EA8240EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17156240F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWjv0kC1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Buw3FXSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfE2TZN (ORCPT
+        id S1726399AbfE2T0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:25:13 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41640 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2TZN (ORCPT
+        Wed, 29 May 2019 15:26:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44917 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfE2T0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:25:13 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s57so4061719qte.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:25:12 -0700 (PDT)
+        Wed, 29 May 2019 15:26:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n2so454387pgp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OshedFNv7ZepaxsRg7Ll0LAb7kHFflsz2AJ5H3wX4EQ=;
-        b=cWjv0kC181GK6dDASReLMCLrXa6KGGj5/HpVBLrdfO67mRbQuYls/K4Wkd01yu/4Md
-         03xEA4/UUvu3KCnY8VmrK2A1rh2JNtHT97dFbbvYkDfHkhPTdawOZd9hTin2UNqVDfs0
-         Ehj1lK/PJhwfl6Xy7c3AjfLVmFCQsbLCCmBWIpzuXeqWLfbjVn7R6rORV5BD/dQnr1/Q
-         ztrnT9gZDAO/1OlhPSdwn7bv0R64DOA6VbI9W/2K5y1y3WhbUUzyA2iynHc+GkM2O4EL
-         PFPfJYP8R3SzbsEvB3Fz4/YhVboZq7WRsjD0xqh3DFjO5y2VkGz1Kp8KRpyGA6cTdToa
-         zyDQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MqvScE+mpTeungkeSlvv3Q/uzBYTV0O7Qr5Vox35/hw=;
+        b=Buw3FXSp4ANIXhiVaYcFq7ueT4hHfJzssIhWbmrncc4YnHk0oVg8OvJ0WvauqQALhB
+         sBghG+54cb3Hrx24CLKE7D0oxQLoKUXTBDFyYSm5aD1WKGg3/759D66vG6dvvqaZZSbX
+         RMrPVBwObsIhqMoSQcIrTNLUVIJxzJvUk8a8g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OshedFNv7ZepaxsRg7Ll0LAb7kHFflsz2AJ5H3wX4EQ=;
-        b=jqN2/56jEYZ0BwW7FRKa4fMxCVBaf/WIIcZkUG4QFI6byS7qoGz29O9ADlggTSI7xo
-         0SmrnbfLy0eic4+0iqxc9En8bkmZGB1qwZRA1zG0QpR3K1QvuoYkLTFcHhDkd7ihVkrV
-         jR12tsO+mtkcMCb9ANgKwv3puHxRFcKVgc9BkeEJVtCohMNregJhOqtSUPfeowqRH9++
-         KL1tIMK6oU/+AypPe3KMKzHZncBSV+uNOOeVN9GiI7MTtbgFcwWdvoCj+z7SCnDuyePK
-         Ov4tWUEWv03+e6doSXV/8YGP3Jgs0X2p44i7x/Zj1PpS2kWVGgWssGsvOjeiPuqMitap
-         FCAQ==
-X-Gm-Message-State: APjAAAVZzrGSVwEx6zakSaeATVuloK2TaBeffsBHCvqf375NgX/nOeJX
-        DIb3nLEx2FFsdWBC1Gp1QE9Gv0sk
-X-Google-Smtp-Source: APXvYqxugppB+FhpQpzS23jZUMZ3JUedDNm7PRBMbfrYUdcOtpFb0A0Kial8z2rpIWe/C5HW7pHMCQ==
-X-Received: by 2002:ac8:17a5:: with SMTP id o34mr8391436qtj.232.1559157911845;
-        Wed, 29 May 2019 12:25:11 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id k5sm202289qkc.75.2019.05.29.12.25.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 12:25:10 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9680641149; Wed, 29 May 2019 16:25:06 -0300 (-03)
-Date:   Wed, 29 May 2019 16:25:06 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] perf record: collect user registers set jointly with
- dwarf stacks
-Message-ID: <20190529192506.GB5553@kernel.org>
-References: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MqvScE+mpTeungkeSlvv3Q/uzBYTV0O7Qr5Vox35/hw=;
+        b=XJ9Ur+mS9qFUKhheljyx5oVCrba+UanjM2MWbeT5caDwvouEocTmw8d1VSzk7zhhDn
+         z5Sa4strryLYGmUVHWlczRbWEx3McKqXKGa/08zXEBGn+zo4N58bWC6fijEVKAWBG2Tu
+         v1Cq4K2BZMSSTZNXWNj9J/CqZ4rZEW0PbKaRw6JskbWjMKI+AjH8Mtj4lDtv+p5z9UdS
+         2oM5o3HFnphuo0wMDWhu1+1nmxAprBYROPRX8lbMQyZwmErczO68kuHgLzUEdQOqNtJo
+         fWC67RbxumbMlbTTXAIJWZUiwfO5kIfkN97rRSGkgh8YRyNwwAy41VzQDuaH7c3C7IJ2
+         8sdg==
+X-Gm-Message-State: APjAAAX/h/ZAyCHvPj4H4jkaU3fELa9LUf+t7vLNV3G5fxM04oOX2EtJ
+        00z3F8YcDsJquXjtVfGSvh+uKA==
+X-Google-Smtp-Source: APXvYqwq6lC0O0O/2wGuHUis8CaujTzg5ED6XBldzBsiAKxCW18NlPMCdk/8ggb/wiv8TlnrM8H9eg==
+X-Received: by 2002:a62:585:: with SMTP id 127mr130528149pff.231.1559157973778;
+        Wed, 29 May 2019 12:26:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q17sm480361pfq.74.2019.05.29.12.26.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 12:26:12 -0700 (PDT)
+Date:   Wed, 29 May 2019 12:26:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 08/14] arm: Use generic mmap top-down layout and brk
+ randomization
+Message-ID: <201905291222.595685C3F0@keescook>
+References: <20190526134746.9315-1-alex@ghiti.fr>
+ <20190526134746.9315-9-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190526134746.9315-9-alex@ghiti.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 29, 2019 at 05:30:49PM +0300, Alexey Budankov escreveu:
+On Sun, May 26, 2019 at 09:47:40AM -0400, Alexandre Ghiti wrote:
+> arm uses a top-down mmap layout by default that exactly fits the generic
+> functions, so get rid of arch specific code and use the generic version
+> by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
+> As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
+> use the generic version of arch_randomize_brk since it also fits.
+> Note that this commit also removes the possibility for arm to have elf
+> randomization and no MMU: without MMU, the security added by randomization
+> is worth nothing.
 > 
-> When dwarf stacks are collected jointly with user specified register
-> set using --user-regs option like below the full register context is
-> still captured on a sample:
-> 
->   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
-> 
->   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
->   ... FP chain: nr:0
->   ... user regs: mask 0xff0fff ABI 64-bit
->   .... AX    0x53b
->   .... BX    0x7ffedbdd3cc0
->   .... CX    0xffffffff
->   .... DX    0x33d3a
->   .... SI    0x7f09b74c38d0
->   .... DI    0x0
->   .... BP    0x401260
->   .... SP    0x7ffedbdd3cc0
->   .... IP    0x401236
->   .... FLAGS 0x20a
->   .... CS    0x33
->   .... SS    0x2b
->   .... R8    0x7f09b74c3800
->   .... R9    0x7f09b74c2da0
->   .... R10   0xfffffffffffff3ce
->   .... R11   0x246
->   .... R12   0x401070
->   .... R13   0x7ffedbdd5db0
->   .... R14   0x0
->   .... R15   0x0
->   ... ustack: size 1024, offset 0xe0
->    . data_src: 0x5080021
->    ... thread: stack_test2.g.O:23828
->    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-> 
-> After applying the change suggested in the patch the sample data contain
-> only user specified register values. IP and SP registers (dwarf_regs)
-> are collected anyways regardless of the --user-regs option value provided
-> from the command line:
-> 
->   -g call-graph dwarf,K                         full_regs
->   -g call-graph dwarf,K --user-regs=user_regs	user_regs + dwarf_regs
->   --user-regs=user_regs                         user_regs
-> 
->   $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- ls
->   WARNING: specified --user-regs register set doesn't include registers needed by also specified --call-graph=dwarf, auto adding IP, SP registers.
->   arch   COPYING	Documentation  include	Kbuild	 lbuild    MAINTAINERS	modules.builtin		 Module.symvers  perf.data.old	scripts   System.map  virt
->   block  CREDITS	drivers        init	Kconfig  lib	   Makefile	modules.builtin.modinfo  net		 README		security  tools       vmlinux
->   certs  crypto	fs	       ipc	kernel	 LICENSES  mm		modules.order		 perf.data	 samples	sound	  usr	      vmlinux.o
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.030 MB perf.data (10 samples) ]
-> 
->   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
->   ... FP chain: nr:0
->   ... user regs: mask 0x1c0 ABI 64-bit
->   .... BP    0x401260
->   .... SP    0x7ffd3d85cc20
->   .... IP    0x401236
->   ... ustack: size 1024, offset 0x58
->    . data_src: 0x5080021
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+
+Acked-by: Kees Cook <keescook@chromium.org>
+
+It may be worth noting that STACK_RND_MASK is safe to remove here
+because it matches the default that now exists in mm/util.c.
+
+-Kees
+
 > ---
-> Changes in v4:
-> - added warning message about dwarf registers unconditionally 
->   included into the collected registers set
+>  arch/arm/Kconfig                 |  2 +-
+>  arch/arm/include/asm/processor.h |  2 --
+>  arch/arm/kernel/process.c        |  5 ---
+>  arch/arm/mm/mmap.c               | 62 --------------------------------
+>  4 files changed, 1 insertion(+), 70 deletions(-)
 > 
-> Changes in v3:
-> - avoid changes in platform specific header files
-> 
-> Changes in v2:
-> - implemented dwarf register set to avoid corrupted trace 
->   when --user-regs option value omits IP,SP
-> 
-> ---
->  tools/perf/util/evsel.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a6f572a40deb..426dfefeecda 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
->  	return ret;
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 8869742a85df..27687a8c9fb5 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -6,7 +6,6 @@ config ARM
+>  	select ARCH_CLOCKSOURCE_DATA
+>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>  	select ARCH_HAS_DEVMEM_IS_ALLOWED
+> -	select ARCH_HAS_ELF_RANDOMIZE
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_KEEPINITRD
+>  	select ARCH_HAS_KCOV
+> @@ -29,6 +28,7 @@ config ARM
+>  	select ARCH_SUPPORTS_ATOMIC_RMW
+>  	select ARCH_USE_BUILTIN_BSWAP
+>  	select ARCH_USE_CMPXCHG_LOCKREF
+> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+>  	select ARCH_WANT_IPC_PARSE_VERSION
+>  	select BUILDTIME_EXTABLE_SORT if MMU
+>  	select CLONE_BACKWARDS
+> diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
+> index 5d06f75ffad4..95b7688341c5 100644
+> --- a/arch/arm/include/asm/processor.h
+> +++ b/arch/arm/include/asm/processor.h
+> @@ -143,8 +143,6 @@ static inline void prefetchw(const void *ptr)
+>  #endif
+>  #endif
+>  
+> -#define HAVE_ARCH_PICK_MMAP_LAYOUT
+> -
+>  #endif
+>  
+>  #endif /* __ASM_ARM_PROCESSOR_H */
+> diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+> index 72cc0862a30e..19a765db5f7f 100644
+> --- a/arch/arm/kernel/process.c
+> +++ b/arch/arm/kernel/process.c
+> @@ -322,11 +322,6 @@ unsigned long get_wchan(struct task_struct *p)
+>  	return 0;
 >  }
 >  
-> +#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
-> +			 (1ULL << PERF_REG_SP))
-> +
->  static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
->  					   struct record_opts *opts,
->  					   struct callchain_param *param)
-> @@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
->  		if (!function) {
->  			perf_evsel__set_sample_bit(evsel, REGS_USER);
->  			perf_evsel__set_sample_bit(evsel, STACK_USER);
-> -			attr->sample_regs_user |= PERF_REGS_MASK;
-> +			if (opts->sample_user_regs) {
-
-Where are you checking that opts->sample_user_regs doesn't have either
-IP or SP?
-
-So, __perf_evsel__config_callchain its the routine that sets up the
-attr->sample_regs_user when callchains are asked for, and what was it
-doing? Asking for _all_ user regs, right?
-
-I.e. what you're saying is that when --callgraph-dwarf is asked for,
-then only IP and BP are needed, and we should stop doing that, so that
-would be a first patch, if that is the case. I.e. a patch that doesn't
-even mention opts->sample_user_regs.
-
-Then, a second patch would fix the opt->sample_user_regs request clash
-with --callgraph dwarf, i.e. it would do something like:
-
-	      if ((opts->sample_regs_user & DWARF_REGS_MASK) != DWARF_REGS_MASK) {
-	      		char * ip = (opts->sample_regs_user & (1ULL << PERF_REG_IP)) ? NULL : "IP",
-	      		     * sp = (opts->sample_regs_user & (1ULL << PERF_REG_SP)) ? NULL : "SP",
-			     * all = (!ip && !sp) ?  "s" : "";
-
-			pr_warning("WARNING: specified --user-regs register set doesn't include register%s "
-				   "needed by also specified --call-graph=dwarf, auto adding %s%s%s register%s.\n",
-				   all, ip, all : ", " : "", sp, all);
-		}
-
-This if and only if all the registers that are needed to do DWARF
-unwinding are just IP and BP, which doesn't look like its true, since
-when no --user_regs is set (i.e. opts->user_regs is not set) then we
-continue asking for PERF_REGS_MASK...
-
-Can you check where I'm missing something?
-
-Jiri DWARF unwind uses just IP and SP? Looking at
-tools/perf/util/unwind-libunwind-local.c's access_reg() I don't think
-so, right?
-
-- Arnaldo
-
-> +				attr->sample_regs_user |= DWARF_REGS_MASK;
-> +				pr_warning("WARNING: specified --user-regs register set doesn't include registers "
-> +					   "needed by also specified --call-graph=dwarf, auto adding IP, SP registers.\n");
-> +			} else {
-> +				attr->sample_regs_user |= PERF_REGS_MASK;
-> +			}
->  			attr->sample_stack_user = param->dump_size;
->  			attr->exclude_callchain_user = 1;
->  		} else {
+> -unsigned long arch_randomize_brk(struct mm_struct *mm)
+> -{
+> -	return randomize_page(mm->brk, 0x02000000);
+> -}
+> -
+>  #ifdef CONFIG_MMU
+>  #ifdef CONFIG_KUSER_HELPERS
+>  /*
+> diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+> index 0b94b674aa91..b8d912ac9e61 100644
+> --- a/arch/arm/mm/mmap.c
+> +++ b/arch/arm/mm/mmap.c
+> @@ -17,43 +17,6 @@
+>  	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
+>  	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
+>  
+> -/* gap between mmap and stack */
+> -#define MIN_GAP		(128*1024*1024UL)
+> -#define MAX_GAP		((STACK_TOP)/6*5)
+> -#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+> -
+> -static int mmap_is_legacy(struct rlimit *rlim_stack)
+> -{
+> -	if (current->personality & ADDR_COMPAT_LAYOUT)
+> -		return 1;
+> -
+> -	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+> -		return 1;
+> -
+> -	return sysctl_legacy_va_layout;
+> -}
+> -
+> -static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+> -{
+> -	unsigned long gap = rlim_stack->rlim_cur;
+> -	unsigned long pad = stack_guard_gap;
+> -
+> -	/* Account for stack randomization if necessary */
+> -	if (current->flags & PF_RANDOMIZE)
+> -		pad += (STACK_RND_MASK << PAGE_SHIFT);
+> -
+> -	/* Values close to RLIM_INFINITY can overflow. */
+> -	if (gap + pad > gap)
+> -		gap += pad;
+> -
+> -	if (gap < MIN_GAP)
+> -		gap = MIN_GAP;
+> -	else if (gap > MAX_GAP)
+> -		gap = MAX_GAP;
+> -
+> -	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+> -}
+> -
+>  /*
+>   * We need to ensure that shared mappings are correctly aligned to
+>   * avoid aliasing issues with VIPT caches.  We need to ensure that
+> @@ -181,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+>  	return addr;
+>  }
+>  
+> -unsigned long arch_mmap_rnd(void)
+> -{
+> -	unsigned long rnd;
+> -
+> -	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+> -
+> -	return rnd << PAGE_SHIFT;
+> -}
+> -
+> -void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+> -{
+> -	unsigned long random_factor = 0UL;
+> -
+> -	if (current->flags & PF_RANDOMIZE)
+> -		random_factor = arch_mmap_rnd();
+> -
+> -	if (mmap_is_legacy(rlim_stack)) {
+> -		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+> -		mm->get_unmapped_area = arch_get_unmapped_area;
+> -	} else {
+> -		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+> -		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+> -	}
+> -}
+> -
+>  /*
+>   * You really shouldn't be using read() or write() on /dev/mem.  This
+>   * might go away in the future.
 > -- 
 > 2.20.1
+> 
 
 -- 
-
-- Arnaldo
+Kees Cook
