@@ -2,135 +2,86 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B71C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F3AC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4C82075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C6C21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z419y0UT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfE2AoK (ORCPT
+        id S1726049AbfE2A5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 20:44:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39876 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfE2AoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 20:44:09 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C3A185362;
-        Wed, 29 May 2019 00:44:08 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0175D60BDF;
-        Wed, 29 May 2019 00:43:55 +0000 (UTC)
-Date:   Tue, 28 May 2019 20:43:52 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Dan Walsh <dwalsh@redhat.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Mrunal Patel <mpatel@redhat.com>
-Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
-Message-ID: <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
-References: <cover.1554732921.git.rgb@redhat.com>
- <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
- <CAHC9VhRW9f6GbhvvfifbOzd9p=PgdB2gq1E7tACcaqvfb85Y8A@mail.gmail.com>
- <3299293.RYyUlNkVNy@x2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3299293.RYyUlNkVNy@x2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 29 May 2019 00:44:08 +0000 (UTC)
+        Tue, 28 May 2019 20:57:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45813 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfE2A5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 20:57:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s11so403038pfm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 17:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TIHClBNyag0L2IIjZvas+5fQgJZRiADZDrSo9Rpuzjc=;
+        b=Z419y0UTgNOS3NEzaVGmRcSalqcIzAw4v7OzgeIYLJ1qRRRkzTHKbf8p9WY0SqV0iw
+         IQCe5SoI7tjyP5OLAZyXum67oUmCHRZB4iCQMb20Z9ms1cxcTW3eR+7HNIXlCvMswreX
+         lOdDpV1reb1XscQB2tzUFWV1N7NruUYVmLrF6HruSFERybcLi/6GgYdNaD1G/iS7oHX9
+         mCCBkZuk+qOQlhoYsFIw+CFTIOipyEa1Vn0fMo4MZCfsUS5oXl6XUQBm22Ba2iZerkOb
+         Xa2jDPQz+QjpFSAWmGS4bSriD2O8iEE8/8PJMt9In1B/NBwKhPWE/2SbM7/SfKI9siSn
+         m6YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TIHClBNyag0L2IIjZvas+5fQgJZRiADZDrSo9Rpuzjc=;
+        b=fgwDHLjY8jv/bZyxf+NLF+/Hw1T4ICc5T8U+fCSMuVaAxr2fWV/Hu8aBltxDqpNre6
+         G9tNQGUCXebHCKNYsh7YkZN+6Y7GiGZiWYpFMQD5AZVIH6LvVBD7vEkld7obrIhtOvh4
+         RmmipMwMBt1+uGKnVUHmQjhe811AV+JI6KxQJlxFt2r6jT4yxjsI7N1owfY6qCSbA3My
+         98lfve2GWHAnqipJJa2UG3aCa8XPG9fPxSpYwk6IWE1ZQldOgnabg83nas3r4YaHd8hk
+         bxSwflKuFwZ4P//70XWu0+OpkOJGYhmCVMw6X1B7H6RGOb6Npw+MMUDA4Gcate6rQ3Pp
+         WfPw==
+X-Gm-Message-State: APjAAAXk+j4fxzQgKep4DFhlDetnZRxW6GODkCYJ2vljrdESeDaNWEmP
+        KtqvMV5c/6Pt9xQFO6OWk7A9iA==
+X-Google-Smtp-Source: APXvYqwc4b2O0tqTNNFfF3dXihl0d5z90Q+aDqiXaBem1Iou4jnX6XYanSFT9Sml6bgFd3DvPi1+oA==
+X-Received: by 2002:a65:4c07:: with SMTP id u7mr131114656pgq.93.1559091433802;
+        Tue, 28 May 2019 17:57:13 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p16sm15434824pff.35.2019.05.28.17.57.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 17:57:13 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] Qualcomm QCS404 PCIe support
+Date:   Tue, 28 May 2019 17:57:07 -0700
+Message-Id: <20190529005710.23950-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-28 19:00, Steve Grubb wrote:
-> On Tuesday, May 28, 2019 6:26:47 PM EDT Paul Moore wrote:
-> > On Tue, May 28, 2019 at 5:54 PM Daniel Walsh <dwalsh@redhat.com> wrote:
-> > > On 4/22/19 9:49 AM, Paul Moore wrote:
-> > > > On Mon, Apr 22, 2019 at 7:38 AM Neil Horman <nhorman@tuxdriver.com> 
-> wrote:
-> > > >> On Mon, Apr 08, 2019 at 11:39:07PM -0400, Richard Guy Briggs wrote:
-> > > >>> Implement kernel audit container identifier.
-> > > >> 
-> > > >> I'm sorry, I've lost track of this, where have we landed on it? Are we
-> > > >> good for inclusion?
-> > > > 
-> > > > I haven't finished going through this latest revision, but unless
-> > > > Richard made any significant changes outside of the feedback from the
-> > > > v5 patchset I'm guessing we are "close".
-> > > > 
-> > > > Based on discussions Richard and I had some time ago, I have always
-> > > > envisioned the plan as being get the kernel patchset, tests, docs
-> > > > ready (which Richard has been doing) and then run the actual
-> > > > implemented API by the userland container folks, e.g. cri-o/lxc/etc.,
-> > > > to make sure the actual implementation is sane from their perspective.
-> > > > They've already seen the design, so I'm not expecting any real
-> > > > surprises here, but sometimes opinions change when they have actual
-> > > > code in front of them to play with and review.
-> > > > 
-> > > > Beyond that, while the cri-o/lxc/etc. folks are looking it over,
-> > > > whatever additional testing we can do would be a big win.  I'm
-> > > > thinking I'll pull it into a separate branch in the audit tree
-> > > > (audit/working-container ?) and include that in my secnext kernels
-> > > > that I build/test on a regular basis; this is also a handy way to keep
-> > > > it based against the current audit/next branch.  If any changes are
-> > > > needed Richard can either chose to base those changes on audit/next or
-> > > > the separate audit container ID branch; that's up to him.  I've done
-> > > > this with other big changes in other trees, e.g. SELinux, and it has
-> > > > worked well to get some extra testing in and keep the patchset "merge
-> > > > ready" while others outside the subsystem look things over.
-> > > 
-> > > Mrunal Patel (maintainer of CRI-O) and I have reviewed the API, and
-> > > believe this is something we can work on in the container runtimes team
-> > > to implement the container auditing code in CRI-O and Podman.
-> > 
-> > Thanks Dan.  If I pulled this into a branch and built you some test
-> > kernels to play with, any idea how long it might take to get a proof
-> > of concept working on the cri-o side?
-> 
-> We'd need to merge user space patches and let them use that instead of the 
-> raw interface. I'm not going to merge user space until we are pretty sure the 
-> patch is going into the kernel.
+This series adds support for the PCIe controller in the Qualcomm QCS404
+platform.
 
-I have an f29 test rpm of the userspace bits if that helps for testing:
-	http://people.redhat.com/~rbriggs/ghak90/git-1db7e21/
+Bjorn Andersson (3):
+  PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+  dt-bindings: PCI: qcom: Add QCS404 to the binding
+  PCI: qcom: Add QCS404 PCIe controller support
 
-Here's what it contains (minus the last patch):
-	https://github.com/linux-audit/audit-userspace/compare/master...rgbriggs:ghau40-containerid-filter.v7.0
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 113 ++++++++----------
+ 2 files changed, 75 insertions(+), 63 deletions(-)
 
-> -Steve
-> 
-> > FWIW, I've also reached out to some of the LXC folks I know to get
-> > their take on the API.  I think if we can get two different container
-> > runtimes to give the API a thumbs-up then I think we are in good shape
-> > with respect to the userspace interface.
-> > 
-> > I just finished looking over the last of the pending audit kernel
-> > patches that were queued waiting for the merge window to open so this
-> > is next on my list to look at.  I plan to start doing that
-> > tonight/tomorrow, and as long as the changes between v5/v6 are not
-> > that big, it shouldn't take too long.
+-- 
+2.18.0
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
