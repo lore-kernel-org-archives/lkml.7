@@ -2,154 +2,151 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E568C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744D8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16270206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E17206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX+X2Ny7"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="eT/LuyHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfE2CYV (ORCPT
+        id S1726490AbfE2C0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:24:21 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37723 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfE2CYV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:24:21 -0400
-Received: by mail-it1-f193.google.com with SMTP id s16so1119728ita.2;
-        Tue, 28 May 2019 19:24:20 -0700 (PDT)
+        Tue, 28 May 2019 22:26:12 -0400
+Received: from mail-eopbgr810049.outbound.protection.outlook.com ([40.107.81.49]:41024
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfE2C0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 22:26:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkI2uXRAShxqXkSUvpvwJ4ItMDdl8/Q41df8coamHk0=;
-        b=LX+X2Ny7LZpwASE6RSVor7y3/lpFmffZt9vd3p4i+CdDT9yJn+B04Lc7DmEm/WrZV8
-         Gm5jBfDpQt6e7gWn/yJQlEIfCAmMvLeuexPyULZsToNY7DjhKd4yD2b3eYQzyLj5a0xS
-         cY/28OKxSy8xY47dxsMMWITaiXvhuhIucoCfgiinU8Ftu5KKUq8uZ3JXz06DJkewLKnP
-         KRAohIHXkViAZFFL0mWlU6ZL9KTre4i6QT37E6Jb76PCU1bE0Wqv4hWeMF3TkTYcEnv6
-         IMtVtOP8Ii9Jzw/jUL7CNRhe/0QdEqlDPfDyEI7V2Y9h5xQl0FXZFyUGjnMYwnqT+oTa
-         jOEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkI2uXRAShxqXkSUvpvwJ4ItMDdl8/Q41df8coamHk0=;
-        b=RhVaFU9E8pN/UxnkPpqpQbbrtKuUJwEoT7TazoSPod4j/238o98zuFOQCa+nT0T0Ot
-         znmZwjq0X45nvoAMbFG8pc+dcA9FletKW9W2jxzOFsEzRGaI+KqwsQbTDKJMP44aVPZv
-         teCXkO4hx79jnFWqUM5g7BuKftz62eK4yoZLF8lhGVK5sZ4Di4eb3xf9yGSuJCRRC9x+
-         seEjzRju6POHLZwFE6UhPVOBmgMjBySH486ZOO1zJYO+qbAQnz1wmTk1smitr3PdWc13
-         ry6nhfKyfeF4D5NMnWV2Zsi25NR68/90goS00e9GC1027aUDlmSvSldixlIWP5qtfEFA
-         WJ/g==
-X-Gm-Message-State: APjAAAXneMX1Ht5xHxpZvCc5NnjE8rdJe9lTOac+MAXhzr/NieQTKW+n
-        JsGspatCPQK+ZYPCfecc0fN6FjDDKLMwvQMIgl8=
-X-Google-Smtp-Source: APXvYqzvE5182ciT1TB9K19vtHHojeePX9Mas/KsfGZ6QiNvfa3aalA7WoBVYO+NTqQoODG9q3QtMCdcwyFBijqVObo=
-X-Received: by 2002:a24:6c4a:: with SMTP id w71mr5835760itb.128.1559096659929;
- Tue, 28 May 2019 19:24:19 -0700 (PDT)
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VoORN3fFqLBOif3g/fjg3HX3WgE/TkSV2YHWtv10SQU=;
+ b=eT/LuyHecbaVheYeKr3+/uq1EG97Paw504JMP/CYgP4tSdH/VZxNuUYidaiMgFSAACO3ykLNOVj3j3vbut38rTS9RyjyDDUICjcpz+NnoqaGXh1ofeBkywRe/5VUSWrjW7amoMywZ4V3wpkBSAJMGqUtsg3x0431EJn2TII1K8I=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4166.namprd03.prod.outlook.com (20.177.184.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.22; Wed, 29 May 2019 02:26:08 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Wed, 29 May 2019
+ 02:26:07 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v2] net: stmmac: Switch to devm_alloc_etherdev_mqs
+Thread-Topic: [PATCH net-next v2] net: stmmac: Switch to
+ devm_alloc_etherdev_mqs
+Thread-Index: AQHVFcXfQrQj7OmglEaLnHJdWJkmdw==
+Date:   Wed, 29 May 2019 02:26:07 +0000
+Message-ID: <20190529101642.294cafd0@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYCPR01CA0029.jpnprd01.prod.outlook.com
+ (2603:1096:405:1::17) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2298fc59-b6da-40f2-4b70-08d6e3dd017f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4166;
+x-ms-traffictypediagnostic: BYAPR03MB4166:
+x-microsoft-antispam-prvs: <BYAPR03MB4166360E99FC1558BEF26222ED1F0@BYAPR03MB4166.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(366004)(396003)(39860400002)(189003)(199004)(6512007)(486006)(26005)(186003)(316002)(6436002)(86362001)(476003)(9686003)(66066001)(71200400001)(6486002)(14444005)(256004)(71190400001)(1076003)(68736007)(478600001)(81166006)(102836004)(6506007)(386003)(14454004)(99286004)(2906002)(25786009)(110136005)(53936002)(54906003)(4326008)(3846002)(6116002)(72206003)(64756008)(50226002)(52116002)(73956011)(8936002)(7736002)(66946007)(66476007)(66556008)(305945005)(66446008)(5660300002)(8676002)(81156014)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4166;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: etZ6yY7RrJlRa7Tq2Mgy66xERDIvM99028NKm99kNFwGsjTuLElpb9tziPIPRulOIvPSA0xHKG5oldmQUwNpNxoVA1jgAgXXuNU4EpHrzYj31N+zM6bvDhzKC5QmKPtUzJNfIpyTPj7IZixf323mYr0S2H1Hgr+63jnSYZgaC6YzOnrvddo+IewmrX3GxCxbuSIOAqxWzVwOMUC2euUB8yQZ85KNvGaDh5+x+ATavVvs8VgYEhgB1rGLB3glOxwyVkgJUpVRpYOHhs1f318ExbAPvykh42SUAWEFOVu02CazjhqiJjv7FwiZpK3EhAVqoNtoEQOZy9Zs4SmATI+tNTeGRm6JvZwcCUl5g15QiDiW375kSQiV3viCTccEDquJrrkcDk1DQaQByrkOVsVLVFFe5oeOVNX8M8GTiwIqaBA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <97DB1BCFAFF7BC43912BC947382159D4@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp> <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
-In-Reply-To: <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 28 May 2019 20:24:09 -0600
-Message-ID: <CAOCk7Nq4zh_tY1aPQ3vJLxR-YDCfYY+iMqx+i5aXUX-wnyPP3w@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Brian Masney <masneyb@onstation.org>, Sean Paul <sean@poorly.run>,
-        Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2298fc59-b6da-40f2-4b70-08d6e3dd017f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 02:26:07.6828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 8:15 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Tue, May 28, 2019 at 6:17 PM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
-> > > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > > Here is a patch series that adds initial display support for the LG
-> > > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
-> > > > of these patches are RFC until we can get it fully working.
-> > > >
-> > > > The phones boots into terminal mode, however there is a several second
-> > > > (or more) delay when writing to tty1 compared to when the changes are
-> > > > actually shown on the screen. The following errors are in dmesg:
-> > >
-> > > I tested to apply patches 2-6 and got the console up on the phone as well.
-> > > I see the same timouts, and I also notice the update is slow in the
-> > > display, as if the DSI panel was running in low power (LP) mode.
-> > >
-> > > Was booting this to do some other work, but happy to see the progress!
-> >
-> > Thanks!
-> >
-> > I've had three people email me off list regarding the display working on
-> > 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
-> > this email is to get some more information out publicly.
-> >
-> > I pushed up a branch to my github with 15 patches applied against 4.17
-> > that has a working display:
-> >
-> > https://github.com/masneyb/linux/commits/display-works-4.17
-> >
-> > It's in low speed mode but its usable. The first 10 patches are in
-> > mainline now and the last 5 are in essence this patch series with the
-> > exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
-> > There's a slightly different version of that patch in mainline now.
-> >
-> > I'm planning to work on the msm8974 interconnect support once some of
-> > the outstanding interconnect patches for the msm kms/drm driver arrive
-> > in mainline. I'd really like to understand why the display works on
-> > 4.17 with those patches though. I assume that it's related to the
-> > vblank events not working properly? Let me preface this with I'm a
-> > total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
-> > looking for these events in the atomic commits before the migration?
-> > See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
-> > helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
-> > call that was added.
->
-> interconnect probably good to get going anyways (and I need to find
-> some time to respin those mdp5/dpu patches) but I guess not related to
-> what you see (ie. I'd expect interconnect issue would trigger
-> underflow irq's)..
->
-> I'm not entirely sure why atomic would break things but cmd mode
-> panels aren't especially well tested.  I can't find it now but there
-> was a thread (or IRC discussion?) that intf2vblank() should be
-> returning MDP5_IRQ_PING_PONG_<n>_DONE instead of
-> MDP5_IRQ_PING_PONG_<n>_RD_PTR, which seems likely and possibly related
-> to vblank timing issues..
+Make use of devm_alloc_etherdev_mqs() to simplify the code.
 
-That was an irc discussion, and I've changed my mind on that.
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+Since V1:
+ - fix the build error, sorry, my bad.
 
-My big issue ended up being that autorefresh was enabled (which
-basically turns the command panel into a pseudo video mode panel),
-which appears incompatible with using the start kick.  If FW is
-configuring things in autorefresh mode, the driver likely doesn't
-know, and will make a mess of things by using the start kick.
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Disabling autorefresh would make the driver work as is, but fbcon
-wouldn't work well (you'd need to do a start kick per frame, which
-doesn't seem to happen).  Removing the start kick and using the
-autorefresh feature seemed better in my testing, but I haven't cleaned
-up my code tree to send something up.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/ne=
+t/ethernet/stmicro/stmmac/stmmac_main.c
+index a87ec70b19f1..4defdcb4f237 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4243,9 +4243,8 @@ int stmmac_dvr_probe(struct device *device,
+ 	u32 queue, maxq;
+ 	int ret =3D 0;
+=20
+-	ndev =3D alloc_etherdev_mqs(sizeof(struct stmmac_priv),
+-				  MTL_MAX_TX_QUEUES,
+-				  MTL_MAX_RX_QUEUES);
++	ndev =3D devm_alloc_etherdev_mqs(device, sizeof(struct stmmac_priv),
++				       MTL_MAX_TX_QUEUES, MTL_MAX_RX_QUEUES);
+ 	if (!ndev)
+ 		return -ENOMEM;
+=20
+@@ -4277,8 +4276,7 @@ int stmmac_dvr_probe(struct device *device,
+ 	priv->wq =3D create_singlethread_workqueue("stmmac_wq");
+ 	if (!priv->wq) {
+ 		dev_err(priv->device, "failed to create workqueue\n");
+-		ret =3D -ENOMEM;
+-		goto error_wq;
++		return -ENOMEM;
+ 	}
+=20
+ 	INIT_WORK(&priv->service_task, stmmac_service_task);
+@@ -4434,8 +4432,6 @@ int stmmac_dvr_probe(struct device *device,
+ 	}
+ error_hw_init:
+ 	destroy_workqueue(priv->wq);
+-error_wq:
+-	free_netdev(ndev);
+=20
+ 	return ret;
+ }
+@@ -4472,7 +4468,6 @@ int stmmac_dvr_remove(struct device *dev)
+ 		stmmac_mdio_unregister(ndev);
+ 	destroy_workqueue(priv->wq);
+ 	mutex_destroy(&priv->lock);
+-	free_netdev(ndev);
+=20
+ 	return 0;
+ }
+--=20
+2.20.1
 
-However, lets see how the hardware is actually configured in Brian's case.
