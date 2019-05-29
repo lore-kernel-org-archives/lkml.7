@@ -2,145 +2,77 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA1C07542
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B84AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2B420665
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2056420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfE2I34 (ORCPT
+        id S1726428AbfE2IaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:29:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbfE2I34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:29:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A8F12AE56;
-        Wed, 29 May 2019 08:29:54 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@opensuse.org>
-Cc:     Michal Rostecki <mrostecki@opensuse.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Wed, 29 May 2019 04:30:15 -0400
+Received: from relay.sw.ru ([185.231.240.75]:42042 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbfE2IaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:30:15 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hVtyM-0001yM-CE; Wed, 29 May 2019 11:30:10 +0300
+Subject: Re: [PATCH] mm: Fix recent_rotated history
+To:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
+        mhocko@suse.com, hannes@cmpxchg.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] libbpf: Return btf_fd in libbpf__probe_raw_btf
-Date:   Wed, 29 May 2019 10:29:41 +0200
-Message-Id: <20190529082941.9440-1-mrostecki@opensuse.org>
-X-Mailer: git-send-email 2.21.0
+References: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <0354e97d-ecc5-f150-7b36-410984c666db@virtuozzo.com>
+Date:   Wed, 29 May 2019 11:30:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function load_sk_storage_btf expects that libbpf__probe_raw_btf is
-returning a btf descriptor, but before this change it was returning
-an information about whether the probe was successful (0 or 1).
-load_sk_storage_btf was using that value as an argument to the close
-function, which was resulting in closing stdout and thus terminating the
-process which used that dunction.
+Missed Johannes :(
 
-That bug was visible in bpftool. `bpftool feature` subcommand was always
-exiting too early (because of closed stdout) and it didn't display all
-requested probes. `bpftool -j feature` or `bpftool -p feature` were not
-returning a valid json object.
+CC
 
-Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
-Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
----
- tools/lib/bpf/libbpf.c        | 36 +++++++++++++++++++++--------------
- tools/lib/bpf/libbpf_probes.c |  7 +------
- 2 files changed, 23 insertions(+), 20 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 197b574406b3..bc2dca36bced 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1645,15 +1645,19 @@ static int bpf_object__probe_btf_func(struct bpf_object *obj)
- 		/* FUNC x */                                    /* [3] */
- 		BTF_TYPE_ENC(5, BTF_INFO_ENC(BTF_KIND_FUNC, 0, 0), 2),
- 	};
--	int res;
-+	int btf_fd;
-+	int ret;
- 
--	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
--				    strs, sizeof(strs));
--	if (res < 0)
--		return res;
--	if (res > 0)
-+	btf_fd = libbpf__probe_raw_btf((char *)types, sizeof(types),
-+				       strs, sizeof(strs));
-+	if (btf_fd < 0)
-+		ret = 0;
-+	else {
-+		ret = 1;
- 		obj->caps.btf_func = 1;
--	return 0;
-+	}
-+	close(btf_fd);
-+	return ret;
- }
- 
- static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
-@@ -1670,15 +1674,19 @@ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
- 		BTF_TYPE_ENC(3, BTF_INFO_ENC(BTF_KIND_DATASEC, 0, 1), 4),
- 		BTF_VAR_SECINFO_ENC(2, 0, 4),
- 	};
--	int res;
-+	int btf_fd;
-+	int ret;
- 
--	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
--				    strs, sizeof(strs));
--	if (res < 0)
--		return res;
--	if (res > 0)
-+	btf_fd = libbpf__probe_raw_btf((char *)types, sizeof(types),
-+				       strs, sizeof(strs));
-+	if (btf_fd < 0)
-+		ret = 0;
-+	else {
-+		ret = 1;
- 		obj->caps.btf_datasec = 1;
--	return 0;
-+	}
-+	close(btf_fd);
-+	return ret;
- }
- 
- static int
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index 5e2aa83f637a..2c2828345514 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -157,14 +157,9 @@ int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
- 	memcpy(raw_btf + hdr.hdr_len + hdr.type_len, str_sec, hdr.str_len);
- 
- 	btf_fd = bpf_load_btf(raw_btf, btf_len, NULL, 0, false);
--	if (btf_fd < 0) {
--		free(raw_btf);
--		return 0;
--	}
- 
--	close(btf_fd);
- 	free(raw_btf);
--	return 1;
-+	return btf_fd;
- }
- 
- static int load_sk_storage_btf(void)
--- 
-2.21.0
+On 28.05.2019 19:09, Kirill Tkhai wrote:
+> Johannes pointed that after commit 886cf1901db9
+> we lost all zone_reclaim_stat::recent_rotated
+> history. This commit fixes that.
+> 
+> Fixes: 886cf1901db9 "mm: move recent_rotated pages calculation to shrink_inactive_list()"
+> Reported-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> ---
+>  mm/vmscan.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index d9c3e873eca6..1d49329a4d7d 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1953,8 +1953,8 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+>  	if (global_reclaim(sc))
+>  		__count_vm_events(item, nr_reclaimed);
+>  	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
+> -	reclaim_stat->recent_rotated[0] = stat.nr_activate[0];
+> -	reclaim_stat->recent_rotated[1] = stat.nr_activate[1];
+> +	reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
+> +	reclaim_stat->recent_rotated[1] += stat.nr_activate[1];
+>  
+>  	move_pages_to_lru(lruvec, &page_list);
+>  
+> 
 
