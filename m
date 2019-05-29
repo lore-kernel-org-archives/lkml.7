@@ -2,115 +2,87 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7F6C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF56C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6859621734
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJXX/kFs"
+	by mail.kernel.org (Postfix) with ESMTP id 0A54D21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfE2Cg0 (ORCPT
+        id S1726547AbfE2Ci5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:36:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40197 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfE2Cg0 (ORCPT
+        Tue, 28 May 2019 22:38:57 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54558 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfE2Ci5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:36:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d30so387016pgm.7;
-        Tue, 28 May 2019 19:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UqRabNjRPQnvgjnJWF/HLeVUAOQcKrxoLjz5Ks5Zk14=;
-        b=OJXX/kFsoeR3LwmcfwQsZnMVH3PNFHcXhM9qHlO/L/wpIMSIaTvv8+ING/er21ZLqE
-         Te++GrRmdRj7xB/Nv5yC843zINnESjIZp0W7Dsd2qtBP6N526UHClF4iyvHvFR3JJUxm
-         Uc4APeNqqfVl+hm+zZuQu8AnM+4unTrPVzr3jPQaTRqcpDFm5MBAdSXnhhNH6As7Juhv
-         Vw4NBvgClLUaXBeQi3E9Qs2Bx524dOyUgUWHu2gH0tWxJkYD6n21bIdKfObJIn6UfxnL
-         AzDLh6LKUk5SxkBJSYP3dkO50jmqMMXJO8kilJC55tTJKtA/80rcxenJvtkj4sPf121j
-         oVhQ==
+        Tue, 28 May 2019 22:38:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i3so444898wml.4
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 19:38:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UqRabNjRPQnvgjnJWF/HLeVUAOQcKrxoLjz5Ks5Zk14=;
-        b=rskH8luBAqJtqggcuwHUYvAGhTNaxDmPh61iXZN6yMwEn0covnKVczP8CSO/wpQ9Pf
-         bz2wL4N1NYwaHc/eTqUZXpLXQXfCO+SmbOiLme8T9CIHeiQYMie6xUDjD7IM8DqmCCUF
-         i/82du4bxsUH9oHhm1m2iFrpfhYykwGZRF3jdhzkUdEVwOS7UIpWtKQTYuFtdPAk+jeZ
-         eyDszRehuWe8llcvUy7iXtK4lm4oLkQ3LjJxAgGUcBXB0K3A1AI2IAUe/GE4riFQ/m9A
-         MVntrOrHhN3nGdCq9uyNZ7MfKVpzfwuhn414NqqZyRDFiIBmqd+kh/dE/r4KMmPA5hGB
-         AkJQ==
-X-Gm-Message-State: APjAAAU4tJ3wlkaTXPGKuLL3sY6MFN5rkkNoEUYI2JgEdv4NqU4RxHLm
-        Q6b6aqdu36g7T5+cbMPxsVE81LwN
-X-Google-Smtp-Source: APXvYqy7Tb1qacbicU7i1ZlMIo/eFWYRgK/f9iQ3mA7RBuJKkvK6SCuLdC6rTS01CvHhhQt+FH4Gew==
-X-Received: by 2002:a05:6a00:43:: with SMTP id i3mr68656219pfk.113.1559097385629;
-        Tue, 28 May 2019 19:36:25 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id f186sm19896792pfb.5.2019.05.28.19.36.24
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pP3fYcLgKNcn4ZGi02aByM6WGyk5AzcIbGUQ+cLa/MU=;
+        b=aV7svqWPdVPrvme5LITbLeWiK6I3ZePWOZa3QtXfdsWXBMgWhpYkl07TxvqwYOMZTX
+         2lCB3L8GvbPYlslgWXBZ/x+iDIl82d1JePQJxYyDhKHs0R0SKr4EgQrU1jQ6OcCqOfRb
+         1Qq+pLSmP5UrTL7AToJUomU/hFrKN2Tz4agYwlW4XT4DdSGtShgu8GZ81i3KkLCk8urn
+         7OAt100CDKHYD4Z7KEqSGlLpYoInbH5M0qK+MxLz+0ltaoGePWIc+BYjtzPU5lyNN0Tw
+         nm0dhnK/ySdpEv8o+tZFp8sMQiTUvfqUlnq4Z8QM4l4o/KTMaSENiwEwpToG5lnPZib+
+         ptPQ==
+X-Gm-Message-State: APjAAAVy89+5AolfsMDMRsA7VXkDG/kaXG9PUAEVjV84Puc5Gr4I6ZXP
+        sVfSAfIHapQKLSTbZrH96QV65w==
+X-Google-Smtp-Source: APXvYqwWFZgfUA/y6b7pztK6v2VYoXi6rFrIYAUoQFJJ01BZd4wPg7v9e3QmiJigMbe2sIgRafm9ew==
+X-Received: by 2002:a05:600c:214d:: with SMTP id v13mr4998628wml.12.1559097534873;
+        Tue, 28 May 2019 19:38:54 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c43e:46a8:e962:cee8? ([2001:b07:6468:f312:c43e:46a8:e962:cee8])
+        by smtp.gmail.com with ESMTPSA id q9sm3063089wmq.9.2019.05.28.19.38.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 19:36:24 -0700 (PDT)
-Date:   Tue, 28 May 2019 19:36:22 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: tsens: Remove unnecessary comparison of
- unsigned integer with < 0
-Message-ID: <20190529023619.GA12875@localhost.localdomain>
-References: <20190527160825.GA24219@embeddedor>
+        Tue, 28 May 2019 19:38:54 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
+References: <20190524075637.29496-1-tao3.xu@intel.com>
+ <20190524075637.29496-2-tao3.xu@intel.com>
+ <419f62f3-69a8-7ec0-5eeb-20bed69925f2@redhat.com>
+ <c1b27714-2eb8-055e-f26c-e17787d83bb6@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b5daf72d-d764-baa4-8e7f-b09dff417786@redhat.com>
+Date:   Wed, 29 May 2019 04:38:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527160825.GA24219@embeddedor>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <c1b27714-2eb8-055e-f26c-e17787d83bb6@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo,
-
-On Mon, May 27, 2019 at 11:08:25AM -0500, Gustavo A. R. Silva wrote:
-> There is no need to compare hw_id with < 0 because such comparison
-> of an unsigned value is always false.
+On 29/05/19 04:05, Tao Xu wrote:
+>>
 > 
-> Fix this by removing such comparison.
+> Thank you Paolo, but I have another question. I was wondering if it is
+> appropriate to enable X86_FEATURE_WAITPKG when QEMU uses "-overcommit
+> cpu-pm=on"?
 
+"-overcommit" only establishes the behavior of KVM, it doesn't change
+the cpuid bits.  So you'd need "-cpu" as well.
 
-Thanks for fixing this. But we had to revert the commit that introduces
-this issue. So this patch is no longer applicable.
+Paolo
 
-> 
-> Addresses-Coverity-ID: 1445440 ("Unsigned compared against 0")
-> Fixes: 3e6a8fb33084 ("drivers: thermal: tsens: Add new operation to check if a sensor is enabled")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/thermal/qcom/tsens-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> index 928e8e81ba69..94878ad35464 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -69,7 +69,7 @@ bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_id)
->  	u32 val;
->  	int ret;
->  
-> -	if ((hw_id > (priv->num_sensors - 1)) || (hw_id < 0))
-> +	if (hw_id > priv->num_sensors - 1)
->  		return -EINVAL;
->  	ret = regmap_field_read(priv->rf[SENSOR_EN], &val);
->  	if (ret)
+> Or just enable X86_FEATURE_WAITPKG when QEMU add the feature
+> "-cpu host,+waitpkg"? User wait instructions is the wait or pause
+> instructions may be executed at any privilege level, but can use
+> IA32_UMWAIT_CONTROL to set the maximum time.
+
