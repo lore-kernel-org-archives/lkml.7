@@ -2,101 +2,138 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5877C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4998AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0DE23B2A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559141858;
-	bh=2MoQ/9VJSoMM91O20PGB4ivHrG38q1xe5mQzrD6t5u4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mnFhac/y1EL1GWdBiygqvcLwgaskYKhlIeZU0DQX4r0aOehl46m/jcZJ6iaifUMwl
-	 pHtVp2HH41LsEsZTpoLeVOVrLYNRTV5h8CNGWqU77n2sVe+GUvMyHBjEUCELeWMxXn
-	 59OCIWDS7+deVowvuy/Mnt9ikSKhN6HrqEub7u0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1D16123B5C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="WX7P/J1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfE2O5h (ORCPT
+        id S1726701AbfE2O5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2O5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:57:37 -0400
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89EE23B3D;
-        Wed, 29 May 2019 14:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559141857;
-        bh=2MoQ/9VJSoMM91O20PGB4ivHrG38q1xe5mQzrD6t5u4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Z8rQXb4doZm6pmJlbN5cIaka5qDTgBcJUIrtSaBiuMVoEQ3F2z0sm7M5+GSwqmQh9
-         MWyU/cJV6ZU7Wzw0Wxqd5t66DziNeA3KCfXs+caIbv3+IYpHXwL2KBOYEI7aMmB1sG
-         1EOUEsTYwtVtq62mGC2Ttmw2HCeTUvldL93x6Q6Q=
-Received: by mail-lj1-f178.google.com with SMTP id z5so2766533lji.10;
-        Wed, 29 May 2019 07:57:36 -0700 (PDT)
-X-Gm-Message-State: APjAAAUnI8jboP7u6NtIXMNtvCeiOaMMVkLs3b8Qe+ZmPx4icZO5c4fs
-        zmwEIirTwpHtK2wavNNk6yyhFoI765XUQbt0fbA=
-X-Google-Smtp-Source: APXvYqzkAqGwLKzbKAnsKsG2Y7Ep/sgbV/2n7wYZZVclmQvLpywZUeB/D8r3hLefKeJGrJDwfAiDkd8IQ9GPjiSYc1E=
-X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr4214188lji.64.1559141855017;
- Wed, 29 May 2019 07:57:35 -0700 (PDT)
+        Wed, 29 May 2019 10:57:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42349 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfE2O5r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:57:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 33so49444pgv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sIAmsJEpBYAFITCiVn5ontRF8mPnuiYWYs/RXhqJVik=;
+        b=WX7P/J1WgZ/D9lrZgOu1anQ6YIHb47wFUL+vzOPy5wp7tMGaB3GMXODl41EgHc8fmy
+         O7CyTYBnpED9Ui08UL7+gG+G4ETtS6EPVbUOEwzGM3Gv+sMqOt9+eBigGG2ZScn8Gn+B
+         mafYiq2WG7VzWLDTbnjHuyxYslOU/8LCyAkITg+lJDaaG8rsFUNzAf06z5HPQAwDuMnZ
+         DDJCih2aBYGHvXSVQn3uSHbkEXIZIcuTm6aXFc7EHyMOA7oZW2kJ3aA+EKTvV+f/8kzR
+         kd5R5mNQMOwiYz89vs7++vyO0bxo90i9bXogfTrnumYixYFV7p9mNBFBfwtXMp1IzGFS
+         rm3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sIAmsJEpBYAFITCiVn5ontRF8mPnuiYWYs/RXhqJVik=;
+        b=GijYK2xahCwCmE531MpIGekYCtM6T238VrhUVGy/DIwSbUWmOGnV3c/59B4gfeqwCx
+         Oxgze7KbVnNb14xVP7dce1dI2FELTr9NN+0/aQGnrIQ4E2JKamvj96sg2HINjX2GBsPI
+         Xzmn+fyXVR3XP6q6LfOwpdV8BulC8T2GuVgaHLDHr2BTUKa9zypZzglTw/FCxcieDSpU
+         3bGqQKJ58izK+BHoR4GMbzOUnVLwph3+DWJYIPOMvG4sw6KsmSuz6U+QtH2WPR853kkc
+         P+zM/vUxIE9REM1l9a/6iIO3/wGWBpizdnFv3KWRPwtkd6gXSMF4cXX1463YoJo+CxjD
+         bLkQ==
+X-Gm-Message-State: APjAAAUlnkLW7KVRHFkiz9Yrw1E9YG/BjGhGWcXA5ExGIdfpCNXFj1ht
+        U0vI4rA9vhVW50fnBzPFrhcG0A==
+X-Google-Smtp-Source: APXvYqxNaNP9e3ltFNMVhA0l1R837lO1f6xlta8mbDk8OLksP1OtAUD8KUF2OzYdBkOo9TcqAUPkQg==
+X-Received: by 2002:a63:ff0c:: with SMTP id k12mr32442911pgi.32.1559141866858;
+        Wed, 29 May 2019 07:57:46 -0700 (PDT)
+Received: from cisco ([2601:280:b:edbb:840:fa90:7243:7032])
+        by smtp.gmail.com with ESMTPSA id t11sm15682423pgp.1.2019.05.29.07.57.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 07:57:46 -0700 (PDT)
+Date:   Wed, 29 May 2019 08:57:42 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+Message-ID: <20190529145742.GA8959@cisco>
+References: <cover.1554732921.git.rgb@redhat.com>
+ <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
-In-Reply-To: <20190527022258.32748-3-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 29 May 2019 16:57:23 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
-Message-ID: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
- level SOC alert threshold
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> For configure low level state of charge threshold alert signaled from
-> max17040 we add "maxim,alert-low-soc-level" property.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> new file mode 100644
-> index 000000000000..a13e8d50ff7b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> @@ -0,0 +1,28 @@
-> +max17040_battery
-> +~~~~~~~~~~~~~~~~
+On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
+> It is not permitted to unset the audit container identifier.
+> A child inherits its parent's audit container identifier.
+
+...
+
+>  /**
+> + * audit_set_contid - set current task's audit contid
+> + * @contid: contid value
+> + *
+> + * Returns 0 on success, -EPERM on permission failure.
+> + *
+> + * Called (set) from fs/proc/base.c::proc_contid_write().
+> + */
+> +int audit_set_contid(struct task_struct *task, u64 contid)
+> +{
+> +	u64 oldcontid;
+> +	int rc = 0;
+> +	struct audit_buffer *ab;
+> +	uid_t uid;
+> +	struct tty_struct *tty;
+> +	char comm[sizeof(current->comm)];
 > +
-> +Required properties :
-> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> +	task_lock(task);
+> +	/* Can't set if audit disabled */
+> +	if (!task->audit) {
+> +		task_unlock(task);
+> +		return -ENOPROTOOPT;
+> +	}
+> +	oldcontid = audit_get_contid(task);
+> +	read_lock(&tasklist_lock);
+> +	/* Don't allow the audit containerid to be unset */
+> +	if (!audit_contid_valid(contid))
+> +		rc = -EINVAL;
+> +	/* if we don't have caps, reject */
+> +	else if (!capable(CAP_AUDIT_CONTROL))
+> +		rc = -EPERM;
+> +	/* if task has children or is not single-threaded, deny */
+> +	else if (!list_empty(&task->children))
+> +		rc = -EBUSY;
+> +	else if (!(thread_group_leader(task) && thread_group_empty(task)))
+> +		rc = -EALREADY;
+> +	read_unlock(&tasklist_lock);
+> +	if (!rc)
+> +		task->audit->contid = contid;
+> +	task_unlock(task);
+> +
+> +	if (!audit_enabled)
+> +		return rc;
 
-One more comment. The datasheet for max17040 says that there is on
-ALERT pin and ALERT bits in RCOMP register. Which device are you
-using? If it turns out that max17040 does not support it, then the
-driver and bindings should reflect this - interrupts should not be set
-on max17040.
+...but it is allowed to change it (assuming
+capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
+immediately useful since we still live in the world of majority
+privileged containers if we didn't allow changing it, in addition to
+un-setting it.
 
-Best regards,
-Krzysztof
+Tycho
