@@ -2,143 +2,85 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0511DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B260AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D294E242A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76882242A8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559169220;
+	bh=RH3AfYoY7Hep8k89nDOp88jHf91cqSPkd1Ls/lo/R3E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=i9fs2qiM9tVaUFKwVk3LuxvzPdmDAT50XUbxFHtraffG4pgIPqdKXIseFSBKx7YqF
+	 SerGferWfKfUbchRFaOd3XiWmM4/7vGkrSAlFFKorpiBhBQZ3aTZ4UkHZ5336bJFug
+	 8FTkn9iYYFFfK2y3rtVzhhsd+cf8yN+gDOr/QmJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfE2Wcv (ORCPT
+        id S1726643AbfE2Wdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:32:51 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34381 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfE2Wcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:32:50 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h1so4692369qtp.1;
-        Wed, 29 May 2019 15:32:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bhcaQuR9YSEQybP2ekpRZxM00TsWewuQkxFdS2ijASs=;
-        b=o5JTyJbmqM4zgeEKLd+Ztdf2hwDDFFfWl+ndu71PPdrdakz2WUuhhLWCs5up4D+qv6
-         XLQO2IQDV0Lz+nWTRzRd7TwVDNFigTYLfzTdBGFpsYzKj2Z8Tm3tquv/r+X+Ci0cLNTY
-         6S49Jz4mHZFeHGG8bkguon5NlI1AOU5Q/FRGwgXAHyCCR+4INKoozDvAShGMO8K1UjqA
-         36baRRJjzn5N52ytOoOtIdbG86rpTsGLoVBEbrkq98tWbT5K+B1/xxobdp3H9k9jLg27
-         ApbAgGhbTg9Wdbq7dK9FJaQhLCOEheSG6jmVnBeRRcNSl/wdCJ7xvp7PxSxNrA8dpgTB
-         gCSQ==
-X-Gm-Message-State: APjAAAU41JjFRz0dPER56lLDIYn/5ROdXnIH63vRBttEfCEHmnaUGZdG
-        r3sTvh2Lq0lbsU8rhp5y9UFxTQyLm/VOWTeeT88=
-X-Google-Smtp-Source: APXvYqzjWc05T9BIUjfMN8/lfoIoLNUkz68qr+FmtCCk7e/p0sSEAdKNYq5z9uqUmaxIhN8RqRHwL2xJ+hWqCzO3yr8=
-X-Received: by 2002:ac8:6750:: with SMTP id n16mr414503qtp.142.1559169169422;
- Wed, 29 May 2019 15:32:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com> <20190529161157.GA27659@redhat.com>
-In-Reply-To: <20190529161157.GA27659@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 30 May 2019 00:32:32 +0200
-Message-ID: <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
-Subject: Re: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
- according to restore_user_sigmask())
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
-        Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 May 2019 18:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfE2Wdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 18:33:39 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0F3242A6;
+        Wed, 29 May 2019 22:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559169218;
+        bh=RH3AfYoY7Hep8k89nDOp88jHf91cqSPkd1Ls/lo/R3E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=d+tLCS4K282W7Kh3BSHxJtRFOqcDCkyMt5IPhssKcqdf2T4rbsMmsIMA2+hYoZwVy
+         O8AYShc8nqRBSiGsfjKXQJ1w37cjVYFUn2TVMExXKPGje42inX1u7NO+KsJJ6wDSCM
+         Lybn4L8i5o5BHFYFbZiEeJp5Rmdky7WxGk2vngDM=
+Date:   Wed, 29 May 2019 15:33:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] proc: use typeof_member() macro
+Message-Id: <20190529153337.3e8fcd2b6b54e11e5ef23d04@linux-foundation.org>
+In-Reply-To: <20190529191110.GB5703@avx2>
+References: <20190529190720.GA5703@avx2>
+        <20190529191110.GB5703@avx2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 6:12 PM Oleg Nesterov <oleg@redhat.com> wrote:
+On Wed, 29 May 2019 22:11:10 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+
+> Don't repeat function signatures twice.
+> 
+> This is a kind-of-precursor for "struct proc_ops".
+> 
+> Note:
+> 
+> 	typeof(pde->proc_fops->...) ...;
+> 
+> can't be used because ->proc_fops is "const struct file_operations *".
+> "const" prevents assignment down the code and it can't be deleted
+> in the type system.
 >
-> Al, Linus, Eric, please help.
+> ...
 >
-> The previous discussion was very confusing, we simply can not understand each
-> other.
->
-> To me everything looks very simple and clear, but perhaps I missed something
-> obvious? Please correct me.
+> --- a/fs/proc/inode.c
+> +++ b/fs/proc/inode.c
+> @@ -200,7 +200,8 @@ static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
+>  	struct proc_dir_entry *pde = PDE(file_inode(file));
+>  	loff_t rv = -EINVAL;
+>  	if (use_pde(pde)) {
+> -		loff_t (*llseek)(struct file *, loff_t, int);
+> +		typeof_member(struct file_operations, llseek) llseek;
 
-Thanks for the elaborate explanation in this patch, it all starts making sense
-to me now. I also looked at your patch in detail and thought I had found
-a few mistakes at first but those all turned out to be mistakes in my reading.
+ooh.  That's pretty nifty.
 
-> See the compile-tested patch at the end. Of course, the new _xxx() helpers
-> should be renamed somehow. fs/aio.c doesn't look right with or without this
-> patch, but iiuc this is what it did before 854a6ed56839a.
 
-I think this is a nice simplification, but it would help not to mix up the
-minimal regression fix with the rewrite of those functions. For the stable
-kernels, I think we want just the addition of the 'bool interrupted' argument
-to restore_user_sigmask() to close the race that was introduced
-854a6ed56839a. Following up on that for future kernels, your patch
-improves the readability, but we can probably take it even further.
-
-> -       ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-> +       ret = set_xxx(ksig.sigmask, ksig.sigsetsize);
->         if (ret)
->                 return ret;
->
->         ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
-> -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> -       if (signal_pending(current) && !ret)
-> +
-> +       interrupted = signal_pending(current);
-> +       update_xxx(interrupted);
-
-Maybe name this
-
-           restore_saved_sigmask_if(!interrupted);
-
-and make restore_saved_sigmask_if() an inline function
-next to restore_saved_sigmask()?
-
-> @@ -2201,13 +2205,15 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
->         if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
->                 return -EFAULT;
->
-> -       ret = set_compat_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-> +       ret = set_compat_xxx(ksig.sigmask, ksig.sigsetsize);
->         if (ret)
->                 return ret;
-
-With some of the recent discussions about compat syscall handling,
-I now think that we want to just fold set_compat_user_sigmask()
-into set_user_sigmask() (whatever they get called in the end)
-with an in_compat_syscall() conditional inside it, and completely get
-rid of the COMPAT_SYSCALL_DEFINEx() definitions for those
-system calls for which this is the only difference.
-
-Unfortunately we still need the time32/time64 distinction, but removing
-syscall handlers is a significant cleanup here already, and we can
-move most of the function body of sys_io_pgetevents() into
-do_io_getevents() in the process. Same for some of the other calls.
-
-Not sure about the order of the cleanups, but probably something like
-this would work:
-
-1. fix the race (to be backported)
-2. unify set_compat_user_sigmask/set_user_sigmask
-3. remove unneeded compat handlers
-4. replace restore_user_sigmask with restore_saved_sigmask_if()
-5. also unify compat_get_fd_set()/get_fd_set() and kill off
-    compat select() variants.
-
-       Arnd
