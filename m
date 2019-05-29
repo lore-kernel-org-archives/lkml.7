@@ -2,148 +2,97 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E289C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD3BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC3320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC6720B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfE2I44 (ORCPT
+        id S1726520AbfE2I57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:56:56 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:38349 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725948AbfE2I4x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:56:53 -0400
-Received: from [IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae] ([IPv6:2001:983:e9a7:1:352c:d076:e7aa:19ae])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id VuO8h4USX3qlsVuO9hsPNJ; Wed, 29 May 2019 10:56:51 +0200
-Subject: Re: [PATCH 4/4] media: xilinx: fix leaked of_node references
-To:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Patrice Chotard <patrice.chotard@st.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
- <1557126318-21487-5-git-send-email-wen.yang99@zte.com.cn>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <e557b5a7-524b-56e0-0642-7f9c04c136f9@xs4all.nl>
-Date:   Wed, 29 May 2019 10:56:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557126318-21487-5-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCNcQwo2tuDr/le+vUGvfG5jmsmcDf9YkYYz99PHycHPmKjCwQlYKvxglDv57a3asuiBY5gKxAEKqAKjFc3lu2ZDtAslmARGu7eN1mc1tICkwrBtrRHf
- jETldO7ENIaH2fYtCZa/jD7AxE9q1CAbUGMt1a8I5v5wFd7bSIxyT7b/3sKSZp7oJMDyr6CUNt6HoGn2YWiU5+GcUsoXjpM8Pc+shfRL1wxAx3m4MqOPgmB8
- nsusfRls9FAQ0N3gedQv9uF1D0i7yN02Xg0g5gDG4nGL2N7GiZ2FQPIaW+ie4kwQ/Gj2ZsAegb4rK8gMy8dhNhKhysa5bTmT2uKO+ReHJJ2w5he2Csd/Vl4p
- l8l28GeEUPq0xeflpZ2iE0cHY81U0zQfutkAM7pGNxk5AEGrsR0y6xpoXw9981qK4kklNbnqvb3aVKIdYUCwmTCofERU0yrjY4lk25P+4JpgzTEZHdnaMuH4
- nl6AbgRZYZoa66bsIu3U2qHzj2GHmXFvoJIW23v+ACJSAD8d9g403vBZc/tvdYSdn2OFqot0GZg0YegL02ignZKzTGObZ3Je5nqDEh9PuWlx4KeGDDwKdwqI
- zVaalO86OUNbdiaWzg8SWOK9
+        Wed, 29 May 2019 04:57:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:22391 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfE2I56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:57:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 01:57:58 -0700
+X-ExtLoop1: 1
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga005.fm.intel.com with ESMTP; 29 May 2019 01:57:54 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH net-next v4 0/5] net: stmmac: enable EHL SGMI
+Date:   Thu, 30 May 2019 00:58:22 +0800
+Message-Id: <1559149107-14631-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 9:05 AM, Wen Yang wrote:
-> The call to of_get_child_by_name returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
-> 
-> Detected by coccinelle with the following warnings:
-> drivers/media/platform/xilinx/xilinx-vipp.c:487:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
-> drivers/media/platform/xilinx/xilinx-vipp.c:491:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
-> 
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
->  drivers/media/platform/exynos4-is/media-dev.c | 1 +
+This patch-set is to enable Ethernet controller
+(DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+The DW Ethernet PCS is the Physical Coding Sublayer that is between Ethernet
+MAC and PHY and uses MDIO Clause-45 as Communication.
 
-Huh? This patch changes exynos4 as well, not just xilinx.
+Kweh Hock Leong (1):
+  net: stmmac: enable clause 45 mdio support
 
-Please split this up into two patches, one for each driver.
+Ong Boon Leong (3):
+  net: stmmac: introducing support for DWC xPCS logics
+  net: stmmac: add xpcs function hooks into main driver and ethtool
+  net: stmmac: add xPCS functions for device with DWMACv5.1
 
->  drivers/media/platform/xilinx/xilinx-vipp.c   | 8 +++++---
->  3 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-> index 02da0b0..25df4c6 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-is.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-is.c
-> @@ -809,6 +809,7 @@ static int fimc_is_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  
->  	is->pmu_regs = of_iomap(node, 0);
-> +	of_node_put(node);
->  	if (!is->pmu_regs)
->  		return -ENOMEM;
->  
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index 463f2d8..a31dacf 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -450,6 +450,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->  	else
->  		pd->fimc_bus_type = pd->sensor_bus_type;
->  
-> +	of_node_put(np);
->  	if (WARN_ON(index >= ARRAY_SIZE(fmd->sensor))) {
->  		of_node_put(rem);
->  		return -EINVAL;
-> diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
-> index edce040..307717c 100644
-> --- a/drivers/media/platform/xilinx/xilinx-vipp.c
-> +++ b/drivers/media/platform/xilinx/xilinx-vipp.c
-> @@ -472,7 +472,7 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
->  {
->  	struct device_node *ports;
->  	struct device_node *port;
-> -	int ret;
-> +	int ret = 0;
->  
->  	ports = of_get_child_by_name(xdev->dev->of_node, "ports");
->  	if (ports == NULL) {
-> @@ -484,11 +484,13 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
->  		ret = xvip_graph_dma_init_one(xdev, port);
->  		if (ret < 0) {
->  			of_node_put(port);
-> -			return ret;
-> +			goto out_put_node;
+Voon Weifeng (1):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
 
-Just do a break here,
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  33 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.c       | 198 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.h       |  51 ++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |  42 ++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  50 ++++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 152 ++++++++++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  40 ++++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 111 ++++++++++++
+ include/linux/phy.h                                |   2 +
+ include/linux/stmmac.h                             |   3 +
+ 14 files changed, 650 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
 
->  		}
->  	}
->  
-> -	return 0;
-> +out_put_node:
+-- 
+Changelog v2:
+*Added support for the C37 AN for 1000BASE-X and SGMII (MAC side SGMII only)
+*removed and submitted the fix patch to net
+ "net: stmmac: dma channel control register need to be init first"
+*Squash the following 2 patches and move it to the end of the patch set:
+ "net: stmmac: add EHL SGMII 1Gbps platform data and PCI ID"
+ "net: stmmac: add xPCS platform data for EHL"
+Changelog v3:
+*Applied reversed christmas tree
+Changelog v4:
+*Rebased to latest net-next
+1.9.1
 
-and drop this label.
-
-> +	of_node_put(ports);
-> +	return ret;
->  }
->  
->  static void xvip_graph_cleanup(struct xvip_composite_device *xdev)
-> 
-
-Regards,
-
-	Hans
