@@ -2,118 +2,120 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FEFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC090C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264AE208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GlIPp6vv"
+	by mail.kernel.org (Postfix) with ESMTP id 94B5B208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfE2M4w (ORCPT
+        id S1727019AbfE2M6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:56:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35372 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfE2M4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:56:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ezJqmdGXuDFxk+yC+s5MBTQ1KIOcOFXTVhZGERGaSZE=; b=GlIPp6vvSyNmSfpucVORXmllw
-        pd6siyW81asRf2ZdtAIS1jQ9/wJI9KaTwqbIbKdhI9h3ZL0hyNPzAqkIWLLa+XuEN8iNy0VN2UmAH
-        qWBOipPXbwNNMpZHZynDOd29JWUf7t+JU5gAAtILJ3Tm2lg8Gx15ajtXObX+Bj0OMaE2LBRNNXOLc
-        hDI85tePcrSd6ry+er24xVvzMF6EX92SG6ScHFjbgg+BblcNdhD+xxiY1Is+CPpGUfoWHr8MDHm3X
-        1BeGmc6P4QKi3dM/zYBltiNYi3ZPvOQz1HAPegPptnpI6AbT89OLR94zb3NxA79nj0DDQZsIBmcl0
-        v/Ou1OZsA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVy7a-0004qc-BV; Wed, 29 May 2019 12:55:58 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 23099201D5ACB; Wed, 29 May 2019 14:55:57 +0200 (CEST)
-Date:   Wed, 29 May 2019 14:55:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au,
-        acme@redhat.com, eranian@google.com, fweisbec@gmail.com,
-        jolsa@redhat.com
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190529125557.GU2623@hirez.programming.kicks-ass.net>
-References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
- <20190528140103.GT2623@hirez.programming.kicks-ass.net>
- <20190528153224.GE20758@fuggles.cambridge.arm.com>
- <20190528173228.GW2623@hirez.programming.kicks-ass.net>
- <20190529091733.GA4485@fuggles.cambridge.arm.com>
- <20190529101042.GN2623@hirez.programming.kicks-ass.net>
- <20190529102022.GC4485@fuggles.cambridge.arm.com>
+        Wed, 29 May 2019 08:58:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40474 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfE2M6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:58:48 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D63E9C07188B;
+        Wed, 29 May 2019 12:58:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CA8C5D9D6;
+        Wed, 29 May 2019 12:58:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com>
+References: <CAG48ez2o1egR13FDd3=CgdXP_MbBsZM4SX=+aqvR6eheWddhFg@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905934373.7587.10824503964531598726.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] vfs: Add superblock notifications
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529102022.GC4485@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <24576.1559134719.1@warthog.procyon.org.uk>
+Date:   Wed, 29 May 2019 13:58:39 +0100
+Message-ID: <24577.1559134719@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 29 May 2019 12:58:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:20:22AM +0100, Will Deacon wrote:
-> Anyway, you can add my ack to your patch, but I bet we can remove that mm
-> check :D
+Jann Horn <jannh@google.com> wrote:
 
-I've ended up with the below. Ravi, can you test if that does indeed
-obsolete your PPC patch?
+> It might make sense to require that the path points to the root inode
+> of the superblock? That way you wouldn't be able to do this on a bind
+> mount that exposes part of a shared filesystem to a container.
 
----
-Subject: perf: Fix perf_sample_regs_user()
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed May 29 14:37:24 CEST 2019
+Why prevent that?  It doesn't prevent the container denizen from watching a
+bind mount that exposes the root of a shared filesystem into a container.
 
-perf_sample_regs_user() uses 'current->mm' to test for the presence of
-userspace, but this is insufficient, consider use_mm().
+It probably makes sense to permit the LSM to rule on whether a watch may be
+emplaced, however.
 
-A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
-PF_KTHREAD after it sets the new ->mm but before it drops to userspace
-for the first time.
+> > +                       ret = add_watch_to_object(watch, s->s_watchers);
+> > +                       if (ret == 0) {
+> > +                               spin_lock(&sb_lock);
+> > +                               s->s_count++;
+> > +                               spin_unlock(&sb_lock);
+> 
+> Why do watches hold references on the superblock they're watching?
 
-Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
+Fair point.  It was necessary at one point, but I don't think it is now.  I'll
+see if I can remove it.  Note that it doesn't stop a superblock from being
+unmounted and destroyed.
 
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Reported-by: Young Xiao <92siuyang@gmail.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +                       }
+> > +               }
+> > +               up_write(&s->s_umount);
+> > +               if (ret < 0)
+> > +                       kfree(watch);
+> > +       } else if (s->s_watchers) {
+> 
+> This should probably have something like a READ_ONCE() for clarity?
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
- 		regs_user->regs = regs;
--	} else if (current->mm) {
-+	} else if (!(current->flags & PF_KTHREAD)) {
- 		perf_get_regs_user(regs_user, regs, regs_user_copy);
- 	} else {
- 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+Note that I think I'll rearrange this to:
+
+	} else {
+		ret = -EBADSLT;
+		if (s->s_watchers) {
+			down_write(&s->s_umount);
+			ret = remove_watch_from_object(s->s_watchers, wqueue,
+						       s->s_unique_id, false);
+			up_write(&s->s_umount);
+		}
+	}
+
+I'm not sure READ_ONCE() is necessary, since s_watchers can only be
+instantiated once and the watch list then persists until the superblock is
+deactivated.  Furthermore, by the time deactivate_locked_super() is called, we
+can't be calling sb_notify() on it as it's become inaccessible.
+
+So if we see s->s_watchers as non-NULL, we should not see anything different
+inside the lock.  In fact, I should be able to rewrite the above to:
+
+	} else {
+		ret = -EBADSLT;
+		wlist = s->s_watchers;
+		if (wlist) {
+			down_write(&s->s_umount);
+			ret = remove_watch_from_object(wlist, wqueue,
+						       s->s_unique_id, false);
+			up_write(&s->s_umount);
+		}
+	}
+
+David
