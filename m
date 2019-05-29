@@ -2,128 +2,82 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C10C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC236C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18A4238F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BAA23956
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfE2OLI (ORCPT
+        id S1727395AbfE2OLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:11:08 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59107 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfE2OLH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:11:07 -0400
-X-Originating-IP: 90.88.147.134
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6B558FF811;
-        Wed, 29 May 2019 14:11:03 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com
-Subject: [PATCH net-next] ethtool: Drop check for vlan etype and vlan tci when parsing flow_rule
-Date:   Wed, 29 May 2019 16:10:44 +0200
-Message-Id: <20190529141044.24669-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 29 May 2019 10:11:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53824 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbfE2OLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:11:48 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 297BD3003E4F;
+        Wed, 29 May 2019 14:11:48 +0000 (UTC)
+Received: from treble (ovpn-123-24.rdu2.redhat.com [10.10.123.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 699BB5B681;
+        Wed, 29 May 2019 14:11:47 +0000 (UTC)
+Date:   Wed, 29 May 2019 09:11:45 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Matt Helsley <mhelsley@vmware.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 00/13] Cleanup recordmcount and begin objtool
+ conversion
+Message-ID: <20190529141145.4tycu25a3os3fpgr@treble>
+References: <cover.1558569448.git.mhelsley@vmware.com>
+ <20190528144328.6wygc2ofk5oaggaf@treble>
+ <20190529134152.GX2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190529134152.GX2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 29 May 2019 14:11:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When parsing an ethtool flow spec to build a flow_rule, the code checks
-if both the vlan etype and the vlan tci are specified by the user to add
-a FLOW_DISSECTOR_KEY_VLAN match.
+On Wed, May 29, 2019 at 03:41:52PM +0200, Peter Zijlstra wrote:
+> On Tue, May 28, 2019 at 09:43:28AM -0500, Josh Poimboeuf wrote:
+> > Would it be feasible to eventually combine subcommands so that objtool
+> > could do both ORC and mcount generation in a single invocation?  I
+> > wonder what what the interface would look like.
+> 
+> objtool orc+mcount ?
+> 
+> That is, have '+' be a separator for cmd thingies. That would of course
+> require all other arguments to be shared between all commands, which is
+> currently already so, but I've not checked the mcount patches.
 
-However, when the user only specified a vlan etype or a vlan tci, this
-check silently ignores these parameters.
+The problem is that you have to combine "orc generate" with "mcount
+record".  Because even the subcommands have subcommands ;-)
 
-For example, the following rule :
+And also sharing arguments between all subcommands isn't ideal.
 
-ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
+Maybe could do:
 
-will result in no error being issued, but the equivalent rule will be
-created and passed to the NIC driver :
+  objtool orc generate [orc options] + mcount record [mcount options]
 
-ethtool -N eth0 flow-type udp4 action -1 loc 0
+> Alternatively, we ditch the command thing entirely and live off of pure
+> flags:
+> 
+>  'o', "orc", "Generate ORC data"
+>  'c', "mcount', "Generate mcount() location data"
 
-In the end, neither the NIC driver using the rule nor the end user have
-a way to know that these keys were dropped along the way, or that
-incorrect parameters were entered.
-
-This kind of check should be left to either the driver, or the ethtool
-flow spec layer.
-
-This commit makes so that ethtool parameters are forwarded as-is to the
-NIC driver.
-
-Since none of the users of ethtool_rx_flow_rule_create are using the
-VLAN dissector, I don't think this qualifies as a regression.
-
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- net/core/ethtool.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
-
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index 4a593853cbf2..2fe86893e9b5 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -3010,26 +3010,23 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
- 		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
- 		const struct ethtool_flow_ext *ext_m_spec = &fs->m_ext;
- 
--		if (ext_m_spec->vlan_etype &&
--		    ext_m_spec->vlan_tci) {
--			match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
--			match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
-+		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
-+		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
- 
--			match->key.vlan.vlan_id =
--				ntohs(ext_h_spec->vlan_tci) & 0x0fff;
--			match->mask.vlan.vlan_id =
--				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
-+		match->key.vlan.vlan_id =
-+			ntohs(ext_h_spec->vlan_tci) & 0x0fff;
-+		match->mask.vlan.vlan_id =
-+			ntohs(ext_m_spec->vlan_tci) & 0x0fff;
- 
--			match->key.vlan.vlan_priority =
--				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
--			match->mask.vlan.vlan_priority =
--				(ntohs(ext_m_spec->vlan_tci) & 0xe000) >> 13;
-+		match->key.vlan.vlan_priority =
-+			(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
-+		match->mask.vlan.vlan_priority =
-+			(ntohs(ext_m_spec->vlan_tci) & 0xe000) >> 13;
- 
--			match->dissector.used_keys |=
--				BIT(FLOW_DISSECTOR_KEY_VLAN);
--			match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
--				offsetof(struct ethtool_rx_flow_key, vlan);
--		}
-+		match->dissector.used_keys |=
-+			BIT(FLOW_DISSECTOR_KEY_VLAN);
-+		match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
-+			offsetof(struct ethtool_rx_flow_key, vlan);
- 	}
- 	if (fs->flow_type & FLOW_MAC_EXT) {
- 		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
 -- 
-2.20.1
-
+Josh
