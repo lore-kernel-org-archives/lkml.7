@@ -2,78 +2,126 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7112C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DEC072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5EE2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFB621734
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7CgTaK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfE2B37 (ORCPT
+        id S1726068AbfE2Bc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 21:29:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40353 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfE2B37 (ORCPT
+        Tue, 28 May 2019 21:32:26 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:32940 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfE2BcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 21:29:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 15so366486wmg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 18:29:57 -0700 (PDT)
+        Tue, 28 May 2019 21:32:25 -0400
+Received: by mail-it1-f194.google.com with SMTP id j17so4134309itk.0;
+        Tue, 28 May 2019 18:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pIfvpAwcUL5aEcXjuJeQ2M0pAhR/Zr/nyVu2Et28hv0=;
+        b=C7CgTaK82YvBIf4VqQZ1gYpGRtU608zv44voHBNeDAcYIU7bv1Mgb7g30FYTu40lwO
+         zhdd9h0dxduIt62RQVCc8h1fzpgFKcPqXxV4MRWqjWckPxc8X29Gjh5k/HC6CWbzRc47
+         vofESGt2DjeRHO1PWS2uIyLDUqI+hLaMOVQiPNifJtnvc5zmxut2xvuJVwaPccNM0jkb
+         Z4SPYUoKO8G8T2TvIaFoHZoeF+E9SL2pI8XS3ISFzJLkSJ4osCyn1ZWU/rwDvESjn/UD
+         Pb9wYesQCGZHQGPnLpy37hVAyeDR+pohWh9gsBc+oZhrHKJYSBBPt5SGMFhyQWsTzaOb
+         kE3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d+bGedX5o6nE+Y5FXR8KV1S9iuqLVRpYMqTJ+aAu2NM=;
-        b=ScIGPY5JNb/HmKUCkAQeO+p4Rj5LMpArIDpGw//VL5NZXm6bZQ/+17BkyyTR6E7YpR
-         S7madk5ZDmUDMNH0XPGBN+qxZAxUAjePzMuGK1J72qhTy/EZFgKejYUsbryQJNQmcd9z
-         683/l7et/RDYHweGWd0lJxsd4qVoDMGpxpamkrzq2QIwRogYVb10I1brNs5bDcbkc6tc
-         juo8lXtNudjD9diH6NlW0Sd1eFmFmaOi8pBREMnxQbZp/9ao5y9/4S3sh7enXqBFrE5T
-         T8T5/cqfZzqcIImHC/K4kNzp2Wf6ppZNeqJh5M8zAE3pqCq26oR6uhbOR8gkO8MHgo0t
-         crcA==
-X-Gm-Message-State: APjAAAUCTp1OFqopKlsLx60K6vT+I6bOpoquJX7WxAwbrKRHzKgLi2AU
-        tXpouwTcHYsABshl0Vck3L3kAg==
-X-Google-Smtp-Source: APXvYqx7CoRBGsCUgLmAD6bmavoIJXGvbBLl4jlFCFwYsR96PCBp0L0QpXGHgsUTRsYeE1z5tZgL0g==
-X-Received: by 2002:a1c:678a:: with SMTP id b132mr4862856wmc.17.1559093397185;
-        Tue, 28 May 2019 18:29:57 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id i17sm12789322wrr.46.2019.05.28.18.29.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 18:29:56 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Tao Xu <tao3.xu@intel.com>, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jingqi.liu@intel.com
-References: <20190524075637.29496-1-tao3.xu@intel.com>
- <20190524075637.29496-3-tao3.xu@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c9f5050a-6144-adbc-25ef-8a7543176ac6@redhat.com>
-Date:   Wed, 29 May 2019 03:29:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pIfvpAwcUL5aEcXjuJeQ2M0pAhR/Zr/nyVu2Et28hv0=;
+        b=Nq38QFaS35w+NcHzZo1d7u+KQaD7R3w1/K+xideJmSEUOgd5jTm6ibTywo1fz4G7Cb
+         Hpp6pgyEUVWNpym5YHU1hXCa7+TExeD9SA+4ygrs4kEmSO/Kz/X69EpCOLiQ0xWeEEi+
+         bU+qQaW1Sf2miF4HBH6U9KoL7thjT/DLb/FTsI+CMNRfNBn0m4dBRgtNGyBbTp09N7qD
+         W3qr0fDBaM+hWXA7i9IhKm+5+YBwVW26htBz/FzMxtPpXHi/KMxEdQ/mdJX5aoGqhIk1
+         NNg82U/9t+wAHW4+1a9GdVdNCrPyyDhAWVpvlsktUITKBZcdYsfI/wXIoHsEpeOWjWaE
+         3OwQ==
+X-Gm-Message-State: APjAAAVjbhiMaxDnd7Mlit2BgwJEAbjxtozZHsX30EFnMFQ7AQS/CqO7
+        MrzvwrjKypr31MRMLl0A0K64FkBJouldvYGPPvo=
+X-Google-Smtp-Source: APXvYqyviJ1M9Qn4lMTmVfNca0S4nsXUtbXTlNjutUOnT584whK0rl7+oPDULSNBLe94uMh6uSFlFMrgzR416XD0phM=
+X-Received: by 2002:a24:7289:: with SMTP id x131mr1588107itc.62.1559093544804;
+ Tue, 28 May 2019 18:32:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190524075637.29496-3-tao3.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp>
+In-Reply-To: <20190529011705.GA12977@basecamp>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 28 May 2019 19:32:14 -0600
+Message-ID: <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/05/19 09:56, Tao Xu wrote:
-> +
-> +	if (rdmsrl_safe(MSR_IA32_UMWAIT_CONTROL, &host_umwait_control))
-> +		return;
-> +
+On Tue, May 28, 2019 at 7:17 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
+> > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
+> >
+> > > Here is a patch series that adds initial display support for the LG
+> > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
+> > > of these patches are RFC until we can get it fully working.
+> > >
+> > > The phones boots into terminal mode, however there is a several second
+> > > (or more) delay when writing to tty1 compared to when the changes are
+> > > actually shown on the screen. The following errors are in dmesg:
+> >
+> > I tested to apply patches 2-6 and got the console up on the phone as well.
+> > I see the same timouts, and I also notice the update is slow in the
+> > display, as if the DSI panel was running in low power (LP) mode.
+> >
+> > Was booting this to do some other work, but happy to see the progress!
+>
+> Thanks!
+>
+> I've had three people email me off list regarding the display working on
+> 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
+> this email is to get some more information out publicly.
+>
+> I pushed up a branch to my github with 15 patches applied against 4.17
+> that has a working display:
+>
+> https://github.com/masneyb/linux/commits/display-works-4.17
+>
+> It's in low speed mode but its usable. The first 10 patches are in
+> mainline now and the last 5 are in essence this patch series with the
+> exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
+> There's a slightly different version of that patch in mainline now.
+>
+> I'm planning to work on the msm8974 interconnect support once some of
+> the outstanding interconnect patches for the msm kms/drm driver arrive
+> in mainline. I'd really like to understand why the display works on
+> 4.17 with those patches though. I assume that it's related to the
+> vblank events not working properly? Let me preface this with I'm a
+> total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
+> looking for these events in the atomic commits before the migration?
+> See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
+> helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
+> call that was added.
 
-Does the host value ever change?  If not, this can perhaps be read once
-when kvm_intel is loaded.  And if it changes often, it should be
-shadowed into a percpu variable.
-
-Paolo
+Do you know if the nexus 5 has a video or command mode panel?  There
+is some glitchyness with vblanks and command mode panels.
