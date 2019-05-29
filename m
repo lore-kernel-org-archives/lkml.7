@@ -2,78 +2,243 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B39C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC4C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F5021721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A8921721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:02:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7MD6iUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfE2DAl (ORCPT
+        id S1726563AbfE2DCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:00:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34842 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725816AbfE2DAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:00:41 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BEBA775CA4A0DB04526B;
-        Wed, 29 May 2019 11:00:33 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
- 11:00:26 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <maxime.chevallier@bootlin.com>,
-        <antoine.tenart@bootlin.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 net-next] net: mvpp2: cls: Remove unnessesary check in mvpp2_ethtool_cls_rule_ins
-Date:   Wed, 29 May 2019 10:59:06 +0800
-Message-ID: <20190529025906.17452-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190527134646.21804-1-yuehaibing@huawei.com>
-References: <20190527134646.21804-1-yuehaibing@huawei.com>
+        Tue, 28 May 2019 23:02:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36186 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfE2DCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 23:02:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so431518pgb.3;
+        Tue, 28 May 2019 20:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X6hCgGrg1/EebBkiZczSeiIYTj567ezCT4B+Qvt2s6Q=;
+        b=E7MD6iUCYh7UBE8D8v6Tj9XnZ+OUEjLsn2t7PjrybNOo62FmkyX8L6GN+YvLcvreBf
+         1K/b9tbQ1rSkY+RJnEpVfTgNzLxYFF6usqJTmHXT+jDAo0jfSt/XLCnXIx70y9IYfxti
+         CqvXgmkijrm0NNrTeidIZWiufx4mLZZDvLr3TgD/+VqLGthmsv80JpGVXSNZ7u5UTaKU
+         65tp8D8zynwlLPjy4TGsnQgZa3bOZJ8lZb77FNu+9s7Mgu55R77DLLy8AxMfyyM/P8pg
+         vc4s/pueNLcGft20cBN2Z2nthMGvUjBkHoSnWgJS8zswD2cBuLQ8XbEUt+lAP0AoGHCB
+         hTZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X6hCgGrg1/EebBkiZczSeiIYTj567ezCT4B+Qvt2s6Q=;
+        b=nVGi9+CKmwkmZQ/93Y6Us1zCGrHByvXt/c/M79el38S6ByByx5b2PI0l1X5FX8aDpe
+         hveTupG+IAPwQWZdDru0novvCu3meY1NzzU09jaG7jXjAwabI2Ow901TXObdhdrSVKtO
+         m3dRD9Y41jBOczZ4r289ZtIJ93NNATbcdH+Q5KvjqIog/AlA5dX1PfxS6H1sXIyFMPzp
+         dkbpbAJA4k7tTkI8V0P1RC98E5NoGwGnxuFgLJ5GjBkhjfzb/k6Mxk1qG46/y7YQLqXi
+         r8mwXP36hk0TY2CoiCvTf/nh9iL1QCHh3PqrTjtPBuMXuH1+77tBYM4vB/89JraWKORR
+         LxBg==
+X-Gm-Message-State: APjAAAVcmDjFNiQK4Li82WsbuzcIGvXRQiBEqoH6r7QONDLkw2aC17QZ
+        tLYs2MibHYhOKI19g4Sf8Wr3x4Ee6v0=
+X-Google-Smtp-Source: APXvYqyPsBpkG44hSDy7mXOJP8h3S5s7ICBOVNki4QTwaMsFGNf1xnTpWdMo6loLPLw8LZJQ9Rgn+A==
+X-Received: by 2002:a17:90a:b885:: with SMTP id o5mr9397531pjr.52.1559098951071;
+        Tue, 28 May 2019 20:02:31 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id d9sm13532565pgl.20.2019.05.28.20.02.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 20:02:30 -0700 (PDT)
+Date:   Tue, 28 May 2019 20:02:27 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Anson.Huang@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, peng.fan@nxp.com, daniel.baluta@nxp.com,
+        maxime.ripard@bootlin.com, olof@lixom.net,
+        jagan@amarulasolutions.com, horms+renesas@verge.net.au,
+        leonard.crestez@nxp.com, bjorn.andersson@linaro.org,
+        dinguyen@kernel.org, enric.balletbo@collabora.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH RESEND V13 2/5] thermal: of-thermal: add API for getting
+ sensor ID from DT
+Message-ID: <20190529030225.GA2662@localhost.localdomain>
+References: <20190528060621.47342-1-Anson.Huang@nxp.com>
+ <20190528060621.47342-2-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190528060621.47342-2-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix smatch warning:
+On Tue, May 28, 2019 at 02:06:18PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> On some platforms like i.MX8QXP, the thermal driver needs a
+> real HW sensor ID from DT thermal zone, the HW sensor ID is
+> used to get temperature from SCU firmware, and the virtual
+> sensor ID starting from 0 to N is NOT used at all, this patch
+> adds new API thermal_zone_of_get_sensor_id() to provide the
+> feature of getting sensor ID from DT thermal zone's node.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V12:
+> 	- adjust the second parameter of thermal_zone_of_get_sensor_id() API, then caller no need
+> 	  to pass the of_phandle_args structure and put the sensor_specs.np manually, also putting
+> 	  the sensor node device check inside this API to make it easy for usage;
 
-drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c:1236
- mvpp2_ethtool_cls_rule_ins() warn: unsigned 'info->fs.location' is never less than zero.
+What happened to using nxp,resource-id property in your driver?
+Why do we need this as an API in of-thermal? What other drivers may
+benefit of this?
 
-'info->fs.location' is u32 type, never less than zero.
+Regardless, this patch needs to document the new API under
+Documentation/
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: rework patch based net-next
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index bd19a910dc90..e1c90adb2982 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1300,8 +1300,7 @@ int mvpp2_ethtool_cls_rule_ins(struct mvpp2_port *port,
- 	struct mvpp2_ethtool_fs *efs, *old_efs;
- 	int ret = 0;
- 
--	if (info->fs.location >= MVPP2_N_RFS_ENTRIES_PER_FLOW ||
--	    info->fs.location < 0)
-+	if (info->fs.location >= MVPP2_N_RFS_ENTRIES_PER_FLOW)
- 		return -EINVAL;
- 
- 	efs = kzalloc(sizeof(*efs), GFP_KERNEL);
--- 
-2.20.1
-
-
+> ---
+>  drivers/thermal/of-thermal.c | 66 +++++++++++++++++++++++++++++++++-----------
+>  include/linux/thermal.h      | 10 +++++++
+>  2 files changed, 60 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index dc5093b..a53792b 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -449,6 +449,54 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>  }
+>  
+>  /**
+> + * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
+> + * @tz_np: a valid thermal zone device node.
+> + * @sensor_np: a sensor node of a valid sensor device.
+> + * @id: a sensor ID pointer will be passed back.
+> + *
+> + * This function will get sensor ID from a given thermal zone node, use
+> + * "thermal-sensors" as list name, and get sensor ID from first phandle's
+> + * argument.
+> + *
+> + * Return: 0 on success, proper error code otherwise.
+> + */
+> +
+> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +				  struct device_node *sensor_np,
+> +				  u32 *id)
+> +{
+> +	struct of_phandle_args sensor_specs;
+> +	int ret;
+> +
+> +	ret = of_parse_phandle_with_args(tz_np,
+> +					 "thermal-sensors",
+> +					 "#thermal-sensor-cells",
+> +					 0,
+> +					 &sensor_specs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (sensor_specs.np != sensor_np) {
+> +		of_node_put(sensor_specs.np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (sensor_specs.args_count >= 1) {
+> +		*id = sensor_specs.args[0];
+> +		WARN(sensor_specs.args_count > 1,
+> +		     "%pOFn: too many cells in sensor specifier %d\n",
+> +		     sensor_specs.np, sensor_specs.args_count);
+> +	} else {
+> +		*id = 0;
+> +	}
+> +
+> +	of_node_put(sensor_specs.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
+> +
+> +/**
+>   * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
+>   * @dev: a valid struct device pointer of a sensor device. Must contain
+>   *       a valid .of_node, for the sensor node.
+> @@ -499,36 +547,22 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  	sensor_np = of_node_get(dev->of_node);
+>  
+>  	for_each_available_child_of_node(np, child) {
+> -		struct of_phandle_args sensor_specs;
+>  		int ret, id;
+>  
+>  		/* For now, thermal framework supports only 1 sensor per zone */
+> -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
+> -						 "#thermal-sensor-cells",
+> -						 0, &sensor_specs);
+> +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
+>  		if (ret)
+>  			continue;
+>  
+> -		if (sensor_specs.args_count >= 1) {
+> -			id = sensor_specs.args[0];
+> -			WARN(sensor_specs.args_count > 1,
+> -			     "%pOFn: too many cells in sensor specifier %d\n",
+> -			     sensor_specs.np, sensor_specs.args_count);
+> -		} else {
+> -			id = 0;
+> -		}
+> -
+> -		if (sensor_specs.np == sensor_np && id == sensor_id) {
+> +		if (id == sensor_id) {
+>  			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+>  							 data, ops);
+>  			if (!IS_ERR(tzd))
+>  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+>  
+> -			of_node_put(sensor_specs.np);
+>  			of_node_put(child);
+>  			goto exit;
+>  		}
+> -		of_node_put(sensor_specs.np);
+>  	}
+>  exit:
+>  	of_node_put(sensor_np);
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index 15a4ca5..5edffe6 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -375,6 +375,9 @@ struct thermal_trip {
+>  
+>  /* Function declarations */
+>  #ifdef CONFIG_THERMAL_OF
+> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +				  struct device_node *sensor_np,
+> +				  u32 *id);
+>  struct thermal_zone_device *
+>  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+>  				const struct thermal_zone_of_device_ops *ops);
+> @@ -386,6 +389,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
+>  void devm_thermal_zone_of_sensor_unregister(struct device *dev,
+>  					    struct thermal_zone_device *tz);
+>  #else
+> +
+> +static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +					 struct device_node *sensor_np,
+> +					 u32 *id)
+> +{
+> +	return -ENOENT;
+> +}
+>  static inline struct thermal_zone_device *
+>  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+>  				const struct thermal_zone_of_device_ops *ops)
