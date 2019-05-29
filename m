@@ -2,208 +2,175 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A944C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C1AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DA723EC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C667523ECB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="IVQ2lEfx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="avBaIdcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfE2RE6 (ORCPT
+        id S1726097AbfE2RJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 13:04:58 -0400
-Received: from sonic303-8.consmr.mail.bf2.yahoo.com ([74.6.131.47]:41836 "EHLO
-        sonic303-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726099AbfE2RE5 (ORCPT
+        Wed, 29 May 2019 13:09:24 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:52274 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2RJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 13:04:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559149495; bh=69qvQzXWECR+GHkmC3NT5N0sgy7z9vk5McUZDG/bT6A=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=IVQ2lEfx6kiFcpbfRAHBZUQeoA7WitSq7TYjCYYY9zBCVVjn8Y7gu7txNTX7QrAKCDoSMrSymNBAu7mR13F3wgt+JaZTyASUs6wYiJy3FqNukoJuHyWy5ZW66wq+Mh8QScdtUPwWy0TSoiqVyNKmwpfGur2V9NC8OZ4pTQou+rIDO134tRu5WOdFF3JD1hEtjmpS1u/iY22r0wdQCWX3KqmSP4KQpYfKVyigACAo7iuUeub6zqCutw2cDXyGMPZ8G8si7dMAnbckXvEF83M7YwQXn6UIcpwnSNDJP8XPSdFJeamCv2Iu919KaUoLEAKzW7dxVMObS5q7fNmUTirRrA==
-X-YMail-OSG: p_insxUVM1k.IJgmtaqDPxrVOYeGQbCVG4Q2zBsgLVBM5S3bCzacINbSHqvXrYA
- Tqqthqx516mJuwWvdjaP4K6mP6tCKiHdvMRd6Wub6fIOk31Qiph6T86a8pRrrYsvdV6RymULvFBC
- .u40aRA4DQhssL5tD0nMQ2Zt4_Pr0Gs6zFOYm6Ktw7Qj.1F4NCoLfFpKuuzw518fmXuNWFTkyhtb
- HTSpISeoOq4hu.HxiKcYk1KLVx1bypno3TRkRhu7gGIQib6VCsPJBhcUXMXxkZjGVHxHI6vZRoSI
- lgRAVcMvZARiGbwDY3oxcKdS11KLYuJSMYOS00DDtoDWkxLbsDDs_JDgxaJ29lZUJewm9NgCgQDN
- arjV0O9dMPiiqrRxkyByXlRvNAhntqO2MMFtFAoraUPIVMEuSut28FDcrNI8_f1XwxZdlyFAOIIL
- K7Wode2d4nSQfC9lYMtM4ZPJz4Iettu.eWSDtEIQe0GD.4zRvp2PGu9mXzsmzdjZ7y_CxUiJkG3U
- H5SMJB7tRzgnBJcORz4IKk1iSsoMiBQXbC99cKGiEipxJu8d8PghU2TzFY3jShJajP.f._EGwQRR
- L7OTfmfTKtSsG8rOq8r4iPaHkuBl7X9FrByThc6A_mZCB0ehApAOwTT91ZTSudnf8YmlhTIxkrKc
- nyPydNQF8ippS8T0WO8u_3sChhLEqSj1WPuPGaxni13wj5t8rXHpAeKqsTWDEQLEWMbpbzlUVmJp
- hyEQtRzkZOB5mjf8jEi7earFs0Vp7GRDGJmX9hnmke6WTslI6mgOgWEK7jyNXZmA.4EgV8gwzn7v
- 6D0XAHGZE38ciRB76cciyFPprN3cJ_dVF68Yc32SW4qE.Xq8mqcOZ0gDMgSHnvpSYz124rTtCz9W
- FEmwVwVYwij6b9pcX2UhKZiZBFV96tce2mngLh29gK4bDPcqBo4Fnl8.VvVyj7W.FNZPZv.0vuvR
- EwmoeklRN5Rpq_p6gc41pTWRMJLrwp.cxJOJJfxeHATS6o7dYJtafpPrcTGVdPM9mCw9GSebVY1h
- TuqSPD3u_A004EVM91JDFu_saJVldYIN02TS2ib68fwpwpPmJHkG6xthHYhCjO7te6gIiE.ogThN
- QKLNTIb8JlYDwLikiQACu0EBN_8VNKCWIr2Qkn2hO6N8IcaE288DCSglQOxCKMsI3oBBA8JB6ZXd
- 9l04hTFauxWhWwA1XxaUCqXu6XiKaKuYQL6CdJrqEv60XyeFvjUEas4k3wc9tOXhK.ww3riWiBFa
- wW3yBMqMVitbxOjpLVSWTGcOQ5mUx
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Wed, 29 May 2019 17:04:55 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp423.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID d7b9ddca251f26edd5d38f2fa16e0b7e;
-          Wed, 29 May 2019 17:04:53 +0000 (UTC)
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
-To:     Jann Horn <jannh@google.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, casey@schaufler-ca.com
-References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
- <14347.1559127657@warthog.procyon.org.uk>
- <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com>
- <CAG48ez2KMrTBFzO9p8GvduXruz+FNLPyhc2YivHePsgViEoT1g@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <c95dd6cd-5530-6b70-68f6-4038edd72352@schaufler-ca.com>
-Date:   Wed, 29 May 2019 10:04:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 13:09:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559149764; x=1590685764;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=D34VPipzn/oapeL312CeeZidhriO/NJFGPDENgL1lqc=;
+  b=avBaIdcqCF5nm0UNo+KOES0uo0OQ0zwzLKSUJaDNh6jZK7vyUD8LyYap
+   I9eQ+6ch0vElvvX8VTgHpTCpzC7AZsbMOGw6FZhd/ro0DOV8owMapNura
+   F1IpHFGcrtd9wQ2AA5zZOP4Mo58gmZC8TqFkr6bacDClIt7brCgGhgtSG
+   9BX+hYWBiPITuQ4kavLs3zbGrBRwtuRg86v9s9KkZ0N4DUxuenoYTEB/Y
+   huxzNJWSK7jANCgQPy0G4FusJxNNKskep/PNKPrZzJupQyjl0rgSkmJk6
+   0oeNv8xJmlclNupyf2Ti2Z4M2WonYjS0U/pz2uEnDedpef555HKAFtiFI
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,527,1549900800"; 
+   d="scan'208";a="110585708"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 30 May 2019 01:09:21 +0800
+IronPort-SDR: 5Q7jNp2Mn5jvrrJHfClb8w7Y1BJefMoxgwQ8SK/hWIOPUNnEy46HqP8hLhr2WpvYhobaQzqDvG
+ dWNp78veaqcWpBCWSeWzExSjeL36oAelJ/F3dKVqiQCJ+70tVVs37M9KAkEmBp029TgOjdQFTe
+ lAnFCUHDoTijx4vDPKZlgc7EEa89IjOo7ugPf26GpGbI5MM6ih2Rm/hoHlTAQ52GHzA7LhpfEY
+ /xEwfP7CxLAbp6BLsJIDM74Bn9giEg9VhlGwFGCBFfoWhbHkJUXB7NqlwO06+qau8sBQB5Cc6k
+ sdUOs+azubmo3teaUba0mqgT
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP; 29 May 2019 09:46:53 -0700
+IronPort-SDR: 9bskIwRH3RoF5w+9WdRWx9p8kCic0KhSra1vXgXio7XEsq/AjQDxclsqrawZ1zOPqacy5jDH7m
+ g8KUQ40eFChOIN0cTWeXAMthnhw47R7W3XR8+XcPuGsSypGhzPdpMHfKpH85/Cou0TZtyqnUh0
+ NSYciRAdH3DXdRVEL93lm1T8HdV1fnOpq1+lCTAPrriwIwQoq/ClIdB6JUxUIYQ96UrKg0fuzC
+ ViE/nNOKK7OV/vFyutAqGrTReXcsjg/FzdCY0ZcAfXpflJCss8QP51A1AhENSjUyq+8kFfTrmj
+ 7jE=
+Received: from r6220.sdcorp.global.sandisk.com (HELO [192.168.1.6]) ([10.196.157.143])
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 May 2019 10:09:21 -0700
+Subject: Re: Testing the recent RISC-V DT patchsets
+To:     Loys Ollivier <lollivier@baylibre.com>,
+        Karsten Merker <merker@debian.org>
+Cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+References: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com>
+ <alpine.DEB.2.21.9999.1905280105110.20842@viisi.sifive.com>
+ <86o93mpqbx.fsf@baylibre.com>
+ <20190528153542.jfkkwycyc3vu6hld@excalibur.cnev.de>
+ <081611ea-a0d3-b0c9-3e08-8946513f2174@wdc.com> <86woi94lvs.fsf@baylibre.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <42a6c3bd-484b-138b-b0f1-2d4b91c5b0bb@wdc.com>
+Date:   Wed, 29 May 2019 10:09:19 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez2KMrTBFzO9p8GvduXruz+FNLPyhc2YivHePsgViEoT1g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <86woi94lvs.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2019 9:12 AM, Jann Horn wrote:
-> On Wed, May 29, 2019 at 5:53 PM Casey Schaufler <casey@schaufler-ca.com=
-> wrote:
->> On 5/29/2019 4:00 AM, David Howells wrote:
->>> Jann Horn <jannh@google.com> wrote:
+On 5/29/19 3:04 AM, Loys Ollivier wrote:
+> On Wed 29 May 2019 at 00:50, Atish Patra <atish.patra@wdc.com> wrote:
+> 
+>> On 5/28/19 8:36 AM, Karsten Merker wrote:
+>>> On Tue, May 28, 2019 at 05:10:42PM +0200, Loys Ollivier wrote:
+>>>> On Tue 28 May 2019 at 01:32, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>>>>
+>>>>> An update for those testing RISC-V patches: here's a new branch of
+>>>>> riscv-pk/bbl that doesn't try to read or modify the DT data at all, which
+>>>>> should be useful until U-Boot settles down.
+>>> [...]
+>>>>> Here is an Linux kernel branch with updated DT data that can be booted
+>>>>> with the above bootloader:
+>>>>>
+>>>>>      https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1-experimental
+>>>>>
+>>>>> A sample boot log follows, using a 'defconfig' build from that branch.
+>>>>
+>>>> Thanks Paul, I can confirm that it works.
+>>>>
+>>>> Something is still unclear to myself.
+>>>> Using FSBL + riscv-pk/bbl the linux kernel + device tree boots.
+>>>> Neither FSBL nor riscv-pk/bbl are modifying the DT.
+>>>>
+>>>> Using FSBL + OpenSBI + U-Boot the same kernel + device tree hangs on
+>>>> running /init.
+>>>>
+>>>> Would you have any pointer on what riscv-pk does that OpenSBI/U-boot doesn't ?
+>>>> Or maybe it is the other way around - OpenSBI/U-boot does something that
+>>>> extra that should not happen.
 >>>
->>>>> +void post_mount_notification(struct mount *changed,
->>>>> +                            struct mount_notification *notify)
->>>>> +{
->>>>> +       const struct cred *cred =3D current_cred();
->>>> This current_cred() looks bogus to me. Can't mount topology changes
->>>> come from all sorts of places? For example, umount_mnt() from
->>>> umount_tree() from dissolve_on_fput() from __fput(), which could
->>>> happen pretty much anywhere depending on where the last reference ge=
-ts
->>>> dropped?
->>> IIRC, that's what Casey argued is the right thing to do from a securi=
-ty PoV.
->>> Casey?
->> You need to identify the credential of the subject that triggered
->> the event. If it isn't current_cred(), the cred needs to be passed
->> in to post_mount_notification(), or derived by some other means.
+>>> Hello,
+>>>
+>>> I don't know which version of OpenSBI you are using, but there is
+>>> a problem with the combination of kernel 5.2-rc1 and OpenSBI
+>>> versions before commit
+>>>
+>>>     https://github.com/riscv/opensbi/commit/4e2cd478208531c47343290f15b577d40c82649c
+>>>
+>>> that can result in a hang on executing init, so in case you
+>>> should be using an older OpenSBI build that might be the source
+>>> of the problem that you are experiencing.
+>>>
+>>> Regards,
+>>> Karsten
+>>>
 >>
->>> Maybe I should pass in NULL creds in the case that an event is being =
-generated
->>> because an object is being destroyed due to the last usage[*] being r=
-emoved.
->> You should pass the cred of the process that removed the
->> last usage. If the last usage was removed by something like
->> the power being turned off on a disk drive a system cred
->> should be used. Someone or something caused the event. It can
->> be important who it was.
-> The kernel's normal security model means that you should be able to
-> e.g. accept FDs that random processes send you and perform
-> read()/write() calls on them without acting as a subject in any
-> security checks; let alone close().
+>> I verified the updated DT with upstream kernel for the boot flow OpenSBI
+>> + U-Boot + Linux or OpenSBI + Linux.
+>>
+>> OpenSBI should be compiled for sifive platform with following additional
+>> argument
+>>
+>> FW_PAYLOAD_FDT_PATH=<linux kernel
+>> source>/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb
+>>
+>> FYI: It will only work when kernel is given a payload to U-Boot/OpenSBI
+>> directly.
+>>
+> 
+> Hum, I am surprised by this statement.
 
-Passed file descriptors are an anomaly in the security model
-that (in this developer's opinion) should have never been
-included. More than one of the "B" level UNIX systems disabled
-them outright.=20
-
->  If you send a file descriptor over
-> a unix domain socket and the unix domain socket is garbage collected,
-> for example, I think the close() will just come from some random,
-> completely unrelated task that happens to trigger the garbage
-> collector?
-
-I never said this was going to be easy or pleasant.
-Who destroyed the UDS? It didn't just spontaneously become
-garbage. Well, not on modern Linux filesystems, anyway.=20
-
-> Also, I think if someone does I/O via io_uring, I think the caller's
-> credentials for read/write operations will probably just be normal
-> kernel creds?
->
-> Here the checks probably aren't all that important, but in other
-> places, when people try to use an LSM as the primary line of defense,
-> checks that don't align with the kernel's normal security model might
-> lead to a bunch of problems.
-
-The kernel does not have a "normal security model". It has a
-collection of disparate and almost but not quite contradictory
-models for the various objects and mechanisms it implements.
-It already has a bunch of problems, we're just used to them.
-
-I can only send a signal to a process with the same UID. Why doesn't
-a process have mode bits so that I could get signals from my group?
-
-Why do IPC object have creator bits, while files don't?
-
-Why can I send a file descriptor over a UDS, but not a message queue?
-
-Why can't I set the mode bits on a symlink?
-
-What can go wrong if I don't map groups into a user namespace?
-
-LSMs (SELinux and Smack, which are classic mandatory access control
-systems in particular) are more consistent, but still have to deal with
-some of these differences. A symlink gets a Smack label, for example.
-
-The point being that it's very easy to add new mechanisms that do
-wonderful things but that introduce unforeseen ways to bypass one
-or more of the existing protections.
+That's because U-Boot also using the new DT. With FW_PAYLOAD_FDT_PATH, 
+OpenSBI ignores the DT from FSBL and U-Boot gets the updated DT from 
+OpenSBI.
 
 
+> I was able to verify the latest DT patch serie from Paul with:
+> OpenSBI + U-Boot + Linux & DT.
+> 
+> Following the OpenSBI documentation [0] with U-Boot payload:
+> FW_PAYLOAD_PATH=<u-boot_build_dir>/u-boot.bin
+> 
+> I get an U-Boot prompt and then I can just load the linux kernel and
+> device tree from the network.
+> 
+
+Cool. This approach will also work where DT is loaded separately after 
+U-Boot is booted.
+
+> [0]: https://github.com/riscv/opensbi/blob/master/docs/platform/sifive_fu540.md#building-sifive-fu540-platform
+> 
+>> Network booting is still not working as the clock driver probe doesn't
+>> happen because of the updated DT.
+>>
+>> -- 
+>> Regards,
+>> Atish
+> 
+
+
+-- 
+Regards,
+Atish
