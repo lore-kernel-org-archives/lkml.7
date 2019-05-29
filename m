@@ -2,127 +2,159 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C27C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3602576C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D102525775
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PXtXDXkk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="su5Hjy8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfE3HzD (ORCPT
+        id S1727755AbfE3H4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:55:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39859 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfE3HzC (ORCPT
+        Thu, 30 May 2019 03:56:36 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:39900 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfE3H4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:55:02 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U7sm7Z2899831
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 00:54:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U7sm7Z2899831
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559202889;
-        bh=LK8Cf6X9rKPqO355G3EsTQDa9jTgl+V8xjJ9X6E7rlU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=PXtXDXkkm2adzMjd6a6jg1FP5mexo3GxOYTcQGPgXPXAo8nR4Bgepola5KEkFKjo9
-         L5G6c0ubnYFv29xQK3Wji9BGmPqKvS/yX8hS8/Ghwicmkm7HiGQrNXNFjkoAce84jG
-         9kS6v9WyaNmtYV4wZi07qzsOBGNoy3T8hna/66Dn6kS2ck+JYTuBBhH2SgMt3KfncG
-         8dBb1Pe19l3xnyUDfSzQH8Qwey4xZdEoo5uK9hb4bbJ9zLVy5A05KQp5aRDqs1c/hX
-         llCbSHqDOlSYpARSMH9FNHPefiBVIpLAXrFKP0M5DUKu/hdko+xuAHwm1Z5EQlNeEy
-         2KrwWzUnsqKVA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U7smGU2899828;
-        Thu, 30 May 2019 00:54:48 -0700
-Date:   Thu, 30 May 2019 00:54:48 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-a2d8a1585e35444789c1c8cf7e2e51fb15589880@git.kernel.org>
-Cc:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, acme@redhat.com, jolsa@redhat.com,
-        hpa@zytor.com, mingo@kernel.org
-Reply-To: mingo@kernel.org, hpa@zytor.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          acme@redhat.com, jolsa@redhat.com
-In-Reply-To: <20190520113728.14389-4-adrian.hunter@intel.com>
-References: <20190520113728.14389-4-adrian.hunter@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf intel-pt: Fix itrace defaults for perf script
- intel-pt documentation
-Git-Commit-ID: a2d8a1585e35444789c1c8cf7e2e51fb15589880
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Thu, 30 May 2019 03:56:35 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U7mlNM049054;
+        Thu, 30 May 2019 07:55:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=nmmfilcgBZH9BqOY/WIuIaoFLAVPuz8Rl7m+poEdBWU=;
+ b=su5Hjy8RbZi5FXmU9nvLnvAA0nfFKMzaBdiFuHQ1rz1S5Uvq0v6HtHqFjzcue0WfPZm0
+ +ZW0McT52kYhoe/vsJUfjL54oXCJYYik/Y+sFUKO7iVf5V4BpuL5BfOeJAGJm+v1ahoz
+ aAPjvAPdSiwIitrxlnD7a1X1rr8df5odwHozh1iEGNgljxHp76xOQWwizdu8yDg4AKVH
+ hvISaePzEOY3rw6M0uX33ESoeS7q9c5oYk5IAM4i4Dv2UEPCw9nTqq2OZZ4p5bKg8QvG
+ oKLGHZr6CG7n2BDNqKdCnSNiGYjZ3SAUPKs85p5wPs7a0JhEeR+EilAOpQcOTTlv9jDI 1g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2spu7dppkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 07:55:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U7prMn102700;
+        Thu, 30 May 2019 07:53:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2srbdxupyg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 07:53:29 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U7rN9N003456;
+        Thu, 30 May 2019 07:53:25 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 May 2019 00:53:23 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     srinivas.eeda@oracle.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Subject: [PATCH] x86/mm/tlb: Do partial TLB flush when possible
+Date:   Wed, 29 May 2019 15:56:44 +0800
+Message-Id: <1559116604-23105-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300059
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a2d8a1585e35444789c1c8cf7e2e51fb15589880
-Gitweb:     https://git.kernel.org/tip/a2d8a1585e35444789c1c8cf7e2e51fb15589880
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 20 May 2019 14:37:09 +0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:42 -0300
+This is a small optimization to stale TLB flush, if there is one new TLB
+flush, let it choose to do partial or full flush. or else, the stale
+flush take over and do full flush.
 
-perf intel-pt: Fix itrace defaults for perf script intel-pt documentation
+Add unlikely() to info->freed_tables check as freeing page tables
+is relatively less.
 
-Fix intel-pt documentation to reflect the change of itrace defaults for
-perf script.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Srinivas Eeda <srinivas.eeda@oracle.com>
+Cc: x86@kernel.org
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 4eb068157121 ("perf script: Make itrace script default to all calls")
-Link: http://lkml.kernel.org/r/20190520113728.14389-4-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/intel-pt.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/mm/tlb.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
-index 115eaacc455f..60d99e5e7921 100644
---- a/tools/perf/Documentation/intel-pt.txt
-+++ b/tools/perf/Documentation/intel-pt.txt
-@@ -88,16 +88,16 @@ smaller.
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 91f6db9..63a8125 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -569,6 +569,17 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 		return;
+ 	}
  
- To represent software control flow, "branches" samples are produced.  By default
- a branch sample is synthesized for every single branch.  To get an idea what
--data is available you can use the 'perf script' tool with no parameters, which
--will list all the samples.
-+data is available you can use the 'perf script' tool with all itrace sampling
-+options, which will list all the samples.
++	if (unlikely(f->new_tlb_gen <= local_tlb_gen &&
++	    local_tlb_gen + 1 == mm_tlb_gen)) {
++		/*
++		 * For stale TLB flush request, if there will be one new TLB
++		 * flush coming, we leave the work to the new IPI as it knows
++		 * partial or full TLB flush to take, or else we do the full
++		 * flush.
++		 */
++		trace_tlb_flush(reason, 0);
++		return;
++	}
+ 	WARN_ON_ONCE(local_tlb_gen > mm_tlb_gen);
+ 	WARN_ON_ONCE(f->new_tlb_gen > mm_tlb_gen);
  
- 	perf record -e intel_pt//u ls
--	perf script
-+	perf script --itrace=ibxwpe
- 
- An interesting field that is not printed by default is 'flags' which can be
- displayed as follows:
- 
--	perf script -Fcomm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,flags
-+	perf script --itrace=ibxwpe -F+flags
- 
- The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
- system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
-@@ -713,7 +713,7 @@ Having no option is the same as
- 
- which, in turn, is the same as
- 
--	--itrace=ibxwpe
-+	--itrace=cepwx
- 
- The letters are:
- 
+@@ -577,7 +588,8 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 	 * This does not strictly imply that we need to flush (it's
+ 	 * possible that f->new_tlb_gen <= local_tlb_gen), but we're
+ 	 * going to need to flush in the very near future, so we might
+-	 * as well get it over with.
++	 * as well get it over with in case we know there will be more
++	 * than one outstanding TLB flush request.
+ 	 *
+ 	 * The only question is whether to do a full or partial flush.
+ 	 *
+@@ -609,9 +621,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 	 *    local_tlb_gen all the way to mm_tlb_gen and we can probably
+ 	 *    avoid another flush in the very near future.
+ 	 */
+-	if (f->end != TLB_FLUSH_ALL &&
+-	    f->new_tlb_gen == local_tlb_gen + 1 &&
+-	    f->new_tlb_gen == mm_tlb_gen) {
++	if (f->end != TLB_FLUSH_ALL && local_tlb_gen + 1 == mm_tlb_gen) {
+ 		/* Partial flush */
+ 		unsigned long nr_invalidate = (f->end - f->start) >> f->stride_shift;
+ 		unsigned long addr = f->start;
+@@ -703,7 +713,7 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+ 	 * up on the new contents of what used to be page tables, while
+ 	 * doing a speculative memory access.
+ 	 */
+-	if (info->freed_tables)
++	if (unlikely(info->freed_tables))
+ 		smp_call_function_many(cpumask, flush_tlb_func_remote,
+ 			       (void *)info, 1);
+ 	else
+-- 
+1.8.3.1
+
