@@ -2,127 +2,259 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874E1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C456C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C53208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C38208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XvJCcOWl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cmfEi787"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfE2KIp (ORCPT
+        id S1726658AbfE2KI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:08:45 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42765 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2KIp (ORCPT
+        Wed, 29 May 2019 06:08:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40185 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2KI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:08:45 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z11so1337381vsq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:08:44 -0700 (PDT)
+        Wed, 29 May 2019 06:08:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t4so1299266wrx.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JqrLgxA4AciEivrwCOum3XhYhFc14FWOXrSGbHtn8l4=;
-        b=XvJCcOWlfI2cAhepwsVATWYEeMXjuPGe36MHEYZY73iUGWkDtfiutI6POmJ9WBgnS5
-         7Zc+MH34Bcng8GBK5pAcN4+/ymPXCE+cXwGYB27pb6fpcm7JJpWRObHmiVtzA72kO7Vt
-         9+YOcI2Zw1oJR4UQfSqS3YY8SCLdrxar3eA2YXi5fviMqALw30QBbOqvt5re4j9bK06T
-         MxXx7a5LVP5i0xbfny+YkspK2cwfOCnZBTAt3WnFtwFkd4xGRcuYSn0qZjjDGgjxXAFp
-         q1ZvaHN3BjJcwWhnr0OVqYGhnNyVRVJJJjOo2VP9Y1mgoPIvFrPK79bYI9MyJL/gQWXB
-         lB1w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ty4IcXlpjkauMOfPz91oXeSsV5meVlVMArgDZnMLLhI=;
+        b=cmfEi7876v83LhRGlYAtNz0t62h5SKiLV0y02qoM17UvQl6ZFVuX7qhc/0cHnoKU1N
+         raXenzyFYRTQT8683DcR5eJB1CF79oEnH2Hzv93Tcmg6JarlmJXrGwj/KD/vxCk4TAxd
+         Bk4pcG7aNTOXFxy62V5rRlfJ6eOCVHxv5a6B7NegGtojrIuBWY+Vraa5DbDTfpzcYTvZ
+         OiC5iPIHG7d4mDcYhhIp/69NXeormdCAZXkopxziP8SgxQHvDsYbP7WRJLalifhUk+j2
+         O/WUrNbuHLhduHu9HU2P4Q4sET5AOo87E4vu4LDSz+6SQlL7a/mEUv2p+YVtXChKJUwh
+         WvZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JqrLgxA4AciEivrwCOum3XhYhFc14FWOXrSGbHtn8l4=;
-        b=N4L/XgSKW/K6oCJvjWKkIFLYv6+u6/LsISPX1S7uLqwa7DCGEa0wIBHLM+WfuXDTxJ
-         cDYBjrOD5sWeYvxNkTUVR5NhctKtGTXIHFqCtGdG1t1VhgK14tTx2NfmcjXs0xNjXYn3
-         iMLCL4+bPM8At2AmOTFN5FRvMrpFL4aUC2+mARtzMjq8vDXXadC6xb483lM12cf5H6s4
-         aK1/KPdBIbLMrdB2n57cSTUPrvmivMu28aeuKIYU9Q7SmdrujTSqahfQF1o8D9uSU+Kt
-         FDQhnGIM8exVEbUJCJeEOFwZA+H23WuF97r2muoPm5/bwvsRyeMg1MDSmuMKfJEQkThm
-         T1hw==
-X-Gm-Message-State: APjAAAXPrs8HFPM0TfKn/5Xp4NuybGkmY8jtFe/7plUIbRKGmaTLAstz
-        C7Ydrphuqzs/Rmtr94tmdJyKOwyBBgghfcO2dWfAXw==
-X-Google-Smtp-Source: APXvYqzSCE0z59kl4Upmp3wn1FWiwFbydqjXU+SBtt9efM9Z8jZQTMXLALdpKllyD+vumjd3lYW8613GvLhWpIBE3/g=
-X-Received: by 2002:a67:e90f:: with SMTP id c15mr3517797vso.9.1559124523923;
- Wed, 29 May 2019 03:08:43 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ty4IcXlpjkauMOfPz91oXeSsV5meVlVMArgDZnMLLhI=;
+        b=jbsm3y0CHf42wb/48SgGAK9vNaqoXX2eEkRFYVDOYy2FZxUljzlX7oNij8vEheqDtl
+         7sTtgUUdjFPZ/5SCHQs0CiNkkq2w15qyQPQwP0pxi2F6N+FRUP1M3J9sTYwdQRCOIGH7
+         nINzimfXru2tJ9uIDKfxe5uRiKNbUs8s6HKw8legC5t/Kk/vvX6soN6l7WPNaAKN52O4
+         N8GnB3HVUhwzquvvYzoDL6aV3iWmaeZE/vhrY5vUenN4zPIMyaSOlNA4aBAUGFZE6EpQ
+         foOfTeXk7Sh28LUbsg7mm3jD7S8YbTV6YndVJ/HaOJk20FR8/vHJSiEovIJ3G/90S/DA
+         RL0A==
+X-Gm-Message-State: APjAAAU56tsmMxh+gyPb/AtTnugK1lNTJGLtA+ATZyPWOftjpI4ooXhg
+        IbArLXQqmw2YaYgEfQN/bmRTYBnLzsUazg==
+X-Google-Smtp-Source: APXvYqwFjkgIbBI/IYRMOH1yPeOrIReTP+zx9FXevxBCbD9DhH7F2H2BTO9HwaALscKnXMESpvkwFA==
+X-Received: by 2002:adf:ebc6:: with SMTP id v6mr9197668wrn.258.1559124535011;
+        Wed, 29 May 2019 03:08:55 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id l6sm3928121wmi.24.2019.05.29.03.08.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 03:08:54 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] arm64: dts: meson: Add minimal support for
+ Odroid-N2
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190527140206.30392-1-narmstrong@baylibre.com>
+ <20190527140206.30392-4-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <7da1c182-db68-c813-1f3c-b936137deeb2@baylibre.com>
+Date:   Wed, 29 May 2019 12:08:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190520035254.57579-1-minchan@kernel.org> <20190520035254.57579-7-minchan@kernel.org>
- <20190520092258.GZ6836@dhcp22.suse.cz> <20190521024820.GG10039@google.com>
- <20190521062421.GD32329@dhcp22.suse.cz> <20190521102613.GC219653@google.com>
- <20190521103726.GM32329@dhcp22.suse.cz> <20190527074940.GB6879@google.com>
-In-Reply-To: <20190527074940.GB6879@google.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 29 May 2019 03:08:32 -0700
-Message-ID: <CAKOZuesK-8zrm1zua4dzqh4TEMivsZKiccySMvfBjOyDkg-MEw@mail.gmail.com>
-Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector arrary
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190527140206.30392-4-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 12:49 AM Minchan Kim <minchan@kernel.org> wrote:
->
-> On Tue, May 21, 2019 at 12:37:26PM +0200, Michal Hocko wrote:
-> > On Tue 21-05-19 19:26:13, Minchan Kim wrote:
-> > > On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
-> > > > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
-> > > > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
-> > > > > > [Cc linux-api]
-> > > > > >
-> > > > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
-> > > > > > > Currently, process_madvise syscall works for only one address range
-> > > > > > > so user should call the syscall several times to give hints to
-> > > > > > > multiple address range.
-> > > > > >
-> > > > > > Is that a problem? How big of a problem? Any numbers?
-> > > > >
-> > > > > We easily have 2000+ vma so it's not trivial overhead. I will come up
-> > > > > with number in the description at respin.
-> > > >
-> > > > Does this really have to be a fast operation? I would expect the monitor
-> > > > is by no means a fast path. The system call overhead is not what it used
-> > > > to be, sigh, but still for something that is not a hot path it should be
-> > > > tolerable, especially when the whole operation is quite expensive on its
-> > > > own (wrt. the syscall entry/exit).
-> > >
-> > > What's different with process_vm_[readv|writev] and vmsplice?
-> > > If the range needed to be covered is a lot, vector operation makes senese
-> > > to me.
-> >
-> > I am not saying that the vector API is wrong. All I am trying to say is
-> > that the benefit is not really clear so far. If you want to push it
-> > through then you should better get some supporting data.
->
-> I measured 1000 madvise syscall vs. a vector range syscall with 1000
-> ranges on ARM64 mordern device. Even though I saw 15% improvement but
-> absoluate gain is just 1ms so I don't think it's worth to support.
-> I will drop vector support at next revision.
+On 27/05/2019 16:02, Neil Armstrong wrote:
+> This patch adds basic support for :
+> - Amlogic G12B, which is very similar to G12A
+> - The HardKernel Odroid-N2 based on the S922X SoC
+> 
+> The Amlogic G12B SoC is very similar with the G12A SoC, sharing
+> most of the features and architecture, but with these differences :
+> - The first CPU cluster only has 2xCortex-A53 instead of 4
+> - G12B has a second cluster of 4xCortex-A73
+> - Both cluster can achieve 2GHz instead of 1,8GHz for G12A
+> - CPU Clock architecture is difference, thus needing a different
+>   compatible to handle this slight difference
+> - Supports a MIPI CSI input
+> - Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
+> 
+> Actual support is done in the same way as for the GXM support, including
+> the G12A dtsi and redefining the CPU clusters.
+> Unlike GXM, the first cluster is different, thus needing to remove
+> the last 2 cpu nodes of the first cluster.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+>  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 288 ++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  82 +++++
+>  3 files changed, 371 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index e129c03ced14..07b861fe5fa5 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> new file mode 100644
+> index 000000000000..48783ead8dfb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -0,0 +1,288 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +/dts-v1/;
+> +
 
-Please do keep the vector support. Absolute timing is misleading,
-since in a tight loop, you're not going to contend on mmap_sem. We've
-seen tons of improvements in things like camera start come from
-coalescing mprotect calls, with the gains coming from taking and
-releasing various locks a lot less often and bouncing around less on
-the contended lock paths. Raw throughput doesn't tell the whole story,
-especially on mobile.
+[...]
+
+> +
+> +	hub_5v: regulator-hub_5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "HUB_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&vcc_5v>;
+> +
+> +		/* Connected to the Hub CHIPENABLE, LOW sets low power state */
+> +		gpio = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	usb_pwr_en: regulator-usb_pwr_en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "USB_PWR_EN";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&hub_5v>;
+> +
+> +		/* Connected to the microUSB port power enable */
+> +		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+
+[...]
+
+> +
+> +&usb {
+> +	status = "okay";
+> +	vbus-supply = <&usb_pwr_en>;
+> +};
+> +
+> +&usb2_phy0 {
+> +	phy-supply = <&vcc_5v>;
+> +};
+> +
+> +&usb2_phy1 {
+> +	phy-supply = <&vcc_5v>;
+> +};
+
+In fact, I need to fixup here :
+
+usb2_phy1 needs &hub_5v and regulator-usb_pwr_en depends on &vcc_5v instead...
+
+@Martin, can I still keep your reviewed-by for v5 ?
+
+Neil
+
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+> new file mode 100644
+> index 000000000000..9e88e513b22d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+[...]
+
+> +		};
+> +	};
+> +};
+> +
+> +&clkc {
+> +	compatible = "amlogic,g12b-clkc";
+> +};
+> 
+
