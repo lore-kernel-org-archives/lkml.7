@@ -2,70 +2,116 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44093C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15596C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A48723F44
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EA223F44
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZnEVaTs0"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cXNmnsk8";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="nkrwJNth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfE2RWT (ORCPT
+        id S1726698AbfE2RXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 13:22:19 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:56868 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbfE2RWT (ORCPT
+        Wed, 29 May 2019 13:23:35 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58978 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbfE2RXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 13:22:19 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4THJbcJ032763
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 10:22:18 -0700
+        Wed, 29 May 2019 13:23:35 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4THK58Y011968;
+        Wed, 29 May 2019 10:23:12 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=vByQe4+xXtsIbQWTc7tNKWHU/jpFmwGRzCjnpQoWXwE=;
- b=ZnEVaTs0nVzM66oadmtYklDSsTGzQq3i+3vUQzahMegU/Sb2he0hOcG2KG5GqSqPakc/
- seJRyx2prI2HUyfny100RPRzg56fcMchjphDzhMkJvjglCGthdf8fL7iN4aXH+QtzG/4
- iMJzMRV1a0n6gQIh5cSYsd6n/CcdomkixYc= 
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=RYe2t34uPb4EOOnAoXFfT8xV9HqDtrzvfs1Xqg4S+wY=;
+ b=cXNmnsk8g/po5cHt8l1Lzk2ulM/EyQtTNhh7l4R9sY3fEC2PFo8KiaT8MrPPEqFl2oxn
+ q1W8ic0aFZ/0Da3V1a+/aY43pd68ArmblPf76Au3q1itgb4zpJUV5wD5eP875a62W6Yv
+ 0Cy/ls86VIxn9UjXyJLtGOWVKbrCExJl5sk= 
 Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ssqq9hf5n-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 10:22:17 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 29 May 2019 10:21:30 -0700
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id 09D4BE65B0A1; Wed, 29 May 2019 10:21:29 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
+        by mx0a-00082601.pphosted.com with ESMTP id 2ssueerqqm-10
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 29 May 2019 10:23:11 -0700
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 29 May 2019 10:22:53 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 29 May 2019 10:22:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RYe2t34uPb4EOOnAoXFfT8xV9HqDtrzvfs1Xqg4S+wY=;
+ b=nkrwJNth4Vz7lE29uXLOwoyXFy5vBCgoWKP448DFZz39Wdoc8oKpDkj/3PqHJoXU1GGv5WC+4SYmGh6DkcQ9lLZIoBbGGuP4OXRIxOR2XNKpOk0GmIyr3q2itXi9NefIFtSmVb6TcVpdCDFVVbGhZM+0kofufpDBWC4OYdBslPY=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1687.namprd15.prod.outlook.com (10.175.119.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.22; Wed, 29 May 2019 17:22:51 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::c026:bca5:3f4e:9b1f]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::c026:bca5:3f4e:9b1f%3]) with mapi id 15.20.1922.021; Wed, 29 May 2019
+ 17:22:51 +0000
 From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        Patrick Venture <venture@google.com>,
-        Vijay Khemka <vijaykhemka@fb.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        "Andrew Jeffery" <andrew@aj.id.au>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <sdasari@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] soc: aspeed: lpc-ctrl: make parameter optional
-Date:   Wed, 29 May 2019 10:21:01 -0700
-Message-ID: <20190529172103.1130525-1-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH] misc: aspeed-lpc-ctrl: make parameter optional
+Thread-Topic: [PATCH] misc: aspeed-lpc-ctrl: make parameter optional
+Thread-Index: AQHVAG4MVnagyLYdbEW1gTueyh4a2qZ6knKAgAd9oQA=
+Date:   Wed, 29 May 2019 17:22:51 +0000
+Message-ID: <F6CAD6A7-3130-4649-B596-5FC53F4DBDFB@fb.com>
+References: <20190501223411.1655854-1-vijaykhemka@fb.com>
+ <20190524155923.GA7516@kroah.com>
+In-Reply-To: <20190524155923.GA7516@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:fd56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec4b2d6b-4063-4ec0-aeee-08d6e45a478b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1687;
+x-ms-traffictypediagnostic: CY4PR15MB1687:
+x-microsoft-antispam-prvs: <CY4PR15MB1687914A76306783454414E9DD1F0@CY4PR15MB1687.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(366004)(396003)(376002)(136003)(199004)(189003)(73956011)(66446008)(64756008)(6116002)(76116006)(229853002)(66476007)(83716004)(66946007)(7736002)(53936002)(91956017)(305945005)(6512007)(2906002)(33656002)(6436002)(8676002)(81166006)(81156014)(36756003)(6486002)(14454004)(71200400001)(8936002)(71190400001)(478600001)(54906003)(4744005)(6916009)(102836004)(2616005)(6506007)(486006)(82746002)(186003)(476003)(446003)(11346002)(5660300002)(4326008)(25786009)(76176011)(99286004)(86362001)(68736007)(316002)(256004)(46003)(6246003)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1687;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: o9Ram2e4sByPhhwAWawyaKr2dYdSuflwaaIay2dzfWOvuA6A/W6zStWnonFK8E6QatEDXzxqcYBCB1oUvrlBdRNPcDw50itHPDUfUAQRoRVTwvY4whCSUl1oPSZbhftRlu7w2bU4DmwltG+oa0Y90NtL+YY1806OyjcjjYfoD0hKpAuY6cQtYjwcLk0b3hEdwsCfLoObmehIMppqcrovAFk/zyDry+agManRC12TWQuDW7ScYvAfIOkTma7C6rdZnVj5hK7c7i1on6FmxecSJwkyu7R+A2XDEB9ateCs2WMWWN+WkuxKFnpXOOFruBKMUxvhIZej3UJJCulC6DIcLFqrfOmP0KP63nWaKZhBptQ1spZXKEoOjBqjMioBTNdFOCodw5NotHB4SLeBhSjI/jEkxjRz5mpg4DRkDekmy90=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B9BA4D932E651A4DA40E3894AC04DD39@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec4b2d6b-4063-4ec0-aeee-08d6e45a478b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 17:22:51.6068
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vijaykhemka@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1687
+X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-29_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=844 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905290113
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,129 +119,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Makiing memory-region and flash as optional parameter in device
-tree if user needs to use these parameter through ioctl then
-need to define in devicetree.
-
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- drivers/soc/aspeed/aspeed-lpc-ctrl.c | 58 +++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-index a024f8042259..aca13779764a 100644
---- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-+++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-@@ -68,6 +68,7 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		unsigned long param)
- {
- 	struct aspeed_lpc_ctrl *lpc_ctrl = file_aspeed_lpc_ctrl(file);
-+	struct device *dev = file->private_data;
- 	void __user *p = (void __user *)param;
- 	struct aspeed_lpc_ctrl_mapping map;
- 	u32 addr;
-@@ -90,6 +91,12 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		if (map.window_id != 0)
- 			return -EINVAL;
- 
-+		/* If memory-region is not described in device tree */
-+		if (!lpc_ctrl->mem_size) {
-+			dev_dbg(dev, "Didn't find reserved memory\n");
-+			return -ENXIO;
-+		}
-+
- 		map.size = lpc_ctrl->mem_size;
- 
- 		return copy_to_user(p, &map, sizeof(map)) ? -EFAULT : 0;
-@@ -126,9 +133,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 			return -EINVAL;
- 
- 		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
-+			if (!lpc_ctrl->pnor_size) {
-+				dev_dbg(dev, "Didn't find host pnor flash\n");
-+				return -ENXIO;
-+			}
- 			addr = lpc_ctrl->pnor_base;
- 			size = lpc_ctrl->pnor_size;
- 		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
-+			/* If memory-region is not described in device tree */
-+			if (!lpc_ctrl->mem_size) {
-+				dev_dbg(dev, "Didn't find reserved memory\n");
-+				return -ENXIO;
-+			}
- 			addr = lpc_ctrl->mem_base;
- 			size = lpc_ctrl->mem_size;
- 		} else {
-@@ -196,17 +212,17 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 	if (!lpc_ctrl)
- 		return -ENOMEM;
- 
-+	/* If flash is described in device tree then store */
- 	node = of_parse_phandle(dev->of_node, "flash", 0);
- 	if (!node) {
--		dev_err(dev, "Didn't find host pnor flash node\n");
--		return -ENODEV;
--	}
--
--	rc = of_address_to_resource(node, 1, &resm);
--	of_node_put(node);
--	if (rc) {
--		dev_err(dev, "Couldn't address to resource for flash\n");
--		return rc;
-+		dev_dbg(dev, "Didn't find host pnor flash node\n");
-+	} else {
-+		rc = of_address_to_resource(node, 1, &resm);
-+		of_node_put(node);
-+		if (rc) {
-+			dev_err(dev, "Couldn't address to resource for flash\n");
-+			return rc;
-+		}
- 	}
- 
- 	lpc_ctrl->pnor_size = resource_size(&resm);
-@@ -214,22 +230,22 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, lpc_ctrl);
- 
-+	/* If memory-region is described in device tree then store */
- 	node = of_parse_phandle(dev->of_node, "memory-region", 0);
- 	if (!node) {
--		dev_err(dev, "Didn't find reserved memory\n");
--		return -EINVAL;
--	}
-+		dev_dbg(dev, "Didn't find reserved memory\n");
-+	} else {
-+		rc = of_address_to_resource(node, 0, &resm);
-+		of_node_put(node);
-+		if (rc) {
-+			dev_err(dev, "Couldn't address to resource for reserved memory\n");
-+			return -ENXIO;
-+		}
- 
--	rc = of_address_to_resource(node, 0, &resm);
--	of_node_put(node);
--	if (rc) {
--		dev_err(dev, "Couldn't address to resource for reserved memory\n");
--		return -ENOMEM;
-+		lpc_ctrl->mem_size = resource_size(&resm);
-+		lpc_ctrl->mem_base = resm.start;
- 	}
- 
--	lpc_ctrl->mem_size = resource_size(&resm);
--	lpc_ctrl->mem_base = resm.start;
--
- 	lpc_ctrl->regmap = syscon_node_to_regmap(
- 			pdev->dev.parent->of_node);
- 	if (IS_ERR(lpc_ctrl->regmap)) {
-@@ -258,8 +274,6 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	dev_info(dev, "Loaded at %pr\n", &resm);
--
- 	return 0;
- 
- err:
--- 
-2.17.1
-
+DQoNCu+7v09uIDUvMjQvMTksIDg6NTkgQU0sICJHcmVnIEtyb2FoLUhhcnRtYW4iIDxncmVna2hA
+bGludXhmb3VuZGF0aW9uLm9yZz4gd3JvdGU6DQoNCiAgICBPbiBXZWQsIE1heSAwMSwgMjAxOSBh
+dCAwMzozNDoxMVBNIC0wNzAwLCBWaWpheSBLaGVta2Egd3JvdGU6DQogICAgPiBNYWtpaW5nIG1l
+bW9yeS1yZWdpb24gYW5kIGZsYXNoIGFzIG9wdGlvbmFsIHBhcmFtZXRlciBpbiBkZXZpY2UNCiAg
+ICA+IHRyZWUgaWYgdXNlciBuZWVkcyB0byB1c2UgdGhlc2UgcGFyYW1ldGVyIHRocm91Z2ggaW9j
+dGwgdGhlbg0KICAgID4gbmVlZCB0byBkZWZpbmUgaW4gZGV2aWNldHJlZS4NCiAgICA+IA0KICAg
+ID4gU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAg
+PiAtLS0NCiAgICA+ICBkcml2ZXJzL21pc2MvYXNwZWVkLWxwYy1jdHJsLmMgfCA1OCArKysrKysr
+KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tDQogICAgPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGlu
+c2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQ0KICAgIA0KICAgIEZpbGUgaXMgbm8gbG9uZ2Vy
+IGF0IHRoaXMgbG9jYXRpb24gOigNCg0KSSBoYXZlIHJlYmFzZWQgdG8gbmV3IGxvY2F0aW9uIGFu
+ZCBjb21iaW5lZCBib3RoIHBhdGNoZXMgYW5kIHN1Ym1pdHRlZCBhZ2Fpbi4gX18NCg0KUmVnYXJk
+cw0KLVZpamF5DQogICAgDQoNCg==
