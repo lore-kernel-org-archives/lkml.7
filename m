@@ -2,142 +2,98 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF29EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5263BC28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF35A23D05
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B5123D12
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfE2QJq (ORCPT
+        id S1727160AbfE2QKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:09:46 -0400
-Received: from mail.us.es ([193.147.175.20]:54564 "EHLO mail.us.es"
+        Wed, 29 May 2019 12:10:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58631 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfE2QJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:09:45 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 23EE9C328E
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:09:43 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 15451DA704
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:09:43 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id EEB98DA711; Wed, 29 May 2019 18:09:42 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id BAFD5DA704;
-        Wed, 29 May 2019 18:09:40 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Wed, 29 May 2019 18:09:40 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726062AbfE2QKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:10:40 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 90D8D4265A31;
-        Wed, 29 May 2019 18:09:40 +0200 (CEST)
-Date:   Wed, 29 May 2019 18:09:40 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH net v2] ethtool: Drop check for vlan etype and vlan tci
- when parsing flow_rule
-Message-ID: <20190529160940.k2hnuoauaa4y2rga@salvia>
-References: <20190529151344.31267-1-maxime.chevallier@bootlin.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id A594E30B97AA;
+        Wed, 29 May 2019 16:10:34 +0000 (UTC)
+Received: from treble (ovpn-123-24.rdu2.redhat.com [10.10.123.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56CDF17A8F;
+        Wed, 29 May 2019 16:10:30 +0000 (UTC)
+Date:   Wed, 29 May 2019 11:10:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+Message-ID: <20190529161028.a6kpywzpjazgql5u@treble>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190529151344.31267-1-maxime.chevallier@bootlin.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <nycvar.YFH.7.76.1905291230130.1962@cbobk.fhfr.pm>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 29 May 2019 16:10:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 05:13:44PM +0200, Maxime Chevallier wrote:
-> When parsing an ethtool flow spec to build a flow_rule, the code checks
-> if both the vlan etype and the vlan tci are specified by the user to add
-> a FLOW_DISSECTOR_KEY_VLAN match.
+On Wed, May 29, 2019 at 12:32:02PM +0200, Jiri Kosina wrote:
+> From: Jiri Kosina <jkosina@suse.cz>
 > 
-> However, when the user only specified a vlan etype or a vlan tci, this
-> check silently ignores these parameters.
+> As explained in
 > 
-> For example, the following rule :
+> 	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 > 
-> ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
+> we always, no matter what, have to bring up x86 HT siblings during boot at 
+> least once in order to avoid first MCE bringing the system to its knees.
 > 
-> will result in no error being issued, but the equivalent rule will be
-> created and passed to the NIC driver :
+> That means that whenever 'nosmt' is supplied on the kernel command-line, 
+> all the HT siblings are as a result sitting in mwait or cpudile after 
+> going through the online-offline cycle at least once.
 > 
-> ethtool -N eth0 flow-type udp4 action -1 loc 0
+> This causes a serious issue though when a kernel, which saw 'nosmt' on its 
+> commandline, is going to perform resume from hibernation: if the resume 
+> from the hibernated image is successful, cr3 is flipped in order to point 
+> to the address space of the kernel that is being resumed, which in turn 
+> means that all the HT siblings are all of a sudden mwaiting on address 
+> which is no longer valid.
 > 
-> In the end, neither the NIC driver using the rule nor the end user have
-> a way to know that these keys were dropped along the way, or that
-> incorrect parameters were entered.
+> That results in triple fault shortly after cr3 is switched, and machine 
+> reboots.
 > 
-> This kind of check should be left to either the driver, or the ethtool
-> flow spec layer.
-> 
-> This commit makes so that ethtool parameters are forwarded as-is to the
-> NIC driver.
-> 
-> Since none of the users of ethtool_rx_flow_rule_create are using the
-> VLAN dissector, I don't think this qualifies as a regression.
-> 
-> Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
-> V2: Added Fixes: tag, targetted to -net.
-> 
->  net/core/ethtool.c | 31 ++++++++++++++-----------------
->  1 file changed, 14 insertions(+), 17 deletions(-)
-> 
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index 4a593853cbf2..2fe86893e9b5 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -3010,26 +3010,23 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
->  		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
->  		const struct ethtool_flow_ext *ext_m_spec = &fs->m_ext;
->  
-> -		if (ext_m_spec->vlan_etype &&
-> -		    ext_m_spec->vlan_tci) {
-> -			match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
-> -			match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
-> +		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
-> +		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
+> Fix this by always waking up all the SMT siblings before initiating the 
+> 'restore from hibernation' process; this guarantees that all the HT 
+> siblings will be properly carried over to the resumed kernel waiting in 
+> resume_play_dead(), and acted upon accordingly afterwards, based on the 
+> target kernel configuration.
 
-Could you just check for ext_m_spec->vlan_etype, then set vlan_tpid
-accordingly? ie.
+hibernation_restore() is called by user space at runtime, via ioctl or
+sysfs.  So I think this still doesn't fix the case where you've disabled
+CPUs at runtime via sysfs, and then resumed from hibernation.  Or are we
+declaring that this is not a supported scenario?
 
-        if (ext_m_spec->vlan_etype) {
-		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
-		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
-        }
-        if (ext_m_spec->vlan_tci) {
-                match->key.vlan.vlan_id = ...;
-                match->mask.vlan.vlan_id = ...;
-                match->key.vlan.vlan_priority = ...;
-                match->mask.vlan.vlan_priority = ...;
-        }
+Would it be possible for mwait_play_dead() to instead just monitor a
+fixmap address which doesn't change for kaslr?
 
-        if (ext_m_spec->vlan_etype ||
-            ext_m_spec->vlan_tci) {
-		match->dissector.used_keys |=
-			BIT(FLOW_DISSECTOR_KEY_VLAN);
-		match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
-			offsetof(struct ethtool_rx_flow_key, vlan);
-        }
+Is there are reason why maxcpus= doesn't do the CR4.MCE booted_once
+dance?
 
-Something like this above.
+-- 
+Josh
