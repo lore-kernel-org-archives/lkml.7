@@ -2,73 +2,155 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962C9C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB56C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6628523B07
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kbEKr11S"
+	by mail.kernel.org (Postfix) with ESMTP id A61F323B09
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559141703;
+	bh=LRmVdjDfCx+iRHnx/tteucrVD9i835WHaCbePlhLWRk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TqozNiOQHl8UmMAmN95CEJh87TT91uZsI/xEI386iYdzT9gaZEhRz6wjgnz0v9ZXC
+	 qDaJ0jcc8qFiROjEDE8mA4CPcLzaZXRVt0DTHx5d/zoQr8XYEaKafU7+N97cJdDOS3
+	 hhZG+U1mtnvesIOsukIJAeFy599f0Dz5/5TaGZVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfE2OzB (ORCPT
+        id S1726748AbfE2OzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:55:01 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50834 "EHLO mail.skyhub.de"
+        Wed, 29 May 2019 10:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfE2OzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:55:00 -0400
-Received: from cz.tnic (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726240AbfE2OzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:55:01 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D01DB1EC01AD;
-        Wed, 29 May 2019 16:54:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559141699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=vEYbKqClcQsPDtUPPoQEYm3CxV8887wcrSdsYDhcWaQ=;
-        b=kbEKr11SEILkfdZ6XaMFVswCRxLz/lhovyPg7TT6Ov52/679LP6oB5x3UnTFfS/RimjhMT
-        La8PCP4x9DX0I6CrwWZzFmAGzd5jLvxcmrkOuchjdXc2l6hJSguSi+jmEpFAJfCShrqlQh
-        b2w76nGKhYCaSUo7/usepcrZkd7zZUw=
-Date:   Wed, 29 May 2019 16:54:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/21] EDAC, mc, ghes: Fixes and updates to improve
- memory error reporting
-Message-ID: <20190529145452.GD2951@cz.tnic>
-References: <20190529084344.28562-1-rrichter@marvell.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2C223B19;
+        Wed, 29 May 2019 14:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559141701;
+        bh=LRmVdjDfCx+iRHnx/tteucrVD9i835WHaCbePlhLWRk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BSnkMURPbHIQyJR6xI3csCIcpEyI0H7IYzYtgDBn9Zs52KbmvZSHYvU0wJ4MwwgVl
+         uthsUtmAVKB7sMufy5GCCjXTz3eD+EN60IwwLDKqltxU1IdlHKuPpnRYT7Y8w51ezP
+         XULafr/o3P7VESNxjkWLx5VHCWjq+yOKyqBbUCoQ=
+Received: by mail-lj1-f180.google.com with SMTP id y15so331554ljd.9;
+        Wed, 29 May 2019 07:55:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAUV5GVAPpvxs0hsFzui9y3UyGDnst1t1vjKuzu2ZGKf2+UeKo6V
+        yeU+QpfJGQiWkTfdRIBz7q94V63131VY0Hu4peQ=
+X-Google-Smtp-Source: APXvYqxLCHSTSKRtNMOeK3w1Vw8PySGLMX5dD0AObBoh6u42Fc0i9Za2sWvtQXUMhZOw5+Z47zy+mzrPzD2fvtbbbaU=
+X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr4207037lji.64.1559141698364;
+ Wed, 29 May 2019 07:54:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190529084344.28562-1-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-5-matheus@castello.eng.br>
+In-Reply-To: <20190527022258.32748-5-matheus@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 29 May 2019 16:54:47 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcFPwBJ26V2rOS7t5H221B0H-MsDmC4Xb7gGHRX_ETxtQ@mail.gmail.com>
+Message-ID: <CAJKOXPcFPwBJ26V2rOS7t5H221B0H-MsDmC4Xb7gGHRX_ETxtQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] power: supply: max17040: Clear ALRT bit when the
+ SOC are above threshold
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:44:01AM +0000, Robert Richter wrote:
-> Patch #1: Repost of an already accepted patch sent to the ml. Adding
-> it here for completeness as I did not find it in a repository yet.
+On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> In order to not generate duplicate interrupts we clear the ALRT bit when
+> the SOC is in a state that shows that the battery is charged above the set
+> threshold for the SOC low level alert.
 
-Try mainline:
+I think interrupt/alert bit should be cleared while handling
+interrupt, not later because:
+1. It is logical to clear it when servicing it,
+2. It is simpler - no need for "chip->alert_bit",
+3. The alert threshold is understood as alert/warning so every
+interrupt should generate uevent. I understand you wanted to remove
+"duplicate interrupts" but in fact there are no duplicates. Every next
+interrupt comes from change of SoC while being below the critical
+level. Therefore on each such change user-space should be woken up and
+notified (e.g. to show the message to the user).
 
-29a0c843973b ("EDAC/mc: Fix edac_mc_find() in case no device is found")
+I also think this should be squashed with previous patch as it does
+not make sense as standalone commit.
 
-:-)
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 2f4851608cfe..61e6fcfea8a1 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -48,6 +48,7 @@ struct max17040_chip {
+>         int status;
+>         /* Low alert threshold from 32% to 1% of the State of Charge */
+>         u32 low_soc_alert_threshold;
+> +       int alert_bit;
+>  };
+>
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -107,6 +108,7 @@ static void max17040_reset(struct i2c_client *client)
+>  static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+>         u32 level)
+>  {
+> +       struct max17040_chip *chip = i2c_get_clientdata(client);
+>         int ret;
+>         u16 data;
+>
+> @@ -118,6 +120,7 @@ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
+>                 data &= MAX17040_ATHD_MASK;
+>                 data |= level;
+>                 max17040_write_reg(client, MAX17040_RCOMP, data);
+> +               chip->alert_bit = 0;
+>                 ret = 0;
+>         } else {
+>                 ret = -EINVAL;
+> @@ -144,6 +147,11 @@ static void max17040_get_soc(struct i2c_client *client)
+>         soc = max17040_read_reg(client, MAX17040_SOC);
+>
+>         chip->soc = (soc >> 8);
+> +
+> +       /* check SOC level to clear ALRT bit */
+> +       if (chip->soc > chip->low_soc_alert_threshold && chip->alert_bit)
+> +               max17040_set_low_soc_threshold_alert(client,
+> +                       chip->low_soc_alert_threshold);
+>  }
+>
+>  static void max17040_get_version(struct i2c_client *client)
+> @@ -229,6 +237,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+>         /* send uevent */
+>         power_supply_changed(chip->battery);
+>
+> +       /* ALRT bit is seted */
 
--- 
-Regards/Gruss,
-    Boris.
+s/seted/set/
 
-ECO tip #101: Trim your mails when you reply. Srsly.
+Best regards,
+Krzysztof
+
+> +       chip->alert_bit = 1;
+> +
+>         return IRQ_HANDLED;
+>  }
+>
+> --
+> 2.20.1
+>
