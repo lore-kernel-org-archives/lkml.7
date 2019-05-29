@@ -2,177 +2,220 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2082C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35345C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0C023407
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559138579;
-	bh=0tSTYoMlHTVZxSrDog0lJVqBtj8J4qQgEtdzSomSTZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gQ43E8ZxZFDTm/Qx1GrOaDrFrtMM/Ma8HF+YOKpIxiHLiSbfJvTeEMbQL5qs95pL8
-	 wFI/WGtOb3JkzWVewYGm/dHb3ro1vUGDvfMBhD/AyH7fTUGthhpjtO64hSh3JdSFY1
-	 Qi2YgFt16txQKaCz0o8soKrdIDR7yv3kTv55yjt4=
+	by mail.kernel.org (Postfix) with ESMTP id F2D9F23400
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRCC9gxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfE2OC7 (ORCPT
+        id S1727571AbfE2OD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:02:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfE2OC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:02:58 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8B823402;
-        Wed, 29 May 2019 14:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559138577;
-        bh=0tSTYoMlHTVZxSrDog0lJVqBtj8J4qQgEtdzSomSTZ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hwPE3sV0wXedjVr2aCpquvp1LlpXrqHZxg6pcjxrIWPJnAL89WxJloIzstRSR3/fP
-         qVENpoMlU08Pz8ufgiUfRIDhOJejZEckw5R5QAGerIRKFXdg9N74E2PtvMpan7kL2K
-         9Vn44KtWtwtDC4BiiJqeIgClHffjxPlDQz3boADc=
-Date:   Wed, 29 May 2019 09:02:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shawn Anastasio <shawn@anastas.io>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        sbobroff@linux.ibm.com, xyjxie@linux.vnet.ibm.com,
-        rppt@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] powerpc/pseries: Allow user-specified PCI
- resource alignment after init
-Message-ID: <20190529140256.GC28250@google.com>
-References: <20190528040313.35582-1-shawn@anastas.io>
- <20190528040313.35582-4-shawn@anastas.io>
+        Wed, 29 May 2019 10:03:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40995 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727106AbfE2OD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:03:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so1872186wrm.8;
+        Wed, 29 May 2019 07:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+ZRkbKYFuYvRjJ17mXNEVG3Ncs8Qs8qGjlL8idYIpgI=;
+        b=lRCC9gxSSPOTWMBf0R0VmncHs+5+HN1G0VOTLxutZhHEpWc6RhEu9G1W3EELsqphk+
+         aoPnCysq1iFMGs0ubU6ZY34uM7/6UAkw/VrXhQsfO4dXR8FES01nTUuryMn8WPXc5khL
+         BdnxeaYDcg/4em8Golu0W2MUHuT7oj+OyXa7vrG+NqpOOaRh3N9Gzze8Oc5R3s2wuMzi
+         NnjNMRxlZW9oItiGgt/v9gSDAjkL/N4Y7QtGZtL9LBdweINRscZ76QEB58GLEFr89VoW
+         xPzpPghVZhwKiQm4wQcaPoVnwS4dh5UHNezQ1k8c10ePpaUPuZ1d6YeSDHvJALMKDDHr
+         Tehw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+ZRkbKYFuYvRjJ17mXNEVG3Ncs8Qs8qGjlL8idYIpgI=;
+        b=ds2cvLuT/oWyUiVzXjUqBveBhAhXDGKapW4G6+5Wbq1PAXUW36dxIaB5Da2Pcs2JlP
+         ZWoBemsqVEw9ksE+vx5mTvY45SE4bDKO7btVKJEnuwGK5buwkbbdsiDWnqtUsyS4zLj/
+         ffgQaPqtxi32xymeqAFBAyF2TWCjxIvtS0qfGQRl3Pk1J3qW/eF/2ebPIq+jUER7gF/E
+         LZJTb+NQGt/iszFd3uQVrMHRakFoY0wir5s660YWt5J2roHVI2LElvjijYv2TlBsV4iR
+         Gc6BGuM7rPEOlWGBpqspCzJ2BgrcrEQcljX14Z6TrnQtle39BwhfMe8sp3IZ8jSoRLk3
+         IDcQ==
+X-Gm-Message-State: APjAAAWa3dMsy3bGY0csv7YzK46EwWzyOuZF0tpME/ggRLBtAARMB1XG
+        DQepxv9Ttwm/p2AFCev/z3E=
+X-Google-Smtp-Source: APXvYqxS14N4hE3lVRDRxf8ID9cvg/ReEt0oP5MQdD0GozbLJGmUMi32qNE6n+lS4fSY3Ys1KqWhDQ==
+X-Received: by 2002:a5d:4145:: with SMTP id c5mr3730687wrq.298.1559138600799;
+        Wed, 29 May 2019 07:03:20 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id 9sm3262417wmn.8.2019.05.29.07.03.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 07:03:19 -0700 (PDT)
+Date:   Wed, 29 May 2019 16:03:18 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 10/12] gpio: tegra: implement wake event support for
+ Tegra210 and prior GPIO
+Message-ID: <20190529140318.GB17679@ulmo>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
 Content-Disposition: inline
-In-Reply-To: <20190528040313.35582-4-shawn@anastas.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559084936-4610-11-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 11:03:13PM -0500, Shawn Anastasio wrote:
-> On pseries, custom PCI resource alignment specified with the commandline
-> argument pci=resource_alignment is disabled due to PCI resources being
-> managed by the firmware. However, in the case of PCI hotplug the
-> resources are managed by the kernel, so custom alignments should be
-> honored in these cases. This is done by only honoring custom
-> alignments after initial PCI initialization is done, to ensure that
-> all devices managed by the firmware are excluded.
-> 
-> Without this ability, sub-page BARs sometimes get mapped in between
-> page boundaries for hotplugged devices and are therefore unusable
-> with the VFIO framework. This change allows users to request
-> page alignment for devices they wish to access via VFIO using
-> the pci=resource_alignment commandline argument.
-> 
-> In the future, this could be extended to provide page-aligned
-> resources by default for hotplugged devices, similar to what is
-> done on powernv by commit 382746376993 ("powerpc/powernv: Override
-> pcibios_default_alignment() to force PCI devices to be page aligned")
-> 
-> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
+
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 28, 2019 at 04:08:54PM -0700, Sowjanya Komatineni wrote:
+> The GPIO controller doesn't have any controls to enable the system to
+> wake up from low power states based on activity on GPIO pins. An extra
+> hardware block that is part of the power management controller (PMC)
+> contains these controls. In order for the GPIO controller to be able
+> to cooperate with the PMC, obtain a reference to the PMC's IRQ domain
+> and make it a parent to the GPIO controller's IRQ domain. This way the
+> PMC gets an opportunity to program the additional registers required
+> to enable wakeup sources on suspend.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/powerpc/include/asm/machdep.h     |  3 +++
->  arch/powerpc/kernel/pci-common.c       |  9 +++++++++
->  arch/powerpc/platforms/pseries/setup.c | 22 ++++++++++++++++++++++
->  3 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/machdep.h b/arch/powerpc/include/asm/machdep.h
-> index 2fbfaa9176ed..46eb62c0954e 100644
-> --- a/arch/powerpc/include/asm/machdep.h
-> +++ b/arch/powerpc/include/asm/machdep.h
-> @@ -179,6 +179,9 @@ struct machdep_calls {
->  
->  	resource_size_t (*pcibios_default_alignment)(void);
->  
-> +	/* Called when determining PCI resource alignment */
-> +	int (*pcibios_ignore_alignment_request)(void);
+>  drivers/gpio/gpio-tegra.c | 116 ++++++++++++++++++++++++++++++++++++++++=
++++---
+>  1 file changed, 110 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 6d9b6906b9d0..5190129668d3 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -32,6 +32,8 @@
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pm.h>
+> =20
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
 > +
->  #ifdef CONFIG_PCI_IOV
->  	void (*pcibios_fixup_sriov)(struct pci_dev *pdev);
->  	resource_size_t (*pcibios_iov_resource_alignment)(struct pci_dev *, int resno);
-> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-> index ff4b7539cbdf..8e0d73b4c188 100644
-> --- a/arch/powerpc/kernel/pci-common.c
-> +++ b/arch/powerpc/kernel/pci-common.c
-> @@ -238,6 +238,15 @@ resource_size_t pcibios_default_alignment(void)
->  	return 0;
->  }
->  
-> +int pcibios_ignore_alignment_request(void)
-> +{
-> +	if (ppc_md.pcibios_ignore_alignment_request)
-> +		return ppc_md.pcibios_ignore_alignment_request();
-> +
-> +	/* Fall back to default method of checking PCI_PROBE_ONLY */
-> +	return pci_has_flag(PCI_PROBE_ONLY);
-> +}
-> +
->  #ifdef CONFIG_PCI_IOV
->  resource_size_t pcibios_iov_resource_alignment(struct pci_dev *pdev, int resno)
+>  #define GPIO_BANK(x)		((x) >> 5)
+>  #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
+>  #define GPIO_BIT(x)		((x) & 0x7)
+> @@ -275,8 +277,22 @@ static int tegra_gpio_set_config(struct gpio_chip *c=
+hip, unsigned int offset,
+>  static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
 >  {
-> diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-> index e4f0dfd4ae33..07f03be02afe 100644
-> --- a/arch/powerpc/platforms/pseries/setup.c
-> +++ b/arch/powerpc/platforms/pseries/setup.c
-> @@ -82,6 +82,8 @@ EXPORT_SYMBOL(CMO_PageSize);
->  
->  int fwnmi_active;  /* TRUE if an FWNMI handler is present */
->  
-> +static int initial_pci_init_done; /* TRUE if initial pcibios init has completed */
+>  	struct tegra_gpio_info *tgi =3D gpiochip_get_data(chip);
+> +	struct irq_domain *domain =3D tgi->irq_domain;
 > +
->  static void pSeries_show_cpuinfo(struct seq_file *m)
->  {
->  	struct device_node *root;
-> @@ -749,6 +751,23 @@ static resource_size_t pseries_pci_iov_resource_alignment(struct pci_dev *pdev,
+> +	if (!gpiochip_irqchip_irq_valid(chip, offset))
+> +		return -ENXIO;
+> +
+> +	if (irq_domain_is_hierarchy(domain)) {
+> +		struct irq_fwspec spec;
+> +
+> +		spec.fwnode =3D domain->fwnode;
+> +		spec.param_count =3D 2;
+> +		spec.param[0] =3D offset;
+> +		spec.param[1] =3D IRQ_TYPE_NONE;
+> +		return irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, &spec);
+
+This looks like it was copied from the equivalent Tegra186 patch. I have
+since then changed the implementation, based on feedback by Linus, to
+not call irq_domain_alloc_irqs() here and instead call
+irq_create_fwspec_mapping(). This has the advantage of not requiring the
+irq_domain_alloc_irqs() function to be exported. It ends up calling that
+function internally, but as discussed with Linus it's also a nicer way
+to create these mappings.
+
+> +	}
+> =20
+> -	return irq_find_mapping(tgi->irq_domain, offset);
+> +	return irq_find_mapping(domain, offset);
 >  }
->  #endif
->  
-> +static void pseries_after_init(void)
-> +{
-> +	initial_pci_init_done = 1;
-> +}
-> +
-> +static int pseries_ignore_alignment_request(void)
-> +{
-> +	if (initial_pci_init_done)
-> +		/*
-> +		 * Allow custom alignments after init for things
-> +		 * like PCI hotplugging.
-> +		 */
+> =20
+>  static void tegra_gpio_irq_ack(struct irq_data *d)
+> @@ -365,7 +381,10 @@ static int tegra_gpio_irq_set_type(struct irq_data *=
+d, unsigned int type)
+>  	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+>  		irq_set_handler_locked(d, handle_edge_irq);
+> =20
+> -	return 0;
+> +	if (d->parent_data)
+> +		return irq_chip_set_type_parent(d, type);
+> +	else
 > +		return 0;
 
-Hmm, if there's any way to avoid this sort of early/late flag, that
-would be nicer.
+There's no need for this final else. Just make it a regular "return 0;"
+at the end of the function, without the extra else branch.
 
-> +
-> +	return pci_has_flag(PCI_PROBE_ONLY);
-> +}
-> +
->  static void __init pSeries_setup_arch(void)
->  {
->  	set_arch_panic_timeout(10, ARCH_PANIC_TIMEOUT);
-> @@ -797,6 +816,9 @@ static void __init pSeries_setup_arch(void)
->  	}
->  
->  	ppc_md.pcibios_root_bridge_prepare = pseries_root_bridge_prepare;
-> +	ppc_md.pcibios_after_init = pseries_after_init;
-> +	ppc_md.pcibios_ignore_alignment_request =
-> +		pseries_ignore_alignment_request;
 >  }
->  
->  static void pseries_panic(char *str)
-> -- 
-> 2.20.1
-> 
+> =20
+>  static void tegra_gpio_irq_shutdown(struct irq_data *d)
+> @@ -503,6 +522,7 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d=
+, unsigned int enable)
+>  	struct tegra_gpio_bank *bank =3D irq_data_get_irq_chip_data(d);
+>  	unsigned int gpio =3D d->hwirq;
+>  	u32 port, bit, mask;
+> +	int ret;
+> =20
+>  	port =3D GPIO_PORT(gpio);
+>  	bit =3D GPIO_BIT(gpio);
+> @@ -513,7 +533,14 @@ static int tegra_gpio_irq_set_wake(struct irq_data *=
+d, unsigned int enable)
+>  	else
+>  		bank->wake_enb[port] &=3D ~mask;
+> =20
+> -	return irq_set_irq_wake(bank->irq, enable);
+> +	ret =3D irq_set_irq_wake(bank->irq, enable);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (d->parent_data)
+> +		return irq_chip_set_wake_parent(d, enable);
+> +	else
+> +		return 0;
+
+Same here.
+
+Thierry
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzukSMACgkQ3SOs138+
+s6F1LRAAkFFm/+adswK0FQQAsKi2ERmNbjizVldSDUw1gwSIIqIDyk28z39Hcq6o
+HXPhvlEtQSAGjWo4iWzuuD6he+q6MOh7N4dDiGmJ9pC7zfg2rhiHES2Nz6a6D4cV
+YKHhfYlNlSyLzHgadmlFOCJ2SJGLkEonHTG+40i73bw0jogFwSI2wz8Y8qFEEfL1
+rS56rK7nnp2GENhkBVtUMkkK9S8asaKfIsyx1xeyz6HXBz8XokJM70w9cwpsMQ+z
+SODN+0F1iVlXh4+t4D5UzmIDxGC3cc8FGMIU+s5gjzmsJCRkpI7+sY6OVH0GUJA6
+L8jr1vIz6Cq/m+DLXhjBb9Ql3npVJXeIUMogm8Dpr4TETLe2tMxTwxP/eJUmtgtD
+661OdpKEaIrb43aazxG9GcA8Z0pBQ2NuW8YSOW30LBivPmO+nK2yZ9uvCfyEkgW8
+rmeJoXATr5rgf77Fd8TP+SZ2x66fDIJVWiFQONkkhMlF6ESMQf9K2BzihR8V9DPx
+0iIXf3ZYtB0rojIhbFREvb2OxRapVkYMFSgg2chcM3cwERUgiXUrqH7fde2goSx9
++SywgmMeIxGMUEkQwj3eD3eERPkjrleyuTdTKCI9ExsH9W/5p2xpGZZSZpauzWA9
+YoI3pZtGuhRZ7wgxVBEMbgpHjGrFY0RAOEmUK0Qn0kmnHe5KxhY=
+=2EEm
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
