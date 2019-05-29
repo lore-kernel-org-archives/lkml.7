@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEADC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A72CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBA124354
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37D024358
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172340;
-	bh=FG0xFcLYjJM1E5dNYsj79uOoQQiZ576cyS0E6zCmVzg=;
+	s=default; t=1559172347;
+	bh=aGBB6GZXCEvpSDNPV/3btwW6lZf8OjZGfEjJII+bN8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOG7/8rwbJh7Sj7xA9YRVH+Ff9Ij/HQ0s3Qk4ZmI9tqW6amUy2DhjZmP3g9sW8Pov
-	 WcyFzxcbLYEdpnyVJDcjq5AitoaqX3NeeFX9mFQO9w0W9ftlmtLb3GUF0FsfDu0+RQ
-	 /h5q290LAEuAOFdSQdcdKzqWcnalUqRynNf736oY=
+	b=dLUkhPivAb3r6T3NnKlm9HEDvcM3oh1BtZfWnVk7tzImk4+UULhQZos9KNECYgqpU
+	 WAv1zHB9AZQBQ91TsNYs4gb/17J35fsyrxo1L5ZmBDOniXUvVylZcyFUv6GOmaFLjt
+	 KYncOA/Q3y+XLjL/kDFjIikz1WxgDgEgNuAc3nfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfE2XZf (ORCPT
+        id S1727145AbfE2XZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:25:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49096 "EHLO
+        Wed, 29 May 2019 19:25:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49114 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfE2XYA (ORCPT
+        with ESMTP id S1726489AbfE2XYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 19:24:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,33 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Kn5wMqWy3JTU4pX5ypphe5EsBomce7cXwt2fz91hoN0=; b=GOIrKYFnz8bubQ1Qmo+Xfh4G3i
-        XpoOuYZYAJHaRhwPaSLZLDanj/a0yRVt1XpoTL6k1inyUu4XbIMo28E3nGykAF/1btwSDBousVY13
-        1dgmxiqvL7L+yUYR1k2fGmsEdHVBh31xcpKBXQEcWdp4NPTrRjuHQVjEpjBCDGEExpX4l1/+SNOxK
-        YKXhbORECPHiODD9m9KGdBn9DlkHP9nHdFwryrue76j5rvY+Yy23VE2BZM5XoP6mhYBiNcbWERxUe
-        hSOC435+IKMttTqWMyUZx620sih4ge+EVcQdKQK9Y9vhYGGRJU49LJ/uiDaRnziTQ6o4zjypW+p8Q
-        i21s2msw==;
+        bh=L/KP7KtqGaaaZ8mlQ/XMLM6HWoK8YMA1PHFDlloUkgo=; b=MOOKPUeO+LTuutF6OVA+jK9SHX
+        6P4dAHjIordM9yPqhEbOp6QAbSTEyWSs5JBx59FZHOxoNqFRhpxA7GLPamO1N4ZfBJS9xCIP1N2Rt
+        6qWDQMo4SpWawPWUfZ8E0yJl/mteYkPZcwY3hDr/R35ddvYPqFV0zhrKkx2bGQu8ZkHfGbEHMQ6/l
+        Zevs3KdSkY1PXCgam3SVor1plwIUqOVmRL6smq1AxU5W+G9z3bg3hHzmSFeTrgI0iHfNSCtYbZ1gP
+        aPST8V1jEXmbH9LYehX+lFG8FEZZTwBCuS20HibMza5ypwg/nSuzUHgAmnBDyD0j+mI1xvCNCzI7q
+        CxaLecNA==;
 Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7vL-0005Rf-4n; Wed, 29 May 2019 23:23:59 +0000
+        id 1hW7vL-0005Rl-3t; Wed, 29 May 2019 23:23:59 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7vI-0007xM-OL; Wed, 29 May 2019 20:23:56 -0300
+        id 1hW7vI-0007wj-Go; Wed, 29 May 2019 20:23:56 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org
-Subject: [PATCH 10/22] docs: amd-memory-encryption.rst get rid of warnings
-Date:   Wed, 29 May 2019 20:23:41 -0300
-Message-Id: <76b7a2990edd771aa1708862d0c6644a6b2d795d.1559171394.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jon Masters <jcm@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 01/22] ABI: sysfs-devices-system-cpu: point to the right docs
+Date:   Wed, 29 May 2019 20:23:32 -0300
+Message-Id: <557b33a4ed53fb1cd5da927c533e7fe283629869.1559171394.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
 References: <cover.1559171394.git.mchehab+samsung@kernel.org>
@@ -67,34 +71,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of those warnings:
-
-    Documentation/virtual/kvm/amd-memory-encryption.rst:244: WARNING: Citation [white-paper] is not referenced.
-    Documentation/virtual/kvm/amd-memory-encryption.rst:246: WARNING: Citation [amd-apm] is not referenced.
-    Documentation/virtual/kvm/amd-memory-encryption.rst:247: WARNING: Citation [kvm-forum] is not referenced.
-
-For references that aren't mentioned at the text by adding an
-explicit reference to them.
+The cpuidle doc was split on two, one at the admin guide
+and another one at the driver API guide. Instead of pointing
+to a non-existent file, point to both (admin guide being
+the first one).
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/virtual/kvm/amd-memory-encryption.rst | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/ABI/testing/sysfs-devices-system-cpu | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
-index 33d697ab8a58..6c37ff9a0a3c 100644
---- a/Documentation/virtual/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
-@@ -243,6 +243,9 @@ Returns: 0 on success, -negative on error
- References
- ==========
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 1528239f69b2..87478ac6c2af 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -137,7 +137,8 @@ Description:	Discover cpuidle policy and mechanism
+ 		current_governor: (RW) displays current idle policy. Users can
+ 		switch the governor at runtime by writing to this file.
  
-+
-+See [white-paper]_, [api-spec]_, [amd-apm]_ and [kvm-forum]_ for more info.
-+
- .. [white-paper] http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2013/12/AMD_Memory_Encryption_Whitepaper_v7-Public.pdf
- .. [api-spec] http://support.amd.com/TechDocs/55766_SEV-KM_API_Specification.pdf
- .. [amd-apm] http://support.amd.com/TechDocs/24593.pdf (section 15.34)
+-		See files in Documentation/cpuidle/ for more information.
++		See Documentation/admin-guide/pm/cpuidle.rst and
++		Documentation/driver-api/pm/cpuidle.rst for more information.
+ 
+ 
+ What:		/sys/devices/system/cpu/cpuX/cpuidle/stateN/name
 -- 
 2.21.0
 
