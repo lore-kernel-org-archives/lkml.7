@@ -2,88 +2,77 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CA8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6B1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C8D23B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4829023B53
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfE2O7E (ORCPT
+        id S1726626AbfE2O77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:59:04 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:54704 "EHLO deadmen.hmeau.com"
+        Wed, 29 May 2019 10:59:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42541 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfE2O7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:59:04 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hW02W-0006AC-Rs; Wed, 29 May 2019 22:58:52 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hW02P-0004f6-Qx; Wed, 29 May 2019 22:58:45 +0800
-Date:   Wed, 29 May 2019 22:58:45 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        syzbot <syzbot+bc5ab0af2dbf3b0ae897@syzkaller.appspotmail.com>,
-        bridge@lists.linux-foundation.org,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in br_mdb_ip_get
-Message-ID: <20190529145845.bcvuc5ows4dedqh3@gondor.apana.org.au>
-References: <000000000000862b160580765e94@google.com>
- <3c44c1ff-2790-ec06-35c6-3572b92170c7@cumulusnetworks.com>
- <CACT4Y+ZA8gBURbeZaDtrt5NoqFy8a8W3jyaWbs34Qjic4Bu+DA@mail.gmail.com>
- <20190220102327.lq2zyqups2fso75z@gondor.apana.org.au>
- <CACT4Y+bUTWcvqEebNjoagw0JtM77NXwVu+i3cYmhgnntZRWyfg@mail.gmail.com>
+        id S1726069AbfE2O77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:59:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:59:58 -0700
+X-ExtLoop1: 1
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by fmsmga004.fm.intel.com with ESMTP; 29 May 2019 07:59:58 -0700
+Subject: Re: [PATCHv4 2/4] firmware: add Intel Stratix10 remote system update
+ driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org,
+        atull@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sen.li@intel.com,
+        Richard Gong <richard.gong@intel.com>
+References: <1559074833-1325-1-git-send-email-richard.gong@linux.intel.com>
+ <1559074833-1325-3-git-send-email-richard.gong@linux.intel.com>
+ <20190528232400.GB29225@kroah.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <ac379a9a-9613-3f66-78ff-a38c0045764d@linux.intel.com>
+Date:   Wed, 29 May 2019 10:12:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+bUTWcvqEebNjoagw0JtM77NXwVu+i3cYmhgnntZRWyfg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190528232400.GB29225@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry:
 
-On Thu, Feb 21, 2019 at 11:54:42AM +0100, Dmitry Vyukov wrote:
->
-> Taking into account that this still happened only once, I tend to
-> write it off onto a previous silent memory corruption (we have dozens
-> of known bugs that corrupt memory). So if several people already
-> looked at it and don't see the root cause, it's probably time to stop
-> spending time on this until we have more info.
+Hi Greg,
+
+On 5/28/19 6:24 PM, Greg KH wrote:
+> On Tue, May 28, 2019 at 03:20:31PM -0500, richard.gong@linux.intel.com wrote:
+>> +static int rsu_send_msg(struct stratix10_rsu_priv *priv,
+>> +			enum stratix10_svc_command_code command,
+>> +	unsigned long arg,
+>> +	void (*callback)(struct stratix10_svc_client *client,
+>> +			 struct stratix10_svc_cb_data *data))
 > 
-> Although, there was also this one:
-> https://groups.google.com/d/msg/syzkaller-bugs/QfCCSxdB1aM/y2cn9IZJCwAJ
-> I have not checked if it can be the root cause of this report, but it
-> points suspiciously close to this stack and when I looked at it, it
-> the report looked legit.
+> Odd indentation for arg, and then callback.
+> 
+> Why isn't callback a typedef to make this simpler to use?
+> 
 
-Have you had any more reports of this kind coming from br_multicast?
+I will make correction in the next submission.
 
-It looks like
+> thanks,
+> 
+> greg k-h
+> 
 
-ommit 1515a63fc413f160d20574ab0894e7f1020c7be2
-Author: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Date:   Wed Apr 3 23:27:24 2019 +0300
-
-    net: bridge: always clear mcast matching struct on reports and leaves
-
-may have at least fixed the uninitialised value error.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Regards,
+Richard
