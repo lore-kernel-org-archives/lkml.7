@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5AAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E8CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF4824331
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5229D2433B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172318;
-	bh=1Bt35fdi7GPaqw9BEzCEpvXz5zh6/UoMeuFYelLCwtk=;
+	s=default; t=1559172327;
+	bh=wAD+EIEQl2C9vRdtH40yHMviHxF32uLp+NaZyCvtvNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KaD4ta+bHaBQ6sCdMmGQHI/ImFTiz3gcUYxllKabZ/AEpxDRnVGDGBjcyS3o0E/rl
-	 Xn1J6KL/0aITO8iZh3jvngyfByG/uRc3ETqATzuQYNqXya5MGU/oD1EqN7s6bQ1axY
-	 /c2MfjdzopOpOPyoXnTF02VDgOTLaL+mda+ZJFBY=
+	b=cE7hhJk7aL2rbNVzRaUeoWp7tBWQ0JaCdn0aXgRSg8tkYiO0cYvU52dh7rpDLriQy
+	 4sD2TkHyJ5aPtnVycaQG58pIcD4nsy1hvzSUVly5Q6fPBBoylKv8zQHZxjX1P1HiIy
+	 qM7pgpSwgS8MH2R3R+nk24JMPZOuy0TsnC3EMpbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfE2XZR (ORCPT
+        id S1726779AbfE2XZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:25:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49170 "EHLO
+        Wed, 29 May 2019 19:25:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49166 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfE2XYB (ORCPT
+        with ESMTP id S1726535AbfE2XYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 19:24:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,35 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=101NUubdgdQ5XTreIrPkh1wQNPvLvYeTkirlA9vazw4=; b=cKuo/zXENJygACfL65gsogn05p
-        6dIGhbpUvFYawarAVSJsma9Vw6fOxOHyu/mwvi/d2ZVecEoeeaXAA68FOLsQFeeOV7XdYvxNjX0mG
-        cJWjhDNATPJktdkHX7JOxE9x+5obzsy0G37bhR67isEeziusXUCWAsMW5xJYOvnmCWIKtX3YX0nFG
-        +uOIVLVbZWtqA5XFmDCrA2mzsR0DEPFuIK2HxD5Su9WXdseaROor5JXldCnoQ27RF6+oYgEbM4+vl
-        jYF/RlcmyGsWvbMuxWI9Yeqrfic+T2ivdtVfxO8KlfDTkuM+xWP7oK+BX2V1mKaeooKXxyw+SEx0m
-        nK53Q09w==;
+        bh=MWu4b2HnNsZ9u5zNAl68rcYIhiC5L6PnTagFV0A6q48=; b=K1nGrVDBAQC7pk/EbproUAqI1+
+        upbz7pNriyhWhaB2djiqMSec90VJVZNZZQPTxHoyvwBeSb9+4/hq+nlbEJx6hWgnrNMbstaqTQ2Li
+        x95HPcTDap7E9vEkVXSmTqcpKPKNdypHBw28S7sw2iKBBJx6roKQC1lG1NCQ+VAp1fwwUY2bJs2uM
+        qtsk7hulpXxFuLqZQ+pQa47pL/YruplXP3XL1FDPwK2lKynAPopb/tnWEzUdfY0aK6MyIBcZxCfwP
+        GHdDcThp2iYi2b7AlAsn+Jgw59ilxzNgwTeed6QXQAuZzz8ggkE5NTJ/U48CU67QHRBmSCslEw14l
+        AWEac4qA==;
 Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7vL-0005Rq-9i; Wed, 29 May 2019 23:23:59 +0000
+        id 1hW7vL-0005Ro-9e; Wed, 29 May 2019 23:23:59 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7vI-0007xU-Pz; Wed, 29 May 2019 20:23:56 -0300
+        id 1hW7vI-0007xQ-P9; Wed, 29 May 2019 20:23:56 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 12/22] gpu: i915.rst: Fix references to renamed files
-Date:   Wed, 29 May 2019 20:23:43 -0300
-Message-Id: <5ecde05364284f6845b651297fd9ce8225af2bcd.1559171394.git.mchehab+samsung@kernel.org>
+        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
+Subject: [PATCH 11/22] gpu: amdgpu: fix broken amdgpu_dma_buf.c references
+Date:   Wed, 29 May 2019 20:23:42 -0300
+Message-Id: <f7378a751557277eab6f37f3f5692cf5f1aff8c6.1559171394.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
 References: <cover.1559171394.git.mchehab+samsung@kernel.org>
@@ -73,42 +69,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Hardware workarounds ./drivers/gpu/drm/i915/intel_workarounds.c' failed with return code 1
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function Logical Rings, Logical Ring Contexts and Execlists ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 1
-WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/i915/intel_lrc.c' failed with return code 2
+This file was renamed, but docs weren't updated accordingly.
 
-Fixes: 112ed2d31a46 ("drm/i915: Move GraphicsTechnology files under gt/")
+	WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -function PRIME Buffer Sharing ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' failed with return code 1
+	WARNING: kernel-doc './scripts/kernel-doc -rst -enable-lineno -internal ./drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c' failed with return code 2
+
+Fixes: 988076cd8c5c ("drm/amdgpu: rename amdgpu_prime.[ch] into amdgpu_dma_buf.[ch]")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/gpu/i915.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/gpu/amdgpu.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/gpu/i915.rst b/Documentation/gpu/i915.rst
-index 055df45596c1..38fefeb99bba 100644
---- a/Documentation/gpu/i915.rst
-+++ b/Documentation/gpu/i915.rst
-@@ -61,7 +61,7 @@ Intel GVT-g Host Support(vGPU device model)
- Workarounds
- -----------
+diff --git a/Documentation/gpu/amdgpu.rst b/Documentation/gpu/amdgpu.rst
+index a740e491dfcc..a15199b1b02e 100644
+--- a/Documentation/gpu/amdgpu.rst
++++ b/Documentation/gpu/amdgpu.rst
+@@ -37,10 +37,10 @@ Buffer Objects
+ PRIME Buffer Sharing
+ --------------------
  
--.. kernel-doc:: drivers/gpu/drm/i915/intel_workarounds.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/selftest_workarounds.c
-    :doc: Hardware workarounds
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
++.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+    :doc: PRIME Buffer Sharing
  
- Display Hardware Handling
-@@ -379,10 +379,10 @@ User Batchbuffer Execution
- Logical Rings, Logical Ring Contexts and Execlists
- --------------------------------------------------
- 
--.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
-    :doc: Logical Rings, Logical Ring Contexts and Execlists
- 
--.. kernel-doc:: drivers/gpu/drm/i915/intel_lrc.c
-+.. kernel-doc:: drivers/gpu/drm/i915/gt/intel_lrc.c
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
++.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
     :internal:
  
- Global GTT views
+ MMU Notifier
 -- 
 2.21.0
 
