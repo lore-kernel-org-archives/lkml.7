@@ -6,63 +6,98 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D16C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8790DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFA521872
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BC821670
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfE2MWx (ORCPT
+        id S1726932AbfE2MX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfE2MWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:22:53 -0400
-Received: from oasis.local.home (unknown [12.156.218.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74BF92081C;
-        Wed, 29 May 2019 12:22:51 +0000 (UTC)
-Date:   Wed, 29 May 2019 08:22:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 1/3] softirq: Use preempt_latency_stop/start to trace
- preemption
-Message-ID: <20190529082248.76bb7a6c@oasis.local.home>
-In-Reply-To: <20190529093056.GA146079@google.com>
-References: <cover.1559051152.git.bristot@redhat.com>
-        <b6bb4705efb0c01c11008ae3c46bc74555245303.1559051152.git.bristot@redhat.com>
-        <20190529093056.GA146079@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 May 2019 08:23:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35942 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfE2MX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:23:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so1287892pgb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 05:23:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rxy6f9sl7ikW/ApsyD3MIdMjQRls/RXr9QjpSHSk8IA=;
+        b=jDzxhqIYLFb0yi7Z6BGzA4wmQ6Whxjw5kkQKeB6DThnM7UZnTeRkrJIRvZe46P8UO8
+         HmAWw83CmNxyh6bcZoSCt5vEJyyRLVMxepExSStk6DCIYiP49TJ7nhMXn2xiEltBr7MA
+         WvNr1foWeUyFa/CzI7y3TPKBZXnRQhHdRX3e/6l4gXtkfD/NEmu1Hrodjxgp0y+pO2Uh
+         vK+8gIb45pKcu/nEFkmuC2jEUDhfbsieLgGQ/sNgNR1XAtP0k/FMnTRWb+6IFb492v2/
+         NGA70XZin1NNXdRIGTY8zewXQ2M6Pw207vhxDROvMARTPwc9/rO1znAA0a9v3eB02P58
+         Fclg==
+X-Gm-Message-State: APjAAAXs5D02KuWU3AMEDjPUOz+0QXgEqtjweZVfMpWCTMvcvhqy8IU/
+        fyGzV0yHZiCyQZoAEpJ0z7WyMGek
+X-Google-Smtp-Source: APXvYqw3gtP9GYIe9PKp/7Bwfo/J4hxf31+bvFoTQDtU0F9p+8zHqc+Inc7h1cd1ACTxH/qzERMEvw==
+X-Received: by 2002:a17:90a:778b:: with SMTP id v11mr12193208pjk.132.1559132635974;
+        Wed, 29 May 2019 05:23:55 -0700 (PDT)
+Received: from asus.site (c-67-188-93-131.hsd1.ca.comcast.net. [67.188.93.131])
+        by smtp.gmail.com with ESMTPSA id e16sm5619309pjp.16.2019.05.29.05.23.54
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 05:23:55 -0700 (PDT)
+Subject: Re: [dm-devel] [PATCH] dm-init: fix 2 incorrect use of kstrndup()
+To:     Gen Zhang <blackgod016574@gmail.com>, agk@redhat.com,
+        snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20190529013320.GA3307@zhanggen-UX430UQ>
+From:   Bart Van Assche <bvanassche@acm.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <fcf2c3c0-e479-9e74-59d5-79cd2a0bade6@acm.org>
+Date:   Wed, 29 May 2019 05:23:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190529013320.GA3307@zhanggen-UX430UQ>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 05:30:56 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+On 5/28/19 6:33 PM, Gen Zhang wrote:
+> In drivers/md/dm-init.c, kstrndup() is incorrectly used twice.
+> 
+> It should be: char *kstrndup(const char *s, size_t max, gfp_t gfp);
 
-> Yes, I think so. Also this patch changes CALLER_ADDR0 passed to the
-> tracepoint because there's one more level of a non-inlined function call
-> in the call chain right?  Very least the changelog should document this
-> change in functional behavior, IMO.
+Should the following be added to this patch?
 
-This sounds more like a break in behavior not a functional change. I
-guess moving it to a header and making it a static __always_inline
-should be fine though.
+Fixes: 6bbc923dfcf5 ("dm: add support to directly boot to a mapped
+device") # v5.1.
+Cc: stable
 
--- Steve
+Thanks,
+
+Bart.
