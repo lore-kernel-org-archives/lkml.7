@@ -2,123 +2,110 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6634BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F6EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4967821721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D6E21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UJ1KIwaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfE2LuK convert rfc822-to-8bit (ORCPT
+        id S1726980AbfE2Lvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:50:10 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44004 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfE2LuK (ORCPT
+        Wed, 29 May 2019 07:51:40 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39860 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfE2Lvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:50:10 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m14so1184149qka.10;
-        Wed, 29 May 2019 04:50:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XHkHtWbVB+TvovZz7oPuGTHVIANZlI/EFu3bjVNoQjY=;
-        b=lTsaY64nMnxiHD7pa9HeT5GE8YW0R8qppT6CDAvpNN2yyka/Gw4Z4VGVRix3sw0JJP
-         IxNhHbE2aDTZx2X3fX2IKikOV+FLgmoja6aCH6fsaRw9yo/GB3245QClm8qM/h3V/Gyz
-         wPQtO8AM/4aKa6WUGYBeEBGaNj3V3j65B8I1py2tjJsxZCnUgy0vYDEsKhPUTj7F7FPr
-         slXtsG1Q6SN2qYzbj8bpVjfUnB4Yo+SpgdULwY+90vYFLtM7FmqU13JW/VyK2xmEWHwA
-         EqGuYr2roFx5F0n/QzjiheaKTie0nTTu0XFx7eTqM689cdsgL5Q1ONjb6gsSDP04anTo
-         XiOg==
-X-Gm-Message-State: APjAAAWKj/iVdbBXWye7ZRwXxwoXcLd6rH8KccmIgIoYcQWRWZAY7tMb
-        Oscfzgn9zwmDj2Cwxs/pAAs+NEY0pSo7FYc37zM=
-X-Google-Smtp-Source: APXvYqwIv+NsvZQNU3e96RUtDw8gxMBWuYuQiiajDZ8QFDNiZsSZdie+JkLoe/OtQ843s/6drkk2QB+tL4D41jq4Vho=
-X-Received: by 2002:a37:bb85:: with SMTP id l127mr27919584qkf.285.1559130609026;
- Wed, 29 May 2019 04:50:09 -0700 (PDT)
+        Wed, 29 May 2019 07:51:40 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4TBpXMd058379;
+        Wed, 29 May 2019 06:51:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559130693;
+        bh=Ubwl+/mZf6d2scCucv5MwBfAvJ9g/1PXNaEggSvKc6c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UJ1KIwaDI2d47VP3j2UpmyowXVfhZs1myBX21/croF8hRdccnpwndrNSB/iCn1Jgr
+         eKxkDg0WAnCKn1NQ1ADgbE2/c+FLEPfznDPMhjvf4uqUh2RV2V7ennMpYTYerEBOnj
+         bUahMEIc4WeoblDElEXcuShXmDHHaFJqeRignryA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4TBpXPO076661
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 May 2019 06:51:33 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 29
+ May 2019 06:51:33 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 29 May 2019 06:51:33 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4TBpWju070508;
+        Wed, 29 May 2019 06:51:32 -0500
+Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
+ enable flexible
+To:     Mark Brown <broonie@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-2-dmurphy@ti.com>
+ <20190523130311.GA17245@sirena.org.uk>
+ <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
+ <20190526124838.GH2456@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2398099b-16e6-f155-5852-45ba3dbc21ef@ti.com>
+Date:   Wed, 29 May 2019 06:51:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190528142424.19626-1-geert@linux-m68k.org> <20190528142424.19626-3-geert@linux-m68k.org>
-In-Reply-To: <20190528142424.19626-3-geert@linux-m68k.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 May 2019 13:49:52 +0200
-Message-ID: <CAK8P3a1wTED5Aet_9AjY9VFFrutkV2xK6C13vroTLd0vpcoo9w@mail.gmail.com>
-Subject: Re: [PATCH 2/5] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Igor Konopko <igor.j.konopko@intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Matias Bjorling <mb@lightnvm.io>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-afs@lists.infradead.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190526124838.GH2456@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 4:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> With gcc 4.1:
->
->     net/rxrpc/output.c: In function â€˜rxrpc_send_data_packetâ€™:
->     net/rxrpc/output.c:338: warning: â€˜retâ€™ may be used uninitialized in this function
->
-> Indeed, if the first jump to the send_fragmentable label is made, and
-> the address family is not handled in the switch() statement, ret will be
-> used uninitialized.
->
-> Fix this by initializing err to zero before the jump, like is already
-> done for the jump to the done label.
->
-> Fixes: 5a924b8951f835b5 ("rxrpc: Don't store the rxrpc header in the Tx queue sk_buffs")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
-> While this is not a real false-positive, I believe it cannot cause harm
-> in practice, as AF_RXRPC cannot be used with other transport families
-> than IPv4 and IPv6.
+Mark
 
-This looks like a variant of the infamous bug
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=18501
+On 5/26/19 7:48 AM, Mark Brown wrote:
+> On Thu, May 23, 2019 at 08:50:20AM -0500, Dan Murphy wrote:
+>> On 5/23/19 8:03 AM, Mark Brown wrote:
+>>> On Wed, May 22, 2019 at 02:27:28PM -0500, Dan Murphy wrote:
+>>> Is it guaranteed that the bitmask for enabling the use of the GPIO is
+>>> going to be the same for all regulators?  The bitmasks for the regulator
+>>> enable look to be different, and it also looks like this setting might
+>>> affect multiple regulators since it seems there are multiple enable bits
+>>> in the same register.  If this affects multiple regulators then how's
+>>> that working at the minute?
+>> Yes for the 3632 and 36274 bit0 is the EXT_EN for LCM on these chips.
+>> LM3631 does not have LCM GPIO control so there is no setting and this should not be called.
+>> If it is then the developer implemented the DT wrong.
+> This feels fragile - it works for the current users but it's just
+> assuming that the placement of this bit will always be in the same
+> position in the same register as the enable and will silently fail if a
+> new chip variant does things differently.  Either storing the data
+> separately somewhere driver specific or just having explicit switch
+> statements would be more robust.
 
-What I don't understand is why clang fails to warn about it with
--Wsometimes-uninitialized.
-(cc clang-built-linux mailing list).
 
-      Arnd
+Although I don't disagree with you I don't see how the interface is 
+fragile with only these 3 regulators defined.
 
->  net/rxrpc/output.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-> index 004c762c2e8d063c..1473d774d67100c5 100644
-> --- a/net/rxrpc/output.c
-> +++ b/net/rxrpc/output.c
-> @@ -403,8 +403,10 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
->
->         /* send the packet with the don't fragment bit set if we currently
->          * think it's small enough */
-> -       if (iov[1].iov_len >= call->peer->maxdata)
-> +       if (iov[1].iov_len >= call->peer->maxdata) {
-> +               ret = 0;
->                 goto send_fragmentable;
-> +       }
->
->         down_read(&conn->params.local->defrag_sem);
->
+Would it not be prudent to amend this driver if/when a new regulator is 
+needed that has a different enable bit/register combination?   And if 
+that was the case I would almost expect a different driver completely if 
+the regmap did not line up correctly.  I only reused this driver because 
+the registers and bits lined up and did not think it was necessary to 
+create a whole new driver.
+
+Dan
+
