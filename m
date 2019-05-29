@@ -2,100 +2,131 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B29C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0750C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E102422293
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DB122293
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="clma4lEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfE2Orp (ORCPT
+        id S1726428AbfE2OtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:47:45 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:58203 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726106AbfE2Orp (ORCPT
+        Wed, 29 May 2019 10:49:21 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52012 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbfE2OtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:47:45 -0400
-Received: from [IPv6:2001:983:e9a7:1:c843:3d28:cba4:8b6e] ([IPv6:2001:983:e9a7:1:c843:3d28:cba4:8b6e])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id VzrihqjyRsDWyVzrjhhsMi; Wed, 29 May 2019 16:47:43 +0200
-Subject: Re: [PATCH v7 1/3] media: cec: expose HDMI connector to CEC dev
- mapping
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Dariusz Marcinkiewicz <darekm@google.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190521105203.154043-1-darekm@google.com>
- <16889839-b4e9-9984-2e36-5f07ceb7d7f2@xs4all.nl>
- <CALFZZQH7-mzRZbji1w-UwRLdw6c8+CThn0e96oG8E2Eq1ivANQ@mail.gmail.com>
- <8e575d0b-4765-ae54-019e-0fab522fe1d5@xs4all.nl>
-Message-ID: <a421ff13-c8ee-b72c-3e1e-376b9e426064@xs4all.nl>
-Date:   Wed, 29 May 2019 16:47:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 10:49:20 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f10so1895770wmb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/di+Uq1BJj/mkx3thnH4knFOJUS1q/BsL8c4jSpHxow=;
+        b=clma4lEFs8bcSe2LzeJxwAOiHfHQaPUY6W7C8ogQFe+7nXs8TX76LKLtV7cVu3n+kM
+         P7KOV31F1uIyBDp1kIbDOIMTkGTC7M2l1pRlEFEFnM4x3PJpO+I51lafepNrhK1deNGd
+         U9rmWrfVOjBLyl1dStRxFuaOHofcjpqwDzzAjBcd2r/EmT+QkdlRIHakLaalEJoYb4BU
+         G5wHV/tSRq/05aOnlLVafm8BISCiwmz+o4Up2aab+nIaNKWozGknLYFTvJ5iZ27TFIA0
+         Pc6OFCV2bbYlAiM5+gqNOEMT15Utd2k/SnkwJ16lLW+p0NC+PkV1o5BpPBglkNKdplwa
+         /FIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/di+Uq1BJj/mkx3thnH4knFOJUS1q/BsL8c4jSpHxow=;
+        b=P0PN2sqHACA4I4m9K/HLSlk86sQrRgwd5uzkMOZ3HzZt3F5qiyBXxN9hNvTJQCRxtW
+         IFaU2aX5FgPOWRppAo50omgtLWtqPYUhhzltRNZGtxabYmZxCBykzcAAZSIba639OUEM
+         oawhFA2j3K7WoXqfXwl24WRQQkTpXcXI+EyFifKZXAuxrwjD/fGwgDaq44K66HwpZG0h
+         moNQRxu2sTrHMj3KLQWiWgSg0L2D8SmzqTPDyg5fada0Emj8lQdCExe57OlDwnHB6vk5
+         AOBvl5JC/LqUhfX7hOLLFueXiVnt5eR5nXBWSJreZ47hnwdnBAWYYfGqQi1tPsh/e67h
+         fwjQ==
+X-Gm-Message-State: APjAAAXDdlDVf7Sku7eRSn6zv1kht0A42c/7SB05fsaP4EZW/wkLYAIV
+        uN4MlpPQy9GkAxxpFcxKLdAPVg==
+X-Google-Smtp-Source: APXvYqzju/6W6sadyPhgz8yiqp8zfCn/tPkWqgfcjWSsndWLj+YOlIwJkLQt3fugCXoelXNiGpWuxw==
+X-Received: by 2002:a05:600c:210c:: with SMTP id u12mr6863052wml.146.1559141358305;
+        Wed, 29 May 2019 07:49:18 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z13sm13986343wrw.42.2019.05.29.07.49.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 07:49:17 -0700 (PDT)
+Date:   Wed, 29 May 2019 16:49:16 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Luis =?utf-8?Q?Cl=C3=A1udio_Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: Re: [PATCH 17/41] perf trace beauty clone: Handle CLONE_PIDFD
+Message-ID: <20190529144915.xe5ug7r3u2efuzme@brauner.io>
+References: <20190529133605.21118-1-acme@kernel.org>
+ <20190529133605.21118-18-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8e575d0b-4765-ae54-019e-0fab522fe1d5@xs4all.nl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOFT+KbQpijqyY5R6EctfAmZFUWcR7Yo8VtDvKyY1iseCfmQislEu119ZXE7vyKuwoWGVlrk+vRYss4UV7TI8lpabv6A4Ezf/SBF9CeiZfUq0sePM05e
- klvYpdsrUkSKH2hKRVUZ1ZAeP0aAob/B/vnp76BTChU1VyxDtyuYsYr0o9Hdy+U7dgTuyiYF3rHTAH9oYrUS9Q2nMMMUWBlGV9iCOaC8uSe99TNO1rPcszYo
- Nzu1hK4y16hkHF8msZQxpkL5JfsrZGydglixkKiYet2TKPe7rYJu6upOAlaXYloccL2jEDt0MakXY9bc2OZ72gj8JjsGUCWl+NNQJAzeUXqpoT9MgPQoYjnt
- tHyGHbib
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190529133605.21118-18-acme@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/19 10:05 AM, Hans Verkuil wrote:
-> On 5/28/19 9:53 AM, Dariusz Marcinkiewicz wrote:
->> On Fri, May 24, 2019 at 11:21 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>>
->>> Hi Dariusz,
->>>
->>> I did some more testing with the Khadas VIM2 and found another problem,
->>> something that will, unfortunately, require some redesign.
->>>
->> ...
->>>
->>> The other problem is in the CEC driver: it creates the CEC device as
->>> soon as the HDMI device is found (cec_notifier_parse_hdmi_phandle).
->>>
->>> But that doesn't mean that the HDMI device also had registered itself
->>> as a CEC notifier.
->>>
->>> Until now that never mattered: as long as the HDMI device was found
->>> the CEC adapter would function fine, it would just have no physical
->>> address until so notified by the HDMI device once it registered its
->>> CEC notifier.
->>>
->>> But if we want to have valid connector info during the lifetime of
->>> the CEC adapter, then this no longer works.
->>>
->>> I'm not entirely sure how to handle this.
->>>
->>> Another issue here is that when the HDMI driver removes the notifier,
->>> then it should also zero the connector info. Remember that both the
->>> HDMI and the CEC drivers can be loaded and unloaded independently from
->>> one another.
->>>
->> Given all of the above, what do you think about coming back to the v1
->> of the patch, where a connector info could be set on an adapter at any
->> time and an event was used to notify userland when that happened? That
->> approach seems to cover all the scenarios mentioned above.
+On Wed, May 29, 2019 at 10:35:41AM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> That's just hiding the real problems :-)
+> In addition to the older flags. This will allow something like this to
+> be implemented in 'perf trace"
 > 
-> I hope to spend some time on CEC tomorrow and I'll get back to you then.
+>   perf trace -e clone/PIDFD in flags/
+> 
+> I.e. ask for strace like tracing, system wide, looking for 'clone'
+> syscalls that have the CLONE_PIDFD bit set in the 'flags' arg.
+> 
+> For now we'll just see PIDFD if it is set in the 'flags' arg.
+> 
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-drq9h7s8gcv8b87064fp6lb0@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Unfortunately I had too many other things going on to spend time on this.
+Acked-by: Christian Brauner <christian@brauner.io>
 
-Hopefully next week.
-
-Regards,
-
-	Hans
-
+> ---
+>  tools/perf/trace/beauty/clone.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+> index 6eb9a6636171..1a8d3be2030e 100644
+> --- a/tools/perf/trace/beauty/clone.c
+> +++ b/tools/perf/trace/beauty/clone.c
+> @@ -25,6 +25,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
+>  	P_FLAG(FS);
+>  	P_FLAG(FILES);
+>  	P_FLAG(SIGHAND);
+> +	P_FLAG(PIDFD);
+>  	P_FLAG(PTRACE);
+>  	P_FLAG(VFORK);
+>  	P_FLAG(PARENT);
+> -- 
+> 2.20.1
+> 
