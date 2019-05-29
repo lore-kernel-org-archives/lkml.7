@@ -2,130 +2,90 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C784C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DD6C07542
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5279E20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="dIAHLOYY"
+	by mail.kernel.org (Postfix) with ESMTP id C479A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfE2IJK (ORCPT
+        id S1726804AbfE2IJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:09:10 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32902 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2IJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:09:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so1077555iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RxXvclxvtLO6JmXKyzZz4TtfqD6qqSQQNDFUnK5EdOE=;
-        b=dIAHLOYYCq5oAsIPqSqwXo7BO2qeHR7SZftiNljkQHJUJv80V0MatrM6Q3SkC/BoXo
-         2yM1PXXNJy2qg2EtCGlpBmJsNHMoswxau4JRWvZ9Vi+wqjT0Vy1KAUu496HRxp8Z2wTT
-         UipyxohvDO1db0DYXvIDnvgfESM3mBn8LbT8A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RxXvclxvtLO6JmXKyzZz4TtfqD6qqSQQNDFUnK5EdOE=;
-        b=Bznz38ychQxSS8QPaEHeVormPAOnkUPc1pb4YOISFST2c00NEjGp3xmOTsaYVYxZ47
-         2G0DRAwBgKegFrkplPb+IM5LUDpJyjzXu3+pJbZwR1075FVQen4ozIw1Li4hP0Tv56iZ
-         aOSvEsbb0Nw7u1w1YTHREwwDizR47gtDspUs+Iuef5nWBzKMfUlD1dVAm+UtlXSzJdgR
-         PjOocSfmVn3cwiIgs6aiscWNlRPa2Qr+9TjvkpePjRId884F+K+ffXCTn3kypQHKD1nq
-         GnJXo4VIqhzTG1EdMBAzV8W/WmZy7b2kiSl89ahxU9/39XBjVOmT2s+YjfPsuaSsPgx3
-         b2DQ==
-X-Gm-Message-State: APjAAAVAkEMp3UQdvr/wi+70yBz8wwiVMBOnNxkXwfCBa55oBczL9b8K
-        IxRuCIsqTNTICi+qu1j9yqlGAGj1/ZNI1AswyG08rw==
-X-Google-Smtp-Source: APXvYqwhgOrotS8jlyEYFxpVCtEt1jaGqmJaJ2Q6ogp9Ky0GdDMgFIIk9nOCTBuYSmaAcZn2/UUVPBw0wO8G5MlhJtY=
-X-Received: by 2002:a05:6602:2252:: with SMTP id o18mr5265330ioo.63.1559117349466;
- Wed, 29 May 2019 01:09:09 -0700 (PDT)
+        Wed, 29 May 2019 04:09:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37236 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfE2IJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:09:42 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AE34A3087958;
+        Wed, 29 May 2019 08:09:41 +0000 (UTC)
+Received: from rhel3.localdomain (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A22C36148C;
+        Wed, 29 May 2019 08:09:38 +0000 (UTC)
+From:   xiubli@redhat.com
+To:     josef@toxicpanda.com, axboe@kernel.dk, nbd@other.debian.org
+Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, atumball@redhat.com,
+        Xiubo Li <xiubli@redhat.com>
+Subject: [RFC PATCH] nbd: set the default nbds_max to 0
+Date:   Wed, 29 May 2019 16:08:36 +0800
+Message-Id: <20190529080836.13031-1-xiubli@redhat.com>
 MIME-Version: 1.0
-References: <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk>
- <155905629702.1662.7233272785972036117.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905629702.1662.7233272785972036117.stgit@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 29 May 2019 10:08:58 +0200
-Message-ID: <CAJfpegutheVtnmN6BFSjzrmz8p9+DpZxFoKa4CoShoh4MW+5gQ@mail.gmail.com>
-Subject: Re: [PATCH 04/25] vfs: Implement parameter value retrieval with
- fsinfo() [ver #13]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 29 May 2019 08:09:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 5:11 PM David Howells <dhowells@redhat.com> wrote:
->
-> Implement parameter value retrieval with fsinfo() - akin to parsing
-> /proc/mounts.
->
-> This allows all the parameters to be retrieved in one go with:
->
->         struct fsinfo_params params = {
->                 .request        = FSINFO_ATTR_PARAMETER,
->         };
+From: Xiubo Li <xiubli@redhat.com>
 
-Ah, here it is.
+There is one problem that when trying to check the nbd device
+NBD_CMD_STATUS and at the same time insert the nbd.ko module,
+we can randomly get some of the 16 /dev/nbd{0~15} are connected,
+but they are not. This is because that the udev service in user
+space will try to open /dev/nbd{0~15} devices to do some sanity
+check when they are added in "__init nbd_init()" and then close
+it asynchronousely.
 
->
-> Each parameter comes as a pair of blobs with a length tacked on the front
-> rather than using separators, since any printable character that could be
-> used as a separator can be found in some value somewhere (including comma).
-> In fact, cifs allows the separator to be set using the "sep=" option in
-> parameter parsing.
->
-> The length on the front of each blob is 1-3 bytes long.  Each byte has a
-> flag in bit 7 that's set if there are more bytes and clear on the last
-> byte; bits 0-6 should be shifted and OR'd into the length count.  The bytes
-> are most-significant first.
->
-> For example, 0x83 0xf5 0x06 is the length (0x03<<14 | 0x75<<7 | 0x06).
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+---
 
-Sounds way too complicated.  What about fixed 4byte sizes?  Or using
-the nul charater as separator (and binary blobs be damned)?
+Not sure whether this patch make sense here, coz this issue can be
+avoided by setting the "nbds_max=0" when inserting the nbd.ko modules.
 
-[...]
 
-> +static void fsinfo_insert_sb_flag_parameters(struct path *path,
-> +                                            struct fsinfo_kparams *params)
-> +{
-> +       int s_flags = READ_ONCE(path->dentry->d_sb->s_flags);
-> +
-> +       if (s_flags & SB_DIRSYNC)
-> +               fsinfo_note_param(params, "dirsync", NULL);
-> +       if (s_flags & SB_LAZYTIME)
-> +               fsinfo_note_param(params, "lazytime", NULL);
-> +       if (s_flags & SB_MANDLOCK)
-> +               fsinfo_note_param(params, "mand", NULL);
-> +       if (s_flags & SB_POSIXACL)
-> +               fsinfo_note_param(params, "posixacl", NULL);
-> +       if (s_flags & SB_RDONLY)
-> +               fsinfo_note_param(params, "ro", NULL);
-> +       if (s_flags & SB_SYNCHRONOUS)
-> +               fsinfo_note_param(params, "sync", NULL);
 
-Again, don't blindly transform s_flags into options, because some of
-them may have been internally manipulated by the filesystem.
+ drivers/block/nbd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You could do a helper for filesystems that does the the common ones
-(ro/sync/dirsync) but all of that *should* go through the filesystem.
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 4c1de1c..98be6ca 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -137,7 +137,7 @@ struct nbd_cmd {
+ 
+ #define NBD_DEF_BLKSIZE 1024
+ 
+-static unsigned int nbds_max = 16;
++static unsigned int nbds_max;
+ static int max_part = 16;
+ static struct workqueue_struct *recv_workqueue;
+ static int part_shift;
+@@ -2310,6 +2310,6 @@ static void __exit nbd_cleanup(void)
+ MODULE_LICENSE("GPL");
+ 
+ module_param(nbds_max, int, 0444);
+-MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: 16)");
++MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: 0)");
+ module_param(max_part, int, 0444);
+ MODULE_PARM_DESC(max_part, "number of partitions per device (default: 16)");
+-- 
+1.8.3.1
 
-Same goes for vfs_parse_sb_flag() btw.   It should be moved into each
-filesystem's ->parse_param() and not be a mandatory thing.
-
-Thanks,
-Miklos
