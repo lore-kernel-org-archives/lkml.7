@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B771C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDA8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB443240B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E07240BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559155882;
-	bh=0ZzrcgBGVfZ/PWEdBvIb97tLixwq7FM2BS+szZHK7+M=;
+	s=default; t=1559155906;
+	bh=5VuX/GAFgFb7HOykYAm7dgMDb5AFHyTX6Y+lg+tLFf0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aw9pUXXiofEzMJ6qyOr7krJ/kCHk59ApEjqTB3f/oTvxSdGRouj2HfhkTr6mKhrNf
-	 yQBrNSFyvj/IwJTxYGDwOIdukimDpIrSqEyrCD4J6FpL6BL5YtZZtnjcO78T7csqZi
-	 WF9fA30GytunZUd/5jyo9dHZqdzNQwQQP6uYT7W4=
+	b=OTqf1Ow14nibFdM/9YcLGCAwyckBP0YP2OmTK2qOLeMcYNAyyQAXvNP5shht6hbzg
+	 wA5/Rjk9yfLFIuKLt/tZWYByrIRc55vI08RVNm4ZZxcyPGggLjV97sDbj6a7djKqxm
+	 wjJ+OTV1kz6f+FjYqCSsfo96EIo+U+j/RHZyc0i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfE2SvV (ORCPT
+        id S1726462AbfE2Svp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 14:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfE2SvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:51:21 -0400
+        id S1725914AbfE2Svp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:51:45 -0400
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD4624056;
-        Wed, 29 May 2019 18:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9040B240B9;
+        Wed, 29 May 2019 18:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559155880;
-        bh=0ZzrcgBGVfZ/PWEdBvIb97tLixwq7FM2BS+szZHK7+M=;
+        s=default; t=1559155904;
+        bh=5VuX/GAFgFb7HOykYAm7dgMDb5AFHyTX6Y+lg+tLFf0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MprGCPlWVTU3pUVTYrl5/4MqcXbWnuVG9rTEYI/rjsq0I9ninigfkE7v3rdQKQwK0
-         vXQknEQlHNiriONe46K1YBXeb8Kj4v6gd0J27GX0Gm60mVbG8B0shfzTpgdjJqrMPl
-         jOXfIwhm1BpVQHmkaw+0iB6LJQ8dPhoHvoNLKh9A=
-Date:   Wed, 29 May 2019 14:51:19 -0400
+        b=NHo/ftvVhBCQVEblvVpCzXL8QPWeZIVf3VbTGgn/ZRrTEp7u71XGjFXaNjVLwnnPc
+         S+4fPZ2Om4/VTdClc6vMtlIx6GIUL2UphDBWpMYVQmI9HOPMANhACNLKq3ENDEYrtD
+         JO8DO1tXu9vYn0x5i4thef3IIV7dS3B3qKi5zbOc=
+Date:   Wed, 29 May 2019 14:51:43 -0400
 From:   Sasha Levin <sashal@kernel.org>
-To:     martin@omnibond.com
+To:     Pavel Machek <pavel@ucw.cz>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mike Marshall <hubcap@omnibond.com>, devel@lists.orangefs.org
-Subject: Re: [PATCH AUTOSEL 5.1 025/375] orangefs: truncate before updating
- size
-Message-ID: <20190529185119.GG12898@sasha-vm>
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 033/375] leds: avoid races with workqueue
+Message-ID: <20190529185143.GH12898@sasha-vm>
 References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-25-sashal@kernel.org>
- <20190522214437.GA87137@t480s.mkb.name>
+ <20190522192115.22666-33-sashal@kernel.org>
+ <20190524225505.GA16076@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190522214437.GA87137@t480s.mkb.name>
+In-Reply-To: <20190524225505.GA16076@amd>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 05:44:37PM -0400, martin@omnibond.com wrote:
->I don't think it makes much sense to put this one in stable.  Without
->the rest of the pagecache patches the race doesn't exist.
+On Sat, May 25, 2019 at 12:55:05AM +0200, Pavel Machek wrote:
+>Hi!
+>
+>Could we hold this patch for now?
 
-Dropped it, thank you!
+Sure, dropped. Thanks!
 
 --
 Thanks,
