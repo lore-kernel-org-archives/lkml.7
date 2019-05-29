@@ -2,113 +2,96 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F09C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F08AC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC9620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D5F20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jn3w4pER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfE2JR4 (ORCPT
+        id S1726673AbfE2JSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:17:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41186 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2JRz (ORCPT
+        Wed, 29 May 2019 05:18:34 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:5485 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2JSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:17:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m4so2629849edd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:17:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R3M9/Nb+iAWv/ivQtmJwp21umz3a07n0D41zlbH+5Vg=;
-        b=s3T2GSdphAWkYobC3Max9vR57e6XQgriTnSmDtIrqf+d4b93noxJvMPW/11iZzsSZo
-         w3i+CYfAR+D3lMkz6uD6M5+6bKeuoMhjtEO7DvbsRSWD3T1BW5pvyTpFhNMUw+CARQgg
-         E5jJFFeBkXSmdOvf6T2PrBtJ8WecCrbRXRppkovHfY48D2dER8t3qF7PdboI7U84OEuM
-         HPb8z96BBEiMDXNx8jOe1ng5u1Mei1OdKXiiQhMwZJTxM4qK32di5Wp2uiLorn4bQYwh
-         lsENU70R0cY53xhNxmNXTkBCNGt2PT3ppk4spwUDxrSu4Rr1YBBDpSsqaBs+DgpvaYjy
-         QcRw==
-X-Gm-Message-State: APjAAAXzLIqvY9mJMEsJjr/Cjoh6GXiCIgX0/LvcwNepDvyaOOMP2piu
-        69i7B6Fe3ME0lzPh88pHjiRtYSpHxnU=
-X-Google-Smtp-Source: APXvYqzDN/m677MUndnaGXnszTXxjNj7JaHW/w/uv+QBZba0k9DL4JeHhTsUPJBOX1W+yTOiYDL77Q==
-X-Received: by 2002:a50:b487:: with SMTP id w7mr136594551edd.45.1559121473400;
-        Wed, 29 May 2019 02:17:53 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:1c0c:6c86:46e0:a7ad:5246:f04d])
-        by smtp.gmail.com with ESMTPSA id x49sm5023051edm.25.2019.05.29.02.17.52
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 02:17:52 -0700 (PDT)
-Subject: Re: hid-related 5.2-rc1 boot hang
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <2c1684f6-9def-93dc-54ab-888142fd5e71@intel.com>
- <nycvar.YFH.7.76.1905281913140.1962@cbobk.fhfr.pm>
- <CAO-hwJJzNAuFbdMVFZ4+h7J=bh6QHr_MioyK2yTV=M5R6CTm=A@mail.gmail.com>
- <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4689a737-6c40-b4ae-cc38-5df60318adce@redhat.com>
-Date:   Wed, 29 May 2019 11:17:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 05:18:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cee4e690000>; Wed, 29 May 2019 02:18:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 29 May 2019 02:18:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 29 May 2019 02:18:33 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
+ 2019 09:18:33 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 29 May 2019 09:18:33 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.21.132.148]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cee4e670004>; Wed, 29 May 2019 02:18:32 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH] clk: tegra210: Fix default rates for HDA clocks
+Date:   Wed, 29 May 2019 10:18:21 +0100
+Message-ID: <1559121501-8566-1-git-send-email-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <8a17e6e2-b468-28fd-5b40-0c258ca7efa9@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559121513; bh=R5/eMVjqBGrmlh8gW6+X0+5WtMkn8HWkBhV9avG/N5Q=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Jn3w4pERFvmYGnGKNbHOxcFr7QJNb39Zj3bROvKf0F4AxSQZF1kaWs1RMVNohBnF2
+         1RwdwKPpoXzKhr5VXVT5kaUuT1Czn/BmlR4hVzA9tbciN2JGK+2yMCyR0LF1CggEww
+         qV9R5waeZEoeZbpMHAiYAxm+OIb4eL+zxBGUXir2DzjEwQYcxup+SPC2qVpT1xx/VB
+         VtwRviEd9DblR/hnhsqB2vnrDvO1NP8Msa9vTOxhKbJSW30LfNuozW8BuqVwRST9Cx
+         ItsMK427/aWfvsLAG23MO/N94A7JoGpQaZhCKVW5J/8HwhJRT+oUZASv2khTjGsh8f
+         4N2Pl5ffVfySA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Currently the default clock rates for the HDA and HDA2CODEC_2X clocks
+are both 19.2MHz. However, the default rates for these clocks should
+actually be 51MHz and 48MHz, respectively. Correct the default clock
+rates for these clocks by specifying them in the clock init table for
+Tegra210.
 
-On 5/28/19 8:11 PM, Dave Hansen wrote:
-> On 5/28/19 10:45 AM, Benjamin Tissoires wrote:
->> On Tue, May 28, 2019 at 7:15 PM Jiri Kosina <jikos@kernel.org> wrote:
->>> Just to confirm -- I guess reverting 4ceabaf79 and a025a18fe would work
->>> this around, right?
-> 
-> Yes, reverting that pair on top of 5.2-rc1 works around the issue.
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/clk/tegra/clk-tegra210.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thank you for catching this and for testing the reverts. We've several bug
-reports which I suspect are related to this.
-
-/sbin/modprobe really should not hang when called by the kernel, as the
-kernel does this in several other places too.
-
-At the same time this clearly is a regression, so I'm afraid we will need
-to revert the 2 commits.
-
-Benjamin, Jiri, I really like the improvements these 2 commits bring
-combined with Benjamin's changes removing the need for all the device specific
-drivers to have  HID_QUIRK_HAVE_SPECIAL_DRIVER quirk.
-
-Maybe instead of reverting them, we wrap them in a Kconfig option, which
-defaults to N, with a warning that this requires an userspace where
-/sbin/modprobe does not hang ?  It would be useful for the Kconfig
-help text if we knew why it hangs. I guess this may have something to do
-with it running from the initrd? Maybe this is not the real modprobe but
-busybox's modprobe?
-
-Dave, can you try building your initrd without the hid-logitech-dj module
-included in the initrd?
-
-
-Also can you check if your modprobe is provided by module-init-tools
-or by kmod ?
-
-I believe we really need more information before we can properly decide
-how to deal with this. Luckily we still have same time.
-
-Regards,
-
-Hans
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index ed3c7df75d1e..8b3b3d771813 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -3377,6 +3377,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_I2S3_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
+ 	{ TEGRA210_CLK_I2S4_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
+ 	{ TEGRA210_CLK_VIMCLK_SYNC, TEGRA210_CLK_CLK_MAX, 24576000, 0 },
++	{ TEGRA210_CLK_HDA, TEGRA210_CLK_PLL_P, 51000000, 0 },
++	{ TEGRA210_CLK_HDA2CODEC_2X, TEGRA210_CLK_PLL_P, 48000000, 0 },
+ 	/* This MUST be the last entry. */
+ 	{ TEGRA210_CLK_CLK_MAX, TEGRA210_CLK_CLK_MAX, 0, 0 },
+ };
+-- 
+2.7.4
 
