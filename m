@@ -2,48 +2,47 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23312C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F0C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A3A24368
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A15724374
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172493;
-	bh=8kdlDPHPJB9SK5OUX6kVhT6RIbf9CHlBwHsoSX6UV6o=;
+	s=default; t=1559172652;
+	bh=LI/SipH9I2k+fGVj863RGRAG5O4wgRHhltiAO+zLezo=;
 	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=yc0fuxOF6E4Pu/Z0026ecpy/JXN83tp4GrIssCXuARC62QOa1RpWLMi3f+kksq5M9
-	 XH7otBafg26ZEXGg/umQDOybkWJBX3KEVaY2sQVr2SQdgwYvkOrDm0MRv8DpuuYeRl
-	 QR1KFq0piwaLqv7hGUa02WXDBHcRLH2Opyex3xoY=
+	b=uYtfKfe4jeR/8QX1f2DATL0ZGFbeIXbr0cjUN6AEJYgjxOWhv/0D5W+RA6GQeFcpi
+	 GOqQ2yNE1APUdHPkYrBjQqEe2bUbZNz6GzeLqOI8D5g9qKFHhc5GFUqLxYlvvZs4hO
+	 Pob4pdJoO3tewKuQ164g1l83mUJcys/SJYUC5Hkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfE2X2M (ORCPT
+        id S1726635AbfE2Xav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 19:30:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfE2X2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:28:11 -0400
+        id S1726240AbfE2Xav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:30:51 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A5224366;
-        Wed, 29 May 2019 23:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E5924371;
+        Wed, 29 May 2019 23:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559172490;
-        bh=8kdlDPHPJB9SK5OUX6kVhT6RIbf9CHlBwHsoSX6UV6o=;
+        s=default; t=1559172649;
+        bh=LI/SipH9I2k+fGVj863RGRAG5O4wgRHhltiAO+zLezo=;
         h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=bLZP9ZV/pnaLDEkb6Fbtff0PTHDRn9b6Voj3YcGTY/tQ1tNF2rGSeBQaB0XHoihS2
-         TMcVcgkYcQf5St5x/266iplFn0U8BGyKco7QXrQCq3EcSeFylbzskaTS6YDmEbn/Ee
-         T2XcGWR3cupx2hA2oTOV9Orc6ECjgp2zfX++VPkc=
+        b=Wp9wUtgtuKs4M89aPqIkYP3bYXkyWNF0DHHm8tvmzDhDY6pHnpwAa+R5eBW5kYbJo
+         RNNDoQTzrigmV31NWRZrI9ht/hodt3h9VstLMeQU+QTP0ey7QmYJTTljkc9k2PH5On
+         dBK7ZQcYfw4FszlZRVa3C5UGWnq3UFnAu1Pa3Uo8=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1559084936-4610-4-git-send-email-skomatineni@nvidia.com>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-4-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-5-git-send-email-skomatineni@nvidia.com>
 Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
@@ -55,95 +54,136 @@ To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
         marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
         tglx@linutronix.de, thierry.reding@gmail.com
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
+Subject: Re: [PATCH V2 04/12] clk: tegra: add support for peripheral clock suspend and resume
 User-Agent: alot/0.8.1
-Date:   Wed, 29 May 2019 16:28:09 -0700
-Message-Id: <20190529232810.14A5224366@mail.kernel.org>
+Date:   Wed, 29 May 2019 16:30:48 -0700
+Message-Id: <20190529233049.A7E5924371@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sowjanya Komatineni (2019-05-28 16:08:47)
-> This patch has implementation of saving and restoring PLL's state to
-> support system suspend and resume operations.
+Quoting Sowjanya Komatineni (2019-05-28 16:08:48)
+> This patch implements peripheral clock context save and restore
+> to support system suspend and resume operation.
 
-Can you provide some more background on _why_ this patch should exist?
-That's typically what gets written in the commit text.
+Again, why?
 
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-divider.c | 19 ++++++++
->  drivers/clk/tegra/clk-pll-out.c | 25 +++++++++++
->  drivers/clk/tegra/clk-pll.c     | 99 ++++++++++++++++++++++++++++++++---=
-------
->  drivers/clk/tegra/clk.h         |  9 ++++
->  4 files changed, 132 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divi=
-der.c
-> index 2a1822a22740..718694727042 100644
-> --- a/drivers/clk/tegra/clk-divider.c
-> +++ b/drivers/clk/tegra/clk-divider.c
-> @@ -14,6 +14,7 @@
->   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->   */
+> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+> index 6f2862eddad7..08b788766564 100644
+> --- a/drivers/clk/tegra/clk.c
+> +++ b/drivers/clk/tegra/clk.c
+> @@ -81,6 +81,10 @@ static struct clk **clks;
+>  static int clk_num;
+>  static struct clk_onecell_data clk_data;
 > =20
-> +#include <linux/clk.h>
->  #include <linux/kernel.h>
->  #include <linux/io.h>
->  #include <linux/err.h>
-> @@ -179,3 +180,21 @@ struct clk *tegra_clk_register_mc(const char *name, =
-const char *parent_name,
->                                           reg, 16, 1, CLK_DIVIDER_READ_ON=
-LY,
->                                           mc_div_table, lock);
+> +#ifdef CONFIG_PM_SLEEP
+> +static u32 *periph_ctx;
+> +#endif
+
+Please move this into the ifdef below.
+
+> +
+>  /* Handlers for SoC-specific reset lines */
+>  static int (*special_reset_assert)(unsigned long);
+>  static int (*special_reset_deassert)(unsigned long);
+> @@ -210,6 +214,65 @@ const struct tegra_clk_periph_regs *get_reg_bank(int=
+ clkid)
+>         }
 >  }
-> +
-> +#if defined(CONFIG_PM_SLEEP)
-> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate)
+> =20
+> +#ifdef CONFIG_PM_SLEEP
+> +void tegra_clk_periph_suspend(void __iomem *clk_base)
 > +{
-> +       struct clk_hw *parent =3D clk_hw_get_parent(hw);
-> +       unsigned long parent_rate;
+> +       int i, idx;
 > +
-> +       if (IS_ERR(parent)) {
-
-Will this ever happen? Collapse the WARN_ON into the if please:
-
-	if (WARN_ON(IS_ERR(parent)))
-
-> +               WARN_ON(1);
-> +               return;
-> +       }
+> +       idx =3D 0;
+> +       for (i =3D 0; i < periph_banks; i++, idx++)
+> +               periph_ctx[idx] =3D
+> +                       readl_relaxed(clk_base + periph_regs[i].rst_reg);
 > +
-> +       parent_rate =3D clk_hw_get_rate(parent);
+> +       for (i =3D 0; i < periph_banks; i++, idx++)
+> +               periph_ctx[idx] =3D
+> +                       readl_relaxed(clk_base + periph_regs[i].enb_reg);
+> +}
 > +
-> +       if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
-> +               WARN_ON(1);
+> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
+k_base)
+> +{
+> +       int i;
+> +
+> +       WARN_ON(count !=3D periph_banks);
+> +
+> +       for (i =3D 0; i < count; i++)
+> +               writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_=
+reg);
+> +}
+> +
+> +void tegra_clk_periph_resume(void __iomem *clk_base)
+> +{
+> +       int i, idx;
+> +
+> +       idx =3D 0;
+> +       for (i =3D 0; i < periph_banks; i++, idx++)
+> +               writel_relaxed(periph_ctx[idx],
+> +                              clk_base + periph_regs[i].rst_reg);
+> +
+> +       /* ensure all resets have propagated */
+> +       fence_udelay(2, clk_base);
+> +       tegra_read_chipid();
+> +
+> +       for (i =3D 0; i < periph_banks; i++, idx++)
+> +               writel_relaxed(periph_ctx[idx],
+> +                              clk_base + periph_regs[i].enb_reg);
+> +
+> +       /* ensure all enables have propagated */
+> +       fence_udelay(2, clk_base);
+> +       tegra_read_chipid();
+> +}
+> +
+> +static int tegra_clk_suspend_ctx_init(int banks)
+> +{
+> +       int err =3D 0;
+> +
+> +       periph_ctx =3D kzalloc(2 * banks * sizeof(*periph_ctx), GFP_KERNE=
+L);
+
+Is this kcalloc(2 * banks, sizeof(*periph_ctx)... ?
+
+> +       if (!periph_ctx)
+> +               err =3D -ENOMEM;
+> +
+> +       return err;
 > +}
 > +#endif
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index 09bccbb9640c..e4d124cc5657 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll,=
- u8 p_div);
->  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
->                  u8 frac_width, u8 flags);
+> +
+>  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
+ks)
+>  {
+>         clk_base =3D regs;
+> @@ -226,11 +289,20 @@ struct clk ** __init tegra_clk_init(void __iomem *r=
+egs, int num, int banks)
+>         periph_banks =3D banks;
+> =20
+>         clks =3D kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
+> -       if (!clks)
+> +       if (!clks) {
+>                 kfree(periph_clk_enb_refcnt);
+> +               return NULL;
+> +       }
+> =20
+>         clk_num =3D num;
 > =20
 > +#ifdef CONFIG_PM_SLEEP
 
-Can you remove this ifdef? It just complicates compilation testing.
+Can you use if (IS_ENABLED(CONFIG_PM_SLEEP)) here?
 
-> +void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
-> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
-> +void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
-> +void tegra_clk_plle_tegra210_resume(struct clk *c);
-> +void tegra_clk_sync_state_pll(struct clk *c);
-> +void tegra_clk_sync_state_pll_out(struct clk *clk);
-
-Do these APIs need to operate on struct clk? Why can't they operate on
-clk_hw or why can't we drive the suspend/resume sequence from the clk
-provider driver itself?
-
+> +       if (tegra_clk_suspend_ctx_init(banks)) {
+> +               kfree(periph_clk_enb_refcnt);
+> +               kfree(clks);
+> +               return NULL;
+> +       }
+> +#endif
+>         return clks;
+>  }
+> =20
