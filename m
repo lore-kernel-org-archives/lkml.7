@@ -2,153 +2,105 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7515C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBBFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C067323BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F44A23BC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzpiO6pT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HM+aD2WH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfE2Ps1 (ORCPT
+        id S1727113AbfE2Psq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:48:27 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41381 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2Ps0 (ORCPT
+        Wed, 29 May 2019 11:48:46 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39205 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2Psq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:48:26 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y10so2427589oia.8;
-        Wed, 29 May 2019 08:48:25 -0700 (PDT)
+        Wed, 29 May 2019 11:48:46 -0400
+Received: by mail-it1-f194.google.com with SMTP id 9so4340115itf.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LZchaD3I1pN+W2x6aXpBTqpBkJQ7vSF4YhK33FN5Rj8=;
-        b=qzpiO6pTCKQX1nUSnENk6OCaUVGtGus+mU7zsIokP7VFrV3/y6NS1q/t8kZUrPm7aP
-         G/bdxogT3+udxBk/3V7yhiqG71qB2Rc2OQvBzMnVF7yGbPxSrxkBcvODfNb6vBY2HrPH
-         PMQDgvwIEWh4+dhjjK31PZsMYDlJy+rmHWDeIfn9KPovn4rPdOtVIBlNHmK0Tjz0ExUp
-         AcVnBsDAmCmpR0rOHQ2O7CdXu7na9dF5cnw2pitOB4liUPUSUpyLMv++PuErGsA0rc4c
-         ZOAH0otCcetK3U7GVbzqWCgdsafDP+Z61FSmffpJP+YPllAk/FmOZqe/wNIrdobm30xK
-         4hVA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cDz3GbUaoai6r6zW2MM2kvL6r+fuZogzUR81Y2LegRo=;
+        b=HM+aD2WHWHXPATtRijrlE6pgyLNsdvu63KgjTL49oFkMJudqlZoYZ8f09bSgUZ00cM
+         UBIFA2ig49PRFgbWTBqlRg0bT4x6o99kGSMBxaueQLiX9/in0ivbgL6eobEw5dh+VFne
+         V8Y49LUYOrhunDFrh+PrlG1sdaO5FkdZgju4g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LZchaD3I1pN+W2x6aXpBTqpBkJQ7vSF4YhK33FN5Rj8=;
-        b=JVzF8gEvSUhjLKfurjD35yUpyGretPhLqnEkTGl0T8vpJzqqa3GTANzOj2vZ5xiZ4Y
-         BbrvYBMhJmgJf0eP6N+rrzDxAX3vJC0IsmJsOGPfYFcbUwiqCxxh2laF9A8AB/vF1npQ
-         HknVB479IyCSJcliuZo3dimsuhe3wvO3D75oYwmyslM4R8T7W8Aq/6lk+3pxviBODZob
-         To2yYAqI1j2MoD3cFkzohCN439BFsPtuvgYqmsSsAM8sx7AXSNHp2ZpjVat3YujTJCja
-         PL/3oLuCD0rHw+sot4mONjD3Bslmcfw6crzPH2USUac1wTqDcrVqiNFyoQ/j28iznC+U
-         P9UQ==
-X-Gm-Message-State: APjAAAX8MfBvviQOpHTkUe6T9ibhCEUHDyqZaeYssDj9JtmrdSjWK0GY
-        lzxhyXoFo89d1IKqbxJfhDBqYrlU
-X-Google-Smtp-Source: APXvYqzffYfqcKCi1LN/X7kBP+pUiwaRtjqaBthtG1n+KqU9jvNOTltF+EZDu4QrfcdWF0UXHAf+5A==
-X-Received: by 2002:aca:314a:: with SMTP id x71mr6875894oix.142.1559144904941;
-        Wed, 29 May 2019 08:48:24 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id i8sm568364oib.12.2019.05.29.08.48.22
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cDz3GbUaoai6r6zW2MM2kvL6r+fuZogzUR81Y2LegRo=;
+        b=XxTn75kM+0Pk2FhxBfKavQ87VxNZAoSEqTVRZhzoyN+gsI8+KXqnajMR5GS+gAnG1i
+         PDzbsFqCrJhLFAlq4VBTG6uvlt02tIuEpM/gMR7bWALEBGMf7zz5mudCKVbufdwm+kH4
+         NRKcNLaHx82PAuV9/6Rqwk1tJj1kkKdNxX58WE2ixr7qS3lrBETp6VmAn8IjkTDdggf1
+         FWXHd9h9tbhyl9OaOIZD389hz9vf3DaptBP6vhjF2f+/vHEIBLdaNAz6EsfHs1my/kir
+         GMcv6+/Po3TBkowEKD3NhZDcVXUk5xMNJgPjV3gx6StijS2bnhgw7JXZEal/WyZKmeHR
+         WKqg==
+X-Gm-Message-State: APjAAAU4p+lQxM5ZLH1P2QdOihyKo1qs/PzyXse98I4UyPJneEY8nbLU
+        XRDZGeRT1R6FBbWG5s7sRnNbsOzJfws=
+X-Google-Smtp-Source: APXvYqyhVVua8TxP97FfKv/W5QxTw90Gb29PNWJqzz213Jf3qpyDLwCHmEzeww3CC/50rv8+hac57A==
+X-Received: by 2002:a24:59c4:: with SMTP id p187mr7631250itb.123.1559144924676;
+        Wed, 29 May 2019 08:48:44 -0700 (PDT)
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com. [209.85.166.42])
+        by smtp.gmail.com with ESMTPSA id u5sm5906523iob.7.2019.05.29.08.48.43
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 08:48:22 -0700 (PDT)
-Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling
- code of rtl_pci_probe()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     pkshih@realtek.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190514123439.10524-1-baijiaju1990@gmail.com>
- <20190528115555.301E760F3C@smtp.codeaurora.org>
- <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
- <357682ba-d1ae-23b1-2372-b1a33d2ba1ac@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <589a0fb2-0033-1374-c3e0-597392a3f4c8@lwfinger.net>
-Date:   Wed, 29 May 2019 10:48:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 08:48:43 -0700 (PDT)
+Received: by mail-io1-f42.google.com with SMTP id r185so2250225iod.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:48:43 -0700 (PDT)
+X-Received: by 2002:a5d:9d90:: with SMTP id 16mr6500257ion.132.1559144923364;
+ Wed, 29 May 2019 08:48:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <357682ba-d1ae-23b1-2372-b1a33d2ba1ac@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-12-thgarnie@chromium.org>
+ <1b53b8eb-5dd3-fb57-d8db-06eedd0ce49f@suse.com>
+In-Reply-To: <1b53b8eb-5dd3-fb57-d8db-06eedd0ce49f@suse.com>
+From:   Thomas Garnier <thgarnie@chromium.org>
+Date:   Wed, 29 May 2019 08:48:32 -0700
+X-Gmail-Original-Message-ID: <CAJcbSZF1xcMpLDrOLkh493+ciVUqrku9WkWdb5xxAqWuXMjGZw@mail.gmail.com>
+Message-ID: <CAJcbSZF1xcMpLDrOLkh493+ciVUqrku9WkWdb5xxAqWuXMjGZw@mail.gmail.com>
+Subject: Re: [PATCH v7 11/12] x86/paravirt: Adapt assembly for PIE support
+To:     Juergen Gross <jgross@suse.com>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Alok Kataria <akataria@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 5:30 AM, Jia-Ju Bai wrote:
-> 
-> 
-> On 2019/5/28 21:00, Larry Finger wrote:
->> On 5/28/19 6:55 AM, Kalle Valo wrote:
->>> Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->>>
->>>> *BUG 1:
->>>> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
->>>> rtl_deinit_core() in the error handling code is executed.
->>>> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
->>>> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
->>>> initialized. Thus a null-pointer dereference occurs.
->>>> The reason is that rtlpriv->scan_list.list is initialized by
->>>> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
->>>>
->>>> To fix this bug, rtl_deinit_core() should not be called when
->>>> rtlpriv->cfg->ops->init_sw_vars() fails.
->>>>
->>>> *BUG 2:
->>>> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
->>>> this function fails, and rtlpriv->scan_list.list has not been
->>>> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
->>>> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
->>>> dereference occurs due to the same reason of the above bug.
->>>>
->>>> To fix this bug, the initialization of lists in rtl_init_core() are
->>>> performed before the call to rtl_regd_init().
->>>>
->>>> These bugs are found by a runtime fuzzing tool named FIZZER written by
->>>> us.
->>>>
->>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->>>
->>> Ping & Larry, is this ok to take?
->>>
->>
->> Kalle,
->>
->> Not at the moment. In reviewing the code, I was unable to see how this 
->> situation could develop, and his backtrace did not mention any rtlwifi code. 
->> For that reason, I asked him to add printk stat4ements to show the last part 
->> of rtl_pci that executed correctly. In 
->> https://marc.info/?l=linux-wireless&m=155788322631134&w=2, he promised to do 
->> that, but I have not seen the result.
->>
-> 
-> Hi Larry,
-> 
-> This patch is not related to the message you mentioned.
-> That message is about an occasional crash that I reported.
-> That crash occurred when request_irq() in rtl_pci_intr_mode_legacy() in 
-> rtl_pci_intr_mode_decide() fails.
-> I have added printk statements and try to reproduce and debug that crash, but 
-> that crash does not always occur, and I still do not know the root cause of that 
-> crash.
-> 
-> The null-pointer dereferences fixed by this patch are different from that crash, 
-> and they always occur when the related functions fail.
-> So please review these null-pointer dereferences, thanks :)
-> 
-> 
-> Best wishes,
-> Jia-Ju Bai
+On Sun, May 26, 2019 at 10:47 PM Juergen Gross <jgross@suse.com> wrote:
+>
+> On 21/05/2019 01:19, Thomas Garnier wrote:
+> > From: Thomas Garnier <thgarnie@google.com>
+> >
+> > if PIE is enabled, switch the paravirt assembly constraints to be
+> > compatible. The %c/i constrains generate smaller code so is kept by
+> > default.
+> >
+> > Position Independent Executable (PIE) support will allow to extend the
+> > KASLR randomization range below 0xffffffff80000000.
+> >
+> > Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>
+> Acked-by: Juergen Gross <jgross@suse.com>
 
-Sorry if I got confused. Kalle has dropped this patch, thus you will need to 
-submit a new version.
+Thanks Juergen.
 
-Larry
-
+>
+>
+> Juergen
