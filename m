@@ -2,155 +2,129 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB56C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379DEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61F323B09
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559141703;
-	bh=LRmVdjDfCx+iRHnx/tteucrVD9i835WHaCbePlhLWRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TqozNiOQHl8UmMAmN95CEJh87TT91uZsI/xEI386iYdzT9gaZEhRz6wjgnz0v9ZXC
-	 qDaJ0jcc8qFiROjEDE8mA4CPcLzaZXRVt0DTHx5d/zoQr8XYEaKafU7+N97cJdDOS3
-	 hhZG+U1mtnvesIOsukIJAeFy599f0Dz5/5TaGZVU=
+	by mail.kernel.org (Postfix) with ESMTP id 1366D23B08
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfE2OzC (ORCPT
+        id S1726849AbfE2Ozc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:55:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfE2OzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:55:01 -0400
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2C223B19;
-        Wed, 29 May 2019 14:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559141701;
-        bh=LRmVdjDfCx+iRHnx/tteucrVD9i835WHaCbePlhLWRk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BSnkMURPbHIQyJR6xI3csCIcpEyI0H7IYzYtgDBn9Zs52KbmvZSHYvU0wJ4MwwgVl
-         uthsUtmAVKB7sMufy5GCCjXTz3eD+EN60IwwLDKqltxU1IdlHKuPpnRYT7Y8w51ezP
-         XULafr/o3P7VESNxjkWLx5VHCWjq+yOKyqBbUCoQ=
-Received: by mail-lj1-f180.google.com with SMTP id y15so331554ljd.9;
-        Wed, 29 May 2019 07:55:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUV5GVAPpvxs0hsFzui9y3UyGDnst1t1vjKuzu2ZGKf2+UeKo6V
-        yeU+QpfJGQiWkTfdRIBz7q94V63131VY0Hu4peQ=
-X-Google-Smtp-Source: APXvYqxLCHSTSKRtNMOeK3w1Vw8PySGLMX5dD0AObBoh6u42Fc0i9Za2sWvtQXUMhZOw5+Z47zy+mzrPzD2fvtbbbaU=
-X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr4207037lji.64.1559141698364;
- Wed, 29 May 2019 07:54:58 -0700 (PDT)
+        Wed, 29 May 2019 10:55:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17606 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726240AbfE2Ozc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:55:32 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CE637923F8ECAF1FEEB2;
+        Wed, 29 May 2019 22:55:27 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
+ 22:55:20 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
+        <ryder.lee@mediatek.com>, <royluo@google.com>,
+        <kvalo@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <sgruszka@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] mt76: Remove set but not used variables 'pid' and 'final_mpdu'
+Date:   Wed, 29 May 2019 22:53:56 +0800
+Message-ID: <20190529145356.13872-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-5-matheus@castello.eng.br>
-In-Reply-To: <20190527022258.32748-5-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 29 May 2019 16:54:47 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcFPwBJ26V2rOS7t5H221B0H-MsDmC4Xb7gGHRX_ETxtQ@mail.gmail.com>
-Message-ID: <CAJKOXPcFPwBJ26V2rOS7t5H221B0H-MsDmC4Xb7gGHRX_ETxtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] power: supply: max17040: Clear ALRT bit when the
- SOC are above threshold
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> In order to not generate duplicate interrupts we clear the ALRT bit when
-> the SOC is in a state that shows that the battery is charged above the set
-> threshold for the SOC low level alert.
+Fixes gcc '-Wunused-but-set-variable' warnings:
 
-I think interrupt/alert bit should be cleared while handling
-interrupt, not later because:
-1. It is logical to clear it when servicing it,
-2. It is simpler - no need for "chip->alert_bit",
-3. The alert threshold is understood as alert/warning so every
-interrupt should generate uevent. I understand you wanted to remove
-"duplicate interrupts" but in fact there are no duplicates. Every next
-interrupt comes from change of SoC while being below the critical
-level. Therefore on each such change user-space should be woken up and
-notified (e.g. to show the message to the user).
+drivers/net/wireless/mediatek/mt76/mt7603/mac.c: In function mt7603_fill_txs:
+drivers/net/wireless/mediatek/mt76/mt7603/mac.c:969:5: warning: variable pid set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/mediatek/mt76/mt7603/mac.c:961:7: warning: variable final_mpdu set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c: In function mt7615_fill_txs:
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c:555:5: warning: variable pid set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/mediatek/mt76/mt7615/mac.c:552:19: warning: variable final_mpdu set but not used [-Wunused-but-set-variable]
 
-I also think this should be squashed with previous patch as it does
-not make sense as standalone commit.
+They are never used, so can be removed.
 
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 2f4851608cfe..61e6fcfea8a1 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -48,6 +48,7 @@ struct max17040_chip {
->         int status;
->         /* Low alert threshold from 32% to 1% of the State of Charge */
->         u32 low_soc_alert_threshold;
-> +       int alert_bit;
->  };
->
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -107,6 +108,7 @@ static void max17040_reset(struct i2c_client *client)
->  static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
->         u32 level)
->  {
-> +       struct max17040_chip *chip = i2c_get_clientdata(client);
->         int ret;
->         u16 data;
->
-> @@ -118,6 +120,7 @@ static int max17040_set_low_soc_threshold_alert(struct i2c_client *client,
->                 data &= MAX17040_ATHD_MASK;
->                 data |= level;
->                 max17040_write_reg(client, MAX17040_RCOMP, data);
-> +               chip->alert_bit = 0;
->                 ret = 0;
->         } else {
->                 ret = -EINVAL;
-> @@ -144,6 +147,11 @@ static void max17040_get_soc(struct i2c_client *client)
->         soc = max17040_read_reg(client, MAX17040_SOC);
->
->         chip->soc = (soc >> 8);
-> +
-> +       /* check SOC level to clear ALRT bit */
-> +       if (chip->soc > chip->low_soc_alert_threshold && chip->alert_bit)
-> +               max17040_set_low_soc_threshold_alert(client,
-> +                       chip->low_soc_alert_threshold);
->  }
->
->  static void max17040_get_version(struct i2c_client *client)
-> @@ -229,6 +237,9 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
->         /* send uevent */
->         power_supply_changed(chip->battery);
->
-> +       /* ALRT bit is seted */
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c | 4 ----
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 5 +----
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-s/seted/set/
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index 6d506e34c3ee..5182a36276fc 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -958,7 +958,6 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 	int final_idx = 0;
+ 	u32 final_rate;
+ 	u32 final_rate_flags;
+-	bool final_mpdu;
+ 	bool ack_timeout;
+ 	bool fixed_rate;
+ 	bool probe;
+@@ -966,7 +965,6 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 	bool cck = false;
+ 	int count;
+ 	u32 txs;
+-	u8 pid;
+ 	int idx;
+ 	int i;
+ 
+@@ -974,9 +972,7 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 	probe = !!(info->flags & IEEE80211_TX_CTL_RATE_CTRL_PROBE);
+ 
+ 	txs = le32_to_cpu(txs_data[4]);
+-	final_mpdu = txs & MT_TXS4_ACKED_MPDU;
+ 	ampdu = !fixed_rate && (txs & MT_TXS4_AMPDU);
+-	pid = FIELD_GET(MT_TXS4_PID, txs);
+ 	count = FIELD_GET(MT_TXS4_TX_COUNT, txs);
+ 
+ 	txs = le32_to_cpu(txs_data[0]);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index b8f48d10f27a..a51bfb6990b3 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -549,23 +549,20 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ {
+ 	struct ieee80211_supported_band *sband;
+ 	int i, idx, count, final_idx = 0;
+-	bool fixed_rate, final_mpdu, ack_timeout;
++	bool fixed_rate, ack_timeout;
+ 	bool probe, ampdu, cck = false;
+ 	u32 final_rate, final_rate_flags, final_nss, txs;
+-	u8 pid;
+ 
+ 	fixed_rate = info->status.rates[0].count;
+ 	probe = !!(info->flags & IEEE80211_TX_CTL_RATE_CTRL_PROBE);
+ 
+ 	txs = le32_to_cpu(txs_data[1]);
+-	final_mpdu = txs & MT_TXS1_ACKED_MPDU;
+ 	ampdu = !fixed_rate && (txs & MT_TXS1_AMPDU);
+ 
+ 	txs = le32_to_cpu(txs_data[3]);
+ 	count = FIELD_GET(MT_TXS3_TX_COUNT, txs);
+ 
+ 	txs = le32_to_cpu(txs_data[0]);
+-	pid = FIELD_GET(MT_TXS0_PID, txs);
+ 	final_rate = FIELD_GET(MT_TXS0_TX_RATE, txs);
+ 	ack_timeout = txs & MT_TXS0_ACK_TIMEOUT;
+ 
+-- 
+2.17.1
 
-Best regards,
-Krzysztof
 
-> +       chip->alert_bit = 1;
-> +
->         return IRQ_HANDLED;
->  }
->
-> --
-> 2.20.1
->
