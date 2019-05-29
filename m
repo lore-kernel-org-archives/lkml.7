@@ -2,105 +2,117 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42619C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3C8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231F2208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00833208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:21:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jLRarsIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfE2KVp (ORCPT
+        id S1726747AbfE2KV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:21:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34618 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726015AbfE2KVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:21:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A8426AF0F;
-        Wed, 29 May 2019 10:21:42 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH v2 3/3] xen/swiotlb: remember having called
- xen_create_contiguous_region()
-To:     Jan Beulich <JBeulich@suse.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org
-References: <20190529090407.1225-1-jgross@suse.com>
- <20190529090407.1225-4-jgross@suse.com>
- <5CEE57910200007800233571@prv1-mh.provo.novell.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <55b35087-064d-8188-2373-0dd94ffef2b6@suse.com>
-Date:   Wed, 29 May 2019 12:21:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 06:21:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfE2KV4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:21:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eaEmReJoktuMTB5S11KlWyhQ5sxMXJSXYo6lfdIwCU0=; b=jLRarsIRHF5opjV03oHEIT31q
+        L8F8AKqtF9E3O5dU3TYoZ2PkJVrTJxhCBB84PoR1ODhLVpvYh7h+xtdIoallzxZ4KfnH/rStJD6N1
+        PdR5Vw2uNE/QphhjaUUH48JadN3STvyKVw4oT0iKXOtqHSzh01xpAMiRNy3AarVAzoUgFbYiC5B0O
+        BSQNFWU+nT8MlbD+Jl98kL6a7TynzXrP0Ovj9PacgMBo+wDbSIiraOhEoWxaBo38Ir50RSgbTsLkl
+        BECzNv7lF2m6RMtySUzSzo3H8BUUacLlIB/PoCuDBj3XzNA8GNAl/w3H9KdxwwrexhRSVKVbJpYse
+        gI4unhMAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVvhI-0005BK-F2; Wed, 29 May 2019 10:20:40 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D5E8207762A4; Wed, 29 May 2019 12:20:38 +0200 (CEST)
+Date:   Wed, 29 May 2019 12:20:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
+        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
+Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
+ due to a preempt_counter change
+Message-ID: <20190529102038.GO2623@hirez.programming.kicks-ass.net>
+References: <cover.1559051152.git.bristot@redhat.com>
+ <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
+ <20190529083357.GF2623@hirez.programming.kicks-ass.net>
+ <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <5CEE57910200007800233571@prv1-mh.provo.novell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 11:57, Jan Beulich wrote:
->>>> On 29.05.19 at 11:04, <jgross@suse.com> wrote:
->> @@ -345,8 +346,11 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
->>  	size = 1UL << (order + XEN_PAGE_SHIFT);
->>  
->>  	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
->> -		     range_straddles_page_boundary(phys, size)))
->> +		     range_straddles_page_boundary(phys, size)) &&
->> +	    PageXenRemapped(virt_to_page(vaddr))) {
->>  		xen_destroy_contiguous_region(phys, order);
->> +		ClearPageXenRemapped(virt_to_page(vaddr));
->> +	}
+On Wed, May 29, 2019 at 11:40:34AM +0200, Daniel Bristot de Oliveira wrote:
+> On 29/05/2019 10:33, Peter Zijlstra wrote:
+> > On Tue, May 28, 2019 at 05:16:23PM +0200, Daniel Bristot de Oliveira wrote:
+> >> The preempt_disable/enable tracepoint only traces in the disable <-> enable
+> >> case, which is correct. But think about this case:
+> >>
+> >> ---------------------------- %< ------------------------------
+> >> 	THREAD					IRQ
+> >> 	   |					 |
+> >> preempt_disable() {
+> >>     __preempt_count_add(1)
+> >> 	------->	    smp_apic_timer_interrupt() {
+> >> 				preempt_disable()
+> >> 				    do not trace (preempt count >= 1)
+> >> 				    ....
+> >> 				preempt_enable()
+> >> 				    do not trace (preempt count >= 1)
+> >> 			    }
+> >>     trace_preempt_disable();
+> >> }
+> >> ---------------------------- >% ------------------------------
+> >>
+> >> The tracepoint will be skipped.
+> > 
+> > .... for the IRQ. But IRQs are not preemptible anyway, so what the
+> > problem?
 > 
-> To be symmetric with setting the flag only after having made the region
-> contiguous, and to avoid (perhaps just theoretical) races, wouldn't it be
-> better to clear the flag before calling xen_destroy_contiguous_region()?
-> Even better would be a TestAndClear...() operation.
+> 
+> right, they are.
+> 
+> exposing my problem in a more specific way:
+> 
+> To show in a model that an event always takes place with preemption disabled,
+> but not necessarily with IRQs disabled, it is worth having the preemption
+> disable events separated from IRQ disable ones.
+> 
+> The main reason is that, although IRQs disabled postpone the execution of the
+> scheduler, it is more pessimistic, as it also delays IRQs. So the more precise
+> the model is, the less pessimistic the analysis will be.
 
-I like that idea.
+I'm not sure I follow, IRQs disabled fully implies !preemptible. I don't
+see how the model would be more pessimistic than reality if it were to
+use this knowledge.
 
+Any !0 preempt_count(), which very much includes (Hard)IRQ and SoftIRQ
+counts, means non-preemptible.
 
-Juergen
