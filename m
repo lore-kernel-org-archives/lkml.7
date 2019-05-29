@@ -2,69 +2,96 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FBC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2986EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901E320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E983421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559128647;
+	bh=Smat1Yuif21heju3QNdZ7S8YbrPWmVKB3ywV3J2PHnQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zjqb5bEilXTH8QtYgjmp4EGZv648F+Aue0YNQ56Y5okJaDCVZaOiYnKVAwBeiWb0u
+	 xo4KlrF4HvdJQMnVyH0gVY8b4AB4vkoHfscFm/Yi3+p62pVNkkTws3qrMhKu/v9z79
+	 jqygnJLkbkVj4QJjimitRsqk5kM6dLOU5F0VYR0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfE2LQa (ORCPT
+        id S1726875AbfE2LRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:16:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45834 "EHLO mx1.redhat.com"
+        Wed, 29 May 2019 07:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfE2LQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:16:30 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726018AbfE2LRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 07:17:25 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0C786300CA98;
-        Wed, 29 May 2019 11:16:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D7B55D756;
-        Wed, 29 May 2019 11:16:28 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez2SAKbPeChAf06GMazMPPThFM+OR00abRZafAP7v+ptKw@mail.gmail.com>
-References: <CAG48ez2SAKbPeChAf06GMazMPPThFM+OR00abRZafAP7v+ptKw@mail.gmail.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk> <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com> <10418.1559084686@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
+        by mail.kernel.org (Postfix) with ESMTPSA id 45FAC20644;
+        Wed, 29 May 2019 11:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559128645;
+        bh=Smat1Yuif21heju3QNdZ7S8YbrPWmVKB3ywV3J2PHnQ=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mMZ8+pWZ+INzw2O5fqsaC5UFON3C3AHUXRTTwZTJ6pW8fMxXIzTvVE8RAtExGJa+t
+         XqTQuU+faKgbwRAPjR5zltWcBNYUROYFm+Xbt2mrAdPlOx0KG0aLzG+q7rfNzdNNVh
+         xT43K791QRfXK7tU/78YBGvlTX0cjyqhVenog8Xs=
+Date:   Wed, 29 May 2019 13:17:21 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+In-Reply-To: <20190521125319.04ac8b6c@gandalf.local.home>
+Message-ID: <nycvar.YFH.7.76.1905291315310.1962@cbobk.fhfr.pm>
+References: <20190520194915.GB1646@sventech.com> <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com> <20190520210905.GC1646@sventech.com> <20190520211931.vokbqxkx5kb6k2bz@treble> <20190520173910.6da9ddaf@gandalf.local.home> <20190521141629.bmk5onsaab26qoaw@treble>
+ <20190521104204.47d4e175@gandalf.local.home> <20190521164227.bxdff77kq7fgl5lp@treble> <20190521125319.04ac8b6c@gandalf.local.home>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <15838.1559128587.1@warthog.procyon.org.uk>
-Date:   Wed, 29 May 2019 12:16:27 +0100
-Message-ID: <15839.1559128587@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 29 May 2019 11:16:30 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+On Tue, 21 May 2019, Steven Rostedt wrote:
 
-> I don't really know. I guess it depends on how it's being used? If
-> someone decides to e.g. make a file browser that installs watches for
-> a bunch of mountpoints for some fancy sidebar showing the device
-> mounts on the system, or something like that, that probably shouldn't
-> inhibit unmounting... I don't know if that's a realistic use case.
+> > Hm.  I suppose using ftrace_lock might be less risky since that lock 
+> > is only used internally by ftrace (up until now).  But I think it 
+> > would also make less sense because the text_mutex is supposed to 
+> > protect code patching.  And presumably ftrace_lock is supposed to be 
+> > ftrace-specific.
+> > 
+> > Here's the latest patch, still using text_mutex.  I added some lockdep
+> > assertions to ensure the permissions toggling functions are always
+> > called with text_mutex.  It's running through 0-day right now.  I can
+> > try to run it through various tests with CONFIG_LOCKDEP.
+> 
+> Yeah, text_mutex probably does make more sense. ftrace_mutex was around
+> before text_mutex as ftrace was the first one to do the runtime
+> patching (after boot has finished). It wasn't until we introduced
+> text_poke that we decided to create the text_mutex locking as well.
+> 
+> > 
+> > 
+> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Subject: [PATCH] livepatch: Fix ftrace module text permissions race
+> 
+> Thanks,
+> 
+> I'll try to find some time to test this as well.
 
-In such a use case, I would envision the browser putting a watch on "/".  A
-watch sees all events in the subtree rooted at that point and you must apply a
-filter that filters them out if you're not interested (filter on
-WATCH_INFO_IN_SUBTREE using info_filter and info_mask).
+Steve, Jessica, any final word on this?
 
-David
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
