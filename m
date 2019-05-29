@@ -2,130 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EABCC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BF6C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30F720B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7926521019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCUeomwu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOOYO5ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfE2IQD (ORCPT
+        id S1726842AbfE2IQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:16:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33583 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfE2IQD (ORCPT
+        Wed, 29 May 2019 04:16:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36774 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfE2IQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:16:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id n17so2416781edb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:16:02 -0700 (PDT)
+        Wed, 29 May 2019 04:16:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v22so889203wml.1;
+        Wed, 29 May 2019 01:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=sender:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=7YPMPnQHiZSTC9SMTzMeKs5svVKQA9+Mqdsa3E0VpUY=;
-        b=FCUeomwuDfmxN1h0D6lV5jxZ/wMPiVvSLh+6vD04triShbrg3N711tx0v+ndzNVEut
-         2qCPkBPgtAw9eb+yFx75vkwC6YOZW12ysDv0DmzpxYe3GlWLvMHwTwBbXbXcXXrCiOAg
-         jmEA6ghVGNubW01UhbwRBlGDePYEPq3Sngg6MkkbWzwmwzyjk+oeg5KHQEmsSQ+ZDDNY
-         wPehJjrTlpk+2DpeU0cq1Cthqz2lQIjBEF8L7C5av2+8fQx4JshBLGvtIDyM7otQGz9k
-         r8VWyntEcUUna8khcjBtK1Dst2OuhpzG0hg6YoSouQ3CZfrn3jcG0ZNtJ9i6O+pip3vy
-         G+EA==
+        bh=JAIjeJA5pieWYxedW2lPGCUTsVd6pWQMhlBtAouoTmQ=;
+        b=GOOYO5uxivJVRh/xk/zr0iCasF7ir02JitV4OIzRYgS2Mvgz4coRAmdpVbInb20CRf
+         43Sj5TCBKfQh9HR2oZYLwvJCkYIacSXUXi5vnr/SpyXHAVfG2ybeO0cCe5army09C4lw
+         d38abLP1xrz04F2l0qoNPbRJaAsQdMgEDZZGlK4Mc1nFYT76y6ZAgIdhXztHzKxzL5xe
+         D73qocAYJYNAGTxRMjTQJb49EfiHPCGJX+NyJJ9OWfkubEpP6s5AaDRJ9oljYeujvBEn
+         mg7VD+bz9flVOTlK7amOgK0czkoqp43b475SEw17dZ8zvicKUVM+azDVdeIAkalYA4nC
+         CmLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7YPMPnQHiZSTC9SMTzMeKs5svVKQA9+Mqdsa3E0VpUY=;
-        b=bU/hkJik7NO3tqQbe2XPL1QXSKV++WprTRX+4jrtS2A/uEwNeFBGWzQUfhIcEjcfdE
-         tu+9YflXf/N6PVDfEUlTZ3M/Ik35obfhNN2Pz3SKCmu3Jdw+K6JH0cWUMBERuxfIMRjN
-         LBUU0NWqCT4UxVzHAKTzhgGJarS5eVKMIAPOW/ZNBtYrg2TzCl42vLjOmMCPp1wFaZeR
-         HpvZL7nj4/B5YQRNf7qF3qj769iK+oS69DYv5f2jEcx9kt4hIuVRBftluwkZ2dLLP7Kw
-         VRKlwq5K3Qn/afPlthSaq18+mwpgo2mUI5xF0oyi9nl78dpHV8ZL8CROCHNBeiNAXeUz
-         1azA==
-X-Gm-Message-State: APjAAAWSvmERJ7cgOvCm1rbDqojzQzzTW3/PJMh+2ZHSxI5POVFwrkkl
-        kMb1ycziMpRSoRsbm0bLjQQ=
-X-Google-Smtp-Source: APXvYqyKhTr9oxvChieY3z2xPala89CEJgfs4hhkYLjCMkL87W1gCcKCNRuP3pQL6cv2kPCr346y7A==
-X-Received: by 2002:a50:8e81:: with SMTP id w1mr134921402edw.271.1559117761693;
-        Wed, 29 May 2019 01:16:01 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id a17sm4835118edt.63.2019.05.29.01.16.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 01:16:00 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] iommu/dma: Fix condition check in iommu_dma_unmap_sg
-Date:   Wed, 29 May 2019 01:15:32 -0700
-Message-Id: <20190529081532.73585-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc1
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=JAIjeJA5pieWYxedW2lPGCUTsVd6pWQMhlBtAouoTmQ=;
+        b=noNs/ViL3I9gMqmuir42sidDL2joAoSLD9oMO9jbeba3NqXG+0uzpV5H/W21DnnC6/
+         ELHQp5EQ7UmoauSkAeEABOi3qRAeMWFmuot9gqjj3027HYc51YOdlW2yJ1dbT2RNGRI4
+         Z+uL2cUvsNawPKbCN6cDySzypNOIa0kahA/JyEYOTdCXyXB4KDVuQEW7A0O9UUtrEiSP
+         g2Q6GaRwly35lvtE8UpGxtJCa1XtChEQxHhvOmaeiWVC0hjOapI6c3IJ4GZhB72tWPkX
+         3blnupyIlwORNdzJ03BIuufX8xpKOyf0N3nw0uSR0ycTJiTW3DozEroGr8XxSoSF4hwc
+         yd5g==
+X-Gm-Message-State: APjAAAW4+XKMAonhqBPTzbIpjIzkjETEPyLDMgQpJ0GZE4+xlhP6y3zo
+        jgf4rLaV1TeFfRdi7vEHyE4=
+X-Google-Smtp-Source: APXvYqyGSyvhN3/M/wGK1MB8/Loq9okLbB2YGmJmemOMF44S8TGMYvvgIgxWRGkea3U9lPFoDBk+Qg==
+X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr5472410wml.159.1559117773340;
+        Wed, 29 May 2019 01:16:13 -0700 (PDT)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id k13sm3308997wmj.10.2019.05.29.01.16.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 01:16:11 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 7776211402E3; Wed, 29 May 2019 10:04:40 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: Remove -Waggregate-return from scripts/Makefile.extrawarn
+Date:   Wed, 29 May 2019 10:04:34 +0200
+Message-Id: <20190529080434.1409-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+It makes little sense to pass -Waggregate-return these days since large
+part of the linux kernel rely on returning struct(s). For instance:
 
-drivers/iommu/dma-iommu.c:897:6: warning: logical not is only applied to
-the left hand side of this comparison [-Wlogical-not-parentheses]
-        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
-            ^                                 ~~
-drivers/iommu/dma-iommu.c:897:6: note: add parentheses after the '!' to
-evaluate the comparison first
-        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
-            ^
-             (                                    )
-drivers/iommu/dma-iommu.c:897:6: note: add parentheses around left hand
-side expression to silence this warning
-        if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
-            ^
-            (                                )
-1 warning generated.
+  ../include/linux/timekeeping.h: In function 'show_uptime':
+  ../include/linux/ktime.h:91:34: error: function call has aggregate value [-Werror=aggregate-return]
+   #define ktime_to_timespec64(kt)  ns_to_timespec64((kt))
+                                    ^~~~~~~~~~~~~~~~~~~~~~
+  ../include/linux/timekeeping.h:166:8: note: in expansion of macro 'ktime_to_timespec64'
+    *ts = ktime_to_timespec64(ktime_get_coarse_boottime());
 
-Judging from the rest of the commit and the conditional in
-iommu_dma_map_sg, either
+Remove this warning from W=2 completely.
 
-    if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-
-or
-    if ((attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
-
-was intended, not a combination of the two.
-
-I personally think that the former is easier to understand so use that.
-
-Fixes: 06d60728ff5c ("iommu/dma: move the arm64 wrappers to common code")
-Link: https://github.com/ClangBuiltLinux/linux/issues/497
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- drivers/iommu/dma-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/Makefile.extrawarn | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 0cd49c2d3770..0dee374fc64a 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -894,7 +894,7 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
- 	struct scatterlist *tmp;
- 	int i;
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 3ab8d1a303cd..98081ab300e5 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -34,7 +34,6 @@ warning-1 += $(call cc-option, -Wstringop-truncation)
+ warning-1 += -Wno-missing-field-initializers
+ warning-1 += -Wno-sign-compare
  
--	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
-+	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
- 		iommu_dma_sync_sg_for_cpu(dev, sg, nents, dir);
- 
- 	/*
+-warning-2 := -Waggregate-return
+ warning-2 += -Wcast-align
+ warning-2 += -Wdisabled-optimization
+ warning-2 += -Wnested-externs
 -- 
-2.22.0.rc1
+2.20.1
 
