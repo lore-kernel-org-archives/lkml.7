@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B9EC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA33C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB04624124
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1746624129
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lZClLD4C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T+S4dzKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfE2UKi (ORCPT
+        id S1726489AbfE2UKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:10:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44849 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2UKh (ORCPT
+        Wed, 29 May 2019 16:10:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45436 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfE2UKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:10:37 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g9so2320590pfo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:10:37 -0700 (PDT)
+        Wed, 29 May 2019 16:10:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s11so2321142pfm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=4tO49DCZiMUuRTyd+RB4sj1Pf9UNQPKfv9m6vwCN9bU=;
-        b=lZClLD4C5PJCN/fAXazHH9tFux7V7osICYTD415D0JHAHk0wYmLL0BNiWP2GXwT2jO
-         iJp3k2hMYmE015ugulaI/SgLfdBc+b7Ih3aLb8qGzEGNW1C7RUJZUITdm8wIg0lnn62N
-         UjssZpDlWyvPgk7k0JOYPvkBQgpbe6QGWgOn0=
+        bh=l4laiGZ+6EAxTzYgyOLxq6AQ0ebW5F8MPaRp0yaenB4=;
+        b=T+S4dzKkP0QeUP0gvmQYme6HE9FvwMG4qznuFtH/nyALnyYufIZl5Zude490BxgiIt
+         TM/MxYm5xSz69G1obZoGJM1LDIeY9X8HJLMu8K1/UHH+gmEEyXz0iVgKFgUxlRbExavm
+         GdYNYHEiXPSCZWG+4ftE4ubEET85V+Ow68jzY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4tO49DCZiMUuRTyd+RB4sj1Pf9UNQPKfv9m6vwCN9bU=;
-        b=meyVGP/eLC8O/35Xw2bqGDzBMYVj+THev3l9POY+ga41EA+fVPitQQJ5IrIPnLH423
-         T+uCY0NF1QxfGQKT6wCksQD+JcBTauBUAoop7OWD5LqVHQVApS2RLZbH945Fy796O3fn
-         T42FO/q1+O4LUEVSCTya3O8eeTPsAfjzI4dON98cBZ0oxOtNtzvsSuPM1ZRkD0tefRxj
-         whBLjqJL4ebvK/GbGwt3vpgsRLjLN/Zchvooi2fp4UQLTc4BNeKaCViYFDPlcm39OY+J
-         bpC3aTVkVOm5IUJJ7vMThCIJQBAnXjjBy8gkJ3ce9zim9pkIJRhxGgywTat/Ybjpq/Vm
-         EIMw==
-X-Gm-Message-State: APjAAAWAbiD+x4VR4w4LvuTbWRtn2FyKx8buEb5zddly4vuDQ7L0LSkH
-        uBfAlyduDlb125jqeeLkJuRCLg==
-X-Google-Smtp-Source: APXvYqzGkzotfqRqlViLgd17DR1DtrVmfgKSVcRWSDYtwWcN+yj4Gv1oMUrd81n+gHG7RpUcJbaPsA==
-X-Received: by 2002:a63:9d8d:: with SMTP id i135mr140578933pgd.245.1559160636677;
-        Wed, 29 May 2019 13:10:36 -0700 (PDT)
+        bh=l4laiGZ+6EAxTzYgyOLxq6AQ0ebW5F8MPaRp0yaenB4=;
+        b=Dv3IEKC/VLbHTd2olrX6eYG8LAKLUnOu6pQ0578IhFA7tnBzgas09HKe1Fp8HT7WV5
+         wOmXhzkLKmrfaTOW8PxVrmJ3G1VO7ZnUeBYeofpObvl1iWA7gInQeQoREMyi4r2/bRuL
+         LMKp2EZWt6ky1D/5XoalNguaskg37YDbQYKnNr9qmbKCf2I25W4IVtg9ga1Bx1OnIFtv
+         FXgLMfOb2Fi/Eo1UC+pinTqEaBxU/yQpRyjszyAFvcPYVzp1KP7rTYWqg9yEn94TTbGI
+         o5fFQQznf6PN1h/siIJYpQKTGnMd4Izj9a4+2i2g3hdD4ti/04UJXk+kjUISdk4/BuUT
+         KlCw==
+X-Gm-Message-State: APjAAAUihI794XrsTOMYYFLczadzTiFwAosaEH4yyEexeW7MqiYtYpR6
+        s3mXR0QtZhBdcgYDV72PVJyRNQ==
+X-Google-Smtp-Source: APXvYqxcX+GEqaFki9ts9gcHnI+DJ4J45UmF6NQ3tBHikewn3dAB757SCx8zHdqTJ17A6V/LaCRYWA==
+X-Received: by 2002:a63:6c83:: with SMTP id h125mr92843035pgc.86.1559160652464;
+        Wed, 29 May 2019 13:10:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g8sm432758pjp.17.2019.05.29.13.10.35
+        by smtp.gmail.com with ESMTPSA id o2sm216631pgq.50.2019.05.29.13.10.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:10:35 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:10:34 -0700
+        Wed, 29 May 2019 13:10:51 -0700 (PDT)
+Date:   Wed, 29 May 2019 13:10:50 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Alexandre Ghiti <alex@ghiti.fr>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -70,301 +70,114 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v4 04/14] arm64, mm: Move generic mmap layout functions
- to mm
-Message-ID: <201905291310.D7E954C95B@keescook>
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 05/14] arm64, mm: Make randomization selected by
+ generic topdown mmap layout
+Message-ID: <201905291310.E27265DACF@keescook>
 References: <20190526134746.9315-1-alex@ghiti.fr>
- <20190526134746.9315-5-alex@ghiti.fr>
+ <20190526134746.9315-6-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526134746.9315-5-alex@ghiti.fr>
+In-Reply-To: <20190526134746.9315-6-alex@ghiti.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 09:47:36AM -0400, Alexandre Ghiti wrote:
-> arm64 handles top-down mmap layout in a way that can be easily reused
-> by other architectures, so make it available in mm.
-> It then introduces a new config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> that can be set by other architectures to benefit from those functions.
-> Note that this new config depends on MMU being enabled, if selected
-> without MMU support, a warning will be thrown.
+On Sun, May 26, 2019 at 09:47:37AM -0400, Alexandre Ghiti wrote:
+> This commits selects ARCH_HAS_ELF_RANDOMIZE when an arch uses the generic
+> topdown mmap layout functions so that this security feature is on by
+> default.
+> Note that this commit also removes the possibility for arm64 to have elf
+> randomization and no MMU: without MMU, the security added by randomization
+> is worth nothing.
 > 
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
 > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 Acked-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 > ---
->  arch/Kconfig                       | 10 ++++
->  arch/arm64/Kconfig                 |  1 +
->  arch/arm64/include/asm/processor.h |  2 -
->  arch/arm64/mm/mmap.c               | 76 -----------------------------
->  kernel/sysctl.c                    |  6 ++-
->  mm/util.c                          | 78 +++++++++++++++++++++++++++++-
->  6 files changed, 92 insertions(+), 81 deletions(-)
+>  arch/Kconfig                |  1 +
+>  arch/arm64/Kconfig          |  1 -
+>  arch/arm64/kernel/process.c |  8 --------
+>  mm/util.c                   | 11 +++++++++--
+>  4 files changed, 10 insertions(+), 11 deletions(-)
 > 
 > diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..df3ab04270fa 100644
+> index df3ab04270fa..3732654446cc 100644
 > --- a/arch/Kconfig
 > +++ b/arch/Kconfig
-> @@ -701,6 +701,16 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
->  	  and vice-versa 32-bit applications to call 64-bit mmap().
->  	  Required for applications doing different bitness syscalls.
+> @@ -710,6 +710,7 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
+>  config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+>  	bool
+>  	depends on MMU
+> +	select ARCH_HAS_ELF_RANDOMIZE
 >  
-> +# This allows to use a set of generic functions to determine mmap base
-> +# address by giving priority to top-down scheme only if the process
-> +# is not in legacy mode (compat task, unlimited stack size or
-> +# sysctl_legacy_va_layout).
-> +# Architecture that selects this option can provide its own version of:
-> +# - STACK_RND_MASK
-> +config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> +	bool
-> +	depends on MMU
-> +
 >  config HAVE_COPY_THREAD_TLS
 >  	bool
->  	help
 > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 4780eb7af842..3d754c19c11e 100644
+> index 3d754c19c11e..403bd3fffdbc 100644
 > --- a/arch/arm64/Kconfig
 > +++ b/arch/arm64/Kconfig
-> @@ -69,6 +69,7 @@ config ARM64
->  	select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
->  	select ARCH_SUPPORTS_NUMA_BALANCING
->  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
-> +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
->  	select ARCH_WANT_FRAME_POINTERS
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
->  	select ARM_AMBA
-> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-> index fcd0e691b1ea..3bd818edf319 100644
-> --- a/arch/arm64/include/asm/processor.h
-> +++ b/arch/arm64/include/asm/processor.h
-> @@ -282,8 +282,6 @@ static inline void spin_lock_prefetch(const void *ptr)
->  		     "nop") : : "p" (ptr));
+> @@ -15,7 +15,6 @@ config ARM64
+>  	select ARCH_HAS_DMA_MMAP_PGPROT
+>  	select ARCH_HAS_DMA_PREP_COHERENT
+>  	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
+> -	select ARCH_HAS_ELF_RANDOMIZE
+>  	select ARCH_HAS_FAST_MULTIPLIER
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 3767fb21a5b8..3f85f8f2d665 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -535,14 +535,6 @@ unsigned long arch_align_stack(unsigned long sp)
+>  	return sp & ~0xf;
 >  }
 >  
-> -#define HAVE_ARCH_PICK_MMAP_LAYOUT
-> -
->  #endif
->  
->  extern unsigned long __ro_after_init signal_minsigstksz; /* sigframe size */
-> diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-> index ac89686c4af8..c74224421216 100644
-> --- a/arch/arm64/mm/mmap.c
-> +++ b/arch/arm64/mm/mmap.c
-> @@ -31,82 +31,6 @@
->  
->  #include <asm/cputype.h>
->  
-> -/*
-> - * Leave enough space between the mmap area and the stack to honour ulimit in
-> - * the face of randomisation.
-> - */
-> -#define MIN_GAP (SZ_128M)
-> -#define MAX_GAP	(STACK_TOP/6*5)
-> -
-> -static int mmap_is_legacy(struct rlimit *rlim_stack)
+> -unsigned long arch_randomize_brk(struct mm_struct *mm)
 > -{
-> -	if (current->personality & ADDR_COMPAT_LAYOUT)
-> -		return 1;
-> -
-> -	if (rlim_stack->rlim_cur == RLIM_INFINITY)
-> -		return 1;
-> -
-> -	return sysctl_legacy_va_layout;
-> -}
-> -
-> -unsigned long arch_mmap_rnd(void)
-> -{
-> -	unsigned long rnd;
-> -
-> -#ifdef CONFIG_COMPAT
 > -	if (is_compat_task())
-> -		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+> -		return randomize_page(mm->brk, SZ_32M);
 > -	else
-> -#endif
-> -		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
-> -	return rnd << PAGE_SHIFT;
-> -}
-> -
-> -static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
-> -{
-> -	unsigned long gap = rlim_stack->rlim_cur;
-> -	unsigned long pad = stack_guard_gap;
-> -
-> -	/* Account for stack randomization if necessary */
-> -	if (current->flags & PF_RANDOMIZE)
-> -		pad += (STACK_RND_MASK << PAGE_SHIFT);
-> -
-> -	/* Values close to RLIM_INFINITY can overflow. */
-> -	if (gap + pad > gap)
-> -		gap += pad;
-> -
-> -	if (gap < MIN_GAP)
-> -		gap = MIN_GAP;
-> -	else if (gap > MAX_GAP)
-> -		gap = MAX_GAP;
-> -
-> -	return PAGE_ALIGN(STACK_TOP - gap - rnd);
-> -}
-> -
-> -/*
-> - * This function, called very early during the creation of a new process VM
-> - * image, sets up which VM layout function to use:
-> - */
-> -void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
-> -{
-> -	unsigned long random_factor = 0UL;
-> -
-> -	if (current->flags & PF_RANDOMIZE)
-> -		random_factor = arch_mmap_rnd();
-> -
-> -	/*
-> -	 * Fall back to the standard layout if the personality bit is set, or
-> -	 * if the expected stack growth is unlimited:
-> -	 */
-> -	if (mmap_is_legacy(rlim_stack)) {
-> -		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
-> -		mm->get_unmapped_area = arch_get_unmapped_area;
-> -	} else {
-> -		mm->mmap_base = mmap_base(random_factor, rlim_stack);
-> -		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
-> -	}
+> -		return randomize_page(mm->brk, SZ_1G);
 > -}
 > -
 >  /*
->   * You really shouldn't be using read() or write() on /dev/mem.  This might go
->   * away in the future.
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 943c89178e3d..aebd03cc4b65 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -271,7 +271,8 @@ extern struct ctl_table epoll_table[];
->  extern struct ctl_table firmware_config_table[];
->  #endif
->  
-> -#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-> +    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
->  int sysctl_legacy_va_layout;
->  #endif
->  
-> @@ -1566,7 +1567,8 @@ static struct ctl_table vm_table[] = {
->  		.proc_handler	= proc_dointvec,
->  		.extra1		= &zero,
->  	},
-> -#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-> +    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
->  	{
->  		.procname	= "legacy_va_layout",
->  		.data		= &sysctl_legacy_va_layout,
+>   * Called from setup_new_exec() after (COMPAT_)SET_PERSONALITY.
+>   */
 > diff --git a/mm/util.c b/mm/util.c
-> index dab33b896146..717f5d75c16e 100644
+> index 717f5d75c16e..8a38126edc74 100644
 > --- a/mm/util.c
 > +++ b/mm/util.c
-> @@ -15,7 +15,12 @@
->  #include <linux/vmalloc.h>
->  #include <linux/userfaultfd_k.h>
->  #include <linux/elf.h>
-> +#include <linux/elf-randomize.h>
-> +#include <linux/personality.h>
->  #include <linux/random.h>
-> +#include <linux/processor.h>
-> +#include <linux/sizes.h>
-> +#include <linux/compat.h>
->  
->  #include <linux/uaccess.h>
->  
-> @@ -313,7 +318,78 @@ unsigned long randomize_stack_top(unsigned long stack_top)
->  #endif
+> @@ -319,7 +319,15 @@ unsigned long randomize_stack_top(unsigned long stack_top)
 >  }
 >  
-> -#if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
-> +#ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> +#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
-> +unsigned long arch_mmap_rnd(void)
+>  #ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> -#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
+> +unsigned long arch_randomize_brk(struct mm_struct *mm)
 > +{
-> +	unsigned long rnd;
+> +	/* Is the current task 32bit ? */
+> +	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
+> +		return randomize_page(mm->brk, SZ_32M);
 > +
-> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
-> +	if (is_compat_task())
-> +		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
-> +	else
-> +#endif /* CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS */
-> +		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
-> +
-> +	return rnd << PAGE_SHIFT;
-> +}
-> +#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
-> +
-> +static int mmap_is_legacy(struct rlimit *rlim_stack)
-> +{
-> +	if (current->personality & ADDR_COMPAT_LAYOUT)
-> +		return 1;
-> +
-> +	if (rlim_stack->rlim_cur == RLIM_INFINITY)
-> +		return 1;
-> +
-> +	return sysctl_legacy_va_layout;
+> +	return randomize_page(mm->brk, SZ_1G);
 > +}
 > +
-> +/*
-> + * Leave enough space between the mmap area and the stack to honour ulimit in
-> + * the face of randomisation.
-> + */
-> +#define MIN_GAP		(SZ_128M)
-> +#define MAX_GAP		(STACK_TOP / 6 * 5)
-> +
-> +static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
-> +{
-> +	unsigned long gap = rlim_stack->rlim_cur;
-> +	unsigned long pad = stack_guard_gap;
-> +
-> +	/* Account for stack randomization if necessary */
-> +	if (current->flags & PF_RANDOMIZE)
-> +		pad += (STACK_RND_MASK << PAGE_SHIFT);
-> +
-> +	/* Values close to RLIM_INFINITY can overflow. */
-> +	if (gap + pad > gap)
-> +		gap += pad;
-> +
-> +	if (gap < MIN_GAP)
-> +		gap = MIN_GAP;
-> +	else if (gap > MAX_GAP)
-> +		gap = MAX_GAP;
-> +
-> +	return PAGE_ALIGN(STACK_TOP - gap - rnd);
-> +}
-> +
-> +void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
-> +{
-> +	unsigned long random_factor = 0UL;
-> +
-> +	if (current->flags & PF_RANDOMIZE)
-> +		random_factor = arch_mmap_rnd();
-> +
-> +	if (mmap_is_legacy(rlim_stack)) {
-> +		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
-> +		mm->get_unmapped_area = arch_get_unmapped_area;
-> +	} else {
-> +		mm->mmap_base = mmap_base(random_factor, rlim_stack);
-> +		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
-> +	}
-> +}
-> +#elif defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
->  void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+>  unsigned long arch_mmap_rnd(void)
 >  {
->  	mm->mmap_base = TASK_UNMAPPED_BASE;
+>  	unsigned long rnd;
+> @@ -333,7 +341,6 @@ unsigned long arch_mmap_rnd(void)
+>  
+>  	return rnd << PAGE_SHIFT;
+>  }
+> -#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
+>  
+>  static int mmap_is_legacy(struct rlimit *rlim_stack)
+>  {
 > -- 
 > 2.20.1
 > 
