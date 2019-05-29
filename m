@@ -2,89 +2,92 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A2BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11098C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73D223B5F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEE123B6A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfE2PH1 (ORCPT
+        id S1726794AbfE2PHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:07:27 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:55303 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2PH0 (ORCPT
+        Wed, 29 May 2019 11:07:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48809 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2PHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:07:26 -0400
-X-Originating-IP: 90.88.147.134
-Received: from bootlin.com (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 033FBFF805;
-        Wed, 29 May 2019 15:07:22 +0000 (UTC)
-Date:   Wed, 29 May 2019 17:07:25 +0200
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH net-next] ethtool: Drop check for vlan etype and vlan
- tci when parsing flow_rule
-Message-ID: <20190529170725.5856dd65@bootlin.com>
-In-Reply-To: <20190529141044.24669-1-maxime.chevallier@bootlin.com>
-References: <20190529141044.24669-1-maxime.chevallier@bootlin.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 May 2019 11:07:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hW0Aw-0004FY-R3; Wed, 29 May 2019 15:07:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Oak Zeng <Oak.Zeng@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdkfd: fix null pointer dereference on dev
+Date:   Wed, 29 May 2019 16:07:34 +0100
+Message-Id: <20190529150734.18120-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 16:10:44 +0200
-Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
->When parsing an ethtool flow spec to build a flow_rule, the code checks
->if both the vlan etype and the vlan tci are specified by the user to add
->a FLOW_DISSECTOR_KEY_VLAN match.
->
->However, when the user only specified a vlan etype or a vlan tci, this
->check silently ignores these parameters.
->
->For example, the following rule :
->
->ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
->
->will result in no error being issued, but the equivalent rule will be
->created and passed to the NIC driver :
->
->ethtool -N eth0 flow-type udp4 action -1 loc 0
->
->In the end, neither the NIC driver using the rule nor the end user have
->a way to know that these keys were dropped along the way, or that
->incorrect parameters were entered.
->
->This kind of check should be left to either the driver, or the ethtool
->flow spec layer.
->
->This commit makes so that ethtool parameters are forwarded as-is to the
->NIC driver.
->
->Since none of the users of ethtool_rx_flow_rule_create are using the
->VLAN dissector, I don't think this qualifies as a regression.
->
->Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+The pointer dev is set to null yet it is being dereferenced when
+checking dev->dqm->sched_policy.  Fix this by performing the check
+on dev->dqm->sched_policy after dev has been assigned and null
+checked.  Also remove the redundant null assignment to dev.
 
-I should have targeted this to -net, and provided a Fixes tag.
-Let me resend that to the proper tree.
+Addresses-Coverity: ("Explicit null dereference")
+Fixes: 1a058c337676 ("drm/amdkfd: New IOCTL to allocate queue GWS")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Sorry about the noise,
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+index aab2aa6c1dee..ea82828fdc76 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+@@ -1572,10 +1572,9 @@ static int kfd_ioctl_alloc_queue_gws(struct file *filep,
+ {
+ 	int retval;
+ 	struct kfd_ioctl_alloc_queue_gws_args *args = data;
+-	struct kfd_dev *dev = NULL;
++	struct kfd_dev *dev;
+ 
+-	if (!hws_gws_support ||
+-		dev->dqm->sched_policy == KFD_SCHED_POLICY_NO_HWS)
++	if (!hws_gws_support)
+ 		return -EINVAL;
+ 
+ 	dev = kfd_device_by_id(args->gpu_id);
+@@ -1583,6 +1582,8 @@ static int kfd_ioctl_alloc_queue_gws(struct file *filep,
+ 		pr_debug("Could not find gpu id 0x%x\n", args->gpu_id);
+ 		return -EINVAL;
+ 	}
++	if (dev->dqm->sched_policy == KFD_SCHED_POLICY_NO_HWS)
++		return -EINVAL;
+ 
+ 	mutex_lock(&p->mutex);
+ 	retval = pqm_set_gws(&p->pqm, args->queue_id, args->num_gws ? dev->gws : NULL);
+-- 
+2.20.1
 
-Maxime
