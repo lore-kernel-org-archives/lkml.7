@@ -2,123 +2,174 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F22C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB77C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BA822AED
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559137473;
-	bh=TDyNtlz445V2KfqCvU5AeZnbIE1PFnUssf6X86CEbM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZHlqV5ftiDJh5qlBAI91BgCSQcpPglCDCju1C7W7KWLEe1WmbxbZxZ0yCT7TUPRFe
-	 r7hIysBAATEzmgATdesOn/y1Ot3ZZ8h2rLAvIsi/XumT7qDdPw2AVk1G3pfy5Ez9ah
-	 Th+imYE4EwqF92tAORqCLl7bar6nuS3zUznYICrA=
+	by mail.kernel.org (Postfix) with ESMTP id 0FA8E22C7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDUTPoej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfE2Noc (ORCPT
+        id S1727350AbfE2Npq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:44:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42222 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfE2Noc (ORCPT
+        Wed, 29 May 2019 09:45:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42402 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfE2Npp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:44:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y13so2103082lfh.9;
-        Wed, 29 May 2019 06:44:30 -0700 (PDT)
+        Wed, 29 May 2019 09:45:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 33so1400584pgv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SqXIr30zs9BkbQwxZqBClCfv+cPq2d3qcgpjcAvAiGs=;
+        b=NDUTPoej8DHpoO6KSmHJxoi0Aqrq9QJZ4odx6zA/FH6TPgcw14FNSc1bsCfcSiD+SL
+         MGHrGq6xKY13oPdb50V2kwwdNPPO9K0XKEWk1YyRXDp3soMjQX5cbzMqjlJluGKijyHH
+         5w5Dla4hkVxGi5PNWs0hyg0p24jKiPP4aqRjfEQPPh+bCoWCGpP1sxkqO0Nr9rf8zQ5M
+         Z9ickGwsa8fR4YJh4a/wTZMiQQnQo12HuYlHQbyUCG79sNpfnp7/9gKEt5HWCHv+Kv7U
+         WJbum9Q9Fl+Zzge/ENs/0aIRU7OvS3cAkKMU90v95Ek9yroY9DNkFNi2Cf3bWLCm5SH4
+         Rvpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FyDp/Sea9Ytj79ykUYdPjN3F1ceX0kmZop3ND/MuQ8k=;
-        b=Ezn75/K23ZKYppz1TPsH5dr9ZLefX4v+6+1FttqhEPObxCSFV/F73dB30hx/XJYdTq
-         M6E1/yxSQkqfAGnogEbn1cZw/lqkL5RYHWu6qLwr0MKPbISxxS7ezfvI9UFkbGSrbxBM
-         qWENxt+ue9YPhi1whEWCR9svk/2pln81brry5p1UAC06E/3txFZKBCuXkKvrKwlFHjYj
-         2aUL1G5HwkIlGWx7yIB9DAMUiF7mySNxZ8udH8XPORxLt6ZGR3PFGbeudpbdwCKJkcmU
-         k98jtRk1D2YpJf7shdd3rQla0JxnW/jeymkjkPUmZWZ50F5oU3LNubq+azzKikYPIskB
-         k5xA==
-X-Gm-Message-State: APjAAAUNKPsbygRx5aep6544KDqEvRtdGKjLLFpn5uh8juV4QB7cPC/n
-        GZvRi9LOZzubNcbCKNqIhfM=
-X-Google-Smtp-Source: APXvYqyRdWhNSYk7M2iTK+aQ8Fl6loE39UE8WgE0C4Ft4MsJbrZrFuqdmPun7lzQzXH0UPfHycNM2A==
-X-Received: by 2002:ac2:494f:: with SMTP id o15mr4449106lfi.22.1559137470075;
-        Wed, 29 May 2019 06:44:30 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id p5sm3434957lfc.80.2019.05.29.06.44.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SqXIr30zs9BkbQwxZqBClCfv+cPq2d3qcgpjcAvAiGs=;
+        b=isR4sVfUZR31dl0kM62ysBlGQyZh6YBR8EFMsSe4BgCTCs3MAbu3JE7rGCpUEZKml4
+         XeB23zpS1NdZSOnCjK+TADy+54CskxyK75EPypGgpEwDkGU6t8Pc0Vdr00mP7BhB5822
+         EHuIebnPC4C9FVvkVB+/rtdzEdoJIAi4+6tvY4L4jzYK04Nw5EjIgBcFGWYDTpkQdVd9
+         W4ZzkbC2sciQ65eAysyfPxhsPOIbcZJ8sg6W8IGtTrfMDsumqH+zIUa/gmdZe7E2r/C0
+         7dIbhYiL9SXfnmwFQYKt0KA/tYRNTsRnMC4OdzXBkCfswrWWMpj3T82yZbNMjv9jztyb
+         Zk9w==
+X-Gm-Message-State: APjAAAW2+ZN9oCM3Fq+osCwfByJRBKaFesc2wcNGYGH44VDDfaUC5f7T
+        hKPfZv5xPl583w6IU+m60m4=
+X-Google-Smtp-Source: APXvYqxkBYOuxK0amFtx5a1umiKDE8/BW7SY/HthJ8NUMLVqTshgv/urKr5MVe22K4m0foaujHyOVg==
+X-Received: by 2002:aa7:8dcd:: with SMTP id j13mr47144454pfr.107.1559137544927;
+        Wed, 29 May 2019 06:45:44 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.67.155])
+        by smtp.gmail.com with ESMTPSA id e5sm14299344pgh.35.2019.05.29.06.45.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:44:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hVysd-00084k-KS; Wed, 29 May 2019 15:44:35 +0200
-Date:   Wed, 29 May 2019 15:44:35 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 1/2 v3] serial: mctrl_gpio: Check if GPIO property
- exisits before requesting it
-Message-ID: <20190529134435.GR568@localhost>
-References: <20190527111805.876-1-sr@denx.de>
+        Wed, 29 May 2019 06:45:43 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     forest@alittletooquiet.net, gregkh@linuxfoundation.org,
+        madhumithabiw@gmail.com, brandonbonaby94@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: vt6655: Change return type of function and remove variable
+Date:   Wed, 29 May 2019 19:15:29 +0530
+Message-Id: <20190529134529.8481-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527111805.876-1-sr@denx.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 01:18:04PM +0200, Stefan Roese wrote:
-> This patch adds a check for the GPIOs property existence, before the
-> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
-> support is added (2nd patch in this patch series) on x86 platforms using
-> ACPI.
+As the function CARDbRadioPowerOff always returns true, and this value
+does not appear to be used anywhere, the return variable can be entirely
+removed and the function converted to type void.
+Issue found with Coccinelle.
 
-> Signed-off-by: Stefan Roese <sr@denx.de>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Yegor Yefremov <yegorslists@googlemail.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> ---
-> v3:
-> - No change
-> 
-> v2:
-> - Include the problem description and analysis from Mika into the commit
->   text, as suggested by Greg.
-> 
->  drivers/tty/serial/serial_mctrl_gpio.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-> index 39ed56214cd3..cac50b20a119 100644
-> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> @@ -116,6 +116,13 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
->  
->  	for (i = 0; i < UART_GPIO_MAX; i++) {
->  		enum gpiod_flags flags;
-> +		char *gpio_str;
-> +
-> +		/* Check if GPIO property exists and continue if not */
-> +		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
-> +				     mctrl_gpios_desc[i].name);
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/vt6655/card.c | 56 ++++++++++++++++-------------------
+ drivers/staging/vt6655/card.h |  2 +-
+ 2 files changed, 27 insertions(+), 31 deletions(-)
 
-Where's the corresponding kfree?
+diff --git a/drivers/staging/vt6655/card.c b/drivers/staging/vt6655/card.c
+index 6ecbe925026d..2aca5b38be5c 100644
+--- a/drivers/staging/vt6655/card.c
++++ b/drivers/staging/vt6655/card.c
+@@ -409,42 +409,38 @@ bool CARDbSetBeaconPeriod(struct vnt_private *priv,
+  *  Out:
+  *      none
+  *
+- * Return Value: true if success; otherwise false
++ * Return Value: none
+  */
+-bool CARDbRadioPowerOff(struct vnt_private *priv)
++void CARDbRadioPowerOff(struct vnt_private *priv)
+ {
+-	bool bResult = true;
+-
+-	if (priv->bRadioOff)
+-		return true;
+-
+-	switch (priv->byRFType) {
+-	case RF_RFMD2959:
+-		MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
+-				   SOFTPWRCTL_TXPEINV);
+-		MACvWordRegBitsOn(priv->PortOffset, MAC_REG_SOFTPWRCTL,
+-				  SOFTPWRCTL_SWPE1);
+-		break;
++	if (!priv->bRadioOff) {
++		switch (priv->byRFType) {
++		case RF_RFMD2959:
++			MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
++					   SOFTPWRCTL_TXPEINV);
++			MACvWordRegBitsOn(priv->PortOffset, MAC_REG_SOFTPWRCTL,
++					  SOFTPWRCTL_SWPE1);
++			break;
+ 
+-	case RF_AIROHA:
+-	case RF_AL2230S:
+-	case RF_AIROHA7230:
+-		MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
+-				   SOFTPWRCTL_SWPE2);
+-		MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
+-				   SOFTPWRCTL_SWPE3);
+-		break;
+-	}
++		case RF_AIROHA:
++		case RF_AL2230S:
++		case RF_AIROHA7230:
++			MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
++					   SOFTPWRCTL_SWPE2);
++			MACvWordRegBitsOff(priv->PortOffset, MAC_REG_SOFTPWRCTL,
++					   SOFTPWRCTL_SWPE3);
++			break;
++		}
+ 
+-	MACvRegBitsOff(priv->PortOffset, MAC_REG_HOSTCR, HOSTCR_RXON);
++		MACvRegBitsOff(priv->PortOffset, MAC_REG_HOSTCR, HOSTCR_RXON);
+ 
+-	BBvSetDeepSleep(priv, priv->byLocalID);
++		BBvSetDeepSleep(priv, priv->byLocalID);
+ 
+-	priv->bRadioOff = true;
+-	pr_debug("chester power off\n");
+-	MACvRegBitsOn(priv->PortOffset, MAC_REG_GPIOCTL0,
+-		      LED_ACTSET);  /* LED issue */
+-	return bResult;
++		priv->bRadioOff = true;
++		pr_debug("chester power off\n");
++		MACvRegBitsOn(priv->PortOffset, MAC_REG_GPIOCTL0,
++			      LED_ACTSET);  /* LED issue */
++	}
+ }
+ 
+ /*
+diff --git a/drivers/staging/vt6655/card.h b/drivers/staging/vt6655/card.h
+index f422fb3c78bd..887c1692e05b 100644
+--- a/drivers/staging/vt6655/card.h
++++ b/drivers/staging/vt6655/card.h
+@@ -57,7 +57,7 @@ u64 CARDqGetTSFOffset(unsigned char byRxRate, u64 qwTSF1, u64 qwTSF2);
+ unsigned char CARDbyGetPktType(struct vnt_private *priv);
+ void CARDvSafeResetTx(struct vnt_private *priv);
+ void CARDvSafeResetRx(struct vnt_private *priv);
+-bool CARDbRadioPowerOff(struct vnt_private *priv);
++void CARDbRadioPowerOff(struct vnt_private *priv);
+ bool CARDbRadioPowerOn(struct vnt_private *priv);
+ bool CARDbSetPhyParameter(struct vnt_private *priv, u8 bb_type);
+ bool CARDbUpdateTSF(struct vnt_private *priv, unsigned char byRxRate,
+-- 
+2.19.1
 
-> +		if (!device_property_present(dev, gpio_str))
-> +			continue;
->  
->  		if (mctrl_gpios_desc[i].dir_out)
->  			flags = GPIOD_OUT_LOW;
-
-Johan
