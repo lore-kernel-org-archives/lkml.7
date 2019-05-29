@@ -2,121 +2,113 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8FCC28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E42C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A57720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46E02070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uID7+9gJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbPa/DcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfE2JNa (ORCPT
+        id S1726330AbfE2JPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:13:30 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40228 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbfE2JNa (ORCPT
+        Wed, 29 May 2019 05:15:16 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36650 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfE2JPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:13:30 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h13so1409230lfc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:13:29 -0700 (PDT)
+        Wed, 29 May 2019 05:15:16 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so809145plr.3;
+        Wed, 29 May 2019 02:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=turgOZHVZA+slmDkzWItW7JViu4gUnC/Ds0bw1pflBM=;
-        b=uID7+9gJfQmbk7PHo/mOm4BVImm/+DnpkGNixHRs2SGI9/hzszYymxfaSJ49T8BDUW
-         PDJTFfCwkcws2FEhVfx0FheGspexSFRAHXIaLmxpKLBZUUk5SDnkHzKHVb8D1QMa0i+z
-         7OWbyDbxVMBqXIBMGCHUyn2iU0Ulq/kWQtQN3jfDwEn+dmk2dk9pWlYPPnu4VQ1zXs6f
-         DcAAJufsmv2uc4O95FLoilKAylhGijHSsnbcWVPA1y9WBSVA37t2KmIHqZJLjD3Pt1AB
-         6Hz76/Qg7MGnGIQoV5Cdh+fTjjuxX5eQZ+S3Af3rzTj01OKiLFwBc+YQDks9E6jKUYa5
-         En4g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7qRIoAoMwFa3C+MKmnp6p+PijydujIip3aFQ2je5+pM=;
+        b=LbPa/DcNDQZyrTlTZcHIXNLoDhP2oB1brO6jWEBdbT5/2ywWe/M8uqqFCyGf6fXKmD
+         3XpPD6bMskfXKkH0b27SrbW1e1WwJf2hgipU2Vv31Xthu0DJv02c2OgWcXv5B+TOFzk6
+         EpChEb5rq087KFHnTMZTGY9qOX0JbhAC/AwsIgdZDYp1HEh4YQwRX05/RKFUbh6htNYd
+         87R9irwxnymKcAdqJHdY8NkdqSGOlU32RomQbjMd5IJFbxBt4cJbNIuGCiCJllO6Ry2N
+         9IETQRWs25YYkj1oxKge4cTi7Lm0h7wr+o4sQzBHzhQNWSnS/CF5QDFGkPl0QPhKQXVd
+         CPcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=turgOZHVZA+slmDkzWItW7JViu4gUnC/Ds0bw1pflBM=;
-        b=s9f4Et6FJAgM4sD8/I4WyXJM6vpQQJSyGnwzcDsWGlHDAY1cU6YwFLlpxA+eZwNezj
-         ON2aPGXHbS5GVr3Wqzo6I3AWre60GZ/GZs8IvWkg0l3f2B5bTnyWzzAvp0mFTcVSggC6
-         EuGB4RVuj9H95+eKWzq/wa/e02G1FarexWFtkfC8EUDg//C+IZKOIFQDKXiMNgPL/G5W
-         FOI7hXqm+Vbt4RveOjf76pmgFd3awuYTJBVmi5EStrzd11C5D9h57PVdD/+NZD7Oe4+w
-         M6iZ/o2gYLEIKrX1TZFLUy76Ks3zFs0Mrkp9TjbLYDa7nSqtSpPjwCBDKKzcP9uRlq2A
-         /J9Q==
-X-Gm-Message-State: APjAAAX0F/ImqTRnLBDAVA8W6dwKoLO4xoAtnVglxe3ugGjkUDTusAM6
-        Hjj+ecWyPEVSDniZb23fOOgg+YyNDLaWYFCvMsu3YA==
-X-Google-Smtp-Source: APXvYqwjC5SWPgI46QoTgvlTu/96JE/AEpBn03nwkHGSfPInUIonOiiuZICMnjjTvlc2wpiX7j93x2VmEko+tKdqsYE=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr1592103lfm.61.1559121208258;
- Wed, 29 May 2019 02:13:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190516085018.2207-1-masneyb@onstation.org> <20190520142149.D56DA214AE@mail.kernel.org>
-In-Reply-To: <20190520142149.D56DA214AE@mail.kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 May 2019 11:13:15 +0200
-Message-ID: <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
- tree bindings for vibrator
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7qRIoAoMwFa3C+MKmnp6p+PijydujIip3aFQ2je5+pM=;
+        b=L8KZWfzCe0ofZ4AlfTITAE/ROs+0lkpR6rUluBkkk9MkHF/LexpcwgXIZMW7litgzQ
+         +NqwjD31PRrtIWMaS4yHCHif3QDESYe8V/nBE+I3dhs9koPX/hyUCnADaEEa3XRGZ36c
+         TuYLI2HhG7ARoD0jNKcs+bpa+lWdV8f8ChFQOrT8jb1A8cQvCbpwucFClA0mVU9aqRWd
+         1CZkmEZ4RD0W3DOQYp9XgR1qeCfy1FIT5eMuNKFT6g2QlJQtrcPoWdNnxYe+3EaAR103
+         wNtOAQAaM4vKPY4qbtTcHiyv0Xw/YFIIKGevO1cdkFlqU8nNkSh8TN4oKlrDKrz4TPJb
+         dr6Q==
+X-Gm-Message-State: APjAAAWLjr72Qj+eg8XZPcahMSM92GWfe81mo1voa4U9JxG5KNZtnF8u
+        JA/Ao970DIuLm8h6HF1RLlE=
+X-Google-Smtp-Source: APXvYqymDJsmB7mrZHnSffvjL/AgMhhrCQY1tAUJ04EAhpx0MaWk+njjoQ/E63h9EnWyqTnyhnXwlw==
+X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr117409634pls.146.1559121315292;
+        Wed, 29 May 2019 02:15:15 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id y12sm11587635pgp.63.2019.05.29.02.15.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 29 May 2019 02:15:14 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     isdn@linux-pingi.de, keescook@chromium.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] isdn: hisax: hfc_2bds0: Fix a possible concurrency use-after-free bug in HFCD_l1hw()
+Date:   Wed, 29 May 2019 17:16:23 +0800
+Message-Id: <1559121383-28691-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 4:21 PM Stephen Boyd <sboyd@kernel.org> wrote:
+In drivers/isdn/hisax/hfc_2bds0.c, the function hfc2bds0_interrupt() and
+HFCD_l1hw() may be concurrently executed.
 
-> > +       vibrator@fd8c3450 {
-> > +               compatible = "qcom,msm8974-vibrator";
-> > +               reg = <0xfd8c3450 0x400>;
->
-> This is inside the multimedia clk controller. The resource reservation
-> mechanism should be complaining loudly here. Is the driver writing
-> directly into clk controller registers to adjust a duty cycle of the
-> camera's general purpose clk?
->
-> Can you add support for duty cycle to the qcom clk driver's RCGs and
-> then write a generic clk duty cycle vibrator driver that adjusts the
-> duty cycle of the clk? That would be better than reaching into the clk
-> controller registers to do this.
+HFCD_l1hw()
+    line 969: if (!cs->tx_skb)
 
-There is something ontological about this.
+hfc2bds0_interrupt()
+    line 875: dev_kfree_skb_irq(cs->tx_skb);
 
-A clock with variable duty cycle, isn't that by definition a PWM?
-I don't suppose it is normal for qcom clocks to be able to control
-their duty cycle, but rather default to 50/50 as we could expect?
+Thus, a possible concurrency use-after-free bug may occur in HFCD_l1hw().
 
-I would rather say that maybe the qcom drivers/clk/qcom/* file
-should be exporting a PWM from the linux side of things
-rather than a clock for this thingie, and adding #pwm-cells
-in the DT node for the clock controller, making it possible
-to obtain PWMs right out of it, if it is a single device node for
-the whole thing.
+To fix these bugs, the calls to spin_lock_irqsave() and
+spin_unlock_irqrestore() are added in HFCD_l1hw(), to protect the
+access to cs->tx_skb.
 
-Analogous to how we have GPIOs that are ortogonally interrupt
-providers I don't see any big problem in a clock controller
-being clock and PWM provider at the same time.
+See commit 7418e6520f22 ("isdn: hisax: hfc_pci: Fix a possible concurrency
+use-after-free bug in HFCPCI_l1hw()") for details.
 
-There is code in drivers/clk/clk-pwm to use a pwm as a clock
-but that is kind of the reverse use case, if we implement PWMs
-directly in a clock controller driver then these can be turned into
-clocks using clk-pwm.c should it be needed, right?
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ drivers/isdn/hisax/hfc_2bds0.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Part of me start to question whether clk and pwm should even
-be separate subsystems :/ they seem to solve an overlapping
-problem space.
+diff --git a/drivers/isdn/hisax/hfc_2bds0.c b/drivers/isdn/hisax/hfc_2bds0.c
+index 3715fa0..ade12c0 100644
+--- a/drivers/isdn/hisax/hfc_2bds0.c
++++ b/drivers/isdn/hisax/hfc_2bds0.c
+@@ -966,11 +966,13 @@ HFCD_l1hw(struct PStack *st, int pr, void *arg)
+ 		if (cs->debug & L1_DEB_LAPD)
+ 			debugl1(cs, "-> PH_REQUEST_PULL");
+ #endif
++		spin_lock_irqsave(&cs->lock, flags);
+ 		if (!cs->tx_skb) {
+ 			test_and_clear_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
+ 			st->l1.l1l2(st, PH_PULL | CONFIRM, NULL);
+ 		} else
+ 			test_and_set_bit(FLG_L1_PULL_REQ, &st->l1.Flags);
++		spin_unlock_irqrestore(&cs->lock, flags);
+ 		break;
+ 	case (HW_RESET | REQUEST):
+ 		spin_lock_irqsave(&cs->lock, flags);
+-- 
+2.7.4
 
-Yours,
-Linus Walleij
