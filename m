@@ -2,142 +2,105 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22101C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622B9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E6723E45
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE6423E7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:58:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B6922hLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfE2Q5Z (ORCPT
+        id S1726546AbfE2Q6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:57:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39402 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfE2Q5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:57:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B2E885538;
-        Wed, 29 May 2019 16:57:23 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D39945C1A1;
-        Wed, 29 May 2019 16:57:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 29 May 2019 18:57:22 +0200 (CEST)
-Date:   Wed, 29 May 2019 18:57:18 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190529165717.GC27659@redhat.com>
-References: <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com>
- <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
- <20190524163310.GG2655@redhat.com>
- <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
- <20190527150409.GA8961@redhat.com>
- <CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com>
+        Wed, 29 May 2019 12:58:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37930 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfE2Q6X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:58:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rXrAP+Iga6tJQXISDarBkMhgvbgqdtXIqdRXFbJlkWA=; b=B6922hLcB0oohhBRVWjTiL+o9
+        N0MaAGDDi+9EOp9r0yySf+n7xAs47uxLR1Z+X40pj2kf4o2m+TohopTubZAmJgIEd4a0ML8/tG0AS
+        PtCcU0pudTtT+YdSnE9dP68eH49SbaHnxlbMVsnHmnkP7U1gWiMmOq7aA5HyR3ZxcnEot9aGJUa1F
+        26YsuJoYiNEWznbP7+NTNVu1iWY7L62sPTDrZwlbQqUPmO8CuQN+UeeyKhFP/Qi/d05R25hsHfvty
+        oF9iQPUp1luwWXwhl7s2pdKsJPh5S/ghup86TbtzCLvTx7ogslehlxRe8VQ2KYwMKQe6o6p0jMFlP
+        jPiigmHzw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW1u3-00085d-J1; Wed, 29 May 2019 16:58:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 68562201B8CFD; Wed, 29 May 2019 18:58:13 +0200 (CEST)
+Date:   Wed, 29 May 2019 18:58:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/9] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190529165813.GC2623@hirez.programming.kicks-ass.net>
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-5-kan.liang@linux.intel.com>
+ <20190528134354.GP2623@hirez.programming.kicks-ass.net>
+ <561ec469-2e0b-4749-c184-d07e4f4eaf40@linux.intel.com>
+ <20190529075426.GA2623@hirez.programming.kicks-ass.net>
+ <110d6e3e-9f50-ad47-5a12-1ccf0b756602@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 29 May 2019 16:57:24 +0000 (UTC)
+In-Reply-To: <110d6e3e-9f50-ad47-5a12-1ccf0b756602@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28, Deepa Dinamani wrote:
->
-> I agree that signal handller being called and return value not being
-> altered is an issue with other syscalls also. I was just wondering if
-> some userspace code assumption would be assuming this. This is not a
-> kernel bug.
->
-> But, I do not think we have an understanding of what was wrong in
-> 854a6ed56839a anymore since you pointed out that my assumption was not
-> correct that the signal handler being called without errno being set
-> is wrong.
+On Wed, May 29, 2019 at 10:42:10AM -0400, Liang, Kan wrote:
+> On 5/29/2019 3:54 AM, Peter Zijlstra wrote:
 
-Deepa, sorry, I simply can't parse the above... most probably because of
-my bad English.
-
-> One open question: this part of epoll_pwait was already broken before
-> 854a6ed56839a. Do you agree?
->
-> if (err == -EINTR) {
->                    memcpy(&current->saved_sigmask, &sigsaved,
->                           sizeof(sigsaved));
->                     set_restore_sigmask();
->   } else
->                    set_current_blocked(&sigsaved);
-
-I do not understand why do you think this part was broken :/
-
-> Or, I could revert the signal_pending() check and provide a fix
-> something like below(not a complete patch)
-
-...
-
-> -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> +int restore_user_sigmask(const void __user *usigmask, sigset_t
-> *sigsaved, int sig_pending)
->  {
+> > cd09c0c40a97 ("perf events: Enable raw event support for Intel unhalted_reference_cycles event")
+> > 
+> > We used the fake event=0x00, umask=0x03 for CPU_CLK_UNHALTED.REF_TSC,
+> > because that was not available as a generic event, *until now* it seems.
+> > I see ICL actually has it as a generic event, which means we need to fix
+> > up the constraint mask for that differently.
+> > 
 > 
->         if (!usigmask)
->                return;
-> 
->         /*
->          * When signals are pending, do not restore them here.
->          * Restoring sigmask here can lead to delivering signals that the above
->          * syscalls are intended to block because of the sigmask passed in.
->          */
-> +       if (sig_pending) {
->                 current->saved_sigmask = *sigsaved;
->                 set_restore_sigmask();
->                return;
->            }
-> 
-> @@ -2330,7 +2330,8 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-> epoll_event __user *, events,
-> 
->         error = do_epoll_wait(epfd, events, maxevents, timeout);
-> 
-> -       restore_user_sigmask(sigmask, &sigsaved);
-> +       signal_detected = restore_user_sigmask(sigmask, &sigsaved,
-> error == -EINTR);
+> There is no change for REF_TSC on ICL.
 
-I fail to understand this pseudo-code, sorry. In particular, do not understand
-why restore_user_sigmask() needs to return a boolean.
+Well, if I look at the SDM for May'19 (latest afaict), Volume 3, Chapter
+19.3 'Performance Monitoring Events for Future Intel (C) Core(tm)
+Processors' the table lists:
 
-The only thing I _seem to_ understand is the "sig_pending" flag passed by the
-caller which replaces the signal_pending() check. Yes, this is what I think we
-should do, and this is what I tried to propose from the very beginning in my
-1st email in this thread.
+ Event Num.	Umask Value	Event Mask Mnemonic
 
-Oleg.
+ 00H		03H		CPU_CLK_UNHALTED.REF_TSC
 
+as a generic event, without constraints, unlike any of the preceding
+uarchs, where that event was not available except through FIXED2.
+
+That is most certainly a change.
+
+> > But note that for all previous uarchs this event did not in fact exist.
+> > 
+> > It appears the TOPDOWN.SLOTS thing, which is available in in FIXED3 is
+> > event=0x00, umask=0x04, is indeed a generic event too.
+> 
+> The SLOTS do have a generic event, TOPDOWN.SLOTS_P, event=0xA4, umask=0x1.
+> 
+> I think we need a fix as below for ICL, so the SLOT event can be extended to
+> generic event.
+> -	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
+> +	FIXED_EVENT_CONSTRAINT(0x01a4, 3),	/* TOPDOWN.SLOTS */
+
+Then WTH is that 00H, 04H event listed in the table? Note the distinct
+lack of 'Fixed Counter' or any other contraints in the 'Comments'
+column.
