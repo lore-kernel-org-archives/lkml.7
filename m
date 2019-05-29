@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DC5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B790C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4591B2430B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CD22430F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559171378;
-	bh=voLiJJ+YBWkuXuOa/EV1wytC0XoJkY6LDaACMMBxoag=;
+	s=default; t=1559171380;
+	bh=xvZyNhvo6Jgw1uph+W5aV18O32BizwXJqW0bfvcWlkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IB+DE1yTnGSEdrqb1hZfltIiHXVclFgwcp+09FEQWARFvujqzzcj5WMnYjV3n2Vi3
-	 OLrTWwi6P2blWd1cg8arKo3XdLMXUi4OsX7xEv7th5rqZi9+whRkVgED/n/pDlDwBH
-	 thkuQyWVti94QMaypGD2YtvTyzH/VXY1l4JxmjmU=
+	b=XUBpO3YHxsDY6LJdftX9VAMiNtiu5/TEjqugYWJRlmXpu4ZenWB9OzFWKgALKmkS5
+	 2WtujibIl83M44n3/hwQqW7aD0mOWfd002kLrqfV//WJEflIESKAKg8rURud5KqbnB
+	 rP4mgPhzEHKsA6SKcuMe+EqxaNxWzmK82Q108/xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfE2XJh (ORCPT
+        id S1726741AbfE2XJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:09:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47586 "EHLO
+        Wed, 29 May 2019 19:09:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47594 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfE2XJh (ORCPT
+        with ESMTP id S1726462AbfE2XJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 19:09:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Pzy7R7NMtIp0soxdacOvAtehGecGOy+zjqDf/NYYYuQ=; b=ox5BvDxZ/jy4+sN4uLv8yqRD44
-        XESlSqsqcaZEBuY3CmAeXrFTq7oW+fwCkUQdNtbYKmx/y3rv7ROk/C6P/0D8sKTLp6+qElFtOS/j1
-        x8+xS12gxsGFcWXNWtmHr4nOomFrnXUS4LVv3Nv0w/cY/2Gx7JPe0sUmXnS9+KhpslITowcGW2l22
-        gC3R3/j5njBxKCZeBnPSYIz0uQAYS4aKUp34Yosr1udeR7gsFr5MoN0NPwlp1ZFyLKtzcLwZX1Vyf
-        ylb2X4m8uCwpZpurJDSAnh5++ME70oF5oG/EzVmWV6mMR1/5aPtu1kNGXqgh3s6ehf9JXfxZzE9sa
-        2GqMI9Rw==;
+        bh=wCq8wzGw72uiJf8YTianNOUvn6pWVH3JtoQXOBTmG7c=; b=KZCCgVwN4/7fZXkfXyahTcPfB5
+        3vhvf4VTIFFeMlZJwPJfA1oZnu5+f5FuDlqP0g0ygvsdXV94pvM5B8GtuA0wpT3P+TDBhYOAVqhcm
+        QEjo0whAHRLFsap3aLw2XaqO8yecfweB28Px+qnx10+yX7H+aTXt5C1pYejj3gyf8EHNirKzwD8IA
+        GYQ0cG+IAs1XUgrCatNeRDdkrmakdWI3S/+S0TOh+tlRy9N4EokGZ0s79/r6g7JS8AFpfWdlwvckb
+        xrjQrozrcnGrrUZmEuJTqmfAv12NlVc6BN4nSXaAy62c+XdD18O67UAVSB47tYj3zCscfvUOs9qDG
+        dUG04c0Q==;
 Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7hQ-0000lB-Fv; Wed, 29 May 2019 23:09:36 +0000
+        id 1hW7hQ-0000lF-GZ; Wed, 29 May 2019 23:09:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7hN-0007Tl-NR; Wed, 29 May 2019 20:09:33 -0300
+        id 1hW7hN-0007Td-Lw; Wed, 29 May 2019 20:09:33 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 08/10] scripts/documentation-file-ref-check: teach about .txt -> .yaml renames
-Date:   Wed, 29 May 2019 20:09:30 -0300
-Message-Id: <a301b6e922407c12279d7ca51b70156673e66ddc.1559170790.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 06/10] scripts/documentation-file-ref-check: exclude false-positives
+Date:   Wed, 29 May 2019 20:09:28 -0300
+Message-Id: <cfc75c5e965884d64579e99e2189a94bf3f30ce4.1559170790.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559170790.git.mchehab+samsung@kernel.org>
 References: <cover.1559170790.git.mchehab+samsung@kernel.org>
@@ -64,46 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At DT, files are being renamed to jason. Teach the script how to
-handle such renames when used in fix mode.
+There are at least two cases where a documentation file was gone
+for good, but the text still mentions it:
+
+1) drivers/vhost/vhost.c:
+   the reference for Documentation/virtual/lguest/lguest.c is just
+   to give credits to the original work that vhost replaced;
+
+2) Documentation/scsi/scsi_mid_low_api.txt:
+   It gives credit and mentions the old Documentation/Configure.help
+   file that used to be part of Kernel 2.4.x
+
+As we don't want to keep the script to keep pinpoint to those
+every time, let's add a logic at the script to allow it to ignore
+valid false-positives like the above.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/documentation-file-ref-check | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ scripts/documentation-file-ref-check | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index 5d775ca7469b..ff16db269079 100755
+index 6b622b88f4cf..05235775cc71 100755
 --- a/scripts/documentation-file-ref-check
 +++ b/scripts/documentation-file-ref-check
-@@ -165,13 +165,22 @@ foreach my $ref (keys %broken_ref) {
+@@ -8,6 +8,14 @@ use warnings;
+ use strict;
+ use Getopt::Long qw(:config no_auto_abbrev);
  
- 	# usual reason for breakage: DT file moved around
- 	if ($ref =~ /devicetree/) {
--		my $search = $new;
--		$search =~ s,^.*/,,;
--		$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
-+		# usual reason for breakage: DT file renamed to .yaml
- 		if (!$f) {
--			# Manufacturer name may have changed
--			$search =~ s/^.*,//;
-+			my $new_ref = $ref;
-+			$new_ref =~ s/\.txt$/.yaml/;
-+			$f=$new_ref if (-f $new_ref);
++# NOTE: only add things here when the file was gone, but the text wants
++# to mention a past documentation file, for example, to give credits for
++# the original work.
++my %false_positives = (
++	"Documentation/scsi/scsi_mid_low_api.txt" => "Documentation/Configure.help",
++	"drivers/vhost/vhost.c" => "Documentation/virtual/lguest/lguest.c",
++);
++
+ my $scriptname = $0;
+ $scriptname =~ s,.*/([^/]+/),$1,;
+ 
+@@ -122,6 +130,11 @@ while (<IN>) {
+ 			next if (grep -e, glob("$path/$ref $path/$fulref"));
+ 		}
+ 
++		# Discard known false-positives
++		if (defined($false_positives{$f})) {
++			next if ($false_positives{$f} eq $fulref);
 +		}
 +
-+		if (!$f) {
-+			my $search = $new;
-+			$search =~ s,^.*/,,;
- 			$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
-+			if (!$f) {
-+				# Manufacturer name may have changed
-+				$search =~ s/^.*,//;
-+				$f = qx(find Documentation/devicetree/ -iname "*$search*") if ($search);
-+			}
- 		}
- 	}
- 
+ 		if ($fix) {
+ 			if (!($ref =~ m/(scripts|Kconfig|Kbuild)/)) {
+ 				$broken_ref{$ref}++;
 -- 
 2.21.0
 
