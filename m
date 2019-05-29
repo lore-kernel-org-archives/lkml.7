@@ -2,560 +2,737 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC20C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDA7C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BC420B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfH181h9"
+	by mail.kernel.org (Postfix) with ESMTP id 327B7216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfE2JdL (ORCPT
+        id S1726097AbfE2Jfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:33:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:32936 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfE2JdK (ORCPT
+        Wed, 29 May 2019 05:35:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:63851 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725861AbfE2Jfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:33:10 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 14so1739010qtf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p7e/n9MQO+MPQMx1/3utWKhXUce7ensfT1IkKRwayMs=;
-        b=mfH181h95/b1VFsfoLdIi1zqvh5gCqZFtKTDUrAhads42BIalR5Sw4FNOeUbCLNeGh
-         2og9BNDKRE0ZIMzVI5LfFSb/ROsVIApnJJmZ4eIjgZvgW6fmMuKjCxaPIsanyTrPYqeh
-         DK9VXBFKzxy4lWT+w/IZ3nzPs3yPL2TH3VEOYgDDhJJpUJHxNVWJ3vTBwoIZdt3/vURf
-         PQPTHqAqkEDIZl1F83Ptyq5D5vCI899B2a6aPNf3OYfpX80za6FPbg8Ybuai4Eh65NEZ
-         OcV+ucf+T9mVWhLvmMq1Yv4ta9qrAoic0LOx8FMbdFBce1I3eDQvCLk4LdbOaRqqmhq1
-         FE2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p7e/n9MQO+MPQMx1/3utWKhXUce7ensfT1IkKRwayMs=;
-        b=cJODWD9pX4VhAgLo+ZQYgN/jqRCTn/FX6gGVd9Qf/+/8ThhEImfqGNi1x9WJrNphXi
-         ZbFAykXHmhrMJbLINemhkHARTXsHdI9d3Bs+tlimdyHll/YZ5ngaE2C0CtF1Cqm6h4yI
-         d3TZbBLa7j9iXcZCdo6lygfm70CtqVkulhs6cX7q2/l09KJpZrw+JPtAo/B9caWREuMn
-         joAGW1H/hIEeTmBNa7X8DVMCHFj+1e7D1kkSXvxJdoMjk0MfG56WJexiXcFZk0ncopNE
-         xIkVwawJkbG6pw379ZZobq5T7pfGRDg6hHuXn/ZN3Ia/EqZPdLre/ij6Zq/rs+Z1w4x8
-         y+HA==
-X-Gm-Message-State: APjAAAWg8NaHBB6Qmnx24uiY/eKKlqY01euhNaTpIq1vUNWQP2jRXLZE
-        IvPmwwGc7yWI2rLcEdO+RIpohM8UVKJIUO3K/vcpZ+ZS
-X-Google-Smtp-Source: APXvYqxjruBYTDHIG+EpJ5vstfjHASR0nbu2CcbP+9180ThdGo76O/POFINevhY8WsyFhCISJ/+PTBLhyDLNRuNMA0A=
-X-Received: by 2002:ac8:3221:: with SMTP id x30mr9094402qta.176.1559122389003;
- Wed, 29 May 2019 02:33:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com> <1558521304-27469-27-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1558521304-27469-27-git-send-email-suzuki.poulose@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 29 May 2019 10:32:57 +0100
-Message-ID: <CAJ9a7VhwHeN5uSEwDhLVR=CL=vgCfKHtWZ3o8NnLnxw_=mYBOg@mail.gmail.com>
-Subject: Re: [PATCH v4 26/30] coresight: Use platform agnostic names
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
+        Wed, 29 May 2019 05:35:39 -0400
+X-UUID: d30e00251bb840368195b29455158f68-20190529
+X-UUID: d30e00251bb840368195b29455158f68-20190529
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 605601674; Wed, 29 May 2019 17:35:31 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 29 May 2019 17:35:29 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 29 May 2019 17:35:29 +0800
+Message-ID: <1559122529.17186.24.camel@mtksdccf07>
+Subject: Re: [PATCH] kasan: add memory corruption identification for
+ software tag-based mode
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Miles Chen" <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>
+Date:   Wed, 29 May 2019 17:35:29 +0800
+In-Reply-To: <CACT4Y+aCnODuffR7PafyYispp_U+ZdY1Dr0XQYvmghkogLJzSw@mail.gmail.com>
+References: <1559027797-30303-1-git-send-email-walter-zh.wu@mediatek.com>
+         <CACT4Y+aCnODuffR7PafyYispp_U+ZdY1Dr0XQYvmghkogLJzSw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> Hi Walter,
+> 
+> Please describe your use case.
+> For testing context the generic KASAN works better and it does have
+> quarantine already. For prod/canary environment the quarantine may be
+> unacceptable in most cases.
+> I think we also want to use tag-based KASAN as a base for ARM MTE
+> support in near future and quarantine will be most likely unacceptable
+> for main MTE use cases. So at the very least I think this should be
+> configurable. +Catalin for this.
+> 
+My patch hope the tag-based KASAN bug report make it easier for
+programmers to see memory corruption problem. 
+Because now tag-based KASAN bug report always shows “invalid-access”
+error, my patch can identify it whether it is use-after-free or
+out-of-bound.
 
-Why am I not seeing references to coresight-cpu-debug in here? In
-other places in this patchset CPU debug has been changed, but there
-appears to be no platform agnostic name here, nor any ACPI type name
-either. Is cpu-debug remaining device tree only? Should CPU debug not
-be treated like ETM and get a cpu centric name?
-
-Mike
-
-On Wed, 22 May 2019 at 11:39, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> So far we have reused the name of the "platform" device for
-> the CoreSight device. But this is not very intuitive when
-> we move to ACPI. Also, the ACPI device names have ":" in them
-> (e.g, ARMHC97C:01), which the perf tool doesn't like very much.
-> This patch introduces a generic naming scheme, givin more intuitive
-> names for the devices that appear on the CoreSight bus.
-> The names follow the pattern "prefix" followed by "index" (e.g, etm5).
-> We maintain a list of allocated devices per "prefix" to make sure
-> we don't allocate a new name when it is reprobed (e.g, due to
-> unsatisifed device dependencies). So, we maintain the list
-> of "fwnodes" of the parent devices to allocate a consistent name.
-> All devices except the ETMs get an index allocated in the order
-> of probing. ETMs get an index based on the CPU they are attached to.
->
-> TMC devices are named using "tmc_etf", "tmc_etb", and "tmc_etr"
-> prefixes depending on the configuration of the device.
->
-> The replicators and funnels are not classified as dynamic/static
-> anymore. One could easily figure that out by checking the presence
-> of "mgmt" registers under sysfs.
->
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-catu.c       |  7 ++-
->  drivers/hwtracing/coresight/coresight-etb10.c      |  7 ++-
->  drivers/hwtracing/coresight/coresight-etm3x.c      |  4 +-
->  drivers/hwtracing/coresight/coresight-etm4x.c      |  4 +-
->  drivers/hwtracing/coresight/coresight-funnel.c     |  7 ++-
->  drivers/hwtracing/coresight/coresight-replicator.c |  7 ++-
->  drivers/hwtracing/coresight/coresight-stm.c        | 12 +++--
->  drivers/hwtracing/coresight/coresight-tmc.c        | 15 +++++-
->  drivers/hwtracing/coresight/coresight-tpiu.c       |  7 ++-
->  drivers/hwtracing/coresight/coresight.c            | 58 ++++++++++++++++++++++
->  include/linux/coresight.h                          | 25 +++++++++-
->  11 files changed, 141 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index 1c1ad12..16ebf38 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -28,6 +28,8 @@
->  #define catu_dbg(x, ...) do {} while (0)
->  #endif
->
-> +DEFINE_CORESIGHT_DEVLIST(catu_devs, "catu");
-> +
->  struct catu_etr_buf {
->         struct tmc_sg_table *catu_table;
->         dma_addr_t sladdr;
-> @@ -505,6 +507,10 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
->         struct device *dev = &adev->dev;
->         void __iomem *base;
->
-> +       catu_desc.name = coresight_alloc_device_name(&catu_devs, dev);
-> +       if (!catu_desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata) {
->                 ret = -ENOMEM;
-> @@ -551,7 +557,6 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
->         catu_desc.type = CORESIGHT_DEV_TYPE_HELPER;
->         catu_desc.subtype.helper_subtype = CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
->         catu_desc.ops = &catu_ops;
-> -       catu_desc.name = dev_name(dev);
->
->         drvdata->csdev = coresight_register(&catu_desc);
->         if (IS_ERR(drvdata->csdev))
-> diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-> index 09df827..bdd4fd5 100644
-> --- a/drivers/hwtracing/coresight/coresight-etb10.c
-> +++ b/drivers/hwtracing/coresight/coresight-etb10.c
-> @@ -63,6 +63,8 @@
->  #define ETB_FFSR_BIT           1
->  #define ETB_FRAME_SIZE_WORDS   4
->
-> +DEFINE_CORESIGHT_DEVLIST(etb_devs, "etb");
-> +
->  /**
->   * struct etb_drvdata - specifics associated to an ETB component
->   * @base:      memory mapped base address for this component.
-> @@ -726,6 +728,10 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
->         struct resource *res = &adev->res;
->         struct coresight_desc desc = { 0 };
->
-> +       desc.name = coresight_alloc_device_name(&etb_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata)
->                 return -ENOMEM;
-> @@ -770,7 +776,6 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
->         desc.ops = &etb_cs_ops;
->         desc.pdata = pdata;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->         desc.groups = coresight_etb_groups;
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev))
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-> index f2d4616..bed7291 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-> @@ -815,6 +815,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->         }
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
-> +       if (!desc.name)
-> +               return -ENOMEM;
->
->         cpus_read_lock();
->         etmdrvdata[drvdata->cpu] = drvdata;
-> @@ -856,7 +859,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->         desc.ops = &etm_cs_ops;
->         desc.pdata = pdata;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->         desc.groups = coresight_etm_groups;
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev)) {
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 1609da1..7fe2661 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->         spin_lock_init(&drvdata->spinlock);
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
-> +       if (!desc.name)
-> +               return -ENOMEM;
->
->         cpus_read_lock();
->         etmdrvdata[drvdata->cpu] = drvdata;
-> @@ -1144,7 +1147,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->         desc.pdata = pdata;
->         desc.dev = dev;
->         desc.groups = coresight_etmv4_groups;
-> -       desc.name = dev_name(dev);
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev)) {
->                 ret = PTR_ERR(drvdata->csdev);
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index 75fa2d3..5867fcb 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -29,6 +29,8 @@
->  #define FUNNEL_HOLDTIME                (0x7 << FUNNEL_HOLDTIME_SHFT)
->  #define FUNNEL_ENSx_MASK       0xff
->
-> +DEFINE_CORESIGHT_DEVLIST(funnel_devs, "funnel");
-> +
->  /**
->   * struct funnel_drvdata - specifics associated to a funnel component
->   * @base:      memory mapped base address for this component.
-> @@ -192,6 +194,10 @@ static int funnel_probe(struct device *dev, struct resource *res)
->             of_device_is_compatible(dev->of_node, "arm,coresight-funnel"))
->                 pr_warn_once("Uses OBSOLETE CoreSight funnel binding\n");
->
-> +       desc.name = coresight_alloc_device_name(&funnel_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata)
->                 return -ENOMEM;
-> @@ -231,7 +237,6 @@ static int funnel_probe(struct device *dev, struct resource *res)
->         desc.ops = &funnel_cs_ops;
->         desc.pdata = pdata;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev)) {
->                 ret = PTR_ERR(drvdata->csdev);
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 64dfde7..c0e4225 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -22,6 +22,8 @@
->  #define REPLICATOR_IDFILTER0           0x000
->  #define REPLICATOR_IDFILTER1           0x004
->
-> +DEFINE_CORESIGHT_DEVLIST(replicator_devs, "replicator");
-> +
->  /**
->   * struct replicator_drvdata - specifics associated to a replicator component
->   * @base:      memory mapped base address for this component. Also indicates
-> @@ -183,6 +185,10 @@ static int replicator_probe(struct device *dev, struct resource *res)
->             of_device_is_compatible(dev->of_node, "arm,coresight-replicator"))
->                 pr_warn_once("Uses OBSOLETE CoreSight replicator binding\n");
->
-> +       desc.name = coresight_alloc_device_name(&replicator_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata)
->                 return -ENOMEM;
-> @@ -222,7 +228,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
->         desc.ops = &replicator_cs_ops;
->         desc.pdata = dev->platform_data;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev)) {
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index 03528f3..e3e2b00 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -107,6 +107,8 @@ struct channel_space {
->         unsigned long           *guaranteed;
->  };
->
-> +DEFINE_CORESIGHT_DEVLIST(stm_devs, "stm");
-> +
->  /**
->   * struct stm_drvdata - specifics associated to an STM component
->   * @base:              memory mapped base address for this component.
-> @@ -810,6 +812,10 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
->         size_t bitmap_size;
->         struct coresight_desc desc = { 0 };
->
-> +       desc.name = coresight_alloc_device_name(&stm_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata)
->                 return -ENOMEM;
-> @@ -854,11 +860,12 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
->         spin_lock_init(&drvdata->spinlock);
->
->         stm_init_default_data(drvdata);
-> -       stm_init_generic_data(drvdata, dev_name(dev));
-> +       stm_init_generic_data(drvdata, desc.name);
->
->         if (stm_register_device(dev, &drvdata->stm, THIS_MODULE)) {
->                 dev_info(dev,
-> -                        "stm_register_device failed, probing deferred\n");
-> +                        "%s : stm_register_device failed, probing deferred\n",
-> +                        desc.name);
->                 return -EPROBE_DEFER;
->         }
->
-> @@ -874,7 +881,6 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
->         desc.ops = &stm_cs_ops;
->         desc.pdata = pdata;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->         desc.groups = coresight_stm_groups;
->         drvdata->csdev = coresight_register(&desc);
->         if (IS_ERR(drvdata->csdev)) {
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-> index 212630e..be37aff 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
-> @@ -27,6 +27,10 @@
->  #include "coresight-priv.h"
->  #include "coresight-tmc.h"
->
-> +DEFINE_CORESIGHT_DEVLIST(etb_devs, "tmc_etb");
-> +DEFINE_CORESIGHT_DEVLIST(etf_devs, "tmc_etf");
-> +DEFINE_CORESIGHT_DEVLIST(etr_devs, "tmc_etr");
-> +
->  void tmc_wait_for_tmcready(struct tmc_drvdata *drvdata)
->  {
->         /* Ensure formatter, unformatter and hardware fifo are empty */
-> @@ -397,6 +401,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->         struct tmc_drvdata *drvdata;
->         struct resource *res = &adev->res;
->         struct coresight_desc desc = { 0 };
-> +       struct coresight_dev_list *dev_list = NULL;
->
->         ret = -ENOMEM;
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> @@ -429,13 +434,13 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->
->         desc.dev = dev;
->         desc.groups = coresight_tmc_groups;
-> -       desc.name = dev_name(dev);
->
->         switch (drvdata->config_type) {
->         case TMC_CONFIG_TYPE_ETB:
->                 desc.type = CORESIGHT_DEV_TYPE_SINK;
->                 desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
->                 desc.ops = &tmc_etb_cs_ops;
-> +               dev_list = &etb_devs;
->                 break;
->         case TMC_CONFIG_TYPE_ETR:
->                 desc.type = CORESIGHT_DEV_TYPE_SINK;
-> @@ -447,11 +452,13 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->                         goto out;
->                 idr_init(&drvdata->idr);
->                 mutex_init(&drvdata->idr_mutex);
-> +               dev_list = &etr_devs;
->                 break;
->         case TMC_CONFIG_TYPE_ETF:
->                 desc.type = CORESIGHT_DEV_TYPE_LINKSINK;
->                 desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_FIFO;
->                 desc.ops = &tmc_etf_cs_ops;
-> +               dev_list = &etf_devs;
->                 break;
->         default:
->                 pr_err("%s: Unsupported TMC config\n", desc.name);
-> @@ -459,6 +466,12 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->                 goto out;
->         }
->
-> +       desc.name = coresight_alloc_device_name(dev_list, dev);
-> +       if (!desc.name) {
-> +               ret = -ENOMEM;
-> +               goto out;
-> +       }
-> +
->         pdata = coresight_get_platform_data(dev);
->         if (IS_ERR(pdata)) {
->                 ret = PTR_ERR(pdata);
-> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-> index b699d61..f8583e4 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-> @@ -47,6 +47,8 @@
->  #define FFCR_FON_MAN           BIT(6)
->  #define FFCR_STOP_FI           BIT(12)
->
-> +DEFINE_CORESIGHT_DEVLIST(tpiu_devs, "tpiu");
-> +
->  /**
->   * @base:      memory mapped base address for this component.
->   * @atclk:     optional clock for the core parts of the TPIU.
-> @@ -125,6 +127,10 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
->         struct resource *res = &adev->res;
->         struct coresight_desc desc = { 0 };
->
-> +       desc.name = coresight_alloc_device_name(&tpiu_devs, dev);
-> +       if (!desc.name)
-> +               return -ENOMEM;
-> +
->         drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->         if (!drvdata)
->                 return -ENOMEM;
-> @@ -157,7 +163,6 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
->         desc.ops = &tpiu_cs_ops;
->         desc.pdata = pdata;
->         desc.dev = dev;
-> -       desc.name = dev_name(dev);
->         drvdata->csdev = coresight_register(&desc);
->
->         if (!IS_ERR(drvdata->csdev)) {
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 1287778..86d1fc2 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -1291,3 +1291,61 @@ void coresight_unregister(struct coresight_device *csdev)
->         device_unregister(&csdev->dev);
->  }
->  EXPORT_SYMBOL_GPL(coresight_unregister);
-> +
-> +
-> +/*
-> + * coresight_search_device_idx - Search the fwnode handle of a device
-> + * in the given dev_idx list. Must be called with the coresight_mutex held.
-> + *
-> + * Returns the index of the entry, when found. Otherwise, -ENOENT.
-> + */
-> +static inline int coresight_search_device_idx(struct coresight_dev_list *dict,
-> +                                             struct fwnode_handle *fwnode)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < dict->nr_idx; i++)
-> +               if (dict->fwnode_list[i] == fwnode)
-> +                       return i;
-> +       return -ENOENT;
-> +}
-> +
-> +/*
-> + * coresight_alloc_device_name - Get an index for a given device in the
-> + * device index list specific to a driver. An index is allocated for a
-> + * device and is tracked with the fwnode_handle to prevent allocating
-> + * duplicate indices for the same device (e.g, if we defer probing of
-> + * a device due to dependencies), in case the index is requested again.
-> + */
-> +char *coresight_alloc_device_name(struct coresight_dev_list *dict,
-> +                                 struct device *dev)
-> +{
-> +       int idx;
-> +       char *name = NULL;
-> +       struct fwnode_handle **list;
-> +
-> +       mutex_lock(&coresight_mutex);
-> +
-> +       idx = coresight_search_device_idx(dict, dev_fwnode(dev));
-> +       if (idx < 0) {
-> +               /* Make space for the new entry */
-> +               idx = dict->nr_idx;
-> +               list = krealloc(dict->fwnode_list,
-> +                               (idx + 1) * sizeof(*dict->fwnode_list),
-> +                               GFP_KERNEL);
-> +               if (ZERO_OR_NULL_PTR(list)) {
-> +                       idx = -ENOMEM;
-> +                       goto done;
-> +               }
-> +
-> +               list[idx] = dev_fwnode(dev);
-> +               dict->fwnode_list = list;
-> +               dict->nr_idx = idx + 1;
-> +       }
-> +
-> +       name = devm_kasprintf(dev, GFP_KERNEL, "%s%d", dict->pfx, idx);
-> +done:
-> +       mutex_unlock(&coresight_mutex);
-> +       return name;
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_alloc_device_name);
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index b40544b..a2b6882 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -168,6 +168,28 @@ struct coresight_device {
->         struct dev_ext_attribute *ea;
->  };
->
-> +/*
-> + * coresight_dev_list - Mapping for devices to "name" index for device
-> + * names.
-> + *
-> + * @nr_idx:            Number of entries already allocated.
-> + * @pfx:               Prefix pattern for device name.
-> + * @fwnode_list:       Array of fwnode_handles associated with each allocated
-> + *                     index, upto nr_idx entries.
-> + */
-> +struct coresight_dev_list {
-> +       int                     nr_idx;
-> +       const char              *pfx;
-> +       struct fwnode_handle    **fwnode_list;
-> +};
-> +
-> +#define DEFINE_CORESIGHT_DEVLIST(var, dev_pfx)                         \
-> +static struct coresight_dev_list (var) = {                             \
-> +                                               .pfx = dev_pfx,         \
-> +                                               .nr_idx = 0,            \
-> +                                               .fwnode_list = NULL,    \
-> +}
-> +
->  #define to_coresight_device(d) container_of(d, struct coresight_device, dev)
->
->  #define source_ops(csdev)      csdev->ops->source_ops
-> @@ -261,7 +283,8 @@ extern int coresight_claim_device_unlocked(void __iomem *base);
->
->  extern void coresight_disclaim_device(void __iomem *base);
->  extern void coresight_disclaim_device_unlocked(void __iomem *base);
-> -
-> +extern char *coresight_alloc_device_name(struct coresight_dev_list *devs,
-> +                                        struct device *dev);
->  #else
->  static inline struct coresight_device *
->  coresight_register(struct coresight_desc *desc) { return NULL; }
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+We can try to make our patch is feature option. Thanks your suggestion.
+Would you explain why the quarantine is unacceptable for main MTE?
+Thanks.
 
 
+> You don't change total quarantine size and charge only sizeof(struct
+> qlist_object). If I am reading this correctly, this means that
+> quarantine will have the same large overhead as with generic KASAN. We
+> will just cache much more objects there. The boot benchmarks may be
+> unrepresentative for this. Don't we need to reduce quarantine size or
+> something?
+> 
+Yes, we will try to choose 2. My original idea is belong to it. So we
+will reduce quarantine size.
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+1). If quarantine size is the same with generic KASAN and tag-based
+KASAN, then the miss rate of use-after-free case in generic KASAN is
+larger than tag-based KASAN.
+2). If tag-based KASAN quarantine size is smaller generic KASAN, then
+the miss rate of use-after-free case may be the same, but tag-based
+KASAN can save slab memory usage.
+
+
+> 
+> > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > ---
+> >  include/linux/kasan.h  |  20 +++++---
+> >  mm/kasan/Makefile      |   4 +-
+> >  mm/kasan/common.c      |  15 +++++-
+> >  mm/kasan/generic.c     |  11 -----
+> >  mm/kasan/kasan.h       |  45 ++++++++++++++++-
+> >  mm/kasan/quarantine.c  | 107 ++++++++++++++++++++++++++++++++++++++---
+> >  mm/kasan/report.c      |  36 +++++++++-----
+> >  mm/kasan/tags.c        |  64 ++++++++++++++++++++++++
+> >  mm/kasan/tags_report.c |   5 +-
+> >  mm/slub.c              |   2 -
+> >  10 files changed, 262 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> > index b40ea104dd36..bbb52a8bf4a9 100644
+> > --- a/include/linux/kasan.h
+> > +++ b/include/linux/kasan.h
+> > @@ -83,6 +83,9 @@ size_t kasan_metadata_size(struct kmem_cache *cache);
+> >  bool kasan_save_enable_multi_shot(void);
+> >  void kasan_restore_multi_shot(bool enabled);
+> >
+> > +void kasan_cache_shrink(struct kmem_cache *cache);
+> > +void kasan_cache_shutdown(struct kmem_cache *cache);
+> > +
+> >  #else /* CONFIG_KASAN */
+> >
+> >  static inline void kasan_unpoison_shadow(const void *address, size_t size) {}
+> > @@ -153,20 +156,14 @@ static inline void kasan_remove_zero_shadow(void *start,
+> >  static inline void kasan_unpoison_slab(const void *ptr) { }
+> >  static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+> >
+> > +static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+> > +static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> >  #endif /* CONFIG_KASAN */
+> >
+> >  #ifdef CONFIG_KASAN_GENERIC
+> >
+> >  #define KASAN_SHADOW_INIT 0
+> >
+> > -void kasan_cache_shrink(struct kmem_cache *cache);
+> > -void kasan_cache_shutdown(struct kmem_cache *cache);
+> > -
+> > -#else /* CONFIG_KASAN_GENERIC */
+> > -
+> > -static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+> > -static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> 
+> Why do we need to move these functions?
+> For generic KASAN that's required because we store the objects
+> themselves in the quarantine, but it's not the case for tag-based mode
+> with your patch...
+> 
+The quarantine in tag-based KASAN includes new objects which we create.
+Those objects are the freed information. They can be shrunk by calling
+them. So we move these function into CONFIG_KASAN. 
+
+
+> > -
+> >  #endif /* CONFIG_KASAN_GENERIC */
+> >
+> >  #ifdef CONFIG_KASAN_SW_TAGS
+> > @@ -180,6 +177,8 @@ void *kasan_reset_tag(const void *addr);
+> >  void kasan_report(unsigned long addr, size_t size,
+> >                 bool is_write, unsigned long ip);
+> >
+> > +struct kasan_alloc_meta *get_object_track(void);
+> > +
+> >  #else /* CONFIG_KASAN_SW_TAGS */
+> >
+> >  static inline void kasan_init_tags(void) { }
+> > @@ -189,6 +188,11 @@ static inline void *kasan_reset_tag(const void *addr)
+> >         return (void *)addr;
+> >  }
+> >
+> > +static inline struct kasan_alloc_meta *get_object_track(void)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> >  #endif /* CONFIG_KASAN_SW_TAGS */
+> >
+> >  #endif /* LINUX_KASAN_H */
+> > diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+> > index 5d1065efbd47..03b0fe22ec55 100644
+> > --- a/mm/kasan/Makefile
+> > +++ b/mm/kasan/Makefile
+> > @@ -16,6 +16,6 @@ CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+> >  CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+> >  CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+> >
+> > -obj-$(CONFIG_KASAN) := common.o init.o report.o
+> > -obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+> > +obj-$(CONFIG_KASAN) := common.o init.o report.o quarantine.o
+> > +obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o
+> >  obj-$(CONFIG_KASAN_SW_TAGS) += tags.o tags_report.o
+> > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> > index 80bbe62b16cd..919f693a58ab 100644
+> > --- a/mm/kasan/common.c
+> > +++ b/mm/kasan/common.c
+> > @@ -81,7 +81,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
+> >         return depot_save_stack(&trace, flags);
+> >  }
+> >
+> > -static inline void set_track(struct kasan_track *track, gfp_t flags)
+> > +void set_track(struct kasan_track *track, gfp_t flags)
+> >  {
+> >         track->pid = current->pid;
+> >         track->stack = save_stack(flags);
+> > @@ -457,7 +457,7 @@ static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+> >                 return false;
+> >
+> >         set_track(&get_alloc_info(cache, object)->free_track, GFP_NOWAIT);
+> > -       quarantine_put(get_free_info(cache, object), cache);
+> > +       quarantine_put(get_free_info(cache, tagged_object), cache);
+> 
+> Why do we need this change?
+> 
+In order to add freed object information into quarantine.
+The freed object information is tag address , size, and free backtrace.
+
+
+> >
+> >         return IS_ENABLED(CONFIG_KASAN_GENERIC);
+> >  }
+> > @@ -614,6 +614,17 @@ void kasan_free_shadow(const struct vm_struct *vm)
+> >                 vfree(kasan_mem_to_shadow(vm->addr));
+> >  }
+> >
+> > +void kasan_cache_shrink(struct kmem_cache *cache)
+> > +{
+> > +       quarantine_remove_cache(cache);
+> > +}
+> > +
+> > +void kasan_cache_shutdown(struct kmem_cache *cache)
+> > +{
+> > +       if (!__kmem_cache_empty(cache))
+> > +               quarantine_remove_cache(cache);
+> > +}
+> > +
+> >  #ifdef CONFIG_MEMORY_HOTPLUG
+> >  static bool shadow_mapped(unsigned long addr)
+> >  {
+> > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > index 504c79363a34..5f579051dead 100644
+> > --- a/mm/kasan/generic.c
+> > +++ b/mm/kasan/generic.c
+> > @@ -191,17 +191,6 @@ void check_memory_region(unsigned long addr, size_t size, bool write,
+> >         check_memory_region_inline(addr, size, write, ret_ip);
+> >  }
+> >
+> > -void kasan_cache_shrink(struct kmem_cache *cache)
+> > -{
+> > -       quarantine_remove_cache(cache);
+> > -}
+> > -
+> > -void kasan_cache_shutdown(struct kmem_cache *cache)
+> > -{
+> > -       if (!__kmem_cache_empty(cache))
+> > -               quarantine_remove_cache(cache);
+> > -}
+> > -
+> >  static void register_global(struct kasan_global *global)
+> >  {
+> >         size_t aligned_size = round_up(global->size, KASAN_SHADOW_SCALE_SIZE);
+> > diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> > index 3e0c11f7d7a1..6848a93660d9 100644
+> > --- a/mm/kasan/kasan.h
+> > +++ b/mm/kasan/kasan.h
+> > @@ -95,9 +95,21 @@ struct kasan_alloc_meta {
+> >         struct kasan_track free_track;
+> >  };
+> >
+> > +#ifdef CONFIG_KASAN_GENERIC
+> >  struct qlist_node {
+> >         struct qlist_node *next;
+> >  };
+> > +#else
+> > +struct qlist_object {
+> > +       unsigned long addr;
+> > +       unsigned int size;
+> > +       struct kasan_alloc_meta free_track;
+> 
+> Why is this kasan_alloc_meta rather then kasan_track? We don't
+> memorize alloc stack...
+> 
+Yes, you are right, we only need the free_track of kasan_alloc_meta. We
+will change it.
+
+
+> > +};
+> > +struct qlist_node {
+> > +       struct qlist_object *qobject;
+> > +       struct qlist_node *next;
+> > +};
+> > +#endif
+> >  struct kasan_free_meta {
+> >         /* This field is used while the object is in the quarantine.
+> >          * Otherwise it might be used for the allocator freelist.
+> > @@ -133,16 +145,19 @@ void kasan_report(unsigned long addr, size_t size,
+> >                 bool is_write, unsigned long ip);
+> >  void kasan_report_invalid_free(void *object, unsigned long ip);
+> >
+> > -#if defined(CONFIG_KASAN_GENERIC) && \
+> > +#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS) && \
+> 
+> This condition seems to be always true, no?
+> 
+Yes, it is always true, it should be removed.
+
+
+> >         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+> > +
+> >  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
+> >  void quarantine_reduce(void);
+> >  void quarantine_remove_cache(struct kmem_cache *cache);
+> > +void set_track(struct kasan_track *track, gfp_t flags);
+> >  #else
+> >  static inline void quarantine_put(struct kasan_free_meta *info,
+> >                                 struct kmem_cache *cache) { }
+> >  static inline void quarantine_reduce(void) { }
+> >  static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
+> > +static inline void set_track(struct kasan_track *track, gfp_t flags) {}
+> >  #endif
+> >
+> >  #ifdef CONFIG_KASAN_SW_TAGS
+> > @@ -151,6 +166,15 @@ void print_tags(u8 addr_tag, const void *addr);
+> >
+> >  u8 random_tag(void);
+> >
+> > +bool quarantine_find_object(void *object);
+> > +
+> > +int qobject_add_size(void);
+> 
+> Would be more reasonable to use size_t type for object sizes.
+> 
+the sum of qobect and qnode size?
+
+
+> > +
+> > +struct qlist_node *qobject_create(struct kasan_free_meta *info,
+> > +               struct kmem_cache *cache);
+> > +
+> > +void qobject_free(struct qlist_node *qlink, struct kmem_cache *cache);
+> > +
+> >  #else
+> >
+> >  static inline void print_tags(u8 addr_tag, const void *addr) { }
+> > @@ -160,6 +184,25 @@ static inline u8 random_tag(void)
+> >         return 0;
+> >  }
+> >
+> > +static inline bool quarantine_find_object(void *object)
+> > +{
+> > +       return 0;
+> 
+> s/0/false/
+> 
+Thanks for your friendly reminder. we will change it.
+
+
+> > +}
+> > +
+> > +static inline int qobject_add_size(void)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static inline struct qlist_node *qobject_create(struct kasan_free_meta *info,
+> > +               struct kmem_cache *cache)
+> > +{
+> > +       return 0;
+> 
+> s/0/NULL/
+> 
+Thanks for your friendly reminder. we will change it.
+
+
+> > +}
+> > +
+> > +static inline void qobject_free(struct qlist_node *qlink,
+> > +               struct kmem_cache *cache) {}
+> > +
+> >  #endif
+> >
+> >  #ifndef arch_kasan_set_tag
+> > diff --git a/mm/kasan/quarantine.c b/mm/kasan/quarantine.c
+> > index 978bc4a3eb51..f14c8dbec552 100644
+> > --- a/mm/kasan/quarantine.c
+> > +++ b/mm/kasan/quarantine.c
+> > @@ -67,7 +67,10 @@ static void qlist_put(struct qlist_head *q, struct qlist_node *qlink,
+> >                 q->tail->next = qlink;
+> >         q->tail = qlink;
+> >         qlink->next = NULL;
+> > -       q->bytes += size;
+> > +       if (IS_ENABLED(CONFIG_KASAN_SW_TAGS))
+> 
+> It would be more reasonable to pass the right size from the caller. It
+> already have to have the branch on CONFIG_KASAN_SW_TAGS because it
+> needs to allocate qobject or not, that would be the right place to
+> pass the right size.
+> 
+In tag-based KASAN, we will pass the sum of qobject and qnode size to it
+and review qlist_put() caller whether it pass right size.
+
+
+> > +               q->bytes += qobject_add_size();
+> > +       else
+> > +               q->bytes += size;
+> >  }
+> >
+> >  static void qlist_move_all(struct qlist_head *from, struct qlist_head *to)
+> > @@ -139,13 +142,18 @@ static void *qlink_to_object(struct qlist_node *qlink, struct kmem_cache *cache)
+> >
+> >  static void qlink_free(struct qlist_node *qlink, struct kmem_cache *cache)
+> >  {
+> > -       void *object = qlink_to_object(qlink, cache);
+> >         unsigned long flags;
+> > +       struct kmem_cache *obj_cache =
+> > +                       cache ? cache : qlink_to_cache(qlink);
+> > +       void *object = qlink_to_object(qlink, obj_cache);
+> > +
+> > +       if (IS_ENABLED(CONFIG_KASAN_SW_TAGS))
+> > +               qobject_free(qlink, cache);
+> >
+> >         if (IS_ENABLED(CONFIG_SLAB))
+> >                 local_irq_save(flags);
+> >
+> > -       ___cache_free(cache, object, _THIS_IP_);
+> > +       ___cache_free(obj_cache, object, _THIS_IP_);
+> >
+> >         if (IS_ENABLED(CONFIG_SLAB))
+> >                 local_irq_restore(flags);
+> > @@ -160,11 +168,9 @@ static void qlist_free_all(struct qlist_head *q, struct kmem_cache *cache)
+> >
+> >         qlink = q->head;
+> >         while (qlink) {
+> > -               struct kmem_cache *obj_cache =
+> > -                       cache ? cache : qlink_to_cache(qlink);
+> >                 struct qlist_node *next = qlink->next;
+> >
+> > -               qlink_free(qlink, obj_cache);
+> > +               qlink_free(qlink, cache);
+> >                 qlink = next;
+> >         }
+> >         qlist_init(q);
+> > @@ -187,7 +193,18 @@ void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache)
+> >         local_irq_save(flags);
+> >
+> >         q = this_cpu_ptr(&cpu_quarantine);
+> > -       qlist_put(q, &info->quarantine_link, cache->size);
+> > +       if (IS_ENABLED(CONFIG_KASAN_SW_TAGS)) {
+> > +               struct qlist_node *free_obj_info = qobject_create(info, cache);
+> > +
+> > +               if (!free_obj_info) {
+> > +                       local_irq_restore(flags);
+> > +                       return;
+> > +               }
+> > +               qlist_put(q, free_obj_info, cache->size);
+> > +       } else {
+> > +               qlist_put(q, &info->quarantine_link, cache->size);
+> > +       }
+> > +
+> >         if (unlikely(q->bytes > QUARANTINE_PERCPU_SIZE)) {
+> >                 qlist_move_all(q, &temp);
+> >
+> > @@ -327,3 +344,79 @@ void quarantine_remove_cache(struct kmem_cache *cache)
+> >
+> >         synchronize_srcu(&remove_cache_srcu);
+> >  }
+> > +
+> > +#ifdef CONFIG_KASAN_SW_TAGS
+> > +static struct kasan_alloc_meta object_free_track;
+> 
+> This global is a dirty solution. It's better passed as argument to the
+> required functions rather than functions leave part of state in a
+> global and somebody picks it up later.
+> 
+Thanks your suggestion, we will change the implementation here.
+
+
+> > +
+> > +struct kasan_alloc_meta *get_object_track(void)
+> > +{
+> > +       return &object_free_track;
+> > +}
+> > +
+> > +static bool qlist_find_object(struct qlist_head *from, void *addr)
+> > +{
+> > +       struct qlist_node *curr;
+> > +       struct qlist_object *curr_obj;
+> > +
+> > +       if (unlikely(qlist_empty(from)))
+> > +               return false;
+> > +
+> > +       curr = from->head;
+> > +       while (curr) {
+> > +               struct qlist_node *next = curr->next;
+> > +
+> > +               curr_obj = curr->qobject;
+> > +               if (unlikely(((unsigned long)addr >= curr_obj->addr)
+> > +                       && ((unsigned long)addr <
+> > +                                       (curr_obj->addr + curr_obj->size)))) {
+> > +                       object_free_track = curr_obj->free_track;
+> > +
+> > +                       return true;
+> > +               }
+> > +
+> > +               curr = next;
+> > +       }
+> > +       return false;
+> > +}
+> > +
+> > +static int per_cpu_find_object(void *arg)
+> > +{
+> > +       void *addr = arg;
+> > +       struct qlist_head *q;
+> > +
+> > +       q = this_cpu_ptr(&cpu_quarantine);
+> > +       return qlist_find_object(q, addr);
+> > +}
+> > +
+> > +struct cpumask cpu_allowed_mask __read_mostly;
+> > +
+> > +bool quarantine_find_object(void *addr)
+> > +{
+> > +       unsigned long flags, i;
+> > +       bool find = false;
+> > +       int cpu;
+> > +
+> > +       cpumask_copy(&cpu_allowed_mask, cpu_online_mask);
+> > +       for_each_cpu(cpu, &cpu_allowed_mask) {
+> > +               find = smp_call_on_cpu(cpu, per_cpu_find_object, addr, true);
+> 
+> There can be multiple qobjects in the quarantine associated with the
+> address, right? If so, we need to find the last one rather then a
+> random one.
+> 
+The qobject includes the address which has tag and range, corruption
+address must be satisfied with the same tag and within object address
+range, then it is found in the quarantine.
+It should not easy to get multiple qobjects have the same tag and within
+object address range.
+
+
+> > +               if (find)
+> > +                       return true;
+> > +       }
+> > +
+> > +       raw_spin_lock_irqsave(&quarantine_lock, flags);
+> > +       for (i = 0; i < QUARANTINE_BATCHES; i++) {
+> > +               if (qlist_empty(&global_quarantine[i]))
+> > +                       continue;
+> > +               find = qlist_find_object(&global_quarantine[i], addr);
+> > +               /* Scanning whole quarantine can take a while. */
+> > +               raw_spin_unlock_irqrestore(&quarantine_lock, flags);
+> > +               cond_resched();
+> > +               raw_spin_lock_irqsave(&quarantine_lock, flags);
+> > +       }
+> > +       raw_spin_unlock_irqrestore(&quarantine_lock, flags);
+> > +
+> > +       synchronize_srcu(&remove_cache_srcu);
+> > +
+> > +       return find;
+> > +}
+> > +#endif
+> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > index ca9418fe9232..9cfabf2f0c40 100644
+> > --- a/mm/kasan/report.c
+> > +++ b/mm/kasan/report.c
+> > @@ -150,18 +150,26 @@ static void describe_object_addr(struct kmem_cache *cache, void *object,
+> >  }
+> >
+> >  static void describe_object(struct kmem_cache *cache, void *object,
+> > -                               const void *addr)
+> > +                               const void *tagged_addr)
+> >  {
+> > +       void *untagged_addr = reset_tag(tagged_addr);
+> >         struct kasan_alloc_meta *alloc_info = get_alloc_info(cache, object);
+> >
+> >         if (cache->flags & SLAB_KASAN) {
+> > -               print_track(&alloc_info->alloc_track, "Allocated");
+> > -               pr_err("\n");
+> > -               print_track(&alloc_info->free_track, "Freed");
+> > -               pr_err("\n");
+> > +               if (IS_ENABLED(CONFIG_KASAN_SW_TAGS) &&
+> > +                       quarantine_find_object((void *)tagged_addr)) {
+> 
+> Can't this be an out-of-bound even if we find the object in quarantine?
+> For example, if we've freed an object, then reallocated and accessed
+> out-of-bounds within the object bounds?
+> Overall suggesting that this is a use-after-free rather than
+> out-of-bounds without redzones and quarantining the object itself is
+> quite imprecise. We can confuse a user even more...
+> 
+the qobject stores object range and address which has tag, even if
+the object reallocate and accessed out-of-bounds, then new object and
+old object in quarantine should be different tag value, so it should be
+no found in quarantine.
+
+
+> 
+> > +                       alloc_info = get_object_track();
+> > +                       print_track(&alloc_info->free_track, "Freed");
+> > +                       pr_err("\n");
+> > +               } else {
+> > +                       print_track(&alloc_info->alloc_track, "Allocated");
+> > +                       pr_err("\n");
+> > +                       print_track(&alloc_info->free_track, "Freed");
+> > +                       pr_err("\n");
+> > +               }
+> >         }
+> >
+> > -       describe_object_addr(cache, object, addr);
+> > +       describe_object_addr(cache, object, untagged_addr);
+> >  }
+> >
+> >  static inline bool kernel_or_module_addr(const void *addr)
+> > @@ -180,23 +188,25 @@ static inline bool init_task_stack_addr(const void *addr)
+> >                         sizeof(init_thread_union.stack));
+> >  }
+> >
+> > -static void print_address_description(void *addr)
+> > +static void print_address_description(void *tagged_addr)
+> >  {
+> > -       struct page *page = addr_to_page(addr);
+> > +       void *untagged_addr = reset_tag(tagged_addr);
+> > +       struct page *page = addr_to_page(untagged_addr);
+> >
+> >         dump_stack();
+> >         pr_err("\n");
+> >
+> >         if (page && PageSlab(page)) {
+> >                 struct kmem_cache *cache = page->slab_cache;
+> > -               void *object = nearest_obj(cache, page, addr);
+> > +               void *object = nearest_obj(cache, page, untagged_addr);
+> >
+> > -               describe_object(cache, object, addr);
+> > +               describe_object(cache, object, tagged_addr);
+> >         }
+> >
+> > -       if (kernel_or_module_addr(addr) && !init_task_stack_addr(addr)) {
+> > +       if (kernel_or_module_addr(untagged_addr) &&
+> > +                       !init_task_stack_addr(untagged_addr)) {
+> >                 pr_err("The buggy address belongs to the variable:\n");
+> > -               pr_err(" %pS\n", addr);
+> > +               pr_err(" %pS\n", untagged_addr);
+> >         }
+> >
+> >         if (page) {
+> > @@ -314,7 +324,7 @@ void kasan_report(unsigned long addr, size_t size,
+> >         pr_err("\n");
+> >
+> >         if (addr_has_shadow(untagged_addr)) {
+> > -               print_address_description(untagged_addr);
+> > +               print_address_description(tagged_addr);
+> >                 pr_err("\n");
+> >                 print_shadow_for_address(info.first_bad_addr);
+> >         } else {
+> > diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+> > index 63fca3172659..fa5d1e29003d 100644
+> > --- a/mm/kasan/tags.c
+> > +++ b/mm/kasan/tags.c
+> > @@ -124,6 +124,70 @@ void check_memory_region(unsigned long addr, size_t size, bool write,
+> >         }
+> >  }
+> >
+> > +int qobject_add_size(void)
+> > +{
+> > +       return sizeof(struct qlist_object);
+> 
+> Shouldn't this also account for qlist_node?
+> 
+yes, we will count it.
+
+
+> > +}
+> > +
+> > +static struct kmem_cache *qobject_to_cache(struct qlist_object *qobject)
+> > +{
+> > +       return virt_to_head_page(qobject)->slab_cache;
+> > +}
+> > +
+> > +struct qlist_node *qobject_create(struct kasan_free_meta *info,
+> > +                                               struct kmem_cache *cache)
+> > +{
+> > +       struct qlist_node *free_obj_info;
+> > +       struct qlist_object *qobject_info;
+> > +       struct kasan_alloc_meta *object_track;
+> > +       void *object;
+> > +
+> > +       object = ((void *)info) - cache->kasan_info.free_meta_offset;
+> > +       qobject_info = kmalloc(sizeof(struct qlist_object), GFP_NOWAIT);
+> > +       if (!qobject_info)
+> > +               return NULL;
+> > +       qobject_info->addr = (unsigned long) object;
+> > +       qobject_info->size = cache->object_size;
+> > +       object_track = &qobject_info->free_track;
+> > +       set_track(&object_track->free_track, GFP_NOWAIT);
+> > +
+> > +       free_obj_info = kmalloc(sizeof(struct qlist_node), GFP_NOWAIT);
+> 
+> Why don't we allocate qlist_object and qlist_node in a single
+> allocation? Doing 2 allocations is both unnecessary slow and leads to
+> more complex code. We need to allocate them with a single allocations.
+> Also I think they should be allocated from a dedicated cache that opts
+> out of quarantine?
+> 
+Single allocation is good suggestion, if we only has one allocation.
+then we need to move all member of qlist_object to qlist_node?
+
+struct qlist_object {
+    unsigned long addr;
+    unsigned int size;
+    struct kasan_alloc_meta free_track;
+};
+struct qlist_node {
+    struct qlist_object *qobject;
+    struct qlist_node *next;
+};
+
+
+We call call ___cache_free() to free the qobject and qnode, it should be
+out of quarantine?
+
+
+Thanks,
+Walter
+
