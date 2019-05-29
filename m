@@ -2,107 +2,96 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156EBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B399C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3A22258D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559137179;
-	bh=3GgCPxhekUV44Ra9EUUPkPDn9SbXslu3KvGLOTPrmhI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONZTsClkAK7LDcyrRZBVRL9BH/sIIWv7mmM6yeG1qdUUFC3BwzMV/tzLmykTIUDHj
-	 2D6hCCujIVNduVpyxgcWI7N25WL4AOjyvboORt3SsfcFbqHqQXm34V07u5Ai3hO9Go
-	 JnbJc3owyl7ewe0XVRyow+M+u79ICiOuoqzjtI0o=
+	by mail.kernel.org (Postfix) with ESMTP id 630F8227BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfE2Njj (ORCPT
+        id S1727318AbfE2Nlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfE2Nje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:39:34 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.195.211.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE96227B7;
-        Wed, 29 May 2019 13:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559137174;
-        bh=3GgCPxhekUV44Ra9EUUPkPDn9SbXslu3KvGLOTPrmhI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OILOSBABJ+nkhHfylypdpeXGQhNhfJwMV+bXXE8TyQ6NWJTFbxMqDFZZjYkXCg+mM
-         NBIFbiAYET0evLrLFi3Dpl/PR6Qypr7Q/conv8nluf1KR1WRf9B7laddfUnu42eRYK
-         v4K8Gjf95ZkfbzdWtnDW3Ok3SLqMtnvVin3c7NEM=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 41/41] perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
-Date:   Wed, 29 May 2019 10:36:05 -0300
-Message-Id: <20190529133605.21118-42-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
-References: <20190529133605.21118-1-acme@kernel.org>
+        Wed, 29 May 2019 09:41:49 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41768 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfE2Nlt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:41:49 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m18so1449664qki.8;
+        Wed, 29 May 2019 06:41:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B4Hu2BykjV2XUgQjXYreykG9CRGtaQihhtWlraD16NE=;
+        b=sl4DM5ZdnaEZ7230fYjDZKFkNHlXI2r1MHAbH/EzdU4PTZaFWfnRXcbUxeHsZUrOWr
+         eg3HmJaxtFeFVEfNEbwz+Vfuy2iZbcNM09i33cxV4P+uR8/fQji3bDwDQNzFAgfHW8tc
+         zSxfK2Cdhi9KbsqPUpOPKzmFZv2OO6wJRgY8dN90EuR3MzbO3J3RrHemZ+Gh7HTFoN3D
+         30W/kXjEqFGxkhE/cYqneBhjQ3KX+Lrbf0O/fi7O06T7lxcaKpwR0Yn0nfKFLRWHpOp+
+         TYGbBNJmHrX5zAtsn1UrIrxfsOwqyK7ZoO1xMMLDOY7LbZuT/ltL7HI+4LD+aefmYehj
+         8GmQ==
+X-Gm-Message-State: APjAAAUhzCfy010lSBqK1n8hFlt+KWriO7ZKizIpYvSJAKISEOWqQIsM
+        DpQiHDcqaxTLAoHWjAL5hRUc013QGXt9mn+g6IE=
+X-Google-Smtp-Source: APXvYqwI32DYHBzUvKVuPe+aOANmgUoQBTNNnfm9jjZUjMGmB4YKECE25ibchquT1Q2cVjHAmLwbc+ySXwB2JGCPHNI=
+X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr80895478qkk.182.1559137308118;
+ Wed, 29 May 2019 06:41:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190524201817.16509-1-jannh@google.com> <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
+ <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
+ <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org> <CAK8P3a0b7MBn+84jh0Y2zhFLLAqZ2tMvFDFF9Kw=breRLH4Utg@mail.gmail.com>
+ <889fc718-b662-8235-5d60-9d330e77cf18@linux-m68k.org>
+In-Reply-To: <889fc718-b662-8235-5d60-9d330e77cf18@linux-m68k.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 29 May 2019 15:41:31 +0200
+Message-ID: <CAK8P3a0zj126XSGjMbiDJDkY8sF+6JNWH0VsJEUAga6OGHV0vg@mail.gmail.com>
+Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
+To:     Greg Ungerer <gregungerer00@gmail.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sergei Poselenov <sposelenov@emcraft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+On Wed, May 29, 2019 at 2:29 PM Greg Ungerer <gregungerer00@gmail.com> wrote:
+> On 29/5/19 10:05 pm, Arnd Bergmann wrote:
+> > On Tue, May 28, 2019 at 12:56 PM Greg Ungerer <gerg@linux-m68k.org> wrote:
+> >> On 27/5/19 11:38 pm, Jann Horn wrote:
+> >>> On Sat, May 25, 2019 at 11:43 PM Andrew Morton
+> >>> <akpm@linux-foundation.org> wrote:
+> >>> Maybe... but I didn't want to rip it out without having one of the
+> >>> maintainers confirm that this really isn't likely to be used anymore.
+> >>
+> >> I have not used shared libraries on m68k non-mmu setups for
+> >> a very long time. At least 10 years I would think.
+> >
+> > I think Emcraft have a significant customer base running ARM NOMMU
+> > Linux, I wonder whether they would have run into this (adding
+> > Sergei to Cc).
+> > My suspicion is that they use only binfmt-elf-fdpic, not binfmt-flat.
+> >
+> > The only architectures I see that enable binfmt-flat are sh, xtensa
+> > and h8300, but only arch/sh uses CONFIG_BINFMT_SHARED_FLAT
+>
+> m68k uses enables it too. It is the only binary format supported
+> when running no-mmu on m68k. (You can use it with MMU enabled too
+> if you really want too).
 
-Returning 1 from intel_pt_sync_switch() causes the current tid to be
-set. That negates the need to keep next_tid anymore. Rationalize the
-code to that effect.
+My mistake, I meant to write 'the only architectures /other than m68k/",
+which you had already mentioned above.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190412113830.4126-9-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/intel-pt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 6aaba1146fc8..7a70693c1b91 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1859,7 +1859,6 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
- 
- 	switch (ptq->switch_state) {
- 	case INTEL_PT_SS_NOT_TRACING:
--		ptq->next_tid = -1;
- 		break;
- 	case INTEL_PT_SS_UNKNOWN:
- 	case INTEL_PT_SS_TRACING:
-@@ -1879,13 +1878,14 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
- 		ptq->switch_state = INTEL_PT_SS_TRACING;
- 		break;
- 	case INTEL_PT_SS_EXPECTING_SWITCH_IP:
--		ptq->next_tid = tid;
- 		intel_pt_log("ERROR: cpu %d expecting switch ip\n", cpu);
- 		break;
- 	default:
- 		break;
- 	}
- 
-+	ptq->next_tid = -1;
-+
- 	return 1;
- }
- 
--- 
-2.20.1
-
+    Arnd
