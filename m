@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25043C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA343C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC1F218C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E1E218D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559137012;
-	bh=3Elkhk5b4dBoao1Zqh+mo49CzbC3LLPZd9K936MyXuc=;
+	s=default; t=1559137015;
+	bh=DxFVZqZAkMacyyd+DKewznFbDVEOe5YQBXCtJqoZ6vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HA7zbzQV33y2NYlokC0ahACQRMEmZdbyF9D/060j4Mo3bNE7J9MsCLfLHUjVZGcEQ
-	 cCSJLZOKXe4wiMk9P6qUhouzUWlHupZUu3mHzHx44t0W3QA20YUiAgQXEY08pAPwSc
-	 DO0iSYUNflY2nt/etSw27Gfb7gcKjPevk9FKeJlU=
+	b=MPEv5m1nZ6/IV8eJEaAuXUze/9uBeQZ1aznst2Kr/ia9qnzYbkYLsBHVmsioj76UY
+	 h4lrxDsbZagh6Zad3rr0NB9sjKXF3SScqt6HVuO/ePkEXfvXDHj+YV3cbVt3Epg8Bp
+	 O+bqfYcQmCuioIuNQRW1cIe3EDt+HuDKHMVYU7CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfE2Ngv (ORCPT
+        id S1727416AbfE2Ngy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 09:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfE2Ngs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:36:48 -0400
+        id S1726612AbfE2Ngx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:36:53 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.211.85])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA3C62190E;
-        Wed, 29 May 2019 13:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3B4218DA;
+        Wed, 29 May 2019 13:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559137008;
-        bh=3Elkhk5b4dBoao1Zqh+mo49CzbC3LLPZd9K936MyXuc=;
+        s=default; t=1559137012;
+        bh=DxFVZqZAkMacyyd+DKewznFbDVEOe5YQBXCtJqoZ6vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZFuSrytVdUYfeyQegEuHSbTjKKnn/NeF+QdOiWE1TBE2ZEjgtYjwhCgt2kOyR+2i
-         02zwOYM8CBCbfZUiqjYMyufYz2RwX5ahhYj6uDqXtlEGPGwyCCwNVUhYW7F1c0L23P
-         eGp4RzQu/uxOCq0om6/7dhrM+PvxDfEKpPWbHNNU=
+        b=JcyAyVkdAwfrQAH7RslHIhMN83Gc/WLxwtoDLs+IcXJm5ccMYO3ZcMzrVZ/yD6je7
+         XO0Z0WL5wI2XkM6nbMvb0HOqXNF7tkDjbVDjxof3bzUSiz6kyCZkMgloiW0HkApxbr
+         qxhIvu9EVKZIwR57TWZJJiOqE+sVZmGyfGP7JgkE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,14 +46,20 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 07/41] perf augmented_raw_syscalls: Fix up comment
-Date:   Wed, 29 May 2019 10:35:31 -0300
-Message-Id: <20190529133605.21118-8-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>
+Subject: [PATCH 08/41] perf beauty: Add generator for 'move_mount' flags argument
+Date:   Wed, 29 May 2019 10:35:32 -0300
+Message-Id: <20190529133605.21118-9-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,31 +68,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Cut'n'paste error, the second comment is about the syscalls that have as
-its second arg a string.
+  $ tools/perf/trace/beauty/move_mount_flags.sh
+  static const char *move_mount_flags[] = {
+	  [ilog2(0x00000001) + 1] = "F_SYMLINKS",
+	  [ilog2(0x00000002) + 1] = "F_AUTOMOUNTS",
+	  [ilog2(0x00000004) + 1] = "F_EMPTY_PATH",
+	  [ilog2(0x00000010) + 1] = "T_SYMLINKS",
+	  [ilog2(0x00000020) + 1] = "T_AUTOMOUNTS",
+	  [ilog2(0x00000040) + 1] = "T_EMPTY_PATH",
+  };
+  $
+
+Will be wired up to the 'perf trace' arg in a followup patch.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-zo5s6rloy42u41acsf6q3pvi@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-px7v33suw1k2ehst52l7bwa3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/examples/bpf/augmented_raw_syscalls.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/trace/beauty/move_mount_flags.sh | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100755 tools/perf/trace/beauty/move_mount_flags.sh
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 2422894a8194..b292e763f3c7 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -87,7 +87,7 @@ struct augmented_filename {
- #define SYS_SYMLINKAT          266
- #define SYS_MEMFD_CREATE       319
- 
--/* syscalls where the first arg is a string */
-+/* syscalls where the second arg is a string */
- 
- #define SYS_PWRITE64            18
- #define SYS_EXECVE              59
+diff --git a/tools/perf/trace/beauty/move_mount_flags.sh b/tools/perf/trace/beauty/move_mount_flags.sh
+new file mode 100755
+index 000000000000..55e59241daa4
+--- /dev/null
++++ b/tools/perf/trace/beauty/move_mount_flags.sh
+@@ -0,0 +1,17 @@
++#!/bin/sh
++# SPDX-License-Identifier: LGPL-2.1
++
++if [ $# -ne 1 ] ; then
++	linux_header_dir=tools/include/uapi/linux
++else
++	linux_header_dir=$1
++fi
++
++linux_mount=${linux_header_dir}/mount.h
++
++printf "static const char *move_mount_flags[] = {\n"
++regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MOVE_MOUNT_([FT]_[[:alnum:]_]+)[[:space:]]+(0x[[:xdigit:]]+)[[:space:]]*.*'
++egrep $regex ${linux_mount} | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n"
++printf "};\n"
 -- 
 2.20.1
 
