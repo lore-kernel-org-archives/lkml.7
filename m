@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B790C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC75C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CD22430F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C8124302
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559171380;
-	bh=xvZyNhvo6Jgw1uph+W5aV18O32BizwXJqW0bfvcWlkI=;
+	s=default; t=1559171384;
+	bh=ieHWmSfzVGoogWT2ToTE8TVzg9uy2cKqdUIdWbPe6v4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XUBpO3YHxsDY6LJdftX9VAMiNtiu5/TEjqugYWJRlmXpu4ZenWB9OzFWKgALKmkS5
-	 2WtujibIl83M44n3/hwQqW7aD0mOWfd002kLrqfV//WJEflIESKAKg8rURud5KqbnB
-	 rP4mgPhzEHKsA6SKcuMe+EqxaNxWzmK82Q108/xE=
+	b=n/GKqTBPnTPaG3H+FF678qEqcTCBz0ogB2n3gXUS5kF9o1bNElZCe/d63b+nnS8LF
+	 475oeAayLGDrFPVINLjbwty+7nukyLnCwbntuuASrlzsaD6Zogl+b7AzyVhVaRia3n
+	 NTXI++gcw9sXvGApTVuzNZcAMlTIXzSZxIfMlhW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfE2XJj (ORCPT
+        id S1726813AbfE2XJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:09:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47594 "EHLO
+        Wed, 29 May 2019 19:09:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47600 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfE2XJh (ORCPT
+        with ESMTP id S1726489AbfE2XJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 19:09:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wCq8wzGw72uiJf8YTianNOUvn6pWVH3JtoQXOBTmG7c=; b=KZCCgVwN4/7fZXkfXyahTcPfB5
-        3vhvf4VTIFFeMlZJwPJfA1oZnu5+f5FuDlqP0g0ygvsdXV94pvM5B8GtuA0wpT3P+TDBhYOAVqhcm
-        QEjo0whAHRLFsap3aLw2XaqO8yecfweB28Px+qnx10+yX7H+aTXt5C1pYejj3gyf8EHNirKzwD8IA
-        GYQ0cG+IAs1XUgrCatNeRDdkrmakdWI3S/+S0TOh+tlRy9N4EokGZ0s79/r6g7JS8AFpfWdlwvckb
-        xrjQrozrcnGrrUZmEuJTqmfAv12NlVc6BN4nSXaAy62c+XdD18O67UAVSB47tYj3zCscfvUOs9qDG
-        dUG04c0Q==;
+        bh=M5AYSXE7Y2LngfbsJ/DojP/iVd7EdymmZUqfay+8Wow=; b=StuhuTjhMvOAiFhs0ch3NTd6a8
+        BLQGgL1+v4o0HI5fPhs2RB4p2QfnHl1k4QGhBmCxFH32mla5jWly+9Xw+Dqrh6J/Lk5yKr+d8MJ/v
+        ZYYXNBG0nx2RHI7lnKJmgUMEYGAhJ2L5zbkn8NlT1vi6j4UTchxCg0lHbejRCbIxmByvzsrjBsfTY
+        bp+ByvZIVquF3ynm8kuAw8YkaRZdA5iZWuhry0WkTzV9nSUmbsy9PbuwzVMA/+z6DW2i3wxQ0Kquu
+        blWsap7mGUzTx3d5Q4I4haqkKFDWmCFJ97wD1EFZ7ef2gOkkicqhgdjvufljS7bbStkiM4RSlVyQA
+        IrfU28bQ==;
 Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW7hQ-0000lF-GZ; Wed, 29 May 2019 23:09:36 +0000
+        id 1hW7hQ-0000lD-Go; Wed, 29 May 2019 23:09:36 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hW7hN-0007Td-Lw; Wed, 29 May 2019 20:09:33 -0300
+        id 1hW7hN-0007TZ-Kz; Wed, 29 May 2019 20:09:33 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 06/10] scripts/documentation-file-ref-check: exclude false-positives
-Date:   Wed, 29 May 2019 20:09:28 -0300
-Message-Id: <cfc75c5e965884d64579e99e2189a94bf3f30ce4.1559170790.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 05/10] scripts/documentation-file-ref-check: better handle translations
+Date:   Wed, 29 May 2019 20:09:27 -0300
+Message-Id: <0f7e9a81fccac06225a2a8277957c99d7678d9e6.1559170790.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1559170790.git.mchehab+samsung@kernel.org>
 References: <cover.1559170790.git.mchehab+samsung@kernel.org>
@@ -64,57 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are at least two cases where a documentation file was gone
-for good, but the text still mentions it:
-
-1) drivers/vhost/vhost.c:
-   the reference for Documentation/virtual/lguest/lguest.c is just
-   to give credits to the original work that vhost replaced;
-
-2) Documentation/scsi/scsi_mid_low_api.txt:
-   It gives credit and mentions the old Documentation/Configure.help
-   file that used to be part of Kernel 2.4.x
-
-As we don't want to keep the script to keep pinpoint to those
-every time, let's add a logic at the script to allow it to ignore
-valid false-positives like the above.
+Only seek for translation renames inside the translation
+directory.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/documentation-file-ref-check | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ scripts/documentation-file-ref-check | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index 6b622b88f4cf..05235775cc71 100755
+index 63e9542656f1..6b622b88f4cf 100755
 --- a/scripts/documentation-file-ref-check
 +++ b/scripts/documentation-file-ref-check
-@@ -8,6 +8,14 @@ use warnings;
- use strict;
- use Getopt::Long qw(:config no_auto_abbrev);
+@@ -141,6 +141,10 @@ print "Auto-fixing broken references. Please double-check the results\n";
+ foreach my $ref (keys %broken_ref) {
+ 	my $new =$ref;
  
-+# NOTE: only add things here when the file was gone, but the text wants
-+# to mention a past documentation file, for example, to give credits for
-+# the original work.
-+my %false_positives = (
-+	"Documentation/scsi/scsi_mid_low_api.txt" => "Documentation/Configure.help",
-+	"drivers/vhost/vhost.c" => "Documentation/virtual/lguest/lguest.c",
-+);
++	my $basedir = ".";
++	# On translations, only seek inside the translations directory
++	$basedir  = $1 if ($ref =~ m,(Documentation/translations/[^/]+),);
 +
- my $scriptname = $0;
- $scriptname =~ s,.*/([^/]+/),$1,;
+ 	# get just the basename
+ 	$new =~ s,.*/,,;
  
-@@ -122,6 +130,11 @@ while (<IN>) {
- 			next if (grep -e, glob("$path/$ref $path/$fulref"));
- 		}
+@@ -161,18 +165,18 @@ foreach my $ref (keys %broken_ref) {
+ 	# usual reason for breakage: file renamed to .rst
+ 	if (!$f) {
+ 		$new =~ s/\.txt$/.rst/;
+-		$f=qx(find . -iname $new) if ($new);
++		$f=qx(find $basedir -iname $new) if ($new);
+ 	}
  
-+		# Discard known false-positives
-+		if (defined($false_positives{$f})) {
-+			next if ($false_positives{$f} eq $fulref);
-+		}
-+
- 		if ($fix) {
- 			if (!($ref =~ m/(scripts|Kconfig|Kbuild)/)) {
- 				$broken_ref{$ref}++;
+ 	# usual reason for breakage: use dash or underline
+ 	if (!$f) {
+ 		$new =~ s/[-_]/[-_]/g;
+-		$f=qx(find . -iname $new) if ($new);
++		$f=qx(find $basedir -iname $new) if ($new);
+ 	}
+ 
+ 	# Wild guess: seek for the same name on another place
+ 	if (!$f) {
+-		$f = qx(find . -iname $new) if ($new);
++		$f = qx(find $basedir -iname $new) if ($new);
+ 	}
+ 
+ 	my @find = split /\s+/, $f;
 -- 
 2.21.0
 
