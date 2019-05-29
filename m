@@ -2,187 +2,216 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230CBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F3624049
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01C024049
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sMA1G/hK"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="qdFwQUsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfE2SOt (ORCPT
+        id S1727511AbfE2SPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:14:49 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16849 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfE2SOt (ORCPT
+        Wed, 29 May 2019 14:15:10 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55561 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfE2SPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:14:49 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ceecc0e0000>; Wed, 29 May 2019 11:14:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 29 May 2019 11:14:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 29 May 2019 11:14:47 -0700
-Received: from [10.110.103.86] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
- 2019 18:14:45 +0000
-Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
- <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d9d54f05-b0bf-6e65-9308-45e94454301e@nvidia.com>
-Date:   Wed, 29 May 2019 11:14:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 14:15:09 -0400
+Received: by mail-it1-f194.google.com with SMTP id g24so5496489iti.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xkf8rKmKSJq4zB1Dra/9+7uGvMblcwp7Vierv9y90/c=;
+        b=qdFwQUshNcgxNY/RBF9rEsNbwHasLXDgUaIpOtCNEEnn2Wx0l8xeWIZsGQoYmOIzGQ
+         F7c66k2BtpCpWpPmueS1WuKwPfkjXaoE1C9P/szk8eNcAkHjM9MCoQI7beruyik5EtTr
+         dtCQUEYtmegrx+EeAxqspgEm5OsGbcBNRFkKE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xkf8rKmKSJq4zB1Dra/9+7uGvMblcwp7Vierv9y90/c=;
+        b=GHtNkUbuZGbl1BSuh5t9UnphPkzWkEkDGSj65XN2/LEGI+m+RbER6HS4oM3nNnnTj1
+         bsTOoPOJAZl3d25IAxqcQunzEoO0qg3F4MBW29MN8HnyB5s/3d3j90tS4sx4quRf4Kax
+         0+iTrfsIOaBNdr/e/FBEmdKSpFIJIZ0rZFRrvoHDbOZYcFz70JrhJbOcANF3w8RoT6yP
+         YhNpCf8mWDGF64vaZ1qDJS1+ZMMdQFxvJVXEaf5BX/91w9Gbqcut9idlXI/+3+5cd/A4
+         o7ZEliy6Hw6TeEoEr9MpDkzpFv8cRnzoAJLV6FIWKU6bvbBX81Gll078zZgzvNdHgJ5f
+         9NWw==
+X-Gm-Message-State: APjAAAW4kHQtwUjLIKMPw/r8RWYhdiM6Xm+QNp3kb/4+YK4rpXSBIXyQ
+        lNhv/h4Q8UlVZOAebLfNY03O2Qj3UqYT3RmFhTxSpQ==
+X-Google-Smtp-Source: APXvYqwYQmN1Q3DXjO1ggA3VkcrZ1Bi6lKNAMYD+Lhn5tKKYzqfA2GKHX9JxvHkXQlKqk1a2eh0uyQs2NU3KHdJvoWY=
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr19363723jag.85.1559153708850;
+ Wed, 29 May 2019 11:15:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559153678; bh=A9YK/nFxLV3PJjOi7BCVU2yWC+RVl5qSeED4QLSsntQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=sMA1G/hK2fy+v7joD29O4P+g1qw+eTvO4mInczl2kFzTjOBgm/L8zygm+96e28Oe0
-         TAEUIVAgZYdyTL+40oXWlQyrmb5evGStTC7Pweb4lYQFbP2o8nEDBD4N4u1UvGJWDT
-         6FjvWwvd7U1u4lyMXgPB/aw8W/E3O4EJQTRJOXkOzw47YbQjABIQmrF+bCqJIvNoCK
-         3nIkRI1b/lxkc7wO38I7dPyXWIDR+29WIo3UO6pwhEIsoqQCDQS1vr26Icba9CVpK0
-         f25sOpUSM2v/V2efZgxAjPlb++RleDbUJNTkzOQGW3b+saaeSXbgP7dUsIGl0fpnno
-         VQL+DXoltW1fw==
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-2-jagan@amarulasolutions.com> <20190523203407.o5obg2wtj7wwau6a@flea>
+ <CAMty3ZDDYEOvSbi7kmacjJZS6f3whpaGd4xsf4OUkXmBbTE3Qg@mail.gmail.com> <20190529145450.qnitxpmpr2a2xemk@flea>
+In-Reply-To: <20190529145450.qnitxpmpr2a2xemk@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Wed, 29 May 2019 23:44:56 +0530
+Message-ID: <CAMty3ZB89cPc8AycFPuNTfPC1dot4cNgN87v+rtQVW2zQh8uZg@mail.gmail.com>
+Subject: Re: [PATCH v10 01/11] drm/sun4i: dsi: Fix TCON DRQ set bits
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 8:24 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Fri, May 24, 2019 at 03:48:51PM +0530, Jagan Teki wrote:
+> > On Fri, May 24, 2019 at 2:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Mon, May 20, 2019 at 02:33:08PM +0530, Jagan Teki wrote:
+> > > > According to "DRM kernel-internal display mode structure" in
+> > > > include/drm/drm_modes.h the current driver is trying to include
+> > > > sync timings along with front porch value while checking and
+> > > > computing drq set bits in non-burst mode.
+> > > >
+> > > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
+> > > >
+> > > > With adding additional sync timings, the dsi controller leads to
+> > > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
+> > > > trigger panel flip_done timed out as:
+> > > >
+> > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > >  [CRTC:46:crtc-0] vblank wait timed out
+> > > >  Modules linked in:
+> > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+> > > >  Hardware name: Allwinner sun8i Family
+> > > >  Workqueue: events deferred_probe_work_func
+> > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+> > > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+> > > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+> > > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+> > > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+> > > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+> > > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+> > > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+> > > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+> > > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > >  ---[ end trace b57eb1e5c64c6b8b ]---
+> > > >  random: fast init done
+> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > > >
+> > > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
+> > > > non-burst DSI mode can be computed based on "horizontal front porch"
+> > > > value only (no sync timings included).
+> > > >
+> > > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
+> > > >
+> > > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
+> > > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
+> > > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
+> > > > => tt->hor_front_porch - 20
+> > >
+> > > The thing is, while your explanation on the DRM side is sound,
+> > > Allwinner has been using the hbp field of their panel description to
+> > > store what DRM calls the backporch and the sync period.
+> >
+> > Exactly, hbp = backporch + sync
+> > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046
+> >
+> > And the above computation is rely on that as well. If you can see the
+> > final out of the above computation you can get the front porch value
+> > (w/o sync )
+>
+> As I was saying, you are explaining it well for DRM, but in order for
+> your last formula (the one coming from the BSP) to make sense, you
+> have to explain that the horizontal back porch for Allwinner contains
+> the sync period, otherwise your expansion of lcd_ht doesn't make
+> sense.
 
-On 5/29/19 8:29 AM, Dmitry Osipenko wrote:
-> 29.05.2019 2:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds suspend and resume support for Tegra pinctrl driver
->> and registers them to syscore so the pinmux settings are restored
->> before the devices resume.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 68 ++++++++++++++++++++++++=
-+++++++-
->>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
->>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>   drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
->>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>   7 files changed, 75 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/teg=
-ra/pinctrl-tegra.c
->> index a5008c066bac..bdc47e62c457 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -28,11 +28,18 @@
->>   #include <linux/pinctrl/pinmux.h>
->>   #include <linux/pinctrl/pinconf.h>
->>   #include <linux/slab.h>
->> +#include <linux/syscore_ops.h>
->>  =20
->>   #include "../core.h"
->>   #include "../pinctrl-utils.h"
->>   #include "pinctrl-tegra.h"
->>  =20
->> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
->> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
->> +#define EMMC_DPD_PARKING			(0x1fff << 14)
->> +
->> +static struct tegra_pmx *pmx;
->> +
->>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>   {
->>   	return readl(pmx->regs[bank] + reg);
->> @@ -629,6 +636,50 @@ static void tegra_pinctrl_clear_parked_bits(struct =
-tegra_pmx *pmx)
->>   	}
->>   }
->>  =20
->> +static int __maybe_unused tegra_pinctrl_suspend(void)
->> +{
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	int i, j;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		regs =3D pmx->regs[i];
->> +		for (j =3D 0; j < pmx->reg_bank_size[i] / 4; j++)
->> +			*backup_regs++ =3D readl(regs++);
->> +	}
->> +
->> +	return pinctrl_force_sleep(pmx->pctl);
->> +}
->> +
->> +static void __maybe_unused tegra_pinctrl_resume(void)
->> +{
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	u32 val;
->> +	int i, j;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		regs =3D pmx->regs[i];
->> +		for (j =3D 0; j < pmx->reg_bank_size[i] / 4; j++)
->> +			writel(*backup_regs++, regs++);
->> +	}
->> +
->> +	if (pmx->soc->has_park_padcfg) {
->> +		val =3D pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->> +		val &=3D ~EMMC_DPD_PARKING;
->> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->> +
->> +		val =3D pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->> +		val &=3D ~EMMC_DPD_PARKING;
->> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->> +	}
->> +}
->>
-> But the CFGPADCTRL registers are already programmed by restoring the
-> backup_regs and hence the relevant EMMC's are already unparked. Hence
-> why do you need to force-unpark both of the EMMC's? What if EMMC is
-> unpopulated on a board, why do you need to unpark it then?
+I'm not sure why we need to take care of back porch since the formula
+clearly evaluating a result as front porch, without sync timing (as
+current code included this sync), I keep the hbp and trying to
+substitute the lcd_ht value so the end result would cancel hbp.
 
-PARK bit for EMMC2/EMMC4 (EMMC2_PAD_CFGPADCTRL and EMMC4_PAD_CFGPADCTRL)=20
-are not part of pinmux.
+I have used this front porch formula from BSP
+tt->hor_front_porch= lcdp->panel_info.lcd_ht-lcdp->panel_info.lcd_hbp
+- lcdp->panel_info.lcd_x;
+https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2047
 
-They are part of CFGPADCTRL register so pinctrl driver pingroup doesn't=20
-include these registers.
+and evaluated drq set-bit formula
 
-backup_regs doesn't take care of this and need to handled separately for=20
-Tegra210.
+tt->hor_front_porch= lcdp->panel_info.lcd_ht-lcdp->panel_info.lcd_hbp
+- lcdp->panel_info.lcd_x;
+lcdp->panel_info.lcd_ht = tt->hor_front_porch +
+lcdp->panel_info.lcd_hbp +  lcdp->panel_info.lcd_x
 
+=> panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
+(substitute the lcd_ht)
+=> tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
+lcdp->panel_info.lcd_x - panel->lcd_x - panel->lcd_hbp
+(here hbp and lcd_x would cancel, and the result is front porch)
+=> tt->hor_front_porch
 
-During resume we have to clear PARK bit for the pads on Tegra210 and=20
-this is not related to presence/absence of eMMC on the board.
+>
+> > > And nowhere in that commit log you are describing whether it's still
+> > > an issue or not, and if it's not anymore how you did test that it's
+> > > not the case anymore.
+> >
+> > No, I have explained 1st and 2nd para about
+> > 00. There is any additional sync timings in the drq set bits
+> > 01: issue occur due to adding addition sync timings with longs on the
+> > panel, by referring
+> > 03: and later paragraphs proved that there is no sync timings used in BSP
+> >
+> > Am I missing anythings?
+>
+> I'm sorry, but I'm not quite sure what you mean here :/
 
-PAD is parked during LP0 entry to have it in DPD mode and it stays in=20
-DPD till its cleared by SW on resume.
+I'm just mentioning how I fragmented/grouped the commit message.
