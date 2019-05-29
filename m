@@ -2,196 +2,80 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7678CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79BFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAD623A58
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7144F23A5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:34:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXCkru3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfE2OdW (ORCPT
+        id S1726784AbfE2OeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:33:22 -0400
-Received: from relay.sw.ru ([185.231.240.75]:55840 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2OdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:33:19 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hVzdY-00049P-4C; Wed, 29 May 2019 17:33:04 +0300
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <20190522152254.5cyxhjizuwuojlix@box>
- <358bb95e-0dca-6a82-db39-83c0cf09a06c@virtuozzo.com>
- <20190524115239.ugxv766doolc6nsc@box>
- <c3cd3719-0a5e-befe-89f2-328526bb714d@virtuozzo.com>
- <20190527233030.hpnnbi4aqnu34ova@box>
- <de6e4e89-66ac-da2f-48a6-4d98a728687a@virtuozzo.com>
- <20190528161524.tn5sqzhmhgyuwrmy@box>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <4b9a6b90-4d82-9d4d-466d-653f9024849f@virtuozzo.com>
-Date:   Wed, 29 May 2019 17:33:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 10:34:12 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43485 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfE2OeM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:34:12 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u27so2257828lfg.10;
+        Wed, 29 May 2019 07:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zI70QWGFplV2olmPh92cmXfu6wdcq8DiRPpOk3E9130=;
+        b=jXCkru3UC3l+qKETouZYsiZiocYiZXZBqx1YKPYhBhQ9A61+o0TQIf+h94wLweTi6l
+         PJ/HAQm0NOCDkzbqVRewFDxs6OZAQ0MuVjLZg31zN8iA2fV9589pX4E7vvF066BlZbE7
+         Fnt08E3G3cLIB4EkXTJrR370X/3sgE9CFRNOqK+/FCr3FTt6A7t1eyLHkBqPmt3bebHz
+         AoXslMLlW17y6UJCCOJj7XMcXwCiJEQH/B9OnmJbN+jx7VvpTeym4geeHzdXcsCUR98a
+         7tuV0kLKzcdfV6cWO8jSSGHsqVQgHEDP/PdGxDeBEN6QZi7jT7a5Bd17O7U0tjlAfZ8c
+         TE8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zI70QWGFplV2olmPh92cmXfu6wdcq8DiRPpOk3E9130=;
+        b=J4FPUhIsNejWkGaBctr3Wkk1CE62HzYpsO78xHtbgRWNkTuFLLLnXIzSVlwwkxqu9d
+         gw8buu3Gc5bRBIMKDgVmIGOKIyLsSkv64sqXXYaeGglAVBJ9TlxI/PwqB2TSsbSxAhLU
+         6OEtdgb/dPpigJ/uVvBLD7STyseLnWTcHQ7/fhM4tzop4B5+9FoZesGXy4eLeyo7tl7A
+         kbN4HM+b1RowDT4J1d7tihLEgWKTDoXxngS2XlBXtYXqR5y2Ai/ReP0LJDvI89ksIdDw
+         f82PtDYIi6HcvsC9S2UrWgi7VaZ/sWMlrWdwkJdKLFqvm3+Otql//lSOxitdlEshRdPB
+         QI+Q==
+X-Gm-Message-State: APjAAAW1e7dEg8/ztC+biXDgQL64BNBJrJD/tow7CKKbKR6g6lHoCAnv
+        +1u3VRrjfJM783YnfoSr8Gl0GrIhgc6ouwwuFQMG+g==
+X-Google-Smtp-Source: APXvYqw2p8byOoHi+UD/L6/XXNO04MYdg05GEh6RSLDrBHDRizvs9h6OiioTb3dcyrjEhzqrfdO2wrBMkKIc002E24k=
+X-Received: by 2002:a19:ca0e:: with SMTP id a14mr12126071lfg.19.1559140449819;
+ Wed, 29 May 2019 07:34:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190528161524.tn5sqzhmhgyuwrmy@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190529130656.23979-1-tonylu@linux.alibaba.com>
+In-Reply-To: <20190529130656.23979-1-tonylu@linux.alibaba.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 29 May 2019 07:33:57 -0700
+Message-ID: <CAADnVQLtZ0oih5cd7FFq8-tQO1N4NR7K5KO9wCvhtFcsJ_=-uQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/3] introduce two new tracepoints for udp
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.2019 19:15, Kirill A. Shutemov wrote:
-> On Tue, May 28, 2019 at 12:15:16PM +0300, Kirill Tkhai wrote:
->> On 28.05.2019 02:30, Kirill A. Shutemov wrote:
->>> On Fri, May 24, 2019 at 05:00:32PM +0300, Kirill Tkhai wrote:
->>>> On 24.05.2019 14:52, Kirill A. Shutemov wrote:
->>>>> On Fri, May 24, 2019 at 01:45:50PM +0300, Kirill Tkhai wrote:
->>>>>> On 22.05.2019 18:22, Kirill A. Shutemov wrote:
->>>>>>> On Mon, May 20, 2019 at 05:00:01PM +0300, Kirill Tkhai wrote:
->>>>>>>> This patchset adds a new syscall, which makes possible
->>>>>>>> to clone a VMA from a process to current process.
->>>>>>>> The syscall supplements the functionality provided
->>>>>>>> by process_vm_writev() and process_vm_readv() syscalls,
->>>>>>>> and it may be useful in many situation.
->>>>>>>
->>>>>>> Kirill, could you explain how the change affects rmap and how it is safe.
->>>>>>>
->>>>>>> My concern is that the patchset allows to map the same page multiple times
->>>>>>> within one process or even map page allocated by child to the parrent.
->>>>>>>
->>>>>>> It was not allowed before.
->>>>>>>
->>>>>>> In the best case it makes reasoning about rmap substantially more difficult.
->>>>>>>
->>>>>>> But I'm worry it will introduce hard-to-debug bugs, like described in
->>>>>>> https://lwn.net/Articles/383162/.
->>>>>>
->>>>>> Andy suggested to unmap PTEs from source page table, and this make the single
->>>>>> page never be mapped in the same process twice. This is OK for my use case,
->>>>>> and here we will just do a small step "allow to inherit VMA by a child process",
->>>>>> which we didn't have before this. If someone still needs to continue the work
->>>>>> to allow the same page be mapped twice in a single process in the future, this
->>>>>> person will have a supported basis we do in this small step. I believe, someone
->>>>>> like debugger may want to have this to make a fast snapshot of a process private
->>>>>> memory (when the task is stopped for a small time to get its memory). But for
->>>>>> me remapping is enough at the moment.
->>>>>>
->>>>>> What do you think about this?
->>>>>
->>>>> I don't think that unmapping alone will do. Consider the following
->>>>> scenario:
->>>>>
->>>>> 1. Task A creates and populates the mapping.
->>>>> 2. Task A forks. We have now Task B mapping the same pages, but
->>>>> write-protected.
->>>>> 3. Task B calls process_vm_mmap() and passes the mapping to the parent.
->>>>>
->>>>> After this Task A will have the same anon pages mapped twice.
->>>>
->>>> Ah, sure.
->>>>
->>>>> One possible way out would be to force CoW on all pages in the mapping,
->>>>> before passing the mapping to the new process.
->>>>
->>>> This will pop all swapped pages up, which is the thing the patchset aims
->>>> to prevent.
->>>>
->>>> Hm, what about allow remapping only VMA, which anon_vma::rb_root contain
->>>> only chain and which vma->anon_vma_chain contains single entry? This is
->>>> a vma, which were faulted, but its mm never were duplicated (or which
->>>> forks already died).
->>>
->>> The requirement for the VMA to be faulted (have any pages mapped) looks
->>> excessive to me, but the general idea may work.
->>>
->>> One issue I see is that userspace may not have full control to create such
->>> VMA. vma_merge() can merge the VMA to the next one without any consent
->>> from userspace and you'll get anon_vma inherited from the VMA you've
->>> justed merged with.
->>>
->>> I don't have any valid idea on how to get around this.
->>
->> Technically it is possible by creating boundary 1-page VMAs with another protection:
->> one above and one below the desired region, then map the desired mapping. But this
->> is not comfortable.
->>
->> I don't think it's difficult to find a natural limitation, which prevents mapping
->> a single page twice if we want to avoid this at least on start. Another suggestion:
->>
->> prohibit to map a remote process's VMA only in case of its vm_area_struct::anon_vma::root
->> is the same as root of one of local process's VMA.
->>
->> What about this?
-> 
-> I don't see anything immediately wrong with this, but it's still going to
-> produce puzzling errors for a user. How would you document such limitation
-> in the way it makes sense for userspace developer?
+On Wed, May 29, 2019 at 6:10 AM Tony Lu <tonylu@linux.alibaba.com> wrote:
+>
+> This series introduces two new tracepoints trace_udp_send and
+> trace_udp_queue_rcv, and removes redundant new line from
+> tcp_event_sk_skb.
 
-It's difficult, since the limitation is artificial.
-
-I just may to suggest more strict limitation.
-
-Something like "VMA may be remapped only as a whole region,
-and only in the case of there were not fork() after VMA
-appeared in a process (by mmap or remapping from another
-remote process). In case of VMA were merged with a neighbouring
-VMA, the same rules are applied to the neighbours.
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..0bcd6f598e73 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -287,13 +287,17 @@ extern unsigned int kobjsize(const void *objp);
- #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
-+#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
- #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
- #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
- #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
- #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
-+#define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
- #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
- 
-+#define VM_MAY_REMOTE_REMAP	VM_HIGH_ARCH_5
-+
- #ifdef CONFIG_ARCH_HAS_PKEYS
- # define VM_PKEY_SHIFT	VM_HIGH_ARCH_BIT_0
- # define VM_PKEY_BIT0	VM_HIGH_ARCH_0	/* A protection key is a 4-bit value */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index ff4efd16fd82..a3c758c8cd54 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -584,8 +584,10 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		rb_parent = &tmp->vm_rb;
- 
- 		mm->map_count++;
--		if (!(tmp->vm_flags & VM_WIPEONFORK))
-+		if (!(tmp->vm_flags & VM_WIPEONFORK)) {
- 			retval = copy_page_range(mm, oldmm, mpnt);
-+			mpnt->vm_flags &= ~VM_MAY_REMOTE_REMAP;
-+		}
- 
- 		if (tmp->vm_ops && tmp->vm_ops->open)
- 			tmp->vm_ops->open(tmp);
+Though I like new tracepoints this patch set gets a nack, since commit log
+says nothing about use case. Why kprobes cannot achieve the same?
