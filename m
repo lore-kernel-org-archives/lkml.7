@@ -2,113 +2,118 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C70C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B216C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416D420645
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0820645
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfqcTP93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfE2MMg (ORCPT
+        id S1726881AbfE2MMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 08:12:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44588 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfE2MMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 08:12:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDBEE80D;
-        Wed, 29 May 2019 05:12:34 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9733C3F59C;
-        Wed, 29 May 2019 05:12:28 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:12:25 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190529121225.q2zjgurxqnohvmkg@mbp>
-References: <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
- <20190523201105.oifkksus4rzcwqt4@mbp>
- <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com>
- <20190524101139.36yre4af22bkvatx@mbp>
- <c6dd53d8-142b-3d8d-6a40-d21c5ee9d272@oracle.com>
- <CAAeHK+yAUsZWhp6xPAbWewX5Nbw+-G3svUyPmhXu5MVeEDKYvA@mail.gmail.com>
- <20190529061126.GA18124@infradead.org>
+        Wed, 29 May 2019 08:12:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35862 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfE2MMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 08:12:46 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c3so1770931otr.3;
+        Wed, 29 May 2019 05:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=XjaYpK8Rsg46AR4Gtit0a5QnhHGfewPp+tzF3TFTKK8=;
+        b=QfqcTP932tiOW4eCsLKgIS8SbhVqWpXSL0xLNpCWHkbyrnxW1VIuaXO7JRGGnSRBZF
+         VWfI5dSN9JLGRyd8XBVr45CiSp99xIq1Kvo4jNN5R3eMyMcmNMbhLOR99gvb0eXYaX/+
+         oA9KW0c1EM5p45jO/GNHMmmXnE6UZEUHOoIHrZztceSudZpwS9NGmoMkPE0UV5Bl8LUh
+         KjyDQDxGYiom02p/1gZ1nA6qlgILkOSvSNK5VJ9ZX6phqvDpVtMIfS15BWMedFsahMHi
+         Pz1ArK7I6XMPD4Soslb4KE640iZ/7/CxLt0Rf2UcdfZarBjuHEZhng8EMG4blY5QfKTI
+         B3SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=XjaYpK8Rsg46AR4Gtit0a5QnhHGfewPp+tzF3TFTKK8=;
+        b=QTVtSN28yKKmYpN7TN3/RnOgDWnhO6BrpAPkl8W+nlFC0T4QbWeFb5pUGnH6R8l6mA
+         oQLZm0q3fj70f4XpeXoNs0Go+JDa3JOnXiDuZwcNOeFk5r1AwbZWdcq9nDKb5Dk/6/fQ
+         czVw2lJ+5lIRF9wE9dso6+hlYEsDy2+PPJ7loKAbmu7FjhtIFfBRXdzX+9MFTKjUnGl1
+         nTlOQL1rduMCHDpsa72SFRzzGGiTozRlgB9JmrcnBV/2ZOBqTqx9/SSF9lP7tsAZluAL
+         BHyXx0ZJSvwpokZRcCbEedMg7l/kK6okTJZOZg5n5UPlhy06Evme6I+vmzbENWSB0a7W
+         eXEQ==
+X-Gm-Message-State: APjAAAVmuRisOgwve+B16e9jG8F9r0YgEeD214pecS/j6A9XFpoBgaus
+        UebMhRpxoeu27Znjl9vjYkhEUQBVP57ZQYeFRUM=
+X-Google-Smtp-Source: APXvYqwqXgO6Nr1j5LgxSA44mlg7nIFGhe5cAirmiZcDAqDrRjRpU8hCTqBPRbJrd0d4aa5w6Ogzuu9pDnv/wdqByjs=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr54132otf.162.1559131965416;
+ Wed, 29 May 2019 05:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529061126.GA18124@infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190529093033.30068-1-huntbag@linux.vnet.ibm.com>
+In-Reply-To: <20190529093033.30068-1-huntbag@linux.vnet.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+From:   Gautham R Shenoy <ego.lkml@gmail.com>
+Date:   Wed, 29 May 2019 17:42:34 +0530
+Message-ID: <CAHZ_5Ww2fMBGUR4gzNRZs-uV16j-hAevxT-vbNULRPsmKA7dow@mail.gmail.com>
+Subject: Re: [PATCH] cpupower : frequency-set -r option misses the last cpu in
+ related cpu list
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Cc:     trenn@suse.com, shuah@kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:11:26PM -0700, Christoph Hellwig wrote:
-> On Tue, May 28, 2019 at 04:14:45PM +0200, Andrey Konovalov wrote:
-> > Thanks for a lot of valuable input! I've read through all the replies
-> > and got somewhat lost. What are the changes I need to do to this
-> > series?
-> > 
-> > 1. Should I move untagging for memory syscalls back to the generic
-> > code so other arches would make use of it as well, or should I keep
-> > the arm64 specific memory syscalls wrappers and address the comments
-> > on that patch?
-> 
-> It absolutely needs to move to common code.  Having arch code leads
-> to pointless (often unintentional) semantic difference between
-> architectures, and lots of boilerplate code.
+Hi Abhishek,
 
-That's fine by me as long as we agree on the semantics (which shouldn't
-be hard; Khalid already following up). We should probably also move the
-proposed ABI document [1] into a common place (or part of since we'll
-have arm64-specifics like prctl() calls to explicitly opt in to memory
-tagging).
+On Wed, May 29, 2019 at 3:02 PM Abhishek Goel
+<huntbag@linux.vnet.ibm.com> wrote:
+>
+> To set frequency on specific cpus using cpupower, following syntax can
+> be used :
+> cpupower -c #i frequency-set -f #f -r
+>
+> While setting frequency using cpupower frequency-set command, if we use
+> '-r' option, it is expected to set frequency for all cpus related to
+> cpu #i. But it is observed to be missing the last cpu in related cpu
+> list. This patch fixes the problem.
+>
+> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+> ---
+>  tools/power/cpupower/utils/cpufreq-set.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+> index 1eef0aed6..08a405593 100644
+> --- a/tools/power/cpupower/utils/cpufreq-set.c
+> +++ b/tools/power/cpupower/utils/cpufreq-set.c
+> @@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
+>                                 bitmask_setbit(cpus_chosen, cpus->cpu);
+>                                 cpus = cpus->next;
+>                         }
+> +                       /* Set the last cpu in related cpus list */
+> +                       bitmask_setbit(cpus_chosen, cpus->cpu);
 
-[1] https://lore.kernel.org/lkml/20190318163533.26838-1-vincenzo.frascino@arm.com/T/#u
+Perhaps you could convert the while() loop to a do ..  while(). That
+should will ensure
+that we terminate the loop after setting the last valid CPU.
+
+
+>                         cpufreq_put_related_cpus(cpus);
+>                 }
+>         }
+> --
+> 2.17.1
+>
+
 
 -- 
-Catalin
+Thanks and Regards
+gautham.
