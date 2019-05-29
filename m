@@ -2,121 +2,124 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95F0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F3FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AD524035
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B1B24057
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rm6Op6Is"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="hfFSlTtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfE2SMI (ORCPT
+        id S1727599AbfE2SMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:12:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35532 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfE2SMI (ORCPT
+        Wed, 29 May 2019 14:12:12 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39344 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfE2SMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:12:08 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n14so3008870otk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:12:08 -0700 (PDT)
+        Wed, 29 May 2019 14:12:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i34so3791860qta.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G+LiWYxMhAJfHLsG+v7LjjWofEdKFy9soNO63HkV+20=;
-        b=rm6Op6Is2WyS28sYE2LrvmC6hYEVlBfSDkJUVaKtEPXkpkcEEgwFZx9EaFMzxA7QHN
-         jGLyhbIH7d3TLdKtfCeO8OKvbDMjlklbUFMA1y1Fzv7/GietI7aZdu2oEsVBu6nVgRND
-         D8Pg4xBc/mwxRuJEOgG/C4KpUU6MF5i1lnkZLF+zkyEz7Jx20Jz5VQFv40woP8Itc/Vb
-         j9auqkQ5XEeP8zQAuW8EihZdk+7rwfnJdOzqFkabhy2air3lPgExNOXh8nOIvkDc2p7e
-         nwmhXppgGZ1QaQxGpM3UFjxRCl6MxPJt9OTN+C6ag2JF4pxEOtDBt//jHJ1wROrhskj/
-         /LIA==
+        bh=ViODfuhWnYhc2s3Kjea5F7ZIJ8Ml/xHbr11ntjMzkwg=;
+        b=hfFSlTtHf223et1zp+zz4Fft/wcc9MB9YlSBND/88dfUQDV8o2hrr8X077o4+DX6ED
+         udJQ5BVvWDtu+f6v77bjmSJs3N8kmDv1b8CcUXlmCK5qpnJ6oq3RdjEBuDIy7ASj/h3h
+         bQotgD7n8ejIKLbCXzWI+Y0OpPIwp2Q9apDj4WQ9pVWRWzrdQiuWvkX4H6x4VVuzdvXn
+         kR1Y5GSMkhLNnC1Nfr9mteFhaFil97va81T/sy/2voPtFc4bvg/5QcHaimDLYorXtqY6
+         db08Zg5JLqly5ozBatzETFl0Ec7JdDrI4R8CtxgVM06U/oseASC6mHza1fefFRzXZIuw
+         lGlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G+LiWYxMhAJfHLsG+v7LjjWofEdKFy9soNO63HkV+20=;
-        b=ThMUWlfwDlp+DVToSc0sYw/eCZFeC4NCVEhJYna/gP0MO2u1aayBIXrvnfiOqDknRm
-         uTjMveaClPwU+2rQahHSomgvRrVEfEstjORUVXjQf3s/i9nEKugyCdEtrpT7l2KvLb9J
-         bjH3A8hfphorzMvJM/5wUk8rP65IaDNpM1gEi24puFokqPEjet4Qv45iohoXBhCwsbf1
-         E2F6PG8FUkX0LozzsXumZPG1N/x3oTbpTj/G/OFar5CQxXm8OyLwqgZtqD0jf5Pq+Qa3
-         Hnjj5UhUfVytVR60w8UsqFZ6YVTFdSHI9VdMOmHbKn8GoHM/HgCm3MHEGozlner9veR8
-         6dzQ==
-X-Gm-Message-State: APjAAAUd557AgCNRYxK6CKD5BSZPCNCsFCFUeZxLluSjDHC6Y5z2MdU8
-        MJMpGTDUFxIsWrRzaKxlL8aSi+5WcagDUTLWe+SzZw==
-X-Google-Smtp-Source: APXvYqw+3MUKe4d0cvSOyC631nuMT0M0/zG0ddXI9fhLgtQNKsQ1SVQlwExS86mDMdF/84VeJAo+Iz4GbbdE8HpYvNI=
-X-Received: by 2002:a9d:148:: with SMTP id 66mr30932226otu.32.1559153527342;
- Wed, 29 May 2019 11:12:07 -0700 (PDT)
+        bh=ViODfuhWnYhc2s3Kjea5F7ZIJ8Ml/xHbr11ntjMzkwg=;
+        b=HeljYIwlFsZ0q4uXghYLVYbHw6Lt06lOEFRRp/PrvlI7YS9Md8G0prU2XRxX4deBxl
+         nz85Oj6smN/EqXahkSbyD+TmDgTLVanZ9vk58tiYk9UFav4YBIYyac5zwOhVNhVEqxxI
+         rVu89YuHPmov9uOu2xUFl2oUjl1K8gjKyUCDzaK1yqrxHyecUoR/by8i3EEXwNqJ1+Et
+         nZBtya57BCt9TZnvxirjNWBlc/5pLJ7X4tOUbZXnXTM5bIWazq6SPCo+5VjgOJ3J4liq
+         fg/kOF229LGiLySFd4KtMuPuzzxjysGlhTNKsHZtNNfKtzn2uXdObPWAR4jRpb1C7CHO
+         DLRQ==
+X-Gm-Message-State: APjAAAU7LMgwZ4HWeLLRMbgCX1m66SpyHjTI/0iS/sUlA4X2QsXZTTVp
+        L9LmLdMGb0o5sefjoO7gojp7ZIPLBkRQvnd1QAZ5nw==
+X-Google-Smtp-Source: APXvYqyxAS6nfNEEguifsrx3x6g5lgGT4VyR8//RpwjqFTV2M0Aw3Jpm9dumVCfx0v/V68hCmEGgrHA6vjJNBAlb+LU=
+X-Received: by 2002:ac8:6b06:: with SMTP id w6mr5556447qts.80.1559153529538;
+ Wed, 29 May 2019 11:12:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG48ez2rRh2_Kq_EGJs5k-ZBNffGs_Q=vkQdinorBgo58tbGpg@mail.gmail.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905933492.7587.6968545866041839538.stgit@warthog.procyon.org.uk>
- <14347.1559127657@warthog.procyon.org.uk> <312a138c-e5b2-4bfb-b50b-40c82c55773f@schaufler-ca.com>
- <4552118F-BE9B-4905-BF0F-A53DC13D5A82@amacapital.net> <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
-In-Reply-To: <058f227c-71ab-a6f4-00bf-b8782b3b2956@schaufler-ca.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 29 May 2019 20:11:40 +0200
-Message-ID: <CAG48ez2S+i2wxpWXVGpEAprgY9gtjxyejLfbZtrqu5YOkQ81Nw@mail.gmail.com>
-Subject: Re: [PATCH 3/7] vfs: Add a mount-notification facility
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <20190529050335.72061-1-chiu@endlessm.com>
+In-Reply-To: <20190529050335.72061-1-chiu@endlessm.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 29 May 2019 12:11:58 -0600
+Message-ID: <CAD8Lp46on32VgWtCe7WsGHXp3Jk16qTh6saf0Vj0Y4Ry5z1n7g@mail.gmail.com>
+Subject: Re: [RFC PATCH v3] rtl8xxxu: Improve TX performance of RTL8723BU on
+ rtl8xxxu driver
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 7:46 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> On 5/29/2019 10:13 AM, Andy Lutomirski wrote:
-> >> On May 29, 2019, at 8:53 AM, Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >>> On 5/29/2019 4:00 AM, David Howells wrote:
-> >>> Jann Horn <jannh@google.com> wrote:
-> >>>
-> >>>>> +void post_mount_notification(struct mount *changed,
-> >>>>> +                            struct mount_notification *notify)
-> >>>>> +{
-> >>>>> +       const struct cred *cred = current_cred();
-> >>>> This current_cred() looks bogus to me. Can't mount topology changes
-> >>>> come from all sorts of places? For example, umount_mnt() from
-> >>>> umount_tree() from dissolve_on_fput() from __fput(), which could
-> >>>> happen pretty much anywhere depending on where the last reference gets
-> >>>> dropped?
-> >>> IIRC, that's what Casey argued is the right thing to do from a security PoV.
-> >>> Casey?
-> >> You need to identify the credential of the subject that triggered
-> >> the event. If it isn't current_cred(), the cred needs to be passed
-> >> in to post_mount_notification(), or derived by some other means.
-> > Taking a step back, why do we care who triggered the event?  It seems to me that we should care whether the event happened and whether the *receiver* is permitted to know that.
->
-> There are two filesystems, "dot" and "dash". I am not allowed
-> to communicate with Fred on the system, and all precautions have
-> been taken to ensure I cannot. Fred asks for notifications on
-> all mount activity. I perform actions that result in notifications
-> on "dot" and "dash". Fred receives notifications and interprets
-> them using Morse code. This is not OK. If Wilma, who *is* allowed
-> to communicate with Fred, does the same actions, he should be
-> allowed to get the messages via Morse.
+Hi Chris,
 
-In other words, a classic covert channel. You can't really prevent two
-cooperating processes from communicating through a covert channel on a
-modern computer. You can transmit information through the scheduler,
-through hyperthread resource sharing, through CPU data caches, through
-disk contention, through page cache state, through RAM contention, and
-probably dozens of other ways that I can't think of right now. There
-have been plenty of papers that demonstrated things like an SSH
-connection between two virtual machines without network access running
-on the same physical host (<https://gruss.cc/files/hello.pdf>),
-communication between a VM and a browser running on the host system,
-and so on.
+On Tue, May 28, 2019 at 11:03 PM Chris Chiu <chiu@endlessm.com> wrote:
+> +       /*
+> +        * Single virtual interface permitted since the driver supports STATION
+> +        * mode only.
+
+I think you can be a bit more explicit by saying e.g.:
+
+Only one virtual interface permitted because only STA mode is
+supported and no iface_combinations are provided.
+
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> index 039e5ca9d2e4..2d612c2df5b2 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+> @@ -4345,7 +4345,7 @@ void rtl8xxxu_gen2_update_rate_mask(struct rtl8xxxu_priv *priv,
+>         h2c.b_macid_cfg.ramask3 = (ramask >> 24) & 0xff;
+>
+>         h2c.ramask.arg = 0x80;
+> -       h2c.b_macid_cfg.data1 = 0;
+> +       h2c.b_macid_cfg.data1 = priv->ratr_index;
+
+I think ratr_index can be moved to be a function parameter of the
+update_rate_mask function. It looks like all callsites already know
+which value they want to set. Then you don't have to store it in the
+priv structure.
+
+> @@ -5471,6 +5509,10 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
+>
+>         switch (vif->type) {
+>         case NL80211_IFTYPE_STATION:
+> +               if (!priv->vif)
+> +                       priv->vif = vif;
+> +               else
+> +                       return -EOPNOTSUPP;
+>                 rtl8xxxu_stop_tx_beacon(priv);
+
+rtl8xxxu_remove_interface should also set priv->vif back to NULL.
+
+> @@ -6183,6 +6259,8 @@ static void rtl8xxxu_disconnect(struct usb_interface *interface)
+>         mutex_destroy(&priv->usb_buf_mutex);
+>         mutex_destroy(&priv->h2c_mutex);
+>
+> +       cancel_delayed_work_sync(&priv->ra_watchdog);
+
+Given that the work was started in rtl8xxxu_start, I think it should
+be cancelled in rtl8xxxu_stop() instead.
+
+Daniel
