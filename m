@@ -2,98 +2,126 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E583C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88142C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5161020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603F721721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559126037;
+	bh=ZsJAgJ4qRGLyT8Xml+BEP7KR++7o2cnAdQ+/gcUsBLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PMpz3kFYvCVz9kDSoHUe46SoFAjCkBA8JrwV3iniGIPfEAfNdx4b9jbIkPTeQLLyT
+	 4/JcpGDUppnmgaKO7jVmQMLZcrANZDgp14xhnHAvbgoAMslNXQqJvC0ejzrLC/ptnO
+	 KL9s+IQP98nLhtV+svZGx97nqbvv0WSkEvrmQg9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE2Kcl (ORCPT
+        id S1726687AbfE2Kd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:32:41 -0400
-Received: from m97179.mail.qiye.163.com ([220.181.97.179]:6940 "EHLO
-        m97179.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2Kcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:32:41 -0400
-Received: from localhost (unknown [120.132.1.243])
-        by m97179.mail.qiye.163.com (Hmail) with ESMTPA id 1966BE01AC1;
-        Wed, 29 May 2019 18:32:33 +0800 (CST)
-Date:   Wed, 29 May 2019 04:05:54 +0800
-From:   Yao Liu <yotta.liu@ucloud.cn>
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] nbd: notify userland even if nbd has already
- disconnected
-Message-ID: <20190528200554.GA21633@192-168-150-246.7~>
-References: <1558691036-16281-1-git-send-email-yotta.liu@ucloud.cn>
- <1558691036-16281-2-git-send-email-yotta.liu@ucloud.cn>
- <20190524130856.zod5agp7hk74pcnr@MacBook-Pro-91.local.dhcp.thefacebook.com>
- <20190527182323.GB20702@192-168-150-246.7~>
- <5CED6385.3000802@redhat.com>
+        Wed, 29 May 2019 06:33:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36996 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfE2Kd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:33:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 50483AC40;
+        Wed, 29 May 2019 10:33:54 +0000 (UTC)
+Date:   Wed, 29 May 2019 12:33:52 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190529103352.GD18589@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
+ <20190520092258.GZ6836@dhcp22.suse.cz>
+ <20190521024820.GG10039@google.com>
+ <20190521062421.GD32329@dhcp22.suse.cz>
+ <20190521102613.GC219653@google.com>
+ <20190521103726.GM32329@dhcp22.suse.cz>
+ <20190527074940.GB6879@google.com>
+ <CAKOZuesK-8zrm1zua4dzqh4TEMivsZKiccySMvfBjOyDkg-MEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5CED6385.3000802@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-HM-Spam-Status: e1kIGBQJHllBWUtVQ01JQkJCQ05NT0xJS0pOWVdZKFlBSUI3V1ktWUFJV1
-        kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6USo*Vjg0OiI9KgoSPyhD
-        OBNPCzhVSlVKTk5CSklOQk5ISUtIVTMWGhIXVQIUDw8aVRcSDjsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SUtVSkhJVUpVSU9IWVdZCAFZQUhOTk83Bg++
-X-HM-Tid: 0a6b03260a5320bdkuqy1966be01ac1
+In-Reply-To: <CAKOZuesK-8zrm1zua4dzqh4TEMivsZKiccySMvfBjOyDkg-MEw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 11:36:21AM -0500, Mike Christie wrote:
-> On 05/27/2019 01:23 PM, Yao Liu wrote:
-> > On Fri, May 24, 2019 at 09:08:58AM -0400, Josef Bacik wrote:
-> >> On Fri, May 24, 2019 at 05:43:55PM +0800, Yao Liu wrote:
-> >>> Some nbd client implementations have a userland's daemon, so we should
-> >>> inform client daemon to clean up and exit.
-> >>>
-> >>> Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-> >>
-> >> Except the nbd_disconnected() check is for the case that the client told us
-> >> specifically to disconnect, so we don't want to send the notification to
-> >> re-connect because we've already been told we want to tear everything down.
-> >> Nack to this as well.  Thanks,
-> >>
-> >> Josef
-> >>
-> > 
-> > But in userland, client daemon process and process which send disconnect
-> > command are not same process, so they are not clear to each other, so
-> > client daemon expect driver inform it to exit.
-> > In addition, client daemon will get nbd status with nbd_genl_status interface
-> > after it get notified and it should not re-connect if status connected == 0
-> > 
+On Wed 29-05-19 03:08:32, Daniel Colascione wrote:
+> On Mon, May 27, 2019 at 12:49 AM Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > On Tue, May 21, 2019 at 12:37:26PM +0200, Michal Hocko wrote:
+> > > On Tue 21-05-19 19:26:13, Minchan Kim wrote:
+> > > > On Tue, May 21, 2019 at 08:24:21AM +0200, Michal Hocko wrote:
+> > > > > On Tue 21-05-19 11:48:20, Minchan Kim wrote:
+> > > > > > On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
+> > > > > > > [Cc linux-api]
+> > > > > > >
+> > > > > > > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> > > > > > > > Currently, process_madvise syscall works for only one address range
+> > > > > > > > so user should call the syscall several times to give hints to
+> > > > > > > > multiple address range.
+> > > > > > >
+> > > > > > > Is that a problem? How big of a problem? Any numbers?
+> > > > > >
+> > > > > > We easily have 2000+ vma so it's not trivial overhead. I will come up
+> > > > > > with number in the description at respin.
+> > > > >
+> > > > > Does this really have to be a fast operation? I would expect the monitor
+> > > > > is by no means a fast path. The system call overhead is not what it used
+> > > > > to be, sigh, but still for something that is not a hot path it should be
+> > > > > tolerable, especially when the whole operation is quite expensive on its
+> > > > > own (wrt. the syscall entry/exit).
+> > > >
+> > > > What's different with process_vm_[readv|writev] and vmsplice?
+> > > > If the range needed to be covered is a lot, vector operation makes senese
+> > > > to me.
+> > >
+> > > I am not saying that the vector API is wrong. All I am trying to say is
+> > > that the benefit is not really clear so far. If you want to push it
+> > > through then you should better get some supporting data.
+> >
+> > I measured 1000 madvise syscall vs. a vector range syscall with 1000
+> > ranges on ARM64 mordern device. Even though I saw 15% improvement but
+> > absoluate gain is just 1ms so I don't think it's worth to support.
+> > I will drop vector support at next revision.
 > 
-> When using the netlink interface you get the NBD_CMD_LINK_DEAD first
-> then the configs_refs goes to zero right?
-> 
-> nbd_disconnect_and_put -> sock_shutdown -> nbd_mark_nsock_dead
-> 
-> then later we do the final nbd_config_put?
-> 
-> Maybe it would be best to add a new netlink event to signal what has
-> happened, because the above nl and stat algorithm seems like a pain. The
-> NBD_CMD_LINK_DEAD will be sent, then userspace has to possibly poll the
-> status to check if this was caused due to nbd_genl_disconnect instead of
-> a downed link due to something like a command timeout, because the
-> refcount may not be down when userspace gets the NL event.
-> 
-> Or, I guess the admin/tool process could just send a msg to the daemon
-> process to tell it to do the netlink disconnect request.
-> 
+> Please do keep the vector support. Absolute timing is misleading,
+> since in a tight loop, you're not going to contend on mmap_sem. We've
+> seen tons of improvements in things like camera start come from
+> coalescing mprotect calls, with the gains coming from taking and
+> releasing various locks a lot less often and bouncing around less on
+> the contended lock paths. Raw throughput doesn't tell the whole story,
+> especially on mobile.
 
-Adding a new netlink event sames good.
+This will always be a double edge sword. Taking a lock for longer can
+improve a throughput of a single call but it would make a latency for
+anybody contending on the lock much worse.
+
+Besides that, please do not overcomplicate the thing from the early
+beginning please. Let's start with a simple and well defined remote
+madvise alternative first and build a vector API on top with some
+numbers based on _real_ workloads.
+-- 
+Michal Hocko
+SUSE Labs
