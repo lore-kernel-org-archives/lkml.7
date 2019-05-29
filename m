@@ -2,96 +2,98 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E323C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726ADC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738CC23BB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C42523B8C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfE2PMc (ORCPT
+        id S1726959AbfE2PMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:12:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47880 "EHLO
+        Wed, 29 May 2019 11:12:42 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47894 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfE2PMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:12:32 -0400
+        id S1725936AbfE2PMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:12:41 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86AA8341;
-        Wed, 29 May 2019 08:12:31 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC923F5AF;
-        Wed, 29 May 2019 08:12:30 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:12:27 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [REVIEW][PATCHv2 03/26] signal/arm64: Use force_sig not
- force_sig_fault for SIGKILL
-Message-ID: <20190529151227.GF11154@fuggles.cambridge.arm.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
- <20190523003916.20726-4-ebiederm@xmission.com>
- <20190523101702.GG26646@fuggles.cambridge.arm.com>
- <875zq1gnh4.fsf_-_@xmission.com>
- <20190523161509.GE31896@fuggles.cambridge.arm.com>
- <8736l4evkn.fsf@xmission.com>
- <20190524100008.GE3432@fuggles.cambridge.arm.com>
- <87o93rcwee.fsf@xmission.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75B4B15AD;
+        Wed, 29 May 2019 08:12:41 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63C383F5AF;
+        Wed, 29 May 2019 08:12:40 -0700 (PDT)
+Subject: Re: [PATCH 11/21] EDAC, ghes: Unify trace_mc_event() code with
+ edac_mc driver
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529084344.28562-12-rrichter@marvell.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <37d47356-a40b-2739-10df-f5ab83fa2b36@arm.com>
+Date:   Wed, 29 May 2019 16:12:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o93rcwee.fsf@xmission.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190529084344.28562-12-rrichter@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 05:36:41PM -0500, Eric W. Biederman wrote:
-> Will Deacon <will.deacon@arm.com> writes:
-> 
-> > On Thu, May 23, 2019 at 03:59:20PM -0500, Eric W. Biederman wrote:
-> >> Will Deacon <will.deacon@arm.com> writes:
-> >> 
-> >> > On Thu, May 23, 2019 at 11:11:19AM -0500, Eric W. Biederman wrote:
-> >> >> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> >> >> index ade32046f3fe..e45d5b440fb1 100644
-> >> >> --- a/arch/arm64/kernel/traps.c
-> >> >> +++ b/arch/arm64/kernel/traps.c
-> >> >> @@ -256,7 +256,10 @@ void arm64_force_sig_fault(int signo, int code, void __user *addr,
-> >> >>  			   const char *str)
-> >> >>  {
-> >> >>  	arm64_show_signal(signo, str);
-> >> >> -	force_sig_fault(signo, code, addr, current);
-> >> >> +	if (signo == SIGKILL)
-> >> >> +		force_sig(SIGKILL, current);
-> >> >> +	else
-> >> >> +		force_sig_fault(signo, code, addr, current);
-> >> >>  }
-> >> >
-> >> > Acked-by: Will Deacon <will.deacon@arm.com>
-> >> >
-> >> > Are you planning to send this series on, or would you like me to pick this
-> >> > into the arm64 tree?
-> >> 
-> >> I am planning on taking this through siginfo tree, unless it causes
-> >> problems.
-> >
-> > Okey doke, it would just be nice to see this patch land in 5.2, that's
-> > all.
-> 
-> As this does not appear to have any real world consequences I am aiming
-> at 5.3.  If someone else would like to take it and feed it to Linus
-> sooner I won't object.
+Hi Robert,
 
-Thanks. I've picked this patch up as part of the arm64 fixes I plan to send
-for -rc3.
+On 29/05/2019 09:44, Robert Richter wrote:
+> Almost duplicate code, remove it.
 
-Will
+almost?
+
+
+> Note: there is a difference in the calculation of the grain_bits,
+> using the edac_mc's version here.
+
+But is it the right thing to do?
+
+Is this an off-by-one bug being papered over as some cleanup?
+If so could you post a separate fix that can be picked up for an rc.
+
+Do Marvell have firmware that populates this field?
+
+...
+
+Unless the argument is no one cares about this...
+
+From ghes_edac_report_mem_error():
+|	/* Error grain */
+|	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+|		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+
+Fishy, why would the kernel page-size be relevant here?
+
+If physical_addr_mask were the same as PAGE_MASK this wouldn't this always give ~0?
+(masking logic like this always does my head in)
+
+/me gives it ago:
+| {1}[Hardware Error]:   physical_address: 0x00000000deadbeef
+| {1}[Hardware Error]:   physical_address_mask: 0xffffffffffff0000
+| {1}[Hardware Error]:   error_type: 6, master abort
+| EDAC MC0: 1 CE Master abort on unknown label ( page:0xdead offset:0xbeef
+| grain:-1 syndrome:0x0 - status(0x0000000000000001): reserved)
+
+That 'grain:-1' is because the calculated e->grain was an unlikely 0xffffffffffffffff.
+Patch incoming, if you could test it on your platform that'd be great.
+
+I don't think ghes_edac.c wants this '+1'.
+
+
+Thanks,
+
+James
