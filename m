@@ -2,122 +2,221 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A8CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5430C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7672238A
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D67822511
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JzlSyO5e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8JOsQlG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfE2OaZ (ORCPT
+        id S1726884AbfE2Oav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:30:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33709 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2OaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:30:24 -0400
-Received: from [172.20.5.109] (207-225-69-115.dia.static.qwest.net [207.225.69.115] (may be forged))
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x4TET5Ip2561081
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Wed, 29 May 2019 07:29:05 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x4TET5Ip2561081
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559140147;
-        bh=0QBCMhL0UtNfpa1/nHPwY54RLtb1R1cG9r3yArQfJtw=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=JzlSyO5eP+ZYLQHrdvCzaFyQ8yV9k74Kwz9U3ZBRjGi+VZ2tnTPD79icUl023IVaa
-         lorhYOOJ39lVimV25yC8m2dMXeg0m03X5EGPWuJ6QzpjHbUcuWphp4BFY7sIrz4FgP
-         TT9aVIxbcqZR5INiHae7timA+hTN2S6EkuNTGTj9j10QfOQA1Zm/XchNd7ZDZPeTkx
-         EFwSJMe3MEfRQ9KoN1PHX3oJZFhRT7M0C8qaTRhDfALGrRbpwmV6xNHrucaWs+HEIg
-         x3oclNc0c4VudCFk50ebDNaxcIoemxYdHIzudfM9TPcv//LgFBeKs0qxuOyvB2RC6f
-         KoMPScX/VGQxA==
-Date:   Wed, 29 May 2019 07:29:01 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190529141500.193390-3-elver@google.com>
-References: <20190529141500.193390-1-elver@google.com> <20190529141500.193390-3-elver@google.com>
+        Wed, 29 May 2019 10:30:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46326 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2Oav (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:30:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r7so1924438wrr.13;
+        Wed, 29 May 2019 07:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+mrvH5d9LnblMFOrU+glO76G4SJ6Ih/eDveF6jIta9Q=;
+        b=W8JOsQlGyoa8Jr2aFnmr9GTCVgVQPuDWb5dA8jyvf5hljd0EQOPlPcqfwGv+SjUXLy
+         porOr0Iv98gZ9Y7mR2bjcnU70c9NHxyTAMIa4Nf8gIv0DrvsK1xLCHWUZMmbHl0oUqr7
+         4TccOQzdz5Z8CpYqCEKmCTHP4wXt7tYhdsC3ZUySUSt9cVs1c+P2NSQ+tK7l9/PKDt68
+         jckUnUFNGI7iN3Llm0zLMU+ZWDlo3EJkggkKVJX7qjh4Nd6fjXrF4xP+Yy1BwgKaOO8l
+         ex/8ul9IQucbV2n6Wl0yLJrm4rvSKfsbAmoh02MoLTVvh9bQC5cTdrYlRW49PsM7OmPJ
+         pqcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+mrvH5d9LnblMFOrU+glO76G4SJ6Ih/eDveF6jIta9Q=;
+        b=If9tRhSAs7yZo2lKRprEg80SWlHlx06hXVeokYwrnrGYr5bb+ExF1rM5TwnwGxyQp1
+         gUuBCJf6fiuybWy59jJTYqjXrdV/Oy3pIyEmgiabgyVFxTQ3rGuzgZx8IVezujSpPj+h
+         24ZVxw3RtRb3X736ZAshmcDpBdpRkabestyaoeQ7q6jlzuuc9A8pTasxH9fk71Xo2CHF
+         xYkWsS5L3k+BhOBIoX0zxX0+pg/JunY8n7tMBXOteL7MqPGjIs8xloRFraYPVT+5hHwZ
+         DhntbFDS5rKzmF7tvZLmEd4iU01rM3g9Qm9YQti+buZ8m/x+sAH3SBYXc64e0hrh1IoZ
+         hpqw==
+X-Gm-Message-State: APjAAAWCF+KfPJRY14uCqeUrOgwuDGiukR86FwwjIWaC9VB3W2cetw7k
+        EFAvwzk2XR6WZSYL4NFdt8oXosKh
+X-Google-Smtp-Source: APXvYqwkTFr7sjDIT5btyNSIMcJc7h73x4bwa4wtzCODaT/zS9/J1zsFj3/ICGIgfnmRBZ7O4yOHqg==
+X-Received: by 2002:a5d:610e:: with SMTP id v14mr402211wrt.343.1559140248146;
+        Wed, 29 May 2019 07:30:48 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id n7sm6577025wrw.64.2019.05.29.07.30.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 07:30:47 -0700 (PDT)
+Date:   Wed, 29 May 2019 16:30:46 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 08/12] soc/tegra: pmc: allow support for more tegra
+ wake models
+Message-ID: <20190529143046.GF17679@ulmo>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-9-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/3] x86: Move CPU feature test out of uaccess region
-To:     Marco Elver <elver@google.com>, peterz@infradead.org,
-        aryabinin@virtuozzo.com, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, mark.rutland@arm.com
-CC:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, arnd@arndb.de, jpoimboe@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-From:   hpa@zytor.com
-Message-ID: <EE911EC6-344B-4EB2-90A4-B11E8D96BEDC@zytor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qp4W5+cUSnZs0RIF"
+Content-Disposition: inline
+In-Reply-To: <1559084936-4610-9-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 29, 2019 7:15:00 AM PDT, Marco Elver <elver@google=2Ecom> wrote:
->This patch is a pre-requisite for enabling KASAN bitops
->instrumentation:
->moves boot_cpu_has feature test out of the uaccess region, as
->boot_cpu_has uses test_bit=2E With instrumentation, the KASAN check would
->otherwise be flagged by objtool=2E
->
->This approach is preferred over adding the explicit kasan_check_*
->functions to the uaccess whitelist of objtool, as the case here appears
->to be the only one=2E
->
->Signed-off-by: Marco Elver <elver@google=2Ecom>
->---
->v1:
->* This patch replaces patch: 'tools/objtool: add kasan_check_* to
->  uaccess whitelist'
->---
-> arch/x86/ia32/ia32_signal=2Ec | 9 ++++++++-
-> 1 file changed, 8 insertions(+), 1 deletion(-)
->
->diff --git a/arch/x86/ia32/ia32_signal=2Ec b/arch/x86/ia32/ia32_signal=2E=
-c
->index 629d1ee05599=2E=2E12264e3c9c43 100644
->--- a/arch/x86/ia32/ia32_signal=2Ec
->+++ b/arch/x86/ia32/ia32_signal=2Ec
->@@ -333,6 +333,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal
->*ksig,
-> 	void __user *restorer;
-> 	int err =3D 0;
-> 	void __user *fpstate =3D NULL;
->+	bool has_xsave;
->=20
-> 	/* __copy_to_user optimizes that into a single 8 byte store */
-> 	static const struct {
->@@ -352,13 +353,19 @@ int ia32_setup_rt_frame(int sig, struct ksignal
->*ksig,
-> 	if (!access_ok(frame, sizeof(*frame)))
-> 		return -EFAULT;
->=20
->+	/*
->+	 * Move non-uaccess accesses out of uaccess region if not strictly
->+	 * required; this also helps avoid objtool flagging these accesses
->with
->+	 * instrumentation enabled=2E
->+	 */
->+	has_xsave =3D boot_cpu_has(X86_FEATURE_XSAVE);
-> 	put_user_try {
-> 		put_user_ex(sig, &frame->sig);
-> 		put_user_ex(ptr_to_compat(&frame->info), &frame->pinfo);
-> 		put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
->=20
-> 		/* Create the ucontext=2E  */
->-		if (boot_cpu_has(X86_FEATURE_XSAVE))
->+		if (has_xsave)
-> 			put_user_ex(UC_FP_XSTATE, &frame->uc=2Euc_flags);
-> 		else
-> 			put_user_ex(0, &frame->uc=2Euc_flags);
 
-This was meant to use static_cpu_has()=2E Why did that get dropped?
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+--qp4W5+cUSnZs0RIF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 28, 2019 at 04:08:52PM -0700, Sowjanya Komatineni wrote:
+> This patch allows to create separate irq_set_wake and irq_set_type
+> implementations for different tegra designs PMC that has different
+> wake models which require difference wake registers and different
+> programming sequence.
+>=20
+> AOWAKE model support is available for Tegra186 and Tegra194 only
+> and it resides within PMC and supports tiered wake architecture.
+>=20
+> Tegra210 and prior tegra designs uses PMC directly to receive wake
+> events and coordinate the wake sequence.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 5648e5c09ef5..974b4c9f6ada 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -235,6 +235,8 @@ struct tegra_pmc_soc {
+>  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
+>  				   struct device_node *np,
+>  				   bool invert);
+> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
+> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
+> =20
+>  	const char * const *reset_sources;
+>  	unsigned int num_reset_sources;
+> @@ -1915,12 +1917,15 @@ static const struct irq_domain_ops tegra_pmc_irq_=
+domain_ops =3D {
+>  	.alloc =3D tegra_pmc_irq_alloc,
+>  };
+> =20
+> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int=
+ on)
+>  {
+>  	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+>  	unsigned int offset, bit;
+>  	u32 value;
+> =20
+> +	if (data->hwirq =3D=3D ULONG_MAX)
+> +		return 0;
+> +
+>  	offset =3D data->hwirq / 32;
+>  	bit =3D data->hwirq % 32;
+> =20
+
+I've submitted this hunk as a separate patch because I think we may end
+up needing to backport that to v5.0.
+
+No need for you to worry about that, though. I'll take care of it when I
+apply this patch.
+
+Thierry
+
+> @@ -1943,7 +1948,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *=
+data, unsigned int on)
+>  	return 0;
+>  }
+> =20
+> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int ty=
+pe)
+> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int=
+ type)
+>  {
+>  	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+>  	u32 value;
+> @@ -1996,8 +2001,10 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pm=
+c)
+>  	pmc->irq.irq_unmask =3D irq_chip_unmask_parent;
+>  	pmc->irq.irq_eoi =3D irq_chip_eoi_parent;
+>  	pmc->irq.irq_set_affinity =3D irq_chip_set_affinity_parent;
+> -	pmc->irq.irq_set_type =3D tegra_pmc_irq_set_type;
+> -	pmc->irq.irq_set_wake =3D tegra_pmc_irq_set_wake;
+> +	if (pmc->soc->irq_set_type)
+> +		pmc->irq.irq_set_type =3D pmc->soc->irq_set_type;
+> +	if (pmc->soc->irq_set_wake)
+> +		pmc->irq.irq_set_wake =3D pmc->soc->irq_set_wake;
+> =20
+>  	pmc->domain =3D irq_domain_add_hierarchy(parent, 0, 96, pmc->dev->of_no=
+de,
+>  					       &tegra_pmc_irq_domain_ops, pmc);
+> @@ -2670,6 +2677,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc =
+=3D {
+>  	.regs =3D &tegra186_pmc_regs,
+>  	.init =3D NULL,
+>  	.setup_irq_polarity =3D tegra186_pmc_setup_irq_polarity,
+> +	.irq_set_wake =3D tegra186_pmc_irq_set_wake,
+> +	.irq_set_type =3D tegra186_pmc_irq_set_type,
+>  	.reset_sources =3D tegra186_reset_sources,
+>  	.num_reset_sources =3D ARRAY_SIZE(tegra186_reset_sources),
+>  	.reset_levels =3D tegra186_reset_levels,
+> @@ -2748,6 +2757,8 @@ static const struct tegra_pmc_soc tegra194_pmc_soc =
+=3D {
+>  	.regs =3D &tegra186_pmc_regs,
+>  	.init =3D NULL,
+>  	.setup_irq_polarity =3D tegra186_pmc_setup_irq_polarity,
+> +	.irq_set_wake =3D tegra186_pmc_irq_set_wake,
+> +	.irq_set_type =3D tegra186_pmc_irq_set_type,
+>  	.num_wake_events =3D ARRAY_SIZE(tegra194_wake_events),
+>  	.wake_events =3D tegra194_wake_events,
+>  };
+> --=20
+> 2.7.4
+>=20
+
+--qp4W5+cUSnZs0RIF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzul5YACgkQ3SOs138+
+s6EvRg//SiL8/cj7vXeGPNhShOjMQH5iYJIHqsX0WbMVVHn86pA6gpNyEYzZKaMU
+Sx9GsAU6QQSaitW2WJ+9Dd2+uNaHiOIFSqZwGEHUxDcYCyEsvNhq99mPVw+KOQXs
+u+hCCzhEN/4emURsfohOTDBRORr30tbLqzl3WinPLrseqLlY5oHXz5RmzXPY8wRV
+ZmBo6X5xXAr3IctQpZUlTDr/TiY60JLEN3zVqPHlNEShtlMVVVzMzR6ByP20NSh0
+fVL/P3iTC3nKHtwlqhaaMpu27wMNz+HHa6xaMRRkM+BLQyuDlN5cZEN3HsiFijB3
+lYn5sMz9bonxyaHX5ROFOeqCfGqPAhBde6d92X+/uq3xLAzt7VzHL9NCNlAjDzMi
+CK6H+9+Uv669KZqw1PG+DhPFNCyCJYx9rPTaR1xZ8T1M2pakLXl15CwSJMIvNWd3
+4hdhDYtCIcrlu23UkjwKZFOIxyMzijobk9FLRBRQoxkL8MXtqqPGlWlAF2Gw4nwi
+k1rcuUPgm/RCtnLa03zGehmKgiJpsGOSevI+ahEPeHSeSaPGbaxgLOXKO0D2PWA3
+80QpD6NO6NiU5VuM/BYomu29sZYWVEQxR1F2LIR4JB3nm2a77nh/eNo7TMlk1WSn
+NNL00bUomOFZXHk+D39puub7N443xeLpEg9PqWtia/nxhyFLrbM=
+=mmOw
+-----END PGP SIGNATURE-----
+
+--qp4W5+cUSnZs0RIF--
