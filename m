@@ -2,364 +2,238 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA87C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ACAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3C1240EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EA8240EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uiZc6BJj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWjv0kC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfE2TRr (ORCPT
+        id S1726240AbfE2TZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:17:47 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44950 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2TRq (ORCPT
+        Wed, 29 May 2019 15:25:13 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41640 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2TZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:17:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TJ8nat081450;
-        Wed, 29 May 2019 19:16:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=CtA6ICxKGe1fqkMs0pY+hvbN0hwH+SCp+kagkC8uKUU=;
- b=uiZc6BJjnxYlkKC0mVgzDMYlXqZp+X7nNs45fIZjaUrNaM6NMEcap06Ic5/50URhPfQK
- bt3R45V10xYXmjyX694eszHU/v7Ha6KRp2Ax/d5zm//J0A+N9v8ZAIJV+fmZY7UvVjsb
- Y8mXLog4WJLDTtB0Sg5R3fE/FmaQNwojslvdVW1zvt77HRXYqa1HYnngfQcFpcqpF1MT
- aPuDSchQXC0rsXFFUo/oO5LlzQT0g++W9ohrJZAp2uxHQUMvu/GTY4bEdyNOpcSyTmX4
- HkllS8/BNhBVGuhrkIHCRCj/VY0fG/Wc3aNzLhHDA3jofDXaA/V1JDdyelNDZntAXNxo tQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2spw4tm189-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 19:16:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TJGOPJ155964;
-        Wed, 29 May 2019 19:16:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2sqh73w8nw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 19:16:55 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TJGoBM009180;
-        Wed, 29 May 2019 19:16:51 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 12:16:50 -0700
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
- <20190527143719.GA59948@MBP.local>
- <20190528145411.GA709@e119886-lin.cambridge.arm.com>
- <20190528154057.GD32006@arrakis.emea.arm.com>
- <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
- <20190529142008.5quqv3wskmpwdfbu@mbp>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
-Date:   Wed, 29 May 2019 13:16:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 15:25:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id s57so4061719qte.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OshedFNv7ZepaxsRg7Ll0LAb7kHFflsz2AJ5H3wX4EQ=;
+        b=cWjv0kC181GK6dDASReLMCLrXa6KGGj5/HpVBLrdfO67mRbQuYls/K4Wkd01yu/4Md
+         03xEA4/UUvu3KCnY8VmrK2A1rh2JNtHT97dFbbvYkDfHkhPTdawOZd9hTin2UNqVDfs0
+         Ehj1lK/PJhwfl6Xy7c3AjfLVmFCQsbLCCmBWIpzuXeqWLfbjVn7R6rORV5BD/dQnr1/Q
+         ztrnT9gZDAO/1OlhPSdwn7bv0R64DOA6VbI9W/2K5y1y3WhbUUzyA2iynHc+GkM2O4EL
+         PFPfJYP8R3SzbsEvB3Fz4/YhVboZq7WRsjD0xqh3DFjO5y2VkGz1Kp8KRpyGA6cTdToa
+         zyDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OshedFNv7ZepaxsRg7Ll0LAb7kHFflsz2AJ5H3wX4EQ=;
+        b=jqN2/56jEYZ0BwW7FRKa4fMxCVBaf/WIIcZkUG4QFI6byS7qoGz29O9ADlggTSI7xo
+         0SmrnbfLy0eic4+0iqxc9En8bkmZGB1qwZRA1zG0QpR3K1QvuoYkLTFcHhDkd7ihVkrV
+         jR12tsO+mtkcMCb9ANgKwv3puHxRFcKVgc9BkeEJVtCohMNregJhOqtSUPfeowqRH9++
+         KL1tIMK6oU/+AypPe3KMKzHZncBSV+uNOOeVN9GiI7MTtbgFcwWdvoCj+z7SCnDuyePK
+         Ov4tWUEWv03+e6doSXV/8YGP3Jgs0X2p44i7x/Zj1PpS2kWVGgWssGsvOjeiPuqMitap
+         FCAQ==
+X-Gm-Message-State: APjAAAVZzrGSVwEx6zakSaeATVuloK2TaBeffsBHCvqf375NgX/nOeJX
+        DIb3nLEx2FFsdWBC1Gp1QE9Gv0sk
+X-Google-Smtp-Source: APXvYqxugppB+FhpQpzS23jZUMZ3JUedDNm7PRBMbfrYUdcOtpFb0A0Kial8z2rpIWe/C5HW7pHMCQ==
+X-Received: by 2002:ac8:17a5:: with SMTP id o34mr8391436qtj.232.1559157911845;
+        Wed, 29 May 2019 12:25:11 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id k5sm202289qkc.75.2019.05.29.12.25.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 12:25:10 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9680641149; Wed, 29 May 2019 16:25:06 -0300 (-03)
+Date:   Wed, 29 May 2019 16:25:06 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] perf record: collect user registers set jointly with
+ dwarf stacks
+Message-ID: <20190529192506.GB5553@kernel.org>
+References: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190529142008.5quqv3wskmpwdfbu@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=271
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=294 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 8:20 AM, Catalin Marinas wrote:
-> Hi Khalid,
->=20
-> On Tue, May 28, 2019 at 05:33:04PM -0600, Khalid Aziz wrote:
->> On Tue, 2019-05-28 at 16:40 +0100, Catalin Marinas wrote:
->>> I think another aspect is how we define the ABI. Is allowing tags to
->>> mlock() for example something specific to arm64 or would sparc ADI
->>> need the same? In the absence of other architectures defining such
->>> ABI, my preference would be to keep the wrappers in the arch code.
->>>
->>> Assuming sparc won't implement untagged_addr(), we can place the
->>> macros back in the generic code but, as per the review here, we need
->>> to be more restrictive on where we allow tagged addresses. For
->>> example, if mmap() gets a tagged address with MAP_FIXED, is it
->>> expected to return the tag?
->>
->> I would recommend against any ABI differences between ARM64 MTE/TBI an=
-d
->> sparc ADI unless it simply can not be helped. My understanding of
->> MTE/TBI is limited, so I will explain how sparc ADI works. On sparc, a=
+Em Wed, May 29, 2019 at 05:30:49PM +0300, Alexey Budankov escreveu:
+> 
+> When dwarf stacks are collected jointly with user specified register
+> set using --user-regs option like below the full register context is
+> still captured on a sample:
+> 
+>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
+> 
+>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+>   ... FP chain: nr:0
+>   ... user regs: mask 0xff0fff ABI 64-bit
+>   .... AX    0x53b
+>   .... BX    0x7ffedbdd3cc0
+>   .... CX    0xffffffff
+>   .... DX    0x33d3a
+>   .... SI    0x7f09b74c38d0
+>   .... DI    0x0
+>   .... BP    0x401260
+>   .... SP    0x7ffedbdd3cc0
+>   .... IP    0x401236
+>   .... FLAGS 0x20a
+>   .... CS    0x33
+>   .... SS    0x2b
+>   .... R8    0x7f09b74c3800
+>   .... R9    0x7f09b74c2da0
+>   .... R10   0xfffffffffffff3ce
+>   .... R11   0x246
+>   .... R12   0x401070
+>   .... R13   0x7ffedbdd5db0
+>   .... R14   0x0
+>   .... R15   0x0
+>   ... ustack: size 1024, offset 0xe0
+>    . data_src: 0x5080021
+>    ... thread: stack_test2.g.O:23828
+>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+> 
+> After applying the change suggested in the patch the sample data contain
+> only user specified register values. IP and SP registers (dwarf_regs)
+> are collected anyways regardless of the --user-regs option value provided
+> from the command line:
+> 
+>   -g call-graph dwarf,K                         full_regs
+>   -g call-graph dwarf,K --user-regs=user_regs	user_regs + dwarf_regs
+>   --user-regs=user_regs                         user_regs
+> 
+>   $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- ls
+>   WARNING: specified --user-regs register set doesn't include registers needed by also specified --call-graph=dwarf, auto adding IP, SP registers.
+>   arch   COPYING	Documentation  include	Kbuild	 lbuild    MAINTAINERS	modules.builtin		 Module.symvers  perf.data.old	scripts   System.map  virt
+>   block  CREDITS	drivers        init	Kconfig  lib	   Makefile	modules.builtin.modinfo  net		 README		security  tools       vmlinux
+>   certs  crypto	fs	       ipc	kernel	 LICENSES  mm		modules.order		 perf.data	 samples	sound	  usr	      vmlinux.o
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.030 MB perf.data (10 samples) ]
+> 
+>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+>   ... FP chain: nr:0
+>   ... user regs: mask 0x1c0 ABI 64-bit
+>   .... BP    0x401260
+>   .... SP    0x7ffd3d85cc20
+>   .... IP    0x401236
+>   ... ustack: size 1024, offset 0x58
+>    . data_src: 0x5080021
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+> Changes in v4:
+> - added warning message about dwarf registers unconditionally 
+>   included into the collected registers set
+> 
+> Changes in v3:
+> - avoid changes in platform specific header files
+> 
+> Changes in v2:
+> - implemented dwarf register set to avoid corrupted trace 
+>   when --user-regs option value omits IP,SP
+> 
+> ---
+>  tools/perf/util/evsel.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a6f572a40deb..426dfefeecda 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
+>  	return ret;
+>  }
+>  
+> +#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
+> +			 (1ULL << PERF_REG_SP))
+> +
+>  static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>  					   struct record_opts *opts,
+>  					   struct callchain_param *param)
+> @@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>  		if (!function) {
+>  			perf_evsel__set_sample_bit(evsel, REGS_USER);
+>  			perf_evsel__set_sample_bit(evsel, STACK_USER);
+> -			attr->sample_regs_user |= PERF_REGS_MASK;
+> +			if (opts->sample_user_regs) {
 
->> tagged address has no meaning until following steps happen:
->=20
-> Before we go into the MTE/ADI similarities or differences, just to
-> clarify that TBI is something that we supported from the start of the
-> arm64 kernel port. TBI (top byte ignore) allows a user pointer to have
-> non-zero top byte and dereference it without causing a fault (the
-> hardware masks it out). The user/kernel ABI does not allow such tagged
-> pointers into the kernel, nor would the kernel return any such tagged
-> addresses.
->=20
-> With MTE (memory tagging extensions), the top-byte meaning is changed
-> from no longer being ignored to actually being checked against a tag in=
+Where are you checking that opts->sample_user_regs doesn't have either
+IP or SP?
 
-> the physical RAM (we call it allocation tag).
->=20
->> 1. set the user mode PSTATE.mcde bit. This acts as the master switch t=
-o
->> enable ADI for a process.
->>
->> 2. set TTE.mcd bit on TLB entries that match the address range ADI is
->> being enabled on.
->=20
-> Something close enough for MTE, with the difference that enabling it is=
+So, __perf_evsel__config_callchain its the routine that sets up the
+attr->sample_regs_user when callchains are asked for, and what was it
+doing? Asking for _all_ user regs, right?
 
-> not a PSTATE bit but rather a system control bit (SCTLR_EL1 register),
-> so only the kernel can turn it on/off for the user.
->=20
->> 3. Store version tag for the range of addresses userspace wants ADI
->> enabled on using "stxa" instruction. These tags are stored in physical=
+I.e. what you're saying is that when --callgraph-dwarf is asked for,
+then only IP and BP are needed, and we should stop doing that, so that
+would be a first patch, if that is the case. I.e. a patch that doesn't
+even mention opts->sample_user_regs.
 
->> memory by the memory controller.
->=20
-> Do you have an "ldxa" instruction to load the tags from physical memory=
-?
+Then, a second patch would fix the opt->sample_user_regs request clash
+with --callgraph dwarf, i.e. it would do something like:
 
-Yes, "ldxa" can be used to read current tag for any memory location.
-Kernel uses it to read the tags for a physical page being swapped out
-and restores those tags when the page is swapped back in.
+	      if ((opts->sample_regs_user & DWARF_REGS_MASK) != DWARF_REGS_MASK) {
+	      		char * ip = (opts->sample_regs_user & (1ULL << PERF_REG_IP)) ? NULL : "IP",
+	      		     * sp = (opts->sample_regs_user & (1ULL << PERF_REG_SP)) ? NULL : "SP",
+			     * all = (!ip && !sp) ?  "s" : "";
 
->=20
->> Steps 1 and 2 are accomplished by userspace by calling mprotect() with=
+			pr_warning("WARNING: specified --user-regs register set doesn't include register%s "
+				   "needed by also specified --call-graph=dwarf, auto adding %s%s%s register%s.\n",
+				   all, ip, all : ", " : "", sp, all);
+		}
 
->> PROT_ADI. Tags are set by storing tags in a loop, for example:
->>
->>         version =3D 10;
->>         tmp_addr =3D shmaddr;
->>         end =3D shmaddr + BUFFER_SIZE;
->>         while (tmp_addr < end) {
->>                 asm volatile(
->>                         "stxa %1, [%0]0x90\n\t"
->>                         :
->>                         : "r" (tmp_addr), "r" (version));
->>                 tmp_addr +=3D adi_blksz;
->>         }
->=20
-> On arm64, a sequence similar to the above would live in the libc. So a
-> malloc() call will tag the memory and return the tagged address to theP=
-re-coloring could easily be done by=20
-> user.
->=20
-> We were not planning for a PROT_ADI/MTE but rather have MTE enabled for=
+This if and only if all the registers that are needed to do DWARF
+unwinding are just IP and BP, which doesn't look like its true, since
+when no --user_regs is set (i.e. opts->user_regs is not set) then we
+continue asking for PERF_REGS_MASK...
 
-> all user memory ranges. We may revisit this before we upstream the MTE
-> support (probably some marginal benefit for the hardware not fetching
-> the tags from memory if we don't need to, e.g. code sections).
->=20
-> Given that we already have the TBI feature and with MTE enabled the top=
+Can you check where I'm missing something?
 
-> byte is no longer ignored, we are planning for an explicit opt-in by th=
-e
-> user via prctl() to enable MTE.
+Jiri DWARF unwind uses just IP and SP? Looking at
+tools/perf/util/unwind-libunwind-local.c's access_reg() I don't think
+so, right?
 
-OK. I had initially proposed enabling ADI for a process using prctl().
-Feedback I got was prctl was not a desirable interface and I ended up
-making mprotect() with PROT_ADI enable ADI on the process instead. Just
-something to keep in mind.
+- Arnaldo
 
->=20
->> With these semantics, giving mmap() or shamat() a tagged address is
->> meaningless since no tags have been stored at the addresses mmap() wil=
-l
->> allocate and one can not store tags before memory range has been
->> allocated. If we choose to allow tagged addresses to come into mmap()
->> and shmat(), sparc code can strip the tags unconditionally and that ma=
-y
->> help simplify ABI and/or code.
->=20
-> We could say that with TBI (pre-MTE support), the top byte is actually
-> ignored on mmap(). Now, if you pass a MAP_FIXED with a tagged address,
-> should the user expect the same tagged address back or stripping the ta=
-g
-> is acceptable? If we want to keep the current mmap() semantics, I'd say=
+> +				attr->sample_regs_user |= DWARF_REGS_MASK;
+> +				pr_warning("WARNING: specified --user-regs register set doesn't include registers "
+> +					   "needed by also specified --call-graph=dwarf, auto adding IP, SP registers.\n");
+> +			} else {
+> +				attr->sample_regs_user |= PERF_REGS_MASK;
+> +			}
+>  			attr->sample_stack_user = param->dump_size;
+>  			attr->exclude_callchain_user = 1;
+>  		} else {
+> -- 
+> 2.20.1
 
-> the same tag is returned. However, with MTE this also implies that the
-> memory was coloured.
->=20
+-- 
 
-Is assigning a tag aprivileged operationon ARM64? I am thinking not
-since you mentioned libc could do it in a loop for malloc'd memory.
-mmap() can return the same tagged address but I am uneasy about kernel
-pre-coloring the pages. Database can mmap 100's of GB of memory. That is
-lot of work being offloaded to the kernel to pre-color the page even if
-done in batches as pages are faulted in.
-
->>> My thoughts on allowing tags (quick look):
->>>
->>> brk - no
->>> get_mempolicy - yes
->>> madvise - yes
->>> mbind - yes
->>> mincore - yes
->>> mlock, mlock2, munlock - yes
->>> mmap - no (we may change this with MTE but not for TBI)
->>> mmap_pgoff - not used on arm64
->>> mprotect - yes
->>> mremap - yes for old_address, no for new_address (on par with mmap)
->>> msync - yes
->>> munmap - probably no (mmap does not return tagged ptrs)
->>> remap_file_pages - no (also deprecated syscall)
->>> shmat, shmdt - shall we allow tagged addresses on shared memory?
->>>
->>> The above is only about the TBI ABI while ignoring hardware MTE. For
->>> the latter, we may want to change the mmap() to allow pre-colouring
->>> on page fault which means that munmap()/mprotect() should also
->>> support tagged pointers. Possibly mremap() as well but we need to
->>> decide whether it should allow re-colouring the page (probably no,
->>> in which case old_address and new_address should have the same tag).
->>> For some of these we'll end up with arm64 specific wrappers again,
->>> unless sparc ADI adopts exactly the same ABI restrictions.
->>
->> Let us keep any restrictions common across ARM64 and sparc. pre-
->> coloring on sparc in the kernel would mean kernel will have to execute=
-
->> stxa instructions in a loop for each page being faulted in.
->=20
-> Since the user can probe the pre-existing colour in a faulted-in page
-> (either with some 'ldxa' instruction or by performing a tag-checked
-> access), the kernel should always pre-colour (even if colour 0) any
-> allocated page. There might not be an obvious security risk but I feel
-> uneasy about letting colours leak between address spaces (different use=
-r
-> processes or between kernel and user).
-
-On sparc, tags 0 and 15 are special in that 0 means untagged memory and
-15 means match any tag in the address. Colour 0 is the default for any
-newly faulted in page on sparc.
-
->=20
-> Since we already need such loop in the kernel, we might as well allow
-> user space to require a certain colour. This comes in handy for large
-> malloc() and another advantage is that the C library won't be stuck
-> trying to paint the whole range (think GB).
-
-If kernel is going to pre-color all pages in a vma, we will need to
-store the default tag in the vma. It will add more time to page fault
-handling code. On sparc M7, kernel will need to execute additional 128
-stxa instructions to set the tags on a normal page.
-
->=20
->> Not that big a deal but doesn't that assume the entire page has the
->> same tag which is dedcued from the upper bits of address? Shouldn't we=
-
->> support tags at the same granularity level as what the hardware
->> supports?
->=20
-> That's mostly about large malloc() optimisation via mmap(), the latter
-> working on page granularity already. There is another use-case for
-> pre-coloured thread stacks, also allocated via anonymous mmap().
->=20
->> We went through this discussion for sparc and decision was to support
->> tags at the same granularity as hardware. That means we can not deduce=
-
->> tags from the first address that pioints into an mmap or shmat region.=
-
->> Those tags and the upper bytes of colored address could change for
->> every cacheline sized block (64-bytes on sparc M7).
->=20
-> It's 16-byte for arm64, so smaller than the cacheline.
->=20
->> We can try to store tags for an entire region in vma but that is
->> expensive, plus on sparc tags are set in userspace with no
->> participation from kernel and now we need a way for userspace to
->> communicate the tags to kernel.
->=20
-> We can't support finer granularity through the mmap() syscall and, as
-> you said, the vma is not the right thing to store the individual tags.
-> With the above extension to mmap(), we'd have to store a colour per vma=
-
-> and prevent merging if different colours (we could as well use the
-> pkeys mechanism we already have in the kernel but use a colour per vma
-> instead of a key).
-
-Since tags can change on any part of mmap region on sparc at any time
-without kernel being involved, I am not sure I see much reason for
-kernel to enforce any tag related restrictions.
-
->=20
-> Of course, the user is allowed to change the in-memory colours at a
-> finer granularity and the kernel will preserve them during swapping
-> out/in, page migration etc. The above mmap() proposal is just for the
-> first fault-in of a page in a given range/vma.
->=20
->> From sparc point of view, making kernel responsible for assigning tags=
-
->> to a page on page fault is full of pitfalls.
->=20
-> This could be just some arm64-specific but if you plan to deploy it mor=
-e
-> generically for sparc (at the C library level), you may find this
-> useful.
->=20
-
-Common semantics from app developer point of view will be very useful to
-maintain. If arm64 says mmap with MAP_FIXED and a tagged address will
-return a pre-colored page, I would rather have it be the same on any
-architecture. Is there a use case that justifies kernel doing this extra
-work?
-
---
-Khalid
-
+- Arnaldo
