@@ -2,63 +2,223 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747C0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C398C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573F3208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5D020673
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:05:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mlbpaSpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfE2NAF (ORCPT
+        id S1726921AbfE2NFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:00:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35156 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726889AbfE2NAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:00:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 962DEAEB7;
-        Wed, 29 May 2019 13:00:03 +0000 (UTC)
-Date:   Wed, 29 May 2019 12:59:59 +0000
-From:   Michal Rostecki <mrostecki@opensuse.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Michal Rostecki <mrostecki@opensuse.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Wed, 29 May 2019 09:05:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42584 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfE2NFM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:05:12 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 188so2362667ljf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=llu8Y5NHzHxxDDbTkC/AtBNhwsX33d/0JdDrLU3ydWI=;
+        b=mlbpaSpyBzO+K4QOYeF8DBxVDrmFilPjP+gK5mEeJw1DXRgmXG2ra6KOfay/IlTTHU
+         UmrgFp5xJ5LmadTPgN527a8XLY0khtGQd6+tAkAXwwero1copC/91HUbKjXvuTpSqxxM
+         ZdIdws4BRpZhEBiRFQCmj4EIzDSKWu2USlEIUrFXW0dolVWxGy4HyhtUkWP2B2r8GFu4
+         aiU9LkWKW1kv/0oqoNaRWq08QdHpf64nOQCBjyCMTIPEQkSwp4fvZZu1uEW87w6G3je/
+         B+gxkcYmaH//4mI0GuBYq0903rw6NKK6Z4j9XsJjULdXEiv5nDl8VbluCLYiUYX4rS/T
+         uafQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=llu8Y5NHzHxxDDbTkC/AtBNhwsX33d/0JdDrLU3ydWI=;
+        b=n0Wh5Fa0DSanklI6VQMUX9zJ07z3wNIAtBOtCx3dBc6alXyIXFi9IjGV6d2QTN571d
+         WGdqj0aEQXxY6xt4rsZt/DALOP403OPsJySb0uCgi4SmunJa6XuXWayyvTAI5TN0iDI0
+         RGTTxslwK3LkkKXaeKi/HLeUmK3RJMuVAwM9TEDPAt9voDG+KY5LkmuwFbUO4GFPfHft
+         7yrBWbc1p52RJ0WNcru4TEBDJV1wcW9XbNWEB6zZ10BXDbcfh8CaUxNrSl1W5QOsrwF3
+         Js0/2zn/KdLB9dR1XhL85ZYxn0X6eML/4in0Ng67IEqwqFhQh8qoRKtWL8gR3XzNmwiL
+         2pMA==
+X-Gm-Message-State: APjAAAUi/Sa+VEpbOHvkKaSoTgD4+RoHqLiXxozw3cvxOH0gK3nMmOMF
+        V6kbLPtY+WckdU9LUs7ADOF5hE+jSgY=
+X-Google-Smtp-Source: APXvYqxt2dwOYHIBbX5Z9cJdxphQnVjqpWdOeU/6e1nwgO2fpp1hBitzbQOfosdNNh2n4lUif4uuuQ==
+X-Received: by 2002:a2e:1284:: with SMTP id 4mr36692793ljs.138.1559135108964;
+        Wed, 29 May 2019 06:05:08 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id v12sm3482366ljv.49.2019.05.29.06.05.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:05:08 -0700 (PDT)
+Subject: Re: [PATCH 2/5] drm/msm/dpu: Integrate interconnect API in MDSS
+To:     Sean Paul <sean@poorly.run>, Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf] libbpf: Return btf_fd in libbpf__probe_raw_btf
-Message-ID: <20190529125959.GA31842@wotan.suse.de>
-References: <20190529082941.9440-1-mrostecki@opensuse.org>
- <e28170e1-cf06-87ef-812b-9b9e6185d925@cogentembedded.com>
+References: <20190508204219.31687-1-robdclark@gmail.com>
+ <20190508204219.31687-3-robdclark@gmail.com>
+ <20190513144722.GO17077@art_vandelay>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <2ac15174-09f5-7c7f-8ca8-226f8238a115@linaro.org>
+Date:   Wed, 29 May 2019 16:05:05 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e28170e1-cf06-87ef-812b-9b9e6185d925@cogentembedded.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190513144722.GO17077@art_vandelay>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 12:53:42PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On 5/13/19 17:47, Sean Paul wrote:
+> On Wed, May 08, 2019 at 01:42:12PM -0700, Rob Clark wrote:
+>> From: Jayant Shekhar <jshekhar@codeaurora.org>
+>>
+>> The interconnect framework is designed to provide a
+>> standard kernel interface to control the settings of
+>> the interconnects on a SoC.
+>>
+>> The interconnect API uses a consumer/provider-based model,
+>> where the providers are the interconnect buses and the
+>> consumers could be various drivers.
+>>
+>> MDSS is one of the interconnect consumers which uses the
+>> interconnect APIs to get the path between endpoints and
+>> set its bandwidth requirement for the given interconnected
+>> path.
+>>
+>> Changes in v2:
+>> 	- Remove error log and unnecessary check (Jordan Crouse)
+>>
+>> Changes in v3:
+>> 	- Code clean involving variable name change, removal
+>> 	  of extra paranthesis and variables (Matthias Kaehlcke)
+>>
+>> Changes in v4:
+>> 	- Add comments, spacings, tabs, proper port name
+>> 	  and icc macro (Georgi Djakov)
+>>
+>> Changes in v5:
+>> 	- Commit text and parenthesis alignment (Georgi Djakov)
+>>
+>> Changes in v6:
+>> 	- Change to new icc_set API's (Doug Anderson)
+>>
+>> Changes in v7:
+>> 	- Fixed a typo
+>>
+>> Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+>> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+>> Signed-off-by: Rob Clark <robdclark@chromium.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 49 ++++++++++++++++++++++--
+>>  1 file changed, 45 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+>> index 7316b4ab1b85..e3c56ccd7357 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+>> @@ -4,11 +4,15 @@
+>>   */
+>>  
+>>  #include "dpu_kms.h"
+>> +#include <linux/interconnect.h>
+>>  
+>>  #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
+>>  
+>>  #define HW_INTR_STATUS			0x0010
+>>  
+>> +/* Max BW defined in KBps */
+>> +#define MAX_BW				6800000
+>> +
+>>  struct dpu_irq_controller {
+>>  	unsigned long enabled_mask;
+>>  	struct irq_domain *domain;
+>> @@ -21,8 +25,30 @@ struct dpu_mdss {
+>>  	u32 hwversion;
+>>  	struct dss_module_power mp;
+>>  	struct dpu_irq_controller irq_controller;
+>> +	struct icc_path *path[2];
+>> +	u32 num_paths;
+>>  };
+>>  
+>> +static int dpu_mdss_parse_data_bus_icc_path(struct drm_device *dev,
+>> +						struct dpu_mdss *dpu_mdss)
+>> +{
+>> +	struct icc_path *path0 = of_icc_get(dev->dev, "mdp0-mem");
+>> +	struct icc_path *path1 = of_icc_get(dev->dev, "mdp1-mem");
+>> +
+>> +	if (IS_ERR(path0))
 > 
-> On 29.05.2019 11:29, Michal Rostecki wrote:
-> 
-> > Function load_sk_storage_btf expects that libbpf__probe_raw_btf is
-> > returning a btf descriptor, but before this change it was returning
-> > an information about whether the probe was successful (0 or 1).
-> > load_sk_storage_btf was using that value as an argument to the close
-> > function, which was resulting in closing stdout and thus terminating the
-> > process which used that dunction.
-> 
->    Function? :-)
+> of_icc_get can also return NULL, it looks like we also want to guard against
+> this case and keep num_paths == 0.
 
-Opps! I will fix in v2. Thanks!
+of_icc_get() returns NULL when the interconnect API is not enabled or the DT
+properties are not present. In this case, passing a NULL path to the icc
+functions is just a nop. So it should be fine either way.
+
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+Thanks,
+Georgi
