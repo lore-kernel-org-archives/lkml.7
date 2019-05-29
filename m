@@ -2,156 +2,177 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D60C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D45DC28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5042183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2670E2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="K16i45JT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKA8q0dU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfE2P3U (ORCPT
+        id S1726804AbfE2PbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:29:20 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35246 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfE2P3T (ORCPT
+        Wed, 29 May 2019 11:31:01 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38595 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2PbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:29:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so2933956ljb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:29:17 -0700 (PDT)
+        Wed, 29 May 2019 11:31:00 -0400
+Received: by mail-lj1-f196.google.com with SMTP id o13so2915404lji.5;
+        Wed, 29 May 2019 08:30:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zGaoYWpZqQThaCeamoLFUvuaep53rUnIcLcyCp5w/vg=;
-        b=K16i45JTnOhNMfVGcEM3dEc/HE4jxUF98k+I1d4LAg3DOuRJvQylZri7olnMGkge0H
-         4u/1DHCKb96WcllkEwg/MgRcL7L1CCWB/hO2xL6zPqW540FOdvpqq8ULGBnZRtoyr3fP
-         /dGrfil607dUvRtiW7bu8V4ywrGKbWRLqU6mf6azB7C8mCUui5dBAoSANEn7un7OuRYk
-         IqepsvKsbnqV/1oKEERjHclI3LARwVOrafGfm/8g8m245GMvIADoi+bQuHeE9itYkX84
-         p6l1akwBNRSzQLd+wftooHrEfiVN9zwWBxGF+rHhkqPeWkDXyPffgp3T4WNSYiCr0lTu
-         +NzA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QNpp3+TXidOjskLGVibpmvR3MRh+7pSnFlPt1lVhXAg=;
+        b=NKA8q0dUoVO+aTq7Rqo9sd8x62qlwWNod/NJ5sZaeoRy8ZCEGzwWOoMC8Fuenf19nu
+         Bo7a7UuNPKal73cypz5P+XdcTFseO+8+KDypD6UuXhJpWUgg9UCbluRuzefcfzKdDXr/
+         uLzwYoYNbQxhxRTHR1GGO6MjPgR93dGZRisH0LHWPiNsytCk3dEz9mqSnLETXAWyERpq
+         +8FVfIafQRtKTL3ai8iTBXQ+7ZTRhibvIYcUjUwXEO3BxTu0yo5Q7pfkp54KK2rnJHru
+         B36vhsgeZ/G6pD88rwABCnIUs+g0rm38xl3AF4HmSoTSUPf+L1/eYk6BgGYWo5t2SQVq
+         hGxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zGaoYWpZqQThaCeamoLFUvuaep53rUnIcLcyCp5w/vg=;
-        b=Sf7mZnWOfQTmVx87QrZz3SwM/qG223Ad0AwZ0GhuabnEqOxZsabKUwYpTV1CR0Oo7A
-         GkP7tXAANEsVNS1XrijdQhrX+soWtJL2JY/EaZ6PRt9t0Ba0amoqpD628pe4D/K7MuIp
-         2DnSx0d3WK1E2SgrRO8SUGRRcPxwhLW7SwX/VipN4U5+jsaP8iB+fLBfhhduk1jJ17sD
-         0vJBUNzi+u07NoCNdtuDWksIGYjMxiHU7X6s2ERhZVjAyuN2DoaVGVbSGEl8E2tuXzyp
-         Oxt7k553NUXkX4w28tbv2tXRILkM9TxtSaljFmCyNvB9zv8jwV5xwul3k59FDsqaHEDf
-         6AzA==
-X-Gm-Message-State: APjAAAUPLoQj254HHdkhdwmX9fDyrrZ4PUyRVGApOgFvKPWUXsPQYF8y
-        lHXi0+cURAlkh7Yl/nJ8O+nxLDlo+tKCw1BTOfGO
-X-Google-Smtp-Source: APXvYqzA1he5CqqTYdGxCaEGH42J2+OT0TC3I1+seVKjcqbN4107AbF/Fb/yxBclhcMIQ95Q2dNrHCvd5kXZOEP8NA8=
-X-Received: by 2002:a2e:92cc:: with SMTP id k12mr2501807ljh.16.1559143756865;
- Wed, 29 May 2019 08:29:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QNpp3+TXidOjskLGVibpmvR3MRh+7pSnFlPt1lVhXAg=;
+        b=V69wezC6uXRH7dtOdgjOQIT519P2nV1zi8srIzHKM1wyycsT1NjlK3Et8aMZu+6iUb
+         78NSgTfT79shZb+/9HlshIboX/fFkf9RIniMQdWJ6JDQqS6viI2KAOtpR6eUPYaLnNAe
+         1L2nrdp3e9vSBv+F1PAmPkuBCuARxxjVYb2UlK7Oz0/yYQxXZSQ7lHHWbyVTsKSajEB/
+         ZeKf0SIsjRytbYRT1sRs8Dd8nZHtGEudOvI8iFkmHFUr87favI/RVj4N2TAQI2ecrPAj
+         NVRfB+84a1Ao49ptdVb6E9qLTnrS3vz8LGFGMHFLC7wJ7+xPFI3vgVpRwV/dsFVc406n
+         hhIA==
+X-Gm-Message-State: APjAAAUGsXPr6f0l1P07kegf5O4HnpWSdvoA1E2a+WQeZirl5G0Gsoz2
+        ZP2BXDlDM+3YrJoIk6t7g/ui9r4C
+X-Google-Smtp-Source: APXvYqxVea962JccPcGD+nidzhwVcdWpV3Mraq2NwASgddvLewsOBGWSeZUAHcTT2aBtS+2o2xTM0A==
+X-Received: by 2002:a2e:970e:: with SMTP id r14mr20439581lji.86.1559143857576;
+        Wed, 29 May 2019 08:30:57 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id c10sm3497637lfh.79.2019.05.29.08.30.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 08:30:56 -0700 (PDT)
+Subject: Re: [PATCH V2 02/12] pinctrl: tegra: add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6273a790-d4b7-c501-3fec-d9816288b139@gmail.com>
+Date:   Wed, 29 May 2019 18:29:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco>
-In-Reply-To: <20190529145742.GA8959@cisco>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 29 May 2019 11:29:05 -0400
-Message-ID: <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1559084936-4610-3-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
+29.05.2019 2:08, Sowjanya Komatineni пишет:
+> This patch adds suspend and resume support for Tegra pinctrl driver
+> and registers them to syscore so the pinmux settings are restored
+> before the devices resume.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c    | 68 +++++++++++++++++++++++++++++++-
+>  drivers/pinctrl/tegra/pinctrl-tegra.h    |  3 ++
+>  drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c |  1 +
+>  drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>  7 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index a5008c066bac..bdc47e62c457 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -28,11 +28,18 @@
+>  #include <linux/pinctrl/pinmux.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/slab.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include "../core.h"
+>  #include "../pinctrl-utils.h"
+>  #include "pinctrl-tegra.h"
+>  
+> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
+> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
+> +#define EMMC_DPD_PARKING			(0x1fff << 14)
+> +
+> +static struct tegra_pmx *pmx;
+> +
+>  static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+>  {
+>  	return readl(pmx->regs[bank] + reg);
+> @@ -629,6 +636,50 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>  	}
+>  }
+>  
+> +static int __maybe_unused tegra_pinctrl_suspend(void)
+> +{
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			*backup_regs++ = readl(regs++);
+> +	}
+> +
+> +	return pinctrl_force_sleep(pmx->pctl);
+> +}
+> +
+> +static void __maybe_unused tegra_pinctrl_resume(void)
+> +{
+> +	u32 *backup_regs = pmx->backup_regs;
+> +	u32 *regs;
+> +	u32 val;
+> +	int i, j;
+> +
+> +	for (i = 0; i < pmx->nbanks; i++) {
+> +		regs = pmx->regs[i];
+> +		for (j = 0; j < pmx->reg_bank_size[i] / 4; j++)
+> +			writel(*backup_regs++, regs++);
+> +	}
+> +
+> +	if (pmx->soc->has_park_padcfg) {
+> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+> +		val &= ~EMMC_DPD_PARKING;
+> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+> +
+> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+> +		val &= ~EMMC_DPD_PARKING;
+> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+> +	}
+> +}
 >
-> On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
-> > It is not permitted to unset the audit container identifier.
-> > A child inherits its parent's audit container identifier.
->
-> ...
->
-> >  /**
-> > + * audit_set_contid - set current task's audit contid
-> > + * @contid: contid value
-> > + *
-> > + * Returns 0 on success, -EPERM on permission failure.
-> > + *
-> > + * Called (set) from fs/proc/base.c::proc_contid_write().
-> > + */
-> > +int audit_set_contid(struct task_struct *task, u64 contid)
-> > +{
-> > +     u64 oldcontid;
-> > +     int rc = 0;
-> > +     struct audit_buffer *ab;
-> > +     uid_t uid;
-> > +     struct tty_struct *tty;
-> > +     char comm[sizeof(current->comm)];
-> > +
-> > +     task_lock(task);
-> > +     /* Can't set if audit disabled */
-> > +     if (!task->audit) {
-> > +             task_unlock(task);
-> > +             return -ENOPROTOOPT;
-> > +     }
-> > +     oldcontid = audit_get_contid(task);
-> > +     read_lock(&tasklist_lock);
-> > +     /* Don't allow the audit containerid to be unset */
-> > +     if (!audit_contid_valid(contid))
-> > +             rc = -EINVAL;
-> > +     /* if we don't have caps, reject */
-> > +     else if (!capable(CAP_AUDIT_CONTROL))
-> > +             rc = -EPERM;
-> > +     /* if task has children or is not single-threaded, deny */
-> > +     else if (!list_empty(&task->children))
-> > +             rc = -EBUSY;
-> > +     else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> > +             rc = -EALREADY;
-> > +     read_unlock(&tasklist_lock);
-> > +     if (!rc)
-> > +             task->audit->contid = contid;
-> > +     task_unlock(task);
-> > +
-> > +     if (!audit_enabled)
-> > +             return rc;
->
-> ...but it is allowed to change it (assuming
-> capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
-> immediately useful since we still live in the world of majority
-> privileged containers if we didn't allow changing it, in addition to
-> un-setting it.
 
-The idea is that only container orchestrators should be able to
-set/modify the audit container ID, and since setting the audit
-container ID can have a significant effect on the records captured
-(and their routing to multiple daemons when we get there) modifying
-the audit container ID is akin to modifying the audit configuration
-which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
-is that you would only change the audit container ID from one
-set/inherited value to another if you were nesting containers, in
-which case the nested container orchestrator would need to be granted
-CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-compromise).  We did consider allowing for a chain of nested audit
-container IDs, but the implications of doing so are significant
-(implementation mess, runtime cost, etc.) so we are leaving that out
-of this effort.
-
-From a practical perspective, un-setting the audit container ID is
-pretty much the same as changing it from one set value to another so
-most of the above applies to that case as well.
+But the CFGPADCTRL registers are already programmed by restoring the
+backup_regs and hence the relevant EMMC's are already unparked. Hence
+why do you need to force-unpark both of the EMMC's? What if EMMC is
+unpopulated on a board, why do you need to unpark it then?
 
 -- 
-paul moore
-www.paul-moore.com
+Dmitry
