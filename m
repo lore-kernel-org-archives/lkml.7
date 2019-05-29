@@ -2,164 +2,178 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7893C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFA6C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1A123A58
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7F023A59
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="MvYOvm5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfE2Oaz (ORCPT
+        id S1726538AbfE2OdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:30:55 -0400
-Received: from mga12.intel.com ([192.55.52.136]:48770 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2Oay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:30:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:30:53 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 29 May 2019 07:30:53 -0700
-Received: from [10.252.23.111] (unknown [10.252.23.111])
-        by linux.intel.com (Postfix) with ESMTP id CE132580258;
-        Wed, 29 May 2019 07:30:50 -0700 (PDT)
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v4] perf record: collect user registers set jointly with dwarf
- stacks
-Organization: Intel Corp.
-Message-ID: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
-Date:   Wed, 29 May 2019 17:30:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 10:33:18 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41778 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfE2OdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:33:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q16so2692941ljj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+R6XaSKmT7xaRS0PcdGGsrsnwtHF1c1yRvMeuqxIEMc=;
+        b=MvYOvm5pwBKuyss3lJ6TE7VXLupq/2ZOCPa5DZASqR7QOGGzwge6SQyavJFxXXyzLA
+         yDESrMvd4fx9bZlF+oVXYSeD8yneLh8ANjGV3aP3xsoRysr4iOXivQBIJMJt0X4vE5Mp
+         mASEtmgbN/gWD74uKgNhVTeVj4vNZbUBv5hrUeYDi9t+0MGIllcot2KPdCXjmQwtgejL
+         HiKKHU9Juhi5xa44ZEwDCXg12DZscPt3cKs2QUmzSfYXZ1o4uP21flqN3RNXu921L2Vc
+         juzSuSf92xuNAsaUl+oW+2heZ7oru2cnl91CAVZb4Yh1cYY2svao/t3dlz/aWtQVysf1
+         etOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+R6XaSKmT7xaRS0PcdGGsrsnwtHF1c1yRvMeuqxIEMc=;
+        b=CIdb6gS2MMSLP8aRkEDemOozIVtAtw4odBN1vDf8I2c2DRSeCqkLqTWchdegAj15Lb
+         tMllG7I2X+NpP0pq3lBWUFe11d8lyRmrCJICOFUb78xmLOMMeTvdJ2ThVcaXejKxMNVt
+         m3MD1XT4CKWwdjMDz//8ne6bAZTuNWzqSDzXtS+SBSEQJLpdVk1pwKnRsaHaoU1yL4MF
+         mnLuC2vyBy0/nXc3kAbbe24TlgFiK8S/icIvNB7aPu/rYc8l7FLLQ4Oq6vdoGYnoKHxx
+         qS0Exhy7GXhSLvT3bbah216XWmK5JHJEqmIzUxbB6yoN/eeF9fSfktbQ3qrSCW5vSVVJ
+         Vmig==
+X-Gm-Message-State: APjAAAUinZJlgnph4TUUPI2BeB1dGg/iEsIEDj+LoNyUBo0dG0aWNvqE
+        lAXuCje1yTfQ/17EO0MsONWYwets7+c0qq8EHAnY7tw=
+X-Google-Smtp-Source: APXvYqwrTy7sYfpXbbmBYsaCl06LIUUm9Pjs4xGEgOjj99u9kMAv34QYfOKCYsQNfcmOZR8Qv/vYo84yQYc6sseRHGM=
+X-Received: by 2002:a2e:9106:: with SMTP id m6mr2792242ljg.164.1559140394914;
+ Wed, 29 May 2019 07:33:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1554732921.git.rgb@redhat.com> <509ea6b0-1ac8-b809-98c2-37c34dd98ca3@redhat.com>
+ <CAHC9VhRW9f6GbhvvfifbOzd9p=PgdB2gq1E7tACcaqvfb85Y8A@mail.gmail.com>
+ <3299293.RYyUlNkVNy@x2> <20190529004352.vvicec7nnk6pvkwt@madcap2.tricolour.ca>
+ <31804653-7518-1a9c-83af-f6ce6a6ce408@redhat.com> <CAHC9VhT295iYu_uDcQ7eqVq8SSkYgEQAsoNrmpvbMR5ERcBzaA@mail.gmail.com>
+ <9a9ccb28-3cbc-c0b1-71b2-26df08105b4a@redhat.com>
+In-Reply-To: <9a9ccb28-3cbc-c0b1-71b2-26df08105b4a@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 29 May 2019 10:33:03 -0400
+Message-ID: <CAHC9VhRWXfYhCA-x+U3STw2FO+wqQ1EFx1wA_zoQVisuqR4oYw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
+To:     Dan Walsh <dwalsh@redhat.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        Mrunal Patel <mpatel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 10:07 AM Daniel Walsh <dwalsh@redhat.com> wrote:
+> On 5/29/19 9:17 AM, Paul Moore wrote:
+> > On Wed, May 29, 2019 at 8:03 AM Daniel Walsh <dwalsh@redhat.com> wrote:
+> >> On 5/28/19 8:43 PM, Richard Guy Briggs wrote:
+> >>> On 2019-05-28 19:00, Steve Grubb wrote:
+> >>>> On Tuesday, May 28, 2019 6:26:47 PM EDT Paul Moore wrote:
+> >>>>> On Tue, May 28, 2019 at 5:54 PM Daniel Walsh <dwalsh@redhat.com> wrote:
+> >>>>>> On 4/22/19 9:49 AM, Paul Moore wrote:
+> >>>>>>> On Mon, Apr 22, 2019 at 7:38 AM Neil Horman <nhorman@tuxdriver.com>
+> >>>> wrote:
+> >>>>>>>> On Mon, Apr 08, 2019 at 11:39:07PM -0400, Richard Guy Briggs wrote:
+> >>>>>>>>> Implement kernel audit container identifier.
+> >>>>>>>> I'm sorry, I've lost track of this, where have we landed on it? Are we
+> >>>>>>>> good for inclusion?
+> >>>>>>> I haven't finished going through this latest revision, but unless
+> >>>>>>> Richard made any significant changes outside of the feedback from the
+> >>>>>>> v5 patchset I'm guessing we are "close".
+> >>>>>>>
+> >>>>>>> Based on discussions Richard and I had some time ago, I have always
+> >>>>>>> envisioned the plan as being get the kernel patchset, tests, docs
+> >>>>>>> ready (which Richard has been doing) and then run the actual
+> >>>>>>> implemented API by the userland container folks, e.g. cri-o/lxc/etc.,
+> >>>>>>> to make sure the actual implementation is sane from their perspective.
+> >>>>>>> They've already seen the design, so I'm not expecting any real
+> >>>>>>> surprises here, but sometimes opinions change when they have actual
+> >>>>>>> code in front of them to play with and review.
+> >>>>>>>
+> >>>>>>> Beyond that, while the cri-o/lxc/etc. folks are looking it over,
+> >>>>>>> whatever additional testing we can do would be a big win.  I'm
+> >>>>>>> thinking I'll pull it into a separate branch in the audit tree
+> >>>>>>> (audit/working-container ?) and include that in my secnext kernels
+> >>>>>>> that I build/test on a regular basis; this is also a handy way to keep
+> >>>>>>> it based against the current audit/next branch.  If any changes are
+> >>>>>>> needed Richard can either chose to base those changes on audit/next or
+> >>>>>>> the separate audit container ID branch; that's up to him.  I've done
+> >>>>>>> this with other big changes in other trees, e.g. SELinux, and it has
+> >>>>>>> worked well to get some extra testing in and keep the patchset "merge
+> >>>>>>> ready" while others outside the subsystem look things over.
+> >>>>>> Mrunal Patel (maintainer of CRI-O) and I have reviewed the API, and
+> >>>>>> believe this is something we can work on in the container runtimes team
+> >>>>>> to implement the container auditing code in CRI-O and Podman.
+> >>>>> Thanks Dan.  If I pulled this into a branch and built you some test
+> >>>>> kernels to play with, any idea how long it might take to get a proof
+> >>>>> of concept working on the cri-o side?
+> >>>> We'd need to merge user space patches and let them use that instead of the
+> >>>> raw interface. I'm not going to merge user space until we are pretty sure the
+> >>>> patch is going into the kernel.
+> >>> I have an f29 test rpm of the userspace bits if that helps for testing:
+> >>>       http://people.redhat.com/~rbriggs/ghak90/git-1db7e21/
+> >>>
+> >>> Here's what it contains (minus the last patch):
+> >>>       https://github.com/linux-audit/audit-userspace/compare/master...rgbriggs:ghau40-containerid-filter.v7.0
+> >>>
+> >>>> -Steve
+> >>>>
+> >>>>> FWIW, I've also reached out to some of the LXC folks I know to get
+> >>>>> their take on the API.  I think if we can get two different container
+> >>>>> runtimes to give the API a thumbs-up then I think we are in good shape
+> >>>>> with respect to the userspace interface.
+> >>>>>
+> >>>>> I just finished looking over the last of the pending audit kernel
+> >>>>> patches that were queued waiting for the merge window to open so this
+> >>>>> is next on my list to look at.  I plan to start doing that
+> >>>>> tonight/tomorrow, and as long as the changes between v5/v6 are not
+> >>>>> that big, it shouldn't take too long.
+> >>> - RGB
+> >>>
+> >>> --
+> >>> Richard Guy Briggs <rgb@redhat.com>
+> >>> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> >>> Remote, Ottawa, Red Hat Canada
+> >>> IRC: rgb, SunRaycer
+> >>> Voice: +1.647.777.2635, Internal: (81) 32635
+> >> Our current thoughts are to put the setting of the ID inside of conmon,
+> >> and then launching the OCI Runtime.  In a perfect world this would
+> >> happen in the OCI Runtime, but we have no controls over different OCI
+> >> Runtimes.
+> >>
+> >> By putting it into conmon, then CRI-O and Podman will automatically get
+> >> the container id support.  After we have this we have to plumb it back
+> >> up through the contianer engines to be able to easily report the link
+> >> between the Container UUID and The Kernel Container Audit ID.
+> > I'm glad you guys have a plan, that's encouraging, but sadly I have no
+> > idea about the level of complexity/difficulty involved in modifying
+> > the various container bits for a proof-of-concept?  Are we talking a
+> > week or two?  A month?  More?
+> >
+> If we had the kernel and the libaudit api, it would involve a small
+> effort in conmon,  I would figure a few days for a POC.  Getting the
+> hole wiring into CRI-O and Podman, would be a little more effort.
 
-When dwarf stacks are collected jointly with user specified register
-set using --user-regs option like below the full register context is
-still captured on a sample:
+That's great.  Stay tuned ...
 
-  $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
-
-  188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
-  ... FP chain: nr:0
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x53b
-  .... BX    0x7ffedbdd3cc0
-  .... CX    0xffffffff
-  .... DX    0x33d3a
-  .... SI    0x7f09b74c38d0
-  .... DI    0x0
-  .... BP    0x401260
-  .... SP    0x7ffedbdd3cc0
-  .... IP    0x401236
-  .... FLAGS 0x20a
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x7f09b74c3800
-  .... R9    0x7f09b74c2da0
-  .... R10   0xfffffffffffff3ce
-  .... R11   0x246
-  .... R12   0x401070
-  .... R13   0x7ffedbdd5db0
-  .... R14   0x0
-  .... R15   0x0
-  ... ustack: size 1024, offset 0xe0
-   . data_src: 0x5080021
-   ... thread: stack_test2.g.O:23828
-   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-
-After applying the change suggested in the patch the sample data contain
-only user specified register values. IP and SP registers (dwarf_regs)
-are collected anyways regardless of the --user-regs option value provided
-from the command line:
-
-  -g call-graph dwarf,K                         full_regs
-  -g call-graph dwarf,K --user-regs=user_regs	user_regs + dwarf_regs
-  --user-regs=user_regs                         user_regs
-
-  $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- ls
-  WARNING: specified --user-regs register set doesn't include registers needed by also specified --call-graph=dwarf, auto adding IP, SP registers.
-  arch   COPYING	Documentation  include	Kbuild	 lbuild    MAINTAINERS	modules.builtin		 Module.symvers  perf.data.old	scripts   System.map  virt
-  block  CREDITS	drivers        init	Kconfig  lib	   Makefile	modules.builtin.modinfo  net		 README		security  tools       vmlinux
-  certs  crypto	fs	       ipc	kernel	 LICENSES  mm		modules.order		 perf.data	 samples	sound	  usr	      vmlinux.o
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.030 MB perf.data (10 samples) ]
-
-  188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
-  ... FP chain: nr:0
-  ... user regs: mask 0x1c0 ABI 64-bit
-  .... BP    0x401260
-  .... SP    0x7ffd3d85cc20
-  .... IP    0x401236
-  ... ustack: size 1024, offset 0x58
-   . data_src: 0x5080021
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
-Changes in v4:
-- added warning message about dwarf registers unconditionally 
-  included into the collected registers set
-
-Changes in v3:
-- avoid changes in platform specific header files
-
-Changes in v2:
-- implemented dwarf register set to avoid corrupted trace 
-  when --user-regs option value omits IP,SP
-
----
- tools/perf/util/evsel.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a6f572a40deb..426dfefeecda 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
- 	return ret;
- }
- 
-+#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
-+			 (1ULL << PERF_REG_SP))
-+
- static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
- 					   struct record_opts *opts,
- 					   struct callchain_param *param)
-@@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
- 		if (!function) {
- 			perf_evsel__set_sample_bit(evsel, REGS_USER);
- 			perf_evsel__set_sample_bit(evsel, STACK_USER);
--			attr->sample_regs_user |= PERF_REGS_MASK;
-+			if (opts->sample_user_regs) {
-+				attr->sample_regs_user |= DWARF_REGS_MASK;
-+				pr_warning("WARNING: specified --user-regs register set doesn't include registers "
-+					   "needed by also specified --call-graph=dwarf, auto adding IP, SP registers.\n");
-+			} else {
-+				attr->sample_regs_user |= PERF_REGS_MASK;
-+			}
- 			attr->sample_stack_user = param->dump_size;
- 			attr->exclude_callchain_user = 1;
- 		} else {
 -- 
-2.20.1
-
+paul moore
+www.paul-moore.com
