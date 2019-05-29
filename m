@@ -2,116 +2,121 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05932C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8FCC28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15E22054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A57720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:13:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uID7+9gJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfE2JJ7 (ORCPT
+        id S1726326AbfE2JNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:09:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42732 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfE2JJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:09:58 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C769A7E426;
-        Wed, 29 May 2019 09:09:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC50B6608B;
-        Wed, 29 May 2019 09:09:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190528235810.GA5776@kroah.com>
-References: <20190528235810.GA5776@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>, casey@schaufler-ca.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+        Wed, 29 May 2019 05:13:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40228 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfE2JNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 05:13:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h13so1409230lfc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 02:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=turgOZHVZA+slmDkzWItW7JViu4gUnC/Ds0bw1pflBM=;
+        b=uID7+9gJfQmbk7PHo/mOm4BVImm/+DnpkGNixHRs2SGI9/hzszYymxfaSJ49T8BDUW
+         PDJTFfCwkcws2FEhVfx0FheGspexSFRAHXIaLmxpKLBZUUk5SDnkHzKHVb8D1QMa0i+z
+         7OWbyDbxVMBqXIBMGCHUyn2iU0Ulq/kWQtQN3jfDwEn+dmk2dk9pWlYPPnu4VQ1zXs6f
+         DcAAJufsmv2uc4O95FLoilKAylhGijHSsnbcWVPA1y9WBSVA37t2KmIHqZJLjD3Pt1AB
+         6Hz76/Qg7MGnGIQoV5Cdh+fTjjuxX5eQZ+S3Af3rzTj01OKiLFwBc+YQDks9E6jKUYa5
+         En4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=turgOZHVZA+slmDkzWItW7JViu4gUnC/Ds0bw1pflBM=;
+        b=s9f4Et6FJAgM4sD8/I4WyXJM6vpQQJSyGnwzcDsWGlHDAY1cU6YwFLlpxA+eZwNezj
+         ON2aPGXHbS5GVr3Wqzo6I3AWre60GZ/GZs8IvWkg0l3f2B5bTnyWzzAvp0mFTcVSggC6
+         EuGB4RVuj9H95+eKWzq/wa/e02G1FarexWFtkfC8EUDg//C+IZKOIFQDKXiMNgPL/G5W
+         FOI7hXqm+Vbt4RveOjf76pmgFd3awuYTJBVmi5EStrzd11C5D9h57PVdD/+NZD7Oe4+w
+         M6iZ/o2gYLEIKrX1TZFLUy76Ks3zFs0Mrkp9TjbLYDa7nSqtSpPjwCBDKKzcP9uRlq2A
+         /J9Q==
+X-Gm-Message-State: APjAAAX0F/ImqTRnLBDAVA8W6dwKoLO4xoAtnVglxe3ugGjkUDTusAM6
+        Hjj+ecWyPEVSDniZb23fOOgg+YyNDLaWYFCvMsu3YA==
+X-Google-Smtp-Source: APXvYqwjC5SWPgI46QoTgvlTu/96JE/AEpBn03nwkHGSfPInUIonOiiuZICMnjjTvlc2wpiX7j93x2VmEko+tKdqsYE=
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr1592103lfm.61.1559121208258;
+ Wed, 29 May 2019 02:13:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31750.1559120984.1@warthog.procyon.org.uk>
-Date:   Wed, 29 May 2019 10:09:44 +0100
-Message-ID: <31751.1559120984@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 29 May 2019 09:09:57 +0000 (UTC)
+References: <20190516085018.2207-1-masneyb@onstation.org> <20190520142149.D56DA214AE@mail.kernel.org>
+In-Reply-To: <20190520142149.D56DA214AE@mail.kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 29 May 2019 11:13:15 +0200
+Message-ID: <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
+Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
+ tree bindings for vibrator
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Mon, May 20, 2019 at 4:21 PM Stephen Boyd <sboyd@kernel.org> wrote:
 
-> >  (3) Letting users see events they shouldn't be able to see.
-> 
-> How are you handling namespaces then?  Are they determined by the
-> namespace of the process that opened the original device handle, or the
-> namespace that made the new syscall for the events to "start flowing"?
+> > +       vibrator@fd8c3450 {
+> > +               compatible = "qcom,msm8974-vibrator";
+> > +               reg = <0xfd8c3450 0x400>;
+>
+> This is inside the multimedia clk controller. The resource reservation
+> mechanism should be complaining loudly here. Is the driver writing
+> directly into clk controller registers to adjust a duty cycle of the
+> camera's general purpose clk?
+>
+> Can you add support for duty cycle to the qcom clk driver's RCGs and
+> then write a generic clk duty cycle vibrator driver that adjusts the
+> duty cycle of the clk? That would be better than reaching into the clk
+> controller registers to do this.
 
-So far I haven't had to deal directly with namespaces.
+There is something ontological about this.
 
-mount_notify() requires you to have access to the mountpoint you want to watch
-- and the entire tree rooted there is in one namespace, so your event sources
-are restricted to that namespace.  Further, mount objects don't themselves
-have any other namespaces, not even a user_ns.
+A clock with variable duty cycle, isn't that by definition a PWM?
+I don't suppose it is normal for qcom clocks to be able to control
+their duty cycle, but rather default to 50/50 as we could expect?
 
-sb_notify() requires you to have access to the superblock you want to watch.
-superblocks aren't directly namespaced as a class, though individual
-superblocks may participate in particular namespaces (ipc, net, etc.).  I'm
-thinking some of these should be marked unwatchable (all pseudo superblocks,
-kernfs-class, proc, for example).
+I would rather say that maybe the qcom drivers/clk/qcom/* file
+should be exporting a PWM from the linux side of things
+rather than a clock for this thingie, and adding #pwm-cells
+in the DT node for the clock controller, making it possible
+to obtain PWMs right out of it, if it is a single device node for
+the whole thing.
 
-Superblocks, however, do each have a user_ns - but you were allowed to access
-the superblock by pathwalk, so you must have some access to the user_ns - I
-think.
+Analogous to how we have GPIOs that are ortogonally interrupt
+providers I don't see any big problem in a clock controller
+being clock and PWM provider at the same time.
 
-KEYCTL_NOTIFY requires you to have View access on the key you're watching.
-Currently, keys have no real namespace restrictions, though I have patches to
-include a namespace tag in the lookup criteria.
+There is code in drivers/clk/clk-pwm to use a pwm as a clock
+but that is kind of the reverse use case, if we implement PWMs
+directly in a clock controller driver then these can be turned into
+clocks using clk-pwm.c should it be needed, right?
 
-block_notify() doesn't require any direct access since you're watching a
-global queue and there is no blockdev namespacing.  LSMs are given the option
-to filter events, though.  The thought here is that if you can access dmesg,
-you should be able to watch for blockdev events.
+Part of me start to question whether clk and pwm should even
+be separate subsystems :/ they seem to solve an overlapping
+problem space.
 
-
-Actually, thinking further on this, restricting access to events is trickier
-than I thought and than perhaps Casey was suggesting.
-
-Say you're watching a mount object and someone in a different user_ns
-namespace or with a different security label mounts on it.  What governs
-whether you are allowed to see the event?
-
-You're watching the object for changes - and it *has* changed.  Further, you
-might be able to see the result of this change by other means (/proc/mounts,
-for instance).
-
-Should you be denied the event based on the security model?
-
-On the other hand, if you're watching a tree of mount objects, it could be
-argued that you should be denied access to events on any mount object you
-can't reach by pathwalk.
-
-On the third hand, if you can see it in /proc/mounts or by fsinfo(), you
-should get an event for it.
-
-
-> How are you handling namespaces then?
-
-So to go back to the original question.  At the moment they haven't impinged
-directly and I haven't had to deal with them directly.  There are indirect
-namespace restrictions that I get for free just due to pathwalk, for instance.
-
-David
+Yours,
+Linus Walleij
