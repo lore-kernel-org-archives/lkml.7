@@ -2,224 +2,167 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1632C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3724AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E1E2426E
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3452427E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WAja/FZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfE2WPT (ORCPT
+        id S1726776AbfE2WPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:15:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40273 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfE2WPT (ORCPT
+        Wed, 29 May 2019 18:15:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38317 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbfE2WPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:15:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u11so3665242otq.7;
-        Wed, 29 May 2019 15:15:18 -0700 (PDT)
+        Wed, 29 May 2019 18:15:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id o13so4089889lji.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:15:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6zFd/+GKbjIaLT3OCgZNCCS2BROhgWZzYWnXfsPDAOI=;
+        b=WAja/FZQE2pFEgnKhl94IfcY8BDGBWqmDZ/K0LwYCwgZZCNgvoTkUHQRuwP3YNgoya
+         z1f4MJuRSEu/GyirKTd7ZxEucg9gwE45Fe167cp9Gbt6SxK1m/9DrrJu7NRrAZY32bla
+         4p+eAFjbcp/9ChooQBY5FdmhiTSlOm5fiQ0RSbq2XomUdeG6vZOenF9TaeHTaq3oDL83
+         qHIT7T9Tcnfjs24oWWuvmRTPwH/ItgW4sLZxfljRcoBxDQ9Bb5BU8OKhEHtCsIEsk1yT
+         MLqbkKb1a/gLfm9HlkJSnjDqX1VSLIKoT+vVxZCZOOatOa32W60AfV4fnv3pVeojRmLW
+         1+wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KSFF4bDXPHpLrA6n50RMJhRFJYg/glW80Pouz4KvDb0=;
-        b=IEMl1JGnDtgMbFifwyt+n3RoZCpqnF0MNkZcfSyOGUu1w/+TML/K7HiMRd3TSAnRAL
-         ZuqQDsEbRhnCWSAQIjgz6VbQul60A0HhsNT7GMyxUDKEuIRCMnxWitJp9+KVO+5iSJqo
-         S/qcC31/FZ3nnKUF+fSljw0UG7fmu3+vjItB25xpCU1y7NkHpkF7Vstg5JpAYC+U8qsm
-         neHTiQBLeJXV4btS5aMuc/DMPtqo03oNMM837UiS9w25RjGFgf7PQ0jQuVYdhDeXRC3H
-         78qDOYIn+BMFdc+yOuGwpneB3q0DNIhRYzG7TzSwwW0A6VobOzuIwptdc1P4xtM3TDvz
-         S4sQ==
-X-Gm-Message-State: APjAAAVX+ZMtywgTCQG4/41Adnsncs05rE2yh08s3ldEEINZ+O1vjqa+
-        qW+E0ogJzkO2rBOzM9cCeHzLqPJlxKg=
-X-Google-Smtp-Source: APXvYqymNn0zHzzyTzWydenBNUP9THKeC6tneQbniCp78hi77D0MatlYykgW/AlXXGz9nC66DhCInw==
-X-Received: by 2002:a9d:7d9a:: with SMTP id j26mr105618otn.102.1559168118123;
-        Wed, 29 May 2019 15:15:18 -0700 (PDT)
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
-        by smtp.gmail.com with ESMTPSA id r14sm335550otk.72.2019.05.29.15.15.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 15:15:15 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id w144so3380984oie.12;
-        Wed, 29 May 2019 15:15:15 -0700 (PDT)
-X-Received: by 2002:aca:ea05:: with SMTP id i5mr374591oih.51.1559168115228;
- Wed, 29 May 2019 15:15:15 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6zFd/+GKbjIaLT3OCgZNCCS2BROhgWZzYWnXfsPDAOI=;
+        b=gCeHqjg12UbLx/PSk0kFsHqwfwTihmWAeJcp5hbf8GPW8wwTSmBzdaKnrINX1VGXQ+
+         t44S1f39zS4qzMkyKZZuumGtty24g6DPH29fZoZiR6Gpq2NAWJX9T5ghORtdT9km6M60
+         pjUmFyvy7fOf9ktD/ImdZr9EhW4KSipQPEK/e8qmRm4063J1kPis5anVTpwxgnRsRoEH
+         108iqqeFDt8GILiTpJK0CKQa2fCRI2SkS5+zKxqsE6tSXfi5rhAK16Kvqwz+VfNfAD4B
+         GnerRsT59Ra+8xzZFMynyJyAv0NrOrL06J7ITGFFDu8dxG29tSz+1rsRAodk9++Wudik
+         qwmw==
+X-Gm-Message-State: APjAAAVGRo8lobngYfW8JDDAor3tKQ8i0ptFZBlijdDEATD3aKHDU+p3
+        4DpxXDPNyxzGRkJQK1JhNwosrsps0MaQIJUMJKc1
+X-Google-Smtp-Source: APXvYqxr7bNBNEWEvitp9VD5magGhpRxnhpJ7GgxKw0cRkL8xChwhJX2izxpfcFyAxd9QA/po4PJvxe1rJlY+6u8D5I=
+X-Received: by 2002:a2e:92cc:: with SMTP id k12mr132567ljh.16.1559168142045;
+ Wed, 29 May 2019 15:15:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-2-chuanhua.han@nxp.com>
-In-Reply-To: <20190529083254.39581-2-chuanhua.han@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 29 May 2019 17:15:03 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
-Message-ID: <CADRPPNTyr+ZpK84C4KPwLVLnabNYN4MC3q=Gp94hBc5VPh7fYg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: mpc8xxx: Use IRQF_SHARED mode to request IRQ
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Zhang Ying-22455 <ying.zhang22455@nxp.com>
+References: <cover.1554732921.git.rgb@redhat.com> <f4a49f7c949e5df80c339a3fe5c4c2303b12bf23.1554732921.git.rgb@redhat.com>
+In-Reply-To: <f4a49f7c949e5df80c339a3fe5c4c2303b12bf23.1554732921.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 29 May 2019 18:15:30 -0400
+Message-ID: <CAHC9VhRfQp-avV2rcEOvLCAXEz-MDZMp91UxU+BtvPkvWny9fQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 04/10] audit: log container info of syscalls
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 3:33 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
+On Mon, Apr 8, 2019 at 11:40 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 >
-> GPIO3 and GPIO4 controllers share one irq number on Layerscape
-> platform. In the current implementation, only one GPIO controller
-> can register successfully.
+> Create a new audit record AUDIT_CONTAINER_ID to document the audit
+> container identifier of a process if it is present.
 >
-> This patch is to allow two controllers to share a single interrupt
-> number.
-
-This patch definitely did more than setting the IRQF_SHARED flag for
-interrupt.  If the driver do need some cleanup please separate the
-cleanup into another patch.
-
+> Called from audit_log_exit(), syscalls are covered.
 >
-> Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> A sample raw event:
+> type=3DSYSCALL msg=3Daudit(1519924845.499:257): arch=3Dc000003e syscall=
+=3D257 success=3Dyes exit=3D3 a0=3Dffffff9c a1=3D56374e1cef30 a2=3D241 a3=
+=3D1b6 items=3D2 ppid=3D606 pid=3D635 auid=3D0 uid=3D0 gid=3D0 euid=3D0 sui=
+d=3D0 fsuid=3D0 egid=3D0 sgid=3D0 fsgid=3D0 tty=3Dpts0 ses=3D3 comm=3D"bash=
+" exe=3D"/usr/bin/bash" subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0=
+:c0.c1023 key=3D"tmpcontainerid"
+> type=3DCWD msg=3Daudit(1519924845.499:257): cwd=3D"/root"
+> type=3DPATH msg=3Daudit(1519924845.499:257): item=3D0 name=3D"/tmp/" inod=
+e=3D13863 dev=3D00:27 mode=3D041777 ouid=3D0 ogid=3D0 rdev=3D00:00 obj=3Dsy=
+stem_u:object_r:tmp_t:s0 nametype=3D PARENT cap_fp=3D0 cap_fi=3D0 cap_fe=3D=
+0 cap_fver=3D0
+> type=3DPATH msg=3Daudit(1519924845.499:257): item=3D1 name=3D"/tmp/tmpcon=
+tainerid" inode=3D17729 dev=3D00:27 mode=3D0100644 ouid=3D0 ogid=3D0 rdev=
+=3D00:00 obj=3Dunconfined_u:object_r:user_tmp_t:s0 nametype=3DCREATE cap_fp=
+=3D0 cap_fi=3D0 cap_fe=3D0 cap_fver=3D0
+> type=3DPROCTITLE msg=3Daudit(1519924845.499:257): proctitle=3D62617368002=
+D6300736C65657020313B206563686F2074657374203E202F746D702F746D70636F6E746169=
+6E65726964
+> type=3DCONTAINER_ID msg=3Daudit(1519924845.499:257): contid=3D123458
+>
+> Please see the github audit kernel issue for the main feature:
+>   https://github.com/linux-audit/audit-kernel/issues/90
+> Please see the github audit userspace issue for supporting additions:
+>   https://github.com/linux-audit/audit-userspace/issues/51
+> Please see the github audit testsuiite issue for the test case:
+>   https://github.com/linux-audit/audit-testsuite/issues/64
+> Please see the github audit wiki for the feature overview:
+>   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> Acked-by: Serge Hallyn <serge@hallyn.com>
+> Acked-by: Steve Grubb <sgrubb@redhat.com>
+> Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 > ---
->  drivers/gpio/gpio-mpc8xxx.c | 43 ++++++++++++++++++++++++++-----------
->  1 file changed, 30 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 555e0e7957d9..63c8586fe5c8 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -11,6 +11,7 @@
->
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/interrupt.h>
->  #include <linux/spinlock.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> @@ -105,10 +106,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->                 return -ENXIO;
+>  include/linux/audit.h      |  5 +++++
+>  include/uapi/linux/audit.h |  1 +
+>  kernel/audit.c             | 20 ++++++++++++++++++++
+>  kernel/auditsc.c           | 20 ++++++++++++++------
+>  4 files changed, 40 insertions(+), 6 deletions(-)
+
+...
+
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 182b0f2c183d..3e0af53f3c4d 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -2127,6 +2127,26 @@ void audit_log_session_info(struct audit_buffer *a=
+b)
+>         audit_log_format(ab, "auid=3D%u ses=3D%u", auid, sessionid);
 >  }
 >
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *dev_id)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_id;
->         struct gpio_chip *gc = &mpc8xxx_gc->gc;
->         unsigned int mask;
->
-> @@ -117,8 +117,7 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
->         if (mask)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
->                                                      32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -129,6 +128,9 @@ static void mpc8xxx_irq_unmask(struct irq_data *d)
->
->         raw_spin_lock_irqsave(&mpc8xxx_gc->lock, flags);
->
-> +       gc->write_reg(mpc8xxx_gc->regs + GPIO_IER,
-> +                     gc->pin2mask(gc, irqd_to_hwirq(d)));
-
-This API has been removed for a while, are you sure you compiled and
-tested the change on latest kernel?
-
-commit 24efd94bc38290dc1d9775a1e767ed4685d8a79b
-Author: Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri Oct 20 16:31:27 2017 +0200
-
-    gpio: mmio: Make pin2mask() a private business
-
-    The vtable call pin2mask() was introducing a vtable function call
-    in every gpiochip callback for a generic MMIO GPIO chip. This was
-    not exactly efficient. (Maybe link-time optimization could get rid of
-    it, I don't know.)
-
-    After removing all external calls into this API we can make it a
-    boolean flag in the struct gpio_chip call and sink the function into
-    the gpio-mmio driver yielding encapsulation and potential speedups.
-
-    Cc: Anton Vorontsov <anton@enomsg.org>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
+> +/*
+> + * audit_log_contid - report container info
+> + * @context: task or local context for record
+> + * @contid: container ID to report
+> + */
+> +void audit_log_contid(struct audit_context *context, u64 contid)
+> +{
+> +       struct audit_buffer *ab;
 > +
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR,
->                 gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR)
->                 | mpc_pin2mask(irqd_to_hwirq(d)));
-> @@ -302,21 +304,31 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         struct gpio_chip        *gc;
->         const struct mpc8xxx_gpio_devtype *devtype =
->                 of_device_get_match_data(&pdev->dev);
-> -       int ret;
-> +       int ret, irq;
->
->         mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
->         if (!mpc8xxx_gc)
->                 return -ENOMEM;
->
-> -       platform_set_drvdata(pdev, mpc8xxx_gc);
-> -
-> -       raw_spin_lock_init(&mpc8xxx_gc->lock);
-> -
->         mpc8xxx_gc->regs = of_iomap(np, 0);
->         if (!mpc8xxx_gc->regs)
->                 return -ENOMEM;
->
->         gc = &mpc8xxx_gc->gc;
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "can't get irq number\n");
-> +               return irq;
-> +       }
-> +
-> +       mpc8xxx_gc->gc.label = pdev->name;
-> +       mpc8xxx_gc->gc.owner = THIS_MODULE;
-> +       mpc8xxx_gc->gc.base = -1;
-> +       mpc8xxx_gc->gc.ngpio = MPC8XXX_GPIO_PINS;
-> +
-> +       platform_set_drvdata(pdev, mpc8xxx_gc);
-> +
-> +       raw_spin_lock_init(&mpc8xxx_gc->lock);
->
->         if (of_property_read_bool(np, "little-endian")) {
->                 ret = bgpio_init(gc, &pdev->dev, 4,
-> @@ -364,7 +376,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->                 goto err;
->         }
->
-> -       mpc8xxx_gc->irqn = irq_of_parse_and_map(np, 0);
-> +       mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
->         if (!mpc8xxx_gc->irqn)
->                 return 0;
->
-> @@ -378,8 +390,13 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
->         gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       /* Request IRQ */
-> +       ret = devm_request_irq(&pdev->dev, irq, mpc8xxx_gpio_irq_cascade,
-> +                              IRQF_SHARED, pdev->name, mpc8xxx_gc);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "can't claim irq %d\n", mpc8xxx_gc->irqn);
-> +               goto err;
-> +       }
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.17.1
->
+> +       if (!audit_contid_valid(contid))
+> +               return;
+> +       /* Generate AUDIT_CONTAINER_ID record with container ID */
+> +       ab =3D audit_log_start(context, GFP_KERNEL, AUDIT_CONTAINER_ID);
+> +       if (!ab)
+> +               return;
+> +       audit_log_format(ab, "contid=3D%llu", (unsigned long long)contid)=
+;
+
+We have a consistency problem regarding how to output the u64 contid
+values; this function uses an explicit cast, others do not.  According
+to Documentation/core-api/printk-formats.rst the recommendation for
+u64 is %llu (or %llx, if you want hex).  Looking quickly through the
+printk code this appears to still be correct.  I suggest we get rid of
+the cast (like it was in v5).
+
+> +       audit_log_end(ab);
+> +}
+> +EXPORT_SYMBOL(audit_log_contid);
+
+--
+paul moore
+www.paul-moore.com
