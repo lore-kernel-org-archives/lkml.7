@@ -2,183 +2,329 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A28C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85288C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3F822CD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46630205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:52:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJcopnJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfE2Nvh (ORCPT
+        id S1727356AbfE2NwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:51:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50496 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbfE2Nvf (ORCPT
+        Wed, 29 May 2019 09:52:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40331 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfE2NwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:51:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f204so1762072wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:51:33 -0700 (PDT)
+        Wed, 29 May 2019 09:52:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t4so1854843wrx.7;
+        Wed, 29 May 2019 06:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RzNbr+rvjVdKwJ2zLeewdxXC9e98E6i+o7Np7MkUHgA=;
+        b=SJcopnJPjQmBRgDIX9ahvgLuKq3zJFlyoV1QzalXPN0KaNjlCMtWE7SvriX64SiYO5
+         dIFBK242KAT/ZXkCQiwxkGHj8aN3y9J8k3X2n54pt3ftu25Gbur8a2JUefNzK885fL13
+         GQCc6y+gGIuYQNDK5UPSZRrztEFlNk468foFo8RC7lVUWTX3L6bHtjsU1gdkuBAiCeU9
+         1MS3zv7272236m38iRHrZv27CvkPT6iv4WvpXgMq5kyqYsrdBMiPqOWXig14XXwcGPKU
+         Je6qszQZgVvpXHo7N8jOEsPnOShCeTLxf005EZ9bhw2kXbs+87wMm76tk7hi9r6LWd1C
+         cwfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vg/VvyKLqoxgWb4CKGH7WmZ7Vk6qZmGWeyTHvk5Cqfg=;
-        b=aItx+y+tgpWuFJTYHslFVHJmOJGY/MxdkIG0TCw20AOO4iq7Wkz1IME0zGwDuoSx9i
-         91bJpvFRbKq5ieotVKbMj5PNlldIOhrcrMVSHQYBc6lRA6XQMyW0p1n4lkFZSAnLrKaM
-         XfKQlIYrOTUGNSd+h/CfHP7nc3X63VtXlcZsKOwNuTDgUyS0Yc2D/kVZ3edoRaiuozSX
-         vEKCFPKK3fjCIi2H+Gq5BzRflnmzdCKFup8cy4mT3HqtFfmFQWby73iA5ek7xuSPiq7T
-         4xYIRG6k0UYsMFXiJaTBC/eb5GJg6MazfWaRbEuNhNpMNMz5AC4XOw/oOiyfFX/u2rKt
-         Ly7w==
-X-Gm-Message-State: APjAAAUqqrfnSSSlBljefQzVCiMogscfEwVsQAP0KI89z3OBP6TuBEAv
-        /2R7K8PrxQamjWYnzX0PqWq8Wy1bFTE3yA==
-X-Google-Smtp-Source: APXvYqy9PbaGnUE8PDR1PmNtaft2S9NelIh7ul179KU7wKCm1z3BqvGKJl5oOPGz7P3CTP2BWdU/wQ==
-X-Received: by 2002:a1c:701a:: with SMTP id l26mr6704028wmc.32.1559137893136;
-        Wed, 29 May 2019 06:51:33 -0700 (PDT)
-Received: from t460s.bristot.redhat.com ([193.205.81.200])
-        by smtp.gmail.com with ESMTPSA id w185sm6891106wma.39.2019.05.29.06.51.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:51:32 -0700 (PDT)
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping due
- to a preempt_counter change
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-References: <cover.1559051152.git.bristot@redhat.com>
- <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
- <20190529083357.GF2623@hirez.programming.kicks-ass.net>
- <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
- <20190529102038.GO2623@hirez.programming.kicks-ass.net>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <94669b5a-06dd-e9bf-cfb6-b5d507a90946@redhat.com>
-Date:   Wed, 29 May 2019 15:51:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RzNbr+rvjVdKwJ2zLeewdxXC9e98E6i+o7Np7MkUHgA=;
+        b=Mf5DaXlPbbxtnRaSKIoepssGFbfyRvw0LtMXAYZApm3vmYZb8HgVtgo0bItj462h3z
+         Ck9SrDWAT4pYvK5fYHW0oMyXWIfeJEn/Tt0Z6eKvzVY1d0O9fxP9kV+ANYCGFZrzZyDn
+         elf19TpKlGXX7GoMvFpcKpYUWXPd45PRBG+7RzKR7+fTFgwlfzjEjPiVmfAdodW2o7tM
+         Jl6QXBrCC7+MRXJv9yS74XY3+4tGa+OupmdT0SQ0BT3ZKJwA5Jdd+uoNgel912vlkRte
+         dknzkqLUFDOcfXB/mjD5TrVOokC8tr0inbJpphCxORVbJdrc6An2jvfZOxcUZR7gUsYJ
+         qbJA==
+X-Gm-Message-State: APjAAAVnTvsK+h6S4HJLoDsX2ngMk/fbKnpuha8bgDUdsMLeIzH1jT9z
+        mZCv5R9MQnWFue9F/Kxr8K0=
+X-Google-Smtp-Source: APXvYqwz1D070gdCi35Mtsv432bNl6e4KQkE7FUC/QIcUDyIb+aXMysH1+LO780wo33pgpimSphDhw==
+X-Received: by 2002:a5d:488a:: with SMTP id g10mr18257400wrq.344.1559137927096;
+        Wed, 29 May 2019 06:52:07 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id w23sm4743720wmc.38.2019.05.29.06.52.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 06:52:06 -0700 (PDT)
+Date:   Wed, 29 May 2019 15:52:05 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 09/12] soc/tegra: pmc: add pmc wake support for
+ tegra210
+Message-ID: <20190529135205.GA17679@ulmo>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+ <1559084936-4610-10-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190529102038.GO2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
+In-Reply-To: <1559084936-4610-10-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 12:20, Peter Zijlstra wrote:
-> On Wed, May 29, 2019 at 11:40:34AM +0200, Daniel Bristot de Oliveira wrote:
->> On 29/05/2019 10:33, Peter Zijlstra wrote:
->>> On Tue, May 28, 2019 at 05:16:23PM +0200, Daniel Bristot de Oliveira wrote:
->>>> The preempt_disable/enable tracepoint only traces in the disable <-> enable
->>>> case, which is correct. But think about this case:
->>>>
->>>> ---------------------------- %< ------------------------------
->>>> 	THREAD					IRQ
->>>> 	   |					 |
->>>> preempt_disable() {
->>>>     __preempt_count_add(1)
->>>> 	------->	    smp_apic_timer_interrupt() {
->>>> 				preempt_disable()
->>>> 				    do not trace (preempt count >= 1)
->>>> 				    ....
->>>> 				preempt_enable()
->>>> 				    do not trace (preempt count >= 1)
->>>> 			    }
->>>>     trace_preempt_disable();
->>>> }
->>>> ---------------------------- >% ------------------------------
->>>>
->>>> The tracepoint will be skipped.
->>>
->>> .... for the IRQ. But IRQs are not preemptible anyway, so what the
->>> problem?
->>
->>
->> right, they are.
->>
->> exposing my problem in a more specific way:
->>
->> To show in a model that an event always takes place with preemption disabled,
->> but not necessarily with IRQs disabled, it is worth having the preemption
->> disable events separated from IRQ disable ones.
->>
->> The main reason is that, although IRQs disabled postpone the execution of the
->> scheduler, it is more pessimistic, as it also delays IRQs. So the more precise
->> the model is, the less pessimistic the analysis will be.
-> 
-> I'm not sure I follow, IRQs disabled fully implies !preemptible. I don't
-> see how the model would be more pessimistic than reality if it were to
-> use this knowledge.
 
-Maybe I did not expressed myself well... and the example was not good either.
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"IRQs disabled fully implies !preemptible" is a "to big" step. In modeling (or
-mathematical reasoning?), a good practice is to break the properties into small
-piece, and then build more complex reasoning/implications using these "small
-properties."
+On Tue, May 28, 2019 at 04:08:53PM -0700, Sowjanya Komatineni wrote:
+> This patch implements PMC wakeup sequence for Tegra210 and defines
+> common used wake events of RTC alarm and power key.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 113 ++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 113 insertions(+)
+>=20
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 974b4c9f6ada..54dc8409e353 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -57,6 +57,7 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>  #include <dt-bindings/gpio/tegra186-gpio.h>
+>  #include <dt-bindings/gpio/tegra194-gpio.h>
+> +#include <dt-bindings/gpio/tegra-gpio.h>
+> =20
+>  #define PMC_CNTRL			0x0
+>  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+> @@ -66,6 +67,12 @@
+>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+> +
+> +#define PMC_WAKE_MASK			0x0c
+> +#define PMC_WAKE_LEVEL			0x10
+> +#define PMC_WAKE_STATUS			0x14
+> +#define PMC_SW_WAKE_STATUS		0x18
+> =20
+>  #define DPD_SAMPLE			0x020
+>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+> @@ -96,6 +103,11 @@
+> =20
+>  #define PMC_SCRATCH41			0x140
+> =20
+> +#define PMC_WAKE2_MASK			0x160
+> +#define PMC_WAKE2_LEVEL			0x164
+> +#define PMC_WAKE2_STATUS		0x168
+> +#define PMC_SW_WAKE2_STATUS		0x16c
+> +
+>  #define PMC_SENSOR_CTRL			0x1b0
+>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+> @@ -245,6 +257,7 @@ struct tegra_pmc_soc {
+> =20
+>  	const struct tegra_wake_event *wake_events;
+>  	unsigned int num_wake_events;
+> +	unsigned int max_supported_wake_events;
 
-Doing "big steps" makes you prone "miss interpretations", creating ambiguity.
-Then, -RT people are prone to be pessimist, non-RT optimistic, and so on... and
-that is what models try to avoid.
+Do we really need this? It's only used in Tegra210 specific code and
+it's always 64 on Tegra210. Can't we always hard-code it?
 
-For instance, explaining this using words is contradictory:>
-> Any !0 preempt_count(), which very much includes (Hard)IRQ and SoftIRQ
-> counts, means non-preemptible.
+>  };
+> =20
+>  static const char * const tegra186_reset_sources[] =3D {
+> @@ -1917,6 +1930,54 @@ static const struct irq_domain_ops tegra_pmc_irq_d=
+omain_ops =3D {
+>  	.alloc =3D tegra_pmc_irq_alloc,
+>  };
+> =20
+> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int=
+ on)
+> +{
+> +	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+> +	unsigned int offset, bit;
+> +	u32 value;
+> +
+> +	if (data->hwirq =3D=3D ULONG_MAX)
+> +		return 0;
+> +
+> +	offset =3D data->hwirq / 32;
+> +	bit =3D data->hwirq % 32;
+> +
+> +	/*
+> +	 * latch wakeups to SW_WAKE_STATUS register to capture events
+> +	 * that would not make it into wakeup event register during LP0 exit.
+> +	 */
+> +	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
+> +	value |=3D PMC_CNTRL_LATCH_WAKEUPS;
+> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+> +	usleep_range(110, 120);
+> +
+> +	value &=3D ~PMC_CNTRL_LATCH_WAKEUPS;
+> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+> +	usleep_range(110, 120);
+> +
+> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+> +	if (pmc->soc->max_supported_wake_events > 32)
+> +		tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+> +
+> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+> +	if (pmc->soc->max_supported_wake_events > 32)
+> +		tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+> +
+> +	/* enable PMC wake */
+> +	if (data->hwirq >=3D 32)
+> +		offset =3D PMC_WAKE2_MASK;
+> +	else
+> +		offset =3D PMC_WAKE_MASK;
+> +	value =3D tegra_pmc_readl(pmc, offset);
 
-One might argue that, the preemption of a thread always takes place with
-preempt_count() != 0, because __schedule() is always called with preemption
-disabled, so the preemption takes place while in non-preemptive.
+Blank line before and after the "value =3D ..." line, for readability.
 
-A more elaborated example:
+> +	if (on)
+> +		value |=3D 1 << bit;
+> +	else
+> +		value &=3D ~(1 << bit);
+> +	tegra_pmc_writel(pmc, value, offset);
 
------------------- %< --------------------------
-Thread A is running, and goes to sleep waiting for a timer...
-	schedule() {
-		preempt_disable();
-		__schedule() {
-			smp_apic_timer_interrupt() {
-				sched_wakeup (Thread A);
-				sched_wakeup (Thread B: highest prio) {
-					sched_set_need_resched();
-				}
-			}
-			local_irq_disable()
-			context switch to B, A leaves in state=R.
------------------- %< --------------------------
+Same here, leave a blank line before the tegra_pmc_writel(...) call to
+improve readability.
 
-In this case, the thread A suffered a "preemption" with "!0 preempt_count()"
+> +
+> +	return 0;
+> +}
+> +
+>  static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int=
+ on)
+>  {
+>  	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+> @@ -1948,6 +2009,48 @@ static int tegra186_pmc_irq_set_wake(struct irq_da=
+ta *data, unsigned int on)
+>  	return 0;
+>  }
+> =20
+> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int=
+ type)
+> +{
+> +	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+> +	unsigned int offset, bit;
+> +	u32 value;
+> +
+> +	if (data->hwirq =3D=3D ULONG_MAX)
+> +		return 0;
+> +
+> +	offset =3D data->hwirq / 32;
+> +	bit =3D data->hwirq % 32;
+> +
+> +	if (data->hwirq >=3D 32)
+> +		offset =3D PMC_WAKE2_LEVEL;
+> +	else
+> +		offset =3D PMC_WAKE_LEVEL;
+> +	value =3D tegra_pmc_readl(pmc, offset);
 
-The fact is, Linux does not fit straight in the "well known terminology" of
-academic papers because many of those terminology bases in the fact that
-operations are atomic. But they are not and Linux has some behaviors that
-desires new terminology/interpretation...
+Same comment as above.
 
-- WAIT But you (daniel) wants to fake the atomicity between preempt_disable and
-its tracepoint!
+Otherwise, looking good, thanks.
 
-Yes, I do, but this is a very straightforward step/assumption: the atomicity is
-about the real-event and the tracepoint that notifies it. It is not about two
-different events.
+Thierry
 
-That is why it is worth letting the modeling rules to clarify the behavior of
-system, without doing non-obvious implication in the code part, so we can have a
-model that fits better in the Linux actions/events to avoid ambiguity.
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		value |=3D 1 << bit;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		value &=3D ~(1 << bit);
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
+> +		value ^=3D 1 << bit;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	tegra_pmc_writel(pmc, value, offset);
+> +
+> +	return 0;
+> +}
+> +
+>  static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int=
+ type)
+>  {
+>  	struct tegra_pmc *pmc =3D irq_data_get_irq_chip_data(data);
+> @@ -2535,6 +2638,11 @@ static const struct pinctrl_pin_desc tegra210_pin_=
+descs[] =3D {
+>  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+>  };
+> =20
+> +static const struct tegra_wake_event tegra210_wake_events[] =3D {
+> +	TEGRA_WAKE_GPIO("power", 24, 0, 189),
+> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
+> +};
+> +
+>  static const struct tegra_pmc_soc tegra210_pmc_soc =3D {
+>  	.num_powergates =3D ARRAY_SIZE(tegra210_powergates),
+>  	.powergates =3D tegra210_powergates,
+> @@ -2552,10 +2660,15 @@ static const struct tegra_pmc_soc tegra210_pmc_so=
+c =3D {
+>  	.regs =3D &tegra20_pmc_regs,
+>  	.init =3D tegra20_pmc_init,
+>  	.setup_irq_polarity =3D tegra20_pmc_setup_irq_polarity,
+> +	.irq_set_wake =3D tegra210_pmc_irq_set_wake,
+> +	.irq_set_type =3D tegra210_pmc_irq_set_type,
+>  	.reset_sources =3D tegra210_reset_sources,
+>  	.num_reset_sources =3D ARRAY_SIZE(tegra210_reset_sources),
+>  	.reset_levels =3D NULL,
+>  	.num_reset_levels =3D 0,
+> +	.num_wake_events =3D ARRAY_SIZE(tegra210_wake_events),
+> +	.wake_events =3D tegra210_wake_events,
+> +	.max_supported_wake_events =3D 64,
+>  };
+> =20
+>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+> --=20
+> 2.7.4
+>=20
 
-[ note 1: the tracepoint is only enabled if CONFIG_PREEMPTIRQ_TRACEPOINTS=y
- which is not enabled by default ]
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[ note 2: I just saw that Steven replied while I was writing this email... I
-will read them now... sorry for some repetitive topic here ]
+-----BEGIN PGP SIGNATURE-----
 
--- Daniel
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzujoUACgkQ3SOs138+
+s6ERYA/9EmA5sQpVE+KkUtS+6+gtw5ZdfjrcZU88794wu43vFH3L4qpVQ+ee1ycZ
+silqzFRA/+s7LinbU8nkKYBkSQT/Fi3kfsxh7XcsEIN97Hp/sG6FJ6fPJ1XGvUMP
+xzsbpHWADAKYpfVBMQqG41BX20AeP8QGuBPNfQBvEfjvda7kUck+p9hqei8r7Hbl
+9kiVsMTOQMFODuD0zFg6vTyzXJAmDrsg4Xm+v962nN1wTRvhiJXR7dXAOwjnFTJG
+UP9BXACICrtLUqhG98s8hFe0M99GEA84+mVg2XIO35jFIUwKsUBBef/SNet16NKL
+6XOD9XYJd+iLFI8uZiG/6XXl5f8orfDOSuZ5uovrMPpQOBQW2CSloFysV6U0BnNu
+CD3uupaayuvrp0dLhtqBJHZCm0so3aBJMNyGCwpJsaL3v40nPAXonBvIAofk7Svj
+Hidwwj81VmcXHj/1peKEJWEgLLNVReGvtVm7P28g6ffBI3B279wP64M2i0bUYUoh
+XCMaKRDFVk2bjrNoUkpbjQYPpG9aFwwmuOA/jIjXz5wPX8Qr9HDeW5qOxZUNcwMC
+yxZgDDF0i4K1I49WzAGb+z+rrET1OuwIZSeXVtLbNYqFKJ8vMBAbUEO7N1y0f+xQ
+c1t2CQHoxPdQ7GPVMJjqTIg43rqkIh6whGJ8SnKWxVKEUleA/Ig=
+=Gn7+
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
