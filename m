@@ -2,104 +2,135 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B9CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B852DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4802421721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:28:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="d83GOlWS"
+	by mail.kernel.org (Postfix) with ESMTP id 8B58E21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfE2C2O (ORCPT
+        id S1726326AbfE2Ce3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:28:14 -0400
-Received: from mail-eopbgr720043.outbound.protection.outlook.com ([40.107.72.43]:6272
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725816AbfE2C2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:28:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sNxWvouK3CV1UqrX8DkSdHTrL9wyGpZB/ogiRK1+X8o=;
- b=d83GOlWS+g4RYLncJ1G1zOLBnvBXUjcvn9vikguWPHoRn/RsyYD75nUi7RecSWh8D7E+ZnGhvomiJMYTdl7rz5voZDk98wDDBUHBCtM/44Qk3u+QnKsCE9olVQQAPWY6uaHqZKPYelXz2A3Q6xj8AKSv7n6gP0fyrfLJSkJBDhQ=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4166.namprd03.prod.outlook.com (20.177.184.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.22; Wed, 29 May 2019 02:28:10 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1922.021; Wed, 29 May 2019
- 02:28:10 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "joabreu@synopsys.com" <joabreu@synopsys.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: stmmac: Switch to devm_alloc_etherdev_mqs
-Thread-Topic: [PATCH net-next] net: stmmac: Switch to devm_alloc_etherdev_mqs
-Thread-Index: AQHVFH3ChMvditMZqEGruBoCTIEsdKaA142AgACJQQA=
-Date:   Wed, 29 May 2019 02:28:10 +0000
-Message-ID: <20190529101908.4b40512e@xhacker.debian>
-References: <20190527190833.5955c851@xhacker.debian>
-        <20190528.110753.377345658167716646.davem@davemloft.net>
-In-Reply-To: <20190528.110753.377345658167716646.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYCPR01CA0032.jpnprd01.prod.outlook.com
- (2603:1096:405:1::20) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 241fa83d-d3a2-437d-4fb1-08d6e3dd4ab4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4166;
-x-ms-traffictypediagnostic: BYAPR03MB4166:
-x-microsoft-antispam-prvs: <BYAPR03MB416628A812F3632FA3DDC004ED1F0@BYAPR03MB4166.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0052308DC6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(366004)(396003)(39860400002)(189003)(199004)(6512007)(486006)(26005)(186003)(316002)(6436002)(86362001)(11346002)(476003)(446003)(9686003)(66066001)(71200400001)(6486002)(256004)(6916009)(71190400001)(229853002)(1076003)(68736007)(6246003)(478600001)(81166006)(102836004)(6506007)(386003)(558084003)(76176011)(14454004)(99286004)(2906002)(25786009)(53936002)(54906003)(4326008)(3846002)(6116002)(72206003)(64756008)(50226002)(52116002)(73956011)(8936002)(7736002)(66946007)(66476007)(66556008)(305945005)(66446008)(5660300002)(8676002)(81156014)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4166;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YcUcEOcu54XzmykvC0bxSST5NcHmIheWn93jnKM2eIJVpQaFktHtMS85DjZWKTH33WNLi76GHAJoosNZ22bDRGPcNxvP2HkcPSo81Afonlt9YkrPUPG93lnG4AwRdzKwZd+MQYiytg+iWaRBgj2NQIVyWDS/yH5L3Ht1Q6Wc/dtGL/YL8RXtPQ8SFpxleoFVJGShsbaA/wqcZIckCVX1aR/P+zb7mtcYuEIlSb43V6VWM7TRGcDUBjwhsbARTjYi9irkGE+YYM9Ac+kTrIX3NGEb3i2cx3SPNfBwmRmeMDN/Ul9G8geM4E+pYgOSe0+J4qlR/1d2pBtzsO8laRcr0FnHn3SrK40NVGMXPxSJU+E2KXC7gMhYXxrdC4wE1/XL0JXiZ7zv+jiBF+908yQlBMS1d8/NzvAm51AqmKNROq8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BBF8F748863E0047912AC6ABA17B32BA@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 May 2019 22:34:29 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37206 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbfE2Ce3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 22:34:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TSvOYQ4_1559097264;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSvOYQ4_1559097264)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 29 May 2019 10:34:25 +0800
+Subject: Re: [RFC PATCH 0/3] Make deferred split shrinker memcg aware
+To:     David Rientjes <rientjes@google.com>
+Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        shakeelb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <2e23bd8c-6120-5a86-9e9e-ab43b02ce150@linux.alibaba.com>
+Date:   Wed, 29 May 2019 10:34:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 241fa83d-d3a2-437d-4fb1-08d6e3dd4ab4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 02:28:10.4459
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jiszha@synaptics.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4166
+In-Reply-To: <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 11:07:53 -0700 David Miller wrote:
 
->=20
-> You never even tried to compiled this patch.
->=20
 
-oops, my bad. I patched the another branch and tested the patch but when I
-manually patch net-next tree, I made a mistake. Sorry.
+On 5/29/19 9:22 AM, David Rientjes wrote:
+> On Tue, 28 May 2019, Yang Shi wrote:
+>
+>> I got some reports from our internal application team about memcg OOM.
+>> Even though the application has been killed by oom killer, there are
+>> still a lot THPs reside, page reclaim doesn't reclaim them at all.
+>>
+>> Some investigation shows they are on deferred split queue, memcg direct
+>> reclaim can't shrink them since THP deferred split shrinker is not memcg
+>> aware, this may cause premature OOM in memcg.  The issue can be
+>> reproduced easily by the below test:
+>>
+> Right, we've also encountered this.  I talked to Kirill about it a week or
+> so ago where the suggestion was to split all compound pages on the
+> deferred split queues under the presence of even memory pressure.
+>
+> That breaks cgroup isolation and perhaps unfairly penalizes workloads that
+> are running attached to other memcg hierarchies that are not under
+> pressure because their compound pages are now split as a side effect.
+> There is a benefit to keeping these compound pages around while not under
+> memory pressure if all pages are subsequently mapped again.
+
+Yes, I do agree. I tried other approaches too, it sounds making deferred 
+split queue per memcg is the optimal one.
+
+>
+>> $ cgcreate -g memory:thp
+>> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+>> $ cgexec -g memory:thp ./transhuge-stress 4000
+>>
+>> transhuge-stress comes from kernel selftest.
+>>
+>> It is easy to hit OOM, but there are still a lot THP on the deferred split
+>> queue, memcg direct reclaim can't touch them since the deferred split
+>> shrinker is not memcg aware.
+>>
+> Yes, we have seen this on at least 4.15 as well.
+>
+>> Convert deferred split shrinker memcg aware by introducing per memcg deferred
+>> split queue.  The THP should be on either per node or per memcg deferred
+>> split queue if it belongs to a memcg.  When the page is immigrated to the
+>> other memcg, it will be immigrated to the target memcg's deferred split queue
+>> too.
+>>
+>> And, move deleting THP from deferred split queue in page free before memcg
+>> uncharge so that the page's memcg information is available.
+>>
+>> Reuse the second tail page's deferred_list for per memcg list since the same
+>> THP can't be on multiple deferred split queues at the same time.
+>>
+>> Remove THP specific destructor since it is not used anymore with memcg aware
+>> THP shrinker (Please see the commit log of patch 2/3 for the details).
+>>
+>> Make deferred split shrinker not depend on memcg kmem since it is not slab.
+>> It doesn't make sense to not shrink THP even though memcg kmem is disabled.
+>>
+>> With the above change the test demonstrated above doesn't trigger OOM anymore
+>> even though with cgroup.memory=nokmem.
+>>
+> I'm curious if your internal applications team is also asking for
+> statistics on how much memory can be freed if the deferred split queues
+> can be shrunk?  We have applications that monitor their own memory usage
+
+No, but this reminds me. The THPs on deferred split queue should be 
+accounted into available memory too.
+
+> through memcg stats or usage and proactively try to reduce that usage when
+> it is growing too large.  The deferred split queues have significantly
+> increased both memcg usage and rss when they've upgraded kernels.
+>
+> How are your applications monitoring how much memory from deferred split
+> queues can be freed on memory pressure?  Any thoughts on providing it as a
+> memcg stat?
+
+I don't think they have such monitor. I saw rss_huge is abormal in memcg 
+stat even after the application is killed by oom, so I realized the 
+deferred split queue may play a role here.
+
+The memcg stat doesn't have counters for available memory as global 
+vmstat. It may be better to have such statistics, or extending 
+reclaimable "slab" to shrinkable/reclaimable "memory".
+
+>
+> Thanks!
 
