@@ -2,103 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B3DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D4FC46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BCF216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FC421721
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RSu6+dlr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p49ChQ13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfE2HGz (ORCPT
+        id S1726454AbfE2HJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:06:55 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33499 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfE2HGy (ORCPT
+        Wed, 29 May 2019 03:09:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46123 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfE2HJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:06:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 14so1359132qtf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:06:53 -0700 (PDT)
+        Wed, 29 May 2019 03:09:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m15so1295175ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qA9B1CIdYn7uFQh9agY6VqwI4z4QDnUm8YBBmahDu4U=;
-        b=RSu6+dlro0iGo/wUkUotKEAtoX5JlmpVTXx83cweGW1rp3wkzwJvCnwrRTU9LabdhH
-         WJzxoaT/USBOZMKWfosrpwqhOlCtxQhy0+dWLhm1GUa4vdZxi4ALhT4Gsa6dE7h4rntu
-         4rNayUppH/l8daDhNYVSVWru1i7bkr9B8Pxdk=
+        bh=0hmEt8XBAszMFOt/NHrMak9iR4Ln+O6rhKTThaepQX0=;
+        b=p49ChQ13CkTgafcWq6Mx8FOk/3a/AeGpi05o5uxn0TRjMP7yQKQUwXpN1bbkt6bsUL
+         BOp03/oTIkbFDCJgo8EFfNE0dDIo9i7rKReMyFNF1dZ/M1Tga6IFPJqU6RNwQ9ztAKEi
+         kVPSOn09OJUcGey1NdvjzyLfUrSxYu2LvzfPCvj/ykDhrPxYoFREu8hf7+IFKkVuznxg
+         wzzsesZ5sTsck6PUx8smbK+YfBzvT0kXI2A1La8N2CmQUuFn1pR26ai5oseyyE1t//7M
+         Jp5OBTnFMGRX4xsL05DMLjI183G/vREXuSDRD9tAOSzGCVHCv3Od22rktQlI1NPK0/Wh
+         hWLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qA9B1CIdYn7uFQh9agY6VqwI4z4QDnUm8YBBmahDu4U=;
-        b=ZzE1K7KNV/FcCtCPDPFpJZ0/Is8v1s/JmSGt4Su4MKDheLIjRtR0n7GJq+dMHPbUGO
-         rTVkVjBJcixDHZRPZtfI9jmqciWx+iwbHX3vfdHcD3jHBF2vHiKkJ0CefhNZiuH7aG8x
-         VQx0xHNWPpiAYasANk3SzHizqFB0Y16HkmtzUScab9EBYcvey1EH2Sa6s8mH4Mb0ZWPM
-         TNl26QV/JKvJABZQQSG+sV+SKDjgrcyF1LPFrRWxh6/doW953uRcYVInvZsdE/XDgAmF
-         EmjUS0MKZZOILzB9/oWlFqqR+YLasSpA7jtJRhFpdkFOo76uT5ooM/qpPtE6ZK29Q5jn
-         bn0A==
-X-Gm-Message-State: APjAAAUNUzhORmuzSzFtLUt/07CSQDF/KfskoNZpVvHIIP/SJQs8Z+fw
-        q76yqgRp0jxtSBqCOzL0Ih0UZ33109FWm1ra55tevQ==
-X-Google-Smtp-Source: APXvYqwaIhOfv/yjZJUEyrJh1Af7NiK3bC572neTGlR+hYHK4lhLZttmwCQu3ZrIVWJojbIsz1dCv5ftzO/ZJKndKPs=
-X-Received: by 2002:a0c:b66f:: with SMTP id q47mr24087512qvf.102.1559113613462;
- Wed, 29 May 2019 00:06:53 -0700 (PDT)
+        bh=0hmEt8XBAszMFOt/NHrMak9iR4Ln+O6rhKTThaepQX0=;
+        b=n+VW0VvtJ6xS5GzeRNo78U9H48ms2BOpcKA3Ce/G0hwPVIysTFDqh4GJ8JrbuALCRk
+         SzwpvlBcbdOOGK8uGU8JAKEnu8N743BVl5N4yyCPXbQHmA7au3artTfsXnPZOQrgRcJb
+         HiStFb/CZ3evEBC3MS5vWYciYw+GbHouZfPy+T9T2ZYq6aru+mjwvRabmanspJIFaB42
+         6QlSjhm5W+fwWFugPRYEXYGTm0B+uyHrhbM4HF4LBDQrUWoF8SK3MLkVTPVlgdOJox1Y
+         GS/QBXwEHNpOrl2aNmtRMPAPJxmHgT0g+RiAASLneFIybQcvZWE5vIGY9EVs5cjXSvOh
+         u/OA==
+X-Gm-Message-State: APjAAAX1qow/Q0UkQGFG+K1SUpJa1ZAL2/DWXccs1tRaHqouwSpXyKjy
+        VvV08yIzXvQ2n5nLToSyTdU5kIB+31Gm30fQ7iI=
+X-Google-Smtp-Source: APXvYqzPybpE3leNNpeYsxD/syHNbqQB4AamoUBooFN787Z8X3jpIs8qqKLWY3d8qJDJTDSMGWjIGZogbhlUDWuIO+4=
+X-Received: by 2002:a2e:9dc6:: with SMTP id x6mr1537784ljj.27.1559113778900;
+ Wed, 29 May 2019 00:09:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190527045054.113259-1-hsinyi@chromium.org> <20190527045054.113259-2-hsinyi@chromium.org>
- <1559093711.11380.6.camel@mtksdaap41>
-In-Reply-To: <1559093711.11380.6.camel@mtksdaap41>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 29 May 2019 15:06:27 +0800
-Message-ID: <CAJMQK-jDhDNViUA3dpixG=_Pe7x0qH4utBWy3k+D_+oKwEOPig@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm: mediatek: fix unbind functions
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20190528193004.GA7744@gmail.com>
+In-Reply-To: <20190528193004.GA7744@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Wed, 29 May 2019 12:39:27 +0530
+Message-ID: <CAFqt6zZ0SHXddLoQMoO3LHT=50Br0x4r3Wn4XviypRxRUtn9zQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: Fail when offset == num in first check of vm_map_pages_zero()
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Huang Ying <ying.huang@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:35 AM CK Hu <ck.hu@mediatek.com> wrote:
-
+On Wed, May 29, 2019 at 1:38 AM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> I think mtk_dsi_destroy_conn_enc() has much thing to do and I would like
-> you to do more. You could refer to [2] for complete implementation.
+> If the user asks us for offset == num, we should already fail in the
+> first check, i.e. the one testing for offsets beyond the object.
 >
-> [2]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/exynos/exynos_drm_dsi.c?h=v5.2-rc2#n1575
+> At the moment, we are failing on the second test anyway,
+> since count cannot be 0. Still, to agree with the comment of the first
+> test, we should first there.
+
+I think, we need to cc linux-mm.
 >
-Hi CK,
-
-Since drm_encoder_cleanup() would already call drm_bridge_detach() to
-detach bridge, I think we only need to handle panel case here.
-We don't need to call mtk_dsi_encoder_disable() since
-mtk_output_dsi_disable() is called in mtk_dsi_remove() and
-dsi->enabled will be set to false. Calling second time will just
-returns immediately.
-So, besides setting
-
-dsi->panel = NULL;
-dsi->conn.status = connector_status_disconnected;
-
-are there other things we need to do here?
-
-Original code doesn't have drm_kms_helper_hotplug_event(), and I'm not
-sure if mtk dsi would need this.
-Also, mtk_dsi_stop() would also stop irq.
-
-Thanks
+> Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> ---
+>  mm/memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index ddf20bd0c317..74cf8b0ce353 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1547,7 +1547,7 @@ static int __vm_map_pages(struct vm_area_struct *vma, struct page **pages,
+>         int ret, i;
+>
+>         /* Fail if the user requested offset is beyond the end of the object */
+> -       if (offset > num)
+> +       if (offset >= num)
+>                 return -ENXIO;
+>
+>         /* Fail if the user requested size exceeds available object size */
+> --
+> 2.17.1
+>
