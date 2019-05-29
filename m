@@ -2,139 +2,189 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1B6C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D17C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E0C2406C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:26:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AH62/ckY"
+	by mail.kernel.org (Postfix) with ESMTP id B918924074
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfE2S0O (ORCPT
+        id S1727471AbfE2SaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:26:14 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:38460 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2S0O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:26:14 -0400
-Received: by mail-it1-f194.google.com with SMTP id i63so898763ita.3;
-        Wed, 29 May 2019 11:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TPw4eflGaKI/OKKxvlJQ22C2ftNP7pXq0GeN7f/mbOQ=;
-        b=AH62/ckYQ4jBdFzIhVm6Y9tX+W+XJ8LN+DSBwBYxk7Bm9tdpsUtfMOXWZrdZa23+N1
-         u52GCBTu11nt5boSjHA+BOio3ozjlwTYumDqAnoM/cr8AxTxvzxvvaCvKnYlSH8h8uvt
-         8Wmn/eEVEosthorZkMwvgqH5oelyyuwoLIc/9mKcqnd5MNYls7F3IPlPdwh3pD0gysxe
-         Kfu1ovDYlRu6LKMs6HeAy3oIlVcwzFFzgd1N7lHIWyNfomtNweNbdWNwSgiR1z9qSHjp
-         Y+8edTj7EW2rS1Bksua0OTS9fhE4BuUGvgAcC7WLnFps5AMZCypbpRQ29+6AvMSnBbPl
-         +Trg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TPw4eflGaKI/OKKxvlJQ22C2ftNP7pXq0GeN7f/mbOQ=;
-        b=lHhSgSNkcQ49bkv0GZujWBxlBiWn4QRkrCnSkAAdl04PjgifrmcADqlYKc2K9hHGim
-         Ydabg82Pfgi+NV8zih0UU4700i45kC3NsyQqWDIceSLPKiEd3HhAcb/t638WO/EH5LJp
-         Ii8eiybUCu4Pp0ejJkJjqCvMQ4WYlSSp4QwPLu7GsDC0IMBHpxYkefpNhScUti4G3GRm
-         Kur6sEuU6GRrkYVYp4VmsyHkCrjlkOURndaDFv15boog71C+mJ+EBGqu/NwcArKlkviW
-         314eJVnuELAbfrClBsYR5H4xJPcqZvBbnOC3ucVnVU7p1jPmfALd0lq9JpUajeaZEyT7
-         yQBw==
-X-Gm-Message-State: APjAAAXZaCxNBfQEOUbTo5dQ0nN4JbRDbFvhWWdZAmZPQfAHFtg+xHw2
-        vE9Lk/mUkSwfuoSiFPQZmfIz+ti4+4eNTpwefMc=
-X-Google-Smtp-Source: APXvYqx8sMU5apXzIWkFBSnAKL1oaiM1V8pYGkVXuq937bPfxzmSeuyTclm131eEYdgapPgXhjvxc6wWp+f8woEXtKc=
-X-Received: by 2002:a02:bb83:: with SMTP id g3mr11149521jan.139.1559154373608;
- Wed, 29 May 2019 11:26:13 -0700 (PDT)
+        Wed, 29 May 2019 14:30:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725917AbfE2SaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:30:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 554F4AF55;
+        Wed, 29 May 2019 18:29:59 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Cc:     Michal Rostecki <mrostecki@opensuse.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH bpf v4] libbpf: Return btf_fd for load_sk_storage_btf
+Date:   Wed, 29 May 2019 20:31:09 +0200
+Message-Id: <20190529183109.17317-1-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com> <20190529161157.GA27659@redhat.com>
-In-Reply-To: <20190529161157.GA27659@redhat.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 29 May 2019 11:26:02 -0700
-Message-ID: <CABeXuvpUQ8rDZYOi8bzq_yAy8Nt4RLwSEGwpk_Pbwd90Q0u7sg@mail.gmail.com>
-Subject: Re: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
- according to restore_user_sigmask())
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:12 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> Al, Linus, Eric, please help.
->
-> The previous discussion was very confusing, we simply can not understand each
-> other.
->
-> To me everything looks very simple and clear, but perhaps I missed something
-> obvious? Please correct me.
->
-> I think that the following code is correct
->
->         int interrupted = 0;
->
->         void sigint_handler(int sig)
->         {
->                 interrupted = 1;
->         }
->
->         int main(void)
->         {
->                 sigset_t sigint, empty;
->
->                 sigemptyset(&sigint);
->                 sigaddset(&sigint, SIGINT);
->                 sigprocmask(SIG_BLOCK, &sigint, NULL);
->
->                 signal(SIGINT, sigint_handler);
->
->                 sigemptyset(&empty);    // so pselect() unblocks SIGINT
->
->                 ret = pselect(..., &empty);
->
->                 if (ret >= 0)           // sucess or timeout
->                         assert(!interrupted);
->
->                 if (interrupted)
->                         assert(ret == -EINTR);
->         }
->
-> IOW, if pselect(sigmask) temporary unblocks SIGINT according to sigmask, this
-> signal should not be delivered if a ready fd was found or timeout. The signal
-> handle should only run if ret == -EINTR.
+Before this change, function load_sk_storage_btf expected that
+libbpf__probe_raw_btf was returning a BTF descriptor, but in fact it was
+returning an information about whether the probe was successful (0 or
+1). load_sk_storage_btf was using that value as an argument of the close
+function, which was resulting in closing stdout and thus terminating the
+process which called that function.
 
-I do not think we discussed this part earlier. But, if this is true
-then this is what is wrong as part of 854a6ed56839a. I missed that
-before.
+That bug was visible in bpftool. `bpftool feature` subcommand was always
+exiting too early (because of closed stdout) and it didn't display all
+requested probes. `bpftool -j feature` or `bpftool -p feature` were not
+returning a valid json object.
 
-> (pselect() can be interrupted by any other signal which has a handler. In this
->  case the handler can be called even if ret >= 0. This is correct, I fail to
->  understand why some people think this is wrong, and in any case we simply can't
->  avoid this).
+This change renames the libbpf__probe_raw_btf function to
+libbpf__load_raw_btf, which now returns a BTF descriptor, as expected in
+load_sk_storage_btf.
 
-This patch is wrong because I did not know that it was ok to deliver a
-signal and not set the errno before. I also admitted to this. And
-proposed another way to revert the patch.:
-https://lore.kernel.org/lkml/CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com/
+v2:
+- Fix typo in the commit message.
 
--Deepa
+v3:
+- Simplify BTF descriptor handling in bpf_object__probe_btf_* functions.
+- Rename libbpf__probe_raw_btf function to libbpf__load_raw_btf and
+return a BTF descriptor.
+
+v4:
+- Fix typo in the commit message.
+
+Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
+Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+---
+ tools/lib/bpf/libbpf.c          | 28 ++++++++++++++++------------
+ tools/lib/bpf/libbpf_internal.h |  4 ++--
+ tools/lib/bpf/libbpf_probes.c   | 13 ++++---------
+ 3 files changed, 22 insertions(+), 23 deletions(-)
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 197b574406b3..5d046cc7b207 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1645,14 +1645,16 @@ static int bpf_object__probe_btf_func(struct bpf_object *obj)
+ 		/* FUNC x */                                    /* [3] */
+ 		BTF_TYPE_ENC(5, BTF_INFO_ENC(BTF_KIND_FUNC, 0, 0), 2),
+ 	};
+-	int res;
++	int btf_fd;
+ 
+-	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+-				    strs, sizeof(strs));
+-	if (res < 0)
+-		return res;
+-	if (res > 0)
++	btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
++				      strs, sizeof(strs));
++	if (btf_fd >= 0) {
+ 		obj->caps.btf_func = 1;
++		close(btf_fd);
++		return 1;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1670,14 +1672,16 @@ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
+ 		BTF_TYPE_ENC(3, BTF_INFO_ENC(BTF_KIND_DATASEC, 0, 1), 4),
+ 		BTF_VAR_SECINFO_ENC(2, 0, 4),
+ 	};
+-	int res;
++	int btf_fd;
+ 
+-	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+-				    strs, sizeof(strs));
+-	if (res < 0)
+-		return res;
+-	if (res > 0)
++	btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
++				      strs, sizeof(strs));
++	if (btf_fd >= 0) {
+ 		obj->caps.btf_datasec = 1;
++		close(btf_fd);
++		return 1;
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
+index f3025b4d90e1..dfab8012185c 100644
+--- a/tools/lib/bpf/libbpf_internal.h
++++ b/tools/lib/bpf/libbpf_internal.h
+@@ -34,7 +34,7 @@ do {				\
+ #define pr_info(fmt, ...)	__pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
+ #define pr_debug(fmt, ...)	__pr(LIBBPF_DEBUG, fmt, ##__VA_ARGS__)
+ 
+-int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+-			  const char *str_sec, size_t str_len);
++int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
++			 const char *str_sec, size_t str_len);
+ 
+ #endif /* __LIBBPF_LIBBPF_INTERNAL_H */
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index 5e2aa83f637a..6635a31a7a16 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -133,8 +133,8 @@ bool bpf_probe_prog_type(enum bpf_prog_type prog_type, __u32 ifindex)
+ 	return errno != EINVAL && errno != EOPNOTSUPP;
+ }
+ 
+-int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+-			  const char *str_sec, size_t str_len)
++int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
++			 const char *str_sec, size_t str_len)
+ {
+ 	struct btf_header hdr = {
+ 		.magic = BTF_MAGIC,
+@@ -157,14 +157,9 @@ int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+ 	memcpy(raw_btf + hdr.hdr_len + hdr.type_len, str_sec, hdr.str_len);
+ 
+ 	btf_fd = bpf_load_btf(raw_btf, btf_len, NULL, 0, false);
+-	if (btf_fd < 0) {
+-		free(raw_btf);
+-		return 0;
+-	}
+ 
+-	close(btf_fd);
+ 	free(raw_btf);
+-	return 1;
++	return btf_fd;
+ }
+ 
+ static int load_sk_storage_btf(void)
+@@ -190,7 +185,7 @@ static int load_sk_storage_btf(void)
+ 		BTF_MEMBER_ENC(23, 2, 32),/* struct bpf_spin_lock l; */
+ 	};
+ 
+-	return libbpf__probe_raw_btf((char *)types, sizeof(types),
++	return libbpf__load_raw_btf((char *)types, sizeof(types),
+ 				     strs, sizeof(strs));
+ }
+ 
+-- 
+2.21.0
+
