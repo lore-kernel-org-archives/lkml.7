@@ -2,180 +2,153 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210FFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7515C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F2223BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C067323BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uq/T2YCZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzpiO6pT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfE2PsX (ORCPT
+        id S1727086AbfE2Ps1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:48:23 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40891 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2PsX (ORCPT
+        Wed, 29 May 2019 11:48:27 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41381 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfE2Ps0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:48:23 -0400
-Received: by mail-it1-f195.google.com with SMTP id h11so4325822itf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:48:22 -0700 (PDT)
+        Wed, 29 May 2019 11:48:26 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y10so2427589oia.8;
+        Wed, 29 May 2019 08:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F1v6CstyBUQQ32046WYaNZBkWpGqm4E3DdO+JI4/z6k=;
-        b=Uq/T2YCZuyTQNQeIkxqsiz8hdWSnJDkKyyQY+hq8u6HlNCKLgz1UGBqkS+VFr95R4i
-         x2rvmMoYddoQ+vV1xQYU2/hjtdTahw7iot+Iv/1ED+/r8NGBwKhwtxZU5JM87G4ru++z
-         tls4WJ/aEKHR7SRCs7paDG7xfBirKUr1LqMqc=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LZchaD3I1pN+W2x6aXpBTqpBkJQ7vSF4YhK33FN5Rj8=;
+        b=qzpiO6pTCKQX1nUSnENk6OCaUVGtGus+mU7zsIokP7VFrV3/y6NS1q/t8kZUrPm7aP
+         G/bdxogT3+udxBk/3V7yhiqG71qB2Rc2OQvBzMnVF7yGbPxSrxkBcvODfNb6vBY2HrPH
+         PMQDgvwIEWh4+dhjjK31PZsMYDlJy+rmHWDeIfn9KPovn4rPdOtVIBlNHmK0Tjz0ExUp
+         AcVnBsDAmCmpR0rOHQ2O7CdXu7na9dF5cnw2pitOB4liUPUSUpyLMv++PuErGsA0rc4c
+         ZOAH0otCcetK3U7GVbzqWCgdsafDP+Z61FSmffpJP+YPllAk/FmOZqe/wNIrdobm30xK
+         4hVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F1v6CstyBUQQ32046WYaNZBkWpGqm4E3DdO+JI4/z6k=;
-        b=XcgpKb1Ioq9reiLBFbh6iaKpAjNgGXpXrFLSsh8C4ZDEseQGVD9riuMO3MJjpnS58L
-         f8ejFiEfjUtHcc7s6fldobce11cDAeARd+gONeMYtoWvaXE7hT/dySqlRzLRnDpxzWiX
-         vLiW3RGo7veIKlWKevMpS66yUFSztH1aKuA6wqJQ5FT5WxQvrVRWyVtEwD+Y7ROL5o0D
-         IV+zvI+n+5eKaacD4z6xYvOoXcu+Lptf1cVdJUK2hew4QtS8Y5BRl+mbdRvBOJO6PtDq
-         zjfjbB3BRPj0drl6WsbD1WdvojDWTb6VsTqyJnNeMOvmsSsSx+gIuKrH74rgf+jMoOjB
-         6xZw==
-X-Gm-Message-State: APjAAAViA+OrnTenfvW5Z1AjREzk6/NGQCE5zEYzgYAAKQSzsr2DyX/x
-        Z0zDEU3Gyev//q7pE2s2QpE4xmG9D6A=
-X-Google-Smtp-Source: APXvYqzDkq71PqfvFgI6MxmoP2/kHQWG0Gb0PenDyA3kfp13H8JlKakC1S2EGHJJ3XXlsV+BYR3GAQ==
-X-Received: by 2002:a24:2943:: with SMTP id p64mr7450856itp.41.1559144901764;
-        Wed, 29 May 2019 08:48:21 -0700 (PDT)
-Received: from mail-it1-f175.google.com (mail-it1-f175.google.com. [209.85.166.175])
-        by smtp.gmail.com with ESMTPSA id r6sm5456555iog.38.2019.05.29.08.48.20
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LZchaD3I1pN+W2x6aXpBTqpBkJQ7vSF4YhK33FN5Rj8=;
+        b=JVzF8gEvSUhjLKfurjD35yUpyGretPhLqnEkTGl0T8vpJzqqa3GTANzOj2vZ5xiZ4Y
+         BbrvYBMhJmgJf0eP6N+rrzDxAX3vJC0IsmJsOGPfYFcbUwiqCxxh2laF9A8AB/vF1npQ
+         HknVB479IyCSJcliuZo3dimsuhe3wvO3D75oYwmyslM4R8T7W8Aq/6lk+3pxviBODZob
+         To2yYAqI1j2MoD3cFkzohCN439BFsPtuvgYqmsSsAM8sx7AXSNHp2ZpjVat3YujTJCja
+         PL/3oLuCD0rHw+sot4mONjD3Bslmcfw6crzPH2USUac1wTqDcrVqiNFyoQ/j28iznC+U
+         P9UQ==
+X-Gm-Message-State: APjAAAX8MfBvviQOpHTkUe6T9ibhCEUHDyqZaeYssDj9JtmrdSjWK0GY
+        lzxhyXoFo89d1IKqbxJfhDBqYrlU
+X-Google-Smtp-Source: APXvYqzffYfqcKCi1LN/X7kBP+pUiwaRtjqaBthtG1n+KqU9jvNOTltF+EZDu4QrfcdWF0UXHAf+5A==
+X-Received: by 2002:aca:314a:: with SMTP id x71mr6875894oix.142.1559144904941;
+        Wed, 29 May 2019 08:48:24 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id i8sm568364oib.12.2019.05.29.08.48.22
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 08:48:20 -0700 (PDT)
-Received: by mail-it1-f175.google.com with SMTP id u186so4376793ith.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:48:20 -0700 (PDT)
-X-Received: by 2002:a02:b895:: with SMTP id p21mr89782634jam.80.1559144899977;
- Wed, 29 May 2019 08:48:19 -0700 (PDT)
+        Wed, 29 May 2019 08:48:22 -0700 (PDT)
+Subject: Re: [PATCH] rtlwifi: Fix null-pointer dereferences in error handling
+ code of rtl_pci_probe()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     pkshih@realtek.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190514123439.10524-1-baijiaju1990@gmail.com>
+ <20190528115555.301E760F3C@smtp.codeaurora.org>
+ <2658b691-b992-b773-c6cf-85801adc479f@lwfinger.net>
+ <357682ba-d1ae-23b1-2372-b1a33d2ba1ac@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <589a0fb2-0033-1374-c3e0-597392a3f4c8@lwfinger.net>
+Date:   Wed, 29 May 2019 10:48:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-2-thgarnie@chromium.org>
- <20190521040634.GA32379@sol.localdomain> <CAJcbSZGekB9Uc8PUoSCND+ZaAN9V60uyVv1bBeBGDQ_pHxzVnw@mail.gmail.com>
- <20190522205524.GA183718@gmail.com>
-In-Reply-To: <20190522205524.GA183718@gmail.com>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Wed, 29 May 2019 08:48:08 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZFnHk1uh3kz4+mcyExwjR+p445p4FSnZbskFKKhgy0qVw@mail.gmail.com>
-Message-ID: <CAJcbSZFnHk1uh3kz4+mcyExwjR+p445p4FSnZbskFKKhgy0qVw@mail.gmail.com>
-Subject: Re: [PATCH v7 01/12] x86/crypto: Adapt assembly for PIE support
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <357682ba-d1ae-23b1-2372-b1a33d2ba1ac@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 1:55 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Wed, May 22, 2019 at 01:47:07PM -0700, Thomas Garnier wrote:
-> > On Mon, May 20, 2019 at 9:06 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > >
-> > > On Mon, May 20, 2019 at 04:19:26PM -0700, Thomas Garnier wrote:
-> > > > diff --git a/arch/x86/crypto/sha256-avx2-asm.S b/arch/x86/crypto/sha256-avx2-asm.S
-> > > > index 1420db15dcdd..2ced4b2f6c76 100644
-> > > > --- a/arch/x86/crypto/sha256-avx2-asm.S
-> > > > +++ b/arch/x86/crypto/sha256-avx2-asm.S
-> > > > @@ -588,37 +588,42 @@ last_block_enter:
-> > > >       mov     INP, _INP(%rsp)
-> > > >
-> > > >       ## schedule 48 input dwords, by doing 3 rounds of 12 each
-> > > > -     xor     SRND, SRND
-> > > > +     leaq    K256(%rip), SRND
-> > > > +     ## loop1 upper bound
-> > > > +     leaq    K256+3*4*32(%rip), INP
-> > > >
-> > > >  .align 16
-> > > >  loop1:
-> > > > -     vpaddd  K256+0*32(SRND), X0, XFER
-> > > > +     vpaddd  0*32(SRND), X0, XFER
-> > > >       vmovdqa XFER, 0*32+_XFER(%rsp, SRND)
-> > > >       FOUR_ROUNDS_AND_SCHED   _XFER + 0*32
-> > > >
-> > > > -     vpaddd  K256+1*32(SRND), X0, XFER
-> > > > +     vpaddd  1*32(SRND), X0, XFER
-> > > >       vmovdqa XFER, 1*32+_XFER(%rsp, SRND)
-> > > >       FOUR_ROUNDS_AND_SCHED   _XFER + 1*32
-> > > >
-> > > > -     vpaddd  K256+2*32(SRND), X0, XFER
-> > > > +     vpaddd  2*32(SRND), X0, XFER
-> > > >       vmovdqa XFER, 2*32+_XFER(%rsp, SRND)
-> > > >       FOUR_ROUNDS_AND_SCHED   _XFER + 2*32
-> > > >
-> > > > -     vpaddd  K256+3*32(SRND), X0, XFER
-> > > > +     vpaddd  3*32(SRND), X0, XFER
-> > > >       vmovdqa XFER, 3*32+_XFER(%rsp, SRND)
-> > > >       FOUR_ROUNDS_AND_SCHED   _XFER + 3*32
-> > > >
-> > > >       add     $4*32, SRND
-> > > > -     cmp     $3*4*32, SRND
-> > > > +     cmp     INP, SRND
-> > > >       jb      loop1
-> > > >
-> > > > +     ## loop2 upper bound
-> > > > +     leaq    K256+4*4*32(%rip), INP
-> > > > +
-> > > >  loop2:
-> > > >       ## Do last 16 rounds with no scheduling
-> > > > -     vpaddd  K256+0*32(SRND), X0, XFER
-> > > > +     vpaddd  0*32(SRND), X0, XFER
-> > > >       vmovdqa XFER, 0*32+_XFER(%rsp, SRND)
-> > > >       DO_4ROUNDS      _XFER + 0*32
-> > > >
-> > > > -     vpaddd  K256+1*32(SRND), X1, XFER
-> > > > +     vpaddd  1*32(SRND), X1, XFER
-> > > >       vmovdqa XFER, 1*32+_XFER(%rsp, SRND)
-> > > >       DO_4ROUNDS      _XFER + 1*32
-> > > >       add     $2*32, SRND
-> > > > @@ -626,7 +631,7 @@ loop2:
-> > > >       vmovdqa X2, X0
-> > > >       vmovdqa X3, X1
-> > > >
-> > > > -     cmp     $4*4*32, SRND
-> > > > +     cmp     INP, SRND
-> > > >       jb      loop2
-> > > >
-> > > >       mov     _CTX(%rsp), CTX
-> > >
-> > > There is a crash in sha256-avx2-asm.S with this patch applied.  Looks like the
-> > > %rsi register is being used for two different things at the same time: 'INP' and
-> > > 'y3'?  You should be able to reproduce by booting a kernel configured with:
-> > >
-> > >         CONFIG_CRYPTO_SHA256_SSSE3=y
-> > >         # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-> >
-> > Thanks for testing the patch. I couldn't reproduce this crash, can you
-> > share the whole .config or share any other specifics of your testing
-> > setup?
-> >
->
-> I attached the .config I used.  It reproduces on v5.2-rc1 with just this patch
-> applied.  The machine you're using does have AVX2 support, right?  If you're
-> using QEMU, did you make sure to pass '-cpu host'?
+On 5/29/19 5:30 AM, Jia-Ju Bai wrote:
+> 
+> 
+> On 2019/5/28 21:00, Larry Finger wrote:
+>> On 5/28/19 6:55 AM, Kalle Valo wrote:
+>>> Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+>>>
+>>>> *BUG 1:
+>>>> In rtl_pci_probe(), when rtlpriv->cfg->ops->init_sw_vars() fails,
+>>>> rtl_deinit_core() in the error handling code is executed.
+>>>> rtl_deinit_core() calls rtl_free_entries_from_scan_list(), which uses
+>>>> rtlpriv->scan_list.list in list_for_each_entry_safe(), but it has been
+>>>> initialized. Thus a null-pointer dereference occurs.
+>>>> The reason is that rtlpriv->scan_list.list is initialized by
+>>>> INIT_LIST_HEAD() in rtl_init_core(), which has not been called.
+>>>>
+>>>> To fix this bug, rtl_deinit_core() should not be called when
+>>>> rtlpriv->cfg->ops->init_sw_vars() fails.
+>>>>
+>>>> *BUG 2:
+>>>> In rtl_pci_probe(), rtl_init_core() can fail when rtl_regd_init() in
+>>>> this function fails, and rtlpriv->scan_list.list has not been
+>>>> initialized by INIT_LIST_HEAD(). Then, rtl_deinit_core() in the error
+>>>> handling code of rtl_pci_probe() is executed. Finally, a null-pointer
+>>>> dereference occurs due to the same reason of the above bug.
+>>>>
+>>>> To fix this bug, the initialization of lists in rtl_init_core() are
+>>>> performed before the call to rtl_regd_init().
+>>>>
+>>>> These bugs are found by a runtime fuzzing tool named FIZZER written by
+>>>> us.
+>>>>
+>>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>>>
+>>> Ping & Larry, is this ok to take?
+>>>
+>>
+>> Kalle,
+>>
+>> Not at the moment. In reviewing the code, I was unable to see how this 
+>> situation could develop, and his backtrace did not mention any rtlwifi code. 
+>> For that reason, I asked him to add printk stat4ements to show the last part 
+>> of rtl_pci that executed correctly. In 
+>> https://marc.info/?l=linux-wireless&m=155788322631134&w=2, he promised to do 
+>> that, but I have not seen the result.
+>>
+> 
+> Hi Larry,
+> 
+> This patch is not related to the message you mentioned.
+> That message is about an occasional crash that I reported.
+> That crash occurred when request_irq() in rtl_pci_intr_mode_legacy() in 
+> rtl_pci_intr_mode_decide() fails.
+> I have added printk statements and try to reproduce and debug that crash, but 
+> that crash does not always occur, and I still do not know the root cause of that 
+> crash.
+> 
+> The null-pointer dereferences fixed by this patch are different from that crash, 
+> and they always occur when the related functions fail.
+> So please review these null-pointer dereferences, thanks :)
+> 
+> 
+> Best wishes,
+> Jia-Ju Bai
 
-Thanks for your help offline on this Eric. I was able to repro the
-issue and fix it, it will be part of the next iteration. You were
-right that esi was used later on, I simplified the code in this
-context and ran more testing on all CONFIG_CRYPTO_* options.
+Sorry if I got confused. Kalle has dropped this patch, thus you will need to 
+submit a new version.
 
->
-> - Eric
+Larry
+
