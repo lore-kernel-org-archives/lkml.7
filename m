@@ -2,85 +2,149 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00646C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3776DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B657C23BB5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033EC23BB5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="CEz/AAKk"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ViqyNnKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfE2Pov (ORCPT
+        id S1726990AbfE2PpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:44:51 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36962 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfE2Pou (ORCPT
+        Wed, 29 May 2019 11:45:13 -0400
+Received: from mail.efficios.com ([167.114.142.138]:46590 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfE2PpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:44:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 20so136698pgr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5rb0csxEYpq6VfGz5/QVGNKPlo9rHsx48NwguhVphjA=;
-        b=CEz/AAKkGLOaVc6lKqbFaOc50JrPG1TariHgp5nHwAf4jc9op0iyz3MxM7nZQO/ymz
-         TKSA2wwMayYrX89UdiTQxgkG4S2uhqZZfbfJxJVrGdU/vGSjR0D9qbnlCv3hPvxbf04h
-         Ptmo3H9PVCcjr5mewqD05lu0+wKuy3MLedN6FiIdjWSRebWK1w/ufeqTcilgHIHBazbc
-         tyoemTy21uGhYOqr9lyIgiAn/tR8SfT65+AmsE1LktTtLpWu7PLifc6+sL7ywovtk1bi
-         74jY3Z9dWSAxMmcGS8tt10gNmMq+Ozl+YJCCkookIzFLu2enYs7QRr8eHmDBbvyKGl4B
-         9HTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5rb0csxEYpq6VfGz5/QVGNKPlo9rHsx48NwguhVphjA=;
-        b=XUSGvNLUGg7iYFQVbiqaiThjtVF7cIp+qLtQTeknMfeESgJtvavX1/TSU2NLyXVWHV
-         UORJyXn11ehv8yHu6fk6OIt2qvgJnrzdLd1ZpCdNiDN6evS2HSGUnTOG7q72kmWwGur9
-         R763bIpDue405abjLKQD4My3Zdq0GwE5XiKzuVezoYeCND9yGr9JhH5tlreJvckqU7Rb
-         xKH38In233XSbOJgoxAy5C13H9IZ0yewiBDdFYapDRKR8ZudXwAAhNwLaHDiVodHNJDI
-         28dd+Da2F2fn8rtc5U5T3vUTtCDkt7gwbP8R3XDArTxdq3yYgpIRitOp0fmcU1FEjNXU
-         re8Q==
-X-Gm-Message-State: APjAAAWsUwOF2Wu8fiQjcprZV32bbDDJxSyJA2WwI5mRECKR7FkC+Cpm
-        f6AK7Sl/5mYS//NvyJnp66cFxw==
-X-Google-Smtp-Source: APXvYqwzUrKfcPoy1hsbTCw6ESg7o3qVXGDDyPIfLq5La7nokllnQ2NESefsdh56kWG23ear160irQ==
-X-Received: by 2002:a63:e953:: with SMTP id q19mr14654295pgj.313.1559144690141;
-        Wed, 29 May 2019 08:44:50 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:a47c])
-        by smtp.gmail.com with ESMTPSA id u123sm34317pfu.67.2019.05.29.08.44.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 08:44:49 -0700 (PDT)
-Date:   Wed, 29 May 2019 11:44:47 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     akpm@linux-foundation.org, daniel.m.jordan@oracle.com,
-        mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Fix recent_rotated history
-Message-ID: <20190529154447.GA28937@cmpxchg.org>
-References: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
+        Wed, 29 May 2019 11:45:12 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5C5E520E810;
+        Wed, 29 May 2019 11:45:11 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 06Uex-ntIi6b; Wed, 29 May 2019 11:45:10 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C762520E80B;
+        Wed, 29 May 2019 11:45:10 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C762520E80B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1559144710;
+        bh=Z8u/h+OkjMEmjPJ6ylYRgvClv2UsRwp41k4WjCc8j/0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ViqyNnKao9tEaN867vuBuAYQVDaw826E1hgVaz5U8GY9XZRZMApV6dp8PUcC6qnsk
+         +o0dC6tPNyGGjG9x7qDHmlwtk9GKPP63jK+XJnsXXuFG+lfXTtIurAuphyL2PEC1si
+         rlWL8eJyrWq7eEPcITpC1O0xGLROp+sH+thw7gWpGNbfCgalOVbzJAfyN7ZASz72ZB
+         kP1lFDRCvpiVRQUNaIdpKo4dODwQcVR1bV/sdBoUJQ/mU2SlAzHIT5Vyf1qPKMUiqm
+         llCSbpGVtnQyqYP0bIKpxpLiQVlFrQGpJbFImbtRhvJbcNQXU+cBUnm7YAFgVWsYLw
+         S0TzC/XTwigbw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id D_tNcsrx8C2x; Wed, 29 May 2019 11:45:10 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id AA0FE20E7FE;
+        Wed, 29 May 2019 11:45:10 -0400 (EDT)
+Date:   Wed, 29 May 2019 11:45:10 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <20190503184219.19266-2-mathieu.desnoyers@efficios.com> <87h89gjgaf.fsf@oldenburg2.str.redhat.com> <1239705947.14878.1558985272873.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155905972210.26456.11178359431724024112.stgit@localhost.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: 18yTu+T8PFt4cXiNhOg61XhmaTl3EWs0GkO7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 07:09:02PM +0300, Kirill Tkhai wrote:
-> Johannes pointed that after commit 886cf1901db9
-> we lost all zone_reclaim_stat::recent_rotated
-> history. This commit fixes that.
-> 
-> Fixes: 886cf1901db9 "mm: move recent_rotated pages calculation to shrink_inactive_list()"
-> Reported-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+----- On May 27, 2019, at 3:27 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> ----- On May 27, 2019, at 7:19 AM, Florian Weimer fweimer@redhat.com wrote:
+> 
+
+[...]
+
+>> 
+>> Furthermore, the reference to ELF constructors is misleading.  I believe
+>> the code you added to __libc_start_main to initialize __rseq_handled and
+>> register __seq_abi with the kernel runs *after* ELF constructors have
+>> executed (and not at all if the main program is written in Go, alas).
+>> All initialization activity for the shared case needs to happen in
+>> elf/rtld.c or called from there, probably as part of the security
+>> initialization code or thereabouts.
+> 
+> in elf/rtld.c:dl_main() we have the following code:
+> 
+>  /* We do not initialize any of the TLS functionality unless any of the
+>     initial modules uses TLS.  This makes dynamic loading of modules with
+>     TLS impossible, but to support it requires either eagerly doing setup
+>     now or lazily doing it later.  Doing it now makes us incompatible with
+>     an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
+>     used.  Trying to do it lazily is too hairy to try when there could be
+>     multiple threads (from a non-TLS-using libpthread).  */
+>  bool was_tls_init_tp_called = tls_init_tp_called;
+>  if (tcbp == NULL)
+>    tcbp = init_tls ();
+> 
+> If I understand your point correctly, I should move the rseq_init() and
+> rseq_register_current_thread() for the SHARED case just after this
+> initialization, otherwise calling those from LIBC_START_MAIN() is too
+> late and it runs after initial modules constructors (or not at all for
+> Go). However, this means glibc will start using TLS internally. I'm
+> concerned that this is not quite in line with the above comment which
+> states that TLS is not initialized if no initial modules use TLS.
+> 
+> For the !SHARED use-case, if my understanding is correct, I should keep
+> rseq_init() and rseq_register_current_thread() calls within LIBC_START_MAIN().
+
+I've moved the rseq initialization for SHARED case to the very end of
+elf/rtld.c:init_tls(), and get the following error on make check:
+
+Generating locale am_ET.UTF-8: this might take a while...
+Inconsistency detected by ld.so: get-dynamic-info.h: 143: elf_get_dynamic_info: Assertion `info[DT_FLAGS] == NULL || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0' failed!
+Charmap: "UTF-8" Inputfile: "am_ET" Outputdir: "am_ET.UTF-8" failed
+/bin/sh: 4: cannot create /home/efficios/git/glibc-build/localedata/am_ET.UTF-8/LC_CTYPE.test-result: Directory nonexistent
+
+This error goes away if I comment out the call to rseq_register_current_thread (),
+which touches the __rseq_abi __thread variable and issues a system call.
+
+Currently, the __rseq_abi __thread variable is within
+sysdeps/unix/sysv/linux/rseq-sym.c, which is added to the
+sysdep_routines within sysdeps/unix/sysv/linux/Makefile. I
+suspect it may need to be moved elsewhere.
+
+Any thoughts on how to solve this ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
