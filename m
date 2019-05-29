@@ -2,92 +2,64 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385D4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C1DC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F9723D60
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9243523D60
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559147137;
+	bh=1LYbnDID6+i96jGpOccylgW14e+dv8wtRA6L2mHibJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hKA05IZeAF6SL3canvUT1l4x49kvDICi556tgAKBSLsR4FjNM3u+/RKq4HJxFTQ9O
+	 4kHrJnkUV53U/izRTVuhqHD76sk0zO9V5G4eYsZUXYyjz6IhWB5IKwgNOdo+QsckJB
+	 AtVBUMDTYyFe6CgOVOnqWR7HXlXCuZ8jEVe/o5Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfE2QZe (ORCPT
+        id S1727106AbfE2QZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:25:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:49016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfE2QZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:25:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6340715AD;
-        Wed, 29 May 2019 09:25:33 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D9723F5AF;
-        Wed, 29 May 2019 09:25:30 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:25:28 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au,
-        acme@redhat.com, eranian@google.com, fweisbec@gmail.com,
-        jolsa@redhat.com
-Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
-Message-ID: <20190529162528.GB12420@fuggles.cambridge.arm.com>
-References: <20190528153224.GE20758@fuggles.cambridge.arm.com>
- <20190528173228.GW2623@hirez.programming.kicks-ass.net>
- <20190529091733.GA4485@fuggles.cambridge.arm.com>
- <20190529101042.GN2623@hirez.programming.kicks-ass.net>
- <20190529102022.GC4485@fuggles.cambridge.arm.com>
- <20190529125557.GU2623@hirez.programming.kicks-ass.net>
- <20190529130521.GA11023@fuggles.cambridge.arm.com>
- <20190529132515.GW2623@hirez.programming.kicks-ass.net>
- <20190529143510.GA11154@fuggles.cambridge.arm.com>
- <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
+        Wed, 29 May 2019 12:25:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60150 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726062AbfE2QZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:25:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 206D5ADEA;
+        Wed, 29 May 2019 16:25:34 +0000 (UTC)
+Date:   Wed, 29 May 2019 18:25:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab_common.c: fix possible spectre-v1 in
+ kmalloc_slab()
+Message-ID: <20190529162532.GG18589@dhcp22.suse.cz>
+References: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <1559133448-31779-1-git-send-email-dianzhangchen0@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 06:19:55PM +0200, Peter Zijlstra wrote:
-> On Wed, May 29, 2019 at 03:35:10PM +0100, Will Deacon wrote:
-> > On Wed, May 29, 2019 at 03:25:15PM +0200, Peter Zijlstra wrote:
-> > > On Wed, May 29, 2019 at 02:05:21PM +0100, Will Deacon wrote:
-> > > > On Wed, May 29, 2019 at 02:55:57PM +0200, Peter Zijlstra wrote:
-> > > 
-> > > > >  	if (user_mode(regs)) {
-> > > > 
-> > > > Hmm, so it just occurred to me that Mark's observation is that the regs
-> > > > can be junk in some cases. In which case, should we be checking for
-> > > > kthreads first?
-> > > 
-> > > task_pt_regs() can return garbage, but @regs is the exception (or
-> > > perf_arch_fetch_caller_regs()) regs, and for those user_mode() had
-> > > better be correct.
-> > 
-> > So what should we report for the idle task?
-> 
-> If an interrupt hits the idle task, @regs would be !user_mode(regs),
-> we'll find current->flags & PF_KTHREAD (idle not having passed through
-> exec()) and therefore we'll take ABI_NONE for the user regs.
-> 
-> Or am I not getting it?
+On Wed 29-05-19 20:37:28, Dianzhang Chen wrote:
+[...]
+> @@ -1056,6 +1057,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
+>  		if (!size)
+>  			return ZERO_SIZE_PTR;
+>  
+> +		size = array_index_nospec(size, 193);
+>  		index = size_index[size_index_elem(size)];
 
-Sorry, I'm not trying to catch you out! Just trying to understand what the
-semantics are supposed to be.
-
-I do find the concept of user_mode(regs) bizarre for the idle task. By the
-above, we definitely have a bug on arm64 (user_mode(regs) tends to be
-true for the idle task), and I couldn't figure out how you avoided it on
-x86. I guess it happens to work because the stack is zero-initialised or
-something?
-
-Will
+What is this 193 magic number?
+-- 
+Michal Hocko
+SUSE Labs
