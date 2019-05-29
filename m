@@ -2,90 +2,228 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC8AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073EDC46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C45242E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2017242ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559171017;
+	bh=FHAF+9hLXRbuhRtbAY40XrpXY2ugiszkj6oUa84mIhs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYTWDfWXrFwdPfOkV0QWu5jOomVRbbpffdUEztYV3chSEq31/nRN2y4/22Jn8W41G
+	 2wC8SPTrX/zC+PXPUuzFrOA8EywNwT/+a+Y7Ge6yGBYamMrOHqavGxE3tjfEZ/6qFR
+	 hKnRHBFuE7Xshqv39+Jlj96upUnvhRwtxrBmPdRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE2XCE (ORCPT
+        id S1726599AbfE2XDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:02:04 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43954 "EHLO ms.lwn.net"
+        Wed, 29 May 2019 19:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfE2XCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:02:04 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1726189AbfE2XDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:03:36 -0400
+Received: from localhost (15.sub-174-234-174.myvzw.com [174.234.174.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E8E952B4;
-        Wed, 29 May 2019 23:02:03 +0000 (UTC)
-Date:   Wed, 29 May 2019 17:02:02 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] docs: by default, build docs a lot faster with
- Sphinx >= 1.7
-Message-ID: <20190529170202.65c7f9ca@lwn.net>
-In-Reply-To: <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
-References: <cover.1558955082.git.mchehab+samsung@kernel.org>
-        <baf19095789f2b2ed0c7a940703037a00cd77850.1558955082.git.mchehab+samsung@kernel.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B06242E6;
+        Wed, 29 May 2019 23:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559171015;
+        bh=FHAF+9hLXRbuhRtbAY40XrpXY2ugiszkj6oUa84mIhs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gTFy69qjf/Kwl4fzfh3XKGruqgT2JJGg8NqeCyR+CyhAOHFzBrnuYXM60C5hbp3Hb
+         qNpZQg9zugljDne4d1uZ21CuwmBg06sSlaZqg4t+79XHMrpizBK/fiFnlRzY52PJG6
+         46TnmfIfl1lDZ/woSGRdXwSpDfraukEnq0G4N5Q0=
+Date:   Wed, 29 May 2019 18:03:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v2 2/5] PCI/ATS: Add PASID support for PCIe VF devices
+Message-ID: <20190529230334.GF28250@google.com>
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <078b169334b4996d03d8608f205942c061590681.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <078b169334b4996d03d8608f205942c061590681.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 08:07:40 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+On Mon, May 06, 2019 at 10:20:04AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> When IOMMU tries to enable PASID for VF device in
+> iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
+> VF device is currently broken in PCIE driver. Current implementation
+> expects the given PCIe device (PF & VF) to implement PASID capability
+> before enabling the PASID support. But this assumption is incorrect. As
+> per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
+> use the PASID of the PF and not implement it.
+> 
+> Since PASID is shared between PF/VF devices, following rules should
+> apply.
+> 
+> 1. Enable PASID in VF only if its already enabled in PF.
 
-> Since Sphinx version 1.7, it is possible to use "-jauto" in
-> order to speedup documentation builds. On older versions,
-> while -j was already supported, one would need to set the
-> number of threads manually.
+s/its/it's/ (same comment applies to PRI patch, IIRC)
+
+> 2. Enable PASID in VF only if the requested features matches with PF
+> config, otherwise return error.
+> 3. When enabling/disabling PASID for VF, instead of configuring the PF
+> registers just increase/decrease the usage count (pasid_ref_cnt).
+> 4. Disable PASID in PF (configuring the registers) only if pasid_ref_cnt
+> is zero.
+> 5. When reading PASID features/settings for VF, use registers of
+> corresponding PF.
 > 
-> So, if SPHINXOPTS is not provided, add -jauto, in order to
-> speed up the build. That makes it *a lot* times faster than
-> without -j.
-> 
-> If one really wants to slow things down, it can just use:
-> 
-> 	make SPHINXOPTS=-j1 htmldocs
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  Documentation/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pci/ats.c   | 55 ++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/pci.h |  1 +
+>  2 files changed, 55 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/Makefile b/Documentation/Makefile
-> index 380e24053d6f..794233d05789 100644
-> --- a/Documentation/Makefile
-> +++ b/Documentation/Makefile
-> @@ -28,6 +28,8 @@ ifeq ($(HAVE_SPHINX),0)
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index 5582e5d83a3f..e7a904e347c3 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -345,6 +345,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+>  {
+>  	u16 control, supported;
+>  	int pos;
+> +	struct pci_dev *pf;
 >  
->  else # HAVE_SPHINX
+>  	if (WARN_ON(pdev->pasid_enabled))
+>  		return -EBUSY;
+> @@ -353,7 +354,33 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+>  		return -EINVAL;
 >  
-> +SPHINXOPTS = $(shell perl -e 'open IN,"sphinx-build --version |"; while (<IN>) { if (m/([\d\.]+)/) { print "-jauto" if ($$1 >= "1.7") } ;} close IN')
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+> -	if (!pos)
 > +
+> +	if (pdev->is_virtfn) {
+> +		/*
+> +		 * Per PCIe r4.0, sec 9.3.7.14, VF must not implement
+> +		 * Process Address Space ID (PASID) Capability.
+> +		*/
+> +		if (pos) {
+> +			dev_err(&pdev->dev, "VF must not implement PASID\n");
+> +			return -EINVAL
+> +		}
 
-So this totally fails to work for me with any version of sphinx, and I'm
-not enough of a Perl person to figure it out.  Sometimes I'll see the
-sphinx-build output, i.e.:
+Same comment as for PRI.
 
-    sphinx-build 1.8.4
+> +		/* Since VF shares PASID with PF, use PF config */
+> +		pf = pci_physfn(pdev);
+> +
+> +		/* If VF config does not match with PF, return error */
+> +		if (!pf->pasid_enabled || pf->pasid_features != features)
+> +			return -EINVAL;
+> +
+> +		pdev->pasid_features = features;
 
-and sometimes (like with 2.0) I don't, but I never get -jauto regardless.
-Not sure what's going on here?
+I don't think this is used for VFs.
 
-Thanks,
+> +		pdev->pasid_enabled = 1;
+> +
+> +		/* Increment PF PASID refcount */
+> +		atomic_inc(&pf->pasid_ref_cnt);
+> +
+> +		return 0;
+> +	}
+> +
+> +	if (pdev->is_physfn && !pos)
+>  		return -EINVAL;
+>  
+>  	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
+> @@ -382,10 +409,27 @@ void pci_disable_pasid(struct pci_dev *pdev)
+>  {
+>  	u16 control = 0;
+>  	int pos;
+> +	struct pci_dev *pf;
+>  
+>  	if (WARN_ON(!pdev->pasid_enabled))
+>  		return;
+>  
+> +	/* All VFs PASID should be disabled before disabling PF PASID*/
 
-jon
+Add space at end of comment.
+
+> +	if (atomic_read(&pdev->pasid_ref_cnt))
+> +		return;
+> +
+> +	if (pdev->is_virtfn) {
+> +		/* Since VF shares PASID with PF, use PF config. */
+
+Most single-line, single-sentence comments here do not include a
+trailing period.
+
+> +		pf = pci_physfn(pdev);
+> +
+> +		/* Decrement PF PASID refcount */
+> +		atomic_dec(&pf->pasid_ref_cnt);
+> +
+> +		pdev->pasid_enabled = 0;
+> +
+> +		return;
+> +	}
+> +
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+>  	if (!pos)
+>  		return;
+> @@ -408,6 +452,9 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
+>  	if (!pdev->pasid_enabled)
+>  		return;
+>  
+> +	if (pdev->is_virtfn)
+> +		return;
+> +
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+>  	if (!pos)
+>  		return;
+> @@ -432,6 +479,9 @@ int pci_pasid_features(struct pci_dev *pdev)
+>  	u16 supported;
+>  	int pos;
+>  
+> +	if (pdev->is_virtfn)
+> +		pdev = pci_physfn(pdev);
+> +
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+>  	if (!pos)
+>  		return -EINVAL;
+> @@ -488,6 +538,9 @@ int pci_max_pasids(struct pci_dev *pdev)
+>  	u16 supported;
+>  	int pos;
+>  
+> +	if (pdev->is_virtfn)
+> +		pdev = pci_physfn(pdev);
+> +
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
+>  	if (!pos)
+>  		return -EINVAL;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 699c79c99a39..2a761ea63f8d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -454,6 +454,7 @@ struct pci_dev {
+>  #endif
+>  #ifdef CONFIG_PCI_PASID
+>  	u16		pasid_features;
+> +	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
+>  #endif
+>  #ifdef CONFIG_PCI_P2PDMA
+>  	struct pci_p2pdma *p2pdma;
+> -- 
+> 2.20.1
+> 
