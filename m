@@ -2,81 +2,95 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F204C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D8FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273BD22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0C22339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfE2N65 (ORCPT
+        id S1727456AbfE2OAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfE2N64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:58:56 -0400
-Received: from oasis.local.home (unknown [12.156.218.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACAB522DA7;
-        Wed, 29 May 2019 13:58:54 +0000 (UTC)
-Date:   Wed, 29 May 2019 09:58:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, williams@redhat.com,
-        daniel@bristot.me, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC 2/3] preempt_tracer: Disable IRQ while starting/stopping
- due to a preempt_counter change
-Message-ID: <20190529095852.36865060@oasis.local.home>
-In-Reply-To: <20190529134946.GY2623@hirez.programming.kicks-ass.net>
-References: <cover.1559051152.git.bristot@redhat.com>
-        <f2ca7336162b6dc45f413cfe4e0056e6aa32e7ed.1559051152.git.bristot@redhat.com>
-        <20190529083357.GF2623@hirez.programming.kicks-ass.net>
-        <b47631c3-d65a-4506-098a-355c8cf50601@redhat.com>
-        <20190529102038.GO2623@hirez.programming.kicks-ass.net>
-        <20190529083930.5541130e@oasis.local.home>
-        <20190529131957.GV2623@hirez.programming.kicks-ass.net>
-        <20190529094213.3e344965@oasis.local.home>
-        <20190529134946.GY2623@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 29 May 2019 10:00:02 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:43611 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfE2OAC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:00:02 -0400
+X-Originating-IP: 90.88.147.134
+Received: from localhost (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7C810FF804;
+        Wed, 29 May 2019 13:59:59 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
+Subject: [PATCH net] net: mvpp2: fix bad MVPP2_TXQ_SCHED_TOKEN_CNTR_REG queue value
+Date:   Wed, 29 May 2019 15:59:48 +0200
+Message-Id: <20190529135948.32483-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 15:49:46 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+MVPP2_TXQ_SCHED_TOKEN_CNTR_REG() expects the logical queue id but
+the current code is passing the global tx queue offset, so it ends
+up writing to unknown registers (between 0x8280 and 0x82fc, which
+seemed to be unused by the hardware). This fixes the issue by using
+the logical queue id instead.
 
+Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-> > That's basically what I was suggesting as the solution to this ;-)  
-> 
-> You were wanting changes to preempt_disable() and task_struct, neither
-> of which is required. The above only needs some per-cpu storage in the
-> tracer implementation.
-
-Only changes were to the trace preempt_disable() code. Which I still
-think needs to be done regardless to differentiate between when we are
-tracing preempt disable and when we are not.
-
-And no modification would need to be done to task_struct as we already
-have a place to add tracing flags.
-
--- Steve
-
-
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index d38952eb7aa9..7a67e23a2c2b 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1455,7 +1455,7 @@ static inline void mvpp2_xlg_max_rx_size_set(struct mvpp2_port *port)
+ /* Set defaults to the MVPP2 port */
+ static void mvpp2_defaults_set(struct mvpp2_port *port)
+ {
+-	int tx_port_num, val, queue, ptxq, lrxq;
++	int tx_port_num, val, queue, lrxq;
+ 
+ 	if (port->priv->hw_version == MVPP21) {
+ 		/* Update TX FIFO MIN Threshold */
+@@ -1476,11 +1476,9 @@ static void mvpp2_defaults_set(struct mvpp2_port *port)
+ 	mvpp2_write(port->priv, MVPP2_TXP_SCHED_FIXED_PRIO_REG, 0);
+ 
+ 	/* Close bandwidth for all queues */
+-	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++) {
+-		ptxq = mvpp2_txq_phys(port->id, queue);
++	for (queue = 0; queue < MVPP2_MAX_TXQ; queue++)
+ 		mvpp2_write(port->priv,
+-			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(ptxq), 0);
+-	}
++			    MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(queue), 0);
+ 
+ 	/* Set refill period to 1 usec, refill tokens
+ 	 * and bucket size to maximum
+@@ -2336,7 +2334,7 @@ static void mvpp2_txq_deinit(struct mvpp2_port *port,
+ 	txq->descs_dma         = 0;
+ 
+ 	/* Set minimum bandwidth for disabled TXQs */
+-	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->id), 0);
++	mvpp2_write(port->priv, MVPP2_TXQ_SCHED_TOKEN_CNTR_REG(txq->log_id), 0);
+ 
+ 	/* Set Tx descriptors queue starting address and size */
+ 	thread = mvpp2_cpu_to_thread(port->priv, get_cpu());
+-- 
+2.21.0
 
