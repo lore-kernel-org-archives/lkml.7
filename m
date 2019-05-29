@@ -2,95 +2,81 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14860C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57981C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C3A20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KG/omzjh"
+	by mail.kernel.org (Postfix) with ESMTP id 248D620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfE2Ial (ORCPT
+        id S1726806AbfE2IbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:30:41 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:41640 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725957AbfE2Ial (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:30:41 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D298EC2132;
-        Wed, 29 May 2019 08:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559118623; bh=F8sZHFsPIFdqkj3KFIDJ0n8BZL1rcqZwyQxdnVl+krY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=KG/omzjhU5pdEhIq4AYIMCffBuSJ2Cksbnt2zH5wDqHBrtwSR/K9Wgdaoh60L5zXP
-         vZds7MuvMr3+m14ycP9OE03dlzL1NDlfwqH2dwD74Z1UrNc9GiuN++xl64QeyfRmw0
-         pxy0JiAD8u1uC544Ef8dRPLEfrBTXxQVQ+Ow3pYCXIfhv0ZCHEqUlSX7mecSAkttrA
-         rg7e3W7opGoEeyegglfh6x0E4EYuK6kabuYnLdlTOBRCS/VJTUv3sDyBCcxqqNhD4E
-         GfembFAJgHP6sliUmVMx7BtofPvZJTOOQ0oEG9uZpn0PSBKyu6iYZze/IGmVavmAKX
-         HeJz/RTglFE4Q==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 42B87A00A5;
-        Wed, 29 May 2019 08:30:40 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 645D83E891;
-        Wed, 29 May 2019 10:30:39 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 2/2] net: stmmac: selftests: Use kfree_skb() instead of kfree()
-Date:   Wed, 29 May 2019 10:30:26 +0200
-Message-Id: <8e2d23ac49fb9d62c3e839b560ebd719fbe9ed7b.1559118521.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1559118521.git.joabreu@synopsys.com>
-References: <cover.1559118521.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1559118521.git.joabreu@synopsys.com>
-References: <cover.1559118521.git.joabreu@synopsys.com>
+        Wed, 29 May 2019 04:31:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60710 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbfE2IbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:31:13 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8736F200273;
+        Wed, 29 May 2019 10:31:09 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F2902011C3;
+        Wed, 29 May 2019 10:31:04 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C8C27402FB;
+        Wed, 29 May 2019 16:30:57 +0800 (SGT)
+From:   Chuanhua Han <chuanhua.han@nxp.com>
+To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Chuanhua Han <chuanhua.han@nxp.com>,
+        Zhang Ying-22455 <ying.zhang22455@nxp.com>
+Subject: [PATCH 1/3] gpio: mpc8xxx: Enable port input and interrupt
+Date:   Wed, 29 May 2019 16:32:52 +0800
+Message-Id: <20190529083254.39581-1-chuanhua.han@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kfree_skb() shall be used instead of kfree(). Fix it.
+The GPIO Input Buffer Enable register is used to control the input
+enable of each individual GPIO port. When an individual GPIO port's
+direction is set to input (GPIO_GPDIR[DRn=0]), the associated
+input enable must be set (GPIOxGPIE[IEn]=1) to propagate the port
+value to the GPIO Data Register.
 
-Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
+This patch enable port input and interrupt.
+
+Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-mpc8xxx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 9d9bad5d31bf..a97b1ea76438 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -617,7 +617,7 @@ static int stmmac_test_flowctrl_validate(struct sk_buff *skb,
- 	tpriv->ok = true;
- 	complete(&tpriv->comp);
- out:
--	kfree(skb);
-+	kfree_skb(skb);
- 	return 0;
- }
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index c8673a5d9412..555e0e7957d9 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -373,9 +373,10 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (!mpc8xxx_gc->irq)
+ 		return 0;
  
+-	/* ack and mask all irqs */
++	/* ack and enable irqs */
+ 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
+-	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
++	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0xffffffff);
++	gc->write_reg(mpc8xxx_gc->regs + GPIO_ICR2, 0xffffffff);
+ 
+ 	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+ 					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
 -- 
-2.7.4
+2.17.1
 
