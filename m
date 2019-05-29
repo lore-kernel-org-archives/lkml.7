@@ -6,78 +6,102 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4675C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30588C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DA520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1091E21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfE2Kuu (ORCPT
+        id S1726411AbfE2Kvr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:50:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43426 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfE2Kuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:50:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F13341;
-        Wed, 29 May 2019 03:50:49 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C21743F59C;
-        Wed, 29 May 2019 03:50:47 -0700 (PDT)
-Subject: Re: [RFC 4/7] arm64: pmu: Add function implementation to update event
- index in userpage.
-To:     Raphael Gault <raphael.gault@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20190528150320.25953-1-raphael.gault@arm.com>
- <20190528150320.25953-5-raphael.gault@arm.com>
- <20190529094659.GK2623@hirez.programming.kicks-ass.net>
- <42a937dd-5cf6-6738-6f69-005fce64138f@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d6f40c6c-6a73-bd7f-e384-050bd9428631@arm.com>
-Date:   Wed, 29 May 2019 11:50:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 06:51:47 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:42073 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbfE2Kvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:51:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-193-tjoSKSwtOfSt0uX1-9NT_Q-1; Wed, 29 May 2019 11:51:42 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 29 May 2019 11:51:42 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 29 May 2019 11:51:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Reshetova, Elena'" <elena.reshetova@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>
+CC:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CAABf/AIAAAvkAgAGZnrD///dzgIAHjbaA///31ICAAC4VAIABBxmAgAAfuaCAAA5FAIAED8OAgAAYaYCAAINWgIAAbRaAgBjvMfCAACWEgIABZK1ggAAKveA=
+Date:   Wed, 29 May 2019 10:51:41 +0000
+Message-ID: <c0345478194240aea930550ccc93353b@AcuMS.aculab.com>
+References: <20190508113239.GA33324@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
+ <20190509055915.GA58462@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
+ <20190509084352.GA96236@gmail.com>
+ <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
+ <201905111703.5998DF5F@keescook> <20190512080245.GA7827@gmail.com>
+ <201905120705.4F27DF3244@keescook>
+ <2236FBA76BA1254E88B949DDB74E612BA4CA8DBF@IRSMSX102.ger.corp.intel.com>
+ <20190528133347.GD19149@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4CABA56@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4CABA56@IRSMSX102.ger.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <42a937dd-5cf6-6738-6f69-005fce64138f@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: tjoSKSwtOfSt0uX1-9NT_Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/05/2019 11:46, Raphael Gault wrote:
-> Hi Peter,
-> 
-> On 5/29/19 10:46 AM, Peter Zijlstra wrote:
->> On Tue, May 28, 2019 at 04:03:17PM +0100, Raphael Gault wrote:
->>> +static int armv8pmu_access_event_idx(struct perf_event *event)
->>> +{
->>> +    if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
->>> +        return 0;
->>> +
->>> +    /*
->>> +     * We remap the cycle counter index to 32 to
->>> +     * match the offset applied to the rest of
->>> +     * the counter indeces.
->>> +     */
->>> +    if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
->>> +        return 32;
->>> +
->>> +    return event->hw.idx;
->>
->> Is there a guarantee event->hw.idx is never 0? Or should you, just like
->> x86, use +1 here?
->>
-> 
-> You are right, I should use +1 here. Thanks for pointing that out.
+From: Reshetova, Elena
+> Sent: 29 May 2019 11:14
+....
+> On related note: the current prng we have in kernel (prandom) is based on a
+> *very old* style of prngs, which is basically 4 linear LFSRs xored together.
 
-Isn't that already the case though, since we reserve index 0 for the 
-cycle counter? I'm looking at ARMV8_IDX_TO_COUNTER() here...
+I'm no expert here (apart from some knowledge of LFRS/CRC) but
+even adding the results of the 4 LFSR (instead of xor) will make
+the generator much more secure (aka computationally expensive to
+reverse) without affecting the randomness or repeat cycle.
 
-Robin.
+FWIW if you are going to merge LFRS you probably want to clock
+them different numbers of times (+ve or -ve) otherwise the
+output 'mostly' shifts one bit per clock and the same bits
+tend to get merged.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
