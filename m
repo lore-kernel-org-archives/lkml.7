@@ -2,300 +2,148 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BCAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C405240D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47EA240D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="TuRLwggT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfE2TES (ORCPT
+        id S1726483AbfE2THF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:04:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52922 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfE2TES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:04:18 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7121430044C9;
-        Wed, 29 May 2019 19:04:12 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-123-24.rdu2.redhat.com [10.10.123.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E9AB1973B;
-        Wed, 29 May 2019 19:04:09 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>, Jessica Yu <jeyu@kernel.org>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] livepatch: Fix ftrace module text permissions race
-Date:   Wed, 29 May 2019 14:02:24 -0500
-Message-Id: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 29 May 2019 19:04:17 +0000 (UTC)
+        Wed, 29 May 2019 15:07:05 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41745 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfE2THE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 15:07:04 -0400
+Received: by mail-qt1-f194.google.com with SMTP id s57so3993332qte.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 12:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2eusIL/nzSK2s9R9uc1xL5ZfmWg5RxkuxNc2ZFp/bBI=;
+        b=TuRLwggTqjMk7XmDlvWEFh9TFVyhGFcP7cAa/rG7hovF99AkCIp+gida+yKpx6zNRb
+         yxMzh2uQwoBuEv6qaVnjzfEhTgU7ZWKvASfjQabJ2eezbDEMvEagbhBL+Qqcv1GGVGTm
+         XxJ6fOaxTePIzwvUt0QyNMExAEKu6tLSeGZKX3InC/0HeGHLFG1Zkyf2cz7iWzgr50X4
+         tE0B31jOexY9fX8m7TLidU7CneRK3ddym1jAOkJOxpxRFiBvSWhwz+TtseXerHWOpYtQ
+         zzzyu61XjgMWMYkDQxCGgosvaoNbqOV4I80TH2d4+q+jsewB63jnJKbKK6duJswnTZZT
+         WUNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2eusIL/nzSK2s9R9uc1xL5ZfmWg5RxkuxNc2ZFp/bBI=;
+        b=bxOwnaipenvnxMshBKQsUtaLtIx+Wx7jYLvdfWEdJAQHeZdZ4bgHSTaN+FIzRkUQeK
+         rDlvD3nn7O5LIOrs/8l5L/D65msiYaQCjNm4QMztMADHm+w+QpC5UPwvDjuv7BPY+eDn
+         gPQJmxfo22o0bqvRyzMBIwsvBKagQHpIMk8UQjlGa61rTjEzHwat+uxikafgrQd2TMzd
+         T5E1sb1s7yR0GMeVxxp4rC0HcxrtjG47txr067r1ygoLfyJGmW8t62lx1MR3FQU72O80
+         wKGPdRDnY3oC3550HFI30pGTHNoPpaqQgcvjQEzd/xFKBcfTQi1enViEw7xqtyNXhkYz
+         eeuQ==
+X-Gm-Message-State: APjAAAUw7Zg2bjit9k8UcsMtqpsHymW7wg3l8chozeD1XOejrQO733lj
+        vJCXfxBfVRetKYZ0IxQVbNSDJg==
+X-Google-Smtp-Source: APXvYqxChkKR1X4fRnQAKSVqrxHnQmFnpt86QUnpPveJVHSvTdcVeXPOSAggtkZ1iv79Bum90D+Wgw==
+X-Received: by 2002:ac8:1608:: with SMTP id p8mr58204451qtj.81.1559156823359;
+        Wed, 29 May 2019 12:07:03 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g124sm168098qkf.55.2019.05.29.12.07.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 12:07:02 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     axboe@kernel.dk, hch@lst.de, peterz@infradead.org, oleg@redhat.com,
+        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/page_io: fix a crash in do_task_dead()
+Date:   Wed, 29 May 2019 15:06:53 -0400
+Message-Id: <1559156813-30681-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's possible for livepatch and ftrace to be toggling a module's text
-permissions at the same time, resulting in the following panic:
+The commit 0619317ff8ba ("block: add polled wakeup task helper")
+replaced wake_up_process() with blk_wake_io_task() in
+end_swap_bio_read() which triggers a crash when running heavy swapping
+workloads.
 
-  BUG: unable to handle page fault for address: ffffffffc005b1d9
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0003) - permissions violation
-  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
-  Oops: 0003 [#1] PREEMPT SMP PTI
-  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-  RIP: 0010:apply_relocate_add+0xbe/0x14c
-  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
-  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
-  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
-  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
-  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
-  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
-  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
-  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   klp_init_object_loaded+0x10f/0x219
-   ? preempt_latency_start+0x21/0x57
-   klp_enable_patch+0x662/0x809
-   ? virt_to_head_page+0x3a/0x3c
-   ? kfree+0x8c/0x126
-   patch_init+0x2ed/0x1000 [livepatch_test02]
-   ? 0xffffffffc0060000
-   do_one_initcall+0x9f/0x1c5
-   ? kmem_cache_alloc_trace+0xc4/0xd4
-   ? do_init_module+0x27/0x210
-   do_init_module+0x5f/0x210
-   load_module+0x1c41/0x2290
-   ? fsnotify_path+0x3b/0x42
-   ? strstarts+0x2b/0x2b
-   ? kernel_read+0x58/0x65
-   __do_sys_finit_module+0x9f/0xc3
-   ? __do_sys_finit_module+0x9f/0xc3
-   __x64_sys_finit_module+0x1a/0x1c
-   do_syscall_64+0x52/0x61
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[T114538] kernel BUG at kernel/sched/core.c:3462!
+[T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
+[T114538] Call trace:
+[T114538]  do_task_dead+0xf0/0xf8
+[T114538]  do_exit+0xd5c/0x10fc
+[T114538]  do_group_exit+0xf4/0x110
+[T114538]  get_signal+0x280/0xdd8
+[T114538]  do_notify_resume+0x720/0x968
+[T114538]  work_pending+0x8/0x10
 
-The above panic occurs when loading two modules at the same time with
-ftrace enabled, where at least one of the modules is a livepatch module:
+This is because shortly after set_special_state(TASK_DEAD),
+end_swap_bio_read() is called from an interrupt handler that revive the
+task state to TASK_RUNNING causes __schedule() to return and trip the
+BUG() later.
 
-CPU0					CPU1
-klp_enable_patch()
-  klp_init_object_loaded()
-    module_disable_ro()
-    					ftrace_module_enable()
-					  ftrace_arch_code_modify_post_process()
-				    	    set_all_modules_text_ro()
-      klp_write_object_relocations()
-        apply_relocate_add()
-	  *patches read-only code* - BOOM
+[  C206] Call trace:
+[  C206]  dump_backtrace+0x0/0x268
+[  C206]  show_stack+0x20/0x2c
+[  C206]  dump_stack+0xb4/0x108
+[  C206]  blk_wake_io_task+0x7c/0x80
+[  C206]  end_swap_bio_read+0x22c/0x31c
+[  C206]  bio_endio+0x3d8/0x414
+[  C206]  dec_pending+0x280/0x378 [dm_mod]
+[  C206]  clone_endio+0x128/0x2ac [dm_mod]
+[  C206]  bio_endio+0x3d8/0x414
+[  C206]  blk_update_request+0x3ac/0x924
+[  C206]  scsi_end_request+0x54/0x350
+[  C206]  scsi_io_completion+0xf0/0x6f4
+[  C206]  scsi_finish_command+0x214/0x228
+[  C206]  scsi_softirq_done+0x170/0x1a4
+[  C206]  blk_done_softirq+0x100/0x194
+[  C206]  __do_softirq+0x350/0x790
+[  C206]  irq_exit+0x200/0x26c
+[  C206]  handle_IPI+0x2e8/0x514
+[  C206]  gic_handle_irq+0x224/0x228
+[  C206]  el1_irq+0xb8/0x140
+[  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
+[  C206]  do_task_dead+0x88/0xf8
+[  C206]  do_exit+0xd5c/0x10fc
+[  C206]  do_group_exit+0xf4/0x110
+[  C206]  get_signal+0x280/0xdd8
+[  C206]  do_notify_resume+0x720/0x968
+[  C206]  work_pending+0x8/0x10
 
-A similar race exists when toggling ftrace while loading a livepatch
-module.
+Before the offensive commit, wake_up_process() will prevent this from
+happening by taking the pi_lock and bail out immediately if TASK_DEAD is
+set.
 
-Fix it by ensuring that the livepatch and ftrace code patching
-operations -- and their respective permissions changes -- are protected
-by the text_mutex.
+if (!(p->state & TASK_NORMAL))
+	goto out;
 
-Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- kernel/livepatch/core.c |  6 ++++++
- kernel/module.c         | 21 ++++++++++++++++++---
- kernel/trace/ftrace.c   | 10 +++++++++-
- 3 files changed, 33 insertions(+), 4 deletions(-)
+ mm/page_io.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 2398832947c6..c4ce08f43bd6 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -18,6 +18,7 @@
- #include <linux/elf.h>
- #include <linux/moduleloader.h>
- #include <linux/completion.h>
-+#include <linux/memory.h>
- #include <asm/cacheflush.h>
- #include "core.h"
- #include "patch.h"
-@@ -718,16 +719,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
- 	struct klp_func *func;
- 	int ret;
- 
-+	mutex_lock(&text_mutex);
-+
- 	module_disable_ro(patch->mod);
- 	ret = klp_write_object_relocations(patch->mod, obj);
- 	if (ret) {
- 		module_enable_ro(patch->mod, true);
-+		mutex_unlock(&text_mutex);
- 		return ret;
- 	}
- 
- 	arch_klp_init_object_loaded(patch, obj);
- 	module_enable_ro(patch->mod, true);
- 
-+	mutex_unlock(&text_mutex);
-+
- 	klp_for_each_func(obj, func) {
- 		ret = klp_find_object_symbol(obj->name, func->old_name,
- 					     func->old_sympos,
-diff --git a/kernel/module.c b/kernel/module.c
-index 6e6712b3aaf5..3c056b56aefa 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -64,6 +64,7 @@
- #include <linux/bsearch.h>
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
-+#include <linux/memory.h>
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-@@ -1943,6 +1944,8 @@ static void frob_writable_data(const struct module_layout *layout,
- /* livepatching wants to disable read-only so it can frob module. */
- void module_disable_ro(const struct module *mod)
- {
-+	lockdep_assert_held(&text_mutex);
-+
- 	if (!rodata_enabled)
- 		return;
- 
-@@ -1953,7 +1956,7 @@ void module_disable_ro(const struct module *mod)
- 	frob_rodata(&mod->init_layout, set_memory_rw);
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 2e8019d0e048..dc2d3e037ccf 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -140,7 +140,8 @@ static void end_swap_bio_read(struct bio *bio)
+ 	unlock_page(page);
+ 	WRITE_ONCE(bio->bi_private, NULL);
+ 	bio_put(bio);
+-	blk_wake_io_task(waiter);
++	/* end_swap_bio_read() could be called from an interrupt handler. */
++	wake_up_process(waiter);
+ 	put_task_struct(waiter);
  }
  
--void module_enable_ro(const struct module *mod, bool after_init)
-+static void __module_enable_ro(const struct module *mod, bool after_init)
- {
- 	if (!rodata_enabled)
- 		return;
-@@ -1974,6 +1977,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
- 		frob_ro_after_init(&mod->core_layout, set_memory_ro);
- }
- 
-+void module_enable_ro(const struct module *mod, bool after_init)
-+{
-+	lockdep_assert_held(&text_mutex);
-+
-+	__module_enable_ro(mod, after_init);
-+}
-+
- static void module_enable_nx(const struct module *mod)
- {
- 	frob_rodata(&mod->core_layout, set_memory_nx);
-@@ -1988,6 +1998,8 @@ void set_all_modules_text_rw(void)
- {
- 	struct module *mod;
- 
-+	lockdep_assert_held(&text_mutex);
-+
- 	if (!rodata_enabled)
- 		return;
- 
-@@ -2007,6 +2019,8 @@ void set_all_modules_text_ro(void)
- {
- 	struct module *mod;
- 
-+	lockdep_assert_held(&text_mutex);
-+
- 	if (!rodata_enabled)
- 		return;
- 
-@@ -2027,6 +2041,7 @@ void set_all_modules_text_ro(void)
- 	mutex_unlock(&module_mutex);
- }
- #else
-+static void __module_enable_ro(const struct module *mod, bool after_init) { }
- static void module_enable_nx(const struct module *mod) { }
- #endif
- 
-@@ -3519,7 +3534,7 @@ static noinline int do_init_module(struct module *mod)
- 	/* Switch to core kallsyms now init is done: kallsyms may be walking! */
- 	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
- #endif
--	module_enable_ro(mod, true);
-+	__module_enable_ro(mod, true);
- 	mod_tree_remove_init(mod);
- 	module_arch_freeing_init(mod);
- 	mod->init_layout.base = NULL;
-@@ -3626,7 +3641,7 @@ static int complete_formation(struct module *mod, struct load_info *info)
- 	/* This relies on module_mutex for list integrity. */
- 	module_bug_finalize(info->hdr, info->sechdrs, mod);
- 
--	module_enable_ro(mod, false);
-+	__module_enable_ro(mod, false);
- 	module_enable_nx(mod);
- 
- 	/* Mark state as coming so strong_try_module_get() ignores us,
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a12aff849c04..8259d4ba8b00 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -34,6 +34,7 @@
- #include <linux/hash.h>
- #include <linux/rcupdate.h>
- #include <linux/kprobes.h>
-+#include <linux/memory.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
- {
- 	int ret;
- 
-+	mutex_lock(&text_mutex);
-+
- 	ret = ftrace_arch_code_modify_prepare();
- 	FTRACE_WARN_ON(ret);
- 	if (ret)
--		return;
-+		goto out_unlock;
- 
- 	/*
- 	 * By default we use stop_machine() to modify the code.
-@@ -2625,6 +2628,9 @@ static void ftrace_run_update_code(int command)
- 
- 	ret = ftrace_arch_code_modify_post_process();
- 	FTRACE_WARN_ON(ret);
-+
-+out_unlock:
-+	mutex_unlock(&text_mutex);
- }
- 
- static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
-@@ -5776,6 +5782,7 @@ void ftrace_module_enable(struct module *mod)
- 	struct ftrace_page *pg;
- 
- 	mutex_lock(&ftrace_lock);
-+	mutex_lock(&text_mutex);
- 
- 	if (ftrace_disabled)
- 		goto out_unlock;
-@@ -5837,6 +5844,7 @@ void ftrace_module_enable(struct module *mod)
- 		ftrace_arch_code_modify_post_process();
- 
-  out_unlock:
-+	mutex_unlock(&text_mutex);
- 	mutex_unlock(&ftrace_lock);
- 
- 	process_cached_mods(mod->name);
 -- 
-2.20.1
+1.8.3.1
 
