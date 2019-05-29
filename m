@@ -2,276 +2,245 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCDC07542
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 05:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3151C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 05:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DAF205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 05:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Mi7n4lK3"
+	by mail.kernel.org (Postfix) with ESMTP id ADDC320657
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 05:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbfE2Fmo (ORCPT
+        id S1726018AbfE2Fvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 01:42:44 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4302 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfE2Fmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 01:42:44 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cee1bd10001>; Tue, 28 May 2019 22:42:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 28 May 2019 22:42:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 28 May 2019 22:42:41 -0700
-Received: from [10.19.108.127] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
- 2019 05:42:36 +0000
-Subject: Re: [PATCH V2 09/12] soc/tegra: pmc: add pmc wake support for
- tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <josephl@nvidia.com>,
-        <talho@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mperttunen@nvidia.com>,
-        <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
- <1559084936-4610-10-git-send-email-skomatineni@nvidia.com>
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <ddf07eae-a933-9d2e-94f9-3893b4e09db0@nvidia.com>
-Date:   Wed, 29 May 2019 13:42:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 01:51:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12653 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfE2Fve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 01:51:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 22:51:33 -0700
+X-ExtLoop1: 1
+Received: from rpedgeco-mobl.amr.corp.intel.com (HELO localhost.intel.com) ([10.252.134.167])
+  by orsmga006.jf.intel.com with ESMTP; 28 May 2019 22:51:32 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        davem@davemloft.net, sparclinux@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     dave.hansen@intel.com, jeyu@kernel.org, namit@vmware.com,
+        luto@kernel.org, will.deacon@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Meelis Roos <mroos@linux.ee>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>
+Subject: [PATCH] vmalloc: Don't use flush flag when no exec perm
+Date:   Tue, 28 May 2019 22:51:04 -0700
+Message-Id: <20190529055104.6822-1-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1559084936-4610-10-git-send-email-skomatineni@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559108561; bh=7ahERssj3Ya7BbN2GOfMLoQovuYCFnBedCRnhZury04=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Mi7n4lK36ZH8qYlfUuFIGtM30pPDk1Mfwd3un1JpIalBUYUdWAdCPLy3vGHSgH09L
-         AYe1Z3pVzzCD+zreHWGQZEH67cGXZ8v10HD51Z1yzUOptEf/maRXGq8dOHHBXVP0vY
-         qbdihLtx8qXSxFuivzebwpSRxlq5tMWEQd+jFQJE3VQOqtB/PJhxGwtqn70GtrINT/
-         ZOYuM9GLnkCfh3qnLJrk6CcvdalGW/fC9Y8HY3H2SgKYG+egSUPSU3t0TMe4RlONNh
-         9jc4dGktPlBW9Kfo8Lmp2/FhwcefxvIhG98z6hPfMIFcI3hDx18UpdiHA9/ZKU77Zx
-         OsMpjr+U6FtUw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
+The addition of VM_FLUSH_RESET_PERMS for BPF JIT allocations was
+bisected to prevent boot on an UltraSparc III machine. It was found that
+sometime shortly after the TLB flush this flag does on vfree of the BPF
+program, the machine hung. Further investigation showed that before any of
+the changes for this flag were introduced, with CONFIG_DEBUG_PAGEALLOC
+configured (which does a similar TLB flush of the vmalloc range on
+every vfree), this machine also hung shortly after the first vmalloc
+unmap/free.
 
-usleep_range() in tegra210_pmc_irq_set_wake() should be replaced with 
-udelay() because caller irq_set_irq_wake() acquired spinlock and made 
-this context atomic.
+So the evidence points to there being some existing issue with the
+vmalloc TLB flushes, but it's still unknown exactly why these hangs are
+happening on sparc. It is also unknown when someone with this hardware
+could resolve this, and in the meantime using this flag on it turns a
+lurking behavior into something that prevents boot.
 
-Thanks,
+However Linux on sparc64 doesn't restrict executable permissions and so
+there is actually not really a need to use this flag. If normal memory is
+executable, any memory copied from the user could be executed without any
+extra steps. There also isn't a need to reset direct map permissions. So
+to work around this issue we can just not use the flag in these cases.
 
-JC
+So change the helper that sets this flag to simply not set it if the
+architecture has these properties. Do this by comparing if PAGE_KERNEL is
+the same as PAGE_KERNEL_EXEC. Also make the logic always do the flush if
+an architecture has a way to reset direct map permissions by checking
+CONFIG_ARCH_HAS_SET_DIRECT_MAP. Place the helper in vmalloc.c to work
+around header dependency issues. Also, remove VM_FLUSH_RESET_PERMS from
+vmalloc_exec() so it doesn't get set unconditionally anywhere.
 
-On 5/29/19 7:08 AM, Sowjanya Komatineni wrote:
-> This patch implements PMC wakeup sequence for Tegra210 and defines
-> common used wake events of RTC alarm and power key.
->
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->   drivers/soc/tegra/pmc.c | 113 ++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 113 insertions(+)
->
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 974b4c9f6ada..54dc8409e353 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -57,6 +57,7 @@
->   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->   #include <dt-bindings/gpio/tegra186-gpio.h>
->   #include <dt-bindings/gpio/tegra194-gpio.h>
-> +#include <dt-bindings/gpio/tegra-gpio.h>
->   
->   #define PMC_CNTRL			0x0
->   #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
-> @@ -66,6 +67,12 @@
->   #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->   #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->   #define  PMC_CNTRL_MAIN_RST		BIT(4)
-> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
-> +
-> +#define PMC_WAKE_MASK			0x0c
-> +#define PMC_WAKE_LEVEL			0x10
-> +#define PMC_WAKE_STATUS			0x14
-> +#define PMC_SW_WAKE_STATUS		0x18
->   
->   #define DPD_SAMPLE			0x020
->   #define  DPD_SAMPLE_ENABLE		BIT(0)
-> @@ -96,6 +103,11 @@
->   
->   #define PMC_SCRATCH41			0x140
->   
-> +#define PMC_WAKE2_MASK			0x160
-> +#define PMC_WAKE2_LEVEL			0x164
-> +#define PMC_WAKE2_STATUS		0x168
-> +#define PMC_SW_WAKE2_STATUS		0x16c
-> +
->   #define PMC_SENSOR_CTRL			0x1b0
->   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-> @@ -245,6 +257,7 @@ struct tegra_pmc_soc {
->   
->   	const struct tegra_wake_event *wake_events;
->   	unsigned int num_wake_events;
-> +	unsigned int max_supported_wake_events;
->   };
->   
->   static const char * const tegra186_reset_sources[] = {
-> @@ -1917,6 +1930,54 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->   	.alloc = tegra_pmc_irq_alloc,
->   };
->   
-> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-> +{
-> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> +	unsigned int offset, bit;
-> +	u32 value;
-> +
-> +	if (data->hwirq == ULONG_MAX)
-> +		return 0;
-> +
-> +	offset = data->hwirq / 32;
-> +	bit = data->hwirq % 32;
-> +
-> +	/*
-> +	 * latch wakeups to SW_WAKE_STATUS register to capture events
-> +	 * that would not make it into wakeup event register during LP0 exit.
-> +	 */
-> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
-> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
-> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-> +	usleep_range(110, 120);
-> +
-> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
-> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-> +	usleep_range(110, 120);
-> +
-> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
-> +	if (pmc->soc->max_supported_wake_events > 32)
-> +		tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
-> +
-> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
-> +	if (pmc->soc->max_supported_wake_events > 32)
-> +		tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
-> +
-> +	/* enable PMC wake */
-> +	if (data->hwirq >= 32)
-> +		offset = PMC_WAKE2_MASK;
-> +	else
-> +		offset = PMC_WAKE_MASK;
-> +	value = tegra_pmc_readl(pmc, offset);
-> +	if (on)
-> +		value |= 1 << bit;
-> +	else
-> +		value &= ~(1 << bit);
-> +	tegra_pmc_writel(pmc, value, offset);
-> +
-> +	return 0;
-> +}
-> +
->   static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->   {
->   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> @@ -1948,6 +2009,48 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->   	return 0;
->   }
->   
-> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> +	unsigned int offset, bit;
-> +	u32 value;
-> +
-> +	if (data->hwirq == ULONG_MAX)
-> +		return 0;
-> +
-> +	offset = data->hwirq / 32;
-> +	bit = data->hwirq % 32;
-> +
-> +	if (data->hwirq >= 32)
-> +		offset = PMC_WAKE2_LEVEL;
-> +	else
-> +		offset = PMC_WAKE_LEVEL;
-> +	value = tegra_pmc_readl(pmc, offset);
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		value |= 1 << bit;
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		value &= ~(1 << bit);
-> +		break;
-> +
-> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
-> +		value ^= 1 << bit;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	tegra_pmc_writel(pmc, value, offset);
-> +
-> +	return 0;
-> +}
-> +
->   static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->   {
->   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> @@ -2535,6 +2638,11 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
->   	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
->   };
->   
-> +static const struct tegra_wake_event tegra210_wake_events[] = {
-> +	TEGRA_WAKE_GPIO("power", 24, 0, 189),
-> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
-> +};
-> +
->   static const struct tegra_pmc_soc tegra210_pmc_soc = {
->   	.num_powergates = ARRAY_SIZE(tegra210_powergates),
->   	.powergates = tegra210_powergates,
-> @@ -2552,10 +2660,15 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
->   	.regs = &tegra20_pmc_regs,
->   	.init = tegra20_pmc_init,
->   	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
-> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
-> +	.irq_set_type = tegra210_pmc_irq_set_type,
->   	.reset_sources = tegra210_reset_sources,
->   	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
->   	.reset_levels = NULL,
->   	.num_reset_levels = 0,
-> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
-> +	.wake_events = tegra210_wake_events,
-> +	.max_supported_wake_events = 64,
->   };
->   
->   #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+Note, today arm has direct map permissions and no
+CONFIG_ARCH_HAS_SET_DIRECT_MAP, but it also restricts executable
+permissions so this logic will work today. When arm adds
+set_direct_map_() implementations and removes the set_memory_() block from
+from vm_remove_mappings() as currently proposed, then this will be correct
+as well.
+
+This logic could be put in vm_remove_mappings() instead, but doing it this
+way leaves the raw flag generic and open for future usages. So change the
+name of the helper to match its new conditional properties.
+
+Fixes: d53d2f7 ("bpf: Use vmalloc special flag")
+Reported-by: Meelis Roos <mroos@linux.ee>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: peterz@infradead.org <peterz@infradead.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@arm.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+
+Hi,
+
+This is what I came up with for working around the sparc issue. The
+other solution I had looked at was making a CONFIG_ARCH_NEEDS_VM_FLUSH
+and just opt out only sparc. Very open to suggestions.
+
+ arch/x86/kernel/ftrace.c       |  2 +-
+ arch/x86/kernel/kprobes/core.c |  2 +-
+ include/linux/filter.h         |  4 ++--
+ include/linux/vmalloc.h        | 10 ++--------
+ kernel/module.c                |  4 ++--
+ mm/vmalloc.c                   | 25 ++++++++++++++++++++++---
+ 6 files changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 0927bb158ffc..9793f6491882 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -823,7 +823,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ 
+-	set_vm_flush_reset_perms(trampoline);
++	set_vm_flush_if_needed(trampoline);
+ 
+ 	/*
+ 	 * Module allocation needs to be completed by making the page
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 9e4fa2484d10..2e3c31c63a6f 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -434,7 +434,7 @@ void *alloc_insn_page(void)
+ 	if (!page)
+ 		return NULL;
+ 
+-	set_vm_flush_reset_perms(page);
++	set_vm_flush_if_needed(page);
+ 	/*
+ 	 * First make the page read-only, and only then make it executable to
+ 	 * prevent it from being W+X in between.
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 7148bab96943..7b20d43a9cf1 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -735,13 +735,13 @@ bpf_ctx_narrow_access_ok(u32 off, u32 size, u32 size_default)
+ 
+ static inline void bpf_prog_lock_ro(struct bpf_prog *fp)
+ {
+-	set_vm_flush_reset_perms(fp);
++	set_vm_flush_if_needed(fp);
+ 	set_memory_ro((unsigned long)fp, fp->pages);
+ }
+ 
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+ {
+-	set_vm_flush_reset_perms(hdr);
++	set_vm_flush_if_needed(hdr);
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
+ 	set_memory_x((unsigned long)hdr, hdr->pages);
+ }
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 51e131245379..2fdd1d62a603 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -151,13 +151,7 @@ extern int map_kernel_range_noflush(unsigned long start, unsigned long size,
+ 				    pgprot_t prot, struct page **pages);
+ extern void unmap_kernel_range_noflush(unsigned long addr, unsigned long size);
+ extern void unmap_kernel_range(unsigned long addr, unsigned long size);
+-static inline void set_vm_flush_reset_perms(void *addr)
+-{
+-	struct vm_struct *vm = find_vm_area(addr);
+-
+-	if (vm)
+-		vm->flags |= VM_FLUSH_RESET_PERMS;
+-}
++extern void set_vm_flush_if_needed(void *addr);
+ #else
+ static inline int
+ map_kernel_range_noflush(unsigned long start, unsigned long size,
+@@ -173,7 +167,7 @@ static inline void
+ unmap_kernel_range(unsigned long addr, unsigned long size)
+ {
+ }
+-static inline void set_vm_flush_reset_perms(void *addr)
++static inline void set_vm_flush_if_needed(void *addr)
+ {
+ }
+ #endif
+diff --git a/kernel/module.c b/kernel/module.c
+index 6e6712b3aaf5..d91f03781c41 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1958,8 +1958,8 @@ void module_enable_ro(const struct module *mod, bool after_init)
+ 	if (!rodata_enabled)
+ 		return;
+ 
+-	set_vm_flush_reset_perms(mod->core_layout.base);
+-	set_vm_flush_reset_perms(mod->init_layout.base);
++	set_vm_flush_if_needed(mod->core_layout.base);
++	set_vm_flush_if_needed(mod->init_layout.base);
+ 	frob_text(&mod->core_layout, set_memory_ro);
+ 	frob_text(&mod->core_layout, set_memory_x);
+ 
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 233af6936c93..c3cac44d96d4 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1944,6 +1944,26 @@ void unmap_kernel_range(unsigned long addr, unsigned long size)
+ }
+ EXPORT_SYMBOL_GPL(unmap_kernel_range);
+ 
++void set_vm_flush_if_needed(void *addr)
++{
++	struct vm_struct *vm;
++
++	/*
++	 * If all PAGE_KERNEL memory is executable, the mandatory flush
++	 * doesn't really add any security value, so skip it. However if there
++	 * is a way to reset direct map permissions, we still need to flush in
++	 * order to do that.
++	 */
++	if (!IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
++		&& pgprot_val(PAGE_KERNEL_EXEC) == pgprot_val(PAGE_KERNEL))
++		return;
++
++	vm = find_vm_area(addr);
++
++	if (vm)
++		vm->flags |= VM_FLUSH_RESET_PERMS;
++}
++
+ int map_vm_area(struct vm_struct *area, pgprot_t prot, struct page **pages)
+ {
+ 	unsigned long addr = (unsigned long)area->addr;
+@@ -2633,9 +2653,8 @@ EXPORT_SYMBOL(vzalloc_node);
+  */
+ void *vmalloc_exec(unsigned long size)
+ {
+-	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+-			GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
+-			NUMA_NO_NODE, __builtin_return_address(0));
++	return __vmalloc_node(size, 1, GFP_KERNEL, PAGE_KERNEL_EXEC,
++			      NUMA_NO_NODE, __builtin_return_address(0));
+ }
+ 
+ #if defined(CONFIG_64BIT) && defined(CONFIG_ZONE_DMA32)
+-- 
+2.20.1
+
