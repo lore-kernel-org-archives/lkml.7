@@ -2,199 +2,156 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCCCC04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61545C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476AC2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2635E21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GLrQuc8z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnONe+iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfE2AMZ (ORCPT
+        id S1727458AbfE2ATI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 20:12:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44669 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfE2AMZ (ORCPT
+        Tue, 28 May 2019 20:19:08 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42074 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfE2ATH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 20:12:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so185616pgp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 17:12:24 -0700 (PDT)
+        Tue, 28 May 2019 20:19:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 188so614377ljf.9
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 17:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LNTyn5rchJW4MmryhfQlOh+K3KT5VsOVQqxARSU5a5Y=;
-        b=GLrQuc8zvIQ9LqRDpZL+InFTHuHVBXyl5wM6E6Sh92l9bW5OSzGUc0Ytg36DUxyAFO
-         /Zk7ByaMl+LSBP8e2ZF3/15UWSIx8wokhWJWrhGY5Y6aKqu+GvlwEkeZfKjz1CV4qizr
-         v08tzdALVjk6vCqjNiBYYRVnB9TtCyAENKbIw=
+         :cc;
+        bh=BtTsiX9fLP1ilIjEBEUD3JJBC+K61VnyY/gr7l2/6Ws=;
+        b=NnONe+izAdPLfKUy8Po++z1ngR/rXmo0Qsl+xByZnGpvVdobMUqZHmA5KwfW7WvWn+
+         3ANkzwb2vuN5lZMvzrHLkb+z4R+UVi8444eOuoN5YW4HeBzb8Z2ZJAWD69jp6XUnHar1
+         +qNsraJtJTttKc32/+WD3i0TVrlFXtFKXk+jc37zgkA+cqBcCfGpqCAMo35/NJ4l2bsd
+         O12WI/FQQAfYCWItMDxaZTQFN3AKY88Rif42fUDNgbOVSGUJge4tIMx2SCB0GioKjJXY
+         9eQvgJudtOsEagr/IGzUNyv1kzMbDwpA4Ln4bQ/v5PcIdgTOKT6D+P/I4DS1JyUEU/X+
+         T/FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LNTyn5rchJW4MmryhfQlOh+K3KT5VsOVQqxARSU5a5Y=;
-        b=GPN/6iJHINMB+MrglQUy+XCl6j4tCrqeHcurNmSakKpVPW3zZJoo26iWKGgsVsW0m7
-         8fbO5kwvEH/qCmkfHi6uylWPvaVFTJOE3RyEmrrRm1/nnPqLaogwbhO4rOdVgy1Ey4lm
-         hyz2YocqZ3yWFHkIDPU4b13gWeOTDqhTp16VlFkVKu7lopUvYquY2ZD4pZRVfl+OF840
-         blgkowJiuUyLSOGdUbFeJqKVNmxjRhkcKWphTqtoGqrsU4szIruz/yyLaN2erBVXf9kF
-         Gq2PJDGVPDpVIGvmLoyl3KVurA4f9kzc96EjAfUGcxQcMPI8xoEwPgz4opIFgeyOrCTz
-         JXZw==
-X-Gm-Message-State: APjAAAWElUHqz9ciKGBv30f7Oq/hgVwXJptbJUjNC+kd7SqHj5q8zZpZ
-        N3CTEVro83OYW/hPfs44nIuw0jJes4zYhTmbXybebg==
-X-Google-Smtp-Source: APXvYqzrIwNPLIdmXwLRMGzet52o+hE+W9RSDh7AWebEvlLNrdUllaWE/Z8q1yjFRcK8e2eWGV4bmFNOxlPrnUvHPPw=
-X-Received: by 2002:a17:90a:33c5:: with SMTP id n63mr9111023pjb.16.1559088743794;
- Tue, 28 May 2019 17:12:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=BtTsiX9fLP1ilIjEBEUD3JJBC+K61VnyY/gr7l2/6Ws=;
+        b=R9A1sVo7Syju7LFHbOvaPn0olXhbCD7rbf3mdsipqd7a2ZUTQE0/Iv6JrRgOpKE7ih
+         f/M0Zx5xaQOKk/kUzF5035QjUmFL5/Y/IIU2h8lA30b5Kondk09zT6hDmW4mX14Ip3Kh
+         /3VYFDMx2XqhcTRzYmaw4XhLtnWpw438E4mN3kCTzEKlodGQepZanxIXhvnehJpc5E0q
+         k6myGs/BwHIKZTjU5/L8po/wHdp3GP8iuJsW5QX200wsXArZx2c2Q5Y1Jhk32VttsQ3C
+         gRdfZPfYavW7knUm/E34xee2/0MUPpSjquIaqR2XnM/8ykD1RIGdyT2y7PRgk1a08Q6C
+         DqPw==
+X-Gm-Message-State: APjAAAX2432hNA4nUjFZMyVnOhgQIdwXk+ZNt7ijSvld7X7HbpTJCYZB
+        wcLZTDtE+DNBZU2ixIS5X+QWXU4es2oEvZ7+XLQ=
+X-Google-Smtp-Source: APXvYqwplNqkarrINTuU9IxbWBiqARqN45Gt9GkeoXDEmXe+Phow9DEhwG8Xi+THEJBYMpPcbgnAI2uVS2yJev3oqO0=
+X-Received: by 2002:a2e:9b54:: with SMTP id o20mr4446799ljj.95.1559089145667;
+ Tue, 28 May 2019 17:19:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
- <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
-In-Reply-To: <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
-From:   "Sean O'Brien" <seobrien@chromium.org>
-Date:   Tue, 28 May 2019 17:12:12 -0700
-Message-ID: <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-To:     Harry Cutts <hcutts@chromium.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+References: <20190522004655.20138-1-fabiolima39@gmail.com> <20190522094130.GS31203@kadam>
+In-Reply-To: <20190522094130.GS31203@kadam>
+From:   Fabio Lima <fabiolima39@gmail.com>
+Date:   Tue, 28 May 2019 21:18:47 -0300
+Message-ID: <CAAM19CGt1UoAXgQWoO85k7UQ8r3rBx6S7-po1aC5OfQZbcO55Q@mail.gmail.com>
+Subject: Re: [PATCH] staging: rtl8723bs: Add missing blank lines
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, jeremy@azazel.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We do still use a maxed out major axis as a signal for a palm in the touchs=
-creen
-logic, but I'm not too concerned because if that axis is maxed out, the con=
-tact
-should probably be treated as a palm anyway...
-
-I'm more concerned with this affecting our gesture detection for
-touchpad. It looks
-like this change would cause all contacts to reported as some percentage bi=
-gger
-than they are currently. Can you give me an idea of how big that percentage=
- is?
-
-On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
+Em qua, 22 de mai de 2019 06:41, Dan Carpenter
+<dan.carpenter@oracle.com> escreveu:
 >
-> On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com>=
- wrote:
+> On Tue, May 21, 2019 at 09:46:55PM -0300, Fabio Lima wrote:
+> > This patch resolves the following warning from checkpatch.pl
+> > WARNING: Missing a blank line after declarations
 > >
-> > Hi Benjamin, KT,
+> > Signed-off-by: Fabio Lima <fabiolima39@gmail.com>
+> > ---
+> >  drivers/staging/rtl8723bs/core/rtw_debug.c | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> > On Mon, May 27, 2019 at 11:55:01AM +0800, =E5=BB=96=E5=B4=87=E6=A6=AE w=
-rote:
-> > > Hi
-> > >
-> > > -----Original Message-----
-> > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> > > Sent: Friday, May 24, 2019 5:37 PM
-> > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/hei=
-ght
-> > >
-> > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoire=
-s@redhat.com> wrote:
-> > > >
-> > > > The width/height is actually in the same unit than X and Y. So we
-> > > > should not tamper the data, but just set the proper resolution, so
-> > > > that userspace can correctly detect which touch is a palm or a fing=
-er.
-> > > >
-> > > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > >
-> > > > --
-> > > >
-> > > > new in v2
-> > > > ---
-> > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> > > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > > >
-> > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
-> > > > b/drivers/input/mouse/elan_i2c_core.c
-> > > > index 7ff044c6cd11..6f4feedb7765 100644
-> > > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > > @@ -45,7 +45,6 @@
-> > > >  #define DRIVER_NAME            "elan_i2c"
-> > > >  #define ELAN_VENDOR_ID         0x04f3
-> > > >  #define ETP_MAX_PRESSURE       255
-> > > > -#define ETP_FWIDTH_REDUCE      90
-> > > >  #define ETP_FINGER_WIDTH       15
-> > > >  #define ETP_RETRY_COUNT                3
-> > > >
-> > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp=
-_data *data,
-> > > >                         return;
-> > > >                 }
-> > > >
-> > > > -               /*
-> > > > -                * To avoid treating large finger as palm, let's re=
-duce the
-> > > > -                * width x and y per trace.
-> > > > -                */
-> > > > -               area_x =3D mk_x * (data->width_x - ETP_FWIDTH_REDUC=
-E);
-> > > > -               area_y =3D mk_y * (data->width_y - ETP_FWIDTH_REDUC=
-E);
-> > > > +               area_x =3D mk_x * data->width_x;
-> > > > +               area_y =3D mk_y * data->width_y;
-> > > >
-> > > >                 major =3D max(area_x, area_y);
-> > > >                 minor =3D min(area_x, area_y); @@ -1123,8 +1118,10 =
-@@
-> > > > static int elan_setup_input_device(struct elan_tp_data *data)
-> > > >                              ETP_MAX_PRESSURE, 0, 0);
-> > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> > > >                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
-> > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> > > >                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-> > >
-> > > I had a chat with Peter on Wednesday, and he mentioned that this is d=
-angerous as Major/Minor are max/min of the width and height. And given that=
- we might have 2 different resolutions, we would need to do some computatio=
-n in the kernel to ensure the data is correct with respect to the resolutio=
-n.
-> > >
-> > > TL;DR: I don't think we should export the resolution there :(
-> > >
-> > > KT, should I drop the patch entirely, or is there a strong argument f=
-or keeping the ETP_FWIDTH_REDUCE around?
-> > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE e=
-xisted.
-> > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> > >
-> > > The only side effect will happen on Chromebook because such computati=
-on have stayed in ChromeOS' kernel for four years.
-> > > Chrome's finger/palm threshold may be different from other Linux dist=
-ribution.
-> > > We will discuss it with Google once the patch picked by chrome and ca=
-use something wrong.
+> > diff --git a/drivers/staging/rtl8723bs/core/rtw_debug.c b/drivers/staging/rtl8723bs/core/rtw_debug.c
+> > index 9f8446ccf..853362381 100644
+> > --- a/drivers/staging/rtl8723bs/core/rtw_debug.c
+> > +++ b/drivers/staging/rtl8723bs/core/rtw_debug.c
+> > @@ -382,6 +382,7 @@ ssize_t proc_set_roam_tgt_addr(struct file *file, const char __user *buffer, siz
+> >       if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
 > >
-> > Chrome has logic that contact with maximum major/minor is treated as a
-> > palm, so here the driver (which originally came from Chrome OS)
-> > artificially reduces the contact size to ensure that palm rejection
-> > logic does not trigger.
+> >               int num = sscanf(tmp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", addr, addr+1, addr+2, addr+3, addr+4, addr+5);
+> > +
+> >               if (num == 6)
+> >                       memcpy(adapter->mlmepriv.roam_tgt_addr, addr, ETH_ALEN);
 > >
-> > I'm adding Harry to confirm whether we are still using this logic and t=
-o
-> > see if we can adjust it to be something else.
 >
-> I'm not very familiar with our touchpad code, so adding Sean O'Brien, who=
- is.
+> I'm sorry but this function is really such nonsense.  Can you send a
+> patch to re-write it instead?
+>
+> drivers/staging/rtl8723bs/core/rtw_debug.c
+>    371  ssize_t proc_set_roam_tgt_addr(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data)
+>    372  {
+>    373          struct net_device *dev = data;
+>    374          struct adapter *adapter = (struct adapter *)rtw_netdev_priv(dev);
+>    375
+>    376          char tmp[32];
+>    377          u8 addr[ETH_ALEN];
+>    378
+>    379          if (count < 1)
+>
+> This check is silly.  I guess the safest thing is to change it to:
+>                 if (count < sizeof(tmp))
+>
+>    380                  return -EFAULT;
+>
+> It should be return -EINVAL;
+>
+>    381
+>    382          if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
+>
+> Remove the check for if the user passes a NULL buffer, because that's
+> already handled in copy_from_user().  Return -EFAULT if copy_from_user()
+> fails.
+>
+>         if (copy_from_user(tmp, buffer, sizeof(tmp)))
+>                 return -EFAULT;
+>
+>
+>    383
+>
+> Extra blank line.
+>
+>    384                  int num = sscanf(tmp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", addr, addr+1, addr+2, addr+3, addr+4, addr+5);
+>
+> You will need to move the num declaration to the start of the function.
+>
+>    385                  if (num == 6)
+>    386                          memcpy(adapter->mlmepriv.roam_tgt_addr, addr, ETH_ALEN);
+>
+> If num != 6 then return -EINVAL;
+>
+>    387
+>    388                  DBG_871X("set roam_tgt_addr to "MAC_FMT"\n", MAC_ARG(adapter->mlmepriv.roam_tgt_addr));
+>    389          }
+>    390
+>    391          return count;
+>    392  }
+>
+> regards,
+> dan carpenter
+
+Thanks for your feedback.
+This is my first patch and I will send the second patch with
+modifications that you suggest.
+
+Fabio Lima
