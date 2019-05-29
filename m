@@ -2,144 +2,97 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F5FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AF2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B548E23CE0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1923C23CE6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Alfsrw1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfE2QGu convert rfc822-to-8bit (ORCPT
+        id S1726925AbfE2QID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:06:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54926 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfE2QGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:06:49 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F077C30BC572;
-        Wed, 29 May 2019 16:06:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E295A7941C;
-        Wed, 29 May 2019 16:06:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190528231218.GA28384@kroah.com>
-References: <20190528231218.GA28384@kroah.com> <20190528162603.GA24097@kroah.com> <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk> <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk> <4031.1559064620@warthog.procyon.org.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring buffer
+        Wed, 29 May 2019 12:08:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46770 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfE2QIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 12:08:02 -0400
+Received: by mail-qk1-f194.google.com with SMTP id a132so1781073qkb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 09:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fsh0TYYc8CcoupHMZiwDZqdBbvSIVmD8HEtsKuwww8s=;
+        b=Alfsrw1MVw34ZMTuaGUxB/ZqEsRTzwdDj0vXoeivqbB0oyFDAIptz8nj+2u3RnZVnL
+         jAkqVvr3hZEHvsxwiYYKjvuRy7L8SLIhoM+iZgtk5APZMQBzygh9x3JvHKhqPFu/GrrJ
+         kqGcJ+4PNJWFHh0cl4JFydycISRCpMv5JilO8aoH2kakAl1Mi0oy29buspX8OLIcOer+
+         W9VeGsHHmC2Hpz7uOpb43qDTXKM5z7HFAmmCW9GMnylg1VwbyjEkEALrhGNBr4HBgwej
+         fJJLOLQjrUhhQHtbgpuLOJpQx1Rz9CupCAMAWIFCV3X3WV6h7ciLKihet+bDXWlb6XQv
+         mYRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fsh0TYYc8CcoupHMZiwDZqdBbvSIVmD8HEtsKuwww8s=;
+        b=DMZ5vKsa1GBplD6RtKf5WxMvNxhVtA0Gz5cUtQC3VwiCW18kt8NVuX4lBq0owJQsKn
+         u5OiD6YNCkbm845UjvM1SCxP7ZqLW+4mnh+9C4tUNtVD+M4u9TtjCSzN5fU5+e0ssT2X
+         GHFLsft4z6qLkVVT0trY9SoY/SsrNTBvsuJCg7utfLdH5OxLi4wWoGgFXeyndnWbPDtI
+         5XeMxCB+XoehHD00DetYZ4JtxbvC8xufTzkWrIWTEPpygYH7kKwVGJpkuc2p5AjVUk9O
+         E+XikP863lzXMnHRLKJzJYlS3+SXqToEalTn3y0iKUAcIgLeG2AuMIuifc6g1MGtM19v
+         XNyw==
+X-Gm-Message-State: APjAAAXAd5OKupiGW2jjnDUu7k/pQkDIM1F5GBsZDuvMj+Xsi8/RCTMl
+        eLvULUQrx48AGo8qP57iInS8LuDVF1Q=
+X-Google-Smtp-Source: APXvYqxR4BNFqVP5+qkd0J3oYODmAEzobBbmiVkKU9yYgPMKGfDxqubNW01C3jR16936S7t0IZ85Xw==
+X-Received: by 2002:a05:620a:13f9:: with SMTP id h25mr9603277qkl.283.1559146081685;
+        Wed, 29 May 2019 09:08:01 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r186sm518843qkd.95.2019.05.29.09.08.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 09:08:01 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hW17Q-0001kD-Je; Wed, 29 May 2019 13:08:00 -0300
+Date:   Wed, 29 May 2019 13:08:00 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mlx5: avoid 64-bit division
+Message-ID: <20190529160800.GA6680@ziepe.ca>
+References: <20190520111902.7104DE0184@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31935.1559146000.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 29 May 2019 17:06:40 +0100
-Message-ID: <31936.1559146000@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 29 May 2019 16:06:48 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520111902.7104DE0184@unicorn.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> > kref_put() could potentially add an unnecessary extra stack frame and would
-> > seem to be best avoided, though an optimising compiler ought to be able to
-> > inline if it can.
+On Mon, May 20, 2019 at 01:19:02PM +0200, Michal Kubecek wrote:
+> Commit 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+> breaks i386 build by introducing three 64-bit divisions. As the divisor
+> is MLX5_SW_ICM_BLOCK_SIZE() which is always a power of 2, we can replace
+> the division with bit operations.
 > 
-> If kref_put() is on your fast path, you have worse problems (kfree isn't
-> fast, right?)
-> 
-> Anyway, it's an inline function, how can it add an extra stack frame?
+> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+>  drivers/infiniband/hw/mlx5/cmd.c  | 9 +++++++--
+>  drivers/infiniband/hw/mlx5/main.c | 2 +-
+>  2 files changed, 8 insertions(+), 3 deletions(-)
 
-The call to the function pointer.  Hopefully the compiler will optimise that
-away for an inlineable function.
+Applied to for-rc, thanks
 
-> > Are you now on the convert all refcounts to krefs path?
-> 
-> "now"?  Remember, I wrote kref all those years ago,
-
-Yes - and I thought it wasn't a good idea at the time.  But this is the first
-time you've mentioned it to me, let alone pushed to change to it, that I
-recall.
-
-> everyone should use
-> it.  It saves us having to audit the same pattern over and over again.
-> And, even nicer, it uses a refcount now, and as you are trying to
-> reference count an object, it is exactly what this was written for.
-> 
-> So yes, I do think it should be used here, unless it is deemed to not
-> fit the pattern/usage model.
-
-kref_put() enforces a very specific destructor signature.  I know of places
-where that doesn't work because the destructor takes more than one argument
-(granted that this is not the case here).  So why does kref_put() exist at
-all?  Why not kref_dec_and_test()?
-
-Why doesn't refcount_t get merged into kref, or vice versa?  Having both would
-seem redundant.
-
-Mind you, I've been gradually reverting atomic_t-to-refcount_t conversions
-because it seems I'm not allowed refcount_inc/dec_return() and I want to get
-at the point refcount for tracing purposes.
-
-> > > > +module_exit(watch_queue_exit);
-> > > 
-> > > module_misc_device()?
-> > 
-> > 	warthog>git grep module_misc_device -- Documentation/
-> > 	warthog1>
-> 
-> Do I have to document all helper macros?
-
-If you add an API, documenting it is your privilege ;-)  It's an important
-test of the API - if you can't describe it, it's probably wrong.
-
-Now I will grant that you didn't add that function...
-
-> Anyway, it saves you boilerplate code, but if built in, it's at the module
-> init level, not the fs init level, like you are asking for here.  So that
-> might not work, it's your call.
-
-Actually, I probably shouldn't have a module exit function.  It can't be a
-module as it's called by core code.  I'll switch to builtin_misc_device().
-
-> And how does the tracing and perf ring buffers do this without needing
-> volatile?  Why not use the same type of interface they provide, as it's
-> always good to share code that has already had all of the nasty corner
-> cases worked out.
-
-I've no idea how trace does it - or even where - or even if.  As far as I can
-see, grepping for mmap in kernel/trace/*, there's no mmap support.
-
-Reading Documentation/trace/ring-buffer-design.txt the trace subsystem has
-some sort of transient page fifo which is a lot more complicated than what I
-want and doesn't look like it'll be mmap'able.
-
-Looking at the perf ring buffer, there appears to be a missing barrier in
-perf_aux_output_end():
-
-	rb->user_page->aux_head = rb->aux_head;
-
-should be:
-
-	smp_store_release(&rb->user_page->aux_head, rb->aux_head);
-
-It should also be using smp_load_acquire().  See
-Documentation/core-api/circular-buffers.rst
-
-And a (partial) patch has been proposed: https://lkml.org/lkml/2018/5/10/249
-
-David
+Jason
