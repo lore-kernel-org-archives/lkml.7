@@ -2,144 +2,95 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF628C072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F4AC04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A774721019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:15:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TI6pGipG"
+	by mail.kernel.org (Postfix) with ESMTP id 9C51721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 02:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfE2CPG (ORCPT
+        id S1726520AbfE2CSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 22:15:06 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35163 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfE2CPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 22:15:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p26so1131852edr.2;
-        Tue, 28 May 2019 19:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MVuq7lYaXanQ2+muRBv1fL9MjUsN0jmBARMWs3+IXa4=;
-        b=TI6pGipGG6Tmo7+0fwdqTp7wV3+aiOpsbht6be1dsWP2ku4I1dSCYO4gVu6KPzUuZS
-         NnX8I9sQKcYRBPlwfle7uM66O8mHfggCXWP7BGbCb3beoGCVCid6ik75HNmMbeMgjHvx
-         eDZwhDHipnxUE0I4rPjzPGXq1mqPyXndXUFxPWkR2kT3LLfC7nZ+KKyae6VYlFh6cKhT
-         j9rZFyCnO3myUsy15l36yvHsrhFRGq9XCTJfVpBKyVSLJJ4x955ScGyl4wGeAJdPEkCD
-         Tky+G1WtRi6GRjqJGi33sUaYvVSc0yMtncd6Rtxl2+KeBIHLIY3iWAJsvyyyqSwWxUrY
-         lutw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MVuq7lYaXanQ2+muRBv1fL9MjUsN0jmBARMWs3+IXa4=;
-        b=br4Y9QlqKW0SJKIAK8GX1l053V1ZlJ4H3Ds+QmjpCbudfWLfkfoyDscMbQHSmUFWXE
-         aFjyqL/ikpbm+TJIfYTR6M9vfRE/HI7iLwHc0P4QedYYcqGo52d2S5Gj1EzZ4qvkdoq3
-         B6YqwaAtSIj8Ca6fNYEGSCY2u0GEUiJZBFypPsWwlHzQSDpBCgalRWO3OMZXfiTu5xDm
-         nAYhfoOaCee6TJAevaFX6PuDpax4VGq4V9jUoEHI4mReUhOu7fn07SkexSs5HmICM3xh
-         FH2sbfkkuLyYyaBoBH0ZzgGfBLUUg4qsJBtDvT8xC7ukETW1UMiMQihv91AO/J08xzHY
-         JGoQ==
-X-Gm-Message-State: APjAAAVeiHvwhxczgfO1y6Awur3fcjdwebKs+rULlfKv8rtNOuHw45YD
-        fiXrBh4+rOD7ECQkoKPSnJuvyTN12J2vI0BLfLE=
-X-Google-Smtp-Source: APXvYqyOg5fgYNs1hVcgXxnSIALAf/v2b0IbtA6UkMpm8Me8LtYEdvXve0H0HiVXQItgpL6SOU+F0L3Z0HgnhF+z4oc=
-X-Received: by 2002:a05:6402:1484:: with SMTP id e4mr2931835edv.57.1559096103705;
- Tue, 28 May 2019 19:15:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp>
-In-Reply-To: <20190529011705.GA12977@basecamp>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 28 May 2019 19:14:50 -0700
-Message-ID: <CAF6AEGu4JNePimAmBG6GFT8DAaQ56OXYqu5BSN_JQB4KaBt29Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 May 2019 22:18:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1353 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbfE2CSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 22:18:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 19:18:07 -0700
+X-ExtLoop1: 1
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga008.fm.intel.com with ESMTP; 28 May 2019 19:18:04 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH net-next v3 0/5] net: stmmac: enable EHL SGMII
+Date:   Wed, 29 May 2019 18:18:33 +0800
+Message-Id: <1559125118-24324-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 6:17 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
-> > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > > Here is a patch series that adds initial display support for the LG
-> > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
-> > > of these patches are RFC until we can get it fully working.
-> > >
-> > > The phones boots into terminal mode, however there is a several second
-> > > (or more) delay when writing to tty1 compared to when the changes are
-> > > actually shown on the screen. The following errors are in dmesg:
-> >
-> > I tested to apply patches 2-6 and got the console up on the phone as well.
-> > I see the same timouts, and I also notice the update is slow in the
-> > display, as if the DSI panel was running in low power (LP) mode.
-> >
-> > Was booting this to do some other work, but happy to see the progress!
->
-> Thanks!
->
-> I've had three people email me off list regarding the display working on
-> 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
-> this email is to get some more information out publicly.
->
-> I pushed up a branch to my github with 15 patches applied against 4.17
-> that has a working display:
->
-> https://github.com/masneyb/linux/commits/display-works-4.17
->
-> It's in low speed mode but its usable. The first 10 patches are in
-> mainline now and the last 5 are in essence this patch series with the
-> exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
-> There's a slightly different version of that patch in mainline now.
->
-> I'm planning to work on the msm8974 interconnect support once some of
-> the outstanding interconnect patches for the msm kms/drm driver arrive
-> in mainline. I'd really like to understand why the display works on
-> 4.17 with those patches though. I assume that it's related to the
-> vblank events not working properly? Let me preface this with I'm a
-> total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
-> looking for these events in the atomic commits before the migration?
-> See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
-> helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
-> call that was added.
+This patch-set is to enable Ethernet controller
+(DW Ethernet QoS and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
+The DW Ethernet PCS is the Physical Coding Sublayer that is between Ethernet
+MAC and PHY and uses MDIO Clause-45 as Communication.
 
-interconnect probably good to get going anyways (and I need to find
-some time to respin those mdp5/dpu patches) but I guess not related to
-what you see (ie. I'd expect interconnect issue would trigger
-underflow irq's)..
+Kweh Hock Leong (1):
+  net: stmmac: enable clause 45 mdio support
 
-I'm not entirely sure why atomic would break things but cmd mode
-panels aren't especially well tested.  I can't find it now but there
-was a thread (or IRC discussion?) that intf2vblank() should be
-returning MDP5_IRQ_PING_PONG_<n>_DONE instead of
-MDP5_IRQ_PING_PONG_<n>_RD_PTR, which seems likely and possibly related
-to vblank timing issues..
+Ong Boon Leong (3):
+  net: stmmac: introducing support for DWC xPCS logics
+  net: stmmac: add xpcs function hooks into main driver and ethtool
+  net: stmmac: add xPCS functions for device with DWMACv5.1
 
-BR,
--R
+Voon Weifeng (1):
+  net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
 
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  33 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.c       | 198 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxpcs.h       |  51 ++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |  41 ++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   2 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  50 ++++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 152 ++++++++++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  40 ++++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 111 ++++++++++++
+ include/linux/phy.h                                |   2 +
+ include/linux/stmmac.h                             |   3 +
+ 14 files changed, 649 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwxpcs.h
 
+-- 
+Changelog v2:
+*Added support for the C37 AN for 1000BASE-X and SGMII (MAC side SGMII only)
+*removed and submitted the fix patch to net
+ "net: stmmac: dma channel control register need to be init first"
+*Squash the following 2 patches and move it to the end of the patch set:
+ "net: stmmac: add EHL SGMII 1Gbps platform data and PCI ID"
+ "net: stmmac: add xPCS platform data for EHL"
+Changelog v3:
+*Applied reversed christmas tree
+1.9.1
 
->
-> Brian
