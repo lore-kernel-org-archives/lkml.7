@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290ADC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A1DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A3A21670
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D9E20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="VFu9w0hD"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KwCs5fOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfE2K5T (ORCPT
+        id S1726998AbfE2K5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:57:19 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44773 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbfE2K5R (ORCPT
+        Wed, 29 May 2019 06:57:24 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46664 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfE2K5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:57:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c5so898549pll.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:57:17 -0700 (PDT)
+        Wed, 29 May 2019 06:57:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bb3so893463plb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:57:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6DwmkLGpJZpkcPw0XMVVDkf1y0K009QPRSW8hUfXBRY=;
-        b=VFu9w0hD1Ourpd8eMMh8PYNciyswgOS1KtrgHUdk0KAmbBdup7r3OzJtKsKMtdN0BH
-         5AS3DuAId2PTW+ttuh2IAHVuA7mZ2XxF6MgB1mm9oABWptM+8bobX3Dwxul01VlpKDoS
-         gSnWhBuTO1Skk4JqIA12yvsaam3Xpv9pnZMN0=
+        bh=lMfuNcsK6tuVz7vC7aYS5UVf9NSaVZRFtcoyHVQ3R8M=;
+        b=KwCs5fOwghwsU5zqVfivfYLGzuV2zoFcgXvqpGrFf4v+qrweHmIqI0lJmPNL4epz5f
+         bMMAXr+tuk70/z4UYM5UxW/zi770+a2NqzhFNfecL2Sa4PWCiHz5H6EUHkB0fy4ge9Bq
+         8jK10Q21ii1l1Z/AYeX41oTpqgi372oJT7KSA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6DwmkLGpJZpkcPw0XMVVDkf1y0K009QPRSW8hUfXBRY=;
-        b=XI9pEwsuZtp0EqoBIDj2st1XRTG+le8vIZNF/bDdFXcs4yOcrEQ8AsCWdmKJJtBcQs
-         KJhZ0EZvXeMx4P79GItG9Y4LJB6tccL/DXzeZr6MH2r7W+bdKVWssjGGnn/3TAWfEopf
-         DttddjjtpgMhFEqfC/WryM7QP/lsL01bsFb5lw75fDFw3Zc1nuUZ5JdE0OpFGNjWXuql
-         BfgrNITNzk3mcmZvAXS4BpDkKv9TEWM6X+ITvdb7WyGneoIcfaqdh0cK43qViJDV3yDy
-         WKWv/3FDhNbXfI5rul2wc4pnSJ9rwdJnIY8v5OC1LtPhp4Jp1g2zS76MiXo1R//ZjH9y
-         jCQg==
-X-Gm-Message-State: APjAAAXCBmbsFIZW/DiqCbNvX5pDNAvfYiK/t+VB2Pu5qFQzUdN7KOcE
-        YU9iLHuuHub6yJc1hhNqy+tJwA==
-X-Google-Smtp-Source: APXvYqwygLxq0inFrDqP1GBEA4oJIXO+O1N08+R0LPi1oqe2Amq7V89w6a/dgny0hRfvq1CVA26PnA==
-X-Received: by 2002:a17:902:20eb:: with SMTP id v40mr15879742plg.239.1559127437024;
-        Wed, 29 May 2019 03:57:17 -0700 (PDT)
+        bh=lMfuNcsK6tuVz7vC7aYS5UVf9NSaVZRFtcoyHVQ3R8M=;
+        b=QHH5k/nthey5EAAkNUPQ9uDppUlcG4Qt8zM89wqYDN7R3DDzjSeuepBIDZgfXDzV4X
+         WQIVLCqvE6SlHGaY6HRo1g6RxlO9EBOLyJuDbmB18CxpWPR/ovwGghah6Z4vo+5m7t/y
+         KeU8VkWHQTPIiKAH8h62PKZu0BgyQUQ5Iw0h073dZuaVU4c2DrkPL8FMLOzP9ZVUVy/9
+         0a2LXHSBVneyj9j0I5GyZ7WwzJGDGWiFGauWMQ1CYSdkfb6tBCL/1Oh7EO083O+rP6Ss
+         xzJHBhopQ+KZhJ4xRKC/vyxvdCRouuJKEjviEdd7yDsg62MX5iWW4TOvhGmvRcsGYQ9F
+         zBBQ==
+X-Gm-Message-State: APjAAAW+QnbZq7+ucVx1OsghYoy1FjtI1Lv/wYeEZ07xi+L4tB5mmVDd
+        slyvUnuY9jEgMpcs+oRHx8cm5w==
+X-Google-Smtp-Source: APXvYqwXHj5uVm2t/AeGvWcmeixCbqNTC6/9vS/5OT5LWc4yeua8wWhsULIPjXFvzVGVBE3iOaNS5Q==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr79658807pls.123.1559127441569;
+        Wed, 29 May 2019 03:57:21 -0700 (PDT)
 Received: from localhost.localdomain ([49.206.202.218])
-        by smtp.gmail.com with ESMTPSA id 184sm18974479pfa.48.2019.05.29.03.57.12
+        by smtp.gmail.com with ESMTPSA id 184sm18974479pfa.48.2019.05.29.03.57.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 03:57:16 -0700 (PDT)
+        Wed, 29 May 2019 03:57:21 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         David Airlie <airlied@linux.ie>,
@@ -65,9 +65,9 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         Sergey Suloev <ssuloev@orpaltech.com>,
         Ryan Pannell <ryan@osukl.com>, bshah@mykolab.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v9 8/9] arm64: dts: allwinner: a64-pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
-Date:   Wed, 29 May 2019 16:26:14 +0530
-Message-Id: <20190529105615.14027-9-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v9 9/9] arm64: dts: allwinner: oceanic-5205-5inmfd: Enable Microtech MTF050FHDI-03 panel
+Date:   Wed, 29 May 2019 16:26:15 +0530
+Message-Id: <20190529105615.14027-10-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190529105615.14027-1-jagan@amarulasolutions.com>
 References: <20190529105615.14027-1-jagan@amarulasolutions.com>
@@ -78,53 +78,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Feiyang FY07024DI26A30-D MIPI_DSI panel is desiged to attach with
-DSI connector on pine64 boards, enable the same for pine64 LTS.
+Microtech MTF050FHDI-03 is 1080x1920, 4-lane MIPI DSI LCD panel which
+has inbuilt NT35596 IC chip.
 
-DSI panel connected via board DSI port with,
+DSI panel connected to board via 39-pin FPC port with,
 - DLDO1 as VCC-DSI supply
-- DC1SW as AVDD supply
 - DLDO2 as DVDD supply
+- DC1SW as AVDD supply
+- DC1SW as AVEE supply
 - PD24 gpio for reset pin
 - PH10 gpio for backlight enable pin
 
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Tested-by: Tamas Papp <tamas@osukl.com>
+Signed-off-by: Ryan Pannell <ryan@osukl.com>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../sun50i-a64-oceanic-5205-5inmfd.dts        | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index e6fb9683f213..51b0cf71c3d4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -46,6 +46,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+index a4ddc0b9664c..ab9ee10ba6a2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
+@@ -8,6 +8,7 @@
  /dts-v1/;
  
  #include "sun50i-a64-sopine.dtsi"
 +#include <dt-bindings/pwm/pwm.h>
  
  / {
- 	model = "SoPine with baseboard";
-@@ -61,6 +62,14 @@
+ 	model = "Oceanic 5205 5inMFD";
+@@ -22,6 +23,15 @@
  		stdout-path = "serial0:115200n8";
  	};
  
 +	backlight: backlight {
 +		compatible = "pwm-backlight";
 +		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <8>;
++		brightness-levels = <412 512>;
++		num-interpolated-steps = <100>;
++		default-brightness-level = <100>;
 +		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
 +	};
 +
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -104,6 +113,24 @@
- 	status = "okay";
+ 	can_osc: can-osc {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -40,6 +50,29 @@
+ 	};
  };
  
++&de {
++	status = "okay";
++};
++
 +&dphy {
 +	status = "okay";
 +};
@@ -134,11 +142,12 @@ index e6fb9683f213..51b0cf71c3d4 100644
 +	status = "okay";
 +
 +	panel@0 {
-+		compatible = "feiyang,fy07024di26a30d";
++		compatible = "microtech,mtf050fhdi-03", "novatek,nt35596";
 +		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;	/* VCC-LCD */
-+		dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++		dvdd-supply = <&reg_dldo2>;			/* VCC-MIPI */
++		avdd-supply = <&reg_dc1sw>;			/* AVDD_5V0 */
++		avee-supply = <&reg_dc1sw>;			/* AVEE_5V */
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>;	/* LCD-RST: PD24 */
 +		backlight = <&backlight>;
 +	};
 +};
@@ -146,17 +155,33 @@ index e6fb9683f213..51b0cf71c3d4 100644
  &ehci0 {
  	status = "okay";
  };
-@@ -184,6 +211,10 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
+@@ -81,10 +114,26 @@
+ 	status = "okay";
  };
  
 +&r_pwm {
 +	status = "okay";
 +};
 +
- &sound {
- 	simple-audio-card,aux-devs = <&codec_analog>;
- 	simple-audio-card,widgets = "Microphone", "Microphone Jack",
+ &reg_dc1sw {
+ 	regulator-name = "vcc-phy";
+ };
+ 
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-dsi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-mipi";
++};
++
+ &reg_ldo_io0 {
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <2800000>;
 -- 
 2.18.0.321.gffc6fa0e3
 
