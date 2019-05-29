@@ -2,199 +2,228 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E61C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B7C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B51A21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D84C21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:18:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7RhC9x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfE2HQw convert rfc822-to-8bit (ORCPT
+        id S1726495AbfE2HSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:16:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42557 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfE2HQw (ORCPT
+        Wed, 29 May 2019 03:18:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46705 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfE2HSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:16:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so1319063qtk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:16:51 -0700 (PDT)
+        Wed, 29 May 2019 03:18:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y11so1003294pfm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:18:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lfPQaJK4b6PcFs1pATGFmdv3+D6FpEgotdn3n+xpnSo=;
+        b=M7RhC9x/89fJXs+K/H6afYRjpW07ij58C9JovMK1gsKLCu1t9dxKU5DYa7Yqb0xHYo
+         9jjxyggQhQu2K4o0XpCVy1KbIYXBuX3ortitNmgEczNhBHMLDhczJpiAstGpB3wc0Y7C
+         wKe46qsSphda6/YVzrf0hsU6+j0YqHcpKGG/bnpAq2CcXphIdJQoCzQ0CVaLAkghuSDG
+         viEMMmtmw0CbtSFBAl7RoXT90gkAviRD1jivPYFkTDT4l2tvR+YwpnImfRmc/Gofw4LI
+         e8ZAJEF8wj0BWME5Udk9Gtp5ASduIzyi44FzET6xClsaYvbJgrwbhjNeHK9uStJcQivz
+         zNaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YBsWEZZfo+UgqHtldSmUeH6vzvpGKBEdjxmYs3cxrzQ=;
-        b=j/9zGdhcfXJ9q/mooXxqIqm+t1IauUcPeHm8hZyl6qTk/MgNGUrrrDLxPhde4yi0z0
-         aK0wUMMmwmfHKLYyoZbSCrVFnhkTKHMvxW4QGmnKfpNLaibvdRDr8r5rGyf+jN4a+M2I
-         QrlXEOgMasUxOiQGJ4rbQmrqYgCQqOR2Sq4R6Gu5xUnSjXMnyaI+z1mIvod9SULciv5K
-         vBBixsC2UWG7CyZvL2GitN4UHBPZtTpesFnptq9qFPvpBO1vqgLFFMpc8Fz9kZ/XVGDl
-         O0qhOvkImeT+y/4jhklvPaFxILgpFe/0zqRDJFQKUGLvApQIPeyke+HcZqJNVP0zHGtt
-         7ADw==
-X-Gm-Message-State: APjAAAXr8tvLYO7LADMOclOZRbqvtw8qJTsHs9PYTe3TLzN9+AIwcLR5
-        sTXKVTp7g7jQl4YPjwu8035k4TpCBxLMfE6zUJfxsw==
-X-Google-Smtp-Source: APXvYqx3QpT7U52GOpJXgpspwc7C5sBUu9dZBrX+Y0X3RjiEndCbZ2+u1ir4OX62jHwIBBrVhwd28m50aYY5rJOeHMo=
-X-Received: by 2002:ac8:224d:: with SMTP id p13mr6085549qtp.154.1559114210817;
- Wed, 29 May 2019 00:16:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lfPQaJK4b6PcFs1pATGFmdv3+D6FpEgotdn3n+xpnSo=;
+        b=Sz3TOd5phV5URAVJmbd5bohYdlCdO4W59ucy/6zst1QMyrVCnR/n/28ZoFEJ0AtiaL
+         x/uDSYw3/YjsULdxBj84gCvp+Pv1PcFJdthslNoaF8ugBF3MXZIzu7RJptfzVno6L+2k
+         JyTdq3u+c78zUmYZkub2AaD3zh78JjJQLiyOemi477S9xG36iIXEUBFWP77yDYuyCFi3
+         42pQawGqha5AJxc0WaQHdpOGRs6jNkidHMpzAEZ3z7B9rz5HAqbYgqi03JHe0B9jIRlu
+         mS/uFihW8ZLgiR9zFMCwGAH9dmElpjNy7gtGotE4OxYf6DB4WHVhR08yw7jcDTJPDZ+d
+         P2Qw==
+X-Gm-Message-State: APjAAAULjoOScTbBZI4n3oUucICiHmtQYJJ1EI29vRrkbuNWYxdE2BoN
+        FNA+jvrm/BuxLXfYlg7ZiXY=
+X-Google-Smtp-Source: APXvYqwOkFXvZjxTMa7XfJD9UYwZbQAVrZVJTnhy8paL3sJPyiMYYXu21mQiS9/zRY2lIYCHdhfhtQ==
+X-Received: by 2002:a63:2224:: with SMTP id i36mr17923970pgi.70.1559114332873;
+        Wed, 29 May 2019 00:18:52 -0700 (PDT)
+Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id y16sm32038938pfo.133.2019.05.29.00.18.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 00:18:52 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ARM: dts: imx6: rdu2: Add node for UCS1002 USB charger chip
+Date:   Wed, 29 May 2019 00:18:41 -0700
+Message-Id: <20190529071843.24767-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
- <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com> <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
-In-Reply-To: <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 29 May 2019 09:16:38 +0200
-Message-ID: <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-To:     "Sean O'Brien" <seobrien@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     Harry Cutts <hcutts@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 2:12 AM Sean O'Brien <seobrien@chromium.org> wrote:
->
-> We do still use a maxed out major axis as a signal for a palm in the touchscreen
-> logic, but I'm not too concerned because if that axis is maxed out, the contact
-> should probably be treated as a palm anyway...
->
-> I'm more concerned with this affecting our gesture detection for
-> touchpad. It looks
-> like this change would cause all contacts to reported as some percentage bigger
-> than they are currently. Can you give me an idea of how big that percentage is?
+Add node for UCS1002 USB charger chip connected to front panel USB and
+replace "regulator-fixed" previously used to control VBUS.
 
-On the P52, I currently have:
-[  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-[  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
 
--> with the computation done in the kernel:
-width_ratio: 126
-height_ratio: 123
+Changes since [v1]:
 
-For my average finger, the reported traces are between 4 and 6:
-With the ETP_FWIDTH_REDUCE:
-Major between 144 to 216
-Minor between 132 to 198
+    - Added GPIO hog configuration to put UCS1002 into correct mode
+      even before its driver takes over. The code for that is taken
+      from similar patch from Lucas, so I added his Signed-off-by as
+      well.
 
-Without:
-Major between 504 to 756
-Minor between 492 to 738
+[v1] lore.kernel.org/r/20190522071227.31488-1-andrew.smirnov@gmail.com
 
-So a rough augmentation of 350%
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 77 +++++++++++++++++++------
+ 1 file changed, 59 insertions(+), 18 deletions(-)
 
-For the Synaptics devices (over SMBus), they send the raw value of the
-traces, so you will get a major/minor between 2 to 5. Max on these
-axes is 15, so we should get the same percentage of value comparing to
-the range.
-Which is why libinput has a database of which device reports which
-pressure/major/minor ranges as otherwise the values are just
-impossible to understand.
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 93be00a60c88..07e21d1e5b4c 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -60,18 +60,6 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_5p0v_user_usb: regulator-5p0v-user-usb {
+-		compatible = "regulator-fixed";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_reg_user_usb>;
+-		vin-supply = <&reg_5p0v_main>;
+-		regulator-name = "5V_USER_USB";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
+-		startup-delay-us = <1000>;
+-	};
+-
+ 	reg_3p3v_pmic: regulator-3p3v-pmic {
+ 		compatible = "regulator-fixed";
+ 		vin-supply = <&reg_12p0v>;
+@@ -331,6 +319,39 @@
+ 	};
+ };
+ 
++&gpio3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpio3_hog>;
++
++	usb-emulation {
++		gpio-hog;
++		gpios = <19 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "usb-emulation";
++	};
++
++	usb-mode1 {
++		gpio-hog;
++		gpios = <20 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "usb-mode1";
++	};
++
++	usb-pwr {
++		gpio-hog;
++		gpios = <22 GPIO_ACTIVE_LOW>;
++		output-high;
++		line-name = "usb-pwr-ctrl-en-n";
++	};
++
++	usb-mode2 {
++		gpio-hog;
++		gpios = <23 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "usb-mode2";
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+@@ -590,6 +611,16 @@
+ 		status = "disabled";
+ 	};
+ 
++	reg_5p0v_user_usb: charger@32 {
++		compatible = "microchip,ucs1002";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ucs1002_pins>;
++		reg = <0x32>;
++		interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
++				      <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
++		interrupt-names = "a_det", "alert";
++	};
++
+ 	hpa1: amp@60 {
+ 		compatible = "ti,tpa6130a2";
+ 		pinctrl-names = "default";
+@@ -935,6 +966,15 @@
+ 		>;
+ 	};
+ 
++	pinctrl_gpio3_hog: gpio3hoggrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x1b0b0
++			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
++			MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x1b0b0
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
+@@ -982,12 +1022,6 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_reg_user_usb: usbotggrp {
+-		fsl,pins = <
+-			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x40000038
+-		>;
+-	};
+-
+ 	pinctrl_rmii_phy_irq: phygrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D30__GPIO3_IO30		0x40010000
+@@ -1047,6 +1081,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ucs1002_pins: ucs1002grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_A25__GPIO5_IO02  	0x1b0b0
++			MX6QDL_PAD_EIM_D21__GPIO3_IO21  	0x1b0b0
++		>;
++	};
++
+ 	pinctrl_usdhc2: usdhc2grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x10059
+-- 
+2.21.0
 
-Cheers,
-Benjamin
-
-
-
->
-> On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
-> >
-> > On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > Hi Benjamin, KT,
-> > >
-> > > On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
-> > > > Hi
-> > > >
-> > > > -----Original Message-----
-> > > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> > > > Sent: Friday, May 24, 2019 5:37 PM
-> > > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de Goede
-> > > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> > > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-> > > >
-> > > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> > > > >
-> > > > > The width/height is actually in the same unit than X and Y. So we
-> > > > > should not tamper the data, but just set the proper resolution, so
-> > > > > that userspace can correctly detect which touch is a palm or a finger.
-> > > > >
-> > > > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > > > >
-> > > > > --
-> > > > >
-> > > > > new in v2
-> > > > > ---
-> > > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
-> > > > > b/drivers/input/mouse/elan_i2c_core.c
-> > > > > index 7ff044c6cd11..6f4feedb7765 100644
-> > > > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > > > @@ -45,7 +45,6 @@
-> > > > >  #define DRIVER_NAME            "elan_i2c"
-> > > > >  #define ELAN_VENDOR_ID         0x04f3
-> > > > >  #define ETP_MAX_PRESSURE       255
-> > > > > -#define ETP_FWIDTH_REDUCE      90
-> > > > >  #define ETP_FINGER_WIDTH       15
-> > > > >  #define ETP_RETRY_COUNT                3
-> > > > >
-> > > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
-> > > > >                         return;
-> > > > >                 }
-> > > > >
-> > > > > -               /*
-> > > > > -                * To avoid treating large finger as palm, let's reduce the
-> > > > > -                * width x and y per trace.
-> > > > > -                */
-> > > > > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> > > > > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> > > > > +               area_x = mk_x * data->width_x;
-> > > > > +               area_y = mk_y * data->width_y;
-> > > > >
-> > > > >                 major = max(area_x, area_y);
-> > > > >                 minor = min(area_x, area_y); @@ -1123,8 +1118,10 @@
-> > > > > static int elan_setup_input_device(struct elan_tp_data *data)
-> > > > >                              ETP_MAX_PRESSURE, 0, 0);
-> > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> > > > >                              ETP_FINGER_WIDTH * max_width, 0, 0);
-> > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR, data->x_res);
-> > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> > > > >                              ETP_FINGER_WIDTH * min_width, 0, 0);
-> > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR, data->y_res);
-> > > >
-> > > > I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-> > > >
-> > > > TL;DR: I don't think we should export the resolution there :(
-> > > >
-> > > > KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-> > > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed.
-> > > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> > > >
-> > > > The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-> > > > Chrome's finger/palm threshold may be different from other Linux distribution.
-> > > > We will discuss it with Google once the patch picked by chrome and cause something wrong.
-> > >
-> > > Chrome has logic that contact with maximum major/minor is treated as a
-> > > palm, so here the driver (which originally came from Chrome OS)
-> > > artificially reduces the contact size to ensure that palm rejection
-> > > logic does not trigger.
-> > >
-> > > I'm adding Harry to confirm whether we are still using this logic and to
-> > > see if we can adjust it to be something else.
-> >
-> > I'm not very familiar with our touchpad code, so adding Sean O'Brien, who is.
