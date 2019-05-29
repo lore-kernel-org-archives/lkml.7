@@ -2,105 +2,298 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB23C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F63C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B819E24074
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h1/b3YNF"
+	by mail.kernel.org (Postfix) with ESMTP id 358982407A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559154892;
+	bh=4wer0j30Lr0mGcwSmkhCoxDlxnB+LSjFlkLZs4nKWuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0ZUiTVzkNxLvDccrmOoETVcEx2Q7xzk6qdf9EbQ2HLZMfL+5P2X1lYzYuP815++Mz
+	 1HycV1exQco3wI91V/7csucL0YT3RhXxwKoOzc8J2qUu8oLQfcP4+xPtN/8rdtpzsA
+	 kmywcZsk6kuhjb5FqR1dwfxpEnVJN1gtg+GFWIMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfE2SbB (ORCPT
+        id S1727537AbfE2Sev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:31:01 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:44705 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfE2SbA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:31:00 -0400
-Received: by mail-ua1-f67.google.com with SMTP id i48so1398031uae.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Icd3S6fysa6PQB1IvdBLYuy5pEg+pRKkO0zAPB11e+s=;
-        b=h1/b3YNFUzwwTW33Zipxw/L27jtJJFS/uoN5p2DdHA3M3G0nsuslv5HtLyXAslZXBF
-         YXAYkYJ+OdVsCg3Cs+bwX5YoW2csbYBr+38xCAWFrcpCvxMr33VPJrhXTHQcgYCjSgz1
-         pXEoQmXGAOMsFQDNtFtHcRBZEmaeM3orpTlPw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Icd3S6fysa6PQB1IvdBLYuy5pEg+pRKkO0zAPB11e+s=;
-        b=DjyrhD/LlNjEWOJqM6Oaa7Z1A1XBbv+OWKdxhX+xF2R1pgOJAYXX2MGsibuh+BI/2+
-         ub5b8cJope69dAY2RSij2+hinXpdgXm1JYJSnrodbxLewEUp3VDcOnGzh88ZF3fPFxOw
-         io7WipQ+7bJ8Rc0+XV6Rl7lVjtZ6HD5DV1qZEOpxcntpiB9RB42gJbg2B78Vv4ioMPGf
-         8TLZT0Ch++gZuIG+oMBgzuA5TDOaJJihaTyzk8RXl4wzYGts01a3AM4A9jiLBMcxoe4I
-         gnQtWkHQDE/KG3bmEo58Zgxz5TS4enrjhJpR+79lCMB0KDAUTRLUyI+Nhanc83iNLcKQ
-         Z1Mg==
-X-Gm-Message-State: APjAAAVCyARR8aCHjvFSUbcqx+9h9CbXaTJMb+ONQ4pGob/gDcsTHhle
-        PCUMXvmKmHuLEghLUC6Hmr0AWHAfx7s=
-X-Google-Smtp-Source: APXvYqzMFRTFeoNy9o/ALfb+tIOu1XQVvB3QdVx6XJLWGce6EIswMeNCLptBeAUvFayUpCOuuVslFQ==
-X-Received: by 2002:ab0:620e:: with SMTP id m14mr54418035uao.68.1559154654312;
-        Wed, 29 May 2019 11:30:54 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id l10sm13350uak.9.2019.05.29.11.30.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 11:30:52 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id q64so2620235vsd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:30:52 -0700 (PDT)
-X-Received: by 2002:a67:ebd6:: with SMTP id y22mr63801054vso.87.1559154652088;
- Wed, 29 May 2019 11:30:52 -0700 (PDT)
+        Wed, 29 May 2019 14:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbfE2Sev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:34:51 -0400
+Received: from linux-8ccs (ip5f5adbeb.dynamic.kabel-deutschland.de [95.90.219.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90CC924074;
+        Wed, 29 May 2019 18:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559154889;
+        bh=4wer0j30Lr0mGcwSmkhCoxDlxnB+LSjFlkLZs4nKWuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g3mL3b0PnHe3O55ymfGuZOcJVYjXIM+fLan0DNelkUvKEif8C31sQl0Y60WI6H565
+         2gPRM/t0UG3fYJCXMde+d0PXx9PdZqhteChRAf8QSURVMBQGOorX5+dSUpm1pWanfS
+         rCf2bL1ox2MWRDnsDTUsmNbnELbA742u1Pkq98+k=
+Date:   Wed, 29 May 2019 20:34:44 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Ingo Molnar <mingo@redhat.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Oops caused by race between livepatch and ftrace
+Message-ID: <20190529183444.GA507@linux-8ccs>
+References: <20190520194915.GB1646@sventech.com>
+ <90f78070-95ec-ce49-1641-19d061abecf4@redhat.com>
+ <20190520210905.GC1646@sventech.com>
+ <20190520211931.vokbqxkx5kb6k2bz@treble>
+ <20190520173910.6da9ddaf@gandalf.local.home>
+ <20190521141629.bmk5onsaab26qoaw@treble>
+ <20190521104204.47d4e175@gandalf.local.home>
+ <20190521164227.bxdff77kq7fgl5lp@treble>
+ <20190529172904.GB12408@linux-8ccs>
+ <20190529173907.wgbkmbhrca6gr3zs@treble>
 MIME-Version: 1.0
-References: <20190218063730.26870-1-ms@dev.tdt.de>
-In-Reply-To: <20190218063730.26870-1-ms@dev.tdt.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 29 May 2019 11:30:39 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Viag00jL-QRLsnyDoXWT5KFyZ3TnMdTPSJ-dbuNNiFVQ@mail.gmail.com>
-Message-ID: <CAD=FV=Viag00jL-QRLsnyDoXWT5KFyZ3TnMdTPSJ-dbuNNiFVQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc2: Fix DMA cache alignment issues
-To:     Martin Schiller <ms@dev.tdt.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>,
-        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190529173907.wgbkmbhrca6gr3zs@treble>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Feb 17, 2019 at 10:37 PM Martin Schiller <ms@dev.tdt.de> wrote:
++++ Josh Poimboeuf [29/05/19 12:39 -0500]:
+>On Wed, May 29, 2019 at 07:29:04PM +0200, Jessica Yu wrote:
+>> +++ Josh Poimboeuf [21/05/19 11:42 -0500]:
+>> > On Tue, May 21, 2019 at 10:42:04AM -0400, Steven Rostedt wrote:
+>> > > On Tue, 21 May 2019 09:16:29 -0500
+>> > > Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>> > >
+>> > > > > Hmm, this may blow up with lockdep, as I believe we already have a
+>> > > > > locking dependency of:
+>> > > > >
+>> > > > >  text_mutex -> ftrace_lock
+>> > > > >
+>> > > > > And this will reverses it. (kprobes appears to take the locks in this
+>> > > > > order).
+>> > > > >
+>> > > > > Perhaps have live kernel patching grab ftrace_lock?
+>> > > >
+>> > > > Where does kprobes call into ftrace with the text_mutex?  I couldn't
+>> > > > find it.
+>> > >
+>> > > Hmm, maybe it doesn't. I was looking at the arm_kprobe_ftrace() but
+>> > > it doesn't call it with text_mutex().
+>> > >
+>> > > Maybe it is fine, but we had better perform a lot of testing with
+>> > > lockdep on to make sure.
+>> >
+>> > Hm.  I suppose using ftrace_lock might be less risky since that lock is
+>> > only used internally by ftrace (up until now).  But I think it would
+>> > also make less sense because the text_mutex is supposed to protect code
+>> > patching.  And presumably ftrace_lock is supposed to be ftrace-specific.
+>> >
+>> > Here's the latest patch, still using text_mutex.  I added some lockdep
+>> > assertions to ensure the permissions toggling functions are always
+>> > called with text_mutex.  It's running through 0-day right now.  I can
+>> > try to run it through various tests with CONFIG_LOCKDEP.
+>> >
+>> >
+>> > From: Josh Poimboeuf <jpoimboe@redhat.com>
+>> > Subject: [PATCH] livepatch: Fix ftrace module text permissions race
+>> >
+>> > It's possible for livepatch and ftrace to be toggling a module's text
+>> > permissions at the same time, resulting in the following panic:
+>> >
+>> >  BUG: unable to handle page fault for address: ffffffffc005b1d9
+>> >  #PF: supervisor write access in kernel mode
+>> >  #PF: error_code(0x0003) - permissions violation
+>> >  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+>> >  Oops: 0003 [#1] PREEMPT SMP PTI
+>> >  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+>> >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+>> >  RIP: 0010:apply_relocate_add+0xbe/0x14c
+>> >  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+>> >  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+>> >  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+>> >  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+>> >  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+>> >  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+>> >  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+>> >  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+>> >  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> >  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+>> >  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> >  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> >  Call Trace:
+>> >   klp_init_object_loaded+0x10f/0x219
+>> >   ? preempt_latency_start+0x21/0x57
+>> >   klp_enable_patch+0x662/0x809
+>> >   ? virt_to_head_page+0x3a/0x3c
+>> >   ? kfree+0x8c/0x126
+>> >   patch_init+0x2ed/0x1000 [livepatch_test02]
+>> >   ? 0xffffffffc0060000
+>> >   do_one_initcall+0x9f/0x1c5
+>> >   ? kmem_cache_alloc_trace+0xc4/0xd4
+>> >   ? do_init_module+0x27/0x210
+>> >   do_init_module+0x5f/0x210
+>> >   load_module+0x1c41/0x2290
+>> >   ? fsnotify_path+0x3b/0x42
+>> >   ? strstarts+0x2b/0x2b
+>> >   ? kernel_read+0x58/0x65
+>> >   __do_sys_finit_module+0x9f/0xc3
+>> >   ? __do_sys_finit_module+0x9f/0xc3
+>> >   __x64_sys_finit_module+0x1a/0x1c
+>> >   do_syscall_64+0x52/0x61
+>> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> >
+>> > The above panic occurs when loading two modules at the same time with
+>> > ftrace enabled, where at least one of the modules is a livepatch module:
+>> >
+>> > CPU0					CPU1
+>> > klp_enable_patch()
+>> >  klp_init_object_loaded()
+>> >    module_disable_ro()
+>> >    					ftrace_module_enable()
+>> > 					  ftrace_arch_code_modify_post_process()
+>> > 				    	    set_all_modules_text_ro()
+>> >      klp_write_object_relocations()
+>> >        apply_relocate_add()
+>> > 	  *patches read-only code* - BOOM
+>> >
+>> > A similar race exists when toggling ftrace while loading a livepatch
+>> > module.
+>> >
+>> > Fix it by ensuring that the livepatch and ftrace code patching
+>> > operations -- and their respective permissions changes -- are protected
+>> > by the text_mutex.
+>> >
+>> > Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+>> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>> > ---
+>> > kernel/livepatch/core.c |  6 ++++++
+>> > kernel/module.c         |  9 +++++++++
+>> > kernel/trace/ftrace.c   | 10 +++++++++-
+>> > 3 files changed, 24 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+>> > index 91cd519756d3..2d17e6e364b5 100644
+>> > --- a/kernel/livepatch/core.c
+>> > +++ b/kernel/livepatch/core.c
+>> > @@ -30,6 +30,7 @@
+>> > #include <linux/elf.h>
+>> > #include <linux/moduleloader.h>
+>> > #include <linux/completion.h>
+>> > +#include <linux/memory.h>
+>> > #include <asm/cacheflush.h>
+>> > #include "core.h"
+>> > #include "patch.h"
+>> > @@ -730,16 +731,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+>> > 	struct klp_func *func;
+>> > 	int ret;
+>> >
+>> > +	mutex_lock(&text_mutex);
+>> > +
+>> > 	module_disable_ro(patch->mod);
+>> > 	ret = klp_write_object_relocations(patch->mod, obj);
+>> > 	if (ret) {
+>> > 		module_enable_ro(patch->mod, true);
+>> > +		mutex_unlock(&text_mutex);
+>> > 		return ret;
+>> > 	}
+>> >
+>> > 	arch_klp_init_object_loaded(patch, obj);
+>> > 	module_enable_ro(patch->mod, true);
+>> >
+>> > +	mutex_unlock(&text_mutex);
+>> > +
+>> > 	klp_for_each_func(obj, func) {
+>> > 		ret = klp_find_object_symbol(obj->name, func->old_name,
+>> > 					     func->old_sympos,
+>> > diff --git a/kernel/module.c b/kernel/module.c
+>> > index 6e6712b3aaf5..4d9f3281c0c5 100644
+>> > --- a/kernel/module.c
+>> > +++ b/kernel/module.c
+>> > @@ -64,6 +64,7 @@
+>> > #include <linux/bsearch.h>
+>> > #include <linux/dynamic_debug.h>
+>> > #include <linux/audit.h>
+>> > +#include <linux/memory.h>
+>> > #include <uapi/linux/module.h>
+>> > #include "module-internal.h"
+>> >
+>> > @@ -1943,6 +1944,8 @@ static void frob_writable_data(const struct module_layout *layout,
+>> > /* livepatching wants to disable read-only so it can frob module. */
+>> > void module_disable_ro(const struct module *mod)
+>> > {
+>> > +	lockdep_assert_held(&text_mutex);
+>> > +
+>> > 	if (!rodata_enabled)
+>> > 		return;
+>> >
+>> > @@ -1955,6 +1958,8 @@ void module_disable_ro(const struct module *mod)
+>> >
+>> > void module_enable_ro(const struct module *mod, bool after_init)
+>> > {
+>> > +	lockdep_assert_held(&text_mutex);
+>>
+>> Hi Josh!
+>>
+>> The lockdep WARN_ON triggers when loading a module under a lockdep enabled kernel:
+>>
+>> [    6.139583] WARNING: CPU: 0 PID: 102 at /home/ppyu/jeyu-linux/kernel/module.c:1961 module_enable_ro+0x121/0x130
+>> [    6.143641] Modules linked in:
+>> [    6.144879] CPU: 0 PID: 102 Comm: insmod Not tainted 5.2.0-rc2+ #1
+>> [    6.147325] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fc-prebuilt.qemu-project.org 04/01/2014
+>> [    6.152046] RIP: 0010:module_enable_ro+0x121/0x130
+>> [    6.153986] Code: 48 c7 c6 70 97 05 81 5d 41 5c 41 5d e9 b8 e2 ff ff be ff ff ff ff 48 c7 c7 40 b2 65 82 e8 a7 c7 fa ff 85 c0 0f 85 f8 fe ff ff <0f> 0b e9 f1 fe ff ff 0f 1f 84 00 00 00 00 00 8b 05 9e a5 66 01 55
+>> [    6.161277] RSP: 0018:ffffc9000041fd18 EFLAGS: 00010246
+>> [    6.162919] RAX: 0000000000000000 RBX: ffffffffc0002000 RCX: 000000000000000b
+>> [    6.164783] RDX: ffff88803d793fc0 RSI: ffffffff8265b240 RDI: ffff88803d7947e8
+>> [    6.166820] RBP: 0000000000000000 R08: 000000000007ade8 R09: ffffffff823989a6
+>> [    6.168579] R10: ffffc9000049c8e8 R11: 0000000000000002 R12: ffffffffc00021c0
+>> [    6.169994] R13: 0000000000000000 R14: 0000000000000030 R15: ffffc9000041fe78
+>> [    6.171390] FS:  00007fdc49708700(0000) GS:ffff88803d800000(0000) knlGS:0000000000000000
+>> [    6.173007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [    6.174047] CR2: 00007fdc496c0000 CR3: 000000003fb84000 CR4: 00000000000006f0
+>> [    6.175168] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> [    6.176326] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> [    6.177384] Call Trace:
+>> [    6.177730]  load_module+0x1b96/0x2620
+>> [    6.178231]  ? rcu_read_lock_sched_held+0x53/0x60
+>> [    6.178865]  ? __alloc_pages_nodemask+0x2fa/0x350
+>> [    6.179497]  ? __do_sys_init_module+0x135/0x170
+>> [    6.180097]  ? _cond_resched+0x10/0x40
+>> [    6.180594]  __do_sys_init_module+0x135/0x170
+>> [    6.181177]  do_syscall_64+0x4b/0x1c0
+>> [    6.181681]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>
+>> It triggers since we call module_enable_ro() along the load_module()
+>> path to prepare for a coming module. We don't take the text_mutex
+>> there since we're not modifying any text, just memory protections.
+>> Leaving the lockdep assert in module_disable_ro() and
+>> set_all_modules_text_*() should be fine though, since I think
+>> livepatch and ftrace are the only users of those functions.
 >
-> Insert a padding between data and the stored_xfer_buffer pointer to
-> ensure they are not on the same cache line.
+>Yeah, I discovered that already:
 >
-> Otherwise, the stored_xfer_buffer gets corrupted for IN URBs on
-> non-cache-coherent systems. (In my case: Lantiq xRX200 MIPS)
->
-> Fixes: 3bc04e28a030 ("usb: dwc2: host: Get aligned DMA in a more supported way")
-> Fixes: 56406e017a88 ("usb: dwc2: Fix DMA alignment to start at allocated boundary")
-> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-> ---
->  drivers/usb/dwc2/hcd.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+>  https://lkml.kernel.org/r/20190522130014.yvkbio62meatqvwf@treble
 
-This patch has been in the back of my mind for a while bug I never got
-around to it.  Today I was debugging memory corruption problems when
-using a webcam on dwc2 on rk3288-veyron-jerry.  This patch appears to
-solve my problems nicely.  Thanks!
+Whoops, I missed that in the thread /o\
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Cc: <stable@vger.kernel.org>
+>The new patch (which I will hopefully be able to post soon) will fix
+>that up.
+
+Sounds good, thanks!
+
+Jessica
