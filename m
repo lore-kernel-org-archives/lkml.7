@@ -8,94 +8,126 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564AEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0014C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BD4205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BF0205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:09:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXiSmLZr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sKIs11XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfE2NIy (ORCPT
+        id S1727231AbfE2NJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:08:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40568 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfE2NIx (ORCPT
+        Wed, 29 May 2019 09:09:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33725 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbfE2NJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:08:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so1600712pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:08:53 -0700 (PDT)
+        Wed, 29 May 2019 09:09:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z28so1620467pfk.0;
+        Wed, 29 May 2019 06:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyF2JFEuH6LvGGWBbwEbtAeB7cBwyayBLAFyPW57EFQ=;
-        b=QXiSmLZrPXsadPi9sgqFl2EmdrtmU6sgqdYwd4DG8RSTTpsHz9yc2PUU5Cxm5KrwPI
-         vFNxS+RcwaI6Nrs70EDVi69oSk4kiTk4TS2Das9vJ6Ug6W36sHFT2dueg9e9g2et6B4U
-         puFrXwJEQhlel7fKBcfhMEWHgQmXXRh2HWJfZuxYxXjRh25uMy/ZKHBIvyV0wJbQEEEN
-         z1PbD82OqNEglKHyKUFk3eyJ8O9YRcyKIFarKHHOflR7R3hBgYl5pBs5olgLNqECDcZ/
-         11P+LHLV6vXoTJM5jUHoObRdb0cx0I8V0gY8NIpMLe3LUMdXo2a1QxsP1dS4nMYFS15O
-         87mA==
+        h=from:to:cc:subject:date:message-id;
+        bh=aGFU8dFMfcB3DwQNIKfjc5/Xy1Xwp0lFwoOF2AErJSc=;
+        b=sKIs11XB8c/C6qoFJNojhUQw+hyCuNdTTvO07PAX2kPQFJkx/d0TXtapL/2maxdMSo
+         Jbq81BDYzSWW2xI8f9OM/OnpL6GyPgVJW9BHhEYGj/rY/rOp2iAknd2YSplEOzLm5pjF
+         PmG7/fRfXcfzfdI3o1Agr/pw65uYt/ELwJwJe+1bkoaJAuljgTumaV5QGnW//k4LlpQN
+         Mquj2YP+nJU17HiYO3ytJ0EPnmyd6k3rtiB5owzESpS0pb1aDPfXIyvbW92sU/ycDQP8
+         oVVLMWxAbwIDB+6TRUSrieFDJbC0gmIMt7derFe3K5Hz7k6sveeqgDZTsLz9CV4Lyoad
+         e46w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MyF2JFEuH6LvGGWBbwEbtAeB7cBwyayBLAFyPW57EFQ=;
-        b=R4foFdRPreDjg6ZXulgNK2OfmTg5C8qIxjua+8RLh1aevm9EnHx1uWVFgkxUmH5vkl
-         Pyd1XLzPw1y5R+K9NwrV7iLCFFKQ/Dp0+48ftBpuVfMQNrabihzDMyWaLYwF+o5qbOur
-         LUD9xEhOBCFsKGzDb7IcrbpwAyIewdRdC46mG8p8VKx8+lWN51FGVNCHhBpyJrZ0pfco
-         ZCUhzVBl9udBF6gQJEcgE1AQdbH8ydcn+bbvbMbgibM81xWcExTK+oIoNnqhAFeM3xP3
-         H/lHcRCDNh98xacXvy8fH1AHx/i/iS1Edox5c9auWt6fGZP8dt+VIxux7miNMRCeaEZG
-         XI3Q==
-X-Gm-Message-State: APjAAAU9JblpgSIWBUftir7jcVcOpsxSIEIvC7dr2DxzXM05ZCMNE+Bf
-        0VNjFin78M5EAVDZutMcb64=
-X-Google-Smtp-Source: APXvYqxmbxpYuATei5MreKV/zNd37hHzuon8DZgToECLdH8liCI6dxsiFM7Ok6mSGSIGbAJSjXE+2w==
-X-Received: by 2002:a17:90a:d3c6:: with SMTP id d6mr11914227pjw.25.1559135333324;
-        Wed, 29 May 2019 06:08:53 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.67.155])
-        by smtp.gmail.com with ESMTPSA id 1sm18289030pfn.165.2019.05.29.06.08.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:08:52 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, tsotsos@gmail.com,
-        igor.stoppa@gmail.com, aaro.koskinen@iki.fi,
-        himadri18.07@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: octeon-usb: Remove return variable
-Date:   Wed, 29 May 2019 18:38:35 +0530
-Message-Id: <20190529130835.6194-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aGFU8dFMfcB3DwQNIKfjc5/Xy1Xwp0lFwoOF2AErJSc=;
+        b=sEZgHPctGzIMYd0uD7tVH+Dg7UKXtz5TcqkdNsblGGt0aoG4WtJn7CKWEuZGYSfGYx
+         o8WNGkiSYCUukrPoWPwNIolMh4/reKbRqMfzgMEPpzczW/IdW4wpoR94WjK+Y/YIxAVa
+         UowRCREw9x/DlTErgdZKn2li5BGZKR/7FqVlHRIfOT3gp/KmdtzykB+mONjzyhMUGJ8C
+         dWggIFA9/FXuCGoypSMlviApL7OQumbVuKpEx+kZvPziAU61u2rgaFgkPwOQPfblR67x
+         DSKF+QShelbYhglA7cIc1aQIVDKXB1eY/Ae/U8me9celP7VlNB8/6x/pPxmQNcANVnz/
+         MOVg==
+X-Gm-Message-State: APjAAAVOYNkZbm4d9Db2SQl4NED+06MMhbH0+ipIi3Y1gFcGJIT0oLCG
+        m5H4mOxOs6XMdsmyGOAiBEU=
+X-Google-Smtp-Source: APXvYqynG2BOmMG9lRLHoLq9aoHvztBMjsBGyG1PwYgghnMUvTj9EtyxiMqXhNv9gKEldLR3g83AgQ==
+X-Received: by 2002:a63:144e:: with SMTP id 14mr120856311pgu.304.1559135339595;
+        Wed, 29 May 2019 06:08:59 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id k19sm1753273pfa.94.2019.05.29.06.08.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 29 May 2019 06:08:59 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     prabhakar.csengg@gmail.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] media: davinci: vpif_capture: fix memory leak in vpif_probe()
+Date:   Wed, 29 May 2019 21:09:59 +0800
+Message-Id: <1559135399-28998-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove return variable result and return the value directly.
-Issue found using Coccinelle.
+If vpif_probe() fails on vpif_probe_complete(), then memory
+allocated at initialize_vpif() for global vpif_obj.dev[i]
+become unreleased.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+The patch adds deallocation of vpif_obj.dev[i] on the error path.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
 ---
- drivers/staging/octeon-usb/octeon-hcd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/platform/davinci/vpif_capture.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/octeon-usb/octeon-hcd.c b/drivers/staging/octeon-usb/octeon-hcd.c
-index aeec16314e0d..cd2b777073c4 100644
---- a/drivers/staging/octeon-usb/octeon-hcd.c
-+++ b/drivers/staging/octeon-usb/octeon-hcd.c
-@@ -521,8 +521,7 @@ static void octeon_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
-  */
- static inline u32 cvmx_usb_read_csr32(struct octeon_hcd *usb, u64 address)
- {
--	u32 result = cvmx_read64_uint32(address ^ 4);
--	return result;
-+	return cvmx_read64_uint32(address ^ 4);
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index b5aacb0..63e6ec4 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1621,6 +1621,14 @@ vpif_capture_get_pdata(struct platform_device *pdev)
+ 	return NULL;
  }
  
++static void free_vpif_objs(void)
++{
++	int i;
++
++	for (i = 0; i < VPIF_DISPLAY_MAX_DEVICES; i++)
++		kfree(vpif_obj.dev[i]);
++}
++
  /**
+  * vpif_probe : This function probes the vpif capture driver
+  * @pdev: platform device pointer
+@@ -1701,7 +1709,10 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 				  "registered sub device %s\n",
+ 				   subdevdata->name);
+ 		}
+-		vpif_probe_complete();
++		err = vpif_probe_complete();
++		if (err) {
++			goto probe_subdev_out;
++		}
+ 	} else {
+ 		vpif_obj.notifier.ops = &vpif_async_ops;
+ 		err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
+@@ -1722,6 +1733,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	v4l2_device_unregister(&vpif_obj.v4l2_dev);
+ cleanup:
+ 	v4l2_async_notifier_cleanup(&vpif_obj.notifier);
++	free_vpif_objs();
+ 
+ 	return err;
+ }
+@@ -1748,8 +1760,8 @@ static int vpif_remove(struct platform_device *device)
+ 		ch = vpif_obj.dev[i];
+ 		/* Unregister video device */
+ 		video_unregister_device(&ch->video_dev);
+-		kfree(vpif_obj.dev[i]);
+ 	}
++	free_vpif_objs()
+ 	return 0;
+ }
+ 
 -- 
-2.19.1
+2.7.4
 
