@@ -2,239 +2,265 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BBCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F331C28CC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC862081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4CB2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vf0yQunK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfE2NRL convert rfc822-to-8bit (ORCPT
+        id S1727192AbfE2NRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 29 May 2019 09:17:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:47026 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfE2NRK (ORCPT
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40014 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfE2NRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 09:17:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so2414771qtz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:17:09 -0700 (PDT)
+Received: by mail-pg1-f194.google.com with SMTP id d30so1359103pgm.7;
+        Wed, 29 May 2019 06:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jGU+IWw3fhQwMj+4gNT4folr25bhqCVF0fJDKSZCqFc=;
+        b=Vf0yQunKPBWZTEehjbJfB7ddgKiCM+Hfj7i7TOJzgSWzASo/bUdLQ71KTG1tQeDwcQ
+         lt7nV+Knx0ZvBU3Uj8/AFrHkJXrSqU3jLKJWDT3YY0IlPCQysZrQlSSpRv9U0/Op77j6
+         IGSMEORaQbBqBkHTuTUUdgGVCqZpehP6UVe2dPYlQU+8SEPHLp3ojA7r16xTmBbEjSxR
+         WlmrLFuagXmPOKdGWpVvSlOUV3PvmpiDO5uIErHosDx+BofixIxC4ZIw9GyrVluucLsr
+         L4knh9/gEYpv0UtNPgHpvCGOfnsvRWPiq76+GoZU+emsbimZjp51Ck+/hviaBFXT20uL
+         35Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=38WVoDkA5tNJSn+74g5K5hd5HeWV9GPT9Cu7zY/fE7k=;
-        b=rtJo/Mgi04juln5DG626JoAA4aX7zid0jcdvd9kTUXBK6ptIVRFWQsLxLcLFrY89yc
-         Fz48IbxAcAcov8RuMJCU391BtTJXwBR+BQ3OTdjwdqF1z8QrGEIvj3zpk/1ndu3hcV8P
-         ghOB3Yyb80v7Fsg59/PQOfKKC165YTv5oWf4Ep/T2IoJkxCeJ9FV+z+0TaE85iXa9Xd7
-         37f9mveb5rM0ahzNA0uBn5/pq3BboRNp7fOIQMnCCxsdqoqmB5l9aw1gPaaubJUHfmsw
-         TMqxXoxM/TvEgAjSYzRWQhHilTiqRJVnBcdes1cWgKJCrZsnth1P7015fbcRjvWMA9cN
-         g0qQ==
-X-Gm-Message-State: APjAAAVniSWLCUxJej+YT+AxIhDzIebFki8Le6TjfoZ8QHSWH+hypWtm
-        R/VL2sZUqGRBBAnqLZag4g+Y6WH87WDwBfFXObXqlw==
-X-Google-Smtp-Source: APXvYqwz4w5VaLU1XoZ45utYk/ZFqxDNLwTqIP/uw1ATQJcHa/8XriiX0iGvO1IdB/MedXQAqndDtpggI0JUND5s7xU=
-X-Received: by 2002:ac8:7656:: with SMTP id i22mr83063261qtr.260.1559135829299;
- Wed, 29 May 2019 06:17:09 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jGU+IWw3fhQwMj+4gNT4folr25bhqCVF0fJDKSZCqFc=;
+        b=HuulY5+7kkanZoZZITvGKYdcTNkfxyhuFZ8QnUBFxCYjzhgeVkDy71prgS27Ws9lBF
+         SlgnDLMEa11s5NmJJibJL25+Ij/TBOBBb5TqA7myFu63L6SAlhlIVWZrDdhQLvd3CbhU
+         gGxr1sUhoB2PQ9vDywqyuwR9kaXaslgwQdgCBL98SfxsdBqsOJJ4C+1ou0ixqiB1KUJ6
+         o/ORfDSnCckvhaHB6pkcHmfw1hN+UskPxBnt9Xi/r5w3XfsjbNl+06K2YVhl6bHAlEN7
+         34S+UekdvLcH71ZlY/Pjpq6Ax3wgq/IFfLclS9qeaoxJWRdAG7LXu4d8CNPsRhcymit6
+         71qg==
+X-Gm-Message-State: APjAAAU8lK1i7Y+0DT8zCkg2fwY/rlrRqP4voQBqaPbg17dSjE5AAXd1
+        RuUvRUI1SrsI1mMinSe93lkTvq2X
+X-Google-Smtp-Source: APXvYqxTD2WDUewDUNuYhNuAePeh4l9PBZk61vRa6gmIWnjX/hw/+WuFh5Q45h7Nc7dLH3buMOfDQA==
+X-Received: by 2002:a63:c50c:: with SMTP id f12mr136656652pgd.71.1559135829739;
+        Wed, 29 May 2019 06:17:09 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i12sm19511533pfd.33.2019.05.29.06.17.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 06:17:08 -0700 (PDT)
+Subject: Re: [PATCH] adm1275: support PMBUS_VIRT_*_SAMPLES
+To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+References: <20190524124841.GA25728@localhost.localdomain>
+ <20190528194652.GE24853@roeck-us.net>
+ <20190529071027.GA6524@localhost.localdomain>
+ <d5a651f2-93ba-f966-1a5c-52b09ccb7d12@roeck-us.net>
+ <20190529125314.GA30959@localhost.localdomain>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <56787ecf-c6d3-27f2-75f0-9e4dfa194fba@roeck-us.net>
+Date:   Wed, 29 May 2019 06:17:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
- <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
- <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
- <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
- <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
- <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com> <010301d5161d$dd201e70$97605b50$@emc.com.tw>
-In-Reply-To: <010301d5161d$dd201e70$97605b50$@emc.com.tw>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 29 May 2019 15:16:55 +0200
-Message-ID: <CAO-hwJKFSFqupf10Dgmd-sLOSD2T0oymd-CwLLtAJ2QeE7DzZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
-To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc:     "Sean O'Brien" <seobrien@chromium.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Harry Cutts <hcutts@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190529125314.GA30959@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 2:56 PM 廖崇榮 <kt.liao@emc.com.tw> wrote:
->
->
->
-> -----Original Message-----
-> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> Sent: Wednesday, May 29, 2019 3:17 PM
-> To: Sean O'Brien; Peter Hutterer
-> Cc: Harry Cutts; Dmitry Torokhov; 廖崇榮; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
->
-> On Wed, May 29, 2019 at 2:12 AM Sean O'Brien <seobrien@chromium.org> wrote:
-> >
-> > We do still use a maxed out major axis as a signal for a palm in the
-> > touchscreen logic, but I'm not too concerned because if that axis is
-> > maxed out, the contact should probably be treated as a palm anyway...
-> >
-> > I'm more concerned with this affecting our gesture detection for
-> > touchpad. It looks like this change would cause all contacts to
-> > reported as some percentage bigger than they are currently. Can you
-> > give me an idea of how big that percentage is?
->
-> On the P52, I currently have:
-> [  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
-> [  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
->
-> -> with the computation done in the kernel:
-> width_ratio: 126
-> height_ratio: 123
->
-> For my average finger, the reported traces are between 4 and 6:
-> With the ETP_FWIDTH_REDUCE:
-> Major between 144 to 216
-> Minor between 132 to 198
->
-> Without:
-> Major between 504 to 756
-> Minor between 492 to 738
->
-> So a rough augmentation of 350%
->
-> For the Synaptics devices (over SMBus), they send the raw value of the traces, so you will get a major/minor between 2 to 5. Max on these axes is 15, so we should get the same percentage of value comparing to the range.
->
-> Elan's vendor report contains such information, which indicate how many trace are touched by finger/palm
->                 mk_x = (finger_data[3] & 0x0f);
->                 mk_y = (finger_data[3] >> 4);
-> Do we need to use mk_* for major/minor for keeping it consistent with other vendor?
+On 5/29/19 5:53 AM, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
+> On Wed, May 29, 2019 at 05:17:47AM -0700, Guenter Roeck wrote:
+>> On 5/29/19 12:11 AM, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
+>>> On Tue, May 28, 2019 at 12:46:52PM -0700, Guenter Roeck wrote:
+>>>> On Fri, May 24, 2019 at 12:49:13PM +0000, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
+>>>>> The device supports setting the number of samples for averaging the
+>>>>> measurements. There are two separate settings - PWR_AVG for averaging
+>>>>> PIN and VI_AVG for averaging VIN/VAUX/IOUT, both being part of
+>>>>> PMON_CONFIG register. The values are stored as exponent of base 2 of the
+>>>>> actual number of samples that will be taken.
+>>>>>
+>>>>> Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+>>>>> ---
+>>>>>   drivers/hwmon/pmbus/adm1275.c | 68 ++++++++++++++++++++++++++++++++++-
+>>>>>   1 file changed, 67 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+>>>>> index f569372c9204..4efe1a9df563 100644
+>>>>> --- a/drivers/hwmon/pmbus/adm1275.c
+>>>>> +++ b/drivers/hwmon/pmbus/adm1275.c
+>>>>> @@ -23,6 +23,8 @@
+>>>>>   #include <linux/slab.h>
+>>>>>   #include <linux/i2c.h>
+>>>>>   #include <linux/bitops.h>
+>>>>> +#include <linux/bitfield.h>
+>>>>> +#include <linux/log2.h>
+>>>>>   #include "pmbus.h"
+>>>>>
+>>>>>   enum chips { adm1075, adm1272, adm1275, adm1276, adm1278, adm1293, adm1294 };
+>>>>> @@ -78,6 +80,10 @@ enum chips { adm1075, adm1272, adm1275, adm1276, adm1278, adm1293, adm1294 };
+>>>>>   #define ADM1075_VAUX_OV_WARN		BIT(7)
+>>>>>   #define ADM1075_VAUX_UV_WARN		BIT(6)
+>>>>>
+>>>>> +#define ADM1275_PWR_AVG_MASK		GENMASK(13, 11)
+>>>>> +#define ADM1275_VI_AVG_MASK		GENMASK(10, 8)
+>>>>> +#define ADM1275_SAMPLES_AVG_MAX	128
+>>>>> +
+>>>>>   struct adm1275_data {
+>>>>>   	int id;
+>>>>>   	bool have_oc_fault;
+>>>>> @@ -90,6 +96,7 @@ struct adm1275_data {
+>>>>>   	bool have_pin_max;
+>>>>>   	bool have_temp_max;
+>>>>>   	struct pmbus_driver_info info;
+>>>>> +	struct mutex lock;
+>>>>>   };
+>>>>>
+>>>>>   #define to_adm1275_data(x)  container_of(x, struct adm1275_data, info)
+>>>>> @@ -164,6 +171,38 @@ static const struct coefficients adm1293_coefficients[] = {
+>>>>>   	[18] = { 7658, 0, -3 },		/* power, 21V, irange200 */
+>>>>>   };
+>>>>>
+>>>>> +static inline int adm1275_read_pmon_config(struct i2c_client *client, u64 mask)
+>>>>
+>>>> Why is the mask passed through as u64 ?
+>>>
+>>> Good point. I used u64 as this is the type used by bitfield machinery
+>>> under the hood but I agree it doesn't make sense and is even confusing
+>>> to have this in the function prototype as we are using this to mask 16
+>>> bit word anyways. I will fix that in v2. I am gonna have to cast the ret
+>>> to u16 when passing to FIELD_GET() to make sure the __BF_FIELD_CHECK is
+>>> not complaining (since it is signed right now), though.
+>>>
+>>
+>> Not sure I understand what you are talking about. FIELD_GET() uses typeof().
+>> FIELD_GET() is used by other callers even with u8 and without any typecasts.
+>> Why would it be a problem here ?
+> 
+> So I basically agree with you but just wanted to note why there will be
+> additional cast needed in my code. The:
+>     return FIELD_GET(mask, ret);
+> will be changed to:
+>     return FIELD_GET(mask, (u16)ret);
+> 
+> And the reason for that is that the __BF_FIELD_CHECK does this check at
+> compile time (and breaks if this is true)
+>     (_mask) > (typeof(_reg))~0ull
+> 
+> In my case typeof(_reg) is int, so (typeof(_reg))~0ull = -1 which is
+> signed. _mask is unsigned. Depending on the type promotion, this might
+> or might not be true depending on the size of _mask. When _mask was u64,
+> it always worked. For _mask being u16, it will fail. For u32, this will
+> fail depending on if we are compiling for 32 or 64 bit architecture.
+> 
+> All this might be obvious to you but it wasn't to me, thus this note.
+> 
 
-IMO, no. It is better to send something closer to an actual unit
-instead of 12,5th of mm.
-However, the problem here is that major/minor can be swapped depending
-on how the finger is placed (horizontally or vertically), so
-unfortunately, if the axes and resolutions are not the same, then we
-are screwed, this would just be a value without unit.
+The problem here is that ret is an int, and integers are not well suited
+for mask operations. The typecast thus makes sense and is ok.
 
-> But this modification will impact Chromebook's usability and Chrome test suite.
+>>>>
+>>>>> +{
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	ret = i2c_smbus_read_word_data(client, ADM1275_PMON_CONFIG);
+>>>>> +	if (ret < 0)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	return FIELD_GET(mask, ret);
+>>>>> +}
+>>>>> +
+>>>>> +static inline int adm1275_write_pmon_config(struct i2c_client *client, u64 mask,
+>>>>> +					    u16 word)
+>>>>> +{
+>>>>> +	const struct pmbus_driver_info *info = pmbus_get_driver_info(client);
+>>>>> +	struct adm1275_data *data = to_adm1275_data(info);
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	mutex_lock(&data->lock);
+>>>>
+>>>> Why is another lock on top of the lock provided by the pmbus core required ?
+>>>>
+>>>
+>>> Good point, I was considering if I should instead add mutex_lock on
+>>> update_lock in the pmbus_set_samples() function inside of pmbus_core.c
+>>> instead (as this function is missing it) but figured that not all
+>>> devices will need that (lm25066 didn't) so it might be a waste in most
+>>> cases. But this may be cleaner approach indeed.
+>>>
+>>> Is this what you mean or there is some other lock I missed?
+>>>
+>> pmbus_set_samples() should set the pmbus lock. That was missed when
+>> the function was added.
+> 
+> And by pmbus lock you mean the update_lock from the pmbus_data
+> structure? I didn't see any other lock but wanted to double check my
+> understanding.
+> 
 
-Yeah, there is no point breaking things just for the fun of it.
+Yes, that is the lock intended to protect write operations.
 
-Cheers,
-Benjamin
+Guenter
 
->
->
->
-> Which is why libinput has a database of which device reports which pressure/major/minor ranges as otherwise the values are just impossible to understand.
->
-> Cheers,
-> Benjamin
->
->
->
-> >
-> > On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
-> > >
-> > > On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > > >
-> > > > Hi Benjamin, KT,
-> > > >
-> > > > On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
-> > > > > Hi
-> > > > >
-> > > > > -----Original Message-----
-> > > > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
-> > > > > Sent: Friday, May 24, 2019 5:37 PM
-> > > > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de
-> > > > > Goede
-> > > > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
-> > > > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true
-> > > > > width/height
-> > > > >
-> > > > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> > > > > >
-> > > > > > The width/height is actually in the same unit than X and Y. So
-> > > > > > we should not tamper the data, but just set the proper
-> > > > > > resolution, so that userspace can correctly detect which touch is a palm or a finger.
-> > > > > >
-> > > > > > Signed-off-by: Benjamin Tissoires
-> > > > > > <benjamin.tissoires@redhat.com>
-> > > > > >
-> > > > > > --
-> > > > > >
-> > > > > > new in v2
-> > > > > > ---
-> > > > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
-> > > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
-> > > > > > b/drivers/input/mouse/elan_i2c_core.c
-> > > > > > index 7ff044c6cd11..6f4feedb7765 100644
-> > > > > > --- a/drivers/input/mouse/elan_i2c_core.c
-> > > > > > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > > > > > @@ -45,7 +45,6 @@
-> > > > > >  #define DRIVER_NAME            "elan_i2c"
-> > > > > >  #define ELAN_VENDOR_ID         0x04f3
-> > > > > >  #define ETP_MAX_PRESSURE       255
-> > > > > > -#define ETP_FWIDTH_REDUCE      90
-> > > > > >  #define ETP_FINGER_WIDTH       15
-> > > > > >  #define ETP_RETRY_COUNT                3
-> > > > > >
-> > > > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
-> > > > > >                         return;
-> > > > > >                 }
-> > > > > >
-> > > > > > -               /*
-> > > > > > -                * To avoid treating large finger as palm, let's reduce the
-> > > > > > -                * width x and y per trace.
-> > > > > > -                */
-> > > > > > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
-> > > > > > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
-> > > > > > +               area_x = mk_x * data->width_x;
-> > > > > > +               area_y = mk_y * data->width_y;
-> > > > > >
-> > > > > >                 major = max(area_x, area_y);
-> > > > > >                 minor = min(area_x, area_y); @@ -1123,8
-> > > > > > +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
-> > > > > >                              ETP_MAX_PRESSURE, 0, 0);
-> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
-> > > > > >                              ETP_FINGER_WIDTH * max_width, 0,
-> > > > > > 0);
-> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR,
-> > > > > > + data->x_res);
-> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
-> > > > > >                              ETP_FINGER_WIDTH * min_width, 0,
-> > > > > > 0);
-> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR,
-> > > > > > + data->y_res);
-> > > > >
-> > > > > I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
-> > > > >
-> > > > > TL;DR: I don't think we should export the resolution there :(
-> > > > >
-> > > > > KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
-> > > > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed.
-> > > > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
-> > > > >
-> > > > > The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
-> > > > > Chrome's finger/palm threshold may be different from other Linux distribution.
-> > > > > We will discuss it with Google once the patch picked by chrome and cause something wrong.
-> > > >
-> > > > Chrome has logic that contact with maximum major/minor is treated
-> > > > as a palm, so here the driver (which originally came from Chrome
-> > > > OS) artificially reduces the contact size to ensure that palm
-> > > > rejection logic does not trigger.
-> > > >
-> > > > I'm adding Harry to confirm whether we are still using this logic
-> > > > and to see if we can adjust it to be something else.
-> > >
-> > > I'm not very familiar with our touchpad code, so adding Sean
-> > > O'Brien, who is.
->
+>>>>> +	ret = i2c_smbus_read_word_data(client, ADM1275_PMON_CONFIG);
+>>>>> +	if (ret < 0) {
+>>>>> +		mutex_unlock(&data->lock);
+>>>>> +		return ret;
+>>>>> +	}
+>>>>> +
+>>>>> +	word = FIELD_PREP(mask, word) | (ret & ~mask);
+>>>>> +	ret = i2c_smbus_write_word_data(client, ADM1275_PMON_CONFIG, word);
+>>>>> +	mutex_unlock(&data->lock);
+>>>>> +
+>>>>> +	return ret;
+>>>>> +}
+>>>>> +
+>>>>>   static int adm1275_read_word_data(struct i2c_client *client, int page, int reg)
+>>>>>   {
+>>>>>   	const struct pmbus_driver_info *info = pmbus_get_driver_info(client);
+>>>>> @@ -242,6 +281,19 @@ static int adm1275_read_word_data(struct i2c_client *client, int page, int reg)
+>>>>>   		if (!data->have_temp_max)
+>>>>>   			return -ENXIO;
+>>>>>   		break;
+>>>>> +	case PMBUS_VIRT_POWER_SAMPLES:
+>>>>> +		ret = adm1275_read_pmon_config(client, ADM1275_PWR_AVG_MASK);
+>>>>> +		if (ret < 0)
+>>>>> +			break;
+>>>>> +		ret = 1 << ret;
+>>>>
+>>>> 		ret = BIT(ret);
+>>>>
+>>>
+>>> I intentionally used the "raw" left shift to make it more obvious this
+>>> is pow2 arithmetic operation and an direct inverse to the ilog2() used
+>>> on write counterpart. This is also consistent with what I used in
+>>> lm25066.c driver not long time ago.
+>>>
+>>> I don't have strong preference but this is my reasoning. So do you still
+>>> think it is better to use BIT() macro instead?
+>>>
+>>
+>> I don't think that is a good rationale, but I'll let it go.
+>>
+> 
+> If you don't think so, I'll change it in v2. As I said, I don't have a
+> strong opinion on that.
+> 
+> Krzysztof
+> 
+
