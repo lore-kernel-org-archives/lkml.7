@@ -2,194 +2,175 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D78BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2789C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F082524118
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FCD2411C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WzEDCNiu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CU9Y1DOy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B8qh1Ld1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfE2T6V (ORCPT
+        id S1726311AbfE2UDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:58:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48908 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfE2T6U (ORCPT
+        Wed, 29 May 2019 16:03:25 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37707 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfE2UDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:58:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3D4F360A00; Wed, 29 May 2019 19:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559159899;
-        bh=FVSPpTHDF0GOBaKIDyNZqRwnEvQHQL/Ok8SvfTA+sVE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WzEDCNiuCjmE4/YO6xyFI93CQdAZUWwA6p1MCkV5/5KeX5E36lE1PdR+ZsSCsUOxZ
-         qVt0fXuPXLPBHTcfJfUdvt3ey0pJ06NyJqgG5YUkMn70Ag2MLl+rUGpMdUqLGWA6w8
-         kigwSz92d76dKLYgsKFTd3HDW0Jhxkd9v3jNqOqI=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CFF086019D;
-        Wed, 29 May 2019 19:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559159897;
-        bh=FVSPpTHDF0GOBaKIDyNZqRwnEvQHQL/Ok8SvfTA+sVE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CU9Y1DOyQ9WEHsuZRNe0JvS0ftkyIvmdiwaW8BqrCMwhQibK1lXH3Eo+FNxZQXD5O
-         glN9aggcfrZC0P3QDYUdm2eKXXNxO5yIn1GcjV2ZXYbefFULrWDMIhpbKBQ/trilC5
-         FBx53OO1MI7YvLXS3xGlZclKXXWV44XtND8fRXxA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CFF086019D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display
- support
-To:     Brian Masney <masneyb@onstation.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>
-References: <20190509020352.14282-1-masneyb@onstation.org>
- <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp>
- <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
- <20190529013713.GA13245@basecamp>
- <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
- <20190529024648.GA13436@basecamp>
- <CAOCk7NpC93ACr4jFm7SBOKSvFJSDhq2byX6BAYPX29BuYEkWnQ@mail.gmail.com>
- <20190529102822.GA15027@basecamp>
- <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
- <20190529193046.GA19876@basecamp>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <26c535af-9853-c8c9-3138-04f5d9ee11b0@codeaurora.org>
-Date:   Wed, 29 May 2019 13:58:16 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 16:03:25 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i4so2747127oih.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:03:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wGYaW+Hbd7AIoyclHFi63uNBzsUxP8AhdA4OguMOUvU=;
+        b=B8qh1Ld1yMoWv42IjspSyHyrdNKC/Oak8TrNecsHfG/hEFJqdhKoXaNDznyMAbR8TY
+         JDudaudBS400/nz0t2T89CvhNY7aY48OZ92qeMBJ2L4TrkqBWlsOa7qb8O6EAmyizV/w
+         h5/z2hq1cYpvnFgrT69H3jABNHO1ao+JnuspAqa7ayvj56s9jXAt3TxfO3PU0pVarzNR
+         b3kt9GEmlrh9w000Qg3vprCJNFsmy4fHFQHaTcAXpOPZQwK+uH/mv99EEI5hOTSNfaJE
+         uxLWN2jt7vTQhYuPaCiuJ8fFW6Y8JCBUMdOJppnbQMSCuxX7rGB2slGjawAtJHnDCihn
+         8D6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wGYaW+Hbd7AIoyclHFi63uNBzsUxP8AhdA4OguMOUvU=;
+        b=a9HbtDuf8YTrX98R7QZzqTin6qVSrBBNtta4QJtXtZnThoKezkJOZ15zIR4kq161UH
+         At/x6iYs3xEaWvwRIe4AOUqRxuooH76cjcdSQ+4XYd2egcu8ZNuYU+/RlE+aH8utW+yN
+         Rd4aQkGI4QlAf2iUAdPHiXYC08ukQefz6jpQdrLYhFjEu6k6oyTEyXrVzDoDJF2cedFv
+         8f6FHQSLK/mSshPgdF4OD1KbZpd8ljCQ8BaPBzHN2hIWanZNOg2kDWlshu4qQpC0XUMu
+         moc4BzVyw5eCA2GFWHKo6u/zcxa+Yzq84NGSQYXNMUjmeZ8aGHdJ+B3ADjqoRwrhCUqE
+         q3bw==
+X-Gm-Message-State: APjAAAX8QaTEjHOiCAQXtvbjyywI8kU48k7O0WkyHH93K1Wx0O0f46ru
+        BcuJ5r+ZP1+FBqqfMfmCFFXusKwvY2fBWxJHDlYylg==
+X-Google-Smtp-Source: APXvYqz/ZWCizrBFHM4Cq1/ncU1oZvTHMFn6u0WZv6z/Jxsk+gNST636u5zULqKhQ67c/cd+0e4ZjxI0UTLTyU4JRZ8=
+X-Received: by 2002:aca:ec0f:: with SMTP id k15mr21599oih.43.1559160199272;
+ Wed, 29 May 2019 13:03:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529193046.GA19876@basecamp>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190524010117.225219-1-saravanak@google.com> <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
+In-Reply-To: <CAGETcx8MY7Xhc4YjCcO9TH6X9Sse4Mg2Wi6vjau5T6d4C-itFQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 29 May 2019 13:02:43 -0700
+Message-ID: <CAGETcx-xWt50zb0JQrDRpqxL8i-PAV4j4_rPLFrJantuyxAxnw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Solve postboot supplier cleanup and optimize probe ordering
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2019 1:30 PM, Brian Masney wrote:
-> On Wed, May 29, 2019 at 08:41:31AM -0600, Jeffrey Hugo wrote:
->> On Wed, May 29, 2019 at 4:28 AM Brian Masney <masneyb@onstation.org> wrote:
->>>
->>> On Tue, May 28, 2019 at 08:53:49PM -0600, Jeffrey Hugo wrote:
->>>> On Tue, May 28, 2019 at 8:46 PM Brian Masney <masneyb@onstation.org> wrote:
->>>>>
->>>>> On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
->>>>>>>> Do you know if the nexus 5 has a video or command mode panel?  There
->>>>>>>> is some glitchyness with vblanks and command mode panels.
->>>>>>>
->>>>>>> Its in command mode. I know this because I see two 'pp done time out'
->>>>>>> messages, even on 4.17. Based on my understanding, the ping pong code is
->>>>>>> only applicable for command mode panels.
->>>>>>
->>>>>> Actually, the ping pong element exists in both modes, but 'pp done
->>>>>> time out' is a good indicator that it is command mode.
->>>>>>
->>>>>> Are you also seeing vblank timeouts?
->>>>>
->>>>> Yes, here's a snippet of the first one.
->>>>>
->>>>> [    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
->>>>> [    2.556020] [CRTC:49:crtc-0] vblank wait timed out
->>>>> [    2.556023] Modules linked in:
->>>>> [    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
->>>>> [    2.556038] Hardware name: Generic DT based system
->>>>> [    2.556056] Workqueue: events deferred_probe_work_func
->>>>> ...
->>>>>
->>>>>> Do you have busybox?
->>>>>>
->>>>>> Can you run -
->>>>>> sudo busybox devmem 0xFD900614
->>>>>> sudo busybox devmem 0xFD900714
->>>>>> sudo busybox devmem 0xFD900814
->>>>>> sudo busybox devmem 0xFD900914
->>>>>> sudo busybox devmem 0xFD900A14
->>>>>
->>>>> # busybox devmem 0xFD900614
->>>>> 0x00020020
->>>>
->>>> Ok, so CTL_0 path, command mode, ping pong 0, with the output going to DSI 1.
->>>>
->>>> Next one please:
->>>>
->>>> busybox devmem 0xFD912D30
->>>
->>> It's 0x00000000 on mainline and 4.17. I used the following script to
->>> dump the entire mdp5 memory region and attached the dump from 4.17 and
->>> 5.2rc1.
->>>
+Sending again because email client somehow reverted to HTML.
+Frank, Rob, Mark,
+
+Gentle reminder. I've replied to your emails spread across the
+different patches in the series. Hoping they address your questions
+and concerns. Please let me know what you think.
+
+Thanks,
+Saravana
+
+
+On Wed, May 29, 2019 at 1:00 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Frank, Rob, Mark,
+>
+> Gentle reminder. I've replied to your emails spread across the different patches in the series. Hoping they address your questions and concerns. Please let me know what you think.
+>
+> Thanks,
+> Saravana
+>
+> On Thu, May 23, 2019 at 6:01 PM Saravana Kannan <saravanak@google.com> wrote:
 >>
->> ok, 0 means autorefresh is not on.  Which is fine.  My next guess
->> would be the vblank code checking the hardware vblank counter, which
->> doesn't exist.
->> In video mode, there is a frame counter which increments, which can be
->> used as the vblank counter.  Unfortunately, that hardware isn't active
->> in command mode, and there isn't an equivalent.
+>> Add a generic "depends-on" property that allows specifying mandatory
+>> functional dependencies between devices. Add device-links after the
+>> devices are created (but before they are probed) by looking at this
+>> "depends-on" property.
 >>
->> So, the vblank code is going to read the register, and look for an
->> update, which will never happen, thus it will timeout.  There is a
->> backup path which uses timestamps (no hardware), which you can
->> activate with a quick hack - make max_vblank_count = 0 at the
->> following line
->> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c#L753
-> 
-> That fixed the issue!
-
-Awesome.  I'm glad it was something simple.
-
-> 
-> I previously observed that mdp5_get_vblank_counter, specifically
-> mdp5_encoder_get_framecount, would always return 0.
-> 
-> What's the best way to fix this in mainline? Set that to zero if any
-> of the interface modes is MDP5_INTF_DSI_MODE_COMMAND?
-> 
-
-Short version, yes.  Long version:
-
-I still have that hack in my tree and haven't come back to formulating
-a proper fix yet.  Feel free to run with it.
-
-Thinking about it briefly, we could do two things.  We could fake a
-hardware counter by just increment an int every time the vblank irq is
-processed, but that seems clunky.  Otherwise, we could force a
-fallback onto the timestamp solution, which seems less invasive.
-
-In theory, we could service multiple displays, with different
-properties (ie a combination of command and video mode).  The hack
-then, is not good, because it would break video mode (at-least we
-wouldn't be using the register when we could).  It would be great if
-the use of the hardware register could be done per display.
-
-Luckily, it looks like someone just made that possible -
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/drm_vblank.c?h=v5.2-rc2&id=ed20151a7699bb2c77eba3610199789a126940c4
-
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+>> This property is used instead of existing DT properties that specify
+>> phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+>> is because not all resources referred to by existing DT properties are
+>> mandatory functional dependencies. Some devices/drivers might be able
+>> to operate with reduced functionality when some of the resources
+>> aren't available. For example, a device could operate in polling mode
+>> if no IRQ is available, a device could skip doing power management if
+>> clock or voltage control isn't available and they are left on, etc.
+>>
+>> So, adding mandatory functional dependency links between devices by
+>> looking at referred phandles in DT properties won't work as it would
+>> prevent probing devices that could be probed. By having an explicit
+>> depends-on property, we can handle these cases correctly.
+>>
+>> Having functional dependencies explicitly called out in DT and
+>> automatically added before the devices are probed, provides the
+>> following benefits:
+>>
+>> - Optimizes device probe order and avoids the useless work of
+>>   attempting probes of devices that will not probe successfully
+>>   (because their suppliers aren't present or haven't probed yet).
+>>
+>>   For example, in a commonly available mobile SoC, registering just
+>>   one consumer device's driver at an initcall level earlier than the
+>>   supplier device's driver causes 11 failed probe attempts before the
+>>   consumer device probes successfully. This was with a kernel with all
+>>   the drivers statically compiled in. This problem gets a lot worse if
+>>   all the drivers are loaded as modules without direct symbol
+>>   dependencies.
+>>
+>> - Supplier devices like clock providers, regulators providers, etc
+>>   need to keep the resources they provide active and at a particular
+>>   state(s) during boot up even if their current set of consumers don't
+>>   request the resource to be active. This is because the rest of the
+>>   consumers might not have probed yet and turning off the resource
+>>   before all the consumers have probed could lead to a hang or
+>>   undesired user experience.
+>>
+>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>   have probed by then. This is not a valid assumption for systems with
+>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>   this due to the lack of a clear signal for when they can turn off
+>>   resources. This leads to downstream hacks to handle cases like this
+>>   that can easily be solved in the upstream kernel.
+>>
+>>   By linking devices before they are probed, we give suppliers a clear
+>>   count of the number of dependent consumers. Once all of the
+>>   consumers are active, the suppliers can turn off the unused
+>>   resources without making assumptions about the number of consumers.
+>>
+>> By default we just add device-links to track "driver presence" (probe
+>> succeeded) of the supplier device. If any other functionality provided
+>> by device-links are needed, it is left to the consumer/supplier
+>> devices to change the link when they probe.
+>>
+>>
+>> Saravana Kannan (5):
+>>   of/platform: Speed up of_find_device_by_node()
+>>   driver core: Add device links support for pending links to suppliers
+>>   dt-bindings: Add depends-on property
+>>   of/platform: Add functional dependency link from "depends-on" property
+>>   driver core: Add sync_state driver/bus callback
+>>
+>>  .../devicetree/bindings/depends-on.txt        |  26 +++++
+>>  drivers/base/core.c                           | 106 ++++++++++++++++++
+>>  drivers/of/platform.c                         |  75 ++++++++++++-
+>>  include/linux/device.h                        |  24 ++++
+>>  include/linux/of.h                            |   3 +
+>>  5 files changed, 233 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+>>
+>> --
+>> 2.22.0.rc1.257.g3120a18244-goog
+>>
