@@ -2,59 +2,128 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420C6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C10C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E24238CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18A4238F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfE2OKj convert rfc822-to-8bit (ORCPT
+        id S1727334AbfE2OLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:10:39 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:40630 "EHLO
-        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbfE2OKj (ORCPT
+        Wed, 29 May 2019 10:11:08 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59107 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbfE2OLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:10:39 -0400
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 May 2019 10:10:38 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 1382E1809AD97;
-        Wed, 29 May 2019 16:04:49 +0200 (CEST)
-From:   David Gstir <david@sigma-star.at>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Can an ahash driver be used through shash API?
-Message-Id: <729A4150-93A0-456B-B7AB-6D3A446E600E@sigma-star.at>
-Date:   Wed, 29 May 2019 16:04:47 +0200
-Cc:     linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
-To:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 29 May 2019 10:11:07 -0400
+X-Originating-IP: 90.88.147.134
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-27-134.w90-88.abo.wanadoo.fr [90.88.147.134])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 6B558FF811;
+        Wed, 29 May 2019 14:11:03 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com
+Subject: [PATCH net-next] ethtool: Drop check for vlan etype and vlan tci when parsing flow_rule
+Date:   Wed, 29 May 2019 16:10:44 +0200
+Message-Id: <20190529141044.24669-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+When parsing an ethtool flow spec to build a flow_rule, the code checks
+if both the vlan etype and the vlan tci are specified by the user to add
+a FLOW_DISSECTOR_KEY_VLAN match.
 
-I've done some testing with hardware acceleration of hash functions
-and noticed that, when using the synchronous message digest API (shash),
-some drivers are not usable. In my case the CAAM driver for SHA256.
-Using the asynchronous interface (ahash), everything works as expected.
-Looking at the driver source, the CAAM driver only implements the ahash
-interface. 
+However, when the user only specified a vlan etype or a vlan tci, this
+check silently ignores these parameters.
 
-I'm wondering if there a way to use an ahash driver through the shash interface?
+For example, the following rule :
 
-I've seen that it does actually work the other way around, since 
-crypto_init_shash_ops_async() in crypto/shash.c takes care of translating calls
-from ahash to shash and that's how the *-generic drivers are usable through the
-ahash API.
+ethtool -N eth0 flow-type udp4 vlan 0x0010 action -1 loc 0
 
-Thanks!
-David
+will result in no error being issued, but the equivalent rule will be
+created and passed to the NIC driver :
+
+ethtool -N eth0 flow-type udp4 action -1 loc 0
+
+In the end, neither the NIC driver using the rule nor the end user have
+a way to know that these keys were dropped along the way, or that
+incorrect parameters were entered.
+
+This kind of check should be left to either the driver, or the ethtool
+flow spec layer.
+
+This commit makes so that ethtool parameters are forwarded as-is to the
+NIC driver.
+
+Since none of the users of ethtool_rx_flow_rule_create are using the
+VLAN dissector, I don't think this qualifies as a regression.
+
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ net/core/ethtool.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 4a593853cbf2..2fe86893e9b5 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -3010,26 +3010,23 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+ 		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
+ 		const struct ethtool_flow_ext *ext_m_spec = &fs->m_ext;
+ 
+-		if (ext_m_spec->vlan_etype &&
+-		    ext_m_spec->vlan_tci) {
+-			match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
+-			match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
++		match->key.vlan.vlan_tpid = ext_h_spec->vlan_etype;
++		match->mask.vlan.vlan_tpid = ext_m_spec->vlan_etype;
+ 
+-			match->key.vlan.vlan_id =
+-				ntohs(ext_h_spec->vlan_tci) & 0x0fff;
+-			match->mask.vlan.vlan_id =
+-				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
++		match->key.vlan.vlan_id =
++			ntohs(ext_h_spec->vlan_tci) & 0x0fff;
++		match->mask.vlan.vlan_id =
++			ntohs(ext_m_spec->vlan_tci) & 0x0fff;
+ 
+-			match->key.vlan.vlan_priority =
+-				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
+-			match->mask.vlan.vlan_priority =
+-				(ntohs(ext_m_spec->vlan_tci) & 0xe000) >> 13;
++		match->key.vlan.vlan_priority =
++			(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
++		match->mask.vlan.vlan_priority =
++			(ntohs(ext_m_spec->vlan_tci) & 0xe000) >> 13;
+ 
+-			match->dissector.used_keys |=
+-				BIT(FLOW_DISSECTOR_KEY_VLAN);
+-			match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
+-				offsetof(struct ethtool_rx_flow_key, vlan);
+-		}
++		match->dissector.used_keys |=
++			BIT(FLOW_DISSECTOR_KEY_VLAN);
++		match->dissector.offset[FLOW_DISSECTOR_KEY_VLAN] =
++			offsetof(struct ethtool_rx_flow_key, vlan);
+ 	}
+ 	if (fs->flow_type & FLOW_MAC_EXT) {
+ 		const struct ethtool_flow_ext *ext_h_spec = &fs->h_ext;
+-- 
+2.20.1
+
