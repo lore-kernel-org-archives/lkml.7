@@ -2,191 +2,149 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269A8C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CFEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F033A227C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pz4dftM4"
+	by mail.kernel.org (Postfix) with ESMTP id 6703923F61
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfE2SmX (ORCPT
+        id S1726224AbfE2Spj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:42:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35100 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2SmX (ORCPT
+        Wed, 29 May 2019 14:45:39 -0400
+Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:38670 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726012AbfE2Spj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:42:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id p2so2775974iol.2;
-        Wed, 29 May 2019 11:42:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ac4wfHXOGpPwgmU9+NyMZSbTQr/j+BDgOZSJk6FL+cU=;
-        b=pz4dftM4fTpg7Y0etCDItJltv1TiXyMGLurzZkTgC82QCcMycu+LXgi6ynxqt27jOI
-         tv0ZDDfcyNcGZNWZMDeEkoOJzcIxqKnVhMeI0RooHtMkgokw+eDE+wGRX+NS68icKKDR
-         LsYD5yoS58k7hDYhkj/ijTP1S9U9SqNegRH6WMTPEQjWZGCId36KmNr2PcRRhDBzTIXH
-         gyQi0cqJ5mc9Pen0AjXg0CH17gPGI8Wet+zHnRq6LnZbvJUGzFw3wH2VEK+Re6pvZrA5
-         Dcap5QyONoSMp4ZcUHcFcJccKd9chk88/RhpR3XueX2OpX/famGA1D0TbGA0NEMgUdrB
-         PPhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ac4wfHXOGpPwgmU9+NyMZSbTQr/j+BDgOZSJk6FL+cU=;
-        b=QQkQ725MMp/KD8hmqUjA4+5WEheXVGVuiCI+PWmWNVRMqQTtSJUSGoFg4k3KVqkX0j
-         +V1Q7Ypac3MGttMDGkX/qQfq5zaHCFBLlQytabu3U5ZELhjDY5b6yn4iChQT/q7MkjaR
-         mjorpeXSPqLbh3jz05NlJcYuJGpQMg6RMD8+zkRhS8TGX0fmbQMouC7cuTKbSjAZOHTs
-         Xh5VQXH9P3TMW/Mc6L2PCkup35UtP+xOonMgLFwxd9VlEUYncWAdGQf6JDTzywXZHw79
-         hvlEED5Lc1GS5ID8lpVMA9jZKGdqfXOLHcWsDhcEmWphaT3ohGTinwCLNy/njLbX+81l
-         ru1A==
-X-Gm-Message-State: APjAAAXWfwSEZzhMSSgTAREHiwhZ6lfEePubbmBsJSXRg8x9/lUODei2
-        aRBQBjJDkHVOoFP20ZAlihIdYXznFEjNq3GBuXg=
-X-Google-Smtp-Source: APXvYqzQDio796G4Lx7zeBpaekA8t5Ss1nQFheXwKT3BzHWDoYIvDIez2PAO6oHIVKTGTiRNKqYB5znXP2b/LOi4buQ=
-X-Received: by 2002:a6b:c411:: with SMTP id y17mr13876076ioa.265.1559155340985;
- Wed, 29 May 2019 11:42:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com> <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
- <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <20190524141054.GB2655@redhat.com> <CABeXuvqSzy+v=3Y5NnMmfob7bvuNkafmdDqoex8BVENN3atqZA@mail.gmail.com>
- <20190524163310.GG2655@redhat.com> <CABeXuvrUKZnECj+NgLdpe5uhKBEmSynrakD-3q9XHqk8Aef5UQ@mail.gmail.com>
- <20190527150409.GA8961@redhat.com> <CABeXuvouBzZuNarmNcd9JgZgvonL1N_p21gat=O_x0-1hMx=6A@mail.gmail.com>
- <20190529165717.GC27659@redhat.com>
-In-Reply-To: <20190529165717.GC27659@redhat.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 29 May 2019 11:42:09 -0700
-Message-ID: <CABeXuvrFqGySKNLFK4f5er2ahQpz_eTbF+RfXCis1TZNT16Ddg@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 29 May 2019 14:45:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 984F9100E86C2;
+        Wed, 29 May 2019 18:45:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: mark05_4ddac67b04548
+X-Filterd-Recvd-Size: 3252
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf03.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 29 May 2019 18:45:34 +0000 (UTC)
+Message-ID: <bcd12350374533ef090ae911be444e702e85134b.camel@perches.com>
+Subject: Re: [PATCH v2] drivers/media/dvb-frontends: Implement probe/remove
+ for stv6110x
+From:   Joe Perches <joe@perches.com>
+To:     Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, sean@mess.org
+Date:   Wed, 29 May 2019 11:45:33 -0700
+In-Reply-To: <20190529165633.8779-1-tobias.johannes.klausmann@mni.thm.de>
+References: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
+         <20190529165633.8779-1-tobias.johannes.klausmann@mni.thm.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 05/28, Deepa Dinamani wrote:
-> >
-> > I agree that signal handller being called and return value not being
-> > altered is an issue with other syscalls also. I was just wondering if
-> > some userspace code assumption would be assuming this. This is not a
-> > kernel bug.
-> >
-> > But, I do not think we have an understanding of what was wrong in
-> > 854a6ed56839a anymore since you pointed out that my assumption was not
-> > correct that the signal handler being called without errno being set
-> > is wrong.
->
-> Deepa, sorry, I simply can't parse the above... most probably because of
-> my bad English.
+On Wed, 2019-05-29 at 18:56 +0200, Tobias Klausmann wrote:
+> Refactor out the common parts of stv6110x_probe() and stv6110x_attach()
+> into separate functions.
+> 
+> This provides the needed functionality to use dvb_module_probe() instead
+> of dvb_attach()!
+> 
+> v2:
+> - Impovments based on comments by Sean Young
+> - Fix checkpatch.pl --strict errors
 
-Ok, All I meant was that I had thought a signal handler being invoked
-without the error value reflecting it was wrong. That is what I had
-thought was wrong with 854a6ed56839a. Now, that we agree that signal
-handler can be invoked without the errno returning success, I thought
-I did not know what is wrong with 854a6ed56839a anymore.
+trivia:
 
-But, you now pointed out that the signals we care about should not be
-delivered after an event has been ready. This points out to what was
-wrong with 854a6ed56839a. Thanks.
+> diff --git a/drivers/media/dvb-frontends/stv6110x.c b/drivers/media/dvb-frontends/stv6110x.c
+[]
+> @@ -333,6 +333,41 @@ static void stv6110x_release(struct dvb_frontend *fe)
+>  	kfree(stv6110x);
+>  }
+>  
+> +void st6110x_init_regs(struct stv6110x_state *stv6110x)
+> +{
+> +	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
 
-> > One open question: this part of epoll_pwait was already broken before
-> > 854a6ed56839a. Do you agree?
-> >
-> > if (err == -EINTR) {
-> >                    memcpy(&current->saved_sigmask, &sigsaved,
-> >                           sizeof(sigsaved));
-> >                     set_restore_sigmask();
-> >   } else
-> >                    set_current_blocked(&sigsaved);
->
-> I do not understand why do you think this part was broken :/
+static const u8...
 
-Ok, because of your other statement that the signals the application
-cares about do not want to know about signals they care about after an
-event is ready this is also not a problem.
+> +
+> +	memcpy(stv6110x->regs, default_regs, 8);
 
-> > Or, I could revert the signal_pending() check and provide a fix
-> > something like below(not a complete patch)
->
-> ...
->
-> > -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> > +int restore_user_sigmask(const void __user *usigmask, sigset_t
-> > *sigsaved, int sig_pending)
-> >  {
-> >
-> >         if (!usigmask)
-> >                return;
-> >
-> >         /*
-> >          * When signals are pending, do not restore them here.
-> >          * Restoring sigmask here can lead to delivering signals that the above
-> >          * syscalls are intended to block because of the sigmask passed in.
-> >          */
-> > +       if (sig_pending) {
-> >                 current->saved_sigmask = *sigsaved;
-> >                 set_restore_sigmask();
-> >                return;
-> >            }
-> >
-> > @@ -2330,7 +2330,8 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct
-> > epoll_event __user *, events,
-> >
-> >         error = do_epoll_wait(epfd, events, maxevents, timeout);
-> >
-> > -       restore_user_sigmask(sigmask, &sigsaved);
-> > +       signal_detected = restore_user_sigmask(sigmask, &sigsaved,
-> > error == -EINTR);
->
-> I fail to understand this pseudo-code, sorry. In particular, do not understand
-> why restore_user_sigmask() needs to return a boolean.
+	memcpy(stv6110x->regs, default_regs, ARRAY_SIZE(default_regs));
 
-That was a remnant from the other patch. Return type needs to be void.
+> +}
+> +
+> +void stv6110x_setup_divider(struct stv6110x_state *stv6110x)
+> +{
+> +	switch (stv6110x->config->clk_div) {
+> +	default:
+> +	case 1:
+> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2],
+> +				  CTRL2_CO_DIV,
+> +				  0);
+> +		break;
+> +	case 2:
+> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2],
+> +				  CTRL2_CO_DIV,
+> +				  1);
+> +		break;
+> +	case 4:
+> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2],
+> +				  CTRL2_CO_DIV,
+> +				  2);
+> +		break;
+> +	case 8:
+> +	case 0:
+> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2],
+> +				  CTRL2_CO_DIV,
+> +				  3);
+> +		break;
+> +	}
+> +}
 
-> The only thing I _seem to_ understand is the "sig_pending" flag passed by the
-> caller which replaces the signal_pending() check.
+Probably more sensible (and smaller object code) written using
+an automatic like:
 
-Correct. This is what is the main change I was proposing.
+{
+	int div;
 
-> Yes, this is what I think we
-> should do, and this is what I tried to propose from the very beginning in my
-> 1st email in this thread.
+	switch (stv6110x->config->clk_div) {
+	case 8:
+		div = 3;
+		break;
+	case 4:
+		div = 2;
+		break;
+	case 2:
+		div = 1;
+		break;
+	case 1:
+	default:
+		div = 0;
+		break;
+	}
+	STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, div);
+}
 
-This was not clear to me in your first response that you did not want
-the signal_pending() check in restore_user_sigmask(). :
-https://lore.kernel.org/lkml/20190522150505.GA4915@redhat.com/
+> diff --git a/drivers/media/dvb-frontends/stv6110x_priv.h b/drivers/media/dvb-frontends/stv6110x_priv.h
+[]
+> @@ -54,11 +54,12 @@
+>  #define REFCLOCK_MHz				(stv6110x->config->refclk / 1000000)
+>  
+>  struct stv6110x_state {
+> +	struct dvb_frontend		*frontend;
+>  	struct i2c_adapter		*i2c;
+>  	const struct stv6110x_config	*config;
+>  	u8				regs[8];
 
-"Ugh. I need to re-check, but at first glance I really dislike this change.
+Perhaps this 8 should be a define?
 
-I think we can fix the problem _and_ simplify the code. Something like below.
-The patch is obviously incomplete, it changes only only one caller of
-set_user_sigmask(), epoll_pwait() to explain what I mean.
 
-restore_user_sigmask() should simply die. Although perhaps another helper
-makes sense to add WARN_ON(test_tsk_restore_sigmask() && !signal_pending)."
-
--Deepa
