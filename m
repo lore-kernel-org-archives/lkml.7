@@ -2,235 +2,289 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7F9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA52C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E176523B25
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MIA0M6Vb"
+	by mail.kernel.org (Postfix) with ESMTP id 106FE23B08
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfE2O4C (ORCPT
+        id S1726716AbfE2O4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:56:02 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:5851 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfE2O4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:56:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cee9d7e0000>; Wed, 29 May 2019 07:55:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 May 2019 07:55:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 May 2019 07:55:58 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
- 2019 14:55:57 +0000
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 29 May
- 2019 14:55:58 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 29 May 2019 14:55:57 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.158]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cee9d7c0000>; Wed, 29 May 2019 07:55:57 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
-        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
-        <drinkcat@chromium.org>, <Thinh.Nguyen@synopsys.com>,
-        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH v11 2/2] usb: xhci: Add Clear_TT_Buffer
-Date:   Wed, 29 May 2019 22:55:49 +0800
-Message-ID: <1559141749-5159-3-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1559141749-5159-1-git-send-email-jilin@nvidia.com>
-References: <1559141749-5159-1-git-send-email-jilin@nvidia.com>
+        Wed, 29 May 2019 10:56:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45760 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726238AbfE2O4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:56:34 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C19F6EB87;
+        Wed, 29 May 2019 14:56:34 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CF75B681;
+        Wed, 29 May 2019 14:56:33 +0000 (UTC)
+Date:   Wed, 29 May 2019 08:56:33 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, kwankhede@nvidia.com, cjia@nvidia.com
+Subject: Re: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Message-ID: <20190529085633.7fcdf7d2@x1.home>
+In-Reply-To: <20190524135738.54862-4-parav@mellanox.com>
+References: <20190524135738.54862-1-parav@mellanox.com>
+        <20190524135738.54862-4-parav@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559141758; bh=qJsqgG/wairsxZLuJhaLHWT5QFH0t31DOAuVLrlkZ6M=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=MIA0M6VbI40NHvRwArxHcu3C/O5kltkpv7FJsz4MDz/LZdjum4Q3dtNWsHvts8hIs
-         Y1/KxZsAFh62NL/v8eIVjNU4MH2BOiFWL+PfAbcJiYPwd+2uLy6Mmx/k3P8PIR0hXv
-         KjwpZzQ+4jt+gc2cQ6UcvsbztmjfTSvLqM6l+viU71DOMUXFtn1MPUCfXQb1ewV5m9
-         ih/WArK4QrxiLCUck8rkMal2m3qqA48mRsdTPcj06aCWh1NQ7XYBk5GUDFPAhwksyy
-         qIO9mRmdEdCiJjnLNdkxPAYCqsgEERZtFXdhD7QPHlyI3BHqO+WxsfXwwOv8j9Cm60
-         Mi7UJHyxK6tFg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 29 May 2019 14:56:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
+On Fri, 24 May 2019 08:57:38 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
+> In following sequences, child devices created while removing mdev parent
+> device can be left out, or it may lead to race of removing half
+> initialized child mdev devices.
+> 
+> issue-1:
+> --------
+>        cpu-0                         cpu-1
+>        -----                         -----
+>                                   mdev_unregister_device()
+>                                     device_for_each_child()
+>                                       mdev_device_remove_cb()
+>                                         mdev_device_remove()
+> create_store()
+>   mdev_device_create()                   [...]
+>     device_add()
+>                                   parent_remove_sysfs_files()
+> 
+> /* BUG: device added by cpu-0
+>  * whose parent is getting removed
+>  * and it won't process this mdev.
+>  */
+> 
+> issue-2:
+> --------
+> Below crash is observed when user initiated remove is in progress
+> and mdev_unregister_driver() completes parent unregistration.
+> 
+>        cpu-0                         cpu-1
+>        -----                         -----
+> remove_store()
+>    mdev_device_remove()
+>    active = false;
+>                                   mdev_unregister_device()
+>                                   parent device removed.
+>    [...]
+>    parents->ops->remove()
+>  /*
+>   * BUG: Accessing invalid parent.
+>   */
+> 
+> This is similar race like create() racing with mdev_unregister_device().
+> 
+> BUG: unable to handle kernel paging request at ffffffffc0585668
+> PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
+> Oops: 0000 [#1] SMP PTI
+> CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
+> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
+> Call Trace:
+>  remove_store+0x71/0x90 [mdev]
+>  kernfs_fop_write+0x113/0x1a0
+>  vfs_write+0xad/0x1b0
+>  ksys_write+0x5a/0xe0
+>  do_syscall_64+0x5a/0x210
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Therefore, mdev core is improved as below to overcome above issues.
+> 
+> Wait for any ongoing mdev create() and remove() to finish before
+> unregistering parent device.
+> This continues to allow multiple create and remove to progress in
+> parallel for different mdev devices as most common case.
+> At the same time guard parent removal while parent is being access by
+> create() and remove callbacks.
+> create()/remove() and unregister_device() are synchronized by the rwsem.
+> 
+> Refactor device removal code to mdev_device_remove_common() to avoid
+> acquiring unreg_sem of the parent.
+> 
+> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 61 ++++++++++++++++++++++++--------
+>  drivers/vfio/mdev/mdev_private.h |  2 ++
+>  2 files changed, 49 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index 0bef0cae1d4b..c5401a8c6843 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -102,11 +102,36 @@ static void mdev_put_parent(struct mdev_parent *parent)
+>  		kref_put(&parent->ref, mdev_release_parent);
+>  }
+>  
 
-Here we invoke usb_hub_clear_tt_buffer() to send Clear_TT_Buffer
-request to the hub of the device for the following Set_Interface
-requests to the device to get ACK successfully.
+Some sort of locking semantics comment would be useful here, ex:
 
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
-v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
-    , remove its claiming in xhci.h
-v3: Add description for clearing_tt (xhci.h)
-v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
-    to protect for Clear_TT_Buffer to be run serially.
-    Remove xhci_clear_tt_buffer_complete as it's not necessary.
-    Same reason as the above.
-    Extend usb_hub_clear_tt_buffer parameter
-v5: Not extending usb_hub_clear_tt_buffer parameter
-    Add description.
-v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-v7: Add devaddr field in "struct usb_device"
-v8: split as two patches
-v9: no change flag
-v10: Add EP_CLEARING_TT flag
-v11: Add spin_lock/unlock in xhci_clear_tt_buffer_complete
+/* Caller holds parent unreg_sem read or write lock */
 
+> +static void mdev_device_remove_common(struct mdev_device *mdev)
+> +{
+> +	struct mdev_parent *parent;
+> +	struct mdev_type *type;
+> +	int ret;
+> +
+> +	type = to_mdev_type(mdev->type_kobj);
+> +	mdev_remove_sysfs_files(&mdev->dev, type);
+> +	device_del(&mdev->dev);
+> +	parent = mdev->parent;
+> +	ret = parent->ops->remove(mdev);
+> +	if (ret)
+> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
+> +
+> +	/* Balances with device_initialize() */
+> +	put_device(&mdev->dev);
+> +	mdev_put_parent(parent);
+> +}
+> +
+>  static int mdev_device_remove_cb(struct device *dev, void *data)
+>  {
+> -	if (dev_is_mdev(dev))
+> -		mdev_device_remove(dev);
+> +	struct mdev_parent *parent;
+> +	struct mdev_device *mdev;
+>  
+> +	if (!dev_is_mdev(dev))
+> +		return 0;
+> +
+> +	mdev = to_mdev_device(dev);
+> +	parent = mdev->parent;
+> +	mdev_device_remove_common(mdev);
 
- drivers/usb/host/xhci-ring.c | 27 ++++++++++++++++++++++++++-
- drivers/usb/host/xhci.c      | 21 +++++++++++++++++++++
- drivers/usb/host/xhci.h      |  5 +++++
- 3 files changed, 52 insertions(+), 1 deletion(-)
+'parent' is unused here and we only use mdev once, so we probably don't
+need to put it in a local variable.
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index feffceb31e8a..a52fd96e70e9 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -399,7 +399,7 @@ void xhci_ring_ep_doorbell(struct xhci_hcd *xhci,
- 	 * stream once the endpoint is on the HW schedule.
- 	 */
- 	if ((ep_state & EP_STOP_CMD_PENDING) || (ep_state & SET_DEQ_PENDING) ||
--	    (ep_state & EP_HALTED))
-+	    (ep_state & EP_HALTED) || (ep_state & EP_CLEARING_TT))
- 		return;
- 	writel(DB_VALUE(ep_index, stream_id), db_addr);
- 	/* The CPU has better things to do at this point than wait for a
-@@ -433,6 +433,13 @@ static void ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
- 	}
- }
- 
-+void xhci_ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
-+		unsigned int slot_id,
-+		unsigned int ep_index)
-+{
-+	ring_doorbell_for_active_rings(xhci, slot_id, ep_index);
-+}
-+
- /* Get the right ring for the given slot_id, ep_index and stream_id.
-  * If the endpoint supports streams, boundary check the URB's stream ID.
-  * If the endpoint doesn't support streams, return the singular endpoint ring.
-@@ -1794,6 +1801,23 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci, struct xhci_td *td,
-+		struct xhci_virt_ep *ep)
-+{
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub) &&
-+	    !(ep->ep_state & EP_CLEARING_TT)) {
-+		ep->ep_state |= EP_CLEARING_TT;
-+		td->urb->ep->hcpriv = td->urb->dev;
-+		if (usb_hub_clear_tt_buffer(td->urb))
-+			ep->ep_state &= ~EP_CLEARING_TT;
-+	}
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1812,6 +1836,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, td, ep);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 4f92643e3a4c..ef5702a45067 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -5163,6 +5163,26 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
- }
- EXPORT_SYMBOL_GPL(xhci_gen_setup);
- 
-+static void xhci_clear_tt_buffer_complete(struct usb_hcd *hcd,
-+		struct usb_host_endpoint *ep)
-+{
-+	struct xhci_hcd *xhci;
-+	struct usb_device *udev;
-+	unsigned int slot_id;
-+	unsigned int ep_index;
-+	unsigned long flags;
-+
-+	xhci = hcd_to_xhci(hcd);
-+	udev = (struct usb_device *)ep->hcpriv;
-+	slot_id = udev->slot_id;
-+	ep_index = xhci_get_endpoint_index(&ep->desc);
-+
-+	spin_lock_irqsave(&xhci->lock, flags);
-+	xhci->devs[slot_id]->eps[ep_index].ep_state &= ~EP_CLEARING_TT;
-+	xhci_ring_doorbell_for_active_rings(xhci, slot_id, ep_index);
-+	spin_unlock_irqrestore(&xhci->lock, flags);
-+}
-+
- static const struct hc_driver xhci_hc_driver = {
- 	.description =		"xhci-hcd",
- 	.product_desc =		"xHCI Host Controller",
-@@ -5224,6 +5244,7 @@ static const struct hc_driver xhci_hc_driver = {
- 	.enable_usb3_lpm_timeout =	xhci_enable_usb3_lpm_timeout,
- 	.disable_usb3_lpm_timeout =	xhci_disable_usb3_lpm_timeout,
- 	.find_raw_port_number =	xhci_find_raw_port_number,
-+	.clear_tt_buffer_complete = xhci_clear_tt_buffer_complete,
- };
- 
- void xhci_init_driver(struct hc_driver *drv,
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 7f8b950d1a73..34789f4db555 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -936,6 +936,8 @@ struct xhci_virt_ep {
- #define EP_GETTING_NO_STREAMS	(1 << 5)
- #define EP_HARD_CLEAR_TOGGLE	(1 << 6)
- #define EP_SOFT_CLEAR_TOGGLE	(1 << 7)
-+/* usb_hub_clear_tt_buffer is in progress */
-+#define EP_CLEARING_TT		(1 << 8)
- 	/* ----  Related to URB cancellation ---- */
- 	struct list_head	cancelled_td_list;
- 	/* Watchdog timer for stop endpoint command to cancel URBs */
-@@ -2102,6 +2104,9 @@ void xhci_handle_command_timeout(struct work_struct *work);
- 
- void xhci_ring_ep_doorbell(struct xhci_hcd *xhci, unsigned int slot_id,
- 		unsigned int ep_index, unsigned int stream_id);
-+void xhci_ring_doorbell_for_active_rings(struct xhci_hcd *xhci,
-+		unsigned int slot_id,
-+		unsigned int ep_index);
- void xhci_cleanup_command_queue(struct xhci_hcd *xhci);
- void inc_deq(struct xhci_hcd *xhci, struct xhci_ring *ring);
- unsigned int count_trbs(u64 addr, u64 len);
--- 
-2.1.4
+>  	return 0;
+>  }
+>  
+> @@ -148,6 +173,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>  	}
+>  
+>  	kref_init(&parent->ref);
+> +	init_rwsem(&parent->unreg_sem);
+>  
+>  	parent->dev = dev;
+>  	parent->ops = ops;
+> @@ -206,13 +232,17 @@ void mdev_unregister_device(struct device *dev)
+>  	dev_info(dev, "MDEV: Unregistering\n");
+>  
+>  	list_del(&parent->next);
+> +	mutex_unlock(&parent_list_lock);
+> +
+> +	down_write(&parent->unreg_sem);
+> +
+>  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+>  
+>  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+>  
+>  	parent_remove_sysfs_files(parent);
+> +	up_write(&parent->unreg_sem);
+>  
+> -	mutex_unlock(&parent_list_lock);
+>  	mdev_put_parent(parent);
+>  }
+>  EXPORT_SYMBOL(mdev_unregister_device);
+> @@ -265,6 +295,12 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  	mdev->parent = parent;
+>  
+> +	ret = down_read_trylock(&parent->unreg_sem);
+> +	if (!ret) {
+> +		ret = -ENODEV;
+
+I would have expected -EAGAIN or -EBUSY here, but I guess that since we
+consider the lock-out to deterministically be the parent going away
+that -ENODEV makes sense.  Ok.
+
+> +		goto mdev_fail;
+> +	}
+> +
+>  	device_initialize(&mdev->dev);
+>  	mdev->dev.parent  = dev;
+>  	mdev->dev.bus     = &mdev_bus_type;
+> @@ -287,6 +323,7 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  	mdev->active = true;
+>  	dev_dbg(&mdev->dev, "MDEV: created\n");
+> +	up_read(&parent->unreg_sem);
+>  
+>  	return 0;
+>  
+> @@ -295,6 +332,7 @@ int mdev_device_create(struct kobject *kobj,
+>  add_fail:
+>  	parent->ops->remove(mdev);
+>  ops_create_fail:
+> +	up_read(&parent->unreg_sem);
+>  	put_device(&mdev->dev);
+>  mdev_fail:
+>  	mdev_put_parent(parent);
+> @@ -305,7 +343,6 @@ int mdev_device_remove(struct device *dev)
+>  {
+>  	struct mdev_device *mdev, *tmp;
+>  	struct mdev_parent *parent;
+> -	struct mdev_type *type;
+>  	int ret;
+>  
+>  	mdev = to_mdev_device(dev);
+> @@ -329,18 +366,14 @@ int mdev_device_remove(struct device *dev)
+>  	mdev->active = false;
+>  	mutex_unlock(&mdev_list_lock);
+>  
+> -	type = to_mdev_type(mdev->type_kobj);
+> -	mdev_remove_sysfs_files(dev, type);
+> -	device_del(&mdev->dev);
+>  	parent = mdev->parent;
+> -	ret = parent->ops->remove(mdev);
+> -	if (ret)
+> -		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
+> -
+> -	/* Balances with device_initialize() */
+> -	put_device(&mdev->dev);
+> -	mdev_put_parent(parent);
+> +	/* Check if parent unregistration has started */
+> +	ret = down_read_trylock(&parent->unreg_sem);
+> +	if (!ret)
+> +		return -ENODEV;
+>  
+> +	mdev_device_remove_common(mdev);
+> +	up_read(&parent->unreg_sem);
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 924ed2274941..398767526276 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -23,6 +23,8 @@ struct mdev_parent {
+>  	struct list_head next;
+>  	struct kset *mdev_types_kset;
+>  	struct list_head type_list;
+> +	/* Synchronize device creation/removal with parent unregistration */
+> +	struct rw_semaphore unreg_sem;
+>  };
+>  
+>  struct mdev_device {
 
