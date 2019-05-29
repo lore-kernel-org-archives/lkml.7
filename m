@@ -2,128 +2,116 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA8CC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEB3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6581523A83
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559140830;
-	bh=EAdtr7sRR0pl/EFHtygZt/Pp3BubgxUN3LjE7D6cOlk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lFj+Vo/Z4ZXYcfHd03iZEhFkvyLgTIoQ2oM499nBV5JW6Q9noWakvCb5k4WgyM3p6
-	 gi2V25NzqMF5wpSFj8zF7W+5Jx6gSDwOGL2CRMxEnOZnf/mdGwJGSLAgps95T+P72t
-	 tHpjFXFrjIzrgOGzc/SFmrpm+eR5/E62sMYs2hfM=
+	by mail.kernel.org (Postfix) with ESMTP id 6E74523A84
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfE2Ok3 (ORCPT
+        id S1726495AbfE2Okz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 10:40:55 -0400
+Received: from mga17.intel.com ([192.55.52.151]:21994 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2Ok3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:40:29 -0400
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+        id S1726012AbfE2Oky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:40:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:40:54 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 29 May 2019 07:40:54 -0700
+Received: from [10.251.0.80] (kliang2-mobl.ccr.corp.intel.com [10.251.0.80])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3202323A82;
-        Wed, 29 May 2019 14:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559140828;
-        bh=EAdtr7sRR0pl/EFHtygZt/Pp3BubgxUN3LjE7D6cOlk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ao2UBId6fsrnjUhuVoz6EJkA6GBDiM237jsCkERiAcLuVEJzhicF1ZqGKUx9BeyXo
-         BHFsJrCUR/wHqtB+c1ttFIp1jVQIl4sRydzpPaUGpcH9euyaqyF+muzyT5+xw2av5D
-         szPdjEW6MCHzJ+gAOzBCeR8nJQ35SKzXf58VWQbo=
-Received: by mail-lf1-f43.google.com with SMTP id v18so2312709lfi.1;
-        Wed, 29 May 2019 07:40:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAX667em/enyT5T9gTnLllqVXaYr1g3CwEr/uks+NIhD2ksjEgve
-        mRiWQU97TKDf0rQMfcJXxsAfZDBLfOe6g/Bxjdk=
-X-Google-Smtp-Source: APXvYqzGwBFLfzLcIP1wJ+4vix58xGXZlLe1e6Gmb4rGT85Ek2cI7Vkp9JES0OgdOXg8ziQZzIohPTW6iOjEkmCNDlw=
-X-Received: by 2002:ac2:4d0d:: with SMTP id r13mr16779577lfi.30.1559140826498;
- Wed, 29 May 2019 07:40:26 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTPS id 596C758054E;
+        Wed, 29 May 2019 07:40:53 -0700 (PDT)
+Subject: Re: [PATCH 2/9] perf/x86/intel: Basic support for metrics counters
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <20190521214055.31060-1-kan.liang@linux.intel.com>
+ <20190521214055.31060-3-kan.liang@linux.intel.com>
+ <20190528121508.GS2606@hirez.programming.kicks-ass.net>
+ <991ef247-8efe-bc21-a988-3d628733d915@linux.intel.com>
+ <20190529072855.GX2623@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <dfaeb4b4-bf49-593d-b9e4-33dd8c050d4e@linux.intel.com>
+Date:   Wed, 29 May 2019 10:40:52 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
- <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
-In-Reply-To: <20190527022258.32748-3-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 29 May 2019 16:40:15 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcigVQEzR3xQMcc9hcSXn0VVCvNR+U2F0the62orR98qw@mail.gmail.com>
-Message-ID: <CAJKOXPcigVQEzR3xQMcc9hcSXn0VVCvNR+U2F0the62orR98qw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
- level SOC alert threshold
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190529072855.GX2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> For configure low level state of charge threshold alert signaled from
-> max17040 we add "maxim,alert-low-soc-level" property.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> new file mode 100644
-> index 000000000000..a13e8d50ff7b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> @@ -0,0 +1,28 @@
-> +max17040_battery
-> +~~~~~~~~~~~~~~~~
-> +
-> +Required properties :
-> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
-> +
-> +Optional properties :
-> +- maxim,alert-low-soc-level :  The alert threshold that sets the state of
-> +                               charge level (%) where an interrupt is
-> +                               generated. Can be configured from 1 up to 32
-> +                               (%). If skipped the power up default value of
-> +                               4 (%) will be used.
-> +- interrupts :                         Interrupt line see Documentation/devicetree/
-> +                               bindings/interrupt-controller/interrupts.txt
 
-Based on driver's behavior, I understand that these two properties
-come in pair so maxim,alert-low-soc-level (or its default value) will
-be used if and only if interrupts property is present. Maybe mention
-this? In general looks fine to me:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Best regards,
-Krzysztof
+On 5/29/2019 3:28 AM, Peter Zijlstra wrote:
+> On Tue, May 28, 2019 at 02:21:49PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 5/28/2019 8:15 AM, Peter Zijlstra wrote:
+>>> On Tue, May 21, 2019 at 02:40:48PM -0700, kan.liang@linux.intel.com wrote:
+>>>> +/*
+>>>> + * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
+>>>> + * and another for the whole slots counter
+>>>> + *
+>>>> + * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
+>>>> + * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
+>>>> + * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
+>>>> + * have the same configuration.
+>>>> + */
+>>>> +#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 17)
+>>>> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
+>>>> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
+>>>> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
+>>>> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
+>>>> +#define INTEL_PMC_MSK_ANY_SLOTS			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
+>>>> +						 INTEL_PMC_MSK_FIXED_SLOTS)
+>>>> +static inline bool is_metric_idx(int idx)
+>>>> +{
+>>>> +	return idx >= INTEL_PMC_IDX_FIXED_METRIC_BASE && idx <= INTEL_PMC_IDX_TD_BE_BOUND;
+>>>> +}
+>>>
+>>> Something like:
+>>>
+>>> 	return (idx >> INTEL_PMC_IDX_FIXED_METRIC_BASE) & 0xf;
+>>>
+>>> might be faster code... (if it wasn't for 64bit literals being a pain,
+>>> it could be a simple test instruction).
+>>>
+>>
+>> is_metric_idx() is not a mask. It's to check if the idx between 49 and 52.
+> 
+> blergh, indeed. Check that it compiles into a single branch though, if
+> it gets that wrong it needs hand holding.
+> 
+> One way would be to make these 48-51 and put BTS as 52, and then you do
 
-> +- wakeup-source :              This device has wakeup capabilities. Use this
-> +                               property to use alert low SOC level interrupt
-> +                               as wake up source.
-> +
-> +Example:
-> +
-> +       battery-fuel-gauge@36 {
-> +               compatible = "maxim,max17040";
-> +               reg = <0x36>;
-> +               maxim,alert-low-soc-level = <10>;
-> +               interrupt-parent = <&gpio7>;
-> +               interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +               wakeup-source;
-> +       };
-> --
-> 2.20.1
->
+Can we put BTS 47?
+Now we only support L1 Topdown metrics. Probably there will be L2 
+Topdown metrics. I think we need some space to extend.
+
+
+Thanks,
+Kan
+
+> have a mask.
+> 
+> Another way would be to write it as:
+> 
+> 	(unsigned)(idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) < 4;
+> 
+> 
