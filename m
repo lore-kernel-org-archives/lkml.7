@@ -2,98 +2,119 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E2FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F7DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE89523BBA
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910F023C4F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0b/OulL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfE2Pwa (ORCPT
+        id S1726981AbfE2Pxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:52:30 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:50140 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfE2Pw3 (ORCPT
+        Wed, 29 May 2019 11:53:34 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38398 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfE2Pxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:52:29 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hW0sJ-0002C0-SU; Wed, 29 May 2019 11:52:25 -0400
-Date:   Wed, 29 May 2019 11:51:56 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Steve Grubb <sgrubb@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Fix xoring of arch_get_random_long into crng->state array
-Message-ID: <20190529155156.GB31099@hmswarspite.think-freely.org>
-References: <20190402220025.14499-1-nhorman@tuxdriver.com>
- <20190529134200.GA31099@hmswarspite.think-freely.org>
- <f13de0f3159a478796a8fe6c34dc00ce@AcuMS.aculab.com>
+        Wed, 29 May 2019 11:53:34 -0400
+Received: by mail-yb1-f194.google.com with SMTP id x7so974818ybg.5;
+        Wed, 29 May 2019 08:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r9aGSUCLgs+CCQtCy+mSQIYSrSfa7rRjanT2W47J6sk=;
+        b=W0b/OulLZHLFV0o5VHh2eX0OO5W2c6ozuOk/exQ/evdjbqKfAvYKVt7nTJGaelABjS
+         dT23v19RZz/oCSnKBJWW90dsJ+LYjXH/I6f0xdCp7Ns9P2zRQEgKzIB7oPFIKES6dLL0
+         1S2hquEItW4s9OBDLayQAbeYb/4FSVufl5UVpaPEQIW/PmeFS34MEP46KP8ZHlnFiBsw
+         K0tMAyJSTUEs8HMZj3oPQHBACECBiHtM8MLlqU72ovwQu7RRpglK7KESRZJnCOJUlr/Z
+         aFZI1mL6fEFOS/JQjVycB9xbHwMUe2+s8qeSxZ+RSO0UZ0YTVQ+WuM01aDm6k1H+a88w
+         ujGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r9aGSUCLgs+CCQtCy+mSQIYSrSfa7rRjanT2W47J6sk=;
+        b=bF6AyhDT1RzgZWdEyQ24AWdFWnzzLKctT6+dHMWZuQY0R8oFpm0SHa2tQDYBbm3gaW
+         JHiOF7mQay1GPzpPAKQzHZt091wd9UOE3JO3jvWN58cm/0sySG3V9SSmv8DJZI+Q+1wx
+         BShkwU+io+bSf1dimJSVbZ0fih5j118AhZr2h2sHa2vyuAQKOfuAnCUPsTyOrR6HnuwK
+         qtC0L8obobpcYGPEbFrhfipu8zf3fxjscATTALfNFVV/2KdJS0MUFVpP2a9F+Be0VjAe
+         9h7BZFRD+zuYLqXxkbGZKyDl9DWpamqHPNaUzTgc01VguXoIqPJTGBenGi7iwFA7Wp4y
+         Ijnw==
+X-Gm-Message-State: APjAAAW3hxNmdD3JJrQzi8vTMVCCIq+LPSXfl3Q84FuvW2pDcQBOEhdP
+        OJJiCdb8ZwRg4EuT6DXVfkid8G3gQjxvSAxxe0w=
+X-Google-Smtp-Source: APXvYqyuiZhLx3GUMFzgw2IYz0TSRIybXZHfA9Jg5KdebmCQMJWjl9o9t2ZQPuZZp6OanotPLkBniUcUeRijLC1e6Ps=
+X-Received: by 2002:a25:b202:: with SMTP id i2mr26173195ybj.439.1559145212823;
+ Wed, 29 May 2019 08:53:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f13de0f3159a478796a8fe6c34dc00ce@AcuMS.aculab.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com> <20190529142504.GC32147@quack2.suse.cz>
+In-Reply-To: <20190529142504.GC32147@quack2.suse.cz>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 29 May 2019 18:53:21 +0300
+Message-ID: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+To:     Jan Kara <jack@suse.cz>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 01:51:24PM +0000, David Laight wrote:
-> From: Neil Horman
-> > Sent: 29 May 2019 14:42
-> > On Tue, Apr 02, 2019 at 06:00:25PM -0400, Neil Horman wrote:
-> > > When _crng_extract is called, any arch that has a registered
-> > > arch_get_random_long method, attempts to mix an unsigned long value into
-> > > the crng->state buffer, it only mixes in 32 of the 64 bits available,
-> > > because the state buffer is an array of u32 values, even though 2 u32
-> > > are expected to be filled (owing to the fact that it expects indexes 14
-> > > and 15 to be filled).
-> > >
-> > > Bring the expected behavior into alignment by casting index 14 to an
-> > > unsignled long pointer, and xoring that in instead.
-> ...
-> > > diff --git a/drivers/char/random.c b/drivers/char/random.c
-> > > index 38c6d1af6d1c..8178618458ac 100644
-> > > --- a/drivers/char/random.c
-> > > +++ b/drivers/char/random.c
-> > > @@ -975,14 +975,16 @@ static void _extract_crng(struct crng_state *crng,
-> > >  			  __u8 out[CHACHA_BLOCK_SIZE])
-> > >  {
-> > >  	unsigned long v, flags;
-> > > -
-> > > +	unsigned long *archrnd;
-> > >  	if (crng_ready() &&
-> > >  	    (time_after(crng_global_init_time, crng->init_time) ||
-> > >  	     time_after(jiffies, crng->init_time + CRNG_RESEED_INTERVAL)))
-> > >  		crng_reseed(crng, crng == &primary_crng ? &input_pool : NULL);
-> > >  	spin_lock_irqsave(&crng->lock, flags);
-> > > -	if (arch_get_random_long(&v))
-> > > -		crng->state[14] ^= v;
-> > > +	if (arch_get_random_long(&v)) {
-> > > +		archrnd = (unsigned long *)&crng->state[14];
-> > > +		*archrnd ^= v;
-> > > +	}
-> 
-> Isn't that likely to generate a misaligned memory access?
-> 
-I'm not quite sure how it would, crng->state is an array of _u32's, and so every
-even element should be on a 64 bit boundary.
+> > David,
+> >
+> > I am interested to know how you envision filesystem notifications would
+> > look with this interface.
+> >
+> > fanotify can certainly benefit from providing a ring buffer interface to read
+> > events.
+> >
+> > From what I have seen, a common practice of users is to monitor mounts
+> > (somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
+> > It'd be good if those users can use a single watch mechanism/API for
+> > watching the mount namespace and filesystem events within mounts.
+> >
+> > A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
+> > It provides users with two complete different mechanisms to watch error
+> > and filesystem events. That is generally not a good thing to have.
+> >
+> > I am not asking that you implement fs_notify() before merging sb_notify()
+> > and I understand that you have a use case for sb_notify().
+> > I am asking that you show me the path towards a unified API (how a
+> > typical program would look like), so that we know before merging your
+> > new API that it could be extended to accommodate fsnotify events
+> > where the final result will look wholesome to users.
+>
+> Are you sure we want to combine notification about file changes etc. with
+> administrator-type notifications about the filesystem? To me these two
+> sound like rather different (although sometimes related) things.
+>
 
-Neil
+Well I am sure that ring buffer for fanotify events would be useful, so
+seeing that David is proposing a generic notification mechanism, I wanted
+to know how that mechanism could best share infrastructure with fsnotify.
 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-> 
+But apart from that I foresee the questions from users about why the
+mount notification API and filesystem events API do not have better
+integration.
+
+The way I see it, the notification queue can serve several classes
+of notifications and fsnotify could be one of those classes
+(at least FAN_CLASS_NOTIF fits nicely to the model).
+
+Thanks,
+Amir.
