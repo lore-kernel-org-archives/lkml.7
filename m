@@ -2,112 +2,220 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAA8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A7CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2502323E3B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C2223E77
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 16:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfE2Qxq (ORCPT
+        id S1727109AbfE2Qyq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 12:53:46 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.216]:36427 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726097AbfE2Qxq (ORCPT
+        Wed, 29 May 2019 12:54:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22801 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbfE2Qyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 12:53:46 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 0B30C202E8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:53:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id W1phhrAEO4FKpW1phhCN2q; Wed, 29 May 2019 11:53:45 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=50894 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hW1pf-002Frw-RX; Wed, 29 May 2019 11:53:44 -0500
-Date:   Wed, 29 May 2019 11:53:43 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ima: use struct_size() in kzalloc()
-Message-ID: <20190529165343.GA2584@embeddedor>
+        Wed, 29 May 2019 12:54:45 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-148-Bqtj4QOpPZGUSdn79nts1w-1; Wed, 29 May 2019 17:54:41 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 29 May 2019 17:54:40 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 29 May 2019 17:54:40 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Oleg Nesterov' <oleg@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "e@80x24.org" <e@80x24.org>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
+ according to restore_user_sigmask())
+Thread-Topic: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error
+ codes according to restore_user_sigmask())
+Thread-Index: AQHVFjlRjDlHH6TU60ajIVKPNNmjrqaCR7xw
+Date:   Wed, 29 May 2019 16:54:40 +0000
+Message-ID: <b05cec7f9e8f457281e689576a7a360f@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+In-Reply-To: <20190529161157.GA27659@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hW1pf-002Frw-RX
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.47.159]:50894
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MC-Unique: Bqtj4QOpPZGUSdn79nts1w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+From: Oleg Nesterov
+> Sent: 29 May 2019 17:12
+> Al, Linus, Eric, please help.
+> 
+> The previous discussion was very confusing, we simply can not understand each
+> other.
+> 
+> To me everything looks very simple and clear, but perhaps I missed something
+> obvious? Please correct me.
+> 
+> I think that the following code is correct
+> 
+> 	int interrupted = 0;
+> 
+> 	void sigint_handler(int sig)
+> 	{
+> 		interrupted = 1;
+> 	}
+> 
+> 	int main(void)
+> 	{
+> 		sigset_t sigint, empty;
+> 
+> 		sigemptyset(&sigint);
+> 		sigaddset(&sigint, SIGINT);
+> 		sigprocmask(SIG_BLOCK, &sigint, NULL);
+> 
+> 		signal(SIGINT, sigint_handler);
+> 
+> 		sigemptyset(&empty);	// so pselect() unblocks SIGINT
+> 
+> 		ret = pselect(..., &empty);
+                                ^^^^^ sigint
+> 
+> 		if (ret >= 0)		// sucess or timeout
+> 			assert(!interrupted);
+> 
+> 		if (interrupted)
+> 			assert(ret == -EINTR);
+> 	}
+> 
+> IOW, if pselect(sigmask) temporary unblocks SIGINT according to sigmask, this
+> signal should not be delivered if a ready fd was found or timeout. The signal
+> handle should only run if ret == -EINTR.
 
-struct foo {
-   int stuff;
-   struct boo entry[];
-};
+Personally I think that is wrong.
+Given code like the above that has:
+		while (!interrupted) {
+			pselect(..., &sigint);
+			// process available data
+		}
 
-instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+You want the signal handler to be executed even if one of the fds
+always has available data.
+Otherwise you can't interrupt a process that is always busy.
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
+One option is to return -EINTR if a signal is pending when the mask
+is updated - before even looking at anything else.
+Signals that happen later on (eg after a timeout) need not be reported
+(until the next time around the loop).
 
-instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+> (pselect() can be interrupted by any other signal which has a handler. In this
+>  case the handler can be called even if ret >= 0. This is correct, I fail to
+>  understand why some people think this is wrong, and in any case we simply can't
+>  avoid this).
 
-This code was detected with the help of Coccinelle.
+You mean any signal that isn't blocked when pselect() is called....
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- security/integrity/ima/ima_template.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> This was true until 854a6ed56839a ("signal: Add restore_user_sigmask()"),
+> now this is broken by the signal_pending() check in restore_user_sigmask().
+> 
+> This patch https://lore.kernel.org/lkml/20190522032144.10995-1-deepa.kernel@gmail.com/
+> turns 0 into -EINTR if signal_pending(), but I think we should simply restore
+> the old behaviour and simplify the code.
+> 
+> See the compile-tested patch at the end. Of course, the new _xxx() helpers
+> should be renamed somehow. fs/aio.c doesn't look right with or without this
+> patch, but iiuc this is what it did before 854a6ed56839a.
+> 
+> Let me show the code with the patch applied. I am using epoll_pwait() as an
+> example because it looks very simple.
+> 
+> 
+> 	static inline void set_restore_sigmask(void)
+> 	{
+> // WARN_ON(!TIF_SIGPENDING) was removed by this patch
+> 		current->restore_sigmask = true;
+> 	}
+> 
+> 	int set_xxx(const sigset_t __user *umask, size_t sigsetsize)
+> 	{
+> 		sigset_t *kmask;
+                     ^ no '*' here, add & before uses.
+> 
+> 		if (!umask)
+> 			return 0;
+> 		if (sigsetsize != sizeof(sigset_t))
+> 			return -EINVAL;
+> 		if (copy_from_user(kmask, umask, sizeof(sigset_t)))
+> 			return -EFAULT;
+> 
+> // we can safely modify ->saved_sigmask/restore_sigmask, they has no meaning
+> // until the syscall returns.
+> 		set_restore_sigmask();
+> 		current->saved_sigmask = current->blocked;
+> 		set_current_blocked(kmask);
+> 
+> 		return 0;
+> 	}
+> 
+> 
+> 	void update_xxx(bool interrupted)
+> 	{
+> // the main reason for this helper is WARN_ON(!TIF_SIGPENDING) which was "moved"
+> // from set_restore_sigmask() above.
+> 		if (interrupted)
+> 			WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+> 		else
+> 			restore_saved_sigmask();
+> 	}
 
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index b631b8bc7624..b945dff2ed14 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -281,9 +281,8 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
- 	int ret = 0;
- 	int i;
- 
--	*entry = kzalloc(sizeof(**entry) +
--		    template_desc->num_fields * sizeof(struct ima_field_data),
--		    GFP_NOFS);
-+	*entry = kzalloc(struct_size(*entry, template_data,
-+				     template_desc->num_fields), GFP_NOFS);
- 	if (!*entry)
- 		return -ENOMEM;
- 
--- 
-2.21.0
+I looked at the code earlier, but failed to find the code that actually
+delivers the signals.
+It may be 'racy' with update_xxx() regardless of whether that is
+looking for -EINTR or just a pending signal.
+
+I assume that TIF_SIGPENGING is used to (not) short-circuit the
+system call return path so that signals get delivered.
+So that it is important that update_xxx() calls restore_saved_sigmask()
+if there is no signal pending.
+(Although a signal can happen after the test - which can/will be ignored
+until the signal is enabled again.)
+
+restore_saved_sigmask() must itself be able to set TIF_SIGPENDING
+(the inner sigmask could be more restrictive!).
+
+If restore_saved_sigmask() isn't called here, the syscall return
+path must do it after calling all the handlers and after clearing
+TIF_SIGPENDING, and then call unmasked handlers again.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
