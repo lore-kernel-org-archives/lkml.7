@@ -2,139 +2,143 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9FCC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC72C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604E021019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F9421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="HfhL8wqC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="DiyOYVdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfE2IE7 (ORCPT
+        id S1726635AbfE2IFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:04:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35900 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfE2IE4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:04:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v22so861855wml.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=EBIy8akgJJVzGMeoN5L9X2jn2x1GxoKHTkHoU0+i4ZQ=;
-        b=HfhL8wqCiookSl50jiJuT1YB5TlSuMeuNrqU2tWcfEUtEQ/AmjA+cvuYkaVQ4gKcHN
-         wSRpxcuZF/NNGH2Y5MLanq3MH+ekyD5LIGY1quGY/RW5R5wx60RM2QX8PBTXSjr2f0LE
-         GrSfel5vdtBCsk+50onjqOuy0SlHUJmcYWNmZ+DBqkKeGydvzo7ncC0b4i0ZsrazeUrf
-         deHnMa1fNBN0eEKOkh+v4Ss0TZu+V2tywk5KUFTt/qlnJ5I7ACVuMx3DbtH06LlW1z78
-         GWgSB5/zjVexZBSTTMUPM0xJTUHJ53ZnuNkmkf6Oq1DG3cc4TV4/F0AGW1Mtw4DTfMaA
-         KOkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=EBIy8akgJJVzGMeoN5L9X2jn2x1GxoKHTkHoU0+i4ZQ=;
-        b=WBIzS5YCiN8t2Pb7TgJ47N0fQZCvM2yp/mOAFc08CGHS+hxFYVHAQ9/m5ir2ynGpj1
-         NezfwVO817qptPmspirFVYK17o7Y+GXn+Ac1aP4h2ut06Y6qBaYzZpAkmFpVcQmON9lG
-         Z3KfAshhJ3c23JRcfwAtPUS8yMJlJOyGA92RWP4iaN9VQqiSNFkyRnDlkFrniXzGRbbH
-         cq7Kc38TN+g3ogL4OFHND0DUjZ12jXvRvHqSeoJeajIUqQy1ggfECd/oma5WDRv+Fud3
-         ae+Fp18+4BXg2Mq4RYPv1j1BP+GSCAFzCNtgeuH9sn0l1e65VhDKJRzdBvzGl5NxvWlZ
-         wzUg==
-X-Gm-Message-State: APjAAAWYq5DoIi1prDlT8hd8OWs4RBp1b5FbcQRy3yCsnl4coDZ3az19
-        JIbOi08KIYAlIZZpYO67Ib535w==
-X-Google-Smtp-Source: APXvYqxVQa+Y+auwZsalqmIXIrSP2DzX25u2YHdLtGqKGkI2wS47Xd0Zk+TI/HfX1YOt5NBkbVB2tg==
-X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr5434256wml.159.1559117094718;
-        Wed, 29 May 2019 01:04:54 -0700 (PDT)
-Received: from localhost (ip-89-177-126-215.net.upcbroadband.cz. [89.177.126.215])
-        by smtp.gmail.com with ESMTPSA id u9sm3165755wme.48.2019.05.29.01.04.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 01:04:53 -0700 (PDT)
+        Wed, 29 May 2019 04:05:03 -0400
+Received: from mx01-fr.bfs.de ([193.174.231.67]:53555 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfE2IFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:05:00 -0400
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 120212035B;
+        Wed, 29 May 2019 10:04:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1559117093; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TXUHU3KH7YVJReexMZ00xlKxU7VTx97/4fQ5i+FXXbA=;
+        b=DiyOYVdXPPQwPsz5v/+46zoYNuZb6sZTEm5fOSEo9wk29RZT7HxobxIRNuEwB2eubE5kI5
+        MzsbYWZMP6MgFwzi2AiHK6uNEyTtkJMSMIX9hQB5Wt/cMw3moWZG3Oy/CuWwDHWIq/hwD3
+        5jQMHPoUGAxcXStEhbm9pw+yisk6h2zfhxq8EuI++/IojhEZDKYrmEXhwur5tOq5wC/dbt
+        fgXDX+L4CWp3hbUGstEAcDgKIQ2+QMMPIyidMqZLKJA+uRZxatfCxQ2sy6OCydeOTvFINf
+        Lv4DgFW2NsvGtAO5Mp6ad0C0Mb9EoW87HlvO60HpGYcyqcCm2l/F4WMcwBeZYw==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id B2B04BEEBD;
+        Wed, 29 May 2019 10:04:52 +0200 (CEST)
+Message-ID: <5CEE3D24.8000700@bfs.de>
 Date:   Wed, 29 May 2019 10:04:52 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Igor Konopko <igor.j.konopko@intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Matias Bjorling <mb@lightnvm.io>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-block@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] [RFC] devlink: Fix uninitialized error code in
- devlink_fmsg_prepare_skb()
-Message-ID: <20190529080452.GE2252@nanopsycho>
-References: <20190528142424.19626-1-geert@linux-m68k.org>
- <20190528142424.19626-6-geert@linux-m68k.org>
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190528142424.19626-6-geert@linux-m68k.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+CC:     Pavel Machek <pavel@ucw.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Aung <aung.aungkyawsoe@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: need company for kernel upgrade
+References: <5CE53BA9.4070906@bfs.de> <CABC7EG8NiiPycthdfb7Ng3MsxTvmmxk_LjcosM8ZD1F0CnuDFw@mail.gmail.com> <5CE64BC7.4010803@bfs.de> <20190524050116.GI2532@mit.edu> <20190528105853.GA21111@amd> <585d6508-ace2-02d8-95ca-8e437d7cec05@metux.net>
+In-Reply-To: <585d6508-ace2-02d8-95ca-8e437d7cec05@metux.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-0.89 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-0.79)[84.57%];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         RCPT_COUNT_FIVE(0.00)[5];
+         TO_DN_ALL(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, May 28, 2019 at 04:24:24PM CEST, geert@linux-m68k.org wrote:
->With gcc 4.1:
->
->    net/core/devlink.c: In function ‘devlink_fmsg_prepare_skb’:
->    net/core/devlink.c:4325: warning: ‘err’ may be used uninitialized in this function
->
->Indeed, if the list has less than *start entries, an uninitialized error
->code will be returned.
->
->Fix this by preinitializing err to zero.
->
->Fixes: 1db64e8733f65381 ("devlink: Add devlink formatted message (fmsg) API")
->Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->---
->I don't know if this can really happen, and if this is the right fix.
->Perhaps err should be initialized to some valid error code instead?
 
-0 is correct here.
-Acked-by: Jiri Pirko <jiri@mellanox.com>
 
-Thanks!
-
->---
-> net/core/devlink.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/net/core/devlink.c b/net/core/devlink.c
->index d43bc52b8840d76b..91377e4eae9a43c1 100644
->--- a/net/core/devlink.c
->+++ b/net/core/devlink.c
->@@ -4321,8 +4321,8 @@ devlink_fmsg_prepare_skb(struct devlink_fmsg *fmsg, struct sk_buff *skb,
-> {
-> 	struct devlink_fmsg_item *item;
-> 	struct nlattr *fmsg_nlattr;
->+	int err = 0;
-> 	int i = 0;
->-	int err;
+Am 28.05.2019 21:35, schrieb Enrico Weigelt, metux IT consult:
+> On 28.05.19 12:58, Pavel Machek wrote:
 > 
-> 	fmsg_nlattr = nla_nest_start_noflag(skb, DEVLINK_ATTR_FMSG);
-> 	if (!fmsg_nlattr)
->-- 
->2.17.1
->
+> Hi,
+> 
+>> On Fri 2019-05-24 01:01:16, Theodore Ts'o wrote:
+>>> On Thu, May 23, 2019 at 09:29:11AM +0200, walter harms wrote:
+>>>>
+>>>> No,
+>>>> the company i am working for has a custom build arm-board.
+>>>> We bought the kernel from the assembler but found it has
+>>>> some problems that need fixing.
+> 
+> basic rule: don't use vendor kernels for production, unless you
+> *really* *really* have to.
+
+we have custom hardware, so this was needed. But we used std. parts
+with existing drivers, so the upcomming problems were hidden in details.
+Of cause we tested the hardware but you can find only obvious problems.
+
+> 
+> HW vendors usually don't have the capacities to offer any decent
+> kernel support. there're only few exceptions (eg. phytec) that have
+> their own kernel hackers and actively participate in upstreaming.
+
+We have noticed that also, *active* is a big point.
+
+> 
+>>>> Basically we want to improve the linux-kernel so it can run
+>>>> native on our boards.
+>>>>
+>>>>>> Hi developers,
+>>>>>> i am in search of a company that can help upgrading
+>>>>>> a running linux-kernel on custom hardware.
+>>>>>> Est. time 10 days.
+>>>
+>>> Have you tried contacting Linutronix (https://linutronix.de) or
+>>> Collabora (https://collabora.com)?
+>>>
+>>> Both have EU offices --- well Collabora does for now, until Brexit
+>>> happens.  :-)
+>>
+>> www.denx.de is another option.
+> 
+> continuing the list w/ my own company --> info@metux.net
+> 
+> by the way: should we create a separate list for commercial topics ?
+> 
+
+I used linux-arm and it worked surprisingly well (not all mails went truh the list)
+but it look very silent and i was unsure if they were still alive. A big win
+for everyone would be a FAQ/Lessons-learned something you can take to check a contract.
+the customer will know what to expect and the contractor will know what to offer.
+
+Having something a list of minimum requirements like that FAQ would improve the stand of
+the hardware developed to support linux. Not everyone has a big budget or need to
+produce in millions like the raspi guys did, and even they have sometimes troubles.
+
+note: that will not solve every proble but even a starting point would be good.
+
+re,
+ wh
