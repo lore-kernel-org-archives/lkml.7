@@ -2,269 +2,92 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036CBC46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47092C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9E321019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="daSmc58+"
+	by mail.kernel.org (Postfix) with ESMTP id 0317A2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 03:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfE2D06 (ORCPT
+        id S1726399AbfE2D2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 23:26:58 -0400
-Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:36320
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfE2D05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 23:26:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nU6qwhV2UvDgcipwtDOBThwVYFgHLhUR+q1ywhUqxU=;
- b=daSmc58+fSFB0q3tKS1TZy+jK7kjwzRfvziifj5njUgCrLndzDgAbZdf0CCXVv55NFolsP+h1yMX68+rUuLLHmf64Cs8sxhBV4+jP8g9bdloZCFKFG0oyrFe0dWE6kDlXhppDx2jcmIBeYQaOPV4rgvoja31Rs89aYgPpllu+XM=
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com (52.134.122.155) by
- VI1PR04MB5597.eurprd04.prod.outlook.com (20.178.125.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Wed, 29 May 2019 03:26:46 +0000
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::497a:768:c7b1:34e0]) by VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::497a:768:c7b1:34e0%6]) with mapi id 15.20.1922.021; Wed, 29 May 2019
- 03:26:46 +0000
-From:   Andy Tang <andy.tang@nxp.com>
-To:     Eduardo Valentin <edubezval@gmail.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add Thermal Monitor Unit
- node
-Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: Add Thermal Monitor Unit
- node
-Thread-Index: AQHU+0Gute7V4LpN/kG0bCUPuN8YU6aBnOMAgAAEY9A=
-Date:   Wed, 29 May 2019 03:26:46 +0000
-Message-ID: <VI1PR04MB43330251231DB7E379DBF49AF31F0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190425082640.37982-1-andy.tang@nxp.com>
- <20190529025331.GB2419@localhost.localdomain>
-In-Reply-To: <20190529025331.GB2419@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=andy.tang@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed03dcd8-f2eb-453b-a448-08d6e3e57ae3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5597;
-x-ms-traffictypediagnostic: VI1PR04MB5597:
-x-microsoft-antispam-prvs: <VI1PR04MB55976495B228339176F25239F31F0@VI1PR04MB5597.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0052308DC6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(39860400002)(396003)(376002)(199004)(189003)(13464003)(66476007)(66446008)(73956011)(64756008)(66556008)(305945005)(7736002)(76116006)(66946007)(68736007)(7416002)(7696005)(102836004)(8936002)(81166006)(8676002)(4326008)(76176011)(6916009)(33656002)(74316002)(53546011)(54906003)(1411001)(9686003)(81156014)(6506007)(6246003)(53936002)(99286004)(55016002)(26005)(476003)(256004)(186003)(44832011)(86362001)(5660300002)(6436002)(478600001)(446003)(229853002)(52536014)(486006)(25786009)(71200400001)(71190400001)(66066001)(316002)(6116002)(3846002)(2906002)(14444005)(14454004)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5597;H:VI1PR04MB4333.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7eORb9MB7+2um/wVCnzHI2pawgcls86E15dciyWCT/ZJisPlgucEVKl/Tmoux2PAPLkbfh9x0kq/csnQbB506Ml9dMkMDoFt8c9TTgTvi1xgvEjX9ZXLT37ssWx2U6QyqqCNxyN/MUn6kJL8yfQvq4+ATnz4xIJI0yzpgEdz+aalTGKwOWIvR8yCoL649KvkAIlGovxnI5fRqXKUmkRGWJjscGIrtQJjNbQa4y4t8Wf2U269Kk+Z7EcvC/QCfs2tO2gvo2w5M8qBE3xIPcpRXdMv6wNcggtuQhRqhDEtDA0wsI56/TEWP+fwHF20JX7R4lASNtg56jFYFJgjwnDJhqWfBx/lYovH0ZDljNSgXJPrXGINC1vi/CUwrqgntRD2Iokbylg7MJX6KDOt/iFfVN8xqwuIVBi+pPuybiU1Pc8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 28 May 2019 23:28:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45194 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbfE2D2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 23:28:30 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F1DA200379;
+        Wed, 29 May 2019 05:28:28 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DEB9F200009;
+        Wed, 29 May 2019 05:28:24 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F07D4402AE;
+        Wed, 29 May 2019 11:28:19 +0800 (SGT)
+From:   shengjiu.wang@nxp.com
+To:     brian.austin@cirrus.com, Paul.Handrigan@cirrus.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: cs42xx8: Fix build error with CONFIG_GPIOLIB is not set
+Date:   Wed, 29 May 2019 11:30:02 +0800
+Message-Id: <20190529033002.16606-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed03dcd8-f2eb-453b-a448-08d6e3e57ae3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 03:26:46.6519
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: andy.tang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5597
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBFZHVhcmRvIFZhbGVudGluIDxl
-ZHViZXp2YWxAZ21haWwuY29tPg0KPiBTZW50OiAyMDE5xOo11MIyOcjVIDEwOjU0DQo+IFRvOiBB
-bmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogc2hhd25ndW9Aa2VybmVsLm9yZzsg
-TGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsu
-cnV0bGFuZEBhcm0uY29tOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRhbmllbC5sZXpjYW5vQGxpbmFyby5v
-cmc7IHJ1aS56aGFuZ0BpbnRlbC5jb20NCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSF0gYXJt
-NjQ6IGR0czogbHMxMDI4YTogQWRkIFRoZXJtYWwgTW9uaXRvciBVbml0DQo+IG5vZGUNCj4gDQo+
-IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gVGh1LCBBcHIgMjUsIDIwMTkgYXQgMDQ6MjY6
-NDBQTSArMDgwMCwgWXVhbnRpYW4gVGFuZyB3cm90ZToNCj4gPiBUaGUgVGhlcm1hbCBNb25pdG9y
-aW5nIFVuaXQgKFRNVSkgbW9uaXRvcnMgYW5kIHJlcG9ydHMgdGhlIHRlbXBlcmF0dXJlDQo+ID4g
-ZnJvbSAyIHJlbW90ZSB0ZW1wZXJhdHVyZSBtZWFzdXJlbWVudCBzaXRlcyBsb2NhdGVkIG9uIGxz
-MTAyOGEgY2hpcC4NCj4gPiBBZGQgVE1VIGR0cyBub2RlIHRvIGVuYWJsZSB0aGlzIGZlYXR1cmUu
-DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNv
-bT4NCj4gDQo+IEkgZG9udCBzZWUgYW55dGhpbmcgd3JvbmcgZnJvbSBhIHRoZXJtYWwgc3RhbmRw
-b2ludC4NCj4gDQo+IEFja2VkLWJ5OiBFZHVhcmRvIFZhbGVudGluIDxlZHViZXp2YWxAZ21haWwu
-Y29tPg0KPiANCj4gUGxlYXNlIGdldCB0aGlzIHZpYSB5b3VyIGFyY2ggdHJlZSBtYWludGFpbmVy
-IHRvIGF2b2lkIG1lcmdlIGNvbmZsaWN0cy4NClRoYW5rcyBmb3IgeW91ciByZXZpZXcuIA0KVGhl
-IG9ubHkgY29uY2VybiBmb3IgYXJjaCB0cmVlIG1haW50YWluZXIgaXMgdGhhdCAiY29vbGluZy1t
-YXBzIiBpcyBhIHJlcXVpcmVkIHByb3BlcnR5Lg0KU28gSSBoYXZlIHRvIGFkZCBjb29saW5nLW1h
-cHMgZm9yIGVhY2ggem9uZS4gDQpTaW5jZSB0aGVyZSBhcmUgdHdvIHRoZXJtYWwgem9uZXMgYnV0
-IG9ubHkgb25lIGNvb2xpbmcgZGV2aWNlLCB3aGljaCBpcyBjcHVmcmVxLCBJIGhhdmUgdG8NCnVz
-ZSBDUFVGUkVRIGFzIGNvb2xpbmcgZGV2aWNlIHR3aWNlIHdoaWNoIG1heSBjYXVzZSBjb29saW5n
-IGRlY2lzaW9uIGNvbmZsaWN0Lg0KVGhlIGNhc2Ugd2lsbCBnZXQgd29yc2Ugd2hlbiB3ZSBoYXZl
-IDcgdGhlcm1hbCB6b25lcy4NClRoaXMgbWFrZXMgbWUgdGhpbmsgIm1heWJlIHdlIG5lZWQgdG8g
-Y2hhbmdlIGNvb2xpbmctbWFwcyB0byBhbiBvcHRpb25hbCBwcm9wZXJ0eSIuDQpJbiB0aGlzIHdh
-eSwgd2UgY2FuIHB1dCB0aGUgY29vbGluZyBkZXZpY2VzIHRvIHNwZWNpZmljIHRoZXJtYWwgem9u
-ZXMgYW5kIGxlYXZlIHRoZSB6b25lcyB3aXRob3V0DQpDb29saW5nIGRldmljZXMgdG8gZG8gdGhl
-IGRlZmF1bHQgYWN0aW9uIHdoaWNoIGlzIHJlc2V0IG9yIHBvd2Vyb2ZmIHNvYy4NCldoYXQncyB5
-b3VyIG9waW5pb24gYWJvdXQgdGhpcz8NCg0KQlIsDQpBbmR5DQoNCj4gDQo+ID4gLS0tDQo+ID4g
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgMTE0DQo+
-ID4gKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZXMgY2hhbmdlZCwgMTE0IGlu
-c2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+IGIvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+IGluZGV4IGIwNDU4MTIu
-LmEyNWY1ZmMgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLmR0c2kNCj4gPiBAQCAtMjksNiArMjksNyBAQA0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDEgMD47DQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgIG5leHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgY3B1LWlkbGUtc3RhdGVzID0gPCZDUFVfUEgyMD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICNjb29saW5nLWNlbGxzID0gPDI+Ow0KPiA+ICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+
-ICAgICAgICAgICAgICAgY3B1MTogY3B1QDEgew0KPiA+IEBAIC0zOSw2ICs0MCw3IEBADQo+ID4g
-ICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gMSAwPjsNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgbmV4dC1sZXZlbC1jYWNoZSA9IDwmbDI+Ow0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICBjcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9QSDIwPjsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgI2Nvb2xpbmctY2VsbHMgPSA8Mj47DQo+ID4gICAgICAgICAgICAgICB9
-Ow0KPiA+DQo+ID4gICAgICAgICAgICAgICBsMjogbDItY2FjaGUgew0KPiA+IEBAIC0zOTgsNiAr
-NDAwLDExOCBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQi
-Ow0KPiA+ICAgICAgICAgICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgICAgICAgdG11OiB0bXVA
-MWYwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLHFv
-cmlxLXRtdSI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgxZjgwMDAw
-IDB4MCAweDEwMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDww
-IDIzIDB4ND47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGZzbCx0bXUtcmFuZ2UgPSA8MHhi
-MDAwMCAweGEwMDI2IDB4ODAwNDgNCj4gMHg3MDA2MT47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgIGZzbCx0bXUtY2FsaWJyYXRpb24gPSA8MHgwMDAwMDAwMCAweDAwMDAwMDI0DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMQ0KPiAw
-eDAwMDAwMDJiDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgMHgwMDAwMDAwMg0KPiAweDAwMDAwMDMxDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMw0KPiAweDAwMDAwMDM4DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwNA0KPiAweDAw
-MDAwMDNmDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgwMDAwMDAwNQ0KPiAweDAwMDAwMDQ1DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwNg0KPiAweDAwMDAwMDRjDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwNw0KPiAweDAwMDAw
-MDUzDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgw
-MDAwMDAwOA0KPiAweDAwMDAwMDU5DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgMHgwMDAwMDAwOQ0KPiAweDAwMDAwMDYwDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwYQ0KPiAweDAwMDAwMDY2
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAw
-MDAwYg0KPiAweDAwMDAwMDZkDQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDANCj4gMHgwMDAwMDAxYw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDENCj4gMHgwMDAw
-MDAyNA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
-MDAwMTAwMDINCj4gMHgwMDAwMDAyYw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDB4MDAwMTAwMDMNCj4gMHgwMDAwMDAzNQ0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDQNCj4gMHgwMDAwMDAz
-ZA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAw
-MTAwMDUNCj4gMHgwMDAwMDA0NQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDB4MDAwMTAwMDYNCj4gMHgwMDAwMDA0ZA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDcNCj4gMHgwMDAwMDA0NQ0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAw
-MDgNCj4gMHgwMDAwMDA1ZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDB4MDAwMTAwMDkNCj4gMHgwMDAwMDA2Ng0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMGENCj4gMHgwMDAwMDA2ZQ0KPiA+
-ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAw
-MDIwMDAwDQo+IDB4MDAwMDAwMTgNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAweDAwMDIwMDAxDQo+IDB4MDAwMDAwMjINCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDAyDQo+IDB4MDAwMDAwMmQN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDIw
-MDAzDQo+IDB4MDAwMDAwMzgNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDAwMDIwMDA0DQo+IDB4MDAwMDAwNDMNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDA1DQo+IDB4MDAwMDAwNGQNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDA2
-DQo+IDB4MDAwMDAwNTgNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAweDAwMDIwMDA3DQo+IDB4MDAwMDAwNjMNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDA4DQo+IDB4MDAwMDAwNmUNCj4gPiAr
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAz
-MDAwMA0KPiAweDAwMDAwMDEwDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgMHgwMDAzMDAwMQ0KPiAweDAwMDAwMDFjDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwMg0KPiAweDAwMDAwMDI5DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAw
-Mw0KPiAweDAwMDAwMDM2DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMHgwMDAzMDAwNA0KPiAweDAwMDAwMDQyDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwNQ0KPiAweDAwMDAwMDRmDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwNg0K
-PiAweDAwMDAwMDViDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMHgwMDAzMDAwNw0KPiAweDAwMDAwMDY4PjsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgbGl0dGxlLWVuZGlhbjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgI3RoZXJtYWwtc2Vu
-c29yLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgICAgICB0aGVybWFsLXpvbmVzIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29yZS1j
-bHVzdGVyIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb2xsaW5nLWRlbGF5
-LXBhc3NpdmUgPSA8MTAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9s
-bGluZy1kZWxheSA9IDw1MDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0
-aGVybWFsLXNlbnNvcnMgPSA8JnRtdSAwPjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgdHJpcHMgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY29yZV9jbHVzdGVyX2FsZXJ0Og0KPiBjb3JlLWNsdXN0ZXItYWxlcnQgew0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9
-DQo+IDw4NTAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGh5c3RlcmVzaXMgPQ0KPiA8MjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGUgPSAicGFzc2l2ZSI7DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNvcmVfY2x1c3Rlcl9jcml0Og0KPiBjb3JlLWNsdXN0
-ZXItY3JpdCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHRlbXBlcmF0dXJlID0NCj4gPDk1MDAwPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9DQo+IDwyMDAwPjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJjcml0aWNh
-bCI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvb2xpbmctbWFwcyB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBtYXAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgdHJpcCA9DQo+IDwmY29yZV9jbHVzdGVyX2FsZXJ0PjsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29vbGluZy1kZXZp
-Y2UgPQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwmY3B1MA0KPiBUSEVSTUFMX05PX0xJTUlUIFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwm
-Y3B1MQ0KPiBUSEVSTUFMX05PX0xJTUlUIFRIRVJNQUxfTk9fTElNSVQ+Ow0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgZGRyLWNvbnRyb2xsZXIgew0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwxMDAwPjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBwb2xsaW5nLWRlbGF5ID0gPDUwMDA+Ow0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRoZXJtYWwtc2Vuc29ycyA9IDwmdG11IDE+Ow0K
-PiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cmlwcyB7DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZHJfY29udHJvbGxlcl9hbGVydDoN
-Cj4gZGRyLWNvbnRyb2xsZXItYWxlcnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9DQo+IDw4NTAwMD47DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh5c3RlcmVzaXMgPQ0KPiA8
-MjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHR5cGUgPSAicGFzc2l2ZSI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGRkcl9jb250cm9sbGVyX2NyaXQ6DQo+IGRkci1jb250cm9sbGVyLWNyaXQgew0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9DQo+
-IDw5NTAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGh5c3RlcmVzaXMgPQ0KPiA8MjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHR5cGUgPSAiY3JpdGljYWwiOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb29s
-aW5nLW1hcHMgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWFw
-MCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRy
-aXAgPQ0KPiA8JmRkcl9jb250cm9sbGVyX2FsZXJ0PjsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29vbGluZy1kZXZpY2UgPQ0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmY3B1MA0KPiBU
-SEVSTUFMX05PX0xJTUlUIFRIRVJNQUxfTk9fTElNSVQ+LA0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmY3B1MQ0KPiBUSEVSTUFMX05P
-X0xJTUlUIFRIRVJNQUxfTk9fTElNSVQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgfTsNCj4gPiArDQo+
-ID4gICAgICAgICAgICAgICBwY2llQDFmMDAwMDAwMCB7IC8qIEludGVncmF0ZWQgRW5kcG9pbnQg
-Um9vdCBDb21wbGV4DQo+ICovDQo+ID4gICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAicGNpLWhvc3QtZWNhbS1nZW5lcmljIjsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPDB4MDEgMHhmMDAwMDAwMCAweDAgMHgxMDAwMDA+Ow0K
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+
+config: x86_64-randconfig-x000201921-201921
+compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+reproduce:
+        make ARCH=x86_64
+
+sound/soc/codecs/cs42xx8.c: In function ‘cs42xx8_probe’:
+sound/soc/codecs/cs42xx8.c:472:25: error: implicit declaration of function ‘devm_gpiod_get_optional’; did you mean ‘devm_clk_get_optional’? [-Werror=implicit-function-declaration]
+  cs42xx8->gpiod_reset = devm_gpiod_get_optional(dev, "reset",
+                         ^~~~~~~~~~~~~~~~~~~~~~~
+                         devm_clk_get_optional
+sound/soc/codecs/cs42xx8.c:473:8: error: ‘GPIOD_OUT_HIGH’ undeclared (first use in this function); did you mean ‘GPIOF_INIT_HIGH’?
+        GPIOD_OUT_HIGH);
+        ^~~~~~~~~~~~~~
+        GPIOF_INIT_HIGH
+sound/soc/codecs/cs42xx8.c:473:8: note: each undeclared identifier is reported only once for each function it appears in
+sound/soc/codecs/cs42xx8.c:477:2: error: implicit declaration of function ‘gpiod_set_value_cansleep’; did you mean ‘gpio_set_value_cansleep’? [-Werror=implicit-function-declaration]
+  gpiod_set_value_cansleep(cs42xx8->gpiod_reset, 0);
+  ^~~~~~~~~~~~~~~~~~~~~~~~
+  gpio_set_value_cansleep
+
+Fixes: bfe95dfa4dac ("ASoC: cs42xx8: Add reset gpio handling")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/codecs/cs42xx8.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/cs42xx8.c b/sound/soc/codecs/cs42xx8.c
+index 3e8dbf63adbe..3bbc62322dfe 100644
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -14,7 +14,7 @@
+ #include <linux/delay.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+-#include <linux/of_gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ #include <sound/pcm_params.h>
+-- 
+2.21.0
+
