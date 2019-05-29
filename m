@@ -2,81 +2,129 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DA3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A4CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B717D2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OSsvfdXo"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE2A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfE2JrI (ORCPT
+        id S1726643AbfE2JrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:47:08 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33242 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfE2JrI (ORCPT
+        Wed, 29 May 2019 05:47:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:49002 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726626AbfE2JrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:47:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UKyuDAkPKwwSacsWVLKxWWxL9wOlFAut+2qC4adY+g4=; b=OSsvfdXoF+PKP3Ps79Tocy7ZF
-        0NxLVYGDnDwqwOnRMnQgZKSLNAO3uPwcCV7wvnvIEbGlkpbS6BFpA1i3qGsWFq1EMlLbgG2Bqb21F
-        UsiBSXwQOWQ63zCkfquOdf1UpQLXmHGnuKsAlyM5ziWogY05bTf04/tJuEKkXJ/KjXFEAEgAFuBBC
-        4wptVKi0WRDAEZ7/HrenNxIk9WhNwRQtUOZT/vEJeexx8784DYbvGikfyHQhWek8MbhJ47d3r/DKm
-        iHiofNg4NDTIQd4+O9WGrbSpUlfQNPtHr0b7nre2swHdpMwICPsCSdsHgszNGje4a82P6stlW5QyC
-        vdNZ5WMsw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hVvAj-00036F-S6; Wed, 29 May 2019 09:47:02 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7F5A4201A7E42; Wed, 29 May 2019 11:46:59 +0200 (CEST)
-Date:   Wed, 29 May 2019 11:46:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        acme@kernel.org, mark.rutland@arm.com
-Subject: Re: [RFC 4/7] arm64: pmu: Add function implementation to update
- event index in userpage.
-Message-ID: <20190529094659.GK2623@hirez.programming.kicks-ass.net>
-References: <20190528150320.25953-1-raphael.gault@arm.com>
- <20190528150320.25953-5-raphael.gault@arm.com>
+        Wed, 29 May 2019 05:47:15 -0400
+X-UUID: f85fc8ea1b0f475caaf9a63d093aef2e-20190529
+X-UUID: f85fc8ea1b0f475caaf9a63d093aef2e-20190529
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 561493275; Wed, 29 May 2019 17:47:04 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 29 May 2019 17:47:02 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 29 May 2019 17:47:02 +0800
+Message-ID: <1559123222.6582.2.camel@mtksdaap41>
+Subject: Re: [PATCH 3/3] drm: mediatek: unbind components in mtk_drm_unbind()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 29 May 2019 17:47:02 +0800
+In-Reply-To: <20190527045054.113259-4-hsinyi@chromium.org>
+References: <20190527045054.113259-1-hsinyi@chromium.org>
+         <20190527045054.113259-4-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190528150320.25953-5-raphael.gault@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 0D67655A3172A9E677B28064701E21555F16641623DFE39541481F10AB8379D22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 04:03:17PM +0100, Raphael Gault wrote:
-> +static int armv8pmu_access_event_idx(struct perf_event *event)
-> +{
-> +	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
-> +		return 0;
-> +
-> +	/*
-> +	 * We remap the cycle counter index to 32 to
-> +	 * match the offset applied to the rest of
-> +	 * the counter indeces.
-> +	 */
-> +	if (event->hw.idx == ARMV8_IDX_CYCLE_COUNTER)
-> +		return 32;
-> +
-> +	return event->hw.idx;
+Hi, Hsin-Yi:
 
-Is there a guarantee event->hw.idx is never 0? Or should you, just like
-x86, use +1 here?
+On Mon, 2019-05-27 at 12:50 +0800, Hsin-Yi Wang wrote:
+> Unbinding components (i.e. mtk_dsi and mtk_disp_ovl/rdma/color) will
+> trigger master(mtk_drm)'s .unbind(), and currently mtk_drm's unbind
+> won't actually unbind components. During the next bind,
+> mtk_drm_kms_init() is called, and the components are added back.
+> 
+> .unbind() should call mtk_drm_kms_deinit() to unbind components.
+> 
+> And since component_master_del() in .remove() will trigger .unbind(),
+> which will also unregister device, it's fine to remove original functions
+> called here.
+> 
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 57ce4708ef1b..bbfe3a464aea 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -311,6 +311,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+>  static void mtk_drm_kms_deinit(struct drm_device *drm)
+>  {
+>  	drm_kms_helper_poll_fini(drm);
+> +	drm_atomic_helper_shutdown(drm);
 
-> +}
+This looks not related to this patch. This patch is related to the
+unbind timing. You could separate this to an independent patch.
+
+>  
+>  	component_unbind_all(drm->dev, drm);
+>  	drm_mode_config_cleanup(drm);
+> @@ -397,7 +398,9 @@ static void mtk_drm_unbind(struct device *dev)
+>  	struct mtk_drm_private *private = dev_get_drvdata(dev);
+>  
+>  	drm_dev_unregister(private->drm);
+> +	mtk_drm_kms_deinit(private->drm);
+>  	drm_dev_put(private->drm);
+> +	private->num_pipes = 0;
+
+This looks not related to this patch. This patch is related to the
+unbind timing. You could separate this to an independent patch.
+
+Regards,
+CK
+
+>  	private->drm = NULL;
+>  }
+>  
+> @@ -568,13 +571,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>  static int mtk_drm_remove(struct platform_device *pdev)
+>  {
+>  	struct mtk_drm_private *private = platform_get_drvdata(pdev);
+> -	struct drm_device *drm = private->drm;
+>  	int i;
+>  
+> -	drm_dev_unregister(drm);
+> -	mtk_drm_kms_deinit(drm);
+> -	drm_dev_put(drm);
+> -
+>  	component_master_del(&pdev->dev, &mtk_drm_ops);
+>  	pm_runtime_disable(&pdev->dev);
+>  	of_node_put(private->mutex_node);
+
+
