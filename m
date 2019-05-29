@@ -2,82 +2,107 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C738EC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15103C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FFF24371
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559172949;
-	bh=aHRGWmrf5rXnGBiMo5ak6Pc0Hv90kyBqNX7HV998xic=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=wTHYzOqP21wN4qXCiGuIycwNS9wzlvBAekzxIMmKEn1AqE040fgF4U+QGhm3x/Mht
-	 9usaoBtrFPAFXh78BTa92iQ2MrtFQ+6HuwqgwRN69fu7QJYZ5OYOYFPvQE/yJ+R2jb
-	 20vPe48W3Rkx40829HN8XIdpkTpz14X8w2rUHPkg=
+	by mail.kernel.org (Postfix) with ESMTP id D8EC724381
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHlFMUMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfE2Xfs (ORCPT
+        id S1726653AbfE2XiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfE2Xfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:35:48 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F6F2435D;
-        Wed, 29 May 2019 23:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559172947;
-        bh=aHRGWmrf5rXnGBiMo5ak6Pc0Hv90kyBqNX7HV998xic=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=jaP6SePRwzRnxN+ij5bLWVtNYpu/iF9tyV5WGHmrc8Q5SzcUP2k2bI/+uvhOKqeaT
-         hJUM0s/lPFbJHfEiJ7AhNx7ktcnq+WFF8qVegWcHmNX9L3ZpK49i93+RAHpYAXwoLo
-         ivyZqOm4nh2trqHx4QCtEtnTzdy3P1IDNhF3B9+M=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 29 May 2019 19:38:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34000 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbfE2XiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:38:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h1so4849225qtp.1;
+        Wed, 29 May 2019 16:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B1MrhhjH6sWxyQ53mVFEQj+9Um0+fhEmxAR3L3EopPc=;
+        b=DHlFMUMpvllwAJIYg6fpDk105AumKUw/r+oGLZw6+05VcVuUFh/vqSlVoBK0IhzRc9
+         scGLyiBlj16Y45fO4pmyEKZJT6m8HdbnwAFu3PL8lRtSPvSRZRmhMXidQj+rlzztDInk
+         LzSr2kvTJSQT34kyIdXElc5fvmIXnM5Jm3U5ZfZ7Gz9kTTeoHy9cawnuV43oyUWk/iMq
+         sIhkc+iO8zp4uvTokRAdlTrFeOEd/skT/N+vPXDC1DFWQI50ey6/aJoBKfzeZFqszJve
+         QyuulHc7s7pbNvX8mZtVsFDJFq1hou0PlYNZr/KUJ4EslEpQasWLUHQq0QWxWHL2FufU
+         EzHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B1MrhhjH6sWxyQ53mVFEQj+9Um0+fhEmxAR3L3EopPc=;
+        b=ejwWw2yC6RtSuo+uFsXqKQoZzr6GOVDPtnELh4wpwJ4QmxKYwa/5QzYLHXi7DCXSq+
+         FJ4kObuHUWrpL4ET3m9V8PgngQ+R8cL5oWVVv+dwgiIBpbPu/skiVROCcl7usppbBwk1
+         AzM9r2192n0o067ochZw4GHMCsoxXWabtgMq43bE2jUAJBugvRllYYNcA0tkK1Vrm1G/
+         vQtiTZq7pTywvMMX9xCFLVhZkrIwCLxZnuwKj2KWRK0YAW3ERqP+IvioKoVmcjkvVLHc
+         0E06mLHpIElRRBJZhqhzvqI84QNy2NCplB2sHBhUXWVSbBmnD1iYyRLxBudj5LmSjIuo
+         Dviw==
+X-Gm-Message-State: APjAAAVfnWe86tvjSrevbvQdP1zokcj8XLm0YHnOqSOz3VY//oEcCvpO
+        T7M5SvsGNEKvRoCnjuttcio=
+X-Google-Smtp-Source: APXvYqzpyfKqjuPxqMSE8Zk4DACc0lSPIyI5UdHuRTOcKITWxv7uiNIIFp4w/jM/Pxs6Ia50u1/PJA==
+X-Received: by 2002:aed:3a45:: with SMTP id n63mr641119qte.109.1559173081297;
+        Wed, 29 May 2019 16:38:01 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.172.91])
+        by smtp.gmail.com with ESMTPSA id x2sm555452qke.92.2019.05.29.16.37.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 16:38:00 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 9498FC1BD8; Wed, 29 May 2019 20:37:57 -0300 (-03)
+Date:   Wed, 29 May 2019 20:37:57 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     syzbot <syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_process_init
+Message-ID: <20190529233757.GC3713@localhost.localdomain>
+References: <00000000000097abb90589e804fd@google.com>
+ <20190528013600.GM5506@localhost.localdomain>
+ <20190528111550.GA4658@hmswarspite.think-freely.org>
+ <20190529190709.GE31099@hmswarspite.think-freely.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190523132235.GZ9261@dragon>
-References: <20190522014832.29485-1-peng.fan@nxp.com> <20190523132235.GZ9261@dragon>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: imx: imx8mm: correct audio_pll2_clk to audio_pll2_out
-User-Agent: alot/0.8.1
-Date:   Wed, 29 May 2019 16:35:46 -0700
-Message-Id: <20190529233547.B7F6F2435D@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529190709.GE31099@hmswarspite.think-freely.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Shawn Guo (2019-05-23 06:22:36)
-> On Wed, May 22, 2019 at 01:34:46AM +0000, Peng Fan wrote:
-> > There is no audio_pll2_clk registered, it should be audio_pll2_out.
-> >=20
-> > Cc: <stable@vger.kernel.org>
-> > Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for imx8mm")
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
->=20
-> Stephen,
->=20
-> I leave this to you, since it's a fix.
->=20
+On Wed, May 29, 2019 at 03:07:09PM -0400, Neil Horman wrote:
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2419,9 +2419,12 @@ int sctp_process_init(struct sctp_association *asoc, struct sctp_chunk *chunk,
+>  	/* Copy cookie in case we need to resend COOKIE-ECHO. */
+>  	cookie = asoc->peer.cookie;
+>  	if (cookie) {
+> +		if (asoc->peer.cookie_allocated)
+> +			kfree(cookie);
+>  		asoc->peer.cookie = kmemdup(cookie, asoc->peer.cookie_len, gfp);
+>  		if (!asoc->peer.cookie)
+>  			goto clean_up;
+> +		asoc->peer.cookie_allocated=1;
+>  	}
+>  
+>  	/* RFC 2960 7.2.1 The initial value of ssthresh MAY be arbitrarily
 
-Is it a critical fix? Or is it an annoyance that can wait in -next until
-the next merge window?
+What if we kmemdup directly at sctp_process_param(), as it's done for
+others already? Like SCTP_PARAM_RANDOM and SCTP_PARAM_HMAC_ALGO. I
+don't see a reason for SCTP_PARAM_STATE_COOKIE to be different
+here. This way it would be always allocated, and ready to be kfreed.
 
+We still need to free it after the handshake, btw.
+
+  Marcelo
