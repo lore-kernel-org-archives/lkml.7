@@ -2,157 +2,86 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5729C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6144BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF86E2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tD/8cwXr"
+	by mail.kernel.org (Postfix) with ESMTP id 30B4F21670
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 09:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfE2JVA (ORCPT
+        id S1726069AbfE2JZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 05:21:00 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:50344 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725874AbfE2JVA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 05:21:00 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4T9HJmV011994;
-        Wed, 29 May 2019 11:20:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=OqzTfdhqia5TW2akazmwmN49UNTjwbfJGUFpC1QJyQ8=;
- b=tD/8cwXryQRpID8VESzInftZqx7l0uVgJd4LEML5K4zgD/y6L5XdDdIjvve50czGN4rF
- KZnV8l4i1lGf4gjH4Uz1cAxqal0oW4PGraXIy++Ux0wjL5NuD6/ox37iWSR/a7IdtAIr
- lXW+GYKSs3vSeCUurICVquKOMb+Dl7uvsMLMvwOjYtFY5lRkINATZZ8aaFovaryuBNSN
- Nb0jWQBmuccXkGI0FF+utl82sPZUs/n64/dqohbx7I81f/e/IPNb3Nj5ObNW0uKEzmUN
- 81d/rU6Wbb/03MBMOQJ+12abw3m0FmS+HI8zYEhEWv/5icVLDyKFQcIe6pgf0icUka2K 5A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2spvkh6hn7-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 29 May 2019 11:20:48 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A1C7C34;
-        Wed, 29 May 2019 09:20:43 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AE9D2653;
-        Wed, 29 May 2019 09:20:43 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.46) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 29 May
- 2019 11:20:42 +0200
-Subject: Re: [PATCH V2 3/5] mmc: mmci: fix clear of busy detect status
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <1556264798-18540-4-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <a6a74431-50a6-6298-b77d-9d27a77fd6cc@st.com>
-Date:   Wed, 29 May 2019 11:20:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 05:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbfE2JZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 05:25:26 -0400
+Received: from oasis.local.home (rrcs-24-39-165-138.nys.biz.rr.com [24.39.165.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1042320B1F;
+        Wed, 29 May 2019 09:25:23 +0000 (UTC)
+Date:   Wed, 29 May 2019 05:25:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 00/14 v2] function_graph: Rewrite to allow multiple
+ users
+Message-ID: <20190529052521.6623ae7b@oasis.local.home>
+In-Reply-To: <20190529154740.016517ff9225680f64961097@kernel.org>
+References: <20190520142001.270067280@goodmis.org>
+        <20190522231955.72899b0d606adb919e8716ff@kernel.org>
+        <20190522104027.1b2aabd8@gandalf.local.home>
+        <20190529154740.016517ff9225680f64961097@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrxp3Y3AudNvkkSRaph2Fe-A-F6Cs0jfy9RUja76GYeiA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-29_05:,,
- signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+On Wed, 29 May 2019 15:47:40 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-On 5/27/19 8:17 PM, Ulf Hansson wrote:
-> On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> The "busy_detect_flag" is used to read/clear busy value of
->> mmci status. The "busy_detect_mask" is used to manage busy irq of
->> mmci mask.
->> For sdmmc variant, the 2 properties have not the same offset.
->> To clear the busyd0 status bit, we must add busy detect flag,
->> the mmci mask is not enough.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+
+> Hi Steve,
 > 
-> Ludovic, again, apologies for the delay.
-> 
->> ---
->>   drivers/mmc/host/mmci.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index a040f54..3cd52e8 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -1517,7 +1517,8 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                   * to make sure that both start and end interrupts are always
->>                   * cleared one after the other.
->>                   */
->> -               status &= readl(host->base + MMCIMASK0);
->> +               status &= readl(host->base + MMCIMASK0) |
->> +                       host->variant->busy_detect_flag;
-> 
-> I think this is not entirely correct, because it would mean we check
-> for busy even if we haven't unmasked the busy IRQ via the
-> variant->busy_detect_mask.
+> I found that these interfaces seem tightly coupled with fgraph_ops. But that
+> cause a problem when I'm using it from kretprobe.
 
-if the variant is busy_detect false:
-  => no problem because the busy_detect_flag or busy_detect_mask is not
-     defined.
-
-if variant is busy_detect true:
-the busy handle is split in 3 steps (see mmci_cmd_irq):
-step 1: detection of busy line => unmasked the busy irq end
-step 2: in busy wait => ignore cmd irq while current busy flag is
-enabled.
-step 3: end of busy => clear and mask busy irq
-
-To detect the first step (see mmci_cmd_irq: which unmasks the busy irq)
-we need to know the current busy state. Actually, the status register is
-re-read in mmci_cmd_irq, why not used the status read in mmci_irq and in
-parameter ?
-
-Regards,
-Ludo
+I was thinking that the kretprobes could use the fgraph_ops like
+kprobes uses ftrace_ops.
 
 > 
-> I suggest to store a new bool in the host (call it
-> "busy_detect_unmasked" or whatever makes sense to you), to track
-> whether we have unmasked the busy IRQ or not. Then take this flag into
-> account, before ORing the value of host->variant->busy_detect_flag,
-> according to above.
-> 
->>                  if (host->variant->busy_detect)
->>                          writel(status & ~host->variant->busy_detect_mask,
->>                                 host->base + MMCICLEAR);
->> --
->> 2.7.4
->>
-> 
-> Kind regards
-> Uffe
-> 
+> kretprobe has 2 handlers, entry handler and return handler, and both need
+> pt_regs. But fgraph_ops's entryfunc and retfunc do not pass the pt_regs.
+> That is the biggest issue for me on these APIs.
+> Can we expand fgraph_ops with regs parameter?
+
+Ug. Yeah, of course you need that :-/
+
+OK, so this series isn't enough to allow kretprobes to use it yet. OK,
+I plan on still keeping it because it does allow for placing function
+graph tracer into instances with their own filters.
+
+I'll look into adding a REGS flag like we do with ftrace_ops.
+
+Does the return need all regs? Or is just the return code good enough?
+
+-- Steve
+
