@@ -2,230 +2,190 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F115AC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C079A23B02
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VJSAKcoT"
+	by mail.kernel.org (Postfix) with ESMTP id 6947723B05
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfE2Plw (ORCPT
+        id S1727035AbfE2Pm0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:41:52 -0400
-Received: from sonic303-8.consmr.mail.bf2.yahoo.com ([74.6.131.47]:41634 "EHLO
-        sonic303-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbfE2Plv (ORCPT
+        Wed, 29 May 2019 11:42:26 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37331 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfE2Pm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:41:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559144509; bh=fIF8FHrdxkMOIaxKZ14fK2jsxLnWhP2FKBQ5OFGZvLk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=VJSAKcoTcK42fOZgEvm/NJt22/xiFB+818scenfqJv6WUv+OaiE6Z5uPGkgEkVUbsqMWRBaboGPF/inRn9pCCNa9Gr30S+o5qmsbR2VVPGZq636/eTUsZX402RIuUAjNzvo6ZMXkkNYAkm5Vkwf+VytR222WrH1L/r5jiiuHo6d2ARxXdrU35TVOujh/xj7LsFwHxqxczF1UHzvVUZthtODimR3YcOdI2RUTs490D8SB389wuqeSvwEA/f0dmndp9hTXyy7Vsr7+ozXll/g7KgvJL372LpsvaK4BSAOzFCTJNmracGluBnICe1CHZaY2XkCc2PGollL5c0wt8pxw2g==
-X-YMail-OSG: MsmGAukVM1mBdI3BtiJ8eZ8btC_ZI31E.AscaDvep.YvrbbjmnV_TirFFioysaT
- YlHWtYzGcnGT65jKZgEdItX8Bm.cfPny8tW89N8yIqeCDedQXkIUyfENbWMOmZqek0ZMi3TjhNQs
- tWn28v1LkEqKY0SXZbpO1j67BjPkiQEElY9VFwZIrBhRZeX5ohxXtBdK1xRDA2uZYdnoa2mGEZx6
- zKFihzzYcQwO5mOFA3LFC_dTnk3r_4i7Fx4ILdHTi663PVtW.tCOrsOld438WBMiIm1LJOrybzUM
- jS2I82a2OjVldWsoJVmr9EuOjXJ428zbRAZS_xch0TFrQgqEsvUsJpJybRm1Z5_MRi75aZ4YhpN9
- FsqIl19HmQIbnax1dtulwxZnYbHQ2t3NGN0.s4k8qfu1Mk2XG2FDBC1Hii18qrfyQauoLqz7.9qJ
- BCe5RsahVnLIvGDisC22Rrfqto90DbLdmj9Yt4d53FigKXZVcr4HBB0sxt26ZFg.A81ZzlSrr_EC
- kkLYB28AlSGBzU_9hPfL93C9GNN1suCxrIQRAsrNrqJlhuIGGP6mv6Twgt3e3Oj48gHCU66ZKLzm
- xatT7Cr1eEgrzMQhWT0VXGpp0nYdgBGN6BB3LwsHaYY_uWEObd15Xqy9_vQpTh_7AZDZc8005l8U
- ilwPfztsMovuhWvTvJOR.fiwGwTPBe8fcVdOqcMMph2SHFkSEUVabfOpzzkH.R1zYXXuvkH0BvZC
- 17jRzAzGUPjkl5DbRUYZcjr1pwnEqaKqjKFz7dDM0riNJ8RISn1cQhluzFco4Acmbic3eOXRI493
- 6JSiH_EeBhpCu7MqsetK2OoZyh_a89Y5ma4J2pXvXqw8djLqseRndmHoKjDsiW65xUNPhMHr7G4R
- pt203vN3KsdICxmASCwOGD5izTjDD9FgyP224SUCWoOhrfPIA0LC5iLoxxUAd5DobIEbOFhkLnTj
- MGp4I16IFhpHY3Mms9zMtkpF6l03jRoDTC1aLVutDj1E2dNU2w8V5ENTR_JOA_4KvnVsuZlDXF4Y
- EQpPZQnvL0vCjYvAmDYIZQ.M2cPtR797SslPc6NBEXErbPAc9b4LFwCWf8iuWR7._Slr6xd55xRn
- ZsUML47cyyApxA7D7YEEeb9ge5kw_6I_w6c.Zq96D6DRJgh_rUgQRlvRywvAIzdE1kbfaN8womuH
- JzziQdbl6Rkv_dvGE5kv7PuKL2_faAT_AbSruW1MOBqjx_xgDwBx0K1_VTUFh1h2PdwqIdcr7
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Wed, 29 May 2019 15:41:48 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp415.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 53cac997c7a8b6f08ba08da82c1b2c81;
-          Wed, 29 May 2019 15:41:45 +0000 (UTC)
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
-To:     David Howells <dhowells@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
-References: <20190528235810.GA5776@kroah.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <31751.1559120984@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <c3d76089-cd0a-a378-f6e8-2fe6e9a5c254@schaufler-ca.com>
-Date:   Wed, 29 May 2019 08:41:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 11:42:26 -0400
+Received: by mail-it1-f193.google.com with SMTP id s16so4312819ita.2;
+        Wed, 29 May 2019 08:42:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/j7gWc8iISYWxGlnTZ+LY1ElrHO5aM1K4ex0tPbofbE=;
+        b=B/RRMPUKUApeaYKft0QoYUBC5VzOTf2pMIqlpodaEjubpmljUbmzKdPBg+fydFJefn
+         XK+HygnMZt/5vXwHJmWZmnQOzmuzHc5nehMzvNnuMR4GcE9SEiCSqYBq4QP0t/aa79bY
+         etrqQbn7S1/SbpsBu1Nvhurcvz0/n2C7VKjvO7ZoXSt+loAkC28udOomgAEKM5dEggZ6
+         OEcez4bQW2pC7sVdhpSqDTMUzSzVBTmyKqSzXM2admlT1HC0aKBGVHQVzLU7BiMx5hD3
+         2NqvpvgQwdQhU0kZw0xuwfkaIgc/VSFpj8R0cIQE2tpEdqKqX7v4v3vCuYMEF0KMeE9R
+         c1mg==
+X-Gm-Message-State: APjAAAWyZ2A2Hu3JIiR4nm3ebdh4neGf3VTa+kAKFvQjpXrGs8AkHALe
+        9Qo2kH1KFtmMDUsCNj211IEaa0uE/8ljzwPZAEs=
+X-Google-Smtp-Source: APXvYqxx5oCnY0ckeXgGB+mbjowC9PFLcxwUeTiuKxwAnSfLcvoimR2T5iJwjxqjFjmj4DF/QeOL++us1RCXTMjmKUU=
+X-Received: by 2002:a24:6583:: with SMTP id u125mr7911125itb.168.1559144543170;
+ Wed, 29 May 2019 08:42:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <31751.1559120984@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+References: <20190521161102.29620-1-peron.clem@gmail.com> <20190529153255.40038-1-tomeu.vizoso@collabora.com>
+ <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
+In-Reply-To: <CAJiuCccFG1SATp7QuSOi11MmbjmgX0ZHsTv=4zuXqXMG+=-7Dw@mail.gmail.com>
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date:   Wed, 29 May 2019 17:42:12 +0200
+Message-ID: <CAAObsKCWJmx-TKyiHFvUaDtGOpz8SXNOBFK3AbmUWW7KprD2Rw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: Add GPU operating points for H6
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2019 2:09 AM, David Howells wrote:
-> Greg KH <gregkh@linuxfoundation.org> wrote:
+On Wed, 29 May 2019 at 17:37, Clément Péron <peron.clem@gmail.com> wrote:
 >
->>>  (3) Letting users see events they shouldn't be able to see.
->> How are you handling namespaces then?  Are they determined by the
->> namespace of the process that opened the original device handle, or th=
-e
->> namespace that made the new syscall for the events to "start flowing"?=
+> Hi Tomeu,
+>
+> On Wed, 29 May 2019 at 17:33, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> >
+> > The GPU driver needs them to change the clock frequency and regulator
+> > voltage depending on the load.
+>
+> As requested by Maxime, I have dropped these OPP table as It's taken
+> from vendor and untested with Panfrost.
+>
+> https://lore.kernel.org/patchwork/patch/1060374/
 
-> So far I haven't had to deal directly with namespaces.
->
-> mount_notify() requires you to have access to the mountpoint you want t=
-o watch
-> - and the entire tree rooted there is in one namespace, so your event s=
-ources
-> are restricted to that namespace.  Further, mount objects don't themsel=
-ves
-> have any other namespaces, not even a user_ns.
->
-> sb_notify() requires you to have access to the superblock you want to w=
-atch.
-> superblocks aren't directly namespaced as a class, though individual
-> superblocks may participate in particular namespaces (ipc, net, etc.). =
- I'm
-> thinking some of these should be marked unwatchable (all pseudo superbl=
-ocks,
-> kernfs-class, proc, for example).
->
-> Superblocks, however, do each have a user_ns - but you were allowed to =
-access
-> the superblock by pathwalk, so you must have some access to the user_ns=
- - I
-> think.
->
-> KEYCTL_NOTIFY requires you to have View access on the key you're watchi=
-ng.
-> Currently, keys have no real namespace restrictions, though I have patc=
-hes to
-> include a namespace tag in the lookup criteria.
->
-> block_notify() doesn't require any direct access since you're watching =
-a
-> global queue and there is no blockdev namespacing.  LSMs are given the =
-option
-> to filter events, though.  The thought here is that if you can access d=
-mesg,
-> you should be able to watch for blockdev events.
->
->
-> Actually, thinking further on this, restricting access to events is tri=
-ckier
-> than I thought and than perhaps Casey was suggesting.
->
-> Say you're watching a mount object and someone in a different user_ns
-> namespace or with a different security label mounts on it.  What govern=
-s
-> whether you are allowed to see the event?
+Ok, guess this series should wait then until we can run Panfrost on it
+and check how DVFS is working.
 
-Conceptually it should be simple, but we have a variety of different
-policies in the core OS, never mind what goes on inside the LSMs.
-If you want to treat a notification like a signal you would only deliver
-it if the process that performed the action that triggered the event
-has the same UID as the process receiving the notification. Should you
-decide to treat it like an IP packet only the LSMs would filter delivery.=
+Thanks,
 
-If there are mode bits on the thing being watched shouldn't you respect
-them?
+Tomeu
 
-> You're watching the object for changes - and it *has* changed.  Further=
-, you
-> might be able to see the result of this change by other means (/proc/mo=
-unts,
-> for instance).
+> Regards,
+> Clément
 >
-> Should you be denied the event based on the security model?
-
-=46rom a subject/object model view there are two objects and one
-subject involved. The subject (active entity) is the process that
-changes the first object, triggering an event. The watching process
-(that will receive the notification) is the second object, because
-its state will change (be written to) when the notification is
-delivered. For the watching process to receive the notification
-the changing process needs write access to the watching process.
-The indirection of the notification mechanism isn't relevant.
-If the changing process couldn't directly notify the watching process
-it shouldn't be able to do it indirectly, either.
-
-> On the other hand, if you're watching a tree of mount objects, it could=
- be
-> argued that you should be denied access to events on any mount object y=
-ou
-> can't reach by pathwalk.
->
-> On the third hand, if you can see it in /proc/mounts or by fsinfo(), yo=
-u
-> should get an event for it.
-
-Right. We've done a pretty good job of muddling the security
-landscape by adding spiffy features to make life easier for
-particular use cases. /proc is chuck full of examples. Objects
-that can be viewed in many different ways make for confusing
-security models. Try explaining /proc/234/fd/2 to a security
-theory student.
-
->> How are you handling namespaces then?
-> So to go back to the original question.  At the moment they haven't imp=
-inged
-> directly and I haven't had to deal with them directly.  There are indir=
-ect
-> namespace restrictions that I get for free just due to pathwalk, for in=
-stance.
->
-> David
-
+> >
+> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> > Cc: Clément Péron <peron.clem@gmail.com>
+> >
+> > ---
+> >
+> > Feel free to pick up this patch if you are going to keep pushing this
+> > series forward.
+> >
+> > Thanks,
+> >
+> > Tomeu
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 66 ++++++++++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > index 6aad06095c40..decf7b56e2df 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -157,6 +157,71 @@
+> >                         allwinner,sram = <&ve_sram 1>;
+> >                 };
+> >
+> > +               gpu_opp_table: opp-table2 {
+> > +                       compatible = "operating-points-v2";
+> > +
+> > +                       opp00 {
+> > +                               opp-hz = /bits/ 64 <756000000>;
+> > +                               opp-microvolt = <1040000>;
+> > +                       };
+> > +                       opp01 {
+> > +                               opp-hz = /bits/ 64 <624000000>;
+> > +                               opp-microvolt = <950000>;
+> > +                       };
+> > +                       opp02 {
+> > +                               opp-hz = /bits/ 64 <576000000>;
+> > +                               opp-microvolt = <930000>;
+> > +                       };
+> > +                       opp03 {
+> > +                               opp-hz = /bits/ 64 <540000000>;
+> > +                               opp-microvolt = <910000>;
+> > +                       };
+> > +                       opp04 {
+> > +                               opp-hz = /bits/ 64 <504000000>;
+> > +                               opp-microvolt = <890000>;
+> > +                       };
+> > +                       opp05 {
+> > +                               opp-hz = /bits/ 64 <456000000>;
+> > +                               opp-microvolt = <870000>;
+> > +                       };
+> > +                       opp06 {
+> > +                               opp-hz = /bits/ 64 <432000000>;
+> > +                               opp-microvolt = <860000>;
+> > +                       };
+> > +                       opp07 {
+> > +                               opp-hz = /bits/ 64 <420000000>;
+> > +                               opp-microvolt = <850000>;
+> > +                       };
+> > +                       opp08 {
+> > +                               opp-hz = /bits/ 64 <408000000>;
+> > +                               opp-microvolt = <840000>;
+> > +                       };
+> > +                       opp09 {
+> > +                               opp-hz = /bits/ 64 <384000000>;
+> > +                               opp-microvolt = <830000>;
+> > +                       };
+> > +                       opp10 {
+> > +                               opp-hz = /bits/ 64 <360000000>;
+> > +                               opp-microvolt = <820000>;
+> > +                       };
+> > +                       opp11 {
+> > +                               opp-hz = /bits/ 64 <336000000>;
+> > +                               opp-microvolt = <810000>;
+> > +                       };
+> > +                       opp12 {
+> > +                               opp-hz = /bits/ 64 <312000000>;
+> > +                               opp-microvolt = <810000>;
+> > +                       };
+> > +                       opp13 {
+> > +                               opp-hz = /bits/ 64 <264000000>;
+> > +                               opp-microvolt = <810000>;
+> > +                       };
+> > +                       opp14 {
+> > +                               opp-hz = /bits/ 64 <216000000>;
+> > +                               opp-microvolt = <810000>;
+> > +                       };
+> > +               };
+> > +
+> >                 gpu: gpu@1800000 {
+> >                         compatible = "allwinner,sun50i-h6-mali",
+> >                                      "arm,mali-t720";
+> > @@ -168,6 +233,7 @@
+> >                         clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
+> >                         clock-names = "core", "bus";
+> >                         resets = <&ccu RST_BUS_GPU>;
+> > +                       operating-points-v2 = <&gpu_opp_table>;
+> >                         status = "disabled";
+> >                 };
+> >
+> > --
+> > 2.20.1
+> >
