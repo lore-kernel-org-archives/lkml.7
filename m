@@ -2,126 +2,104 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DEC072B1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1920DC04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFB621734
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1B0216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:33:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7CgTaK8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCodE0k1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfE2Bc0 (ORCPT
+        id S1726186AbfE2Bdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 21:32:26 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:32940 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfE2BcZ (ORCPT
+        Tue, 28 May 2019 21:33:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38710 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfE2Bdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 21:32:25 -0400
-Received: by mail-it1-f194.google.com with SMTP id j17so4134309itk.0;
-        Tue, 28 May 2019 18:32:25 -0700 (PDT)
+        Tue, 28 May 2019 21:33:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so307011pgl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 18:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pIfvpAwcUL5aEcXjuJeQ2M0pAhR/Zr/nyVu2Et28hv0=;
-        b=C7CgTaK82YvBIf4VqQZ1gYpGRtU608zv44voHBNeDAcYIU7bv1Mgb7g30FYTu40lwO
-         zhdd9h0dxduIt62RQVCc8h1fzpgFKcPqXxV4MRWqjWckPxc8X29Gjh5k/HC6CWbzRc47
-         vofESGt2DjeRHO1PWS2uIyLDUqI+hLaMOVQiPNifJtnvc5zmxut2xvuJVwaPccNM0jkb
-         Z4SPYUoKO8G8T2TvIaFoHZoeF+E9SL2pI8XS3ISFzJLkSJ4osCyn1ZWU/rwDvESjn/UD
-         Pb9wYesQCGZHQGPnLpy37hVAyeDR+pohWh9gsBc+oZhrHKJYSBBPt5SGMFhyQWsTzaOb
-         kE3g==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zKrr4VP4HF8/3gxRsVG1U8oxmyUqmlQMzF2rdcl+ZUM=;
+        b=fCodE0k1SR/XgnrXwksZ/0NgsCpj7/T3qew3IBA9J/yxjzYxeyS9vTXtiaCyi17Pju
+         nMAJAz/T6F6KbEodURtPN+bvEVMPnyd3ofqkUwrqM7Mb+qj2HxUMosooMW93nCWtkF0F
+         USPZMB13X14sL75tYkeeqMsfZ6jZrG0YPVJElRNzfPI7d0gtAjcxLtydQn+zGAmUKKrk
+         mA3sQuIuK8iM5LdXbvbj8r7ohMC9CEvOW1M+RvIVkFPti5TnNnq5wksXC5gX0kuAl96W
+         zDMUn1be8VFlWVppg75/cEJ5VY/DDJO4Z0vd6onGf2N9R02DcgziwRutZcUsmT+H9ZUy
+         n8ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pIfvpAwcUL5aEcXjuJeQ2M0pAhR/Zr/nyVu2Et28hv0=;
-        b=Nq38QFaS35w+NcHzZo1d7u+KQaD7R3w1/K+xideJmSEUOgd5jTm6ibTywo1fz4G7Cb
-         Hpp6pgyEUVWNpym5YHU1hXCa7+TExeD9SA+4ygrs4kEmSO/Kz/X69EpCOLiQ0xWeEEi+
-         bU+qQaW1Sf2miF4HBH6U9KoL7thjT/DLb/FTsI+CMNRfNBn0m4dBRgtNGyBbTp09N7qD
-         W3qr0fDBaM+hWXA7i9IhKm+5+YBwVW26htBz/FzMxtPpXHi/KMxEdQ/mdJX5aoGqhIk1
-         NNg82U/9t+wAHW4+1a9GdVdNCrPyyDhAWVpvlsktUITKBZcdYsfI/wXIoHsEpeOWjWaE
-         3OwQ==
-X-Gm-Message-State: APjAAAVjbhiMaxDnd7Mlit2BgwJEAbjxtozZHsX30EFnMFQ7AQS/CqO7
-        MrzvwrjKypr31MRMLl0A0K64FkBJouldvYGPPvo=
-X-Google-Smtp-Source: APXvYqyviJ1M9Qn4lMTmVfNca0S4nsXUtbXTlNjutUOnT584whK0rl7+oPDULSNBLe94uMh6uSFlFMrgzR416XD0phM=
-X-Received: by 2002:a24:7289:: with SMTP id x131mr1588107itc.62.1559093544804;
- Tue, 28 May 2019 18:32:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zKrr4VP4HF8/3gxRsVG1U8oxmyUqmlQMzF2rdcl+ZUM=;
+        b=Qe1mbo1XdprIwAVKaI6EOTLOejI54C/bL4RLSzCb6FUpa697ZuwOa+/Y1OyQR2GIxB
+         tzHqdBe/lY1rDUQUF8x/ERZN2NyQJAaK0zIY8LKdQ0fUrc7bAZXo5iIU2UF6r/QFZyw0
+         GGfYW4ZhVlKtQf27/p5U8KzLly4E210uY/UYErBawVkRB+8X/9YIRFcNjJH5lBO9DfQU
+         Wju1ZXYuhI0JLtWuEkmt//PbbTB/xDsI8HqxC6mL7m03LS8YPU2dh+aSDMUK2VvrOYD+
+         1wJ27nSDJa+aeJ9nkCVxr5s5m94cFVPY5EKHp15YPVxs2XNAGKufTEuOtoHCJaYqmri8
+         hiSg==
+X-Gm-Message-State: APjAAAVYgD/YXP8lo+ihUPTVj41SCefJQctJzScdEcCEW0W88qu9O9PU
+        xoEfUjEH61J34IrcaNBeNXy0TlI0
+X-Google-Smtp-Source: APXvYqzjPYA3TCWsvkoDa9t1uozb9hmBqywF2OndUSgMrFkdKfbQ5TGa8smbi6UBhouA2hDLcUae0g==
+X-Received: by 2002:a63:520a:: with SMTP id g10mr10490754pgb.136.1559093617233;
+        Tue, 28 May 2019 18:33:37 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id k6sm15981806pfi.86.2019.05.28.18.33.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 May 2019 18:33:36 -0700 (PDT)
+Date:   Wed, 29 May 2019 09:33:20 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] dm-init: fix 2 incorrect use of kstrndup()
+Message-ID: <20190529013320.GA3307@zhanggen-UX430UQ>
 MIME-Version: 1.0
-References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
- <20190529011705.GA12977@basecamp>
-In-Reply-To: <20190529011705.GA12977@basecamp>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 28 May 2019 19:32:14 -0600
-Message-ID: <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dave Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 7:17 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Tue, May 28, 2019 at 03:46:14PM +0200, Linus Walleij wrote:
-> > On Thu, May 9, 2019 at 4:04 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > > Here is a patch series that adds initial display support for the LG
-> > > Nexus 5 (hammerhead) phone. It's not fully working so that's why some
-> > > of these patches are RFC until we can get it fully working.
-> > >
-> > > The phones boots into terminal mode, however there is a several second
-> > > (or more) delay when writing to tty1 compared to when the changes are
-> > > actually shown on the screen. The following errors are in dmesg:
-> >
-> > I tested to apply patches 2-6 and got the console up on the phone as well.
-> > I see the same timouts, and I also notice the update is slow in the
-> > display, as if the DSI panel was running in low power (LP) mode.
-> >
-> > Was booting this to do some other work, but happy to see the progress!
->
-> Thanks!
->
-> I've had three people email me off list regarding the display working on
-> 4.17 before the msm kms/drm driver was converted to the DRM atomic API so
-> this email is to get some more information out publicly.
->
-> I pushed up a branch to my github with 15 patches applied against 4.17
-> that has a working display:
->
-> https://github.com/masneyb/linux/commits/display-works-4.17
->
-> It's in low speed mode but its usable. The first 10 patches are in
-> mainline now and the last 5 are in essence this patch series with the
-> exception of 'drm/atomic+msm: add helper to implement legacy dirtyfb'.
-> There's a slightly different version of that patch in mainline now.
->
-> I'm planning to work on the msm8974 interconnect support once some of
-> the outstanding interconnect patches for the msm kms/drm driver arrive
-> in mainline. I'd really like to understand why the display works on
-> 4.17 with those patches though. I assume that it's related to the
-> vblank events not working properly? Let me preface this with I'm a
-> total DRM newbie, but it looked like the pre-DRM-atomic driver wasn't
-> looking for these events in the atomic commits before the migration?
-> See commit 70db18dca4e0 ("drm/msm: Remove msm_commit/worker, use atomic
-> helper commit"), specifically the drm_atomic_helper_wait_for_vblanks()
-> call that was added.
+In drivers/md/dm-init.c, kstrndup() is incorrectly used twice.
 
-Do you know if the nexus 5 has a video or command mode panel?  There
-is some glitchyness with vblanks and command mode panels.
+It should be: char *kstrndup(const char *s, size_t max, gfp_t gfp);
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/md/dm-init.c b/drivers/md/dm-init.c
+index 352e803..526e261 100644
+--- a/drivers/md/dm-init.c
++++ b/drivers/md/dm-init.c
+@@ -140,8 +140,8 @@ static char __init *dm_parse_table_entry(struct dm_device *dev, char *str)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 	/* target_args */
+-	dev->target_args_array[n] = kstrndup(field[3], GFP_KERNEL,
+-					     DM_MAX_STR_SIZE);
++	dev->target_args_array[n] = kstrndup(field[3], DM_MAX_STR_SIZE,
++						GFP_KERNEL);
+ 	if (!dev->target_args_array[n])
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -275,7 +275,7 @@ static int __init dm_init_init(void)
+ 		DMERR("Argument is too big. Limit is %d\n", DM_MAX_STR_SIZE);
+ 		return -EINVAL;
+ 	}
+-	str = kstrndup(create, GFP_KERNEL, DM_MAX_STR_SIZE);
++	str = kstrndup(create, DM_MAX_STR_SIZE, GFP_KERNEL);
+ 	if (!str)
+ 		return -ENOMEM;
+ 
+---
