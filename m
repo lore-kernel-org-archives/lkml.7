@@ -2,216 +2,121 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DCFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01C024049
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FE124049
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="qdFwQUsh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GCg6eFTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfE2SPK (ORCPT
+        id S1727519AbfE2SPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:15:10 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55561 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfE2SPJ (ORCPT
+        Wed, 29 May 2019 14:15:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42818 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2SPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:15:09 -0400
-Received: by mail-it1-f194.google.com with SMTP id g24so5496489iti.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xkf8rKmKSJq4zB1Dra/9+7uGvMblcwp7Vierv9y90/c=;
-        b=qdFwQUshNcgxNY/RBF9rEsNbwHasLXDgUaIpOtCNEEnn2Wx0l8xeWIZsGQoYmOIzGQ
-         F7c66k2BtpCpWpPmueS1WuKwPfkjXaoE1C9P/szk8eNcAkHjM9MCoQI7beruyik5EtTr
-         dtCQUEYtmegrx+EeAxqspgEm5OsGbcBNRFkKE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xkf8rKmKSJq4zB1Dra/9+7uGvMblcwp7Vierv9y90/c=;
-        b=GHtNkUbuZGbl1BSuh5t9UnphPkzWkEkDGSj65XN2/LEGI+m+RbER6HS4oM3nNnnTj1
-         bsTOoPOJAZl3d25IAxqcQunzEoO0qg3F4MBW29MN8HnyB5s/3d3j90tS4sx4quRf4Kax
-         0+iTrfsIOaBNdr/e/FBEmdKSpFIJIZ0rZFRrvoHDbOZYcFz70JrhJbOcANF3w8RoT6yP
-         YhNpCf8mWDGF64vaZ1qDJS1+ZMMdQFxvJVXEaf5BX/91w9Gbqcut9idlXI/+3+5cd/A4
-         o7ZEliy6Hw6TeEoEr9MpDkzpFv8cRnzoAJLV6FIWKU6bvbBX81Gll078zZgzvNdHgJ5f
-         9NWw==
-X-Gm-Message-State: APjAAAW4kHQtwUjLIKMPw/r8RWYhdiM6Xm+QNp3kb/4+YK4rpXSBIXyQ
-        lNhv/h4Q8UlVZOAebLfNY03O2Qj3UqYT3RmFhTxSpQ==
-X-Google-Smtp-Source: APXvYqwYQmN1Q3DXjO1ggA3VkcrZ1Bi6lKNAMYD+Lhn5tKKYzqfA2GKHX9JxvHkXQlKqk1a2eh0uyQs2NU3KHdJvoWY=
-X-Received: by 2002:a02:90cd:: with SMTP id c13mr19363723jag.85.1559153708850;
- Wed, 29 May 2019 11:15:08 -0700 (PDT)
+        Wed, 29 May 2019 14:15:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TI45Gd026303;
+        Wed, 29 May 2019 18:15:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=X1r1l9IbI3BOkFp9ol61hLAsIPyF/vTaoewLMBFuIz4=;
+ b=GCg6eFTfUHhgUB9eSXQA3fJP4YzWZr9DQtM9SwudrdjDKsu/cZFM5ziuaDyOnb5KCu4N
+ acONfWg+yW/wZSxYkdi/qKt0ieppowilWMz67EWhfZZtxvmQ687AJn3yvHY8BBaq98p/
+ Glc5IO7eW9QIyvJtIVxd9nLNHu2tjqL94oDA5hn2SJS5LTVLX2Vu2GALld7vwzldXvx+
+ lVPUbcfN1vjA5J4YPAZNXo+6L6y5NT3YZtnDLVthlDrNwhjboZ1rQzH2N3SWzjl0N7xF
+ CwnRPwr9wbd3tSn23Hmvr2Qc5nef13kNRIzztRJ4WXnYpK3C+fSuXsf1cZrGDerjbpdK Jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2spw4tkq38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 May 2019 18:15:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TIE7Ja160246;
+        Wed, 29 May 2019 18:15:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2srbdxj39c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 May 2019 18:15:41 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4TIFd4U022602;
+        Wed, 29 May 2019 18:15:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 May 2019 11:15:38 -0700
+Date:   Wed, 29 May 2019 21:15:32 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] staging: kpc2000: add missing spaces in core.c
+Message-ID: <20190529181532.GM24680@kadam>
+References: <20190524110802.2953-1-simon@nikanor.nu>
+ <20190524110802.2953-4-simon@nikanor.nu>
+ <20190527073159.GX31203@kadam>
+ <20190529155419.ego3sfedew65ini5@dev.nikanor.nu>
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-2-jagan@amarulasolutions.com> <20190523203407.o5obg2wtj7wwau6a@flea>
- <CAMty3ZDDYEOvSbi7kmacjJZS6f3whpaGd4xsf4OUkXmBbTE3Qg@mail.gmail.com> <20190529145450.qnitxpmpr2a2xemk@flea>
-In-Reply-To: <20190529145450.qnitxpmpr2a2xemk@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 29 May 2019 23:44:56 +0530
-Message-ID: <CAMty3ZB89cPc8AycFPuNTfPC1dot4cNgN87v+rtQVW2zQh8uZg@mail.gmail.com>
-Subject: Re: [PATCH v10 01/11] drm/sun4i: dsi: Fix TCON DRQ set bits
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190529155419.ego3sfedew65ini5@dev.nikanor.nu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905290117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905290117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 8:24 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Fri, May 24, 2019 at 03:48:51PM +0530, Jagan Teki wrote:
-> > On Fri, May 24, 2019 at 2:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Mon, May 20, 2019 at 02:33:08PM +0530, Jagan Teki wrote:
-> > > > According to "DRM kernel-internal display mode structure" in
-> > > > include/drm/drm_modes.h the current driver is trying to include
-> > > > sync timings along with front porch value while checking and
-> > > > computing drq set bits in non-burst mode.
-> > > >
-> > > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
-> > > >
-> > > > With adding additional sync timings, the dsi controller leads to
-> > > > wrong drq set bits for "bananapi,s070wv20-ct16" panel which indeed
-> > > > trigger panel flip_done timed out as:
-> > > >
-> > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > >  Modules linked in:
-> > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
-> > > >  Hardware name: Allwinner sun8i Family
-> > > >  Workqueue: events deferred_probe_work_func
-> > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
-> > > >  [<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
-> > > >  [<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
-> > > >  [<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
-> > > >  [<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
-> > > >  [<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
-> > > >  [<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
-> > > >  [<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
-> > > >  [<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
-> > > >  [<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > >  ---[ end trace b57eb1e5c64c6b8b ]---
-> > > >  random: fast init done
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > >
-> > > > But according to Allwinner A33, A64 BSP code [1] [3] the TCON DRQ for
-> > > > non-burst DSI mode can be computed based on "horizontal front porch"
-> > > > value only (no sync timings included).
-> > > >
-> > > > Detailed evidence for drq set bits based on A33 BSP [1] [2]
-> > > >
-> > > > => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp - 20
-> > > > => (tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
-> > > > lcdp->panel_info.lcd_x) - panel->lcd_x - panel->lcd_hbp - 20
-> > > > => tt->hor_front_porch - 20
-> > >
-> > > The thing is, while your explanation on the DRM side is sound,
-> > > Allwinner has been using the hbp field of their panel description to
-> > > store what DRM calls the backporch and the sync period.
-> >
-> > Exactly, hbp = backporch + sync
-> > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2046
-> >
-> > And the above computation is rely on that as well. If you can see the
-> > final out of the above computation you can get the front porch value
-> > (w/o sync )
->
-> As I was saying, you are explaining it well for DRM, but in order for
-> your last formula (the one coming from the BSP) to make sense, you
-> have to explain that the horizontal back porch for Allwinner contains
-> the sync period, otherwise your expansion of lcd_ht doesn't make
-> sense.
+On Wed, May 29, 2019 at 05:54:19PM +0200, Simon Sandström wrote:
+> On Mon, May 27, 2019 at 10:31:59AM +0300, Dan Carpenter wrote:
+> > On Fri, May 24, 2019 at 01:08:01PM +0200, Simon Sandström wrote:
+> > > [..]
+> > > -		ret = copy_to_user((void*)ioctl_param, (void*)&temp, sizeof(temp));
+> > > +		ret = copy_to_user((void *)ioctl_param, (void *)&temp, sizeof(temp));
+> > >  		if (ret)
+> > >  			return -EFAULT;
+> > 
+> > This should really be written like so:
+> > 
+> > 		if (copy_to_user((void __user *)ioctl_param, &temp,
+> > 				 sizeof(temp)))
+> > 			return -EFAULT;
+> > 
+> > temp is really the wrong name.  "temp" is for temperatures.  "tmp" means
+> > temporary.  But also "tmp" is wrong here because it's not a temporary
+> > variable.  It's better to call it "regs" here.
+> > 
+> > regards,
+> > dan carpenter
+> > 
+> 
+> I agree, but I don't think it fits within this patch. I can send a
+> separate patch with this change.
 
-I'm not sure why we need to take care of back porch since the formula
-clearly evaluating a result as front porch, without sync timing (as
-current code included this sync), I keep the hbp and trying to
-substitute the lcd_ht value so the end result would cancel hbp.
+You could send the other chunk as a separate patch, but I don't think it
+makes sense to apply this chunk when really it just needs to be
+re-written.
 
-I have used this front porch formula from BSP
-tt->hor_front_porch= lcdp->panel_info.lcd_ht-lcdp->panel_info.lcd_hbp
-- lcdp->panel_info.lcd_x;
-https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L2047
+I normally don't complain too much about mechanical no-thought patches,
+but in this case the function is very sub-par and should be re-written.
 
-and evaluated drq set-bit formula
-
-tt->hor_front_porch= lcdp->panel_info.lcd_ht-lcdp->panel_info.lcd_hbp
-- lcdp->panel_info.lcd_x;
-lcdp->panel_info.lcd_ht = tt->hor_front_porch +
-lcdp->panel_info.lcd_hbp +  lcdp->panel_info.lcd_x
-
-=> panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
-(substitute the lcd_ht)
-=> tt->hor_front_porch + lcdp->panel_info.lcd_hbp +
-lcdp->panel_info.lcd_x - panel->lcd_x - panel->lcd_hbp
-(here hbp and lcd_x would cancel, and the result is front porch)
-=> tt->hor_front_porch
-
->
-> > > And nowhere in that commit log you are describing whether it's still
-> > > an issue or not, and if it's not anymore how you did test that it's
-> > > not the case anymore.
-> >
-> > No, I have explained 1st and 2nd para about
-> > 00. There is any additional sync timings in the drq set bits
-> > 01: issue occur due to adding addition sync timings with longs on the
-> > panel, by referring
-> > 03: and later paragraphs proved that there is no sync timings used in BSP
-> >
-> > Am I missing anythings?
->
-> I'm sorry, but I'm not quite sure what you mean here :/
-
-I'm just mentioning how I fragmented/grouped the commit message.
+regards,
+dan carpenter
