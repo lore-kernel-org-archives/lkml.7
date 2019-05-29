@@ -2,196 +2,151 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3B7C28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70BBC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC6623956
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1H0zSQS"
+	by mail.kernel.org (Postfix) with ESMTP id 950FA23957
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfE2OMP (ORCPT
+        id S1727297AbfE2OMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:12:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38632 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbfE2OMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:12:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so1908712wrs.5;
-        Wed, 29 May 2019 07:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=50gnRWNOUvhGB8/LmvapWfp8QbHo99JjrjVdCJ17stM=;
-        b=t1H0zSQSJpqxzoqsa8TrpDocZkLbqdr/UTuSsDK97zeSnDUC6TbjAZkrSuan4+1KQD
-         BCorZmqDU2VyauZvlE1k2XNnvwIqdLw8ZOExvpguGgV3dF+yB9juslPbmc7msHAGIVAD
-         xsIOENnvIK7ek5WqziVxWwuGJZviho7Rb42U5WXf4b/hHzJ06oZZf1EheLYT3b1fjmi4
-         GlfpzSccd4ALSd3GSCHEETBrHgWJI2EszmzAUtUg9VwZh1gwEm7J05ZfUgRFXg/eYm9q
-         bHd32c0ZjA8iUtPANw37vmPelLhlkiEhCfUlcD4t9NiRw88Fg0NBRmI4jM8434KYy8dB
-         C1og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=50gnRWNOUvhGB8/LmvapWfp8QbHo99JjrjVdCJ17stM=;
-        b=XluDui+gbLTJ7hInHCXYTH4F+00qRF4Sakt0rCEVT1eduK+CQvyqYN4E/v8ktScg2c
-         bJlEQyt54PKYqEPcQDuw1M0lYd9kUwZ8j8GXe3eFL5g18NjfQ1JJX5DgDtCTWkG8vraw
-         rpTK8hnJHSCDhuJ7gh+Rm2+s+D3U7sMWJN+uMkcHqQNZDiNExjcGW1e7sGDQzdIJtGAn
-         lGKfVPIburS81cbE2iOLQUu7iQ7ty19Fz3kVKtihia6dgBlBNyZJ67PUZUXEgGwOK11S
-         wcgy+yxwO7qLrY0S9lnuXMJgHVs31TmxZgwTw8zTYMNiwzjZf72c0qVi0jKW2ep9k4Yn
-         MGMA==
-X-Gm-Message-State: APjAAAWgl37ZaQBFGdKosdLCwploXdjWCXYGmqFCAm2DZeva5+GaCskg
-        eIwUOxM9dfpDxgUGJob+IqU=
-X-Google-Smtp-Source: APXvYqy1VAX1GGVBRRL5iR9nTeBKy2y23DU3q2v2MzV8H86/xCQoiaaKMCZBWPeNWWDEhrB6kG2Z3w==
-X-Received: by 2002:a5d:6a05:: with SMTP id m5mr3001527wru.161.1559139131637;
-        Wed, 29 May 2019 07:12:11 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id b10sm34255599wrh.59.2019.05.29.07.12.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 07:12:10 -0700 (PDT)
-Date:   Wed, 29 May 2019 16:12:09 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 00/12] LP0 entry and exit support for Tegra210
-Message-ID: <20190529141209.GD17679@ulmo>
-References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
+        Wed, 29 May 2019 10:12:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50894 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfE2OMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:12:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:12:53 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 29 May 2019 07:12:53 -0700
+Received: from [10.252.23.111] (unknown [10.252.23.111])
+        by linux.intel.com (Postfix) with ESMTP id AA0DC580258;
+        Wed, 29 May 2019 07:12:50 -0700 (PDT)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: perf record: collect user registers set jointly with dwarf stacks
+Organization: Intel Corp.
+Message-ID: <4ad35eb0-0d85-cb87-ac81-7474303ca608@linux.intel.com>
+Date:   Wed, 29 May 2019 17:12:48 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Content-Disposition: inline
-In-Reply-To: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When dwarf stacks are collected jointly with user specified register
+set using --user-regs option like below the full register context is
+still captured on a sample:
 
-On Tue, May 28, 2019 at 04:08:44PM -0700, Sowjanya Komatineni wrote:
-> This patch series includes Tegra210 deepsleep/LP0 support with
-> deep sleep exit through RTC alarm wake and power button wake events.
->=20
-> Note: Wake on power button is through gpio-keys node in device tree.
+  $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- stack_test2.g.O3
 
-On the Jetson TX2 patches for LP0 support we added a couple of other
-properties that we don't have in the Jetson TX1 device tree yet. For
-example:
+  188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+  ... FP chain: nr:0
+  ... user regs: mask 0xff0fff ABI 64-bit
+  .... AX    0x53b
+  .... BX    0x7ffedbdd3cc0
+  .... CX    0xffffffff
+  .... DX    0x33d3a
+  .... SI    0x7f09b74c38d0
+  .... DI    0x0
+  .... BP    0x401260
+  .... SP    0x7ffedbdd3cc0
+  .... IP    0x401236
+  .... FLAGS 0x20a
+  .... CS    0x33
+  .... SS    0x2b
+  .... R8    0x7f09b74c3800
+  .... R9    0x7f09b74c2da0
+  .... R10   0xfffffffffffff3ce
+  .... R11   0x246
+  .... R12   0x401070
+  .... R13   0x7ffedbdd5db0
+  .... R14   0x0
+  .... R15   0x0
+  ... ustack: size 1024, offset 0xe0
+   . data_src: 0x5080021
+   ... thread: stack_test2.g.O:23828
+   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
 
-	linux,input-type =3D <EV_KEY>;
+After applying the change suggested in the patch the sample data contain
+only user specified register values. IP and SP registers (dwarf_regs)
+are collected anyways regardless of the --user-regs option value provided
+from the command line:
 
-which is probably harmless, but we may want to add it on Jetson TX1
-eventually anyway.
+  -g call-graph dwarf,K                         full_regs
+  -g call-graph dwarf,K --user-regs=user_regs	user_regs + dwarf_regs
+  --user-regs=user_regs                         user_regs
 
-	debounce-interval =3D <10>;
+  $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- ls
+  WARNING: specified --user-regs register set doesn't include registers needed by also specified --call-graph=dwarf, auto adding IP, SP registers.
+  arch   COPYING	Documentation  include	Kbuild	 lbuild    MAINTAINERS	modules.builtin		 Module.symvers  perf.data.old	scripts   System.map  virt
+  block  CREDITS	drivers        init	Kconfig  lib	   Makefile	modules.builtin.modinfo  net		 README		security  tools       vmlinux
+  certs  crypto	fs	       ipc	kernel	 LICENSES  mm		modules.order		 perf.data	 samples	sound	  usr	      vmlinux.o
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.030 MB perf.data (10 samples) ]
 
-May be good an Jetson TX1 as well.
+  188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+  ... FP chain: nr:0
+  ... user regs: mask 0x1c0 ABI 64-bit
+  .... BP    0x401260
+  .... SP    0x7ffd3d85cc20
+  .... IP    0x401236
+  ... ustack: size 1024, offset 0x58
+   . data_src: 0x5080021
 
-	wakeup-event-action =3D <EV_ACT_ASSERTED>;
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/util/evsel.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-I vaguely recall this to be necessary for some reason, but I may be
-wrong.
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a6f572a40deb..426dfefeecda 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
+ 	return ret;
+ }
+ 
++#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
++			 (1ULL << PERF_REG_SP))
++
+ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+ 					   struct record_opts *opts,
+ 					   struct callchain_param *param)
+@@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+ 		if (!function) {
+ 			perf_evsel__set_sample_bit(evsel, REGS_USER);
+ 			perf_evsel__set_sample_bit(evsel, STACK_USER);
+-			attr->sample_regs_user |= PERF_REGS_MASK;
++			if (opts->sample_user_regs) {
++				attr->sample_regs_user |= DWARF_REGS_MASK;
++				pr_warning("WARNING: specified --user-regs register set doesn't include registers "
++					   "needed by also specified --call-graph=dwarf, auto adding IP, SP registers.\n");
++			} else {
++				attr->sample_regs_user |= PERF_REGS_MASK;
++			}
+ 			attr->sample_stack_user = param->dump_size;
+ 			attr->exclude_callchain_user = 1;
+ 		} else {
+-- 
+2.20.1
 
-Thierry
-
->=20
-> This series also includes save and restore of PLLs, clocks, OSC contexts
-> for basic LP0 exit.
->=20
-> This patch series doesn't support 100% suspend/resume to allow fully
-> functional state upon resume and we are working on some more drivers susp=
-end
-> and resume implementations.
->=20
-> [V2] : V1 feedback fixes
-> 	Patch 0002: This version still using syscore. Thierry suggest not to
-> 	use syscore and waiting on suggestion from Linux Walleij for any better
-> 	way of storing current state of pins before suspend entry and restoring
-> 	them on resume at very early stage. So left this the same way as V1 and
-> 	will address once I get more feedback on this.
-> 	Also need to findout and implement proper way of forcing resume order
-> 	between pinctrl and gpio driver.
->=20
->=20
-> Sowjanya Komatineni (12):
->   irqchip: tegra: do not disable COP IRQ during suspend
->   pinctrl: tegra: add suspend and resume support
->   clk: tegra: save and restore PLLs state for system
->   clk: tegra: add support for peripheral clock suspend and resume
->   clk: tegra: add support for OSC clock resume
->   clk: tegra: add suspend resume support for DFLL clock
->   clk: tegra: support for Tegra210 clocks suspend-resume
->   soc/tegra: pmc: allow support for more tegra wake models
->   soc/tegra: pmc: add pmc wake support for tegra210
->   gpio: tegra: implement wake event support for Tegra210 and prior GPIO
->   arm64: tegra: enable wake from deep sleep on RTC alarm.
->   soc/tegra: pmc: configure tegra deep sleep control settings
->=20
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
->  drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
->  drivers/clk/tegra/clk-dfll.h                   |   2 +
->  drivers/clk/tegra/clk-divider.c                |  19 ++
->  drivers/clk/tegra/clk-pll-out.c                |  25 ++
->  drivers/clk/tegra/clk-pll.c                    |  99 +++++--
->  drivers/clk/tegra/clk-tegra-fixed.c            |  16 ++
->  drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++=
-++++++
->  drivers/clk/tegra/clk.c                        |  74 ++++-
->  drivers/clk/tegra/clk.h                        |  13 +
->  drivers/gpio/gpio-tegra.c                      | 116 +++++++-
->  drivers/irqchip/irq-tegra.c                    |  22 +-
->  drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
->  drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
->  drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
->  drivers/soc/tegra/pmc.c                        | 150 +++++++++-
->  21 files changed, 1053 insertions(+), 35 deletions(-)
->=20
-> --=20
-> 2.7.4
->=20
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzukzkACgkQ3SOs138+
-s6Fvbw/9GOx4SBK4rXY/2iNkvhLEw29n/39ejy5DedGficMbyMZmxOupaS7qu4bN
-B15kGLjwctbLaf/36ZaFTbPSL5fsKmbAtFAv3QmSE1XopkDTnnn6yTXmpwNDd4kv
-vqI/kxk6oFi1LQRbZl1QN7E385zHNCsYa9QFI1yZz4AlApKzedKOzGnJaBSBLpKV
-VLnztQVF6bkJkENyQQ0RVoQRf2BB53m7fzcyuYdJ9sAwYdf0QlcZQf9RGkKOIpCY
-NTAL09FreA8iYVZdiG/F2urq3DoqZLkWVkMVbWQvDxQIk5qcncZWGb5JCkJC0mLm
-GOwicygS5QtxWBs4+EmRc0eNn9+D9bVzkUr2zeU+H/mBvzsSrEIYTsYEY3Z1n+CV
-zbuEjIgCdrO8lTsEVxsZJYr90aqRJ6J+XtySz/AWe+GXbCWBZaCtrIMmxOL8QYxz
-4lPJQvZYMSqcoEn/e2Tlvv2Jr/bGaJq0OHM67zuC6O4ZiqH/Tz3sePXmTtRm1+vw
-u17sZ6NVFoUlEw7iu2W+c/SJC9VlfC6PS0AS1Wt8Fskz6UCPg3149lU605EdMsys
-ZwVMBu9j24Ot/ibq58gbN6vxsmR5XuZTv+EiZVyDWEOHxH6gVLaEjLxvVA4tuLqz
-O5U2tmcnMPqFZTo1iy6mx8+ge04JT835GPf9vwGuqb7M40qBJ4k=
-=2CDP
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
