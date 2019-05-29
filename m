@@ -2,121 +2,148 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C245FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23312C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACFE24359
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9y1ILos"
+	by mail.kernel.org (Postfix) with ESMTP id E8A3A24368
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559172493;
+	bh=8kdlDPHPJB9SK5OUX6kVhT6RIbf9CHlBwHsoSX6UV6o=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=yc0fuxOF6E4Pu/Z0026ecpy/JXN83tp4GrIssCXuARC62QOa1RpWLMi3f+kksq5M9
+	 XH7otBafg26ZEXGg/umQDOybkWJBX3KEVaY2sQVr2SQdgwYvkOrDm0MRv8DpuuYeRl
+	 QR1KFq0piwaLqv7hGUa02WXDBHcRLH2Opyex3xoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfE2X06 (ORCPT
+        id S1726686AbfE2X2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:26:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38113 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfE2X05 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:26:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id g13so6235343edu.5;
-        Wed, 29 May 2019 16:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4MYDvvkcBMpD3vTFCGd0htlT0GxbUehOqYVwE/XNQ9w=;
-        b=r9y1ILosMv1HdLnsdsAP+MOj8XoPRuEhpX+827w9xBOQ4atic97Pj5M57pj7RqdciP
-         o4NSSKU+sBsW+S00Z3Q9wK2lJpFLwI9hObrUubudDFxx5f2aH6wKfZv71g1B4NB8Ijg7
-         wVbYcgqIUIUm2gMwMYvxncCQqmVzUIrGYMRGSmHJiKOn0Bv1nNYKwRm1laaQkp2lNxxR
-         hOr02yrpjt7u07lHY5gfV0YLdBNIRb6c3uS4t3npWort/GbChtnyUMV0Ta0DSNqK/lvf
-         hCrjWka+iETsxPTS106cV3W4ZLjeOJSzoQUXpTqOdDwWcIXp6nK7DYoPtDHHPc4Yx2hf
-         cuLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4MYDvvkcBMpD3vTFCGd0htlT0GxbUehOqYVwE/XNQ9w=;
-        b=RF6GwOPDuvuQ8Nz58geNBG2Ra68mpikEV6G4KXgOBBJXZIvAFhezUNrjO97YBKDJWU
-         pbpu2MZLKnUXSjXFcXG4+0MSfrbVuX/XIwQWZwm/eXGVo8dUxqtndmfVTgjYdSEAu6r3
-         gOCDI3zsyIYh9Baork7LD4zVkJemrBeEaK7eUSfF6+fAQ3gehn7q284CoXeCdKWVBS72
-         uhZe8Bq0R+RrIuWImletxYL3/czdtCwPKUiy20vRJ4Ana9q2qtblIAtELefxYDKKQy1i
-         fvzmvf+KZAah7kw60AhqzaebQWGfr0vrJudq0OmHjuQkvBw07TT8e2QkFSIWcUuVOupX
-         1qGQ==
-X-Gm-Message-State: APjAAAWu8LPQmjBZCiVZlyki8D1xDRsu7UuYysAAAta3OzXqf7i6Wr9y
-        fg/Qlw969ijK6040R12JlSFrGedbSJQAZgwR45w=
-X-Google-Smtp-Source: APXvYqwnheto+zYvIaHfRrjE+flVSb0ynWBD4Kqor0qxUvVvN3xWwpreCuaWW1NOsE9qA9ag86vzCURZDstGO6tJSe8=
-X-Received: by 2002:a05:6402:1543:: with SMTP id p3mr1047442edx.108.1559172415592;
- Wed, 29 May 2019 16:26:55 -0700 (PDT)
+        Wed, 29 May 2019 19:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfE2X2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:28:11 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A5224366;
+        Wed, 29 May 2019 23:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559172490;
+        bh=8kdlDPHPJB9SK5OUX6kVhT6RIbf9CHlBwHsoSX6UV6o=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=bLZP9ZV/pnaLDEkb6Fbtff0PTHDRn9b6Voj3YcGTY/tQ1tNF2rGSeBQaB0XHoihS2
+         TMcVcgkYcQf5St5x/266iplFn0U8BGyKco7QXrQCq3EcSeFylbzskaTS6YDmEbn/Ee
+         T2XcGWR3cupx2hA2oTOV9Orc6ECjgp2zfX++VPkc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1559171394.git.mchehab+samsung@kernel.org> <c8f6ddd2d538e36f6036681f5756f6ea9499039f.1559171394.git.mchehab+samsung@kernel.org>
-In-Reply-To: <c8f6ddd2d538e36f6036681f5756f6ea9499039f.1559171394.git.mchehab+samsung@kernel.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 30 May 2019 02:26:44 +0300
-Message-ID: <CA+h21hqtfh1KTZXXC+Hmf7JUkXpWwjtJU_KS_u-wcjnWA3pLZA@mail.gmail.com>
-Subject: Re: [PATCH 21/22] docs: net: sja1105.rst: fix table format
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1559084936-4610-4-git-send-email-skomatineni@nvidia.com>
+References: <1559084936-4610-1-git-send-email-skomatineni@nvidia.com> <1559084936-4610-4-git-send-email-skomatineni@nvidia.com>
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
+        jonathanh@nvidia.com, linus.walleij@linaro.org,
+        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
+        tglx@linutronix.de, thierry.reding@gmail.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 03/12] clk: tegra: save and restore PLLs state for system
+User-Agent: alot/0.8.1
+Date:   Wed, 29 May 2019 16:28:09 -0700
+Message-Id: <20190529232810.14A5224366@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 02:24, Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> There's a table there with produces two warnings when built
-> with Sphinx:
->
->     Documentation/networking/dsa/sja1105.rst:91: WARNING: Block quote ends without a blank line; unexpected unindent.
->     Documentation/networking/dsa/sja1105.rst:91: WARNING: Block quote ends without a blank line; unexpected unindent.
->
-> It will still produce a table, but the html output is wrong, as
-> it won't interpret the second line as the continuation for the
-> first ones, because identation doesn't match.
->
-> After the change, the output looks a way better and we got rid
-> of two warnings.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  Documentation/networking/dsa/sja1105.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/networking/dsa/sja1105.rst b/Documentation/networking/dsa/sja1105.rst
-> index ea7bac438cfd..cb2858dece93 100644
-> --- a/Documentation/networking/dsa/sja1105.rst
-> +++ b/Documentation/networking/dsa/sja1105.rst
-> @@ -86,13 +86,13 @@ functionality.
->  The following traffic modes are supported over the switch netdevices:
->
->  +--------------------+------------+------------------+------------------+
-> -|                    | Standalone |   Bridged with   |   Bridged with   |
-> -|                    |    ports   | vlan_filtering 0 | vlan_filtering 1 |
-> +|                    | Standalone | Bridged with     | Bridged with     |
-> +|                    | ports      | vlan_filtering 0 | vlan_filtering 1 |
->  +====================+============+==================+==================+
->  | Regular traffic    |     Yes    |       Yes        |  No (use master) |
->  +--------------------+------------+------------------+------------------+
->  | Management traffic |     Yes    |       Yes        |       Yes        |
-> -|    (BPDU, PTP)     |            |                  |                  |
-> +| (BPDU, PTP)        |            |                  |                  |
->  +--------------------+------------+------------------+------------------+
->
->  Switching features
-> --
-> 2.21.0
->
+Quoting Sowjanya Komatineni (2019-05-28 16:08:47)
+> This patch has implementation of saving and restoring PLL's state to
+> support system suspend and resume operations.
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+Can you provide some more background on _why_ this patch should exist?
+That's typically what gets written in the commit text.
+
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-divider.c | 19 ++++++++
+>  drivers/clk/tegra/clk-pll-out.c | 25 +++++++++++
+>  drivers/clk/tegra/clk-pll.c     | 99 ++++++++++++++++++++++++++++++++---=
+------
+>  drivers/clk/tegra/clk.h         |  9 ++++
+>  4 files changed, 132 insertions(+), 20 deletions(-)
+>=20
+> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divi=
+der.c
+> index 2a1822a22740..718694727042 100644
+> --- a/drivers/clk/tegra/clk-divider.c
+> +++ b/drivers/clk/tegra/clk-divider.c
+> @@ -14,6 +14,7 @@
+>   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>   */
+> =20
+> +#include <linux/clk.h>
+>  #include <linux/kernel.h>
+>  #include <linux/io.h>
+>  #include <linux/err.h>
+> @@ -179,3 +180,21 @@ struct clk *tegra_clk_register_mc(const char *name, =
+const char *parent_name,
+>                                           reg, 16, 1, CLK_DIVIDER_READ_ON=
+LY,
+>                                           mc_div_table, lock);
+>  }
+> +
+> +#if defined(CONFIG_PM_SLEEP)
+> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate)
+> +{
+> +       struct clk_hw *parent =3D clk_hw_get_parent(hw);
+> +       unsigned long parent_rate;
+> +
+> +       if (IS_ERR(parent)) {
+
+Will this ever happen? Collapse the WARN_ON into the if please:
+
+	if (WARN_ON(IS_ERR(parent)))
+
+> +               WARN_ON(1);
+> +               return;
+> +       }
+> +
+> +       parent_rate =3D clk_hw_get_rate(parent);
+> +
+> +       if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
+> +               WARN_ON(1);
+> +}
+> +#endif
+> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+> index 09bccbb9640c..e4d124cc5657 100644
+> --- a/drivers/clk/tegra/clk.h
+> +++ b/drivers/clk/tegra/clk.h
+> @@ -841,6 +841,15 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll,=
+ u8 p_div);
+>  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
+>                  u8 frac_width, u8 flags);
+> =20
+> +#ifdef CONFIG_PM_SLEEP
+
+Can you remove this ifdef? It just complicates compilation testing.
+
+> +void tegra_clk_pll_resume(struct clk *c, unsigned long rate);
+> +void tegra_clk_divider_resume(struct clk_hw *hw, unsigned long rate);
+> +void tegra_clk_pll_out_resume(struct clk *clk, unsigned long rate);
+> +void tegra_clk_plle_tegra210_resume(struct clk *c);
+> +void tegra_clk_sync_state_pll(struct clk *c);
+> +void tegra_clk_sync_state_pll_out(struct clk *clk);
+
+Do these APIs need to operate on struct clk? Why can't they operate on
+clk_hw or why can't we drive the suspend/resume sequence from the clk
+provider driver itself?
+
