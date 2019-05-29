@@ -2,103 +2,139 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A4EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9FCC04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0622081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604E021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cChtVJTA"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="HfhL8wqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfE2IEz (ORCPT
+        id S1726520AbfE2IE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:04:55 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38838 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfE2IEz (ORCPT
+        Wed, 29 May 2019 04:04:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35900 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfE2IE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:04:55 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b11so1241626lfa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:04:54 -0700 (PDT)
+        Wed, 29 May 2019 04:04:56 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v22so861855wml.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 01:04:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1LIOku9W0w6jyilHULXZM0qJLovMNSsThL0PJAa4R6s=;
-        b=cChtVJTAkdUeB569BzFxW+lkBv7RfvyARS1+90S3q0TPpHzTNLxCWGjgwut75/WYHZ
-         CQ9XfGod9nJpU5BjcSlJyGmMzlSkH569SwBTcbB9Hg7jZTwZdfOfeeWP2oc2MJKZwMiW
-         kYz9kLS/NVsgGustKQHks5T0k1EOf3OwfcwoMTZIn5LIJ2h3oDzvilSVIOJpzqUHD0Qh
-         Io1B9qE1nYXUFSIBylfBsvLgZBYmIByUJzMPyFR56uHECQLCJrdIXEG5oXM+wrtyqdBn
-         NwWeexMTd9waVGwrIeFxp/jE71lcpq9O9JeJ+tRcfj+6BXyU9vzfBWUuEJbO9nKdDTIX
-         pmvw==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=EBIy8akgJJVzGMeoN5L9X2jn2x1GxoKHTkHoU0+i4ZQ=;
+        b=HfhL8wqCiookSl50jiJuT1YB5TlSuMeuNrqU2tWcfEUtEQ/AmjA+cvuYkaVQ4gKcHN
+         wSRpxcuZF/NNGH2Y5MLanq3MH+ekyD5LIGY1quGY/RW5R5wx60RM2QX8PBTXSjr2f0LE
+         GrSfel5vdtBCsk+50onjqOuy0SlHUJmcYWNmZ+DBqkKeGydvzo7ncC0b4i0ZsrazeUrf
+         deHnMa1fNBN0eEKOkh+v4Ss0TZu+V2tywk5KUFTt/qlnJ5I7ACVuMx3DbtH06LlW1z78
+         GWgSB5/zjVexZBSTTMUPM0xJTUHJ53ZnuNkmkf6Oq1DG3cc4TV4/F0AGW1Mtw4DTfMaA
+         KOkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1LIOku9W0w6jyilHULXZM0qJLovMNSsThL0PJAa4R6s=;
-        b=RtfTrOXqj4DUGc5xrXMwM1gfMHb2U+EYQ5zOMEC7wWiEbKWemX1ldsVa8lN0j3HVRZ
-         Ukcg0bq+lu1U004GcDP7XbzRGlXkOnRx6/wur20+pGd0xJ+uleg9pjkFg4kQpHhddo2j
-         GR2xUxvrQAL3Y/buN8HUfKf4hqGCilQTtEE0ghEhp01fN3w8h7Oay1nhM4ncxmlmEPUG
-         9JbVpx2efa6a4/hpXeYcH+gOb4lSGtUImm4kU7g1uDd1L/fra4FS9/r9QBrmOmkdGFXQ
-         ekeLG50atEGk0qSvHKfuqytpa3FNm/dtsIec4YFtAmv2b5VW1/T8E9hTa3zXWf+TfpLJ
-         aXcA==
-X-Gm-Message-State: APjAAAV3mK45kj5R2IB4XKuWLdjoNGa09VNSIp9kfTQA8ZQulb4TmJvd
-        XG20xNG2aTQ1Ab/iu62iv1Kxz6CiiChwUxMf5Ajbixuijr0=
-X-Google-Smtp-Source: APXvYqzGg3PfDli6WYmdX+mVXkhECaeIUHXaK/vTD7ZvztMnsVmqR0e2YR/cufgv/gQgmROlPOEQ02URCK8zPU2nObI=
-X-Received: by 2002:ac2:4428:: with SMTP id w8mr3070736lfl.99.1559117093345;
- Wed, 29 May 2019 01:04:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=EBIy8akgJJVzGMeoN5L9X2jn2x1GxoKHTkHoU0+i4ZQ=;
+        b=WBIzS5YCiN8t2Pb7TgJ47N0fQZCvM2yp/mOAFc08CGHS+hxFYVHAQ9/m5ir2ynGpj1
+         NezfwVO817qptPmspirFVYK17o7Y+GXn+Ac1aP4h2ut06Y6qBaYzZpAkmFpVcQmON9lG
+         Z3KfAshhJ3c23JRcfwAtPUS8yMJlJOyGA92RWP4iaN9VQqiSNFkyRnDlkFrniXzGRbbH
+         cq7Kc38TN+g3ogL4OFHND0DUjZ12jXvRvHqSeoJeajIUqQy1ggfECd/oma5WDRv+Fud3
+         ae+Fp18+4BXg2Mq4RYPv1j1BP+GSCAFzCNtgeuH9sn0l1e65VhDKJRzdBvzGl5NxvWlZ
+         wzUg==
+X-Gm-Message-State: APjAAAWYq5DoIi1prDlT8hd8OWs4RBp1b5FbcQRy3yCsnl4coDZ3az19
+        JIbOi08KIYAlIZZpYO67Ib535w==
+X-Google-Smtp-Source: APXvYqxVQa+Y+auwZsalqmIXIrSP2DzX25u2YHdLtGqKGkI2wS47Xd0Zk+TI/HfX1YOt5NBkbVB2tg==
+X-Received: by 2002:a7b:c8c1:: with SMTP id f1mr5434256wml.159.1559117094718;
+        Wed, 29 May 2019 01:04:54 -0700 (PDT)
+Received: from localhost (ip-89-177-126-215.net.upcbroadband.cz. [89.177.126.215])
+        by smtp.gmail.com with ESMTPSA id u9sm3165755wme.48.2019.05.29.01.04.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 01:04:53 -0700 (PDT)
+Date:   Wed, 29 May 2019 10:04:52 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Igor Konopko <igor.j.konopko@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Mohit P . Tahiliani" <tahiliani@nitk.edu.in>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Matias Bjorling <mb@lightnvm.io>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] [RFC] devlink: Fix uninitialized error code in
+ devlink_fmsg_prepare_skb()
+Message-ID: <20190529080452.GE2252@nanopsycho>
+References: <20190528142424.19626-1-geert@linux-m68k.org>
+ <20190528142424.19626-6-geert@linux-m68k.org>
 MIME-Version: 1.0
-References: <20190529025256.GB22325@shao2-debian> <20190529035613.GA6210@mit.edu>
-In-Reply-To: <20190529035613.GA6210@mit.edu>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 29 May 2019 13:34:42 +0530
-Message-ID: <CA+G9fYtVH0UF55Xins22sXCvcOLN+JGv-p2brj58BjzNGqdE2A@mail.gmail.com>
-Subject: Re: [LKP] [ext4] 079f9927c7: ltp.mmap16.fail
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org,
-        ltp@lists.linux.it
-Cc:     lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528142424.19626-6-geert@linux-m68k.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
-
-On Wed, 29 May 2019 at 09:26, Theodore Ts'o <tytso@mit.edu> wrote:
+Tue, May 28, 2019 at 04:24:24PM CEST, geert@linux-m68k.org wrote:
+>With gcc 4.1:
 >
-> On Wed, May 29, 2019 at 10:52:56AM +0800, kernel test robot wrote:
-> > FYI, we noticed the following commit (built with gcc-7):
-> >
-> > commit: 079f9927c7bfa026d963db1455197159ebe5b534 ("ext4: gracefully handle ext4_break_layouts() failure during truncate")
-> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-
-I do have found this problem on linux next 20190528 on x86_64, i386,
-arm64 and arm architectures.
-But, this failure is not easy to reproduce.
-so thought of sharing report with steps to reproduce and got delayed.
-
+>    net/core/devlink.c: In function ‘devlink_fmsg_prepare_skb’:
+>    net/core/devlink.c:4325: warning: ‘err’ may be used uninitialized in this function
 >
-> Jan --- this is the old version of your patch, which I had dropped
-> before sending a push request to Linus.  However, I forgot to reset
-> the dev branch so it still had the old patch on it, and so it got
-> picked up in linux-next.  Apologies for the confusion.
+>Indeed, if the list has less than *start entries, an uninitialized error
+>code will be returned.
 >
-> I've reset the dev branch on ext4.git, and the new version of your
-> patch will show up there shortly, as I start reviewing patches for the
-> next merge window.
+>Fix this by preinitializing err to zero.
+>
+>Fixes: 1db64e8733f65381 ("devlink: Add devlink formatted message (fmsg) API")
+>Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>---
+>I don't know if this can really happen, and if this is the right fix.
+>Perhaps err should be initialized to some valid error code instead?
 
-However, Thanks for looking into this problem.
-I will keep monitoring this mmap16 failure and let you know when it
-will get fixed.
+0 is correct here.
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 
-- Naresh
+Thanks!
+
+>---
+> net/core/devlink.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/net/core/devlink.c b/net/core/devlink.c
+>index d43bc52b8840d76b..91377e4eae9a43c1 100644
+>--- a/net/core/devlink.c
+>+++ b/net/core/devlink.c
+>@@ -4321,8 +4321,8 @@ devlink_fmsg_prepare_skb(struct devlink_fmsg *fmsg, struct sk_buff *skb,
+> {
+> 	struct devlink_fmsg_item *item;
+> 	struct nlattr *fmsg_nlattr;
+>+	int err = 0;
+> 	int i = 0;
+>-	int err;
+> 
+> 	fmsg_nlattr = nla_nest_start_noflag(skb, DEVLINK_ATTR_FMSG);
+> 	if (!fmsg_nlattr)
+>-- 
+>2.17.1
+>
