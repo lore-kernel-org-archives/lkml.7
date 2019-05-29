@@ -2,309 +2,115 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343AFC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E14FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1017423FFE
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96F424009
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 17:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EftG0tcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfE2RvE (ORCPT
+        id S1726823AbfE2RyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 13:51:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50288 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfE2RvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 13:51:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF5A2341;
-        Wed, 29 May 2019 10:51:02 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB20E3F5AF;
-        Wed, 29 May 2019 10:51:01 -0700 (PDT)
-Subject: Re: [PATCH 14/21] EDAC, ghes: Extract numa node information for each
- dimm
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190529084344.28562-1-rrichter@marvell.com>
- <20190529084344.28562-15-rrichter@marvell.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <42d1cb7f-de7a-31e8-eb89-8d0651a3501a@arm.com>
-Date:   Wed, 29 May 2019 18:51:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 13:54:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38980 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2RyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 13:54:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4fmAXjgAlgrqWrjrvceWv+cvuht35jcWY2gjbzwdhQU=; b=EftG0tcQ+1MUBbc6HadzBAFfG
+        I6KWn/XYspZ50XkoqimhzyI/Z8s7ZeP60qsN4s5AOsfriA97cf3snBVOoMMzQ43U+ImWqzdE2HZFr
+        yaTs75jUMqY5paZBR0v7GqD7OdcjRIFAXieMd+Zfctp0aXRHAH6gxD8qiRWESP909JNUMPS5hZ7Un
+        Vj0qjOaXb66RvcnHsh2FKh38/nO4Be0qw+IYvkUT8SsHGMY/rXhjaqWk2V7aQ9RhXCWTFvq6Nz+eG
+        bEV4qedcOZ7XSweMaopEXGK6GzeT2fmXTg4GISq4eVMJlJKTBesCTz85e6oXajUGz4cftqKusthsm
+        CRVRVFzmA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW2mJ-0001X1-VK; Wed, 29 May 2019 17:54:20 +0000
+Subject: Re: ERROR: "hdac_hdmi_jack_port_init"
+ [sound/soc/intel/boards/snd-soc-sof_rt5682.ko] undefined!
+To:     kbuild test robot <lkp@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Sathya Prakash M R <sathya.prakash.m.r@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+References: <201905281758.K64LbM6G%lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <30d084d6-207a-053d-6ab4-0096a1d8d216@infradead.org>
+Date:   Wed, 29 May 2019 10:54:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190529084344.28562-15-rrichter@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <201905281758.K64LbM6G%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On 5/28/19 2:54 AM, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   cd6c84d8f0cdc911df435bb075ba22ce3c605b07
+> commit: f70abd75b7c6c04d3219d0b3a0f3f15411b042fb ASoC: Intel: add sof-rt5682 machine driver
+> date:   4 weeks ago
+> config: x86_64-randconfig-b005272310-05281357 (attached as .config)
+> compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
+> reproduce:
+>         git checkout f70abd75b7c6c04d3219d0b3a0f3f15411b042fb
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> ERROR: "hdac_hdmi_jack_port_init" [sound/soc/intel/boards/snd-soc-sof_rt5682.ko] undefined!
+>>> ERROR: "hdac_hdmi_jack_init" [sound/soc/intel/boards/snd-soc-sof_rt5682.ko] undefined!
 
-On 29/05/2019 09:44, Robert Richter wrote:
-> In a later patch we want to have one mc device per node. This patch
-> extracts the numa node information for each dimm. This is done by
-> collecting the physical address ranges from the DMI table (Memory
-> Array Mapped Address - Type 19 of SMBIOS spec). The node information> for a physical address is already know to a numa aware system (e.g. by
-> using the ACPI _PXM method or the ACPI SRAT table), so based on the PA
-> we can assign the node id to the dimms.
+Confirmed on 5.2-rc2.
 
-I think you're letting the smbios information drive you here. We'd like to do as much as
-possible without it, all its really good for is telling us the label on the PCB.
+Needs CONFIG_SND_SOC_HDAC_HDMI to be set for those functions to be built.
 
-With this approach, you only get numa information by parsing more smbios, which we have to
-try and validate, and fall back to some error path if it smells wrong. We end up needing
-things like a 'fallback memory controller' in the case the firmware fault-time value is
-missing, or nuts.
+CONFIG_SND_SOC_SOF_BAYTRAIL=m
+CONFIG_SND_SOC_INTEL_SOF_RT5682_MACH=m
 
-What bugs me is we already know the numa information from the address. We could expose
-that without the smbios tables at all, and it would be useful to someone playing the
-dimm-bisect game. Not making it depend on smbios means there is a good chance it can
-become common with other edac drivers.
+CONFIG_SND_SOC_SOF_HDA_COMMON is not set; the "select ... if" in the middle
+[<<<<<<<<<<] of this Kconfig entry is preventing SND_SOC_HDAC_HDMI from being set:
 
-I don't think we need to know the dimm->node mapping up front. When we get an error,
-pfn_to_nid() on the address tells us which node that memory is attached to. This should be
-the only place nid information comes from, that way we don't need to check it. Trying to
-correlate it with smbios tables is much more code. If the CPER comes with a DIMM handle,
-we know the DIMM too.
-
-So all we really need is to know at setup time is how many numa-nodes there are, and the
-maximum DIMM per node if we don't want phantom-dimms. Type-17 already has a
-Physical-Memory-Array-Handle, which points at Type-19... but we don't need to read it,
-just count them and find the biggest.
-
-If the type-19 information is missing from smbios, or not linked up properly, or the
-values provided at fault-time don't overlap with the values in the table, or there is no
-fault-time node information: you still get the numa-node information based on the address.
-
-Using the minimum information should give us the least code, and the least exposure to
-misdescribed tables.
-
-
-> A fallback that disables numa is implemented in case the node
-> information is inconsistent.
-
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 50f4ee36b755..083452a48b42 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -67,14 +67,34 @@ struct memdev_dmi_entry {
->  	u16 conf_mem_clk_speed;
->  } __attribute__((__packed__));
->  
-> +/* Memory Array Mapped Address - Type 19 of SMBIOS spec */
-> +struct memarr_dmi_entry {
-> +	u8		type;
-> +	u8		length;
-> +	u16		handle;
-> +	u32		start;
-> +	u32		end;
-> +	u16		phys_mem_array_handle;
-> +	u8		partition_width;
-> +	u64		ext_start;
-> +	u64		ext_end;
-> +} __attribute__((__packed__));
-
-Any chance we could collect the structures from the smbios spec in a header file somewhere?
-
-I'd prefer not to read this thing at all if we can help it.
-
->  struct ghes_dimm_info {
->  	struct dimm_info dimm_info;
->  	int		idx;
-> +	int		numa_node;
-
-(I thought nid was the preferred term)
+if SND_SOC_SOF_HDA_COMMON || SND_SOC_SOF_BAYTRAIL
+config SND_SOC_INTEL_SOF_RT5682_MACH
+	tristate "SOF with rt5682 codec in I2S Mode"
+	depends on I2C && ACPI
+	depends on (SND_SOC_SOF_HDA_COMMON && MFD_INTEL_LPSS) ||\
+		   (SND_SOC_SOF_BAYTRAIL && X86_INTEL_LPSS)
+	select SND_SOC_RT5682
+	select SND_SOC_DMIC
+	select SND_SOC_HDAC_HDMI if SND_SOC_SOF_HDA_COMMON <<<<<<<<<<
+	help
+	   This adds support for ASoC machine driver for SOF platforms
+	   with rt5682 codec.
+	   Say Y if you have such a device.
+	   If unsure select "N".
+endif ## SND_SOC_SOF_HDA_COMMON || SND_SOC_SOF_BAYTRAIL
 
 
-> +	phys_addr_t	start;
-> +	phys_addr_t	end;
-
-I think start and end are deceptive as they overlap with other DIMMs on systems with
-interleaving memory controllers. I'd prefer not to keep these values around.
 
 
-> +	u16		phys_handle;
->  };
->  
->  struct ghes_mem_info {
-> -	int num_dimm;
-> +	int		num_dimm;
->  	struct ghes_dimm_info *dimms;
-> +	int		num_nodes;
-
-> +	int		num_per_node[MAX_NUMNODES];
-
-Number of what?
-
-
-> +	bool		enable_numa;
-
-This is used locally in mem_info_setup(), but its not read from here by any of the later
-patches in the series. Is it needed?
-
-I don't like the idea that this is behaviour that is turned on/off. Its a property of the
-system. I think it would be better if CONFIG_NUMA causes you to get multiple
-memory-controllers created, but if its not actually a NUMA machine there would only be
-one. This lets us test that code on not-really-numa systems.
-
-
->  };
->  
->  struct ghes_mem_info mem_info;
-> @@ -97,10 +117,50 @@ static void ghes_dimm_info_init(void)
->  
->  	for_each_dimm(dimm) {
->  		dimm->idx	= idx;
-> +		dimm->numa_node	= NUMA_NO_NODE;
->  		idx++;
->  	}
->  }
->  
-> +static void ghes_edac_set_nid(const struct dmi_header *dh, void *arg)
-> +{
-> +	struct memarr_dmi_entry *entry = (struct memarr_dmi_entry *)dh;
-> +	struct ghes_dimm_info *dimm;
-> +	phys_addr_t start, end;
-> +	int nid;
-> +
-> +	if (dh->type != DMI_ENTRY_MEM_ARRAY_MAPPED_ADDR)
-> +		return;
-
-> +	/* only support SMBIOS 2.7+ */
-> +	if (entry->length < sizeof(*entry))
-> +		return;
-
-Lovely. I still hope we can get away without parsing this table.
-
-
-> +	if (entry->start == 0xffffffff)
-> +		start = entry->ext_start;
-> +	else
-> +		start = entry->start;
-> +	if (entry->end == 0xffffffff)
-> +		end = entry->ext_end;
-> +	else
-> +		end = entry->end;
-
-
-> +	if (!pfn_valid(PHYS_PFN(start)))
-> +		return;
-
-Eh? Just because there is no struct page doesn't mean firmware won't report errors for it.
-This is going to bite on arm64 if the 'start' page happens to have been reserved by
-firmware, and thus doesn't have a struct page. Bottom-up allocation doesn't sound unlikely.
-
-
-> +	nid = pfn_to_nid(PHYS_PFN(start));
-
-... Ugh, because pfn_to_nid() goes via struct page.
-
-You can make this robust by scanning start->end looking for a pfn_valid() you can pull the
-nid out of. (no, I don't think its a good idea either!)
-
-I'd like to see if we can get rid of the 'via address' part of this.
-
-
-> +	if (nid < 0 || nid >= MAX_NUMNODES || !node_possible(nid))
-> +		nid = NUMA_NO_NODE;
-
-Can this happen? Does this indicate the firmware tables are wrong, or mm is about derail?
-
-
-> +	for_each_dimm(dimm) {
-> +		if (entry->phys_mem_array_handle == dimm->phys_handle) {
-> +			dimm->numa_node	= nid;
-> +			dimm->start	= start;
-> +			dimm->end	= end;
-> +		}
-> +	}
-> +}
-> +
->  static int get_dimm_smbios_index(u16 handle)
->  {
->  	struct mem_ctl_info *mci = ghes_pvt->mci;
-> @@ -213,8 +273,25 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  	}
->  }
->  
-> +static void mem_info_disable_numa(void)
-> +{
-> +	struct ghes_dimm_info *dimm;
-> +
-> +	for_each_dimm(dimm) {
-> +		if (dimm->numa_node != NUMA_NO_NODE)
-> +			mem_info.num_per_node[dimm->numa_node] = 0;
-
-> +		dimm->numa_node = 0;
-
-NUMA_NO_NODE?
-
-> +	}
-> +
-> +	mem_info.num_per_node[0] = mem_info.num_dimm;
-> +	mem_info.num_nodes = 1;
-> +	mem_info.enable_numa = false;
-> +}
-> +
->  static int mem_info_setup(void)
->  {
-> +	struct ghes_dimm_info *dimm;
-> +	bool enable_numa = true;
->  	int idx = 0;
->  
->  	memset(&mem_info, 0, sizeof(mem_info));
-> @@ -231,6 +308,29 @@ static int mem_info_setup(void)
->  
->  	ghes_dimm_info_init();
->  	dmi_walk(ghes_edac_dmidecode, &idx);
-> +	dmi_walk(ghes_edac_set_nid, NULL);
-> +
-> +	for_each_dimm(dimm) {
-> +		if (dimm->numa_node == NUMA_NO_NODE) {
-> +			enable_numa = false;
-> +		} else {
-
-> +			if (!mem_info.num_per_node[dimm->numa_node])
-> +				mem_info.num_nodes++;
-
-This is to try and hide empty nodes?
-
-
-> +			mem_info.num_per_node[dimm->numa_node]++;
-
-Could you do these two in your previous for_each_dimm() walk?
-
-
-> +		}
-> +
-> +		edac_dbg(1, "DIMM%i: Found mem range [%pa-%pa] on node %d\n",
-> +			dimm->idx, &dimm->start, &dimm->end, dimm->numa_node);
-> +	}
-
-
-> +	mem_info.enable_numa = enable_numa;
-> +	if (enable_numa)
-> +		return 0;
-> +
-> +	/* something went wrong, disable numa */
-> +	if (num_possible_nodes() > 1)
-> +		pr_warn("Can't get numa info, disabling numa\n");
-> +	mem_info_disable_numa();
-
-I'd like to find a way of doing this where we don't need this sort of thing!
-
-
-Thanks,
-
-James
+-- 
+~Randy
