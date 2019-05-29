@@ -2,259 +2,103 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C456C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C55CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C38208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222E6208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cmfEi787"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="McFL6gJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfE2KI6 (ORCPT
+        id S1726501AbfE2KKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:08:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40185 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfE2KI6 (ORCPT
+        Wed, 29 May 2019 06:10:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37968 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfE2KKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:08:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t4so1299266wrx.7
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ty4IcXlpjkauMOfPz91oXeSsV5meVlVMArgDZnMLLhI=;
-        b=cmfEi7876v83LhRGlYAtNz0t62h5SKiLV0y02qoM17UvQl6ZFVuX7qhc/0cHnoKU1N
-         raXenzyFYRTQT8683DcR5eJB1CF79oEnH2Hzv93Tcmg6JarlmJXrGwj/KD/vxCk4TAxd
-         Bk4pcG7aNTOXFxy62V5rRlfJ6eOCVHxv5a6B7NegGtojrIuBWY+Vraa5DbDTfpzcYTvZ
-         OiC5iPIHG7d4mDcYhhIp/69NXeormdCAZXkopxziP8SgxQHvDsYbP7WRJLalifhUk+j2
-         O/WUrNbuHLhduHu9HU2P4Q4sET5AOo87E4vu4LDSz+6SQlL7a/mEUv2p+YVtXChKJUwh
-         WvZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ty4IcXlpjkauMOfPz91oXeSsV5meVlVMArgDZnMLLhI=;
-        b=jbsm3y0CHf42wb/48SgGAK9vNaqoXX2eEkRFYVDOYy2FZxUljzlX7oNij8vEheqDtl
-         7sTtgUUdjFPZ/5SCHQs0CiNkkq2w15qyQPQwP0pxi2F6N+FRUP1M3J9sTYwdQRCOIGH7
-         nINzimfXru2tJ9uIDKfxe5uRiKNbUs8s6HKw8legC5t/Kk/vvX6soN6l7WPNaAKN52O4
-         N8GnB3HVUhwzquvvYzoDL6aV3iWmaeZE/vhrY5vUenN4zPIMyaSOlNA4aBAUGFZE6EpQ
-         foOfTeXk7Sh28LUbsg7mm3jD7S8YbTV6YndVJ/HaOJk20FR8/vHJSiEovIJ3G/90S/DA
-         RL0A==
-X-Gm-Message-State: APjAAAU56tsmMxh+gyPb/AtTnugK1lNTJGLtA+ATZyPWOftjpI4ooXhg
-        IbArLXQqmw2YaYgEfQN/bmRTYBnLzsUazg==
-X-Google-Smtp-Source: APXvYqwFjkgIbBI/IYRMOH1yPeOrIReTP+zx9FXevxBCbD9DhH7F2H2BTO9HwaALscKnXMESpvkwFA==
-X-Received: by 2002:adf:ebc6:: with SMTP id v6mr9197668wrn.258.1559124535011;
-        Wed, 29 May 2019 03:08:55 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l6sm3928121wmi.24.2019.05.29.03.08.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 03:08:54 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] arm64: dts: meson: Add minimal support for
- Odroid-N2
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190527140206.30392-1-narmstrong@baylibre.com>
- <20190527140206.30392-4-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <7da1c182-db68-c813-1f3c-b936137deeb2@baylibre.com>
-Date:   Wed, 29 May 2019 12:08:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 29 May 2019 06:10:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=95Oxk8yU+7lW8gyKo1/2OpFJ/n7OwlhaWfOSt2Jh2II=; b=McFL6gJP1i+wIeMgFZ59Fim5k
+        IDvtMHIF5SfmGl1JMacxqRL2kGI/ky/ZVTBcnnEy/CQNZ2hAAONCEnX+fkx1ekitpHqEgNtef2Ly1
+        lUZgOdcJDtSaXcsG08P+kX5ymVDaVbuppat2lI9cTXVOUTE7Lh2BShA4KePoXw/lZUsMUeicU2s4R
+        0K7F0KAFRaGx60tJBrZwgVJ79szyvqAIz+0b1ytxjE9HIRBsjI1YU2NpwknMtpMjld/WuLEK4i1BY
+        xD0HoaZ5pHWInHch+tAZQRI9AW7CFXKgR+XGI1DmHu2qqYWJmctPFFMqfNSyVzdzSzIZYwtOA37ur
+        l0Rxt/jAg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVvXf-0008LP-VT; Wed, 29 May 2019 10:10:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 78560201A7E40; Wed, 29 May 2019 12:10:42 +0200 (CEST)
+Date:   Wed, 29 May 2019 12:10:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190529101042.GN2623@hirez.programming.kicks-ass.net>
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
+ <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+ <20190528153224.GE20758@fuggles.cambridge.arm.com>
+ <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+ <20190529091733.GA4485@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190527140206.30392-4-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529091733.GA4485@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/2019 16:02, Neil Armstrong wrote:
-> This patch adds basic support for :
-> - Amlogic G12B, which is very similar to G12A
-> - The HardKernel Odroid-N2 based on the S922X SoC
+On Wed, May 29, 2019 at 10:17:33AM +0100, Will Deacon wrote:
+> On Tue, May 28, 2019 at 07:32:28PM +0200, Peter Zijlstra wrote:
+
+> > 'funny' thing that, perf_sample_regs_user() seems to assume that
+> > anything with current->mm is in fact a user task, and that assumption is
+> > just plain wrong, consider use_mm().
 > 
-> The Amlogic G12B SoC is very similar with the G12A SoC, sharing
-> most of the features and architecture, but with these differences :
-> - The first CPU cluster only has 2xCortex-A53 instead of 4
-> - G12B has a second cluster of 4xCortex-A73
-> - Both cluster can achieve 2GHz instead of 1,8GHz for G12A
-> - CPU Clock architecture is difference, thus needing a different
->   compatible to handle this slight difference
-> - Supports a MIPI CSI input
-> - Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
+> Right, I suppose that was attempting to handle interrupt skid from the PMU
+> overflow?
+
+Nah, just a broken test to determine if there is userspace at all. It is
+mostly right, just not completely :-)
+
+> > So I'm thinking the right thing to do here is something like the below;
+> > umh should get PF_KTHREAD cleared when it passes exec(). And this should
+> > also fix the power splat I'm thinking.
+> > 
+> > ---
+> > 
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index abbd4b3b96c2..9929404b6eb9 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+> >  	if (user_mode(regs)) {
+> >  		regs_user->abi = perf_reg_abi(current);
+> >  		regs_user->regs = regs;
+> > -	} else if (current->mm) {
+> > +	} else if (!(current->flags & PF_KTHREAD) && current->mm) {
+> >  		perf_get_regs_user(regs_user, regs, regs_user_copy);
 > 
-> Actual support is done in the same way as for the GXM support, including
-> the G12A dtsi and redefining the CPU clusters.
-> Unlike GXM, the first cluster is different, thus needing to remove
-> the last 2 cpu nodes of the first cluster.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |   1 +
->  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 288 ++++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  82 +++++
->  3 files changed, 371 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index e129c03ced14..07b861fe5fa5 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> new file mode 100644
-> index 000000000000..48783ead8dfb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -0,0 +1,288 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +/dts-v1/;
-> +
+> Makes sense, but under which circumstances would we have a NULL mm here?
 
-[...]
+Dunno; I'm paranoid, and also:
 
-> +
-> +	hub_5v: regulator-hub_5v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "HUB_5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vcc_5v>;
-> +
-> +		/* Connected to the Hub CHIPENABLE, LOW sets low power state */
-> +		gpio = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	usb_pwr_en: regulator-usb_pwr_en {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "USB_PWR_EN";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&hub_5v>;
-> +
-> +		/* Connected to the microUSB port power enable */
-> +		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-
-[...]
-
-> +
-> +&usb {
-> +	status = "okay";
-> +	vbus-supply = <&usb_pwr_en>;
-> +};
-> +
-> +&usb2_phy0 {
-> +	phy-supply = <&vcc_5v>;
-> +};
-> +
-> +&usb2_phy1 {
-> +	phy-supply = <&vcc_5v>;
-> +};
-
-In fact, I need to fixup here :
-
-usb2_phy1 needs &hub_5v and regulator-usb_pwr_en depends on &vcc_5v instead...
-
-@Martin, can I still keep your reviewed-by for v5 ?
-
-Neil
-
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> new file mode 100644
-> index 000000000000..9e88e513b22d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> @@ -0,0 +1,82 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-
-[...]
-
-> +		};
-> +	};
-> +};
-> +
-> +&clkc {
-> +	compatible = "amlogic,g12b-clkc";
-> +};
-> 
+  mm/memcontrol.c:        if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
+  mm/vmacache.c:  return current->mm == mm && !(current->flags & PF_KTHREAD);
 
