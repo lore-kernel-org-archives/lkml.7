@@ -2,141 +2,263 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF98C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A78C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74F924305
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EEC24305
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 23:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559171398;
-	bh=RYgrpGQlV6JhNVFewZg8lfQgvdy68HtrQSwL8rOWAVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XdhA2DIcWJrJznjeHgJJuQqGZSWpykovPljqvmFTm6REoYnLWaQ/OC4guQfznMSRC
-	 r4zEoEAmQqHJAXeJS2D6FocC98qoQ6sO+kyW3oCI58HGpqtn6ol2/pVWcna8bauneO
-	 Oy4mEJkjU0FK0sWDoEODFSXyRDX1vIUKEMxyb0s8=
+	s=default; t=1559171407;
+	bh=R8Uh0FUtGG6diLPceT1jy3h+bc4R48dyzgDNhWatJ84=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kHBLuUq+uQk2J+yTTle3mCuPX2vLIG+GFPCVrdmsw8EW+2TaIQ/whVKBUVD5/rv5z
+	 14op0dpdW5Ao0tE3X7DrHtcpOC4Eo7Ip7uQpBwssHFl4V8qenawq5ZvFY4N+cR8y/f
+	 ZacgdKKxUpNCLzL7cXu/A/RuWKcCwcIf86ln0+d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfE2XJ5 (ORCPT
+        id S1726794AbfE2XJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 19:09:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbfE2XJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 19:09:56 -0400
-Received: from localhost (unknown [207.225.69.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 247012431F;
-        Wed, 29 May 2019 23:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559171395;
-        bh=RYgrpGQlV6JhNVFewZg8lfQgvdy68HtrQSwL8rOWAVc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vcn5pbNeMnyZtaY1Dky6rkxgROL4EN3gp+VJHTsLmtdV8lXVVCMY6PxcElXWfeVdm
-         GDbcBiViw66eGS7+ROANo46uH4/K5+D5UqUAz8o2Y0fGnvRRRP33XAiFMGfedITQfR
-         3uouPh+qo2WDtYIkx6bhGj6rXy+RyVJi2DmKYZV0=
-Date:   Wed, 29 May 2019 16:09:54 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
- ring buffer
-Message-ID: <20190529230954.GA3164@kroah.com>
-References: <20190528231218.GA28384@kroah.com>
- <20190528162603.GA24097@kroah.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
- <4031.1559064620@warthog.procyon.org.uk>
- <31936.1559146000@warthog.procyon.org.uk>
+        Wed, 29 May 2019 19:09:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47588 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfE2XJh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 19:09:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wk/SLJ+ymA7QXlObWHcZ8qPM7WGOzh2AMXrcwsp7zXM=; b=mUVvUDunnHhlsshP2uphxMiOBt
+        TNhWRPCZnIVrrAnQHH1+pjqdgGnsgEv5d47fc5y1kf+zWpNvQN9QdYJhERSyY+RQlb+8Mtax8zB3z
+        Ea7QeSmCPB+lwC34k8+ZcuTcUPNJPy80KXotWzIr2JLzAmw1T+iPDREUr6xBNrUIGjE8scOhQjXiu
+        EoLJYoMW8CtqJOBT3GGt762o4eDvt+UaDRY1Qr3rtQdXjkbkHB5pB/v2Mg7OKhKHOHY626bVDn+BO
+        PikN5Ggbm7SL/OCF4rMrO8EpNrj6oEY21QAoVTFEOCk7viViBdy6jxX6f5/1g4DPzFgmwIoyYFOZZ
+        nmroHcYw==;
+Received: from 177.132.232.81.dynamic.adsl.gvt.net.br ([177.132.232.81] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hW7hQ-0000lI-Gr; Wed, 29 May 2019 23:09:36 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hW7hN-0007TV-K8; Wed, 29 May 2019 20:09:33 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 04/10] scripts/sphinx-pre-install: always check if version is compatible with build
+Date:   Wed, 29 May 2019 20:09:26 -0300
+Message-Id: <298be71a71859282065697d5d9f6b911e59ec6a0.1559170790.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1559170790.git.mchehab+samsung@kernel.org>
+References: <cover.1559170790.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <31936.1559146000@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 05:06:40PM +0100, David Howells wrote:
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > > kref_put() could potentially add an unnecessary extra stack frame and would
-> > > seem to be best avoided, though an optimising compiler ought to be able to
-> > > inline if it can.
-> > 
-> > If kref_put() is on your fast path, you have worse problems (kfree isn't
-> > fast, right?)
-> > 
-> > Anyway, it's an inline function, how can it add an extra stack frame?
-> 
-> The call to the function pointer.  Hopefully the compiler will optimise that
-> away for an inlineable function.
+Call the script every time a make docs target is selected, on
+a simplified check mode.
 
-The function pointer only gets called for the last "put", and then kfree
-will be called so you should not have to worry about speed/stack frames
-at that point in time.
+With this change, the script will set two vars:
 
-> > > Are you now on the convert all refcounts to krefs path?
-> > 
-> > "now"?  Remember, I wrote kref all those years ago,
-> 
-> Yes - and I thought it wasn't a good idea at the time.  But this is the first
-> time you've mentioned it to me, let alone pushed to change to it, that I
-> recall.
+$min_version - obtained from `needs_sphinx` var inside
+	       conf.py (currently, '1.3')
 
-I bring up using a kref any time I see a usage that could use it as it
-makes it easier for people to understand and "know" you are doing your
-reference counting for your object "correctly".  It's an abstraction
-that is used to make it easier for us developers to understand.
-Otherwise you have to hand-roll the same logic here.  Yes, refcounts
-have made it easier to do it in your own (which was their goal), but you
-still don't have to do it "on your own".
+$rec_version - obtained from sphinx/requirements.txt.
 
-Anyway, I'll not push the issue here, if you want to stick to a
-refcount_t, that's enough for now.  We can worry about changing this
-later after you have debugged all the corner conditions :)
+With those changes, a target like "make htmldocs" will do:
 
-> > everyone should use
-> > it.  It saves us having to audit the same pattern over and over again.
-> > And, even nicer, it uses a refcount now, and as you are trying to
-> > reference count an object, it is exactly what this was written for.
-> > 
-> > So yes, I do think it should be used here, unless it is deemed to not
-> > fit the pattern/usage model.
-> 
-> kref_put() enforces a very specific destructor signature.  I know of places
-> where that doesn't work because the destructor takes more than one argument
-> (granted that this is not the case here).  So why does kref_put() exist at
-> all?  Why not kref_dec_and_test()?
+1) If no sphinx-build/sphinx-build3 is found, it will run
+   the script on normal mode as before, checking for all
+   system dependencies and providing install hints for the
+   needed programs and will abort the build;
 
-The destructor only takes one object pointer as you are finally freeing
-that object.  What more do you need/want to "know" at that point in
-time?
+2) If no sphinx-build/sphinx-build3 is found, but there is
+   a sphinx_${VER}/bin/activate file, and if
+   ${VER} >= $min_version (string comparation), it will
+   run in full mode, and will recommend to activate the
+   virtualenv. If there are multiple virtualenvs, it
+   will string sort the versions, recommending the
+   highest version and will abort the build;
 
-What would kref_dec_and_test() be needed for?
+3) If Sphinx is detected but has a version lower than
+   $min_version, it will run in full mode - with will
+   recommend creating a virtual env using sphinx/requirements.txt,
+   and will abort the build.
 
-> Why doesn't refcount_t get merged into kref, or vice versa?  Having both would
-> seem redundant.
+4) If Sphinx is detected and version is lower than
+   $rec_version, it will run in full mode and will
+   recommend creating a virtual env using sphinx/requirements.txt.
 
-kref uses refcount_t and provides a different functionality on top of
-it.  Not all uses of a refcount in the kernel is for object lifecycle
-reference counting, as you know :)
+   In this case, it **won't** abort the build.
 
-> Mind you, I've been gradually reverting atomic_t-to-refcount_t conversions
-> because it seems I'm not allowed refcount_inc/dec_return() and I want to get
-> at the point refcount for tracing purposes.
+5) If Sphinx is detected and version is equal or righer than
+   $rec_version it will return just after detecting the
+   version ("quick mode"), not checking if are there any
+   missing dependencies.
 
-That's not good, we should address that independently as you are loosing
-functionality/protection when doing that.
+Just like before, if one wants to install Sphinx from the
+distro, it has to call the script manually and use `--no-virtualenv`
+argument to get the hints for his OS:
 
-thanks,
+    You should run:
 
-greg k-h
+	sudo dnf install -y python3-sphinx python3-sphinx_rtd_theme
+
+While here, add a small help for the three optional arguments
+for the script.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/Makefile     |  5 +++++
+ scripts/sphinx-pre-install | 46 +++++++++++++++++++++++++-------------
+ 2 files changed, 35 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index e889e7cb8511..380e24053d6f 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -70,12 +70,14 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
+ 	$(abspath $(BUILDDIR)/$3/$4)
+ 
+ htmldocs:
++	@./scripts/sphinx-pre-install --version-check
+ 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
+ 
+ linkcheckdocs:
+ 	@$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,linkcheck,$(var),,$(var)))
+ 
+ latexdocs:
++	@./scripts/sphinx-pre-install --version-check
+ 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,latex,$(var),latex,$(var)))
+ 
+ ifeq ($(HAVE_PDFLATEX),0)
+@@ -87,14 +89,17 @@ pdfdocs:
+ else # HAVE_PDFLATEX
+ 
+ pdfdocs: latexdocs
++	@./scripts/sphinx-pre-install --version-check
+ 	$(foreach var,$(SPHINXDIRS), $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit;)
+ 
+ endif # HAVE_PDFLATEX
+ 
+ epubdocs:
++	@./scripts/sphinx-pre-install --version-check
+ 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,epub,$(var),epub,$(var)))
+ 
+ xmldocs:
++	@./scripts/sphinx-pre-install --version-check
+ 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,xml,$(var),xml,$(var)))
+ 
+ endif # HAVE_SPHINX
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index ded3e2ef3f8d..f001fc2fcf12 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -38,6 +38,7 @@ my $min_version;
+ 
+ my $pdf = 1;
+ my $virtualenv = 1;
++my $version_check = 0;
+ 
+ #
+ # List of required texlive packages on Fedora and OpenSuse
+@@ -277,20 +278,22 @@ sub check_sphinx()
+ 
+ 	die "$sphinx didn't return its version" if (!$cur_version);
+ 
+-	printf "Sphinx version %s (minimal: %s, recommended >= %s)\n",
+-		$cur_version, $min_version, $rec_version;
+-
+ 	if ($cur_version lt $min_version) {
+-		print "Warning: Sphinx version should be >= $min_version\n\n";
++		printf "ERROR: Sphinx version is %s. It should be >= %s (recommended >= %s)\n",
++		       $cur_version, $min_version, $rec_version;;
+ 		$need_sphinx = 1;
+ 		return;
+ 	}
+ 
+ 	if ($cur_version lt $rec_version) {
++		printf "Sphinx version %s\n", $cur_version;
+ 		print "Warning: It is recommended at least Sphinx version $rec_version.\n";
+-		print "         To upgrade, use:\n\n";
+ 		$rec_sphinx_upgrade = 1;
++		return;
+ 	}
++
++	# On version check mode, just assume Sphinx has all mandatory deps
++	exit (0) if ($version_check);
+ }
+ 
+ #
+@@ -575,14 +578,18 @@ sub check_distros()
+ 
+ sub check_needs()
+ {
+-	if ($system_release) {
+-		print "Detected OS: $system_release.\n";
+-	} else {
+-		print "Unknown OS\n";
+-	}
+-
+ 	# Check for needed programs/tools
+ 	check_sphinx();
++
++	if ($system_release) {
++		print "Detected OS: $system_release.\n\n";
++	} else {
++		print "Unknown OS\n\n";
++	}
++
++	print "To upgrade Sphinx, use:\n\n" if ($rec_sphinx_upgrade);
++
++	# Check for needed programs/tools
+ 	check_perl_module("Pod::Usage", 0);
+ 	check_program("make", 0);
+ 	check_program("gcc", 0);
+@@ -601,13 +608,14 @@ sub check_needs()
+ 	}
+ 	if ($need_sphinx || $rec_sphinx_upgrade) {
+ 		my $min_activate = "$ENV{'PWD'}/${virtenv_prefix}${min_version}/bin/activate";
+-                my @activates = glob "$ENV{'PWD'}/${virtenv_prefix}*/bin/activate";
++		my @activates = glob "$ENV{'PWD'}/${virtenv_prefix}*/bin/activate";
+ 
+-                @activates = sort {$b cmp $a} @activates;
++		@activates = sort {$b cmp $a} @activates;
+ 
+-		if (scalar @activates > 0 && $activates[0] ge $min_activate) {
+-			printf "\nNeed to activate virtualenv with:\n";
++		if ($need_sphinx && scalar @activates > 0 && $activates[0] ge $min_activate) {
++			printf "\nNeed to activate a compatible Sphinx version on virtualenv with:\n";
+ 			printf "\t. $activates[0]\n";
++			exit (1);
+ 		} else {
+ 			my $rec_activate = "$virtenv_dir/bin/activate";
+ 			my $virtualenv = findprog("virtualenv-3");
+@@ -646,8 +654,14 @@ while (@ARGV) {
+ 		$virtualenv = 0;
+ 	} elsif ($arg eq "--no-pdf"){
+ 		$pdf = 0;
++	} elsif ($arg eq "--version-check"){
++		$version_check = 1;
+ 	} else {
+-		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf>\n\n";
++		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
++		print "Where:\n";
++		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
++		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
++		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
+ 		exit -1;
+ 	}
+ }
+-- 
+2.21.0
+
