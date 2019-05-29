@@ -2,108 +2,102 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DABC28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87641C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C26921019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 11:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463D420644
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 12:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nzz9NhjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfE2LwU (ORCPT
+        id S1726736AbfE2MBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 07:52:20 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35274 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfE2LwU (ORCPT
+        Wed, 29 May 2019 08:01:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58832 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfE2MBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 07:52:20 -0400
-Received: by mail-qk1-f196.google.com with SMTP id l128so1235315qke.2;
-        Wed, 29 May 2019 04:52:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TdAznkRxrKE17L8clQuRvpoCe6A9H8ATfOCcLEenWWI=;
-        b=s0778B/4PRJRV9CHP8Na6IFf77DRRrjYvnHi2Ijrigok937pUAnGjgZrBN0AJlbyQw
-         ALs5JTxaeiWGsHVmFccnlIJca5vkxz9tVKMiv8aMDWkkjsmf1mFaYZDMe2OhGWE/H9NF
-         4A+PdgvfmUPMxgumo6xz3+rGQsM4OOhsYg5ox9Ua1r9ftcR3Si2Jn+rceTEZILu1KBRG
-         2pmR4YRHcGCdzmOGya6b0suS0e+hGVHP3PFngeaYW/HcwT+eXVKXZk9p/qHknpEI9R4u
-         YNu/I+7Pme4clYwYpCiiujSoogHlaAwvbCMjivm+nc/285DrMguCE3ZVkIX2ykrIvVNN
-         fNUA==
-X-Gm-Message-State: APjAAAWaXxHw2poBQLbjUXCnIHjGt565pHQ+68cmOKh1ypgY3oFItZvz
-        r9Mo+XsQ5YuVp7tEG70xNclGdRUmS8gaIal1YwE=
-X-Google-Smtp-Source: APXvYqzg32MH5decqHjgAwz1/0NlrkGcjLsvjWutrE0FtLUETA9tge85aPqT4FbVImIWliuZ7t/XSkbxBIATrB3QgH4=
-X-Received: by 2002:a37:bb85:: with SMTP id l127mr27927380qkf.285.1559130738893;
- Wed, 29 May 2019 04:52:18 -0700 (PDT)
+        Wed, 29 May 2019 08:01:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YPtPUNuDX71Si0dZ9/GsA4yGWJlCJusvLAiyqICMNXY=; b=Nzz9NhjF8qG2NqUpURT9rN5I8
+        GitsRNBIKtwiTOhTDSPZGCjNfpraqKc9ITf6ZzGPoNENCmd72vVOzeolX69T8ltrz/laD4QSfK/Sm
+        SrDJ0Ebsss5km5xqOMyCWbUtrJOvVLv0blhjI6uB8rkzbUC6AFnWJmc8R0eNi1PanZ9WrsJFl6wIW
+        M7DpaAaRIYsdynADtd2wKisFTn4pvvDjYEna0VzWY+AVxDSjUjyMSRuqv+rx24E1f482BrTqeP2yb
+        PKvkcpDaldigqqxfmU2+iFQunen/H62839PwiNEo0nBqX9o6nbtPUDUx0ULQt+gm1e790tkTTLHo3
+        Q60lmYXZA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hVxGi-0003lQ-Tc; Wed, 29 May 2019 12:01:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 45DDD201DA657; Wed, 29 May 2019 14:01:18 +0200 (CEST)
+Date:   Wed, 29 May 2019 14:01:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Dmitry Vyukov' <dvyukov@google.com>,
+        Marco Elver <elver@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 3/3] asm-generic, x86: Add bitops instrumentation for
+ KASAN
+Message-ID: <20190529120118.GQ2623@hirez.programming.kicks-ass.net>
+References: <20190528163258.260144-1-elver@google.com>
+ <20190528163258.260144-3-elver@google.com>
+ <20190528165036.GC28492@lakrids.cambridge.arm.com>
+ <CACT4Y+bV0CczjRWgHQq3kvioLaaKgN+hnYEKCe5wkbdngrm+8g@mail.gmail.com>
+ <CANpmjNNtjS3fUoQ_9FQqANYS2wuJZeFRNLZUq-ku=v62GEGTig@mail.gmail.com>
+ <20190529100116.GM2623@hirez.programming.kicks-ass.net>
+ <CANpmjNMvwAny54udYCHfBw1+aphrQmiiTJxqDq7q=h+6fvpO4w@mail.gmail.com>
+ <20190529103010.GP2623@hirez.programming.kicks-ass.net>
+ <CACT4Y+aVB3jK_M0-2D_QTq=nncVXTsNp77kjSwBwjqn-3hAJmA@mail.gmail.com>
+ <a0157a8d778a48b7ba3935f3e6840d30@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20190524201817.16509-1-jannh@google.com> <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
- <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com> <aa7f66ad-dab5-f0b6-ade9-7d3698d509a9@westnet.com.au>
-In-Reply-To: <aa7f66ad-dab5-f0b6-ade9-7d3698d509a9@westnet.com.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 29 May 2019 13:52:02 +0200
-Message-ID: <CAK8P3a2wA4R-V-W1+pPTaqVP7Dr=170G2a76AzASpx1xtRWj0Q@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-To:     Greg Ungerer <gregungerer@westnet.com.au>
-Cc:     Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0157a8d778a48b7ba3935f3e6840d30@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:56 PM Greg Ungerer
-<gregungerer@westnet.com.au> wrote:
-> On 27/5/19 11:38 pm, Jann Horn wrote:
-> > On Sat, May 25, 2019 at 11:43 PM Andrew Morton
-> > <akpm@linux-foundation.org> wrote:
-> >> On Fri, 24 May 2019 22:18:17 +0200 Jann Horn <jannh@google.com> wrote:
-> >>> load_flat_shared_library() is broken: It only calls load_flat_file() if
-> >>> prepare_binprm() returns zero, but prepare_binprm() returns the number of
-> >>> bytes read - so this only happens if the file is empty.
-> >>
-> >>> Instead, call into load_flat_file() if the number of bytes read is
-> >>> non-negative. (Even if the number of bytes is zero - in that case,
-> >>> load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-> >>>
-> >>> In addition, remove the code related to bprm creds and stop using
-> >>> prepare_binprm() - this code is loading a library, not a main executable,
-> >>> and it only actually uses the members "buf", "file" and "filename" of the
-> >>> linux_binprm struct. Instead, call kernel_read() directly.
-> >>>
-> >>> Cc: stable@vger.kernel.org
-> >>> Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-> >>> Signed-off-by: Jann Horn <jannh@google.com>
-> >>> ---
-> >>> I only found the bug by looking at the code, I have not verified its
-> >>> existence at runtime.
-> >>> Also, this patch is compile-tested only.
-> >>> It would be nice if someone who works with nommu Linux could have a
-> >>> look at this patch.
-> >>
-> >> 287980e49ffc was three years ago!  Has it really been broken for all
-> >> that time?  If so, it seems a good source of freed disk space...
-> >
-> > Maybe... but I didn't want to rip it out without having one of the
-> > maintainers confirm that this really isn't likely to be used anymore.
->
-> I have not used shared libraries on m68k non-mmu setups for
-> a very long time. At least 10 years I would think.
->
-> Regards
-> Greg
->
->
->
+On Wed, May 29, 2019 at 11:20:56AM +0000, David Laight wrote:
+> From: Dmitry Vyukov
+> > Sent: 29 May 2019 11:57
+
+> > Interesting. Does an address passed to bitops also should be aligned,
+> > or alignment is supposed to be handled by bitops themselves?
+> 
+> The bitops are defined on 'long []' and it is expected to be aligned.
+> Any code that casts the argument is likely to be broken on big-endian.
+> I did a quick grep a few weeks ago and found some very dubious code.
+> Not all the casts seemed to be on code that was LE only (although
+> I didn't try to find out what the casts were from).
+> 
+> The alignment trap on x86 could be avoided by only ever requesting 32bit
+> cycles - and assuming the buffer is always 32bit aligned (eg int []).
+> But on BE passing an 'int []' is just so wrong ....
+
+Right, but as argued elsewhere, I feel we should clean up the dubious
+code instead of enabling it.
