@@ -2,116 +2,145 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEB3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591DAC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E74523A84
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A3323A83
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esghtRAq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfE2Okz (ORCPT
+        id S1726534AbfE2Olp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:40:55 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21994 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfE2Oky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:40:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 07:40:54 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 29 May 2019 07:40:54 -0700
-Received: from [10.251.0.80] (kliang2-mobl.ccr.corp.intel.com [10.251.0.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 596C758054E;
-        Wed, 29 May 2019 07:40:53 -0700 (PDT)
-Subject: Re: [PATCH 2/9] perf/x86/intel: Basic support for metrics counters
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com
-References: <20190521214055.31060-1-kan.liang@linux.intel.com>
- <20190521214055.31060-3-kan.liang@linux.intel.com>
- <20190528121508.GS2606@hirez.programming.kicks-ass.net>
- <991ef247-8efe-bc21-a988-3d628733d915@linux.intel.com>
- <20190529072855.GX2623@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <dfaeb4b4-bf49-593d-b9e4-33dd8c050d4e@linux.intel.com>
-Date:   Wed, 29 May 2019 10:40:52 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 29 May 2019 10:41:45 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40166 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2Olp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:41:45 -0400
+Received: by mail-it1-f195.google.com with SMTP id h11so3932389itf.5;
+        Wed, 29 May 2019 07:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J07LSTl0M3xW1XshAcWkk9rLC9WTA+EH6ULXPA37iqk=;
+        b=esghtRAq0hclbHFappu5DChe6+pq4ipeNj55WOzrABUNqF9nRNLrYudPtI7ZASnuwZ
+         4Ocyod9xt7P7DBNYz9mCrWOcFOSkzOxB7lXGEwwfDeLuOgruY23PB1ppagr1p67uSmga
+         tHXfg0lljzrnJfOXJEe2gIZbiRGXq8sbOJcnOcPnou/gvnMaQf84bXTtZDQ5nVxSEEHV
+         mYROmsJD5XHP7mN8DRhzmHRFycf1/9+/Lq4PUn8MaRcGIXCHLi1ge2W7InoXzIOs/6qV
+         R7S78VfFmeVi/CdRhVPNFT1bA7n5xKsMV5g4jHF8/1LSmjvpQOqBTOWSrQ0XoTOq8n2H
+         4WPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J07LSTl0M3xW1XshAcWkk9rLC9WTA+EH6ULXPA37iqk=;
+        b=fM6gvDCNJwHJ/4JIMV1I+G4kTorctZjgzUP0qZodwYAHdb64uoPUwjrKfrv5vCkrQh
+         PyJwFW+SA4y8nYOrVC5ETTYSRg4LhgVWaxILO43yccINWHOWwX7UGZjClsUnE1LdRlEM
+         2rvJtUJuysdL2TGoK8+bEOdXKzuZmJyLEkxUAm0fZMwCBtefoH9eyE6mCyMK6p0xXyOc
+         RKCUT6Vi17iHgSw9T9M91kZYIkgS987Zos7kJW5EFVXdgIC/ijGrVMSHIQ+3sRkHCkBf
+         zQ64qcx/zoHrVHyAT34OFKIm98lGiDh9V9LJ4Tw+3oKI2V+XPfNsd0+VAOQr1QGcPlX+
+         Jr1Q==
+X-Gm-Message-State: APjAAAXsC3gqbEM+ZCZuc8tEIX8CJaJVjHmbDmJw92N/ogS/N7A8C5YA
+        HIdiwhI1+GnUeE2z4iVau0UgaCaypzd4WKj+ATQ=
+X-Google-Smtp-Source: APXvYqzs+2J8SnpsfE3xG53pI8tGtORcQMfKKmIXEBVL3aa4oBo7esvYoo9NmakBbTl0Ua4eVY4gDa+wsgZGH8kAUyc=
+X-Received: by 2002:a02:c608:: with SMTP id i8mr30213998jan.19.1559140904254;
+ Wed, 29 May 2019 07:41:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190529072855.GX2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190509020352.14282-1-masneyb@onstation.org> <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp> <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
+ <20190529013713.GA13245@basecamp> <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+ <20190529024648.GA13436@basecamp> <CAOCk7NpC93ACr4jFm7SBOKSvFJSDhq2byX6BAYPX29BuYEkWnQ@mail.gmail.com>
+ <20190529102822.GA15027@basecamp>
+In-Reply-To: <20190529102822.GA15027@basecamp>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 29 May 2019 08:41:31 -0600
+Message-ID: <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 4:28 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Tue, May 28, 2019 at 08:53:49PM -0600, Jeffrey Hugo wrote:
+> > On Tue, May 28, 2019 at 8:46 PM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
+> > > > > > Do you know if the nexus 5 has a video or command mode panel?  There
+> > > > > > is some glitchyness with vblanks and command mode panels.
+> > > > >
+> > > > > Its in command mode. I know this because I see two 'pp done time out'
+> > > > > messages, even on 4.17. Based on my understanding, the ping pong code is
+> > > > > only applicable for command mode panels.
+> > > >
+> > > > Actually, the ping pong element exists in both modes, but 'pp done
+> > > > time out' is a good indicator that it is command mode.
+> > > >
+> > > > Are you also seeing vblank timeouts?
+> > >
+> > > Yes, here's a snippet of the first one.
+> > >
+> > > [    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
+> > > [    2.556020] [CRTC:49:crtc-0] vblank wait timed out
+> > > [    2.556023] Modules linked in:
+> > > [    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
+> > > [    2.556038] Hardware name: Generic DT based system
+> > > [    2.556056] Workqueue: events deferred_probe_work_func
+> > > ...
+> > >
+> > > > Do you have busybox?
+> > > >
+> > > > Can you run -
+> > > > sudo busybox devmem 0xFD900614
+> > > > sudo busybox devmem 0xFD900714
+> > > > sudo busybox devmem 0xFD900814
+> > > > sudo busybox devmem 0xFD900914
+> > > > sudo busybox devmem 0xFD900A14
+> > >
+> > > # busybox devmem 0xFD900614
+> > > 0x00020020
+> >
+> > Ok, so CTL_0 path, command mode, ping pong 0, with the output going to DSI 1.
+> >
+> > Next one please:
+> >
+> > busybox devmem 0xFD912D30
+>
+> It's 0x00000000 on mainline and 4.17. I used the following script to
+> dump the entire mdp5 memory region and attached the dump from 4.17 and
+> 5.2rc1.
+>
 
+ok, 0 means autorefresh is not on.  Which is fine.  My next guess
+would be the vblank code checking the hardware vblank counter, which
+doesn't exist.
+In video mode, there is a frame counter which increments, which can be
+used as the vblank counter.  Unfortunately, that hardware isn't active
+in command mode, and there isn't an equivalent.
 
-On 5/29/2019 3:28 AM, Peter Zijlstra wrote:
-> On Tue, May 28, 2019 at 02:21:49PM -0400, Liang, Kan wrote:
->>
->>
->> On 5/28/2019 8:15 AM, Peter Zijlstra wrote:
->>> On Tue, May 21, 2019 at 02:40:48PM -0700, kan.liang@linux.intel.com wrote:
->>>> +/*
->>>> + * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
->>>> + * and another for the whole slots counter
->>>> + *
->>>> + * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
->>>> + * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
->>>> + * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
->>>> + * have the same configuration.
->>>> + */
->>>> +#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 17)
->>>> +#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
->>>> +#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
->>>> +#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
->>>> +#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
->>>> +#define INTEL_PMC_MSK_ANY_SLOTS			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
->>>> +						 INTEL_PMC_MSK_FIXED_SLOTS)
->>>> +static inline bool is_metric_idx(int idx)
->>>> +{
->>>> +	return idx >= INTEL_PMC_IDX_FIXED_METRIC_BASE && idx <= INTEL_PMC_IDX_TD_BE_BOUND;
->>>> +}
->>>
->>> Something like:
->>>
->>> 	return (idx >> INTEL_PMC_IDX_FIXED_METRIC_BASE) & 0xf;
->>>
->>> might be faster code... (if it wasn't for 64bit literals being a pain,
->>> it could be a simple test instruction).
->>>
->>
->> is_metric_idx() is not a mask. It's to check if the idx between 49 and 52.
-> 
-> blergh, indeed. Check that it compiles into a single branch though, if
-> it gets that wrong it needs hand holding.
-> 
-> One way would be to make these 48-51 and put BTS as 52, and then you do
-
-Can we put BTS 47?
-Now we only support L1 Topdown metrics. Probably there will be L2 
-Topdown metrics. I think we need some space to extend.
-
-
-Thanks,
-Kan
-
-> have a mask.
-> 
-> Another way would be to write it as:
-> 
-> 	(unsigned)(idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) < 4;
-> 
-> 
+So, the vblank code is going to read the register, and look for an
+update, which will never happen, thus it will timeout.  There is a
+backup path which uses timestamps (no hardware), which you can
+activate with a quick hack - make max_vblank_count = 0 at the
+following line
+https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c#L753
