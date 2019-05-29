@@ -2,162 +2,140 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA956C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D245DC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69092075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEF9208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJ5z3L0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfE2KNu convert rfc822-to-8bit (ORCPT
+        id S1726516AbfE2KO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:13:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16575 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfE2KNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:13:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 03:13:49 -0700
-X-ExtLoop1: 1
-Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
-  by orsmga003.jf.intel.com with ESMTP; 29 May 2019 03:13:45 -0700
-Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
- irsmsx110.ger.corp.intel.com (163.33.3.25) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 29 May 2019 11:13:43 +0100
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.108]) by
- irsmsx155.ger.corp.intel.com ([169.254.14.127]) with mapi id 14.03.0415.000;
- Wed, 29 May 2019 11:13:43 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-CC:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        "Eric Biggers" <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CAABf/AIAAAvkAgAGZnrD///dzgIAHjbaA///31ICAAC4VAIABBxmAgAAfuaCAAA5FAIAED8OAgAAYaYCAAINWgIAAbRaAgBjvMfCAACWEgIABZK1g
-Date:   Wed, 29 May 2019 10:13:43 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4CABA56@IRSMSX102.ger.corp.intel.com>
-References: <20190508113239.GA33324@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
- <20190509055915.GA58462@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
- <20190509084352.GA96236@gmail.com>
- <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
- <201905111703.5998DF5F@keescook> <20190512080245.GA7827@gmail.com>
- <201905120705.4F27DF3244@keescook>
- <2236FBA76BA1254E88B949DDB74E612BA4CA8DBF@IRSMSX102.ger.corp.intel.com>
- <20190528133347.GD19149@mit.edu>
-In-Reply-To: <20190528133347.GD19149@mit.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 29 May 2019 06:14:59 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37973 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfE2KO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:14:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 18so770485oij.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 03:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EAGedgacrWoeLyu0To12qxT1eO2alYayXGjZrLvwd+k=;
+        b=AJ5z3L0kCSDsX8kXY7FSc2jTfD36U/yC4myrub3XWsesly5t1RLKUIYsFwmIk7zsYu
+         G/ec1s4wKrkwSBj9pKJFzg44ijlFkepzOOVECZb78w2ln3vLeD60cOOUcrWjhvm/hcJj
+         942E4WXbRgAxpZvAmBSkQhzszZ5bK+LHKWUDvfALZUh1KIitzPIV9pDwHwczthbpj6dX
+         e6IMh8yRgg27ugsXJVH2tMCQrdblMWGwu8SuiAdRuTkI9USXONsl/TqcoWuCAoCtatnF
+         ox3+f8AKTVMwzO+PznlyqLjWcdMeTDySGBYIriLWSXL+bIV/wMyDDeS0qlMUH7F541ct
+         m+zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EAGedgacrWoeLyu0To12qxT1eO2alYayXGjZrLvwd+k=;
+        b=hut8IDzgUMIFFe5y3eOwS8d3hWaHxXKAeba+ZV6fNT0yLKtYzg074lZHG+vKCdQcl6
+         2INmXjtIZQlPMdTBmTcfvhoH5WYjEdfQQSUb+fBoI+FwkzFM+lXQUapptaLaJDQd+hRV
+         aUZFFd9xt7iqL0J5kodymaXOFxurx09rYBOEH9rmReXfMJXcHd0Cwo9WLH32xtn68qeJ
+         3gvHbe1IXn1rsjFyEqipgfIlEqg8RK6bNJc1v7gCFlKEBDdnpW15a6r19suXX/DggB6p
+         z6A2yTWdE2t4Mk9oz6wbwcF2kcDT4O5OI9IMQnsmzRyqFG13GM5oj77w+5krp9ZbWxK3
+         KdAA==
+X-Gm-Message-State: APjAAAUsU7LCaZIu1aaibGGGI0Nq+0c4lZTkr6nkgUSvYZ3qYn5W66yi
+        rVE28b5fnRDurPI54mSkbA+OTw==
+X-Google-Smtp-Source: APXvYqzycnDr7LSCH8lljP2nquWhzzkKaVjxa0t7sxxmmSebqcmDYlIZAEK+IFDcl6SuyoXkBJH5LA==
+X-Received: by 2002:a54:4f98:: with SMTP id g24mr6026696oiy.99.1559124897777;
+        Wed, 29 May 2019 03:14:57 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id w24sm5608786otk.74.2019.05.29.03.14.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 03:14:56 -0700 (PDT)
+Date:   Wed, 29 May 2019 18:14:45 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc:     Guodong Xu <guodong.xu@linaro.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>
+Subject: Re: [PATCH v2 00/11] dts: Update DT bindings for CoreSight
+ replicator and funnel
+Message-ID: <20190529101445.GC15808@leoy-ThinkPad-X240s>
+References: <20190508021902.10358-1-leo.yan@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508021902.10358-1-leo.yan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I confess I've kind of lost the plot on the performance requirements
-> at this point.  Instead of measuring and evaluating potential
-> solutions, can we try to approach this from the opposite direction and
-> ask what the requirements are?
-> 
-> What's the maximum number of CPU cycles that we are allowed to burn
-> such that we can meet the 1-2% overhead?
+On Wed, May 08, 2019 at 10:18:51AM +0800, Leo Yan wrote:
+> Since the DT bindings consolidatoins for CoreSight replicator and funnel
+> is ready for kernel v5.2 merge window [1], this patch set is to update
+> the related CoreSight DT bindings for platforms; IIUC, this patch set
+> will be safe for merging into kernel v5.2 because the dependency
+> patches in [1] will be landed into mainline kernel v5.2 cycle.
 
-This is a good question on which I have no answer, so I tried to play with
-performance numbers as much as I know. I don't know what is
-considered acceptable for a syscall path and I guess answer can also 
-be presented in two security configurations, like weak (less CPU cycles)
-and strong (more cycles). 
+[...]
 
-> 
-> And how many bits of uncertainty are we trying to present to the
-> attacker?  
+> Leo Yan (11):
+>   ARM: dts: hip04: Update coresight DT bindings
+>   ARM: dts: imx7s: Update coresight DT bindings
+>   ARM: dts: qcom-apq8064: Update coresight DT bindings
+>   ARM: dts: ste: Update coresight DT bindings
+>   ARM: dts: vexpress-v2p-ca15_a7: Update coresight DT bindings
+>   ARM: dts: qcom-msm8974: Update coresight DT bindings
+>   arm64: dts: hi6220: Update coresight DT bindings
+>   arm64: dts: juno: Update coresight DT bindings
+>   arm64: dts: qcom-msm8916: Update coresight DT bindings
+>   arm64: dts: sc9836: Update coresight DT bindings
+>   arm64: dts: sc9860: Update coresight DT bindings
 
-I think currently we are talking about 5 bits. Ideally maybe 8 bits,
-given that offset is new for each syscall, it should be enough to remove
-the "stability and predictability" feature of kernel thread stack that
-attackers rely on. If your chances of crashing kernel 255 from 256,
-you might figure some other attack path instead. 
+Gentle ping for maintainers.
 
-What's the minimum beyond we shouldn't bother?  (Perhaps
-> because rdtsc will give us that many bits?)  
+Hi Andy, David,
 
-Again, it is all about probabilities. 4 bits gives us success chance of
-1 in 16 (of not crashing kernel), this is already starting to be dangerous
-in my view, so maybe no less than 5?
+Could you pick up patches 03, 06, 09/11 for QCOM DT bindings?
 
-And does that change if
-> we vary the reseed window in terms of the number of system calls
-> between reseeding?
+Hi Sudeep,
 
-I think if we talk about prng, reseeding should be done periodically to 
-make sure we never overrun the safe generation period and also for 
-additional security (seeding with proper entropy).
-But the most important part is to have a distinct offset (random bits) between
-each consequent syscall.
- 
-> And what are the ideal parameters after which point we're just gilding
-> the lily?
+Could you pick up patches 05, 08/11 for Arm DT bindings?
 
-Not sure about ideal params for the whole combination here since security
-and performance are basically conflicting with each other (as usual). 
-So, that's why I was trying to propose to have two version of this:
-- one with tilt towards performance (rdtsc based)
-- one with tilt towards security (CRNG-based)
-And then let users choose what matters more for their workload. 
-For normal things like dektops, etc. CRNG based version won't provide
-any noticeable overhead. It might only matter for syscall sensitive workloads,
-which btw, most likely not enable quite a bunch of other security protections, 
-so I would say that for them to have even rdtsc() version is actually an 
-improvement in their defenses for stack (and basically no impact on performance).
+Hi Chunyan, Orson, Baolin,
 
-On related note: the current prng we have in kernel (prandom) is based on a
-*very old* style of prngs, which is basically 4 linear LFSRs xored together. 
-Nowadays, we have much more powerful prngs that show much better
-statistical and even security properties (not cryptographically secure, but still
-not so linear like the one above). 
-What is the reason why we still use a prng that is couple of decades away from the
-state of art in the area? It is actively used, especially by network stack,
-should we update it to smth that is more appropriate (speed would be comparable)?
+Could you pick up patches 10, 11/11 for Unisoc DT bindings?
 
-I am mostly talking about PCG-based generators:
-http://www.pcg-random.org/
+Thanks a lot for Shawn and Linus have picked up 02, 04/11 separately.
 
-If people are interested, I could put together a PoC and we have an expert here we can
-consult for providing calculations for min-entropy, HILL entropy and whatever 
-is requested. 
-
-Best Regards,
-Elena.
-
+Thanks,
+Leo Yan
