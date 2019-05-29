@@ -2,189 +2,105 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D17C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB23C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B918924074
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B819E24074
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:31:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h1/b3YNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfE2SaB (ORCPT
+        id S1727552AbfE2SbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:30:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44890 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfE2SaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:30:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 554F4AF55;
-        Wed, 29 May 2019 18:29:59 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@opensuse.org>
-Cc:     Michal Rostecki <mrostecki@opensuse.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
-        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf v4] libbpf: Return btf_fd for load_sk_storage_btf
-Date:   Wed, 29 May 2019 20:31:09 +0200
-Message-Id: <20190529183109.17317-1-mrostecki@opensuse.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 29 May 2019 14:31:01 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:44705 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfE2SbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:31:00 -0400
+Received: by mail-ua1-f67.google.com with SMTP id i48so1398031uae.11
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Icd3S6fysa6PQB1IvdBLYuy5pEg+pRKkO0zAPB11e+s=;
+        b=h1/b3YNFUzwwTW33Zipxw/L27jtJJFS/uoN5p2DdHA3M3G0nsuslv5HtLyXAslZXBF
+         YXAYkYJ+OdVsCg3Cs+bwX5YoW2csbYBr+38xCAWFrcpCvxMr33VPJrhXTHQcgYCjSgz1
+         pXEoQmXGAOMsFQDNtFtHcRBZEmaeM3orpTlPw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Icd3S6fysa6PQB1IvdBLYuy5pEg+pRKkO0zAPB11e+s=;
+        b=DjyrhD/LlNjEWOJqM6Oaa7Z1A1XBbv+OWKdxhX+xF2R1pgOJAYXX2MGsibuh+BI/2+
+         ub5b8cJope69dAY2RSij2+hinXpdgXm1JYJSnrodbxLewEUp3VDcOnGzh88ZF3fPFxOw
+         io7WipQ+7bJ8Rc0+XV6Rl7lVjtZ6HD5DV1qZEOpxcntpiB9RB42gJbg2B78Vv4ioMPGf
+         8TLZT0Ch++gZuIG+oMBgzuA5TDOaJJihaTyzk8RXl4wzYGts01a3AM4A9jiLBMcxoe4I
+         gnQtWkHQDE/KG3bmEo58Zgxz5TS4enrjhJpR+79lCMB0KDAUTRLUyI+Nhanc83iNLcKQ
+         Z1Mg==
+X-Gm-Message-State: APjAAAVCyARR8aCHjvFSUbcqx+9h9CbXaTJMb+ONQ4pGob/gDcsTHhle
+        PCUMXvmKmHuLEghLUC6Hmr0AWHAfx7s=
+X-Google-Smtp-Source: APXvYqzMFRTFeoNy9o/ALfb+tIOu1XQVvB3QdVx6XJLWGce6EIswMeNCLptBeAUvFayUpCOuuVslFQ==
+X-Received: by 2002:ab0:620e:: with SMTP id m14mr54418035uao.68.1559154654312;
+        Wed, 29 May 2019 11:30:54 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id l10sm13350uak.9.2019.05.29.11.30.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 11:30:52 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id q64so2620235vsd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 11:30:52 -0700 (PDT)
+X-Received: by 2002:a67:ebd6:: with SMTP id y22mr63801054vso.87.1559154652088;
+ Wed, 29 May 2019 11:30:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190218063730.26870-1-ms@dev.tdt.de>
+In-Reply-To: <20190218063730.26870-1-ms@dev.tdt.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 29 May 2019 11:30:39 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Viag00jL-QRLsnyDoXWT5KFyZ3TnMdTPSJ-dbuNNiFVQ@mail.gmail.com>
+Message-ID: <CAD=FV=Viag00jL-QRLsnyDoXWT5KFyZ3TnMdTPSJ-dbuNNiFVQ@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc2: Fix DMA cache alignment issues
+To:     Martin Schiller <ms@dev.tdt.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>,
+        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before this change, function load_sk_storage_btf expected that
-libbpf__probe_raw_btf was returning a BTF descriptor, but in fact it was
-returning an information about whether the probe was successful (0 or
-1). load_sk_storage_btf was using that value as an argument of the close
-function, which was resulting in closing stdout and thus terminating the
-process which called that function.
+Hi,
 
-That bug was visible in bpftool. `bpftool feature` subcommand was always
-exiting too early (because of closed stdout) and it didn't display all
-requested probes. `bpftool -j feature` or `bpftool -p feature` were not
-returning a valid json object.
+On Sun, Feb 17, 2019 at 10:37 PM Martin Schiller <ms@dev.tdt.de> wrote:
+>
+> Insert a padding between data and the stored_xfer_buffer pointer to
+> ensure they are not on the same cache line.
+>
+> Otherwise, the stored_xfer_buffer gets corrupted for IN URBs on
+> non-cache-coherent systems. (In my case: Lantiq xRX200 MIPS)
+>
+> Fixes: 3bc04e28a030 ("usb: dwc2: host: Get aligned DMA in a more supported way")
+> Fixes: 56406e017a88 ("usb: dwc2: Fix DMA alignment to start at allocated boundary")
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> ---
+>  drivers/usb/dwc2/hcd.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-This change renames the libbpf__probe_raw_btf function to
-libbpf__load_raw_btf, which now returns a BTF descriptor, as expected in
-load_sk_storage_btf.
+This patch has been in the back of my mind for a while bug I never got
+around to it.  Today I was debugging memory corruption problems when
+using a webcam on dwc2 on rk3288-veyron-jerry.  This patch appears to
+solve my problems nicely.  Thanks!
 
-v2:
-- Fix typo in the commit message.
-
-v3:
-- Simplify BTF descriptor handling in bpf_object__probe_btf_* functions.
-- Rename libbpf__probe_raw_btf function to libbpf__load_raw_btf and
-return a BTF descriptor.
-
-v4:
-- Fix typo in the commit message.
-
-Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
-Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
----
- tools/lib/bpf/libbpf.c          | 28 ++++++++++++++++------------
- tools/lib/bpf/libbpf_internal.h |  4 ++--
- tools/lib/bpf/libbpf_probes.c   | 13 ++++---------
- 3 files changed, 22 insertions(+), 23 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 197b574406b3..5d046cc7b207 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1645,14 +1645,16 @@ static int bpf_object__probe_btf_func(struct bpf_object *obj)
- 		/* FUNC x */                                    /* [3] */
- 		BTF_TYPE_ENC(5, BTF_INFO_ENC(BTF_KIND_FUNC, 0, 0), 2),
- 	};
--	int res;
-+	int btf_fd;
- 
--	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
--				    strs, sizeof(strs));
--	if (res < 0)
--		return res;
--	if (res > 0)
-+	btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
-+				      strs, sizeof(strs));
-+	if (btf_fd >= 0) {
- 		obj->caps.btf_func = 1;
-+		close(btf_fd);
-+		return 1;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1670,14 +1672,16 @@ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
- 		BTF_TYPE_ENC(3, BTF_INFO_ENC(BTF_KIND_DATASEC, 0, 1), 4),
- 		BTF_VAR_SECINFO_ENC(2, 0, 4),
- 	};
--	int res;
-+	int btf_fd;
- 
--	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
--				    strs, sizeof(strs));
--	if (res < 0)
--		return res;
--	if (res > 0)
-+	btf_fd = libbpf__load_raw_btf((char *)types, sizeof(types),
-+				      strs, sizeof(strs));
-+	if (btf_fd >= 0) {
- 		obj->caps.btf_datasec = 1;
-+		close(btf_fd);
-+		return 1;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
-index f3025b4d90e1..dfab8012185c 100644
---- a/tools/lib/bpf/libbpf_internal.h
-+++ b/tools/lib/bpf/libbpf_internal.h
-@@ -34,7 +34,7 @@ do {				\
- #define pr_info(fmt, ...)	__pr(LIBBPF_INFO, fmt, ##__VA_ARGS__)
- #define pr_debug(fmt, ...)	__pr(LIBBPF_DEBUG, fmt, ##__VA_ARGS__)
- 
--int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
--			  const char *str_sec, size_t str_len);
-+int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
-+			 const char *str_sec, size_t str_len);
- 
- #endif /* __LIBBPF_LIBBPF_INTERNAL_H */
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index 5e2aa83f637a..6635a31a7a16 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -133,8 +133,8 @@ bool bpf_probe_prog_type(enum bpf_prog_type prog_type, __u32 ifindex)
- 	return errno != EINVAL && errno != EOPNOTSUPP;
- }
- 
--int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
--			  const char *str_sec, size_t str_len)
-+int libbpf__load_raw_btf(const char *raw_types, size_t types_len,
-+			 const char *str_sec, size_t str_len)
- {
- 	struct btf_header hdr = {
- 		.magic = BTF_MAGIC,
-@@ -157,14 +157,9 @@ int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
- 	memcpy(raw_btf + hdr.hdr_len + hdr.type_len, str_sec, hdr.str_len);
- 
- 	btf_fd = bpf_load_btf(raw_btf, btf_len, NULL, 0, false);
--	if (btf_fd < 0) {
--		free(raw_btf);
--		return 0;
--	}
- 
--	close(btf_fd);
- 	free(raw_btf);
--	return 1;
-+	return btf_fd;
- }
- 
- static int load_sk_storage_btf(void)
-@@ -190,7 +185,7 @@ static int load_sk_storage_btf(void)
- 		BTF_MEMBER_ENC(23, 2, 32),/* struct bpf_spin_lock l; */
- 	};
- 
--	return libbpf__probe_raw_btf((char *)types, sizeof(types),
-+	return libbpf__load_raw_btf((char *)types, sizeof(types),
- 				     strs, sizeof(strs));
- }
- 
--- 
-2.21.0
-
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Cc: <stable@vger.kernel.org>
