@@ -2,119 +2,124 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFD3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0823C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEE8242CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CB8242BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxP3qDMI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2m6pNEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfE2WtV (ORCPT
+        id S1726498AbfE2Wyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:49:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36837 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfE2WtV (ORCPT
+        Wed, 29 May 2019 18:54:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39527 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfE2Wyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:49:21 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so757303pgb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:49:21 -0700 (PDT)
+        Wed, 29 May 2019 18:54:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 196so756053pgc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OtENOwKeHAEIcv8DtGFlUjGL0dIz5rExz7T3XsDoNZ8=;
-        b=kxP3qDMIzoaU9z24i/FcOYvYCdzGKPbAwkgXh8mqLAlP0h6YYo+/xQkfBD8OHVleuJ
-         DTOXqzHo7+JcQKVqt0qI9IZGLyOqPuB2qbQid2aOXHv4OAXoZlYdsSKK5MollRuLb9Ai
-         nZiV78bSfNZUhc6EzNm2LeUa0hFEVomLt1iCe3erhmMyjyBw1VknYFNCdHQXSa9q10d8
-         u+OD0jTmFnoiN7gNA0+uHiahUFn1N8IQOIEJCTnHGbMZpjm0FGw0Lsqly/w1z8yq46JC
-         2CvgPcS9CjCkPhSCXQ4dObIlGL4C+A87Fm7uL3juH7YzM7uIqfeTSDuW+iGxx5+jdD9d
-         UdTg==
+        h=from:to:cc:subject:date:message-id;
+        bh=jSKQLZwrhmnSigLvBb1y7bTu3QweUmRNvIXEtuAqha8=;
+        b=i2m6pNEp//jAEdoVKlUepZrqCrxOeGMnhLpqIgwHYjCZuF1j3b+HZSW8SKuGwf1zDt
+         0bhyfZQPgyaivPOywVbLs91S4hzEVqMfYIG3C5qkLNxgmWMxMkjSo7UKUzLzHVsKOgvb
+         2r2aceu5kfodmmZkfuuAz0O4G4lZv5m/9XI0on/lp9xeE60SF9e+JH3tFD3v0ohkBZoV
+         w+7veRU2N4ilJsskcWqJRw3UYj6ram4axcu3rhFFM6R8kQJtHkKuJlk17BYP4tYHHjY9
+         Ye2nbDpDWlhbhMpO7j+4cMkzYkUwtNMixcy88LTT3FUX0DPvQNzrI/nWRZXRQqSH6+ix
+         kraA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OtENOwKeHAEIcv8DtGFlUjGL0dIz5rExz7T3XsDoNZ8=;
-        b=GpjwmBrcwydPd0wn806Bu1aMAFD/YeiaY9icsBEcZ6HboxLwstp8aGGOEq13V7EbD5
-         enFfHNn5ZfnycGt/lIvVP4Jnr1DkRVrcBNnrQ1EQpvJI0vRwsbKNTDPQyuiU0Lq+BnTX
-         E0/Qwd0a1PzkQitdGzEfRw6rva7H+yUAd1gYEgJjlfroCjt5L60TPML8FoydvmZAxlAJ
-         MJIc8W0arNsug2YpaBjhmIrSH0JMLyfPJXqmwymK46W7H262FvV9Bp/eQqttPKdhEmke
-         O2W+jn4pRMx6MbirCBkYlmUHG5SA1a1kMIeY6FqQ6YzfEGSlUSAEZXTzbFxCzAxeCjQP
-         FDzw==
-X-Gm-Message-State: APjAAAVLtX3unKktQ97yIkNRkl9ZEtsZYImxWio4Ql5zqLHRqdp4SxOX
-        z1SpxTjY6wa7lU1suWlNWZM=
-X-Google-Smtp-Source: APXvYqxCUru4wlx+HuYWWTkP4QLXjDPZV6qos9q5kkqjQNUFnwCoUEdp8vdWj72Y5aCS7V0F6OIzFw==
-X-Received: by 2002:a62:4ed8:: with SMTP id c207mr44834pfb.241.1559170160671;
-        Wed, 29 May 2019 15:49:20 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id j72sm637334pje.12.2019.05.29.15.49.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 15:49:19 -0700 (PDT)
-Date:   Wed, 29 May 2019 15:48:07 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com,
-        vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        joro@8bytes.org, dwmw2@infradead.org, tony@atomide.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        treding@nvidia.com, keescook@chromium.org, iamjoonsoo.kim@lge.com,
-        wsa+renesas@sang-engineering.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        dann.frazier@canonical.com, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v3 1/2] dma-contiguous: Abstract
- dma_{alloc,free}_contiguous()
-Message-ID: <20190529224806.GA3270@Asurada-Nvidia.nvidia.com>
-References: <20190524040633.16854-1-nicoleotsuka@gmail.com>
- <20190524040633.16854-2-nicoleotsuka@gmail.com>
- <20190529183546.GA12747@archlinux-epyc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529183546.GA12747@archlinux-epyc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jSKQLZwrhmnSigLvBb1y7bTu3QweUmRNvIXEtuAqha8=;
+        b=FqKogu9YQtULHaa3x1zJVakdduC1zs1t+DaJ5Zl0TPiLpp9O94ZFFOxRIjRyRCuWfq
+         n1XACy/wx5cTSpqA/Mu9LuAJrQBliCrvkZvV17RU4VgkWTRvZY1CPaycH8AalEOF7yik
+         QODRLjeXXEBD+5cxRgBLnM4xi6oJiRnjj6LfbUqxrMWsidrgiPt/4mhs9KajwxtA5MvX
+         rEOuUyVLW5JcU0MECpM2na2mXCfuvxHh2bO6KUV0cO6s0ofZDhrXUQE78PYGWideBMT/
+         wH8FeB+PUdzFkp2cQTOL/ZiYOLNcwf5Mhap5UoN2QfhaZU+MIEQqA5Un/Z52RWQYhPfw
+         1ZKQ==
+X-Gm-Message-State: APjAAAVNEbe58EcUVeJQFjI/m2t2GaTc4466z5McjgaBSO1M5rVPA2Q9
+        OR4bwGkartFKtuqzQI/AvA==
+X-Google-Smtp-Source: APXvYqwxpupc9N7njSo6f+msnHvsDLFKL5Sq7Tzn0RujPl74omIALXvHB2HQqQuQvOJWf8s9Yh/43Q==
+X-Received: by 2002:a63:d157:: with SMTP id c23mr504819pgj.125.1559170471934;
+        Wed, 29 May 2019 15:54:31 -0700 (PDT)
+Received: from mylaptop.redhat.com ([2408:8207:782a:8650:1229:85cd:500a:f525])
+        by smtp.gmail.com with ESMTPSA id e12sm690266pfl.122.2019.05.29.15.54.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 15:54:31 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
+Date:   Thu, 30 May 2019 06:54:04 +0800
+Message-Id: <1559170444-3304-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+As for FOLL_LONGTERM, it is checked in the slow path
+__gup_longterm_unlocked(). But it is not checked in the fast path, which
+means a possible leak of CMA page to longterm pinned requirement through
+this crack.
 
-On Wed, May 29, 2019 at 11:35:46AM -0700, Nathan Chancellor wrote:
-> This commit is causing boot failures in QEMU on x86_64 defconfig:
-> 
-> https://travis-ci.com/ClangBuiltLinux/continuous-integration/jobs/203825363
-> 
-> Attached is a bisect log and a boot log with GCC (just to show it is not
-> a compiler thing).
-> 
-> My QEMU command line is:
-> 
-> qemu-system-x86_64 -m 512m \
->                    -drive file=images/x86_64/rootfs.ext4,format=raw,if=ide \
->                    -append 'console=ttyS0 root=/dev/sda' \
->                    -nographic \
->                    -kernel arch/x86_64/boot/bzImage
-> 
-> and the rootfs is available here:
-> 
-> https://github.com/ClangBuiltLinux/continuous-integration/raw/master/images/x86_64/rootfs.ext4
+Place a check in the fast path.
 
-Thanks for reporting the bug.
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/gup.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I am able to repro the issue with the given command and rootfs. The
-problem is that x86_64 has CONFIG_DMA_CMA=n so the helper function
-is blank on x86_64 while dma-direct should be platform independent.
+diff --git a/mm/gup.c b/mm/gup.c
+index f173fcb..00feab3 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2235,6 +2235,18 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 		local_irq_enable();
+ 		ret = nr;
+ 	}
++#if defined(CONFIG_CMA)
++	if (unlikely(gup_flags & FOLL_LONGTERM)) {
++		int i, j;
++
++		for (i = 0; i < nr; i++)
++			if (is_migrate_cma_page(pages[i])) {
++				for (j = i; j < nr; j++)
++					put_page(pages[j]);
++				nr = i;
++			}
++	}
++#endif
+ 
+ 	if (nr < nr_pages) {
+ 		/* Try to get the remaining pages with get_user_pages */
+-- 
+2.7.5
 
-A simple fix is to add alloc_pages_node() for !CONFIG_DMA_CMA. I'll
-submit a fix soon -- need to figure out a good way though. It seems
-that adding the fallback to the !CONFIG_DMA_CMA version would cause
-some recipe errors when building the kernel...
