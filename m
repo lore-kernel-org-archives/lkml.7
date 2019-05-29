@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CACFC28CC2
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD11FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1693424131
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F70224135
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mD+XA/C1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XrzLaKA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE2UMN (ORCPT
+        id S1726736AbfE2UMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:12:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37027 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbfE2UMN (ORCPT
+        Wed, 29 May 2019 16:12:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41359 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbfE2UMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:12:13 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a23so2353197pff.4
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:12:12 -0700 (PDT)
+        Wed, 29 May 2019 16:12:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q17so2338191pfq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 13:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=PGcw43rEtHfebZ1ykAg+O3oB9Ib7l867UUY+4n/dk/Q=;
-        b=mD+XA/C1RPTuYpF3bAQXZIvQOGFykfuFTGv2T4SJe7rylVcI8w0NDLRy0IsBLJ66C4
-         yVcYvfhvVtwxJaG6tBzpFRpEcG+JM4ZK+8yr+Vmhnc0lkQZ9h7mnNWkXgsjQ03iN9T3Y
-         xn9BTzPrq4mJgfWOD9cwdHXpGjo9qYZ06UsdU=
+        bh=0aft1pCaWtRYtnkCVrHz1gsURga5CiN4SjNK2Yoiqfs=;
+        b=XrzLaKA5MBHx0xlQKOcw3TIc85QvkhgJkO2JlDacDh+XCgUjABQyymyiZ/G560P5jJ
+         HkAij558NkgyQQddecvDdQLSq5ZIicJMj+V7FdjS/5Qp/CTG9jIYFMaRFN3A7NFwUjgi
+         FNTYdjrs48vkuDxAgacSirUU/cz2L2J9fobnY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=PGcw43rEtHfebZ1ykAg+O3oB9Ib7l867UUY+4n/dk/Q=;
-        b=DlIztW/YtrpBq43ZXSP5AzCsN/9cobZ3Gm9DZ9GC9TsU1vjKGe+HAUaFRAV7E0s1pd
-         jHnXXwgF6FGAXG1QL/N00KlcYzyz+4YUpTr2yCEN2AEX//cwJnEzAll6X1O5jMFRWNvt
-         vYTgyP8aDTbzP0Dng6xCNir+e6DPuIS9nuVWvIlQtb1LYnzOfGkocF+r2fR9XjW+KP4s
-         F6CRQ0ecGq88X1eX5csqKpInPgUn4J3dKxIWzoQcrmRrOQhLoWvREEgJ1qiHf70fqlp3
-         h0Fskaf5veMAGJ5j42WpvX23tpdZHdMq79RtFxCsSZ2XTStO/RAVh8rpaEwBnHc7Cl4F
-         F6xQ==
-X-Gm-Message-State: APjAAAXd3z1ewpi5uO1mkbG1yQ4DFjOxiB3hGbiTGgpWAjC7xaI6PR5W
-        MZ0WEOzexkhJI5ruH3RoC/zPeg==
-X-Google-Smtp-Source: APXvYqwDEJpc5XVklT3bHvSVgN9OxPIFPApr20V/GjXll3oEfIoQdqDbKTvTIc6ODp034anrn4Q3IQ==
-X-Received: by 2002:a63:f551:: with SMTP id e17mr11828943pgk.329.1559160732491;
-        Wed, 29 May 2019 13:12:12 -0700 (PDT)
+        bh=0aft1pCaWtRYtnkCVrHz1gsURga5CiN4SjNK2Yoiqfs=;
+        b=gX6fb4grNopRzpAxZbk2Qk/qEPbnTHYdH3dt+woH2oPE/zzsQOy54JVLSu81+U2+Tw
+         0EawgyRyGwz7Cz9yZGZnSmqZwSsxjSBDUyeCFnfCcQE9QEDCLaVXPvJo8zGHBI431/h2
+         NSVZI6J8YK2xRPupLDuHeFf20GoOd1CCq/nSGbuTeeQSOZ/W2ougyfH0aM7NcK4bp9pE
+         ntbQTsekWoF/cXEY/w1oS3bhCc9v04lg6EEd3Q6pd9Rl6vGczQOgQJHTsK2TsgpqnNtC
+         70UJ2K8iwSdj8Od551E49yaUEHKbSb/ThkXtMm9bLiu+Lw2sX8wTVx5evEH2xJQ412AX
+         Zfng==
+X-Gm-Message-State: APjAAAX3jZsLLVavsx6HBD90GWe63/ENOlI+QH1ZukrE9ASkeX5nvV8F
+        PfbZ09jlB0W91VHtH1CunYnMdA==
+X-Google-Smtp-Source: APXvYqwc7/sGYBIou0XJOLY+/Ol3XK8SIbVohsGySQ6NBMh2dCNE0NA9cvRsEXWPqWrlHnSoWF5LlQ==
+X-Received: by 2002:aa7:8d81:: with SMTP id i1mr126561827pfr.244.1559160746780;
+        Wed, 29 May 2019 13:12:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j2sm494584pfb.157.2019.05.29.13.12.11
+        by smtp.gmail.com with ESMTPSA id d9sm220941pgj.34.2019.05.29.13.12.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 13:12:11 -0700 (PDT)
-Date:   Wed, 29 May 2019 13:12:10 -0700
+        Wed, 29 May 2019 13:12:25 -0700 (PDT)
+Date:   Wed, 29 May 2019 13:12:25 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Alexandre Ghiti <alex@ghiti.fr>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -71,25 +71,25 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 11/14] mips: Adjust brk randomization offset to fit
- generic version
-Message-ID: <201905291311.7E88A71@keescook>
+Subject: Re: [PATCH v4 12/14] mips: Replace arch specific way to determine
+ 32bit task with generic version
+Message-ID: <201905291312.7B8EBE955@keescook>
 References: <20190526134746.9315-1-alex@ghiti.fr>
- <20190526134746.9315-12-alex@ghiti.fr>
+ <20190526134746.9315-13-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190526134746.9315-12-alex@ghiti.fr>
+In-Reply-To: <20190526134746.9315-13-alex@ghiti.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 26, 2019 at 09:47:43AM -0400, Alexandre Ghiti wrote:
-> This commit simply bumps up to 32MB and 1GB the random offset
-> of brk, compared to 8MB and 256MB, for 32bit and 64bit respectively.
+On Sun, May 26, 2019 at 09:47:44AM -0400, Alexandre Ghiti wrote:
+> Mips uses TASK_IS_32BIT_ADDR to determine if a task is 32bit, but
+> this define is mips specific and other arches do not have it: instead,
+> use !IS_ENABLED(CONFIG_64BIT) || is_compat_task() condition.
 > 
-> Suggested-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
@@ -97,36 +97,30 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  arch/mips/mm/mmap.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  arch/mips/mm/mmap.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 > diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-> index ffbe69f3a7d9..c052565b76fb 100644
+> index c052565b76fb..900670ea8531 100644
 > --- a/arch/mips/mm/mmap.c
 > +++ b/arch/mips/mm/mmap.c
-> @@ -16,6 +16,7 @@
->  #include <linux/random.h>
+> @@ -17,6 +17,7 @@
 >  #include <linux/sched/signal.h>
 >  #include <linux/sched/mm.h>
-> +#include <linux/sizes.h>
+>  #include <linux/sizes.h>
+> +#include <linux/compat.h>
 >  
 >  unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
 >  EXPORT_SYMBOL(shm_align_mask);
-> @@ -189,11 +190,11 @@ static inline unsigned long brk_rnd(void)
->  	unsigned long rnd = get_random_long();
+> @@ -191,7 +192,7 @@ static inline unsigned long brk_rnd(void)
 >  
 >  	rnd = rnd << PAGE_SHIFT;
-> -	/* 8MB for 32bit, 256MB for 64bit */
-> +	/* 32MB for 32bit, 1GB for 64bit */
->  	if (TASK_IS_32BIT_ADDR)
-> -		rnd = rnd & 0x7ffffful;
-> +		rnd = rnd & SZ_32M;
+>  	/* 32MB for 32bit, 1GB for 64bit */
+> -	if (TASK_IS_32BIT_ADDR)
+> +	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
+>  		rnd = rnd & SZ_32M;
 >  	else
-> -		rnd = rnd & 0xffffffful;
-> +		rnd = rnd & SZ_1G;
->  
->  	return rnd;
->  }
+>  		rnd = rnd & SZ_1G;
 > -- 
 > 2.20.1
 > 
