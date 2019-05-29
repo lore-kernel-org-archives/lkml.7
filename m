@@ -2,174 +2,143 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA3BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB001242AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:43:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HNJdtYlR"
+	by mail.kernel.org (Postfix) with ESMTP id 26825242BD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559169868;
+	bh=aKHSIkDbzxATBUyOwATnE+u9n6O5//MnT+XxsgiEgMw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=In4nV7F+rIa7j4y518Odur6ra6jb+P5dnDkwHzqS7evok+HU6KWJFVrd5TyOm0wJk
+	 kUNPXi28UGvJdlQTppbkwfw4sM89cKGCK+oqFQZ3xiI49PaBbnNf/JK9gYlwZF5BJu
+	 cieThaBr4YtTdbeqShRMCOB9ZRqijLLblo8u1x88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfE2Wn4 (ORCPT
+        id S1726652AbfE2Wo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:43:56 -0400
-Received: from mail-ot1-f74.google.com ([209.85.210.74]:51000 "EHLO
-        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbfE2Wnz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:43:55 -0400
-Received: by mail-ot1-f74.google.com with SMTP id g22so1840830otp.17
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=nIbdDpuiUQjZb4OOVtvUELzofH+r331C0gYmQQjTD8s=;
-        b=HNJdtYlRXOacnDqZhFy07seNksTSHxkHLKaCslX7zj6rNoT61Fe3agZ9GMweLxm4k1
-         KUFhb8uxfLZd6zpKnu5nfY+N5Gcg8QqPi4CmM7CHHCCdK11GbDIuHO7v7Ph8fSjl2vKk
-         oSrUC7+UAUj1nIDVX/A0Mr1uB/4SSmSN0UMODku96Eof0v8EvLCyBS3BqeprcAM9s2Q7
-         Bki5cgH8N3S4m+el+INbFHbEV80SD9bAh1oiuxG7EWu/XvInbZgyLCZT77qoRCGsh/rs
-         Th93kSlraPYtinNoWgj6RXL4YweWmGRqJYAucOHDeUWPd9KjPaBGUgxSpmbPKM45YVkb
-         JK4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=nIbdDpuiUQjZb4OOVtvUELzofH+r331C0gYmQQjTD8s=;
-        b=k854ojELn86lfqV85bQWsuFsQJDyMFZDvbl9V9DdzypmyZ1w+HU3HzKyRJp6XrBH09
-         k9dpzJNoqi/aL2q4e51oJUgBGWztq7UA1OzKX1tF3oi15gpn4djh7E2F9pL26Lw19+bZ
-         eDvI5B+FIFG+Z5ETWFWQBJeV2/ocp5xEnvzrKEy9ZoPwT0YnKCHK+QM6dOAhHOh5Ri0T
-         gc0rVPGI8Z0X2SgvojOwVnkXX+6nAjSNnTQ8+Rg8V+pDcCoZgku+B7TFxmUxQwGZXw7c
-         yQETOXa9OvWDj9v9OHayLgulRzjUBuRuat1pqfdzKyY4JepT7hHdWpN5ng6c+trcPdM7
-         mjeQ==
-X-Gm-Message-State: APjAAAXG8j3lNwB8G3shB+jp1LFnCmxywFdOUf8WF1l/y49RSrQHY/Nh
-        6mZobflvEIJYyp0WC5pw4Ie8ftBDDYQ=
-X-Google-Smtp-Source: APXvYqzcHO7uG6P+zg1K9CqC2JHSf3+xaWgVWc+e+9Xnzfzz5jFVoGyxdER7ys0iGExAmYRdjroxX3SMGsY=
-X-Received: by 2002:aca:4208:: with SMTP id p8mr479023oia.105.1559169834858;
- Wed, 29 May 2019 15:43:54 -0700 (PDT)
-Date:   Wed, 29 May 2019 15:43:50 -0700
-Message-Id: <20190529224350.6460-1-mikewu@google.com>
+        Wed, 29 May 2019 18:44:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfE2Wo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 18:44:27 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F55242B7;
+        Wed, 29 May 2019 22:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559169865;
+        bh=aKHSIkDbzxATBUyOwATnE+u9n6O5//MnT+XxsgiEgMw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Lua8D0OEdQGWNihWIIxnwi8g2DSd4p3FPHXUy/wPDm2mJJFGtr9iud1QVtqcVZ6nY
+         JjU1tC6/svRlClz2RLkeEg487A1MsvGqcAmQhInkA6731FKKDXGUVB4BtZZvHthQLM
+         YtliyN5/GyYmIF4EAyFC4b2Zxh+Ilh06OTNDKszc=
+Date:   Wed, 29 May 2019 15:44:24 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     axboe@kernel.dk, hch@lst.de, peterz@infradead.org, oleg@redhat.com,
+        gkohli@codeaurora.org, mingo@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_io: fix a crash in do_task_dead()
+Message-Id: <20190529154424.c0fe2758cf5af42ff258714a@linux-foundation.org>
+In-Reply-To: <1559156813-30681-1-git-send-email-cai@lca.pw>
+References: <1559156813-30681-1-git-send-email-cai@lca.pw>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH] Allow to exclude specific file types in LoadPin
-From:   Ke Wu <mikewu@google.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, Ke Wu <mikewu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel already provide MODULE_SIG and KEXEC_VERIFY_SIG to
-make sure loaded kernel module and kernel image are trusted. This
-patch adds a kernel command line option "loadpin.exclude" which
-allows to exclude specific file types from LoadPin. This is useful
-when people want to use different mechanisms to verify module and
-kernel image while still use LoadPin to protect the integrity of
-other files kernel loads.
+On Wed, 29 May 2019 15:06:53 -0400 Qian Cai <cai@lca.pw> wrote:
 
-Signed-off-by: Ke Wu <mikewu@google.com>
----
- Documentation/admin-guide/LSM/LoadPin.rst | 10 ++++++
- security/loadpin/loadpin.c                | 37 +++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+> The commit 0619317ff8ba ("block: add polled wakeup task helper")
+> replaced wake_up_process() with blk_wake_io_task() in
+> end_swap_bio_read() which triggers a crash when running heavy swapping
+> workloads.
+> 
+> [T114538] kernel BUG at kernel/sched/core.c:3462!
+> [T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
+> [T114538] Call trace:
+> [T114538]  do_task_dead+0xf0/0xf8
+> [T114538]  do_exit+0xd5c/0x10fc
+> [T114538]  do_group_exit+0xf4/0x110
+> [T114538]  get_signal+0x280/0xdd8
+> [T114538]  do_notify_resume+0x720/0x968
+> [T114538]  work_pending+0x8/0x10
+> 
+> This is because shortly after set_special_state(TASK_DEAD),
+> end_swap_bio_read() is called from an interrupt handler that revive the
+> task state to TASK_RUNNING causes __schedule() to return and trip the
+> BUG() later.
+> 
+> [  C206] Call trace:
+> [  C206]  dump_backtrace+0x0/0x268
+> [  C206]  show_stack+0x20/0x2c
+> [  C206]  dump_stack+0xb4/0x108
+> [  C206]  blk_wake_io_task+0x7c/0x80
+> [  C206]  end_swap_bio_read+0x22c/0x31c
+> [  C206]  bio_endio+0x3d8/0x414
+> [  C206]  dec_pending+0x280/0x378 [dm_mod]
+> [  C206]  clone_endio+0x128/0x2ac [dm_mod]
+> [  C206]  bio_endio+0x3d8/0x414
+> [  C206]  blk_update_request+0x3ac/0x924
+> [  C206]  scsi_end_request+0x54/0x350
+> [  C206]  scsi_io_completion+0xf0/0x6f4
+> [  C206]  scsi_finish_command+0x214/0x228
+> [  C206]  scsi_softirq_done+0x170/0x1a4
+> [  C206]  blk_done_softirq+0x100/0x194
+> [  C206]  __do_softirq+0x350/0x790
+> [  C206]  irq_exit+0x200/0x26c
+> [  C206]  handle_IPI+0x2e8/0x514
+> [  C206]  gic_handle_irq+0x224/0x228
+> [  C206]  el1_irq+0xb8/0x140
+> [  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
+> [  C206]  do_task_dead+0x88/0xf8
+> [  C206]  do_exit+0xd5c/0x10fc
+> [  C206]  do_group_exit+0xf4/0x110
+> [  C206]  get_signal+0x280/0xdd8
+> [  C206]  do_notify_resume+0x720/0x968
+> [  C206]  work_pending+0x8/0x10
+> 
+> Before the offensive commit, wake_up_process() will prevent this from
+> happening by taking the pi_lock and bail out immediately if TASK_DEAD is
+> set.
+> 
+> if (!(p->state & TASK_NORMAL))
+> 	goto out;
 
-diff --git a/Documentation/admin-guide/LSM/LoadPin.rst b/Documentation/admin-guide/LSM/LoadPin.rst
-index 32070762d24c..716ad9b23c9a 100644
---- a/Documentation/admin-guide/LSM/LoadPin.rst
-+++ b/Documentation/admin-guide/LSM/LoadPin.rst
-@@ -19,3 +19,13 @@ block device backing the filesystem is not read-only, a sysctl is
- created to toggle pinning: ``/proc/sys/kernel/loadpin/enabled``. (Having
- a mutable filesystem means pinning is mutable too, but having the
- sysctl allows for easy testing on systems with a mutable filesystem.)
-+
-+It's also possible to exclude specific file types from LoadPin using kernel
-+command line option "``loadpin.exclude``". By default, all files are
-+included, but they can be excluded using kernel command line option such
-+as "``loadpin.exclude=kernel-module,kexec-image``". This allows to use
-+different mechanisms such as ``CONFIG_MODULE_SIG`` and
-+``CONFIG_KEXEC_VERIFY_SIG`` to verify kernel module and kernel image while
-+still use LoadPin to protect the integrity of other files kernel loads. The
-+full list of valid file types can be found in ``kernel_read_file_str``
-+defined in ``include/linux/fs.h``.
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index 055fb0a64169..8ee0c58fea40 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -45,6 +45,8 @@ static void report_load(const char *origin, struct file *file, char *operation)
- }
- 
- static int enforce = IS_ENABLED(CONFIG_SECURITY_LOADPIN_ENFORCE);
-+static char *exclude_read_files[READING_MAX_ID];
-+static int ignore_read_file_id[READING_MAX_ID];
- static struct super_block *pinned_root;
- static DEFINE_SPINLOCK(pinned_root_spinlock);
- 
-@@ -129,6 +131,12 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id)
- 	struct super_block *load_root;
- 	const char *origin = kernel_read_file_id_str(id);
- 
-+	/* If the file id is excluded, ignore the pinning. */
-+	if ((unsigned int)id < READING_MAX_ID && ignore_read_file_id[id]) {
-+		report_load(origin, file, "pinning-excluded");
-+		return 0;
-+	}
-+
- 	/* This handles the older init_module API that has a NULL file. */
- 	if (!file) {
- 		if (!enforce) {
-@@ -187,10 +195,37 @@ static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(kernel_load_data, loadpin_load_data),
- };
- 
-+static void parse_exclude(void)
-+{
-+	int i, j;
-+	char *cur;
-+
-+	for (i = 0; i < ARRAY_SIZE(exclude_read_files); i++) {
-+		cur = exclude_read_files[i];
-+		if (!cur)
-+			break;
-+		if (*cur == '\0')
-+			continue;
-+
-+		for (j = 0; j < ARRAY_SIZE(kernel_read_file_str); j++) {
-+			if (strcmp(cur, kernel_read_file_str[j]) == 0) {
-+				pr_info("excluding: %s\n",
-+					kernel_read_file_str[j]);
-+				ignore_read_file_id[j] = 1;
-+				/*
-+				 * Can not break, because one read_file_str
-+				 * may map to more than on read_file_id.
-+				 */
-+			}
-+		}
-+	}
-+}
-+
- static int __init loadpin_init(void)
- {
- 	pr_info("ready to pin (currently %senforcing)\n",
- 		enforce ? "" : "not ");
-+	parse_exclude();
- 	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");
- 	return 0;
- }
-@@ -203,3 +238,5 @@ DEFINE_LSM(loadpin) = {
- /* Should not be mutable after boot, so not listed in sysfs (perm == 0). */
- module_param(enforce, int, 0);
- MODULE_PARM_DESC(enforce, "Enforce module/firmware pinning");
-+module_param_array_named(exclude, exclude_read_files, charp, NULL, 0);
-+MODULE_PARM_DESC(exclude, "Exclude pinning specific read file types");
--- 
-2.22.0.rc1.257.g3120a18244-goog
+Nice description, thanks.
+
+And...  ouch.  blk_wake_io_task() is a scary thing - changing a task to
+TASK_RUNNING state from interrupt context.  I wonder whether the
+assumptions which that is making hold true in all situations even after
+this change.
+
+Is polled block IO important enough for doing this stuff?
+
+> Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
+
+That will be needing a cc:stable, no?
+
+> ...
+>
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -140,7 +140,8 @@ static void end_swap_bio_read(struct bio *bio)
+>  	unlock_page(page);
+>  	WRITE_ONCE(bio->bi_private, NULL);
+>  	bio_put(bio);
+> -	blk_wake_io_task(waiter);
+> +	/* end_swap_bio_read() could be called from an interrupt handler. */
+> +	wake_up_process(waiter);
+>  	put_task_struct(waiter);
+>  }
 
