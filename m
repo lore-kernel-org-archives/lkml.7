@@ -2,156 +2,160 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61545C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B58C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2635E21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:19:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnONe+iz"
+	by mail.kernel.org (Postfix) with ESMTP id E32C1216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 00:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfE2ATI (ORCPT
+        id S1727092AbfE2AWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 20:19:08 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42074 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfE2ATH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 20:19:07 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 188so614377ljf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 17:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtTsiX9fLP1ilIjEBEUD3JJBC+K61VnyY/gr7l2/6Ws=;
-        b=NnONe+izAdPLfKUy8Po++z1ngR/rXmo0Qsl+xByZnGpvVdobMUqZHmA5KwfW7WvWn+
-         3ANkzwb2vuN5lZMvzrHLkb+z4R+UVi8444eOuoN5YW4HeBzb8Z2ZJAWD69jp6XUnHar1
-         +qNsraJtJTttKc32/+WD3i0TVrlFXtFKXk+jc37zgkA+cqBcCfGpqCAMo35/NJ4l2bsd
-         O12WI/FQQAfYCWItMDxaZTQFN3AKY88Rif42fUDNgbOVSGUJge4tIMx2SCB0GioKjJXY
-         9eQvgJudtOsEagr/IGzUNyv1kzMbDwpA4Ln4bQ/v5PcIdgTOKT6D+P/I4DS1JyUEU/X+
-         T/FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtTsiX9fLP1ilIjEBEUD3JJBC+K61VnyY/gr7l2/6Ws=;
-        b=R9A1sVo7Syju7LFHbOvaPn0olXhbCD7rbf3mdsipqd7a2ZUTQE0/Iv6JrRgOpKE7ih
-         f/M0Zx5xaQOKk/kUzF5035QjUmFL5/Y/IIU2h8lA30b5Kondk09zT6hDmW4mX14Ip3Kh
-         /3VYFDMx2XqhcTRzYmaw4XhLtnWpw438E4mN3kCTzEKlodGQepZanxIXhvnehJpc5E0q
-         k6myGs/BwHIKZTjU5/L8po/wHdp3GP8iuJsW5QX200wsXArZx2c2Q5Y1Jhk32VttsQ3C
-         gRdfZPfYavW7knUm/E34xee2/0MUPpSjquIaqR2XnM/8ykD1RIGdyT2y7PRgk1a08Q6C
-         DqPw==
-X-Gm-Message-State: APjAAAX2432hNA4nUjFZMyVnOhgQIdwXk+ZNt7ijSvld7X7HbpTJCYZB
-        wcLZTDtE+DNBZU2ixIS5X+QWXU4es2oEvZ7+XLQ=
-X-Google-Smtp-Source: APXvYqwplNqkarrINTuU9IxbWBiqARqN45Gt9GkeoXDEmXe+Phow9DEhwG8Xi+THEJBYMpPcbgnAI2uVS2yJev3oqO0=
-X-Received: by 2002:a2e:9b54:: with SMTP id o20mr4446799ljj.95.1559089145667;
- Tue, 28 May 2019 17:19:05 -0700 (PDT)
+        Tue, 28 May 2019 20:22:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26926 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbfE2AWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 28 May 2019 20:22:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 May 2019 17:22:14 -0700
+X-ExtLoop1: 1
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by orsmga005.jf.intel.com with ESMTP; 28 May 2019 17:22:09 -0700
+Date:   Tue, 28 May 2019 20:16:25 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v3 1/2] vfio/mdev: add migration_version attribute for
+ mdev device
+Message-ID: <20190529001625.GG27438@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190527034155.31473-1-yan.y.zhao@intel.com>
+ <20190527034342.31523-1-yan.y.zhao@intel.com>
+ <20190528105332.7c5a2f82.cohuck@redhat.com>
 MIME-Version: 1.0
-References: <20190522004655.20138-1-fabiolima39@gmail.com> <20190522094130.GS31203@kadam>
-In-Reply-To: <20190522094130.GS31203@kadam>
-From:   Fabio Lima <fabiolima39@gmail.com>
-Date:   Tue, 28 May 2019 21:18:47 -0300
-Message-ID: <CAAM19CGt1UoAXgQWoO85k7UQ8r3rBx6S7-po1aC5OfQZbcO55Q@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: Add missing blank lines
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     gregkh@linuxfoundation.org, jeremy@azazel.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528105332.7c5a2f82.cohuck@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em qua, 22 de mai de 2019 06:41, Dan Carpenter
-<dan.carpenter@oracle.com> escreveu:
+On Tue, May 28, 2019 at 04:53:32PM +0800, Cornelia Huck wrote:
+> On Sun, 26 May 2019 23:43:42 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > migration_version attribute is used to check migration compatibility
+> > between two mdev device of the same mdev type.
+> 
+> s/device/devices/
 >
-> On Tue, May 21, 2019 at 09:46:55PM -0300, Fabio Lima wrote:
-> > This patch resolves the following warning from checkpatch.pl
-> > WARNING: Missing a blank line after declarations
-> >
-> > Signed-off-by: Fabio Lima <fabiolima39@gmail.com>
+yes... sorry and thanks :)
+
+> > The key is that it's rw and its data is opaque to userspace.
+> > 
+> > Userspace reads migration_version of mdev device at source side and
+> > writes the value to migration_version attribute of mdev device at target
+> > side. It judges migration compatibility according to whether the read
+> > and write operations succeed or fail.
+> > 
+> > As this attribute is under mdev_type node, userspace is able to know
+> > whether two mdev devices are compatible before a mdev device is created.
+> > 
+> > userspace needs to check whether the two mdev devices are of the same
+> > mdev type before checking the migration_version attribute. It also needs
+> > to check device creation parameters if aggregation is supported in
+> > future.
+> > 
+> >              __    userspace
+> >               /\              \
+> >              /                 \write
+> >             / read              \
+> >    ________/__________       ___\|/_____________
+> >   | migration_version |     | migration_version |-->check migration
+> >   ---------------------     ---------------------   compatibility
+> >     mdev device A               mdev device B
+> > 
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Erik Skultety <eskultet@redhat.com>
+> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > Cc: Neo Jia <cjia@nvidia.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> > Cc: Daniel P. Berrangé <berrange@redhat.com>
+> > Cc: Christophe de Dinechin <dinechin@redhat.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > 
 > > ---
-> >  drivers/staging/rtl8723bs/core/rtw_debug.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/staging/rtl8723bs/core/rtw_debug.c b/drivers/staging/rtl8723bs/core/rtw_debug.c
-> > index 9f8446ccf..853362381 100644
-> > --- a/drivers/staging/rtl8723bs/core/rtw_debug.c
-> > +++ b/drivers/staging/rtl8723bs/core/rtw_debug.c
-> > @@ -382,6 +382,7 @@ ssize_t proc_set_roam_tgt_addr(struct file *file, const char __user *buffer, siz
-> >       if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
-> >
-> >               int num = sscanf(tmp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", addr, addr+1, addr+2, addr+3, addr+4, addr+5);
-> > +
-> >               if (num == 6)
-> >                       memcpy(adapter->mlmepriv.roam_tgt_addr, addr, ETH_ALEN);
-> >
->
-> I'm sorry but this function is really such nonsense.  Can you send a
-> patch to re-write it instead?
->
-> drivers/staging/rtl8723bs/core/rtw_debug.c
->    371  ssize_t proc_set_roam_tgt_addr(struct file *file, const char __user *buffer, size_t count, loff_t *pos, void *data)
->    372  {
->    373          struct net_device *dev = data;
->    374          struct adapter *adapter = (struct adapter *)rtw_netdev_priv(dev);
->    375
->    376          char tmp[32];
->    377          u8 addr[ETH_ALEN];
->    378
->    379          if (count < 1)
->
-> This check is silly.  I guess the safest thing is to change it to:
->                 if (count < sizeof(tmp))
->
->    380                  return -EFAULT;
->
-> It should be return -EINVAL;
->
->    381
->    382          if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
->
-> Remove the check for if the user passes a NULL buffer, because that's
-> already handled in copy_from_user().  Return -EFAULT if copy_from_user()
-> fails.
->
->         if (copy_from_user(tmp, buffer, sizeof(tmp)))
->                 return -EFAULT;
->
->
->    383
->
-> Extra blank line.
->
->    384                  int num = sscanf(tmp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", addr, addr+1, addr+2, addr+3, addr+4, addr+5);
->
-> You will need to move the num declaration to the start of the function.
->
->    385                  if (num == 6)
->    386                          memcpy(adapter->mlmepriv.roam_tgt_addr, addr, ETH_ALEN);
->
-> If num != 6 then return -EINVAL;
->
->    387
->    388                  DBG_871X("set roam_tgt_addr to "MAC_FMT"\n", MAC_ARG(adapter->mlmepriv.roam_tgt_addr));
->    389          }
->    390
->    391          return count;
->    392  }
->
-> regards,
-> dan carpenter
+> > v3:
+> > 1. renamed version to migration_version
+> > (Christophe de Dinechin, Cornelia Huck, Alex Williamson)
+> > 2. let errno to be freely defined by vendor driver
+> > (Alex Williamson, Erik Skultety, Cornelia Huck, Dr. David Alan Gilbert)
+> > 3. let checking mdev_type be prerequisite of migration compatibility
+> > check. (Alex Williamson)
+> > 4. reworded example usage section.
+> > (most of this section came from Alex Williamson)
+> > 5. reworded attribute intention section (Cornelia Huck)
+> > 
+> > v2:
+> > 1. added detailed intent and usage
+> > 2. made definition of version string completely private to vendor driver
+> >    (Alex Williamson)
+> > 3. abandoned changes to sample mdev drivers (Alex Williamson)
+> > 4. mandatory --> optional (Cornelia Huck)
+> > 5. added description for errno (Cornelia Huck)
+> > ---
+> >  Documentation/vfio-mediated-device.txt | 113 +++++++++++++++++++++++++
+> >  1 file changed, 113 insertions(+)
+> > 
+> 
+> While I probably would have written a more compact description, your
+> version is fine with me as well.
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Thank you Cornelia!
 
-Thanks for your feedback.
-This is my first patch and I will send the second patch with
-modifications that you suggest.
-
-Fabio Lima
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
