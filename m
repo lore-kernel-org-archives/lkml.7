@@ -3,110 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B350C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F16C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC6F2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="A9xTu63H"
+	by mail.kernel.org (Postfix) with ESMTP id CD3812070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 10:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559125481;
+	bh=Zn58nd8T5+65YqD1AnYvF1lnYwDjRaKzeQ7ag4xKOEY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=k41xnEIf4rkO/VLdJJvuXs++fZbkhcXaBXwlRrBtVbbzmZmLkqtopT6uD7gNimLPs
+	 fbxcKeSxPUFke1W1rnRKvmpjngkAvPOMbrGmOjylmb9PyCY5rzWYMMtVRNOWqW4ZqQ
+	 VB6MKbdGFpGlcsOSxFo8VQuTVg17nJPueV41pPgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE2KYC (ORCPT
+        id S1726741AbfE2KYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 06:24:02 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:46054 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbfE2KYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 06:24:01 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8DFE7C2177;
-        Wed, 29 May 2019 10:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559125424; bh=EaIlXg4+87vZfZa76Eds7saCbr0RrMdv8qglDo5oEUg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=A9xTu63HZPXHp9sxs/90ChTBkUIiFdJnwJFWZEd/rtWfZge+xMXtZ2qsUB7iwUzFa
-         VAw3IfeqBGl63sFkyplgnUxhzv7nNpD26WwQsR00GICnkCWQRzQPFx4a2S0czRVt3X
-         sFFMlcnjYQGmoeIlwAWI39c7jTcJ0AzuipTDoKzGODB7GU2xB/u+lvB45cmsMfHTPw
-         ZgfUL64N5QeUvPmjhXRWoeuoEfNZBeKwt8fLRvGmc6eiWTTp3L+n0DGVXk9+hjUs7u
-         9UszmMSz+YQ9BXRBCcJUXUzLRa8SNvXAg/oD5bZTf801XjDSFaUdjtKj/jiXpgy9zS
-         21jVreUga/0ww==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id F3823A006D;
-        Wed, 29 May 2019 10:23:59 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 29 May 2019 03:23:59 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 29 May 2019 12:23:57 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Voon Weifeng <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH net-next v4 3/5] net: stmmac: add xpcs function hooks
- into main driver and ethtool
-Thread-Topic: [PATCH net-next v4 3/5] net: stmmac: add xpcs function hooks
- into main driver and ethtool
-Thread-Index: AQHVFfyla7qF4cEoq0uy/2sja8vl2aaB5Egw
-Date:   Wed, 29 May 2019 10:23:57 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B933429@DE02WEMBXB.internal.synopsys.com>
-References: <1559149107-14631-1-git-send-email-weifeng.voon@intel.com>
- <1559149107-14631-4-git-send-email-weifeng.voon@intel.com>
-In-Reply-To: <1559149107-14631-4-git-send-email-weifeng.voon@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 May 2019 06:24:41 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11595 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbfE2KYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 06:24:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 03:24:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,526,1549958400"; 
+   d="scan'208";a="179534587"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 29 May 2019 03:24:38 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list\:DESIGNWARE USB3 DRD IP DRIVER" 
+        <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+In-Reply-To: <AM5PR0402MB2865AB6C2A50851B7EA4E653F11F0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865AB6C2A50851B7EA4E653F11F0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+Date:   Wed, 29 May 2019 13:24:37 +0300
+Message-ID: <874l5dr21m.fsf@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Voon Weifeng <weifeng.voon@intel.com>
-Date: Wed, May 29, 2019 at 17:58:25
 
-> +/**
-> + *  xPCS_interrupt - xPCS ISR
-> + *  @irq: interrupt number.
-> + *  @dev_id: to pass the net device pointer.
-> + *  Description: this is the xPCS interrupt service routine.
-> + */
+Hi,
 
-Please remove all JAVA docs from the series unless they are really=20
-useful. This looks like it's stating the obvious and just pollutes the=20
-eyes.
+Ran Wang <ran.wang_1@nxp.com> writes:
+>> >> >> c) WHAT does this mean for PCI devices?
+>
+> According to DWC3 data book, I think this (PCI) mean to the case of 'master bus type = Native'
+> The data book describes this feature as 'system bus DMA option for the master bus,
+> which may be configured as AHB, AXI, or Native.' On Table 6-5, it says when MBUS_TYPE
+> is Native, the definition of 4 transfer types control bits [3-0] is 'Same as AXI'.
+>
+> However, as to the code implementation to be generic to both PCI and AXI,
+> I admit I don't have a perfect solution so far, only 2 proposals with concerns:
+>
+> a. Create another module driver like dwc3-exynos.c (arch/arm/boot/dts/wxynos54xx.dtsi)
+>     to contain above programming code. However, it will touch the same reg range of DWC3
+>     I think this is not good.
 
-> +static irqreturn_t xpcs_interrupt(int irq, void *dev_id)
-> +{
-> +	struct net_device *ndev =3D (struct net_device *)dev_id;
-> +	struct stmmac_priv *priv =3D netdev_priv(ndev);
-> +	irqreturn_t ret =3D IRQ_NONE;
-> +
-> +	if (unlikely(!ndev)) {
+I'd prefer avoiding another glue :-)
 
-This is a useless check because you already dereference the pointer when=20
-you assign "priv" variable.
+> b. Add #ifdef CONFIG_ARCH_LAYERSCAPE in drivers/usb/dwc3/core.c to constrain hacking code
+>    can only take effect for Layerscape (AXI case). I know it look ugly.
+>
+> Do you have any better advice on this (besides changed power on default value from HW perspective)?
 
-Thanks,
-Jose Miguel Abreu
+Maybe we don't need to care, actually. Since this property will only be
+needed for RTL instantiation that didn't configure these defaults
+properly during coreConsultant.
+
+>> >> >> Another question is: Why wasn't this setup properly during
+>> >> >> coreConsultant instantiation of the RTL? Do you have devices on
+>> >> >> the market already that need this or is this some early FPGA model
+>> >> >> or test-only
+>> >> ASIC?
+>
+> Several Layerscape platforms like LS1043ARDB, LS1046ARDB, etc. are already on
+> the market and have this issue. So I have to work out a SW patch to fix them.
+
+Thank you, now I'm certain that this is not some temporary solution :-)
+
+Thanks for going through this again. Please refresh the patch so we can
+try to get it merged.
+
+-- 
+balbi
