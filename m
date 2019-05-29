@@ -2,110 +2,266 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484B6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACF4C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120D02075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:09:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXozv7o6"
+	by mail.kernel.org (Postfix) with ESMTP id 4EF7E2426A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 22:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559167786;
+	bh=3OmN7Ed90J/s26tvuNKReiDT2xMzEGrBWFHugyhQnlw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0ZMVoahbtL1GOWx2/LhILhnYnwmAO/SLrvgvqE0qwov/7oasLalStDLbKsSEfLjbf
+	 nnq29uhy8MNzDWY/WVmu8bMFZyvBTiB4lJj9zsTx7XDrjh2/mZF6LEgEIsxsiWEtOH
+	 r6LVgKHVnHxkMzd94NXZNDypxNkN6EZtQlFSHvmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfE2WJY (ORCPT
+        id S1726574AbfE2WJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 18:09:24 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43533 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfE2WJX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 18:09:23 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t187so3371740oie.10
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 15:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MtBd0igQNAxdQAvDkTKzFaKKKxYH7TTNb8Emm7WFbQE=;
-        b=PXozv7o68bfCUq0r+Erfvc1dZo7UWlAVyBTOedz9ikaeFw07hwAiM5rs4CIKNt5WHa
-         wivuhgusMAxHlziT0bbZDYOYPirYWq6UhwvLmtzzjAEcnJs1YJo0xs6vsrDuOQvdAxqC
-         ZR9iVaCMj0ck/tcGikxIn8tQdeUuSrZzZzFngH8l1huBKjx4fSBlDueH3rzzhRCW3XOf
-         5UPTqqo/rSz/y1lm1e9veDp9ChVoAE4E2OoZmEsqzrTXF7/Mcmh8hv6AZHATwg4B/oGZ
-         ml39zfV1Zhl9BSIV4ppRGjdq9VCRb8iLoQTWgvtg3XSCXL/KtHxC87ITOGZcs2FrhY2D
-         VPjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MtBd0igQNAxdQAvDkTKzFaKKKxYH7TTNb8Emm7WFbQE=;
-        b=Fi9UImmcm5dIYn22Ee6KLlDfY+bgB50AeWZP4baA8KRMmArILMpZQLvhPZHzF1ii/G
-         jZ8gID1HIfz5n/w6RwH1Yb+WrCUYsW5lDbbm//bXVhoyabcDtc08MUcHaUlIvf4iQuTt
-         a4qM5e+8Qd63Zhiq9TngYYdIMeh72xdhJc1kQW/Fi8lgtFj+FLacx2w/RHf08KN9NL7I
-         T5TCxD5JqIJH/LCMbifaAMsPS7UWUApgVZymIf0aJMviRSWMRaCOu/HVpwdwaI2M70/g
-         B3h9x4CDWUurobWe3DCoOHxsfudBzEFuyGdUz21DMAhbt7z6q7RQ2pPyT0YNgHfYzt2i
-         3s2A==
-X-Gm-Message-State: APjAAAW7WzMqOd4FoLh7LHdHbjW7x6as2xAz3gkqtL3R5ZvyvJb/72Cq
-        Faccp/XMFgx6Qfe4TitVY1JnURP9/N1CtOHo4hooC2+u
-X-Google-Smtp-Source: APXvYqwTqdwJ0JoKkftSDj5qIPj+WtB0r5SxluHWi/TiA3Au7JVtxIAOfUmpnc08w/KlBRo4CfJfUS0kItBStcaTtoI=
-X-Received: by 2002:a05:6808:642:: with SMTP id z2mr382112oih.83.1559167762998;
- Wed, 29 May 2019 15:09:22 -0700 (PDT)
+        Wed, 29 May 2019 18:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfE2WJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 18:09:45 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 868B52075B;
+        Wed, 29 May 2019 22:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559167783;
+        bh=3OmN7Ed90J/s26tvuNKReiDT2xMzEGrBWFHugyhQnlw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=KOURBKUuflSIr5s09riZllLv7PKMiQLqDJ0Oo9erxssyCTq3o5sECTB1wgLBYwKlZ
+         +ogdHnO2mk+N9E7MlnbOcV6E2Lnc7Wx4f1I/oiVi6VnRgIqsxE9YF8q26C2VVlVFD+
+         9uizhhYHeemF5ttAD5zLnh0u/i7MsnAnqyd8Wp6Y=
+Date:   Thu, 30 May 2019 00:09:39 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+cc:     x86@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault during
+ resume
+In-Reply-To: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190528043117.169987-1-tgb.kernel@gmail.com> <b52aaaed-5efb-ae1f-68c0-80b150388219@suse.cz>
-In-Reply-To: <b52aaaed-5efb-ae1f-68c0-80b150388219@suse.cz>
-From:   Trevor Bourget <tgb.kernel@gmail.com>
-Date:   Wed, 29 May 2019 15:09:11 -0700
-Message-ID: <CAG0f_nYQSn8eFHH3EcV4zxia0C6v7PfCvXybx40em9KgtzMGqQ@mail.gmail.com>
-Subject: Re: [PATCH] vt: configurable number of console devices
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I hadn't registered that was uapi. You are right, as a
-configuration setting it's an odd thing to expose there.
-That define won't really be any use to user space except for type
-range validation, and as such it would actually be unhelpful for it to
-be other than 63.
+From: Jiri Kosina <jkosina@suse.cz>
 
-I will add if defined(__KERNEL__) to improve that, so that it will be
-constant for uapi.
+As explained in
 
-btw The idea is obviously not new. I can give credit to James Cox who
-posted an actual patch 15 years ago that never merged.
-https://lore.kernel.org/lkml/E1BFhPh-00027s-IL@smtp.gentoo.org/
+	0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
 
--- Trevor
+we always, no matter what, have to bring up x86 HT siblings during boot at
+least once in order to avoid first MCE bringing the system to its knees.
 
-On Wed, May 29, 2019 at 4:03 AM Jiri Slaby <jslaby@suse.cz> wrote:
->
-> On 28. 05. 19, 6:31, Trevor Bourget wrote:
-> > --- a/include/uapi/linux/vt.h
-> > +++ b/include/uapi/linux/vt.h
-> > @@ -8,9 +8,13 @@
-> >   * resizing).
-> >   */
-> >  #define MIN_NR_CONSOLES 1       /* must be at least 1 */
-> > +#ifdef CONFIG_MAX_NR_CONSOLES
-> > +#define MAX_NR_CONSOLES CONFIG_MAX_NR_CONSOLES
->
-> This is an uapi header. Will the #ifdef work there? As I don't think
-> CONFIG_* (i.e. autoconf.h) is available in userspace...
->
-> Also, I am not sure if there is any consumer of this macro in userspace
-> at all -- so what are the possible effects of this being "incorrect"?
->
-> BTW having headers from one kernel and booting another with different
-> settings makes this definition also incorrect. The same as for e.g. the
-> HZ constant. Again, not sure if this is a problem at all.
->
-> thanks,
-> --
-> js
-> suse labs
+That means that whenever 'nosmt' is supplied on the kernel command-line,
+all the HT siblings are as a result sitting in mwait or cpudile after
+going through the online-offline cycle at least once.
+
+This causes a serious issue though when a kernel, which saw 'nosmt' on its
+commandline, is going to perform resume from hibernation: if the resume
+from the hibernated image is successful, cr3 is flipped in order to point
+to the address space of the kernel that is being resumed, which in turn
+means that all the HT siblings are all of a sudden mwaiting on address
+which is no longer valid.
+
+That results in triple fault shortly after cr3 is switched, and machine
+reboots.
+
+Fix this by always waking up all the SMT siblings before initiating the
+'restore from hibernation' process; this guarantees that all the HT
+siblings will be properly carried over to the resumed kernel waiting in
+resume_play_dead(), and acted upon accordingly afterwards, based on the
+target kernel configuration.
+Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+again in case it has SMT disabled; this means it has to online all
+the siblings when resuming (so that they come out of hlt) and offline
+them again to let them reach mwait.
+
+Cc: stable@vger.kernel.org # v4.19+
+Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+---
+
+v1 -> v2:
+        - restructure error handling as suggested by peterz
+        - add Rafael's ack
+
+v2 -> v3:
+        - added extra online/offline dance for nosmt case during
+          resume, as we want the siblings to be in mwait, not hlt
+        - dropped peterz's and Rafael's acks for now due to the above
+
+v3 -> v4:
+	- fix undefined return value from arch_resume_nosmt() in case
+	  it's not overriden by arch
+
+ arch/x86/power/cpu.c       | 10 ++++++++++
+ arch/x86/power/hibernate.c | 33 +++++++++++++++++++++++++++++++++
+ include/linux/cpu.h        |  4 ++++
+ kernel/cpu.c               |  4 ++--
+ kernel/power/hibernate.c   |  9 +++++++++
+ 5 files changed, 58 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index a7d966964c6f..513ce09e9950 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable(void)
+ 	 * address in its instruction pointer may not be possible to resolve
+ 	 * any more at that point (the page tables used by it previously may
+ 	 * have been overwritten by hibernate image data).
++	 *
++	 * First, make sure that we wake up all the potentially disabled SMT
++	 * threads which have been initially brought up and then put into
++	 * mwait/cpuidle sleep.
++	 * Those will be put to proper (not interfering with hibernation
++	 * resume) sleep afterwards, and the resumed kernel will decide itself
++	 * what to do with them.
+ 	 */
++	ret = cpuhp_smt_enable();
++	if (ret)
++		return ret;
+ 	smp_ops.play_dead = resume_play_dead;
+ 	ret = disable_nonboot_cpus();
+ 	smp_ops.play_dead = play_dead;
+diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+index 4845b8c7be7f..fc413717a45f 100644
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -11,6 +11,7 @@
+ #include <linux/suspend.h>
+ #include <linux/scatterlist.h>
+ #include <linux/kdebug.h>
++#include <linux/cpu.h>
+ 
+ #include <crypto/hash.h>
+ 
+@@ -245,3 +246,35 @@ int relocate_restore_code(void)
+ 	__flush_tlb_all();
+ 	return 0;
+ }
++
++int arch_resume_nosmt(void)
++{
++	int ret = 0;
++	/*
++	 * We reached this while coming out of hibernation. This means
++	 * that SMT siblings are sleeping in hlt, as mwait is not safe
++	 * against control transition during resume (see comment in
++	 * hibernate_resume_nonboot_cpu_disable()).
++	 *
++	 * If the resumed kernel has SMT disabled, we have to take all the
++	 * SMT siblings out of hlt, and offline them again so that they
++	 * end up in mwait proper.
++	 *
++	 * Called with hotplug disabled.
++	 */
++	cpu_hotplug_enable();
++	if (cpu_smt_control == CPU_SMT_DISABLED ||
++			cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
++		enum cpuhp_smt_control old = cpu_smt_control;
++
++		ret = cpuhp_smt_enable();
++		if (ret)
++			goto out;
++		ret = cpuhp_smt_disable(old);
++		if (ret)
++			goto out;
++	}
++out:
++	cpu_hotplug_disable();
++	return ret;
++}
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 3813fe45effd..fcb1386bb0d4 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -201,10 +201,14 @@ enum cpuhp_smt_control {
+ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
++extern int cpuhp_smt_enable(void);
++extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+ #else
+ # define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
++static inline int cpuhp_smt_enable(void) { return 0; }
++static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+ #endif
+ 
+ /*
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index f2ef10460698..077fde6fb953 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2061,7 +2061,7 @@ static void cpuhp_online_cpu_device(unsigned int cpu)
+ 	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+ }
+ 
+-static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ {
+ 	int cpu, ret = 0;
+ 
+@@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+ 	return ret;
+ }
+ 
+-static int cpuhp_smt_enable(void)
++int cpuhp_smt_enable(void)
+ {
+ 	int cpu, ret = 0;
+ 
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index c8c272df7154..b65635753e8e 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -257,6 +257,11 @@ void swsusp_show_speed(ktime_t start, ktime_t stop,
+ 		(kps % 1000) / 10);
+ }
+ 
++__weak int arch_resume_nosmt(void)
++{
++	return 0;
++}
++
+ /**
+  * create_image - Create a hibernation image.
+  * @platform_mode: Whether or not to use the platform driver.
+@@ -324,6 +329,10 @@ static int create_image(int platform_mode)
+  Enable_cpus:
+ 	suspend_enable_secondary_cpus();
+ 
++	/* Allow architectures to do nosmt-specific post-resume dances */
++	if (!in_suspend)
++		error = arch_resume_nosmt();
++
+  Platform_finish:
+ 	platform_finish(platform_mode);
+ 
+
+-- 
+Jiri Kosina
+SUSE Labs
+
