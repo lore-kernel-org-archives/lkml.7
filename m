@@ -2,228 +2,161 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ED7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F1A23BAB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9549F23BAD
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 15:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wPNQdOcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfE2Pn5 (ORCPT
+        id S1727057AbfE2Pom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 11:43:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfE2Pn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 11:43:57 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 664FE4CF7E;
-        Wed, 29 May 2019 15:43:51 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5B3E5C5DF;
-        Wed, 29 May 2019 15:43:43 +0000 (UTC)
-From:   Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v5 7/7] iommu/vt-d: Differentiate relaxable and non
- relaxable RMRRs
-To:     Lu Baolu <baolu.lu@linux.intel.com>, eric.auger.pro@gmail.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
-        robin.murphy@arm.com
-Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com,
-        jean-philippe.brucker@arm.com
-References: <20190528115025.17194-1-eric.auger@redhat.com>
- <20190528115025.17194-8-eric.auger@redhat.com>
- <13a77738-5e85-ea62-aab1-384c75bde8bd@linux.intel.com>
-Message-ID: <1f2a7039-04be-383e-b054-d0dba99b9bdf@redhat.com>
-Date:   Wed, 29 May 2019 17:43:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 29 May 2019 11:44:42 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46556 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfE2Pol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 11:44:41 -0400
+Received: by mail-yw1-f68.google.com with SMTP id x144so1242608ywd.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 08:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UzvX+fHwwsVK/rYT0lCyOiKU2IYlx0wYtIIUBRbu7rI=;
+        b=wPNQdOcNDJpcN8SLZ3QoXpbTi5+UGW9J1bJY4DkqqyBqOI5d3yqzNACNWIULW+15uA
+         IOXbGpvkbYBV0VebvqxyIL8ibS8C+tAyRbVca1/XXkDA4xi9WNrW/FL80v5lLwXrn6WX
+         cwhMZKxdm4TSwzUMarPMwb5BPTzYFDP5T/Ff+/xk4GmpGLuIB99ZDBFE5ZsPst2thb98
+         KdZKvl1cychGGc0G2K0seDV4UyZX6QAlop/QAK4INAj89+MOLqABeimnQbx0EAjB+tY6
+         Hst//WxZmOF9GBbIbUWdiIPxGEGXGapkxHSeWkuEL+nez7jMLVZmRFPRVONUbF3V+1jb
+         nIBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UzvX+fHwwsVK/rYT0lCyOiKU2IYlx0wYtIIUBRbu7rI=;
+        b=U579i1/kMZ945Q85I21gHCAu3/nDQfKLl4A9W6cqljzWYY5N3rTHT9hV5nOp1t+PTu
+         lQHgWUz2e2Mj/Z/v11lAdLZrhwjASlgWKobvnGaiPsDt7fXM7U+ZwpQUhpVwWcOTFTIh
+         MxXKGTB6B3XuRYULED7XQGrBlNIIiNNpPRYfXTlqgwtH/QSRlauUk3TMlmZ3npEm0NHj
+         yoxKevGXInlAkSvJTzdYK/yIa59dEPhzwA/1BzUYaBmVjp1YVjbJz5bVhEJIx3kusonS
+         ulpYl++pdc3eQdRzuZ5ozfWGAzBWVkB8WJM3gFaLQkShL9e3BGpQqTWukS3xI7GgKspe
+         VcZA==
+X-Gm-Message-State: APjAAAWVdpHDNvqbCwhE9WOrmYMmuM1b5qov2tBa5Y73OgYRogu97BbW
+        nnAg7PVNg4zWSoUReoGO1XVFP3HCMRaHuqN8MTE8zQ==
+X-Google-Smtp-Source: APXvYqzA+PBa1BbnJDLnJot49Cdhzw+OKvDs168TcBrvjO423z/o9cDuc2+4zCLPwjWJyT1pCgHVlblOYoJI3350nLM=
+X-Received: by 2002:a81:59c2:: with SMTP id n185mr60560151ywb.21.1559144680103;
+ Wed, 29 May 2019 08:44:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <13a77738-5e85-ea62-aab1-384c75bde8bd@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 29 May 2019 15:43:56 +0000 (UTC)
+References: <1559117459-27353-1-git-send-email-92siuyang@gmail.com>
+ <CANn89iLxxiX+4E7EURNKb=xRkk97rPaKTkpSc6Yu7fZbiwPT6w@mail.gmail.com> <CAKgHYH2uW=iSUM1j5pLhaQXpm35XK2rWq45M2Yih1-Dn=es0SA@mail.gmail.com>
+In-Reply-To: <CAKgHYH2uW=iSUM1j5pLhaQXpm35XK2rWq45M2Yih1-Dn=es0SA@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 29 May 2019 08:44:27 -0700
+Message-ID: <CANn89iJ1qoP9PpJZVcatvdtRX4SqUrKrWDfer1hdid+gxYQXhA@mail.gmail.com>
+Subject: Re: [PATCH] ipv4: tcp_input: fix stack out of bounds when parsing TCP options.
+To:     Yang Xiao <92siuyang@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lu,
+On Wed, May 29, 2019 at 8:11 AM Yang Xiao <92siuyang@gmail.com> wrote:
+>
+> Indeed, condition opsize < 2 and opsize > length can deduce that length >= 2.
+> However, before the condition (if opsize < 2), there may be one-byte
+> out-of-bound access in line 12.
+> I'm not sure whether I have put it very clearly.
 
-On 5/29/19 4:34 AM, Lu Baolu wrote:
-> Hi,
-> 
-> On 5/28/19 7:50 PM, Eric Auger wrote:
->> Now we have a new IOMMU_RESV_DIRECT_RELAXABLE reserved memory
->> region type, let's report USB and GFX RMRRs as relaxable ones.
->>
->> We introduce a new device_rmrr_is_relaxable() helper to check
->> whether the rmrr belongs to the relaxable category.
->>
->> This allows to have a finer reporting at IOMMU API level of
->> reserved memory regions. This will be exploitable by VFIO to
->> define the usable IOVA range and detect potential conflicts
->> between the guest physical address space and host reserved
->> regions.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->>
->> v3 -> v4:
->> - introduce device_rmrr_is_relaxable and reshuffle the comments
->> ---
->>   drivers/iommu/intel-iommu.c | 55 +++++++++++++++++++++++++++----------
->>   1 file changed, 40 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 9302351818ab..01c82f848470 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -2920,6 +2920,36 @@ static bool device_has_rmrr(struct device *dev)
->>       return false;
->>   }
->>   +/*
->> + * device_rmrr_is_relaxable - Test whether the RMRR of this device
->> + * is relaxable (ie. is allowed to be not enforced under some
->> conditions)
->> + *
->> + * @dev: device handle
->> + *
->> + * We assume that PCI USB devices with RMRRs have them largely
->> + * for historical reasons and that the RMRR space is not actively
->> used post
->> + * boot.  This exclusion may change if vendors begin to abuse it.
->> + *
->> + * The same exception is made for graphics devices, with the
->> requirement that
->> + * any use of the RMRR regions will be torn down before assigning the
->> device
->> + * to a guest.
->> + *
->> + * Return: true if the RMRR is relaxable
->> + */
->> +static bool device_rmrr_is_relaxable(struct device *dev)
->> +{
->> +    struct pci_dev *pdev;
->> +
->> +    if (!dev_is_pci(dev))
->> +        return false;
->> +
->> +    pdev = to_pci_dev(dev);
->> +    if (IS_USB_DEVICE(pdev) || IS_GFX_DEVICE(pdev))
->> +        return true;
->> +    else
->> +        return false;
->> +}
-> 
-> I know this is only code refactoring. But strictly speaking, the rmrr of
-> any USB host device is ignorable only if quirk_usb_early_handoff() has
-> been called. There, the control of USB host controller will be handed
-> over from BIOS to OS and the corresponding SMI are disabled.
-> 
-> This function is registered in drivers/usb/host/pci-quirks.c
-> 
-> DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
->                         PCI_CLASS_SERIAL_USB, 8, quirk_usb_early_handoff);
-> 
-> and only get compiled if CONFIG_USB_PCI is enabled.
-> 
-> Hence, it's safer to say:
-> 
-> +#ifdef CONFIG_USB_PCI
-> +    if (IS_USB_DEVICE(pdev))
-> +        return true;
-> +#endif /* CONFIG_USB_PCI */
-> 
-> I am okay if we keep this untouched and make this change within a
-> separated patch.
+Maybe I should have been clear about the 320 bytes we have at the end
+of skb->head
 
-As we first checked whether the device was a pci device, isn't it
-sufficient to guarantee the quirk is setup?
+This is the struct skb_shared_info
 
-As you suggested, I am inclined to keep it as a separate patch anyway.
+So reading one byte, 'out-of-bound' here is harmless.
 
-Thank you for the review!
+Whatever value is read, we will return early without ever looking at a
+following byte.
 
-Best Regards
 
-Eric
-> 
->> +
->>   /*
->>    * There are a couple cases where we need to restrict the
->> functionality of
->>    * devices associated with RMRRs.  The first is when evaluating a
->> device for
->> @@ -2934,25 +2964,16 @@ static bool device_has_rmrr(struct device *dev)
->>    * We therefore prevent devices associated with an RMRR from
->> participating in
->>    * the IOMMU API, which eliminates them from device assignment.
->>    *
->> - * In both cases we assume that PCI USB devices with RMRRs have them
->> largely
->> - * for historical reasons and that the RMRR space is not actively
->> used post
->> - * boot.  This exclusion may change if vendors begin to abuse it.
->> - *
->> - * The same exception is made for graphics devices, with the
->> requirement that
->> - * any use of the RMRR regions will be torn down before assigning the
->> device
->> - * to a guest.
->> + * In both cases, devices which have relaxable RMRRs are not
->> concerned by this
->> + * restriction. See device_rmrr_is_relaxable comment.
->>    */
->>   static bool device_is_rmrr_locked(struct device *dev)
->>   {
->>       if (!device_has_rmrr(dev))
->>           return false;
->>   -    if (dev_is_pci(dev)) {
->> -        struct pci_dev *pdev = to_pci_dev(dev);
->> -
->> -        if (IS_USB_DEVICE(pdev) || IS_GFX_DEVICE(pdev))
->> -            return false;
->> -    }
->> +    if (device_rmrr_is_relaxable(dev))
->> +        return false;
->>         return true;
->>   }
->> @@ -5494,6 +5515,7 @@ static void intel_iommu_get_resv_regions(struct
->> device *device,
->>           for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
->>                         i, i_dev) {
->>               struct iommu_resv_region *resv;
->> +            enum iommu_resv_type type;
->>               size_t length;
->>                 if (i_dev != device &&
->> @@ -5501,9 +5523,12 @@ static void intel_iommu_get_resv_regions(struct
->> device *device,
->>                   continue;
->>                 length = rmrr->end_address - rmrr->base_address + 1;
->> +
->> +            type = device_rmrr_is_relaxable(device) ?
->> +                IOMMU_RESV_DIRECT_RELAXABLE : IOMMU_RESV_DIRECT;
->> +
->>               resv = iommu_alloc_resv_region(rmrr->base_address,
->> -                               length, prot,
->> -                               IOMMU_RESV_DIRECT);
->> +                               length, prot, type);
->>               if (!resv)
->>                   break;
->>  
-> 
-> Other looks good to me.
-> 
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> 
-> Best regards,
-> Baolu
+>
+> On Wed, May 29, 2019 at 10:20 PM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Wed, May 29, 2019 at 1:10 AM Young Xiao <92siuyang@gmail.com> wrote:
+> > >
+> > > The TCP option parsing routines in tcp_parse_options function could
+> > > read one byte out of the buffer of the TCP options.
+> > >
+> > > 1         while (length > 0) {
+> > > 2                 int opcode = *ptr++;
+> > > 3                 int opsize;
+> > > 4
+> > > 5                 switch (opcode) {
+> > > 6                 case TCPOPT_EOL:
+> > > 7                         return;
+> > > 8                 case TCPOPT_NOP:        /* Ref: RFC 793 section 3.1 */
+> > > 9                         length--;
+> > > 10                        continue;
+> > > 11                default:
+> > > 12                        opsize = *ptr++; //out of bound access
+> > >
+> > > If length = 1, then there is an access in line2.
+> > > And another access is occurred in line 12.
+> > > This would lead to out-of-bound access.
+> > >
+> > > Therefore, in the patch we check that the available data length is
+> > > larger enough to pase both TCP option code and size.
+> > >
+> > > Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> > > ---
+> > >  net/ipv4/tcp_input.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > index 20f6fac..9775825 100644
+> > > --- a/net/ipv4/tcp_input.c
+> > > +++ b/net/ipv4/tcp_input.c
+> > > @@ -3791,6 +3791,8 @@ void tcp_parse_options(const struct net *net,
+> > >                         length--;
+> > >                         continue;
+> > >                 default:
+> > > +                       if (length < 2)
+> > > +                               return;
+> > >                         opsize = *ptr++;
+> > >                         if (opsize < 2) /* "silly options" */
+> > >                                 return;
+> >
+> > In practice we are good, since we have at least 320 bytes of room there,
+> > and the test done later catches silly options.
+> >
+> > if (opsize < 2) /* "silly options" */
+> >     return;
+> > if (opsize > length)   /* remember, opsize >= 2 here */
+> >      return; /* don't parse partial options */
+> >
+> > I guess adding yet another conditional will make this code obviously
+> > correct for all eyes
+> > and various tools.
+> >
+> > Thanks.
+> >
+> > Signed-off-by: Eric Dumazet <edumazet@google.com>
+>
+>
+>
+> --
+> Best regards!
+>
+> Young
+> -----------------------------------------------------------
