@@ -2,254 +2,131 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEFDC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35286239BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421F9239C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:20:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nX8vkcdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfE2OUT (ORCPT
+        id S1727370AbfE2OU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:20:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46868 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbfE2OUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:20:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00935A78;
-        Wed, 29 May 2019 07:20:18 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6612C3F5AF;
-        Wed, 29 May 2019 07:20:11 -0700 (PDT)
-Date:   Wed, 29 May 2019 15:20:08 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-Message-ID: <20190529142008.5quqv3wskmpwdfbu@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
- <20190527143719.GA59948@MBP.local>
- <20190528145411.GA709@e119886-lin.cambridge.arm.com>
- <20190528154057.GD32006@arrakis.emea.arm.com>
- <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
+        Wed, 29 May 2019 10:20:26 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:33887 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfE2OUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:20:25 -0400
+Received: by mail-yb1-f194.google.com with SMTP id x32so861394ybh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 07:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mUy0z4iSw34EaGviaEu3i8ULKI62dWY3xWhXEM5Or4o=;
+        b=nX8vkcdpQ250rHdvswa6gSnnyCCuekV8Y/Xr/b1Ri+6EQz6pcC8HEhm20DkF2803/V
+         6h4uIWinRWCh1BLMcqyteNi4gUowgMqyaN9NNPmqciBKaKI8vh1ZpBzv6uMJxsgecn+j
+         vQFdeX2+iCimufwEDA5tgOWlK106FwR2egiV1Dy+xm+Kw7mH+o4FraKUgNUZSUOgdsCN
+         DJgLZ4t/ICEO/KVZwe+PALiCzoWeOzrFY+fIlzSQZy7Nstf97VU24MORsPYPuMhihveb
+         yMhjcKftyqHLorJrSLOpvXLQG21/Idq4GwHtM+djB/XebFWT2bd+oF/F0aXQViFD0RAE
+         plpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mUy0z4iSw34EaGviaEu3i8ULKI62dWY3xWhXEM5Or4o=;
+        b=o7B7tVWDrJA9y9dGf/kZeTXUqKOONdQ1A/4wCHxtsfRxgpP6yol1cxm8/A8kuFEB3N
+         6GEv0HAiraxJ/tiT6DvRYpoWHgRSkFT49HD/6+65Imr9/YHF7GKK7VBb89Q+DrhPMNQW
+         srKeJInmPS0KwzC/4kp/ugWZMU5iYigzDZURiT2wp3QKF9W1THreESAGJoHlJ/D2+PGA
+         xiD76WsEcWIG4OaYTEBmfPaHwt6ne7+VuoVH4bO9AJpr/d+YP3m+bm4WOc8G+4bVULEL
+         JeE78tI7KHiebogKEKYaoaO/NMsDNOpkmvtrL68OLILgxxS8jraLSBeggeB2EiHy9BoG
+         IWIg==
+X-Gm-Message-State: APjAAAXd8UnhxbSy7jODTb7VxYZ+4j+/y0WjmdEFd6Vu72WJUV8i2p6G
+        5dG0e1TrZtHKha2gAj+Jk82T71agkmzcXC8zShc3hg==
+X-Google-Smtp-Source: APXvYqzuGn7f+/A1+DvTXLL0+G25nRQoJzz2tfgcamvslvVhXbiLT1ISami0iRSa6tkNePNALyPbKXpwvT+5t8QFdjg=
+X-Received: by 2002:a25:7642:: with SMTP id r63mr31031362ybc.253.1559139624452;
+ Wed, 29 May 2019 07:20:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1559117459-27353-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <1559117459-27353-1-git-send-email-92siuyang@gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 29 May 2019 07:20:12 -0700
+Message-ID: <CANn89iLxxiX+4E7EURNKb=xRkk97rPaKTkpSc6Yu7fZbiwPT6w@mail.gmail.com>
+Subject: Re: [PATCH] ipv4: tcp_input: fix stack out of bounds when parsing TCP options.
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Khalid,
+On Wed, May 29, 2019 at 1:10 AM Young Xiao <92siuyang@gmail.com> wrote:
+>
+> The TCP option parsing routines in tcp_parse_options function could
+> read one byte out of the buffer of the TCP options.
+>
+> 1         while (length > 0) {
+> 2                 int opcode = *ptr++;
+> 3                 int opsize;
+> 4
+> 5                 switch (opcode) {
+> 6                 case TCPOPT_EOL:
+> 7                         return;
+> 8                 case TCPOPT_NOP:        /* Ref: RFC 793 section 3.1 */
+> 9                         length--;
+> 10                        continue;
+> 11                default:
+> 12                        opsize = *ptr++; //out of bound access
+>
+> If length = 1, then there is an access in line2.
+> And another access is occurred in line 12.
+> This would lead to out-of-bound access.
+>
+> Therefore, in the patch we check that the available data length is
+> larger enough to pase both TCP option code and size.
+>
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> ---
+>  net/ipv4/tcp_input.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 20f6fac..9775825 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -3791,6 +3791,8 @@ void tcp_parse_options(const struct net *net,
+>                         length--;
+>                         continue;
+>                 default:
+> +                       if (length < 2)
+> +                               return;
+>                         opsize = *ptr++;
+>                         if (opsize < 2) /* "silly options" */
+>                                 return;
 
-On Tue, May 28, 2019 at 05:33:04PM -0600, Khalid Aziz wrote:
-> On Tue, 2019-05-28 at 16:40 +0100, Catalin Marinas wrote:
-> > I think another aspect is how we define the ABI. Is allowing tags to
-> > mlock() for example something specific to arm64 or would sparc ADI
-> > need the same? In the absence of other architectures defining such
-> > ABI, my preference would be to keep the wrappers in the arch code.
-> > 
-> > Assuming sparc won't implement untagged_addr(), we can place the
-> > macros back in the generic code but, as per the review here, we need
-> > to be more restrictive on where we allow tagged addresses. For
-> > example, if mmap() gets a tagged address with MAP_FIXED, is it
-> > expected to return the tag?
-> 
-> I would recommend against any ABI differences between ARM64 MTE/TBI and
-> sparc ADI unless it simply can not be helped. My understanding of
-> MTE/TBI is limited, so I will explain how sparc ADI works. On sparc, a
-> tagged address has no meaning until following steps happen:
+In practice we are good, since we have at least 320 bytes of room there,
+and the test done later catches silly options.
 
-Before we go into the MTE/ADI similarities or differences, just to
-clarify that TBI is something that we supported from the start of the
-arm64 kernel port. TBI (top byte ignore) allows a user pointer to have
-non-zero top byte and dereference it without causing a fault (the
-hardware masks it out). The user/kernel ABI does not allow such tagged
-pointers into the kernel, nor would the kernel return any such tagged
-addresses.
+if (opsize < 2) /* "silly options" */
+    return;
+if (opsize > length)   /* remember, opsize >= 2 here */
+     return; /* don't parse partial options */
 
-With MTE (memory tagging extensions), the top-byte meaning is changed
-from no longer being ignored to actually being checked against a tag in
-the physical RAM (we call it allocation tag).
+I guess adding yet another conditional will make this code obviously
+correct for all eyes
+and various tools.
 
-> 1. set the user mode PSTATE.mcde bit. This acts as the master switch to
-> enable ADI for a process.
-> 
-> 2. set TTE.mcd bit on TLB entries that match the address range ADI is
-> being enabled on.
+Thanks.
 
-Something close enough for MTE, with the difference that enabling it is
-not a PSTATE bit but rather a system control bit (SCTLR_EL1 register),
-so only the kernel can turn it on/off for the user.
-
-> 3. Store version tag for the range of addresses userspace wants ADI
-> enabled on using "stxa" instruction. These tags are stored in physical
-> memory by the memory controller.
-
-Do you have an "ldxa" instruction to load the tags from physical memory?
-
-> Steps 1 and 2 are accomplished by userspace by calling mprotect() with
-> PROT_ADI. Tags are set by storing tags in a loop, for example:
-> 
->         version = 10;
->         tmp_addr = shmaddr;
->         end = shmaddr + BUFFER_SIZE;
->         while (tmp_addr < end) {
->                 asm volatile(
->                         "stxa %1, [%0]0x90\n\t"
->                         :
->                         : "r" (tmp_addr), "r" (version));
->                 tmp_addr += adi_blksz;
->         }
-
-On arm64, a sequence similar to the above would live in the libc. So a
-malloc() call will tag the memory and return the tagged address to the
-user.
-
-We were not planning for a PROT_ADI/MTE but rather have MTE enabled for
-all user memory ranges. We may revisit this before we upstream the MTE
-support (probably some marginal benefit for the hardware not fetching
-the tags from memory if we don't need to, e.g. code sections).
-
-Given that we already have the TBI feature and with MTE enabled the top
-byte is no longer ignored, we are planning for an explicit opt-in by the
-user via prctl() to enable MTE.
-
-> With these semantics, giving mmap() or shamat() a tagged address is
-> meaningless since no tags have been stored at the addresses mmap() will
-> allocate and one can not store tags before memory range has been
-> allocated. If we choose to allow tagged addresses to come into mmap()
-> and shmat(), sparc code can strip the tags unconditionally and that may
-> help simplify ABI and/or code.
-
-We could say that with TBI (pre-MTE support), the top byte is actually
-ignored on mmap(). Now, if you pass a MAP_FIXED with a tagged address,
-should the user expect the same tagged address back or stripping the tag
-is acceptable? If we want to keep the current mmap() semantics, I'd say
-the same tag is returned. However, with MTE this also implies that the
-memory was coloured.
-
-> > My thoughts on allowing tags (quick look):
-> > 
-> > brk - no
-> > get_mempolicy - yes
-> > madvise - yes
-> > mbind - yes
-> > mincore - yes
-> > mlock, mlock2, munlock - yes
-> > mmap - no (we may change this with MTE but not for TBI)
-> > mmap_pgoff - not used on arm64
-> > mprotect - yes
-> > mremap - yes for old_address, no for new_address (on par with mmap)
-> > msync - yes
-> > munmap - probably no (mmap does not return tagged ptrs)
-> > remap_file_pages - no (also deprecated syscall)
-> > shmat, shmdt - shall we allow tagged addresses on shared memory?
-> > 
-> > The above is only about the TBI ABI while ignoring hardware MTE. For
-> > the latter, we may want to change the mmap() to allow pre-colouring
-> > on page fault which means that munmap()/mprotect() should also
-> > support tagged pointers. Possibly mremap() as well but we need to
-> > decide whether it should allow re-colouring the page (probably no,
-> > in which case old_address and new_address should have the same tag).
-> > For some of these we'll end up with arm64 specific wrappers again,
-> > unless sparc ADI adopts exactly the same ABI restrictions.
-> 
-> Let us keep any restrictions common across ARM64 and sparc. pre-
-> coloring on sparc in the kernel would mean kernel will have to execute
-> stxa instructions in a loop for each page being faulted in.
-
-Since the user can probe the pre-existing colour in a faulted-in page
-(either with some 'ldxa' instruction or by performing a tag-checked
-access), the kernel should always pre-colour (even if colour 0) any
-allocated page. There might not be an obvious security risk but I feel
-uneasy about letting colours leak between address spaces (different user
-processes or between kernel and user).
-
-Since we already need such loop in the kernel, we might as well allow
-user space to require a certain colour. This comes in handy for large
-malloc() and another advantage is that the C library won't be stuck
-trying to paint the whole range (think GB).
-
-> Not that big a deal but doesn't that assume the entire page has the
-> same tag which is dedcued from the upper bits of address? Shouldn't we
-> support tags at the same granularity level as what the hardware
-> supports?
-
-That's mostly about large malloc() optimisation via mmap(), the latter
-working on page granularity already. There is another use-case for
-pre-coloured thread stacks, also allocated via anonymous mmap().
-
-> We went through this discussion for sparc and decision was to support
-> tags at the same granularity as hardware. That means we can not deduce
-> tags from the first address that pioints into an mmap or shmat region.
-> Those tags and the upper bytes of colored address could change for
-> every cacheline sized block (64-bytes on sparc M7).
-
-It's 16-byte for arm64, so smaller than the cacheline.
-
-> We can try to store tags for an entire region in vma but that is
-> expensive, plus on sparc tags are set in userspace with no
-> participation from kernel and now we need a way for userspace to
-> communicate the tags to kernel.
-
-We can't support finer granularity through the mmap() syscall and, as
-you said, the vma is not the right thing to store the individual tags.
-With the above extension to mmap(), we'd have to store a colour per vma
-and prevent merging if different colours (we could as well use the
-pkeys mechanism we already have in the kernel but use a colour per vma
-instead of a key).
-
-Of course, the user is allowed to change the in-memory colours at a
-finer granularity and the kernel will preserve them during swapping
-out/in, page migration etc. The above mmap() proposal is just for the
-first fault-in of a page in a given range/vma.
-
-> From sparc point of view, making kernel responsible for assigning tags
-> to a page on page fault is full of pitfalls.
-
-This could be just some arm64-specific but if you plan to deploy it more
-generically for sparc (at the C library level), you may find this
-useful.
-
--- 
-Catalin
+Signed-off-by: Eric Dumazet <edumazet@google.com>
