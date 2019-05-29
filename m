@@ -2,289 +2,101 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA52C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5877C28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106FE23B08
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0DE23B2A
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559141858;
+	bh=2MoQ/9VJSoMM91O20PGB4ivHrG38q1xe5mQzrD6t5u4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mnFhac/y1EL1GWdBiygqvcLwgaskYKhlIeZU0DQX4r0aOehl46m/jcZJ6iaifUMwl
+	 pHtVp2HH41LsEsZTpoLeVOVrLYNRTV5h8CNGWqU77n2sVe+GUvMyHBjEUCELeWMxXn
+	 59OCIWDS7+deVowvuy/Mnt9ikSKhN6HrqEub7u0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfE2O4f (ORCPT
+        id S1726548AbfE2O5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:56:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45760 "EHLO mx1.redhat.com"
+        Wed, 29 May 2019 10:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbfE2O4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:56:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726012AbfE2O5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 10:57:37 -0400
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C19F6EB87;
-        Wed, 29 May 2019 14:56:34 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CF75B681;
-        Wed, 29 May 2019 14:56:33 +0000 (UTC)
-Date:   Wed, 29 May 2019 08:56:33 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, kwankhede@nvidia.com, cjia@nvidia.com
-Subject: Re: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Message-ID: <20190529085633.7fcdf7d2@x1.home>
-In-Reply-To: <20190524135738.54862-4-parav@mellanox.com>
-References: <20190524135738.54862-1-parav@mellanox.com>
-        <20190524135738.54862-4-parav@mellanox.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id A89EE23B3D;
+        Wed, 29 May 2019 14:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559141857;
+        bh=2MoQ/9VJSoMM91O20PGB4ivHrG38q1xe5mQzrD6t5u4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Z8rQXb4doZm6pmJlbN5cIaka5qDTgBcJUIrtSaBiuMVoEQ3F2z0sm7M5+GSwqmQh9
+         MWyU/cJV6ZU7Wzw0Wxqd5t66DziNeA3KCfXs+caIbv3+IYpHXwL2KBOYEI7aMmB1sG
+         1EOUEsTYwtVtq62mGC2Ttmw2HCeTUvldL93x6Q6Q=
+Received: by mail-lj1-f178.google.com with SMTP id z5so2766533lji.10;
+        Wed, 29 May 2019 07:57:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAUnI8jboP7u6NtIXMNtvCeiOaMMVkLs3b8Qe+ZmPx4icZO5c4fs
+        zmwEIirTwpHtK2wavNNk6yyhFoI765XUQbt0fbA=
+X-Google-Smtp-Source: APXvYqzkAqGwLKzbKAnsKsG2Y7Ep/sgbV/2n7wYZZVclmQvLpywZUeB/D8r3hLefKeJGrJDwfAiDkd8IQ9GPjiSYc1E=
+X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr4214188lji.64.1559141855017;
+ Wed, 29 May 2019 07:57:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 29 May 2019 14:56:34 +0000 (UTC)
+References: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
+ <20190527022258.32748-1-matheus@castello.eng.br> <20190527022258.32748-3-matheus@castello.eng.br>
+In-Reply-To: <20190527022258.32748-3-matheus@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 29 May 2019 16:57:23 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
+Message-ID: <CAJKOXPdtsyY_GhniBAb0yV=HOhGx+x4xRPqNgdO+d0MDZRZ_7w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 08:57:38 -0500
-Parav Pandit <parav@mellanox.com> wrote:
-
-> In following sequences, child devices created while removing mdev parent
-> device can be left out, or it may lead to race of removing half
-> initialized child mdev devices.
-> 
-> issue-1:
-> --------
->        cpu-0                         cpu-1
->        -----                         -----
->                                   mdev_unregister_device()
->                                     device_for_each_child()
->                                       mdev_device_remove_cb()
->                                         mdev_device_remove()
-> create_store()
->   mdev_device_create()                   [...]
->     device_add()
->                                   parent_remove_sysfs_files()
-> 
-> /* BUG: device added by cpu-0
->  * whose parent is getting removed
->  * and it won't process this mdev.
->  */
-> 
-> issue-2:
-> --------
-> Below crash is observed when user initiated remove is in progress
-> and mdev_unregister_driver() completes parent unregistration.
-> 
->        cpu-0                         cpu-1
->        -----                         -----
-> remove_store()
->    mdev_device_remove()
->    active = false;
->                                   mdev_unregister_device()
->                                   parent device removed.
->    [...]
->    parents->ops->remove()
->  /*
->   * BUG: Accessing invalid parent.
->   */
-> 
-> This is similar race like create() racing with mdev_unregister_device().
-> 
-> BUG: unable to handle kernel paging request at ffffffffc0585668
-> PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
-> Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-> RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
-> Call Trace:
->  remove_store+0x71/0x90 [mdev]
->  kernfs_fop_write+0x113/0x1a0
->  vfs_write+0xad/0x1b0
->  ksys_write+0x5a/0xe0
->  do_syscall_64+0x5a/0x210
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Therefore, mdev core is improved as below to overcome above issues.
-> 
-> Wait for any ongoing mdev create() and remove() to finish before
-> unregistering parent device.
-> This continues to allow multiple create and remove to progress in
-> parallel for different mdev devices as most common case.
-> At the same time guard parent removal while parent is being access by
-> create() and remove callbacks.
-> create()/remove() and unregister_device() are synchronized by the rwsem.
-> 
-> Refactor device removal code to mdev_device_remove_common() to avoid
-> acquiring unreg_sem of the parent.
-> 
-> Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
+On Mon, 27 May 2019 at 04:45, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> For configure low level state of charge threshold alert signaled from
+> max17040 we add "maxim,alert-low-soc-level" property.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  drivers/vfio/mdev/mdev_core.c    | 61 ++++++++++++++++++++++++--------
->  drivers/vfio/mdev/mdev_private.h |  2 ++
->  2 files changed, 49 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 0bef0cae1d4b..c5401a8c6843 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -102,11 +102,36 @@ static void mdev_put_parent(struct mdev_parent *parent)
->  		kref_put(&parent->ref, mdev_release_parent);
->  }
->  
-
-Some sort of locking semantics comment would be useful here, ex:
-
-/* Caller holds parent unreg_sem read or write lock */
-
-> +static void mdev_device_remove_common(struct mdev_device *mdev)
-> +{
-> +	struct mdev_parent *parent;
-> +	struct mdev_type *type;
-> +	int ret;
+>  .../power/supply/max17040_battery.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> new file mode 100644
+> index 000000000000..a13e8d50ff7b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -0,0 +1,28 @@
+> +max17040_battery
+> +~~~~~~~~~~~~~~~~
 > +
-> +	type = to_mdev_type(mdev->type_kobj);
-> +	mdev_remove_sysfs_files(&mdev->dev, type);
-> +	device_del(&mdev->dev);
-> +	parent = mdev->parent;
-> +	ret = parent->ops->remove(mdev);
-> +	if (ret)
-> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-> +
-> +	/* Balances with device_initialize() */
-> +	put_device(&mdev->dev);
-> +	mdev_put_parent(parent);
-> +}
-> +
->  static int mdev_device_remove_cb(struct device *dev, void *data)
->  {
-> -	if (dev_is_mdev(dev))
-> -		mdev_device_remove(dev);
-> +	struct mdev_parent *parent;
-> +	struct mdev_device *mdev;
->  
-> +	if (!dev_is_mdev(dev))
-> +		return 0;
-> +
-> +	mdev = to_mdev_device(dev);
-> +	parent = mdev->parent;
-> +	mdev_device_remove_common(mdev);
+> +Required properties :
+> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
 
-'parent' is unused here and we only use mdev once, so we probably don't
-need to put it in a local variable.
+One more comment. The datasheet for max17040 says that there is on
+ALERT pin and ALERT bits in RCOMP register. Which device are you
+using? If it turns out that max17040 does not support it, then the
+driver and bindings should reflect this - interrupts should not be set
+on max17040.
 
->  	return 0;
->  }
->  
-> @@ -148,6 +173,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->  	}
->  
->  	kref_init(&parent->ref);
-> +	init_rwsem(&parent->unreg_sem);
->  
->  	parent->dev = dev;
->  	parent->ops = ops;
-> @@ -206,13 +232,17 @@ void mdev_unregister_device(struct device *dev)
->  	dev_info(dev, "MDEV: Unregistering\n");
->  
->  	list_del(&parent->next);
-> +	mutex_unlock(&parent_list_lock);
-> +
-> +	down_write(&parent->unreg_sem);
-> +
->  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
->  
->  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
->  
->  	parent_remove_sysfs_files(parent);
-> +	up_write(&parent->unreg_sem);
->  
-> -	mutex_unlock(&parent_list_lock);
->  	mdev_put_parent(parent);
->  }
->  EXPORT_SYMBOL(mdev_unregister_device);
-> @@ -265,6 +295,12 @@ int mdev_device_create(struct kobject *kobj,
->  
->  	mdev->parent = parent;
->  
-> +	ret = down_read_trylock(&parent->unreg_sem);
-> +	if (!ret) {
-> +		ret = -ENODEV;
-
-I would have expected -EAGAIN or -EBUSY here, but I guess that since we
-consider the lock-out to deterministically be the parent going away
-that -ENODEV makes sense.  Ok.
-
-> +		goto mdev_fail;
-> +	}
-> +
->  	device_initialize(&mdev->dev);
->  	mdev->dev.parent  = dev;
->  	mdev->dev.bus     = &mdev_bus_type;
-> @@ -287,6 +323,7 @@ int mdev_device_create(struct kobject *kobj,
->  
->  	mdev->active = true;
->  	dev_dbg(&mdev->dev, "MDEV: created\n");
-> +	up_read(&parent->unreg_sem);
->  
->  	return 0;
->  
-> @@ -295,6 +332,7 @@ int mdev_device_create(struct kobject *kobj,
->  add_fail:
->  	parent->ops->remove(mdev);
->  ops_create_fail:
-> +	up_read(&parent->unreg_sem);
->  	put_device(&mdev->dev);
->  mdev_fail:
->  	mdev_put_parent(parent);
-> @@ -305,7 +343,6 @@ int mdev_device_remove(struct device *dev)
->  {
->  	struct mdev_device *mdev, *tmp;
->  	struct mdev_parent *parent;
-> -	struct mdev_type *type;
->  	int ret;
->  
->  	mdev = to_mdev_device(dev);
-> @@ -329,18 +366,14 @@ int mdev_device_remove(struct device *dev)
->  	mdev->active = false;
->  	mutex_unlock(&mdev_list_lock);
->  
-> -	type = to_mdev_type(mdev->type_kobj);
-> -	mdev_remove_sysfs_files(dev, type);
-> -	device_del(&mdev->dev);
->  	parent = mdev->parent;
-> -	ret = parent->ops->remove(mdev);
-> -	if (ret)
-> -		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-> -
-> -	/* Balances with device_initialize() */
-> -	put_device(&mdev->dev);
-> -	mdev_put_parent(parent);
-> +	/* Check if parent unregistration has started */
-> +	ret = down_read_trylock(&parent->unreg_sem);
-> +	if (!ret)
-> +		return -ENODEV;
->  
-> +	mdev_device_remove_common(mdev);
-> +	up_read(&parent->unreg_sem);
->  	return 0;
->  }
->  
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index 924ed2274941..398767526276 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -23,6 +23,8 @@ struct mdev_parent {
->  	struct list_head next;
->  	struct kset *mdev_types_kset;
->  	struct list_head type_list;
-> +	/* Synchronize device creation/removal with parent unregistration */
-> +	struct rw_semaphore unreg_sem;
->  };
->  
->  struct mdev_device {
-
+Best regards,
+Krzysztof
