@@ -2,88 +2,239 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1026EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BBCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76FA2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC862081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfE2NQp (ORCPT
+        id S1727170AbfE2NRL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:16:45 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:49189 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE2NQo (ORCPT
+        Wed, 29 May 2019 09:17:11 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:47026 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfE2NRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:16:44 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45DWSn5ZnMz1rcqw;
-        Wed, 29 May 2019 15:16:40 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45DWSm40vbz1qqkj;
-        Wed, 29 May 2019 15:16:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Aho-CC1PN1WD; Wed, 29 May 2019 15:16:39 +0200 (CEST)
-X-Auth-Info: heIz6POa976JqLUuwvE+2N83H3Q60nk8KinsJitNukiRlmGYQB/lJSXTXqr9r+Ce
-Received: from hawking (nat.nue.novell.com [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 29 May 2019 15:16:39 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>, Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] binfmt_flat: make load_flat_shared_library() work
-References: <20190524201817.16509-1-jannh@google.com>
-        <20190525144304.e2b9475a18a1f78a964c5640@linux-foundation.org>
-        <CAG48ez36xJ9UA8gWef3+1rHQwob5nb8WP3RqnbT8GEOV9Z38jA@mail.gmail.com>
-        <6956cfe5-90d4-aad4-48e3-66b0ece91fed@linux-m68k.org>
-        <7cac8be1-1667-6b6e-d2b8-d6ec5dc6da09@physik.fu-berlin.de>
-X-Yow:  FOOLED you!  Absorb EGO SHATTERING impulse rays, polyester poltroon!!
-Date:   Wed, 29 May 2019 15:16:38 +0200
-In-Reply-To: <7cac8be1-1667-6b6e-d2b8-d6ec5dc6da09@physik.fu-berlin.de> (John
-        Paul Adrian Glaubitz's message of "Wed, 29 May 2019 14:32:04 +0200")
-Message-ID: <mvma7f5bdu1.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Wed, 29 May 2019 09:17:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z19so2414771qtz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:17:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=38WVoDkA5tNJSn+74g5K5hd5HeWV9GPT9Cu7zY/fE7k=;
+        b=rtJo/Mgi04juln5DG626JoAA4aX7zid0jcdvd9kTUXBK6ptIVRFWQsLxLcLFrY89yc
+         Fz48IbxAcAcov8RuMJCU391BtTJXwBR+BQ3OTdjwdqF1z8QrGEIvj3zpk/1ndu3hcV8P
+         ghOB3Yyb80v7Fsg59/PQOfKKC165YTv5oWf4Ep/T2IoJkxCeJ9FV+z+0TaE85iXa9Xd7
+         37f9mveb5rM0ahzNA0uBn5/pq3BboRNp7fOIQMnCCxsdqoqmB5l9aw1gPaaubJUHfmsw
+         TMqxXoxM/TvEgAjSYzRWQhHilTiqRJVnBcdes1cWgKJCrZsnth1P7015fbcRjvWMA9cN
+         g0qQ==
+X-Gm-Message-State: APjAAAVniSWLCUxJej+YT+AxIhDzIebFki8Le6TjfoZ8QHSWH+hypWtm
+        R/VL2sZUqGRBBAnqLZag4g+Y6WH87WDwBfFXObXqlw==
+X-Google-Smtp-Source: APXvYqwz4w5VaLU1XoZ45utYk/ZFqxDNLwTqIP/uw1ATQJcHa/8XriiX0iGvO1IdB/MedXQAqndDtpggI0JUND5s7xU=
+X-Received: by 2002:ac8:7656:: with SMTP id i22mr83063261qtr.260.1559135829299;
+ Wed, 29 May 2019 06:17:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
+ <20190521132712.2818-9-benjamin.tissoires@redhat.com> <CAO-hwJJXGTZq7zRVhcFNwh-kOo0rUhZOsNtFX1yA93Km=L+ynA@mail.gmail.com>
+ <00f901d5143f$f5ea8420$e1bf8c60$@emc.com.tw> <20190528012101.GA193221@dtor-ws>
+ <CA+jURcsWe=fZ-catnCaH=A85vAhrv1w1E5nSwpJvBAwgCTNYfw@mail.gmail.com>
+ <CAOOzhkq+vD034Q2FKB2ryR7Q9nY=iQjdrREuihkZTaVcg+E_Xg@mail.gmail.com>
+ <CAO-hwJ+9tnmvD-K3_Ksesdvag1aNbLB7eJxb9ZKb7kM24unqQQ@mail.gmail.com> <010301d5161d$dd201e70$97605b50$@emc.com.tw>
+In-Reply-To: <010301d5161d$dd201e70$97605b50$@emc.com.tw>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 29 May 2019 15:16:55 +0200
+Message-ID: <CAO-hwJKFSFqupf10Dgmd-sLOSD2T0oymd-CwLLtAJ2QeE7DzZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+To:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
+Cc:     "Sean O'Brien" <seobrien@chromium.org>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        Harry Cutts <hcutts@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mai 29 2019, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de> wrote:
+On Wed, May 29, 2019 at 2:56 PM 廖崇榮 <kt.liao@emc.com.tw> wrote:
+>
+>
+>
+> -----Original Message-----
+> From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> Sent: Wednesday, May 29, 2019 3:17 PM
+> To: Sean O'Brien; Peter Hutterer
+> Cc: Harry Cutts; Dmitry Torokhov; 廖崇榮; Rob Herring; Aaron Ma; Hans de Goede; open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true width/height
+>
+> On Wed, May 29, 2019 at 2:12 AM Sean O'Brien <seobrien@chromium.org> wrote:
+> >
+> > We do still use a maxed out major axis as a signal for a palm in the
+> > touchscreen logic, but I'm not too concerned because if that axis is
+> > maxed out, the contact should probably be treated as a palm anyway...
+> >
+> > I'm more concerned with this affecting our gesture detection for
+> > touchpad. It looks like this change would cause all contacts to
+> > reported as some percentage bigger than they are currently. Can you
+> > give me an idea of how big that percentage is?
+>
+> On the P52, I currently have:
+> [  +0.000009] max:    (3045,1731) drivers/input/mouse/elan_i2c_core.c:428
+> [  +0.000003] traces: (24,14) drivers/input/mouse/elan_i2c_core.c:429
+>
+> -> with the computation done in the kernel:
+> width_ratio: 126
+> height_ratio: 123
+>
+> For my average finger, the reported traces are between 4 and 6:
+> With the ETP_FWIDTH_REDUCE:
+> Major between 144 to 216
+> Minor between 132 to 198
+>
+> Without:
+> Major between 504 to 756
+> Minor between 492 to 738
+>
+> So a rough augmentation of 350%
+>
+> For the Synaptics devices (over SMBus), they send the raw value of the traces, so you will get a major/minor between 2 to 5. Max on these axes is 15, so we should get the same percentage of value comparing to the range.
+>
+> Elan's vendor report contains such information, which indicate how many trace are touched by finger/palm
+>                 mk_x = (finger_data[3] & 0x0f);
+>                 mk_y = (finger_data[3] >> 4);
+> Do we need to use mk_* for major/minor for keeping it consistent with other vendor?
 
-> On 5/28/19 12:56 PM, Greg Ungerer wrote:
->>> Maybe... but I didn't want to rip it out without having one of the
->>> maintainers confirm that this really isn't likely to be used anymore.
->> 
->> I have not used shared libraries on m68k non-mmu setups for
->> a very long time. At least 10 years I would think.
-> We use shared libraries in Debian on m68k and Andreas Schwab uses them
-> on openSUSE/m68k.
+IMO, no. It is better to send something closer to an actual unit
+instead of 12,5th of mm.
+However, the problem here is that major/minor can be swapped depending
+on how the finger is placed (horizontally or vertically), so
+unfortunately, if the axes and resolutions are not the same, then we
+are screwed, this would just be a value without unit.
 
-Nope, I don't use non-mmu.
+> But this modification will impact Chromebook's usability and Chrome test suite.
 
-Andreas.
+Yeah, there is no point breaking things just for the fun of it.
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Cheers,
+Benjamin
+
+>
+>
+>
+> Which is why libinput has a database of which device reports which pressure/major/minor ranges as otherwise the values are just impossible to understand.
+>
+> Cheers,
+> Benjamin
+>
+>
+>
+> >
+> > On Tue, May 28, 2019 at 11:13 AM Harry Cutts <hcutts@chromium.org> wrote:
+> > >
+> > > On Mon, 27 May 2019 at 18:21, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > > >
+> > > > Hi Benjamin, KT,
+> > > >
+> > > > On Mon, May 27, 2019 at 11:55:01AM +0800, 廖崇榮 wrote:
+> > > > > Hi
+> > > > >
+> > > > > -----Original Message-----
+> > > > > From: Benjamin Tissoires [mailto:benjamin.tissoires@redhat.com]
+> > > > > Sent: Friday, May 24, 2019 5:37 PM
+> > > > > To: Dmitry Torokhov; KT Liao; Rob Herring; Aaron Ma; Hans de
+> > > > > Goede
+> > > > > Cc: open list:HID CORE LAYER; lkml; devicetree@vger.kernel.org
+> > > > > Subject: Re: [PATCH v2 08/10] Input: elan_i2c - export true
+> > > > > width/height
+> > > > >
+> > > > > On Tue, May 21, 2019 at 3:28 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
+> > > > > >
+> > > > > > The width/height is actually in the same unit than X and Y. So
+> > > > > > we should not tamper the data, but just set the proper
+> > > > > > resolution, so that userspace can correctly detect which touch is a palm or a finger.
+> > > > > >
+> > > > > > Signed-off-by: Benjamin Tissoires
+> > > > > > <benjamin.tissoires@redhat.com>
+> > > > > >
+> > > > > > --
+> > > > > >
+> > > > > > new in v2
+> > > > > > ---
+> > > > > >  drivers/input/mouse/elan_i2c_core.c | 11 ++++-------
+> > > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/input/mouse/elan_i2c_core.c
+> > > > > > b/drivers/input/mouse/elan_i2c_core.c
+> > > > > > index 7ff044c6cd11..6f4feedb7765 100644
+> > > > > > --- a/drivers/input/mouse/elan_i2c_core.c
+> > > > > > +++ b/drivers/input/mouse/elan_i2c_core.c
+> > > > > > @@ -45,7 +45,6 @@
+> > > > > >  #define DRIVER_NAME            "elan_i2c"
+> > > > > >  #define ELAN_VENDOR_ID         0x04f3
+> > > > > >  #define ETP_MAX_PRESSURE       255
+> > > > > > -#define ETP_FWIDTH_REDUCE      90
+> > > > > >  #define ETP_FINGER_WIDTH       15
+> > > > > >  #define ETP_RETRY_COUNT                3
+> > > > > >
+> > > > > > @@ -915,12 +914,8 @@ static void elan_report_contact(struct elan_tp_data *data,
+> > > > > >                         return;
+> > > > > >                 }
+> > > > > >
+> > > > > > -               /*
+> > > > > > -                * To avoid treating large finger as palm, let's reduce the
+> > > > > > -                * width x and y per trace.
+> > > > > > -                */
+> > > > > > -               area_x = mk_x * (data->width_x - ETP_FWIDTH_REDUCE);
+> > > > > > -               area_y = mk_y * (data->width_y - ETP_FWIDTH_REDUCE);
+> > > > > > +               area_x = mk_x * data->width_x;
+> > > > > > +               area_y = mk_y * data->width_y;
+> > > > > >
+> > > > > >                 major = max(area_x, area_y);
+> > > > > >                 minor = min(area_x, area_y); @@ -1123,8
+> > > > > > +1118,10 @@ static int elan_setup_input_device(struct elan_tp_data *data)
+> > > > > >                              ETP_MAX_PRESSURE, 0, 0);
+> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0,
+> > > > > >                              ETP_FINGER_WIDTH * max_width, 0,
+> > > > > > 0);
+> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MAJOR,
+> > > > > > + data->x_res);
+> > > > > >         input_set_abs_params(input, ABS_MT_TOUCH_MINOR, 0,
+> > > > > >                              ETP_FINGER_WIDTH * min_width, 0,
+> > > > > > 0);
+> > > > > > +       input_abs_set_res(input, ABS_MT_TOUCH_MINOR,
+> > > > > > + data->y_res);
+> > > > >
+> > > > > I had a chat with Peter on Wednesday, and he mentioned that this is dangerous as Major/Minor are max/min of the width and height. And given that we might have 2 different resolutions, we would need to do some computation in the kernel to ensure the data is correct with respect to the resolution.
+> > > > >
+> > > > > TL;DR: I don't think we should export the resolution there :(
+> > > > >
+> > > > > KT, should I drop the patch entirely, or is there a strong argument for keeping the ETP_FWIDTH_REDUCE around?
+> > > > > I suggest you apply the patch, I have no idea why ETP_FWIDTH_REDUCE existed.
+> > > > > Our FW team know nothing about ETP_FWIDTH_REDUCE ether.
+> > > > >
+> > > > > The only side effect will happen on Chromebook because such computation have stayed in ChromeOS' kernel for four years.
+> > > > > Chrome's finger/palm threshold may be different from other Linux distribution.
+> > > > > We will discuss it with Google once the patch picked by chrome and cause something wrong.
+> > > >
+> > > > Chrome has logic that contact with maximum major/minor is treated
+> > > > as a palm, so here the driver (which originally came from Chrome
+> > > > OS) artificially reduces the contact size to ensure that palm
+> > > > rejection logic does not trigger.
+> > > >
+> > > > I'm adding Harry to confirm whether we are still using this logic
+> > > > and to see if we can adjust it to be something else.
+> > >
+> > > I'm not very familiar with our touchpad code, so adding Sean
+> > > O'Brien, who is.
+>
