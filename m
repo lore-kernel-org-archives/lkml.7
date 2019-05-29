@@ -2,93 +2,194 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA38AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D78BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F3224108
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F082524118
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 19:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WzEDCNiu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CU9Y1DOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfE2Ty7 (ORCPT
+        id S1726225AbfE2T6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 15:54:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57460 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfE2Ty7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 15:54:59 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 29 May 2019 15:58:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48908 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfE2T6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 15:58:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3D4F360A00; Wed, 29 May 2019 19:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559159899;
+        bh=FVSPpTHDF0GOBaKIDyNZqRwnEvQHQL/Ok8SvfTA+sVE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WzEDCNiuCjmE4/YO6xyFI93CQdAZUWwA6p1MCkV5/5KeX5E36lE1PdR+ZsSCsUOxZ
+         qVt0fXuPXLPBHTcfJfUdvt3ey0pJ06NyJqgG5YUkMn70Ag2MLl+rUGpMdUqLGWA6w8
+         kigwSz92d76dKLYgsKFTd3HDW0Jhxkd9v3jNqOqI=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E228DC004BEE;
-        Wed, 29 May 2019 19:54:58 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A27E05C5DF;
-        Wed, 29 May 2019 19:54:57 +0000 (UTC)
-Date:   Wed, 29 May 2019 13:54:56 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Thomas Meyer" <thomas@m3y3r.de>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re:
-Message-ID: <20190529135456.5a2e3973@x1.home>
-In-Reply-To: <E1hUrZM-0007qA-Q8@sslproxy01.your-server.de>
-References: <E1hUrZM-0007qA-Q8@sslproxy01.your-server.de>
-Organization: Red Hat
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CFF086019D;
+        Wed, 29 May 2019 19:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559159897;
+        bh=FVSPpTHDF0GOBaKIDyNZqRwnEvQHQL/Ok8SvfTA+sVE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CU9Y1DOyQ9WEHsuZRNe0JvS0ftkyIvmdiwaW8BqrCMwhQibK1lXH3Eo+FNxZQXD5O
+         glN9aggcfrZC0P3QDYUdm2eKXXNxO5yIn1GcjV2ZXYbefFULrWDMIhpbKBQ/trilC5
+         FBx53OO1MI7YvLXS3xGlZclKXXWV44XtND8fRXxA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CFF086019D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [Freedreno] [PATCH RFC v2 0/6] ARM: qcom: initial Nexus 5 display
+ support
+To:     Brian Masney <masneyb@onstation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sean Paul <sean@poorly.run>, Rob Herring <robh@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dave Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        freedreno <freedreno@lists.freedesktop.org>
+References: <20190509020352.14282-1-masneyb@onstation.org>
+ <CACRpkda-7+ggoeMD9=erPX09OWteX0bt+qP60_Yv6=4XLqNDZQ@mail.gmail.com>
+ <20190529011705.GA12977@basecamp>
+ <CAOCk7NrRo2=0fPN_Sy1Bhhy+UV7U6uO5aV9uXZc8kc3VpSt71g@mail.gmail.com>
+ <20190529013713.GA13245@basecamp>
+ <CAOCk7NqfdNkRJkbJY70XWN-XvdtFJ0UVn3_9rbgAsNCdR7q5PQ@mail.gmail.com>
+ <20190529024648.GA13436@basecamp>
+ <CAOCk7NpC93ACr4jFm7SBOKSvFJSDhq2byX6BAYPX29BuYEkWnQ@mail.gmail.com>
+ <20190529102822.GA15027@basecamp>
+ <CAOCk7NoVknZOkFcki9c8hq2vkqLhBSfum05T9Srq8mtJjAaLyQ@mail.gmail.com>
+ <20190529193046.GA19876@basecamp>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <26c535af-9853-c8c9-3138-04f5d9ee11b0@codeaurora.org>
+Date:   Wed, 29 May 2019 13:58:16 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190529193046.GA19876@basecamp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 29 May 2019 19:54:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 May 2019 13:44:04 +0200
-"Thomas Meyer" <thomas@m3y3r.de> wrote:
-
-> From thomas@m3y3r.de Sun May 26 00:13:26 2019
-> Subject: [PATCH] vfio-pci/nvlink2: Use vma_pages function instead of explicit
->  computation
-> To: alex.williamson@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-> Content-Type: text/plain; charset="UTF-8"
-> Mime-Version: 1.0
-> Content-Transfer-Encoding: 8bit
-> X-Patch: Cocci
-> X-Mailer: DiffSplit
-> Message-ID: <1558822461341-1674464153-1-diffsplit-thomas@m3y3r.de>
-> References: <1558822461331-726613767-0-diffsplit-thomas@m3y3r.de>
-> In-Reply-To: <1558822461331-726613767-0-diffsplit-thomas@m3y3r.de>
-> X-Serial-No: 1
+On 5/29/2019 1:30 PM, Brian Masney wrote:
+> On Wed, May 29, 2019 at 08:41:31AM -0600, Jeffrey Hugo wrote:
+>> On Wed, May 29, 2019 at 4:28 AM Brian Masney <masneyb@onstation.org> wrote:
+>>>
+>>> On Tue, May 28, 2019 at 08:53:49PM -0600, Jeffrey Hugo wrote:
+>>>> On Tue, May 28, 2019 at 8:46 PM Brian Masney <masneyb@onstation.org> wrote:
+>>>>>
+>>>>> On Tue, May 28, 2019 at 07:42:19PM -0600, Jeffrey Hugo wrote:
+>>>>>>>> Do you know if the nexus 5 has a video or command mode panel?  There
+>>>>>>>> is some glitchyness with vblanks and command mode panels.
+>>>>>>>
+>>>>>>> Its in command mode. I know this because I see two 'pp done time out'
+>>>>>>> messages, even on 4.17. Based on my understanding, the ping pong code is
+>>>>>>> only applicable for command mode panels.
+>>>>>>
+>>>>>> Actually, the ping pong element exists in both modes, but 'pp done
+>>>>>> time out' is a good indicator that it is command mode.
+>>>>>>
+>>>>>> Are you also seeing vblank timeouts?
+>>>>>
+>>>>> Yes, here's a snippet of the first one.
+>>>>>
+>>>>> [    2.556014] WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
+>>>>> [    2.556020] [CRTC:49:crtc-0] vblank wait timed out
+>>>>> [    2.556023] Modules linked in:
+>>>>> [    2.556034] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.2.0-rc1-00178-g72c3c1fd5f86-dirty #426
+>>>>> [    2.556038] Hardware name: Generic DT based system
+>>>>> [    2.556056] Workqueue: events deferred_probe_work_func
+>>>>> ...
+>>>>>
+>>>>>> Do you have busybox?
+>>>>>>
+>>>>>> Can you run -
+>>>>>> sudo busybox devmem 0xFD900614
+>>>>>> sudo busybox devmem 0xFD900714
+>>>>>> sudo busybox devmem 0xFD900814
+>>>>>> sudo busybox devmem 0xFD900914
+>>>>>> sudo busybox devmem 0xFD900A14
+>>>>>
+>>>>> # busybox devmem 0xFD900614
+>>>>> 0x00020020
+>>>>
+>>>> Ok, so CTL_0 path, command mode, ping pong 0, with the output going to DSI 1.
+>>>>
+>>>> Next one please:
+>>>>
+>>>> busybox devmem 0xFD912D30
+>>>
+>>> It's 0x00000000 on mainline and 4.17. I used the following script to
+>>> dump the entire mdp5 memory region and attached the dump from 4.17 and
+>>> 5.2rc1.
+>>>
+>>
+>> ok, 0 means autorefresh is not on.  Which is fine.  My next guess
+>> would be the vblank code checking the hardware vblank counter, which
+>> doesn't exist.
+>> In video mode, there is a frame counter which increments, which can be
+>> used as the vblank counter.  Unfortunately, that hardware isn't active
+>> in command mode, and there isn't an equivalent.
+>>
+>> So, the vblank code is going to read the register, and look for an
+>> update, which will never happen, thus it will timeout.  There is a
+>> backup path which uses timestamps (no hardware), which you can
+>> activate with a quick hack - make max_vblank_count = 0 at the
+>> following line
+>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c#L753
 > 
-> Use vma_pages function on vma object instead of explicit computation.
+> That fixed the issue!
+
+Awesome.  I'm glad it was something simple.
+
 > 
-> Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
-> ---
+> I previously observed that mdp5_get_vblank_counter, specifically
+> mdp5_encoder_get_framecount, would always return 0.
 > 
-> diff -u -p a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
-> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
-> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
-> @@ -161,7 +161,7 @@ static int vfio_pci_nvgpu_mmap(struct vf
->  
->  	atomic_inc(&data->mm->mm_count);
->  	ret = (int) mm_iommu_newdev(data->mm, data->useraddr,
-> -			(vma->vm_end - vma->vm_start) >> PAGE_SHIFT,
-> +			vma_pages(vma),
->  			data->gpu_hpa, &data->mem);
->  
->  	trace_vfio_pci_nvgpu_mmap(vdev->pdev, data->gpu_hpa, data->useraddr,
+> What's the best way to fix this in mainline? Set that to zero if any
+> of the interface modes is MDP5_INTF_DSI_MODE_COMMAND?
+> 
 
-Besides the formatting of this patch, there's already a pending patch
-with this same change:
+Short version, yes.  Long version:
 
-https://lkml.org/lkml/2019/5/16/658
+I still have that hack in my tree and haven't come back to formulating
+a proper fix yet.  Feel free to run with it.
 
-I think the original must have bounced from lkml due the encoding, but
-I'll use that one since it came first, is slightly cleaner in wrapping
-the line following the change, and already has Alexey's R-b.  Thanks,
+Thinking about it briefly, we could do two things.  We could fake a
+hardware counter by just increment an int every time the vblank irq is
+processed, but that seems clunky.  Otherwise, we could force a
+fallback onto the timestamp solution, which seems less invasive.
 
-Alex
+In theory, we could service multiple displays, with different
+properties (ie a combination of command and video mode).  The hack
+then, is not good, because it would break video mode (at-least we
+wouldn't be using the register when we could).  It would be great if
+the use of the hardware register could be done per display.
+
+Luckily, it looks like someone just made that possible -
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/drm_vblank.c?h=v5.2-rc2&id=ed20151a7699bb2c77eba3610199789a126940c4
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
