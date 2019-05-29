@@ -2,133 +2,105 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36D0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFDC28CC2
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B4A24169
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9FC2416F
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 20:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSOtfEZD"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="NSgXvhVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfE2Udp (ORCPT
+        id S1726540AbfE2Ufl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 16:33:45 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40864 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfE2Udo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 16:33:44 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r18so4611733edo.7;
-        Wed, 29 May 2019 13:33:43 -0700 (PDT)
+        Wed, 29 May 2019 16:35:41 -0400
+Received: from mail-eopbgr790110.outbound.protection.outlook.com ([40.107.79.110]:21178
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726362AbfE2Ufl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 16:35:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S2fb3eOB2v37Ig/0VcUFboawuXP2h8U26aBhW6jgwSM=;
-        b=pSOtfEZDFvuffJP4LTrkKxf3iCzvE7qPLy2aiYKLQwXx3ZzV8GnmpaQ3mPLRjV7szo
-         3gyqGkrZZF94HFtChmQ9dQR5dFYLWEk1rRIq7bM29dsMEWUzEbI1MKVlvcSXHyUcUM4h
-         B4lMLDpjsHCZ17nchpvMmoBhADdZIdRCyC1llO5//pHnLlIuQmdGQz2sCA7KugaHRvaz
-         ui3lRLRX0nn2aIN3yN8dCSjB4aG/NR0I0QzOjXA3voVvkEqu/oo1OvXC98LSHAGBxx6o
-         7V4ewQLNnucW3gtKaSwU9vu7xIHxk0vYiFKkQd5Z3j4AMON2zhLA8vrc0NGM4ZpurxrX
-         IXDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S2fb3eOB2v37Ig/0VcUFboawuXP2h8U26aBhW6jgwSM=;
-        b=Y2rrbp2bppiPq322gGI7Edh5o9W6YoDIujjh9ZmMknJXcJk65i5pZ9XVO4GaG7LIdT
-         dq4xzb+LRinaKIy9pQjsI9PGdFd9x1c8jKYiiODV6BiomgJHm94Hu05ligKorX/FUlw/
-         sh9lhelRgeSmctNzU1/dzAeSPHcbsDTtMV6icPCdIQO3aAZiqS4JCkv5wyv6Mbl2n2kz
-         hQR6SAzGr3cOqEbws716PSYzKY5QuLtrpw2gp56ly/Zm5gvzgsq9A4T4Ih5Ff6ayccGI
-         B0m3DU86L2XVbpdvI3oC1lrxs79AWW3D//tStiZ2XVR71Q3ga06xI5csEzEFp0lCNBWg
-         nSLg==
-X-Gm-Message-State: APjAAAWYTAE9MBGafE3IycJCLabU2xR4pOdVkyVFs/oP6YsrDG5imDXb
-        /VNgl8EFcJJznmRUhTRjSiek+jhPPV5Rh5dFxiQ=
-X-Google-Smtp-Source: APXvYqwkMHeR1MAaH87vh26R/pSrDfv84eLwPk3xyjxu2mGBLb89TfHWisnZ3uA9/hC1IBUGGS72/obS7C5gwuc5ZQo=
-X-Received: by 2002:aa7:c402:: with SMTP id j2mr217119edq.165.1559162022656;
- Wed, 29 May 2019 13:33:42 -0700 (PDT)
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uH+WMU7daOngIMZ4nvkcc4G3f9aYFouZEL4PdXtGbx4=;
+ b=NSgXvhVu6Vcl++wjb5qUUASfq/h774BMv7AbX7/WH3pjzIIoO+7TQHI2t6N19Seokrl/sLq2G9Lj2iH7ehc+R5MyU1bIvOQbwzA2j0E+kCysk6ZRfCzo36ErTQJOS3LKBXOku9laHCtqWlxo4aBp0Pcw+3Urll1+tvWRbLe/KLk=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1071.namprd22.prod.outlook.com (10.174.169.145) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Wed, 29 May 2019 20:35:38 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1922.021; Wed, 29 May 2019
+ 20:35:38 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH -next] MIPS: uprobes: remove set but not used variable
+ 'epc'
+Thread-Topic: [PATCH -next] MIPS: uprobes: remove set but not used variable
+ 'epc'
+Thread-Index: AQHVEvS1dT+b64Tw0029Z/MKHa+DFKaCljUA
+Date:   Wed, 29 May 2019 20:35:34 +0000
+Message-ID: <MWHPR2201MB127743ADD206B4064E9E5AAAC11F0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190525122024.4908-1-yuehaibing@huawei.com>
+In-Reply-To: <20190525122024.4908-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0014.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::27) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d9b9175e-116a-4013-2787-08d6e4753321
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1071;
+x-ms-traffictypediagnostic: MWHPR2201MB1071:
+x-microsoft-antispam-prvs: <MWHPR2201MB1071EA23903C0B6A6622C896C11F0@MWHPR2201MB1071.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0052308DC6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(376002)(39850400004)(136003)(199004)(189003)(54906003)(26005)(74316002)(6116002)(2906002)(66066001)(71200400001)(7736002)(52536014)(102836004)(6916009)(5660300002)(25786009)(4744005)(486006)(66476007)(66556008)(64756008)(66446008)(71190400001)(3846002)(476003)(11346002)(73956011)(305945005)(44832011)(186003)(66946007)(446003)(42882007)(81156014)(7696005)(14444005)(76176011)(52116002)(478600001)(14454004)(53936002)(4326008)(256004)(6246003)(316002)(33656002)(8936002)(229853002)(9686003)(8676002)(6436002)(6666004)(68736007)(6506007)(99286004)(55016002)(81166006)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1071;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4LQ88epWezc/jI+tQHWunto5JQsJjMtv1e8X7hbIo1PbHx24syRMocm7PoVKDQA97CzcsyuUUcW9pS/QziAUAYQzCCqTVWAl4jB6ZtQhKoZX/8dINXsDCBK+/xiEpLy9bcjJd+vX5oW6eqedLs0puW3+wmYVfQyXBf46cBc2+RBCjzn4InUAPbDWyjmtd6YbUkJ6IchhlJKYcgzii5h8kWgO/1qYkh3YHYSETLOVbv1F9ec+qf2KesXo8jNHHgDpDYWgzOwu2iE/6Z5xnKyyC/BpDcEhy9c1AcIFluOUrNPvHRsbWZI3IbSIcO95LTiRiuja8boXVuTZDRxUSe2peXYQlGHJkVFhthziMTWze+4ST5oxzYburd2PWQ+EAex6uZ3sbmxr6j1uy76F7c9/GlJrkswb6uVeOaGPMp+EpkM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190528235627.1315-4-olteanv@gmail.com>
- <20190529044912.cyg44rqvdo73oeiu@localhost>
-In-Reply-To: <20190529044912.cyg44rqvdo73oeiu@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 29 May 2019 23:33:31 +0300
-Message-ID: <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
- can_timestamp function
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9b9175e-116a-4013-2787-08d6e4753321
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2019 20:35:34.2403
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 07:49, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Wed, May 29, 2019 at 02:56:25AM +0300, Vladimir Oltean wrote:
-> > The newly introduced function is called on both the RX and TX paths.
->
-> NAK on this patch.
->
-> > The boolean returned by port_txtstamp should only return false if the
-> > driver tried to timestamp the skb but failed.
->
-> So you say.
->
-> > Currently there is some logic in the mv88e6xxx driver that determines
-> > whether it should timestamp frames or not.
-> >
-> > This is wasteful, because if the decision is to not timestamp them, then
-> > DSA will have cloned an skb and freed it immediately afterwards.
->
-> No, it isn't wasteful.  Look at the tests in that driver to see why.
->
-> > Additionally other drivers (sja1105) may have other hardware criteria
-> > for timestamping frames on RX, and the default conditions for
-> > timestamping a frame are too restrictive.
->
-> I'm sorry, but we won't change the frame just for one device that has
-> design issues.
->
-> Please put device specific workarounds into its driver.
->
-> Thanks,
-> Richard
-
-Hi Richard,
-
-I removed this patch and my RX timestamping path still works, apparently.
-It's just that now I'm not holding up in the RX timestamping queue
-anything else except what the PTP classifier requested me to.
-What I'm concerned about is that I'm using the skb->cb as a
-communication space between the tagger waiting for the meta frame, and
-the RX timestamping queue waiting to be notified that the meta frame
-arrived.
-If I'm not holding up all frames that I know will have a follow-up
-come after them, then I'm letting them free up the stack, and who
-knows whose skb->cb the tagger will overwrite.
-By asking me to remove this patch you're basically asking the state
-machine inside the tagger to guess whether the previous frame is one
-that DSA cares about w.r.t. RX timestamping, and based on that info
-write to its skb->cb or not.
-I would like to avoid keeping meta frames in their own RX queue,
-because then I'm complicating (or rather put, making impossible) the
-association between a meta frame and the frame it holds a timestamp
-of.
-
-Regards,
--Vladimir
+SGVsbG8sDQoNCll1ZUhhaWJpbmcgd3JvdGU6DQo+IEZpeGVzIGdjYyAnLVd1bnVzZWQtYnV0LXNl
+dC12YXJpYWJsZScgd2FybmluZzoNCj4gDQo+IGFyY2gvbWlwcy9rZXJuZWwvdXByb2Jlcy5jOiBJ
+biBmdW5jdGlvbiAnYXJjaF91cHJvYmVfcHJlX3hvbCc6DQo+IGFyY2gvbWlwcy9rZXJuZWwvdXBy
+b2Jlcy5jOjExNToxNzogd2FybmluZzogdmFyaWFibGUgJ2VwYycgc2V0IGJ1dCBub3QgdXNlZCBb
+LVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0NCj4gDQo+IEl0J3MgbmV2ZXIgdXNlZCBzaW5jZSBp
+bnRyb2R1Y3Rpb24gaW4NCj4gY29tbWl0IDQwZTA4NGE1MDZlYiAoIk1JUFM6IEFkZCB1cHJvYmVz
+IHN1cHBvcnQuIikNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdA
+aHVhd2VpLmNvbT4NCg0KQXBwbGllZCB0byBtaXBzLWZpeGVzLg0KDQpUaGFua3MsDQogICAgUGF1
+bA0KDQpbIFRoaXMgbWVzc2FnZSB3YXMgYXV0by1nZW5lcmF0ZWQ7IGlmIHlvdSBiZWxpZXZlIGFu
+eXRoaW5nIGlzIGluY29ycmVjdA0KICB0aGVuIHBsZWFzZSBlbWFpbCBwYXVsLmJ1cnRvbkBtaXBz
+LmNvbSB0byByZXBvcnQgaXQuIF0NCg==
