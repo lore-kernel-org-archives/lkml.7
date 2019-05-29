@@ -2,98 +2,316 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F65C07542
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24DC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF98D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1712075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 07:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="YbZYex+M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMD9Kwq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfE2Hzu (ORCPT
+        id S1726728AbfE2Hz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 03:55:50 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:51286 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfE2Hzu (ORCPT
+        Wed, 29 May 2019 03:55:57 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:35458 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfE2Hz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 03:55:50 -0400
-Received: by mail-it1-f194.google.com with SMTP id m3so2192671itl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 00:55:49 -0700 (PDT)
+        Wed, 29 May 2019 03:55:56 -0400
+Received: by mail-yb1-f194.google.com with SMTP id s69so457703ybi.2;
+        Wed, 29 May 2019 00:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=op4791qBHMjDCQdV9txK9mbzIX+WhgzeovFSwUXqaFQ=;
-        b=YbZYex+MkYR9h819JTNbMfn9OoTfQc0WfMl0pIniSUlyhGceEB4vQ8StrtFyuiAy4w
-         V/rdXa8qsaNoWL4xwbh2GBDzhIEKxgBZMsNRyZjGgmPoBJPWEYu2f0YjJis9SSPtC26W
-         UD998MyvHLyBc5OYtLE92jxNIzzt5APPCEtC8=
+         :cc:content-transfer-encoding;
+        bh=Osn05iDZ9YCFVG1ZvG0QdOmP+zixCsnWvYuWdS++NU4=;
+        b=iMD9Kwq2WvoN0BcWVK6saJsnqWZYziNtKrS/SyqMm0kUw/ROxdkvC9WZOr+bZWORMc
+         uV0m//OEWkL4DLgIlHxt8upkxIiLVegk2oDhicTK/pXirfj/dY9NB+Odeb5jDVO6MuuY
+         A2+Lh/z4sOvFaaOuf4TqINSk1EHCy17ANuw1HF6TBX0R4r4GNJcC/q2QJZlygfQkMGRO
+         +A8o2ufbM2pnECngH4NJIbAhqUwWJiRCE3n0sF7IPzt5GArm5hVuSzNnwVw7cvY9RV0w
+         EF+N/vRHL/2I1nbzpo+aO5le/c8GtrVtsmR6RCEH5Bo5MZZCDplfUu2ksRdfYB1HySLP
+         EvCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=op4791qBHMjDCQdV9txK9mbzIX+WhgzeovFSwUXqaFQ=;
-        b=lZU9DWDT2yDX9By2aVaFKYCAx1OOF91/M3Wx3Ti6nXb6PRGjY0if8ogqztu1SUa0I0
-         nMpIFCrqT3nses/X0xx2MB6MmasCOdSGIDaoSnWxxLjB7l+N1tfZhfpu/fAxG2mHCtme
-         UXAyPF2y5tRCkxKoZaKU9XdhIU/865c+F6LeXxkXrk1ceTNs4y1pF1GR887mzYhU41fR
-         ov30K+tCoJF6r8mHm9Q+i0HcVjKh21PENINvT4iDjlcbWc7kH12IRxxFPE+GyY68s0hr
-         m7qzDBW2AC9h8KndVHdChWsxw7Ge3q1sK86yG7pP7zgcAC99eF3cqmUjjGa1Yko7P6O1
-         GOcQ==
-X-Gm-Message-State: APjAAAUgNpNzLgCKqbddcE+Uj3IZHWRcmQ3KPm3Pxa5wInQwuTDN/Sb4
-        NHhY1oywkIIfcgHgheL7Wfs5k6aWUJLlyhMFO8x8cg==
-X-Google-Smtp-Source: APXvYqy/whcusTY4hHDoC4X+OnP9aaNKf6KjmFpD6uW6iIEpnRrUQmEJ77wekoH11aNFI99khObtXhKqxO04kVXVSD0=
-X-Received: by 2002:a24:4dd4:: with SMTP id l203mr6105131itb.118.1559116549227;
- Wed, 29 May 2019 00:55:49 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Osn05iDZ9YCFVG1ZvG0QdOmP+zixCsnWvYuWdS++NU4=;
+        b=pr+c3jiwrHfnfaMDr2CXdLNcNYWRXcMm2p+LwyFKg57LWpbyNaDkQnoNB35VH6flrA
+         zhUYnN1pokbg5cRcagXBSNfkVS4UXV/VMR6X/kTsZjkLzcTYQeN9aBC+lZxHzZd6OGUn
+         r8ecK8mcNxzP2kLBb9J/v8ZKfGv9N7PIsK4fskvE7LKVWv1073MP1s1B8bIwPjbhk/xX
+         p7sjf4Nb8Qal13zfkrqardQ5/0dKdG9TCAgzZ2j2ZHne5h9u6sSyfDsS+2Bn2TavbW0G
+         cxxfeymcukve1lZKV8Jwske20e7Lwh3BVpAChDyWjsQToPvg9LlW8gakaHVfU0wHHLn0
+         zo+A==
+X-Gm-Message-State: APjAAAV+XwqzMvrprzfECPui8TKGHxbEG2afSPIXwPnjZAyZnj0rj6m0
+        nNRCQOmwdSkWeF2pskHYNT8646zLOHqY57rzMJU=
+X-Google-Smtp-Source: APXvYqyGJzi6yznBfh/xZBx33+jcZ1K80IstRlOacxmR/ZeKXYZ51BBwHuo38owcJrO9U70Ny2c0AFM9ulI8unoKmrs=
+X-Received: by 2002:a25:340e:: with SMTP id b14mr20130906yba.82.1559116554895;
+ Wed, 29 May 2019 00:55:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <155905621951.1304.5956310120238620025.stgit@warthog.procyon.org.uk>
- <155905622921.1304.8775688192987027250.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155905622921.1304.8775688192987027250.stgit@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 29 May 2019 09:55:38 +0200
-Message-ID: <CAJfpeguPTQ00zVjpwVQ4R8mEqE3aijCzNMAz6Wvr56xE-jfJag@mail.gmail.com>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able ring
- buffer [ver #13]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>
+References: <20190526222536.10917-1-peron.clem@gmail.com> <20190527134805.j7t4ffstrnhdml47@core.my.home>
+ <CAJiuCcdnQa0TArduT4yBbUyd+dOaM0cQ1JcRUQLXLR6s_5e8sA@mail.gmail.com>
+ <20190527163117.hpealt6cttqzqdxz@core.my.home> <20190527172337.5qxh5qeqnul55gsb@core.my.home>
+ <CAJiuCccnRCqez2uG-pU8XY4Z=5S8rDwFB3rgsBovPHY1Uxyazw@mail.gmail.com>
+ <20190527193016.yxngu5grsqnctx3z@core.my.home> <20190527195330.pugb7ypvnyv32fug@core.my.home>
+ <CAJiuCccpnEqw_tGXST+WtGmZLbE+=wN1Hn9HKrk1+4WsW-abiA@mail.gmail.com>
+ <20190528180447.zlrdfmn73fntnf4n@core.my.home> <20190529071945.mrbgurcvl2jvpm5r@flea>
+In-Reply-To: <20190529071945.mrbgurcvl2jvpm5r@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 29 May 2019 09:55:43 +0200
+Message-ID: <CAJiuCcdAnwOO=uexmUMM2qSomxgOHfa432d-KxX-N7Jg+Ekipg@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 00/10] Allwinner A64/H6 IR support
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 5:10 PM David Howells <dhowells@redhat.com> wrote:
->
-> Implement a misc device that implements a general notification queue as a
-> ring buffer that can be mmap()'d from userspace.
->
-> The way this is done is:
->
->  (1) An application opens the device and indicates the size of the ring
->      buffer that it wants to reserve in pages (this can only be set once):
->
->         fd = open("/dev/watch_queue", O_RDWR);
->         ioctl(fd, IOC_WATCH_QUEUE_NR_PAGES, nr_of_pages);
->
->  (2) The application should then map the pages that the device has
->      reserved.  Each instance of the device created by open() allocates
->      separate pages so that maps of different fds don't interfere with one
->      another.  Multiple mmap() calls on the same fd, however, will all work
->      together.
->
->         page_size = sysconf(_SC_PAGESIZE);
->         mapping_size = nr_of_pages * page_size;
->         char *buf = mmap(NULL, mapping_size, PROT_READ|PROT_WRITE,
->                          MAP_SHARED, fd, 0);
+Hi,
 
-Would it make sense to use relayfs for the implementation of the
-mapped ring buffer?
+On Wed, 29 May 2019 at 09:19, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Tue, May 28, 2019 at 08:04:47PM +0200, Ond=C5=99ej Jirman wrote:
+> > Hello Cl=C3=A9ment,
+> >
+> > On Tue, May 28, 2019 at 06:21:19PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
+:
+> > > Hi Ond=C5=99ej,
+> > >
+> > > On Mon, 27 May 2019 at 21:53, 'Ond=C5=99ej Jirman' via linux-sunxi
+> > > <linux-sunxi@googlegroups.com> wrote:
+> > > >
+> > > > Hi Cl=C3=A9ment,
+> > > >
+> > > > On Mon, May 27, 2019 at 09:30:16PM +0200, verejna wrote:
+> > > > > Hi Cl=C3=A9ment,
+> > > > >
+> > > > > On Mon, May 27, 2019 at 08:49:59PM +0200, Cl=C3=A9ment P=C3=A9ron=
+ wrote:
+> > > > > > Hi Ondrej,
+> > > > > >
+> > > > > > >
+> > > > > > > I'm testing on Orange Pi 3.
+> > > > > > >
+> > > > > > > With your patches, I get kernel lockup after ~1 minute of use=
+ (ssh stops
+> > > > > > > responding/serial console stops responding). I don't have RC =
+controller to test
+> > > > > > > the CIR. But just enabling the CIR causes kernel to hang shor=
+tly after boot.
+> > > > > > >
+> > > > > > > I tried booting multiple times. Other results:
+> > > > > > >
+> > > > > > > boot 2:
+> > > > > > >
+> > > > > > > - ssh hangs even before connecting (ethernet crashes/is reset=
+)
+> > > > > > >
+> > > > > > > INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D409=
+1/4091 fqs=3D2437
+> > > > > > > dwmac-sun8i 5020000.ethernet eth0: Reset adapter.
+> > > > > > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks:=
+ { 0-... } 5696 jiffies s: 81 root: 0x1/.
+> > > > > > > rcu: blocking rcu_node structures:
+> > > > > > >  rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D409=
+1/4091 fqs=3D9714
+> > > > > > > rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks:=
+ { 0-... } 21568 jiffies s: 81 root: 0x1/.
+> > > > > > > rcu: blocking rcu_node structures:
+> > > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (1 GPs behind) idle=3D64a/0/0x3 softirq=3D409=
+1/4091 fqs=3D17203
+> > > > > > >
+> > > > > > > above messages appear regularly.
+> > > > > > >
+> > > > > > > boot 3:
+> > > > > > >
+> > > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (9 GPs behind) idle=3D992/0/0x3 softirq=3D612=
+3/6123 fqs=3D2600
+> > > > > > >
+> > > > > > >
+> > > > > > > Sometimes serial console keeps working. Sometimes it locks up=
+ too (but not
+> > > > > > > frequently). Storage locks up always (any program that was no=
+t run before
+> > > > > > > the crash can't be started and lock up the kernel hard, progr=
+ams that
+> > > > > > > were executed prior, can be run again).
+> > > > > > >
+> > > > > > >
+> > > > > > > Exactly the same kernel build on H5 seems to work (or at leas=
+t I was not able to
+> > > > > > > trigger the crash). So this seems to be limited to H6 for now=
+.
+> > > > > > >
+> > > > > > > I suspect that the crash occurs sooner if I vary the light (t=
+urn on/off the table
+> > > > > > > lamp light).
+> > > > > > >
+> > > > > > > Without your patches, everything works fine on H6, and I neve=
+r see
+> > > > > > > crashes/lockups.
+> > > > > > >
+> > > > > > > I tired physically covering the IR receiver, and that helps p=
+reventing the
+> > > > > > > crash. As soon as I uncover it, the crash happens again in 1s=
+ or so:
+> > > > > > >
+> > > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (1 GPs behind) idle=3D4ea/0/0x3 softirq=3D448=
+3/4484 fqs=3D2444
+> > > > > > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > > > > > rcu:    0-....: (1 GPs behind) idle=3D4ea/0/0x3 softirq=3D448=
+3/4484 fqs=3D9777
+> > > > > > >
+> > > > > > > This time I got the hung task and reboot: (probably not direc=
+tly related)
+> > > > > > >
+> > > > > > > INFO: task find:560 blocked for more than 120 seconds.
+> > > > > > >       Not tainted 5.2.0-rc2+ #7
+> > > > > > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables t=
+his message.
+> > > > > > > find            D    0   560    551 0x00000000
+> > > > > > > Call trace:
+> > > > > > >  __switch_to+0x6c/0x90
+> > > > > > >  __schedule+0x1f4/0x578
+> > > > > > >  schedule+0x28/0xa8
+> > > > > > >  io_schedule+0x18/0x38
+> > > > > > >  __lock_page+0x12c/0x208
+> > > > > > >  pagecache_get_page+0x238/0x2e8
+> > > > > > >  __get_node_page+0x6c/0x310
+> > > > > > >  f2fs_get_node_page+0x14/0x20
+> > > > > > >  f2fs_iget+0x70/0xc60
+> > > > > > >  f2fs_lookup+0xcc/0x218
+> > > > > > >  __lookup_slow+0x78/0x160
+> > > > > > >  lookup_slow+0x3c/0x60
+> > > > > > >  walk_component+0x1e4/0x2e0
+> > > > > > >  path_lookupat.isra.13+0x5c/0x1e0
+> > > > > > >  filename_lookup.part.23+0x6c/0xe8
+> > > > > > >  user_path_at_empty+0x4c/0x60
+> > > > > > >  vfs_statx+0x78/0xd8
+> > > > > > >  __se_sys_newfstatat+0x24/0x48
+> > > > > > >  __arm64_sys_newfstatat+0x18/0x20
+> > > > > > >  el0_svc_handler+0x9c/0x170
+> > > > > > >  el0_svc+0x8/0xc
+> > > > > > > Kernel panic - not syncing: hung_task: blocked tasks
+> > > > > > > CPU: 1 PID: 34 Comm: khungtaskd Not tainted 5.2.0-rc2+ #7
+> > > > > > > Hardware name: OrangePi 3 (DT)
+> > > > > > > Call trace:
+> > > > > > >  dump_backtrace+0x0/0xf8
+> > > > > > >  show_stack+0x14/0x20
+> > > > > > >  dump_stack+0xa8/0xcc
+> > > > > > >  panic+0x124/0x2dc
+> > > > > > >  proc_dohung_task_timeout_secs+0x0/0x40
+> > > > > > >  kthread+0x120/0x128
+> > > > > > >  ret_from_fork+0x10/0x18
+> > > > > > > SMP: stopping secondary CPUs
+> > > > > > > Kernel Offset: disabled
+> > > > > > > CPU features: 0x0002,20002000
+> > > > > > > Memory Limit: none
+> > > > > > > Rebooting in 3 seconds..
+> > > > > > >
+> > > > > > >
+> > > > > > > Meanwhile H5 based board now runs for 15 minutes without issu=
+es.
+> > > > > > >
+> > > > > > > So to sum up:
+> > > > > > >
+> > > > > > > - these crashes are definitely H6 IR related
+> > > > > > >   - the same kernel, on H5 works
+> > > > > > >   - covering the sensor prevents the crashes on H6
+> > > > > > >
+> > > > > > > So we should probably hold on with the series, until this is =
+figured out.
+> > > > > >
+> > > > > > Thanks for testing, but I think it's more hardware related.
+> > > > > > It seems that your IR is flooded or misconfigured for your boar=
+d.
+> > > > > > Could you add a simple print in the "sunxi_ir_irq"
+> > > > >
+> > > > > Yes, I get flood of IRQs with status =3D 0x30. (after I turn on t=
+he lamp,
+> > > > > but it persists even after I turn it off and cover the IR sensor)=
+.
+> > > >
+> > > > Interestingly, status also contains RAC, and it's 0 in this case. S=
+o the
+> > > > interrupt if firing with "No available data in RX FIFO" repeatedly.=
+ Regardless
+> > > > of input.
+> > > >
+> > > > So there's something else up.
+> > >
+> > > Really weird indeed...
+> > >
+> > > I have pushed a new version, where I didn't enabled the support for
+> > > others H6 board and the cover letter include a link to this thread.
+> > >
+> > > It would be great if other sunxi users could test this series, to
+> > > check if this issue in present in other OPi3 / Pine H64.
+> >
+> > I don't know if this is enough. I'd rather prefer if the driver has a w=
+ay
+> > of detecting this situation and shutting the module down, at the very l=
+east,
+> > instead of taking down the entire system with IRQ flood.
+> >
+> > It may be detectable by checking RAC =3D=3D 0 when RX FIFO available in=
+terrupt
+> > flag is set.
+> >
+> > Otherwise, this will eventually be forgotten (cover letters are not eve=
+n stored
+> > in git), and someone will fall into the trap again, after enabling r_ir=
+ on
+> > their board, and end up chasing their tail for a day. I've initially on=
+ly found
+> > this is IR driver issue after a long unpleasant debugging session, chas=
+ing other
+> > more obvious ideas (as when this happens there's absolutely nothing in =
+the log
+> > indicating this is IR issue).
+>
+> Returning IRQ_NONE in the handler will disable the interrupt line
+> after 100,000 (I think?) occurences. That might be a good workaround,
+> but we definitely want to have a comment there :)
+>
+
+Thanks for the suggestion,
+
+I will propose a patch to return IRQ_NONE if Fifo is empty when RA is sette=
+d.
+
+Just a comment in the IRQ handling we are actually looking at the
+RXSTA register and using the RXINT bit ?
+Is there any reason for doing that ?
 
 Thanks,
-Miklos
+Cl=C3=A9ment
+
+
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
