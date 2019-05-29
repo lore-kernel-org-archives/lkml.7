@@ -2,154 +2,138 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7079DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D57C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C0522CF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9294822CF8
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QdxMexFk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXjwPjRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfE2N60 (ORCPT
+        id S1727498AbfE2N6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:58:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40680 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfE2N6Z (ORCPT
+        Wed, 29 May 2019 09:58:30 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34824 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfE2N62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:58:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 15so1689191wmg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:58:24 -0700 (PDT)
+        Wed, 29 May 2019 09:58:28 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h11so2596670ljb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qk0HGBnrffxH0SszLcEFWuIbH/VkDg7vULoFZ+xx0Kc=;
-        b=QdxMexFkAlzFN+PfB1ElJBUUAAqH94q9YgBqRg3iwX2qMor9To0i2ro6IzOHJ5q0bR
-         lVQCV4jJJbW2ayh/SGGzAb8zFE8i8fS0Ta/sBgsfayq+7MS8EWeflIjpIGPpCd88J3Lr
-         gi74EMKfustUw7SYsrSrlzOB3uXKKlobtbDHfkHpwkuEF7P5NLmj/C18ll4IfqvQrSeU
-         5L5O0kvAkgy3IyumQGsb/iCDlL3QgdKoNsuQUgvxSDq/1l+O1LglTe2H/nXRudsjk0JU
-         uzBIVVqMRZPR6DxOkGvrJFejCrvJgRMgvPdgQrzGLZLh4gVXQVCxUaklGk1sqZSzHbV1
-         gluA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FvnuOzvWWHxvWxRXVyec6ngD8uETWcADOgiOUZyOXOI=;
+        b=uXjwPjRZCt5+NzEnNPmdCCkF3iYjQdmKQjzHPmIBvcHk21+tVcQk6R/TffAC7mbzK7
+         3OwgsrDjSkovmg4CpeCxkjLO/kQQvYs0pmQohCNI7L8gZdD8RGrfY4VGJdYTU4SoFB3v
+         vxOJmH2NmOUBLSaEMsTV4T0d7uI//nBlM9nMZjIItiftF4IVJAOz7r5HkBkNRO1ocej9
+         uSw6MboF7GCpcr9BVSt1oVeMNInBa+xY8WKUwIpqaSATf3Ri/vgGphqjpJDKCfIuJNPw
+         2XVz/73HtiI5Ls00TDoUhrA2TsMBVDDDh2a2MIgaAD8+i7k63TUUX87Zz6QC0oBlSFQ1
+         qdNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qk0HGBnrffxH0SszLcEFWuIbH/VkDg7vULoFZ+xx0Kc=;
-        b=tN2z9QfS+x3+t8Azc9+JC27YdhHflVowfasvIRaZ9DKPQ/ZST6TeBKWUTe9TLcANMS
-         cU8fzVYmaSy1g9yS3y3+PuuC8jO05Z5Hv86Dcp8ikuMM/3I6h6dha0TPS4o+eID9wiPC
-         HZeaS7rEXzbZNwMUml0HcNOXrWeYumJvA/sThvTLiCh0SkDnHMAuZ0A9SQjIXZQkVM1I
-         Y/+usHwxZ76vFeRGo51ivX2TXb5vgDdbHygg5/8u++Xcod/Erlafj5TDamzTut37wMj6
-         PZIvez59qCkXSEM4mwT3q3adeizgyRUZXtra157lmH7FhaEcxtz8X+9BVEsKRZUAk1My
-         EHcw==
-X-Gm-Message-State: APjAAAWGjvqt9yXgMSkqJ8L4NrKZ9r0G+xswh6FS/d3KpwbFTBTydG+9
-        Nz5AhQULvEKupFmfnhwV0XmK5Q==
-X-Google-Smtp-Source: APXvYqze12mMzt5a2klvAWdo6ZVb9KQXiqj6wF4yVUfnsNbjdM8VvzW17UUMXRJjnqARdqK9wvKZcw==
-X-Received: by 2002:a7b:ce9a:: with SMTP id q26mr2105006wmj.11.1559138303516;
-        Wed, 29 May 2019 06:58:23 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id d11sm17124712wrv.72.2019.05.29.06.58.22
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FvnuOzvWWHxvWxRXVyec6ngD8uETWcADOgiOUZyOXOI=;
+        b=IB4u2HMrPDiAfJsqlHFdM8iroYEZuh1/pPdrcYNEIBCMtwm4Q41BxPWVROfw6vrEj+
+         maJo9iUxgclFzELJvoFyDVwCKj169ryf1MeiRyQMVnam9J2Qk3ORNJATN+7KEXTQf/Py
+         UEQHdaMgNnhc7rrFgh/WIqCM5d47jLpratn++kD/0E9/FMOG2wpAZHA6GmJPvLSZ154v
+         iaKSBuZ3vq5+2LtQSZhz3UUk9mPErGbgD6YKyN5ZHBKICOvMBf2UM4IIKWwYJRuA6Imb
+         KqMDC6fXo7+Tggwi5qu2Rbzr2vQ69zwsyRwOIBR81Wnkh+RU5Izb4BYuF+SXNzAdecWa
+         t6aw==
+X-Gm-Message-State: APjAAAVe3UG6IgmIgH15P2YMBPLcVuAJamEFyAa7i6+IvnzyfDQp0MNq
+        QphImuqckkLHju0KyR17fFg=
+X-Google-Smtp-Source: APXvYqxJcXNy9tjvGvb6p0Lmjk07Ff52IXEus1xxpwJYnnL8XqCx75U51Gw9O4dVXAeZBa+45pmDaQ==
+X-Received: by 2002:a2e:a0ca:: with SMTP id f10mr1708409ljm.113.1559138306581;
+        Wed, 29 May 2019 06:58:26 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id d18sm3473580lfl.95.2019.05.29.06.58.24
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 06:58:22 -0700 (PDT)
-Date:   Wed, 29 May 2019 14:58:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274
- LED driver
-Message-ID: <20190529135821.GK4574@dell>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com>
- <20190523125012.GB20354@amd>
- <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
- <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com>
+        Wed, 29 May 2019 06:58:25 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 29 May 2019 15:58:17 +0200
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 4/4] mm/vmap: move BUG_ON() check to the unlink_va()
+Message-ID: <20190529135817.tr7usoi2xwx5zl2s@pc636>
+References: <20190527093842.10701-1-urezki@gmail.com>
+ <20190527093842.10701-5-urezki@gmail.com>
+ <20190528225001.GI27847@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190528225001.GI27847@tower.DHCP.thefacebook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019, Jacek Anaszewski wrote:
+Hello, Roman!
 
-> Hi,
+> > Move the BUG_ON()/RB_EMPTY_NODE() check under unlink_va()
+> > function, it means if an empty node gets freed it is a BUG
+> > thus is considered as faulty behaviour.
 > 
-> On 5/23/19 9:09 PM, Dan Murphy wrote:
-> > Pavel
-> > 
-> > Thanks for the review
-> > 
-> > On 5/23/19 7:50 AM, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > +++ b/drivers/leds/leds-lm36274.c
-> > > 
-> > > > +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
-> > > > +{
-> > > > +	struct fwnode_handle *child = NULL;
-> > > > +	char label[LED_MAX_NAME_SIZE];
-> > > > +	struct device *dev = &lm36274_data->pdev->dev;
-> > > > +	const char *name;
-> > > > +	int child_cnt;
-> > > > +	int ret = -EINVAL;
-> > > > +
-> > > > +	/* There should only be 1 node */
-> > > > +	child_cnt = device_get_child_node_count(dev);
-> > > > +	if (child_cnt != 1)
-> > > > +		return ret;
-> > > 
-> > > I'd do explicit "return -EINVAL" here.
-> > > 
-> > 
-> > ACK
-> > 
-> > > > +static int lm36274_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
-> > > > +	struct lm36274 *lm36274_data;
-> > > > +	int ret;
-> > > > +
-> > > > +	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
-> > > > +				    GFP_KERNEL);
-> > > > +	if (!lm36274_data) {
-> > > > +		ret = -ENOMEM;
-> > > > +		return ret;
-> > > > +	}
-> > > 
-> > > And certainly do "return -ENOMEM" explicitly here.
-> > > 
-> > 
-> > ACK
-> > 
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> It's not exactly clear from the description, why it's better.
 > 
-> I've done all amendments requested by Pavel and updated branch
-> ib-leds-mfd-regulator on linux-leds.git, but in the same time
+It is rather about if "unlink" happens on unhandled node it is
+faulty behavior. Something that clearly written in stone. We used
+to call "unlink" on detached node during merge, but after:
 
-What do you mean by updated?  You cannot update an 'ib' (immutable
-branch).  Immutable means that it cannot change, by definition.
+[PATCH v3 3/4] mm/vmap: get rid of one single unlink_va() when merge
 
-> dropped the merge from the for-next.
-> 
-> We will proceed further once we clarify the issue of cross-merging
-> recently raised again by Linus.
-> 
+it is not supposed to be ever happened across the logic.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>
+> Also, do we really need a BUG_ON() in either place?
+> 
+Historically we used to have the BUG_ON there. We can get rid of it
+for sure. But in this case, it would be harder to find a head or tail
+of it when the crash occurs, soon or later.
+
+> Isn't something like this better?
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index c42872ed82ac..2df0e86d6aff 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1118,7 +1118,8 @@ EXPORT_SYMBOL_GPL(unregister_vmap_purge_notifier);
+>  
+>  static void __free_vmap_area(struct vmap_area *va)
+>  {
+> -       BUG_ON(RB_EMPTY_NODE(&va->rb_node));
+> +       if (WARN_ON_ONCE(RB_EMPTY_NODE(&va->rb_node)))
+> +               return;
+>
+I was thinking about WARN_ON_ONCE. The concern was about if the
+message gets lost due to kernel ring buffer. Therefore i used that.
+I am not sure if we have something like WARN_ONE_RATELIMIT that
+would be the best i think. At least it would indicate if a warning
+happens periodically or not.
+
+Any thoughts?
+
+Thanks for the comments!
+
+--
+Vlad Rezki
