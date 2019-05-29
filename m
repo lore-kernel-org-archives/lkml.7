@@ -2,77 +2,78 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00786C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60718C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D079B2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3D02402E
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 18:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559153374;
+	bh=gnKw2WEDduGax4sEEXJjd76ccNLaRKge7up8CAq41d8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jWm4/csYSpZSry7J6AbPfrpcKch/5mgIToTD2bb+PMKgkkFANJkLo6zv1EzHJaBaI
+	 JgcUN8ljKhEN6w0jcWeq5o/Ty1ws75FHAo9MS1no3wGvagR5AS2266mtvURAlaLOoS
+	 XEVcbMshMwIxGbgR2HCp/auWI+VJU8sHaCLVK2iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfE2SJN (ORCPT
+        id S1727503AbfE2SJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 14:09:13 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3322 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfE2SJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 14:09:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 11:09:12 -0700
-X-ExtLoop1: 1
-Received: from alison-desk.jf.intel.com ([10.54.74.53])
-  by fmsmga005.fm.intel.com with ESMTP; 29 May 2019 11:09:11 -0700
-Date:   Wed, 29 May 2019 11:13:02 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 57/62] x86/mktme: Overview of Multi-Key Total Memory
- Encryption
-Message-ID: <20190529181302.GB32533@alison-desk.jf.intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
- <20190529072148.GE3656@rapoport-lnx>
+        Wed, 29 May 2019 14:09:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39026 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727227AbfE2SJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 14:09:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0BD96AD89;
+        Wed, 29 May 2019 18:09:32 +0000 (UTC)
+Date:   Wed, 29 May 2019 20:09:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org
+Subject: Re: kernel BUG at mm/swap_state.c:170!
+Message-ID: <20190529180931.GI18589@dhcp22.suse.cz>
+References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
+ <CABXGCsNq4xTFeeLeUXBj7vXBz55aVu31W9q74r+pGM83DrPjfA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529072148.GE3656@rapoport-lnx>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CABXGCsNq4xTFeeLeUXBj7vXBz55aVu31W9q74r+pGM83DrPjfA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:21:48AM +0300, Mike Rapoport wrote:
-> On Wed, May 08, 2019 at 05:44:17PM +0300, Kirill A. Shutemov wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > Provide an overview of MKTME on Intel Platforms.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  Documentation/x86/mktme/index.rst          |  8 +++
-> >  Documentation/x86/mktme/mktme_overview.rst | 57 ++++++++++++++++++++++
+On Wed 29-05-19 22:32:08, Mikhail Gavrilov wrote:
+> On Wed, 29 May 2019 at 09:05, Mikhail Gavrilov
+> <mikhail.v.gavrilov@gmail.com> wrote:
+> >
+> > Hi folks.
+> > I am observed kernel panic after update to git tag 5.2-rc2.
+> > This crash happens at memory pressing when swap being used.
+> >
+> > Unfortunately in journalctl saved only this:
+> >
 > 
-> I'd expect addition of mktme docs to Documentation/x86/index.rst
+> Now I captured better trace.
+> 
+> : page:ffffd6d34dff0000 refcount:1 mapcount:1 mapping:ffff97812323a689
+> index:0xfecec363
+> : anon
+> : flags: 0x17fffe00080034(uptodate|lru|active|swapbacked)
+> : raw: 0017fffe00080034 ffffd6d34c67c508 ffffd6d3504b8d48 ffff97812323a689
+> : raw: 00000000fecec363 0000000000000000 0000000100000000 ffff978433ace000
+> : page dumped because: VM_BUG_ON_PAGE(entry != page)
+> : page->mem_cgroup:ffff978433ace000
+> : ------------[ cut here ]------------
+> : kernel BUG at mm/swap_state.c:170!
 
-Got it. Thanks.
-Alison
-
+Do you see the same with 5.2-rc1 resp. 5.1?
+-- 
+Michal Hocko
+SUSE Labs
