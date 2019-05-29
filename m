@@ -2,213 +2,85 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59879C28CC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56630C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3141321019
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5FA20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfE2I6U (ORCPT
+        id S1726818AbfE2I70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:58:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22391 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726748AbfE2I6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:58:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 01:58:16 -0700
-X-ExtLoop1: 1
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by fmsmga005.fm.intel.com with ESMTP; 29 May 2019 01:58:13 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH net-next v4 5/5] net: stmmac: add EHL SGMII 1Gbps PCI info and PCI ID
-Date:   Thu, 30 May 2019 00:58:27 +0800
-Message-Id: <1559149107-14631-6-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1559149107-14631-1-git-send-email-weifeng.voon@intel.com>
-References: <1559149107-14631-1-git-send-email-weifeng.voon@intel.com>
+        Wed, 29 May 2019 04:59:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:17603 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfE2I7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:59:25 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7F31D5AE3A8FF4DC23B1;
+        Wed, 29 May 2019 16:59:23 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 29 May 2019
+ 16:59:13 +0800
+Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
+ processing linkwatch wq
+To:     David Miller <davem@davemloft.net>
+CC:     <hkallweit1@gmail.com>, <f.fainelli@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
+References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
+ <20190528.235806.323127882998745493.davem@davemloft.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
+Date:   Wed, 29 May 2019 16:59:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190528.235806.323127882998745493.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added EHL SGMII 1Gbps PCI ID. Different MII and speed will have
-different PCI ID.
+On 2019/5/29 14:58, David Miller wrote:
+> From: Yunsheng Lin <linyunsheng@huawei.com>
+> Date: Mon, 27 May 2019 09:47:54 +0800
+> 
+>> When user has configured a large number of virtual netdev, such
+>> as 4K vlans, the carrier on/off operation of the real netdev
+>> will also cause it's virtual netdev's link state to be processed
+>> in linkwatch. Currently, the processing is done in a work queue,
+>> which may cause worker starvation problem for other work queue.
+>>
+>> This patch releases the cpu when link watch worker has processed
+>> a fixed number of netdev' link watch event, and schedule the
+>> work queue again when there is still link watch event remaining.
+>>
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> 
+> Why not rtnl_unlock(); yield(); rtnl_lock(); every "100" events
+> processed?
+> 
+> That seems better than adding all of this overhead to reschedule the
+> workqueue every 100 items.
 
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c | 111 +++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+One minor concern, the above solution does not seem to solve the cpu
+starvation for other normal workqueue which was scheduled on the same
+cpu as linkwatch. Maybe I misunderstand the workqueue or there is other
+consideration here? :)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 7cbc01f316fa..f2225c1eafc2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -23,6 +23,7 @@
- #include <linux/dmi.h>
- 
- #include "stmmac.h"
-+#include "dwxpcs.h"
- 
- /*
-  * This struct is used to associate PCI Function of MAC controller on a board,
-@@ -118,6 +119,113 @@ static int stmmac_default_data(struct pci_dev *pdev,
- 	.setup = stmmac_default_data,
- };
- 
-+static int ehl_common_data(struct pci_dev *pdev,
-+			   struct plat_stmmacenet_data *plat)
-+{
-+	int i;
-+
-+	plat->bus_id = 1;
-+	plat->phy_addr = 0;
-+	plat->clk_csr = 5;
-+	plat->has_gmac = 0;
-+	plat->has_gmac4 = 1;
-+	plat->xpcs_phy_addr = 0x16;
-+	plat->pcs_mode = AN_CTRL_PCS_MD_C37_SGMII;
-+	plat->force_sf_dma_mode = 0;
-+	plat->tso_en = 1;
-+
-+	plat->rx_queues_to_use = 8;
-+	plat->tx_queues_to_use = 8;
-+	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
-+
-+	for (i = 0; i < plat->rx_queues_to_use; i++) {
-+		plat->rx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+		plat->rx_queues_cfg[i].chan = i;
-+
-+		/* Disable Priority config by default */
-+		plat->rx_queues_cfg[i].use_prio = false;
-+
-+		/* Disable RX queues routing by default */
-+		plat->rx_queues_cfg[i].pkt_route = 0x0;
-+	}
-+
-+	for (i = 0; i < plat->tx_queues_to_use; i++) {
-+		plat->tx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+
-+		/* Disable Priority config by default */
-+		plat->tx_queues_cfg[i].use_prio = false;
-+	}
-+
-+	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WRR;
-+	plat->tx_queues_cfg[0].weight = 0x09;
-+	plat->tx_queues_cfg[1].weight = 0x0A;
-+	plat->tx_queues_cfg[2].weight = 0x0B;
-+	plat->tx_queues_cfg[3].weight = 0x0C;
-+	plat->tx_queues_cfg[4].weight = 0x0D;
-+	plat->tx_queues_cfg[5].weight = 0x0E;
-+	plat->tx_queues_cfg[6].weight = 0x0F;
-+	plat->tx_queues_cfg[7].weight = 0x10;
-+
-+	plat->mdio_bus_data->phy_reset = NULL;
-+	plat->mdio_bus_data->phy_mask = 0;
-+
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+	plat->dma_cfg->fixed_burst = 0;
-+	plat->dma_cfg->mixed_burst = 0;
-+	plat->dma_cfg->aal = 0;
-+
-+	plat->axi = devm_kzalloc(&pdev->dev, sizeof(*plat->axi),
-+				 GFP_KERNEL);
-+	if (!plat->axi)
-+		return -ENOMEM;
-+	plat->axi->axi_lpi_en = 0;
-+	plat->axi->axi_xit_frm = 0;
-+	plat->axi->axi_wr_osr_lmt = 0;
-+	plat->axi->axi_rd_osr_lmt = 2;
-+	plat->axi->axi_blen[0] = 4;
-+	plat->axi->axi_blen[1] = 8;
-+	plat->axi->axi_blen[2] = 16;
-+
-+	/* Set default value for multicast hash bins */
-+	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-+
-+	/* Set default value for unicast filter entries */
-+	plat->unicast_filter_entries = 1;
-+
-+	/* Set the maxmtu to a default of JUMBO_LEN */
-+	plat->maxmtu = JUMBO_LEN;
-+
-+	/* Set 32KB fifo size as the advertised fifo size in
-+	 * the HW features is not the same as the HW implementation
-+	 */
-+	plat->tx_fifo_size = 32768;
-+	plat->rx_fifo_size = 32768;
-+
-+	return 0;
-+}
-+
-+static int ehl_sgmii1g_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	int ret;
-+
-+	/* Set common default data first */
-+	ret = ehl_common_data(pdev, plat);
-+
-+	if (ret)
-+		return ret;
-+
-+	plat->interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->has_xpcs = 1;
-+
-+	return 0;
-+}
-+
-+static struct stmmac_pci_info ehl_sgmii1g_pci_info = {
-+	.setup = ehl_sgmii1g_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -290,6 +398,7 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
- 	res.addr = pcim_iomap_table(pdev)[i];
- 	res.wol_irq = pdev->irq;
- 	res.irq = pdev->irq;
-+	res.xpcs_irq = 0;
- 
- 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
- }
-@@ -359,6 +468,7 @@ static int __maybe_unused stmmac_pci_resume(struct device *dev)
- 
- #define STMMAC_QUARK_ID  0x0937
- #define STMMAC_DEVICE_ID 0x1108
-+#define STMMAC_EHL_SGMII1G_ID   0x4b31
- 
- #define STMMAC_DEVICE(vendor_id, dev_id, info)	{	\
- 	PCI_VDEVICE(vendor_id, dev_id),			\
-@@ -369,6 +479,7 @@ static int __maybe_unused stmmac_pci_resume(struct device *dev)
- 	STMMAC_DEVICE(STMMAC, STMMAC_DEVICE_ID, stmmac_pci_info),
- 	STMMAC_DEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_MAC, stmmac_pci_info),
- 	STMMAC_DEVICE(INTEL, STMMAC_QUARK_ID, quark_pci_info),
-+	STMMAC_DEVICE(INTEL, STMMAC_EHL_SGMII1G_ID, ehl_sgmii1g_pci_info),
- 	{}
- };
- 
--- 
-1.9.1
+Anyway, I will implemet it as you suggested and test it before posting V2.
+Thanks.
+
+> 
+> .
+> 
 
