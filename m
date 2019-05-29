@@ -2,87 +2,130 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82351C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03967C072B1
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548062070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF147217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 01:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="LS3OzXUP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="7qswdVOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfE2B0j (ORCPT
+        id S1726395AbfE2B1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 28 May 2019 21:26:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37325 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfE2B0j (ORCPT
+        Tue, 28 May 2019 21:27:19 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:32827 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbfE2B1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 28 May 2019 21:26:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h1so460305wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 28 May 2019 18:26:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rmRCqN5V69njNKzXqsufXyHQFr1ecAJaoY5I9r8Jg/A=;
-        b=RdsdS8NeKXw1/W9H38wI14UEsdibrKxDkdBwdyQbgbaL8ikirFE2NFKzahOM8ZAxim
-         3X7sv8XcwUtmBikTYMf4FBMS471A0iXTQjfiyXa5tQjgmxSi6fXE8DEmL/fuSXfRe9KO
-         OruuCIVHKexPGe6BYjuUC0CEPGCbRKEoOPmqTkirdXZEmxzwlvtr9i4yIsmRasC8ZHcu
-         Wl9rLvS6rrcSsfPcrEwneNySSiyLzIOzR9Rzxby6xa//zJXINCzE05b8bjCT4/3jTyiY
-         LbQBipUD+QlndAJkFUp3mnOt8KLPs+lL+OcbYTGAjOKJxC3oIFCE7F+BrzbjeAiBttjn
-         PPig==
-X-Gm-Message-State: APjAAAXdsy5EchRUIKw2xcow7RyI8+ba7prPJg1xFKz2D2k2yQtKBKCB
-        yVGdBrBG35LppNwvWoh0rEz5xA==
-X-Google-Smtp-Source: APXvYqwX1usmVw6q1CDoi4OTK+z6UWAWXKZZFyXo6pMfhnLF9gUifvkPOsRu9b8SygmMeO8p8Yt+mQ==
-X-Received: by 2002:adf:ba47:: with SMTP id t7mr18702012wrg.175.1559093197515;
-        Tue, 28 May 2019 18:26:37 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id d26sm3816595wmb.4.2019.05.28.18.26.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 May 2019 18:26:36 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] KVM: x86: add support for user wait instructions
-To:     Tao Xu <tao3.xu@intel.com>, Wanpeng Li <kernellwp@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kvm <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, jingqi.liu@intel.com
-References: <20190524075637.29496-1-tao3.xu@intel.com>
- <20190524075637.29496-2-tao3.xu@intel.com>
- <20190527103003.GX2623@hirez.programming.kicks-ass.net>
- <43e2a62a-e992-2138-f038-1e4b2fb79ad1@intel.com>
- <CANRm+CwnJoj0EwWoFC44SXVUTLdE+iFGovaMr4Yf=OzbaW36sA@mail.gmail.com>
- <072dd34e-0361-5a06-4d0b-d04e8150a3bb@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f1d739ba-8499-1f41-5515-c53c6dd7f3d2@redhat.com>
-Date:   Wed, 29 May 2019 03:26:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <072dd34e-0361-5a06-4d0b-d04e8150a3bb@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 28 May 2019 21:27:19 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 524D02203E;
+        Tue, 28 May 2019 21:27:18 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 28 May 2019 21:27:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=ioeB7zHzuIrWPlycdQWlBGq8mtTxytQ
+        LMO5+tIc96Og=; b=LS3OzXUPrbKqiJbL/pQVT1MOVVOLo0+E78YZXJwv1DpXruf
+        Y3EncH+L0nN+izLmvqtPA83EWSEX+v2552DeODXpV1erb4L+vkGD3nVEBIBZw9sm
+        OuR30rXhiCxmfx+LGZjtoViVbT4/FBfs6JiVkrG+iLsij2gpR+riYxtNa8qpFkc0
+        gamh++e/Wa9GJ3wpZobvoTlMsrCwjJ+s1YAKOnruIuS3bmIIOMb2xsBsZ4VW3lJj
+        Y02sZb4dCrd68pIeF8BSFcutQwq3qCP/dJbmrid5p0xjuakUlkz/b2dFyF0eSqE5
+        jqae/CrC6u2XcaDqB2C6PX91ETJ1hQJxr82/s2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ioeB7z
+        HzuIrWPlycdQWlBGq8mtTxytQLMO5+tIc96Og=; b=7qswdVOlE1f9vJrwsJhoSE
+        jV3vZHzZk0EoBNB+HKPtenBhp5sGO19cz9qrOBv5JoICgK6IIDVBuVdyEdyreiJt
+        8gszj6Hpz+pCnLkUH4x1jW/nJ9gw45WZRi2du9T7OZlV44TrvlK/GSmEe8/nyHDl
+        40eNjgftT+ttN2I1C/NojHm6nHQAr6EturFeysDAqTT2qBeUbcN5eDbVEGWysR7X
+        SVYCAQmVw+eRli37zjajA+2vrjW659hiWQ4ZTTuupzJSSbJT0sgQpH1/DIamN6FW
+        6r/4ATUBTk8RIHXda43qaUIZPK4AaxHl++sSQuKB7xMPif67R+Ehw35XlCUk28ZQ
+        ==
+X-ME-Sender: <xms:9N_tXLiz0FV_kq6p9HMQVm8b9GwTjYANLQpCEKbfhcbreVLkNG6wdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddviedggeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:9N_tXLCRm4BGk27OuOe1ur6tyqa-6U06n2BL-N-Z6wL5FEUvaSAuHg>
+    <xmx:9N_tXNqMOY8haizNcQXR51DiO96ZyDlZGA7RCousVe5ICapsxn-ebQ>
+    <xmx:9N_tXCtIugJuRak_0OyMewJoejHMcP4Ymiu80TXHHI4NBgpy3-x5tw>
+    <xmx:9t_tXGV3PMpaR97hvvy9j8WxwcyOGvhcCUp7fC7MjiCi6DXjsFb-pQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C2A78E00A1; Tue, 28 May 2019 21:27:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-555-g49357e1-fmstable-20190528v2
+Mime-Version: 1.0
+Message-Id: <04f103fb-54b1-4911-8164-44b20bfd1e72@www.fastmail.com>
+In-Reply-To: <20190525144153.2028-1-yuehaibing@huawei.com>
+References: <20190525144153.2028-1-yuehaibing@huawei.com>
+Date:   Wed, 29 May 2019 10:57:16 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>, james.morse@arm.com,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] EDAC: aspeed: Remove set but not used variable 'np'
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/19 09:19, Tao Xu wrote:
+
+
+On Sun, 26 May 2019, at 00:12, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> Thank you! This information really helped me. After I read the code in
-> KVM/QEMU, I was wondering that with qemu command-line "-cpu
-> host,+kvm-hint-dedicated", then in KVM,
-> "kvm_hint_has_feature(KVM_HINTS_DEDICATED)" will be true, am I right?
+> drivers/edac/aspeed_edac.c: In function aspeed_probe:
+> drivers/edac/aspeed_edac.c:284:22: warning: variable np set but not 
+> used [-Wunused-but-set-variable]
+> 
+> It is never used and can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Yes, but it doesn't matter for this patch series.
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-Paolo
+> ---
+>  drivers/edac/aspeed_edac.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
+> index 11833c0a5d07..5634437bb39d 100644
+> --- a/drivers/edac/aspeed_edac.c
+> +++ b/drivers/edac/aspeed_edac.c
+> @@ -281,15 +281,11 @@ static int aspeed_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct edac_mc_layer layers[2];
+>  	struct mem_ctl_info *mci;
+> -	struct device_node *np;
+>  	struct resource *res;
+>  	void __iomem *regs;
+>  	u32 reg04;
+>  	int rc;
+>  
+> -	/* setup regmap */
+> -	np = dev->of_node;
+> -
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res)
+>  		return -ENOENT;
+> -- 
+> 2.17.1
+> 
+> 
+>
