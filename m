@@ -2,90 +2,114 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DD6C07542
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10607C04AB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C479A20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CCB21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ns7/gQCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfE2IJm (ORCPT
+        id S1726859AbfE2IJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:09:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37236 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfE2IJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:09:42 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE34A3087958;
-        Wed, 29 May 2019 08:09:41 +0000 (UTC)
-Received: from rhel3.localdomain (ovpn-12-18.pek2.redhat.com [10.72.12.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A22C36148C;
-        Wed, 29 May 2019 08:09:38 +0000 (UTC)
-From:   xiubli@redhat.com
-To:     josef@toxicpanda.com, axboe@kernel.dk, nbd@other.debian.org
-Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, atumball@redhat.com,
-        Xiubo Li <xiubli@redhat.com>
-Subject: [RFC PATCH] nbd: set the default nbds_max to 0
-Date:   Wed, 29 May 2019 16:08:36 +0800
-Message-Id: <20190529080836.13031-1-xiubli@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 29 May 2019 08:09:42 +0000 (UTC)
+        Wed, 29 May 2019 04:09:54 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33945 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfE2IJy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:09:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w7so738925plz.1;
+        Wed, 29 May 2019 01:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LNT+zg4PSbt9K3xm52PuCoDPdKgmlpZ10u0AIkhHmCQ=;
+        b=Ns7/gQCueH8qkz32nkdpNHhe+fi78Ls6j23hl1x4ARc8ypJClLRrkh6FEFr/403n8w
+         F3/ElRwB6sJN17ug4AHJLr63hKJnsQVTCjNNEqPktHmpikJ5zo9bKHrwHgs0VF0q6XKl
+         Jdc72B5Ul20qtENh6ByszFC5qtSKfkYbY9RvE8XjDDx41tL6MRYPE4rFYvz9EuQS1qIg
+         2UM3UcW/nqMOTmMpTBk/MNqOf0Tauqikthr+u8KWD4S+HjvDHg54D9xQ5spRTHMzYjvY
+         WHJKVtOAuaT9ah/G3YkdljIufmqxFYw65eSBdyE69krqTnRdK0OKV1CM3fxMrvQXZhis
+         c5+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LNT+zg4PSbt9K3xm52PuCoDPdKgmlpZ10u0AIkhHmCQ=;
+        b=Ae2Silv3dc1AFskC3yfl/GlIWjUg8Mc7HKam5EatFdtofU08C157oZcPlcjzeAO9tF
+         Kiegkp3QoJAGdKhX+QEUZwSQZ2jR5Eom7HhSVLnZlqiR9N3+v9gAVcAwUi95YJ6LgpzF
+         s2SeaiHzRTxwlON0fB6X3u4tQUUNGi4oTosQt528KrxxfOW25oUcNeoky7+pu97lB9nq
+         nlM4Iaq4cShWNYLDR4pKv+ZUiVjbhWq2PjjqdRFSz+hWEMF2wnyWNH1ZE1ONAeUR4IYV
+         LoX4NTC1qOX2yEZCsaK8IEbzuEU9YF+D4VpBLpLf7S5hvOSQNJi3Bnws1ohmgnHRu+MH
+         NySA==
+X-Gm-Message-State: APjAAAVgn27PxJo8fDvvQc8N7J/C1QQbO6ipJ1WWtewd7iSZPLEGToXx
+        1uOWgWLKrfZ1gXxATHLVJNo=
+X-Google-Smtp-Source: APXvYqwus4Qs9oLutePxkzGgcVLVX25FwdXFYB0UOW45rzdhECkOdH69gzUmV/QlaYUnOTa/ujS8kQ==
+X-Received: by 2002:a17:902:b215:: with SMTP id t21mr21964991plr.152.1559117393602;
+        Wed, 29 May 2019 01:09:53 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id p7sm16645973pgb.92.2019.05.29.01.09.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 29 May 2019 01:09:53 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     edumazet@google.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] ipv4: tcp_input: fix stack out of bounds when parsing TCP options.
+Date:   Wed, 29 May 2019 16:10:59 +0800
+Message-Id: <1559117459-27353-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+The TCP option parsing routines in tcp_parse_options function could
+read one byte out of the buffer of the TCP options.
 
-There is one problem that when trying to check the nbd device
-NBD_CMD_STATUS and at the same time insert the nbd.ko module,
-we can randomly get some of the 16 /dev/nbd{0~15} are connected,
-but they are not. This is because that the udev service in user
-space will try to open /dev/nbd{0~15} devices to do some sanity
-check when they are added in "__init nbd_init()" and then close
-it asynchronousely.
+1         while (length > 0) {
+2                 int opcode = *ptr++;
+3                 int opsize;
+4
+5                 switch (opcode) {
+6                 case TCPOPT_EOL:
+7                         return;
+8                 case TCPOPT_NOP:        /* Ref: RFC 793 section 3.1 */
+9                         length--;
+10                        continue;
+11                default:
+12                        opsize = *ptr++; //out of bound access
 
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
+If length = 1, then there is an access in line2.
+And another access is occurred in line 12.
+This would lead to out-of-bound access.
+
+Therefore, in the patch we check that the available data length is
+larger enough to pase both TCP option code and size.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
 ---
+ net/ipv4/tcp_input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Not sure whether this patch make sense here, coz this issue can be
-avoided by setting the "nbds_max=0" when inserting the nbd.ko modules.
-
-
-
- drivers/block/nbd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 4c1de1c..98be6ca 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -137,7 +137,7 @@ struct nbd_cmd {
- 
- #define NBD_DEF_BLKSIZE 1024
- 
--static unsigned int nbds_max = 16;
-+static unsigned int nbds_max;
- static int max_part = 16;
- static struct workqueue_struct *recv_workqueue;
- static int part_shift;
-@@ -2310,6 +2310,6 @@ static void __exit nbd_cleanup(void)
- MODULE_LICENSE("GPL");
- 
- module_param(nbds_max, int, 0444);
--MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: 16)");
-+MODULE_PARM_DESC(nbds_max, "number of network block devices to initialize (default: 0)");
- module_param(max_part, int, 0444);
- MODULE_PARM_DESC(max_part, "number of partitions per device (default: 16)");
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 20f6fac..9775825 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -3791,6 +3791,8 @@ void tcp_parse_options(const struct net *net,
+ 			length--;
+ 			continue;
+ 		default:
++			if (length < 2)
++				return;
+ 			opsize = *ptr++;
+ 			if (opsize < 2) /* "silly options" */
+ 				return;
 -- 
-1.8.3.1
+2.7.4
 
