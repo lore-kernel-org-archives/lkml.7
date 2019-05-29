@@ -2,125 +2,141 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9BFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2717F208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF8OWavK"
+	by mail.kernel.org (Postfix) with ESMTP id 0917221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 13:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfE2NUr (ORCPT
+        id S1727124AbfE2NXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 09:20:47 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44360 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfE2NUq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 09:20:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so1355634pgp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 06:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MnsmjGULYbyE0ak6jRzzu9lNKNNX7Vv2vqMfhHQMf7g=;
-        b=fF8OWavKnY8mawPFHREaawr8yDeOuu2jsuoUvXQAbTbB2ZI5fqlKMlGGB6PMpkx0BV
-         mCIEllMv3ip5gQTVm5u4+agvoC7NrGXm+GecCTjYa1xrflD+E7Yqg7HgKbzRbT9aTFUP
-         7JzfJZtd2Z68FKXAMuPnXRkK2L6iunF4LzRSxiMrWWkXQ1XLdlrxSFS6dbc4NB89Xgje
-         M7O7nSy9LLNyMZNtYCZUxFv60J2pCv+7Zpo3YDzsrtV8hR23x8gJuZIOnylGDWgdMXuS
-         XY7F3G2gqjK5XFb9YorFbX3wTeR1Sa7X02PGiXTJzmPHmzr/F+AV2GOo6oNH94zMzAmq
-         LOWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MnsmjGULYbyE0ak6jRzzu9lNKNNX7Vv2vqMfhHQMf7g=;
-        b=TcBOVSS9i8ry1kBH2Ij1SPiPkACeDSQJVEvMXmVXo9kI89/zcqOHVSicRCs98aCXhZ
-         QYNvSqJy1hrS3j8euZRN0YTwi6ciHpCQe4QUqfxf4kgX+6TLSD6III5y7fS50TwKNSz3
-         BUHlEPPwxQfw7i3xJGmb6oYG8fENC0sI79C8dwQJN7/+yAQGVnL9q4Fr55JBFuRh6h7s
-         6n1gg5t3YbAg7x7Z+VhJON/h4Ezfl1ZimtQme+7YaRqJdJaDJDOlbKpZmrd643H+cMAN
-         gnin4k4cQ6B2Izu+mz0AUkYSjnigb7cVW+OgW+Q6uKS+5ke7XZFf1kQwsOcgOgCA0pmF
-         SGIA==
-X-Gm-Message-State: APjAAAWvWEke2khlEdPNWxC3sn4bp5+7bCHZQCeh6MZVj6cvZWTdZtSH
-        UUYJOmjaqDuDcdv5+3IHzBw=
-X-Google-Smtp-Source: APXvYqwrIpIcdADUaHyqqcKbgm99ep3yRJ0nrQO/vlRmcdUx3v4Ql4Qq1Svd9NESOvFINo3fGCD8uA==
-X-Received: by 2002:a17:90a:33c5:: with SMTP id n63mr12445270pjb.16.1559136046086;
-        Wed, 29 May 2019 06:20:46 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.67.155])
-        by smtp.gmail.com with ESMTPSA id l3sm28812133pgl.3.2019.05.29.06.20.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 06:20:45 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        gregkh@linuxfoundation.org, himadri18.07@gmail.com,
-        daniela.mormocea@gmail.com, straube.linux@gmail.com,
-        vatsalanarang@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rtl8712: Remove unnecessary variable in rtl8712_recv.c
-Date:   Wed, 29 May 2019 18:50:31 +0530
-Message-Id: <20190529132031.6493-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 29 May 2019 09:23:52 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45920 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfE2NXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 09:23:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0EF180D;
+        Wed, 29 May 2019 06:23:50 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5BC23F59C;
+        Wed, 29 May 2019 06:23:44 -0700 (PDT)
+Date:   Wed, 29 May 2019 14:23:42 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190529132341.27t3knoxpb7t7y3g@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190527143719.GA59948@MBP.local>
+ <20190528145411.GA709@e119886-lin.cambridge.arm.com>
+ <20190528154057.GD32006@arrakis.emea.arm.com>
+ <20190528155644.GD28398@e103592.cambridge.arm.com>
+ <20190528163400.GE32006@arrakis.emea.arm.com>
+ <20190529124224.GE28398@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529124224.GE28398@e103592.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary variable last_evm in rtl8712_recv.c and use its value
-directly.
-Issue found with Coccinelle.
+On Wed, May 29, 2019 at 01:42:25PM +0100, Dave P Martin wrote:
+> On Tue, May 28, 2019 at 05:34:00PM +0100, Catalin Marinas wrote:
+> > On Tue, May 28, 2019 at 04:56:45PM +0100, Dave P Martin wrote:
+> > > On Tue, May 28, 2019 at 04:40:58PM +0100, Catalin Marinas wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > My thoughts on allowing tags (quick look):
+> > > >
+> > > > brk - no
+> > > 
+> > > [...]
+> > > 
+> > > > mlock, mlock2, munlock - yes
+> > > > mmap - no (we may change this with MTE but not for TBI)
+> > > 
+> > > [...]
+> > > 
+> > > > mprotect - yes
+> > > 
+> > > I haven't following this discussion closely... what's the rationale for
+> > > the inconsistencies here (feel free to refer me back to the discussion
+> > > if it's elsewhere).
+> > 
+> > _My_ rationale (feel free to disagree) is that mmap() by default would
+> > not return a tagged address (ignoring MTE for now). If it gets passed a
+> > tagged address or a "tagged NULL" (for lack of a better name) we don't
+> > have clear semantics of whether the returned address should be tagged in
+> > this ABI relaxation. I'd rather reserve this specific behaviour if we
+> > overload the non-zero tag meaning of mmap() for MTE. Similar reasoning
+> > for mremap(), at least on the new_address argument (not entirely sure
+> > about old_address).
+> > 
+> > munmap() should probably follow the mmap() rules.
+> > 
+> > As for brk(), I don't see why the user would need to pass a tagged
+> > address, we can't associate any meaning to this tag.
+> > 
+> > For the rest, since it's likely such addresses would have been tagged by
+> > malloc() in user space, we should allow tagged pointers.
+> 
+> Those arguments seem reasonable.  We should try to capture this
+> somewhere when documenting the ABI.
+> 
+> To be clear, I'm not sure that we should guarantee anywhere that a
+> tagged pointer is rejected: rather the behaviour should probably be
+> left unspecified.  Then we can tidy it up incrementally.
+> 
+> (The behaviour is unspecified today, in any case.)
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rtl8712/rtl8712_recv.c | 5 ++---
- drivers/staging/rtl8712/rtl871x_cmd.c  | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+What is specified (or rather de-facto ABI) today is that passing a user
+address above TASK_SIZE (e.g. non-zero top byte) would fail in most
+cases. If we relax this with the TBI we may end up with some de-facto
+ABI before we actually get MTE hardware. Tightening it afterwards may be
+slightly more problematic, although MTE needs to be an explicit opt-in.
 
-diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
-index 82ddc0c3ecd4..f6f7cd5fd0f2 100644
---- a/drivers/staging/rtl8712/rtl8712_recv.c
-+++ b/drivers/staging/rtl8712/rtl8712_recv.c
-@@ -885,7 +885,7 @@ static void query_rx_phy_status(struct _adapter *padapter,
- static void process_link_qual(struct _adapter *padapter,
- 			      union recv_frame *prframe)
- {
--	u32	last_evm = 0, tmpVal;
-+	u32	tmpVal;
- 	struct rx_pkt_attrib *pattrib;
- 	struct smooth_rssi_data *sqd = &padapter->recvpriv.signal_qual_data;
- 
-@@ -898,8 +898,7 @@ static void process_link_qual(struct _adapter *padapter,
- 		 */
- 		if (sqd->total_num++ >= PHY_LINKQUALITY_SLID_WIN_MAX) {
- 			sqd->total_num = PHY_LINKQUALITY_SLID_WIN_MAX;
--			last_evm = sqd->elements[sqd->index];
--			sqd->total_val -= last_evm;
-+			sqd->total_val -= sqd->elements[sqd->index];
- 		}
- 		sqd->total_val += pattrib->signal_qual;
- 		sqd->elements[sqd->index++] = pattrib->signal_qual;
-diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
-index 05a78ac24987..7c437ee9e022 100644
---- a/drivers/staging/rtl8712/rtl871x_cmd.c
-+++ b/drivers/staging/rtl8712/rtl871x_cmd.c
-@@ -880,7 +880,7 @@ void r8712_createbss_cmd_callback(struct _adapter *padapter,
- 		}
- 		r8712_indicate_connect(padapter);
- 	} else {
--		pwlan = _r8712_alloc_network(pmlmepriv);
-+		pwlan = r8712_alloc_network(pmlmepriv);
- 		if (!pwlan) {
- 			pwlan = r8712_get_oldest_wlan_network(
- 				&pmlmepriv->scanned_queue);
+IOW, I wouldn't want to unnecessarily relax the ABI if we don't need to.
+
 -- 
-2.19.1
-
+Catalin
