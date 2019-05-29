@@ -2,105 +2,145 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C17C04AB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA1C07542
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4903B20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2B420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 08:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfE2I2b (ORCPT
+        id S1726330AbfE2I34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 04:28:31 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42459 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725935AbfE2I2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 04:28:30 -0400
-X-UUID: 725f9bdff6c840129cdc26316ed95433-20190529
-X-UUID: 725f9bdff6c840129cdc26316ed95433-20190529
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1005367912; Wed, 29 May 2019 16:28:18 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 29 May 2019 16:28:16 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 29 May 2019 16:28:16 +0800
-Message-ID: <1559118496.4226.11.camel@mtksdaap41>
-Subject: Re: [PATCH 1/3] drm: mediatek: fix unbind functions
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-CC:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Wed, 29 May 2019 16:28:16 +0800
-In-Reply-To: <CAJMQK-jDhDNViUA3dpixG=_Pe7x0qH4utBWy3k+D_+oKwEOPig@mail.gmail.com>
-References: <20190527045054.113259-1-hsinyi@chromium.org>
-         <20190527045054.113259-2-hsinyi@chromium.org>
-         <1559093711.11380.6.camel@mtksdaap41>
-         <CAJMQK-jDhDNViUA3dpixG=_Pe7x0qH4utBWy3k+D_+oKwEOPig@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 29 May 2019 04:29:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfE2I34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 04:29:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8F12AE56;
+        Wed, 29 May 2019 08:29:54 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Cc:     Michal Rostecki <mrostecki@opensuse.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] libbpf: Return btf_fd in libbpf__probe_raw_btf
+Date:   Wed, 29 May 2019 10:29:41 +0200
+Message-Id: <20190529082941.9440-1-mrostecki@opensuse.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: A023916AAC1D56E857E7DE6AAAEAA623764789450FCB15420F9FB9F4341CEE5A2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Hsin-Yi:
+Function load_sk_storage_btf expects that libbpf__probe_raw_btf is
+returning a btf descriptor, but before this change it was returning
+an information about whether the probe was successful (0 or 1).
+load_sk_storage_btf was using that value as an argument to the close
+function, which was resulting in closing stdout and thus terminating the
+process which used that dunction.
 
-On Wed, 2019-05-29 at 15:06 +0800, Hsin-Yi Wang wrote:
-> On Wed, May 29, 2019 at 9:35 AM CK Hu <ck.hu@mediatek.com> wrote:
-> 
-> >
-> > I think mtk_dsi_destroy_conn_enc() has much thing to do and I would like
-> > you to do more. You could refer to [2] for complete implementation.
-> >
-> > [2]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/exynos/exynos_drm_dsi.c?h=v5.2-rc2#n1575
-> >
-> Hi CK,
-> 
-> Since drm_encoder_cleanup() would already call drm_bridge_detach() to
-> detach bridge, I think we only need to handle panel case here.
-> We don't need to call mtk_dsi_encoder_disable() since
-> mtk_output_dsi_disable() is called in mtk_dsi_remove() and
-> dsi->enabled will be set to false. Calling second time will just
-> returns immediately.
-> So, besides setting
-> 
-> dsi->panel = NULL;
-> dsi->conn.status = connector_status_disconnected;
+That bug was visible in bpftool. `bpftool feature` subcommand was always
+exiting too early (because of closed stdout) and it didn't display all
+requested probes. `bpftool -j feature` or `bpftool -p feature` were not
+returning a valid json object.
 
-Sorry, I think your original patch is good enough, and you need not to
-do the besides setting.
+Fixes: d7c4b3980c18 ("libbpf: detect supported kernel BTF features and sanitize BTF")
+Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+---
+ tools/lib/bpf/libbpf.c        | 36 +++++++++++++++++++++--------------
+ tools/lib/bpf/libbpf_probes.c |  7 +------
+ 2 files changed, 23 insertions(+), 20 deletions(-)
 
-Regards,
-CK
-
-> 
-> are there other things we need to do here?
-> 
-> Original code doesn't have drm_kms_helper_hotplug_event(), and I'm not
-> sure if mtk dsi would need this.
-> Also, mtk_dsi_stop() would also stop irq.
-> 
-> Thanks
-
-
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 197b574406b3..bc2dca36bced 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1645,15 +1645,19 @@ static int bpf_object__probe_btf_func(struct bpf_object *obj)
+ 		/* FUNC x */                                    /* [3] */
+ 		BTF_TYPE_ENC(5, BTF_INFO_ENC(BTF_KIND_FUNC, 0, 0), 2),
+ 	};
+-	int res;
++	int btf_fd;
++	int ret;
+ 
+-	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+-				    strs, sizeof(strs));
+-	if (res < 0)
+-		return res;
+-	if (res > 0)
++	btf_fd = libbpf__probe_raw_btf((char *)types, sizeof(types),
++				       strs, sizeof(strs));
++	if (btf_fd < 0)
++		ret = 0;
++	else {
++		ret = 1;
+ 		obj->caps.btf_func = 1;
+-	return 0;
++	}
++	close(btf_fd);
++	return ret;
+ }
+ 
+ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
+@@ -1670,15 +1674,19 @@ static int bpf_object__probe_btf_datasec(struct bpf_object *obj)
+ 		BTF_TYPE_ENC(3, BTF_INFO_ENC(BTF_KIND_DATASEC, 0, 1), 4),
+ 		BTF_VAR_SECINFO_ENC(2, 0, 4),
+ 	};
+-	int res;
++	int btf_fd;
++	int ret;
+ 
+-	res = libbpf__probe_raw_btf((char *)types, sizeof(types),
+-				    strs, sizeof(strs));
+-	if (res < 0)
+-		return res;
+-	if (res > 0)
++	btf_fd = libbpf__probe_raw_btf((char *)types, sizeof(types),
++				       strs, sizeof(strs));
++	if (btf_fd < 0)
++		ret = 0;
++	else {
++		ret = 1;
+ 		obj->caps.btf_datasec = 1;
+-	return 0;
++	}
++	close(btf_fd);
++	return ret;
+ }
+ 
+ static int
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index 5e2aa83f637a..2c2828345514 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -157,14 +157,9 @@ int libbpf__probe_raw_btf(const char *raw_types, size_t types_len,
+ 	memcpy(raw_btf + hdr.hdr_len + hdr.type_len, str_sec, hdr.str_len);
+ 
+ 	btf_fd = bpf_load_btf(raw_btf, btf_len, NULL, 0, false);
+-	if (btf_fd < 0) {
+-		free(raw_btf);
+-		return 0;
+-	}
+ 
+-	close(btf_fd);
+ 	free(raw_btf);
+-	return 1;
++	return btf_fd;
+ }
+ 
+ static int load_sk_storage_btf(void)
+-- 
+2.21.0
 
