@@ -2,153 +2,137 @@ Return-Path: <SRS0=t3dz=T5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B60C28CC0
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DD5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7366523AC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB7C23AFE
+	for <linux-kernel@archiver.kernel.org>; Wed, 29 May 2019 14:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vAYGK9KO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PRu92ve5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PUY+3yOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfE2OuV (ORCPT
+        id S1726747AbfE2Ov4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 10:50:21 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:37242 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbfE2OuV (ORCPT
+        Wed, 29 May 2019 10:51:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46762 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbfE2Ov4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 10:50:21 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TEmj59055774;
-        Wed, 29 May 2019 14:49:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2018-07-02;
- bh=bdiE7HWyHmzeDdhgcpTkxNwVwsKMW5J4u0bwenhkW2I=;
- b=vAYGK9KOQKh1ci+61dIXEhKr/6PuEl3w9nerHoG2o6KZcTmroHCycrPlXsSVYoCc1D9e
- u53Af15v96j6SPmPoJ+syGA6mCGI1yCiY2PcW+gMzZiVseWDKwRqdfQ/vA5LKK20Ou6S
- qqH1kgPXhEpgNiGNUtFLQ9cNrcGvNjpxe3Gfdd5qauvpSfl3hiaspyOm5mJhBkWRqvwm
- IYx2v4CAD32zNH3jZdsRIlmsjtuapA8CQI+GAGIf1qsl+aD1+DqMFhyfxIFAGNXJW+cz
- 9a5PK1sw72WXYdjOuDHWee7Q0Jai2TlWbMJfUWHm89DxiTdsjrZTZi400nmT0P2EZndw JQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2spu7djgus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 14:49:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4TEnL0O140618;
-        Wed, 29 May 2019 14:49:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ss1fngsh2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 May 2019 14:49:22 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4TEnF2L021623;
-        Wed, 29 May 2019 14:49:16 GMT
-Received: from concerto-wl.internal (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 07:49:15 -0700
-Message-ID: <3ade20696cc772772f5362fea02ede81c4a0fad3.camel@oracle.com>
-Subject: Re: [PATCH v15 01/17] uaccess: add untagged_addr definition for
- other arches
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Date:   Wed, 29 May 2019 08:49:09 -0600
-In-Reply-To: <67ae3bd92e590d42af22ef2de0ad37b730a13837.1557160186.git.andreyknvl@google.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
-         <67ae3bd92e590d42af22ef2de0ad37b730a13837.1557160186.git.andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905290098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905290098
+        Wed, 29 May 2019 10:51:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CDDBC60A63; Wed, 29 May 2019 14:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559141514;
+        bh=wB2s6eG/yS7NJpG9iQQVkTE5phJzfMsxILOMCQ9VtJk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=PRu92ve5m+yFMyE9ZOAdUy7oR9ClsAMW+nPqlk0MeENffS9VWqE4AG9Bk2Fl2uVTe
+         wsdxUerQ3mWSqESfJ09yzyx0wUvIqu/SucsItWJYlTRAMxSnXU3LFte+BPXUxihO8x
+         3CCwJ/JB9AKhd+x6pYKiS0YfM3vEae3r2NClMWoM=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C6DE60741;
+        Wed, 29 May 2019 14:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559141513;
+        bh=wB2s6eG/yS7NJpG9iQQVkTE5phJzfMsxILOMCQ9VtJk=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=PUY+3yOpoSS6ECOQcR7KVN3EseXspgVDwsrgZ2LmWoKOYCAxv9uR0r7CR5blyzPFa
+         63L6qrquF0de4y/HH33Ihl1Y7nVLLuOoUVQIE6BXGxLh52uP0dToSPOekIusE1vIQI
+         D9zR5uLY8FF9zhHUEcF1rgdALzzb2MFTlRHnWWd0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C6DE60741
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "open list\:ARM\/Rockchip SoC..." 
+        <linux-rockchip@lists.infradead.org>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list@cypress.com, Double Lo <double.lo@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>
+Subject: Re: [PATCH 1/3] brcmfmac: re-enable command decode in sdio_aos for BRCM 4354
+References: <20190517225420.176893-2-dianders@chromium.org>
+        <20190528121833.7D3A460A00@smtp.codeaurora.org>
+        <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+Date:   Wed, 29 May 2019 17:51:47 +0300
+In-Reply-To: <CAD=FV=VtxdEeFQsdF=U7-_7R+TXfVmA2_JMB_-WYidGHTLDgLw@mail.gmail.com>
+        (Doug Anderson's message of "Tue, 28 May 2019 08:51:53 -0700")
+Message-ID: <87h89d2u0s.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-06 at 18:30 +0200, Andrey Konovalov wrote:
-> To allow arm64 syscalls to accept tagged pointers from userspace, we
-> must
-> untag them when they are passed to the kernel. Since untagging is
-> done in
-> generic parts of the kernel, the untagged_addr macro needs to be
-> defined
-> for all architectures.
-> 
-> Define it as a noop for architectures other than arm64.
-> 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  include/linux/mm.h | 4 ++++
->  1 file changed, 4 insertions(+)
+Doug Anderson <dianders@chromium.org> writes:
 
-As discussed in the other thread Chris started, there is a generic need
-to untag addresses in kernel and this patch gets us ready for that.
+> Hi,
+>
+> On Tue, May 28, 2019 at 5:18 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Douglas Anderson <dianders@chromium.org> wrote:
+>>
+>> > In commit 29f6589140a1 ("brcmfmac: disable command decode in
+>> > sdio_aos") we disabled something called "command decode in sdio_aos"
+>> > for a whole bunch of Broadcom SDIO WiFi parts.
+>> >
+>> > After that patch landed I find that my kernel log on
+>> > rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
+>> >   brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+>> >
+>> > This seems to happen every time the Broadcom WiFi transitions out of
+>> > sleep mode.  Reverting the part of the commit that affects the WiFi on
+>> > my boards fixes the problem for me, so that's what this patch does.
+>> >
+>> > Note that, in general, the justification in the original commit seemed
+>> > a little weak.  It looked like someone was testing on a SD card
+>> > controller that would sometimes die if there were CRC errors on the
+>> > bus.  This used to happen back in early days of dw_mmc (the controller
+>> > on my boards), but we fixed it.  Disabling a feature on all boards
+>> > just because one SD card controller is broken seems bad.  ...so
+>> > instead of just this patch possibly the right thing to do is to fully
+>> > revert the original commit.
+>> >
+>> > Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
+>> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>
+>> I don't see patch 2 in patchwork and I assume discussion continues.
+>
+> Apologies.  I made sure to CC you individually on all the patches but
+> didn't think about the fact that you use patchwork to manage and so
+> didn't ensure all patches made it to all lists (by default each patch
+> gets recipients individually from get_maintainer).  I'll make sure to
+> fix for patch set #2.  If you want to see all the patches, you can at
+> least find them on lore.kernel.org linked from the cover:
+>
+> https://lore.kernel.org/patchwork/cover/1075373/
 
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+No worries, I had the thread on my email but was just too busy to check.
+So I instead wrote down my thought process so that somebode can correct
+me in case I have misunderstood. I usually do that when it's not clear
+what the next action should be.
 
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 6b10c21630f5..44041df804a6 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -99,6 +99,10 @@ extern int mmap_rnd_compat_bits __read_mostly;
->  #include <asm/pgtable.h>
->  #include <asm/processor.h>
->  
-> +#ifndef untagged_addr
-> +#define untagged_addr(addr) (addr)
-> +#endif
-> +
->  #ifndef __pa_symbol
->  #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
->  #endif
-
+-- 
+Kalle Valo
