@@ -4,588 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E5AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07461C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7520B2616D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBD026166
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGvVeOZS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wpGOi1iS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfE3UcF (ORCPT
+        id S1726461AbfE3UhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:32:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32994 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfE3UcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:32:05 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g21so3033722plq.0;
-        Thu, 30 May 2019 13:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kguosYeFwg0UQb+y10YIE7iIZLNffVxVTFmnvc3bap8=;
-        b=fGvVeOZSE0ET9SO/bO/OPxJ5yvsV1UHHYcsckRtI1SVNBgTAGyjAWyvXAx66N4W2jl
-         GrNqwi7ZhmDlL5FiBdznmWlMBD/kV1ceCIfMqVh3JMvA8pCunpPDxWUPiRufwF4Lyp5X
-         rKcsx3AkQ6Ml4GWgfhH6laJzBAo8FmYSWYLBjRbCAyf5KXiwfNr5PyuraW4/6NK8Gu5v
-         TvPRGQq7AAt2Hy/ih8bsKf1iLqaj8rpGhsPHcd/QX8kutMeTuP7whyUXKsLy6CrZTZNh
-         IGHf5ZCTkj3yzBNzkYO/Xz39hk4WNw/aulmxJehwmKsBIEVYejsm8oi6PpZ9+EUVgs1J
-         Fy3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kguosYeFwg0UQb+y10YIE7iIZLNffVxVTFmnvc3bap8=;
-        b=lYCNUL4vqwgLqMr4lXi+rV/38BVwWpfwsHalhakCIc4JRIssCYphfRIpp80X0mcLsE
-         dhEHg1RAmVncc4fWchahrGoX2qb1Qov/t/JnWE78UPDl19uGvLDFX+DSQoxFz4RStN0f
-         vE+c7Zb3oMKdRML5uFnOQG0NFNjQKb/f17YNXS7r22t7zgmOmrl8uJhD/fmH0X56MiFm
-         +ozLtWZtdwpivmF3GbQG531WTPeG6VVRdskF2WpDBqNWgA0XME7tAQLZMofSBqb+cxpT
-         LUfQhCLlbjiRFwzj62A8pOIWcH16MyZxdocEFVxZPC+L+Qq65xC41Xnzd8fUZEvNU91U
-         Iszg==
-X-Gm-Message-State: APjAAAW8nojjnwuhcT2CZ4sjqdxhcDFLWOcYfxU9VXr7lF2fKntzgl06
-        Tjj8QKYUX8wpj5d0p9L7Csc=
-X-Google-Smtp-Source: APXvYqz3Cxdgk8TW1rHHu3MlWR0sJbYNWQWDNc8q7gYGplLRcrTWWHS3rocG1QiSmnMTBKOErj1JOg==
-X-Received: by 2002:a17:902:4e:: with SMTP id 72mr5561546pla.80.1559248324265;
-        Thu, 30 May 2019 13:32:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t4sm3256666pjq.19.2019.05.30.13.32.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 13:32:03 -0700 (PDT)
-Date:   Thu, 30 May 2019 13:32:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] power: supply: Add HWMON compatibility layer
-Message-ID: <20190530203202.GD12310@roeck-us.net>
-References: <20190529071112.16849-1-andrew.smirnov@gmail.com>
- <20190529071112.16849-2-andrew.smirnov@gmail.com>
- <22dcfea4-00a2-3de8-8313-35d8d1350493@roeck-us.net>
- <CAHQ1cqGpcRbqzDk3z0nu0OUGsPbXXmc-fzZRzZjd-_dnqCwodQ@mail.gmail.com>
+        Thu, 30 May 2019 16:37:08 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42630 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3UhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 16:37:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CzZNdS7LKVPhMQrMJpz7Y8+OpXbEAePhifOl33mCSkA=; b=wpGOi1iSqLulaxzZWywII1B+qn
+        4EZSokjY+LbuOEdRHIuw+kiYGOjUslhLdD6IvizLXzwuI7rq2b8u3s0WlM7H8X6fYahnJqnPUztJ9
+        a4K93qA0l8nJI0J8OvKIwfoohQsd5eNt5C1DAFet3ZVo05Rhh79zrYbz02TwcGMXSEq0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hWRnB-0001ZU-H8; Thu, 30 May 2019 22:36:53 +0200
+Date:   Thu, 30 May 2019 22:36:53 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Filippov <a.filippov@yadro.com>
+Cc:     linux-aspeed@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add YADRO VESNIN BMC
+Message-ID: <20190530203653.GD1561@lunn.ch>
+References: <20190530143933.25414-1-a.filippov@yadro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHQ1cqGpcRbqzDk3z0nu0OUGsPbXXmc-fzZRzZjd-_dnqCwodQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190530143933.25414-1-a.filippov@yadro.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:08:35PM -0700, Andrey Smirnov wrote:
-> On Wed, May 29, 2019 at 5:40 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On 5/29/19 12:11 AM, Andrey Smirnov wrote:
-> > > Add code implementing HWMON adapter/compatibility layer to allow
-> > > expositing various sensors present on power supply devices via HWMON
-> > > subsystem. This is done in order to allow userspace to use single
-> > > ABI/library(libsensors) to access/manipulate all of the sensors of the
-> > > system.
-> > >
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Cc: Chris Healy <cphealy@gmail.com>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > Cc: Sebastian Reichel <sre@kernel.org>
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: linux-pm@vger.kernel.org
-> > > ---
-> > >   drivers/power/supply/Kconfig              |  14 +
-> > >   drivers/power/supply/Makefile             |   1 +
-> > >   drivers/power/supply/power_supply_hwmon.c | 329 ++++++++++++++++++++++
-> > >   include/linux/power_supply.h              |  11 +
-> > >   4 files changed, 355 insertions(+)
-> > >   create mode 100644 drivers/power/supply/power_supply_hwmon.c
-> > >
-> > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > > index 26dacdab03cc..1f2252cb95fd 100644
-> > > --- a/drivers/power/supply/Kconfig
-> > > +++ b/drivers/power/supply/Kconfig
-> > > @@ -14,6 +14,20 @@ config POWER_SUPPLY_DEBUG
-> > >         Say Y here to enable debugging messages for power supply class
-> > >         and drivers.
-> > >
-> > > +config POWER_SUPPLY_HWMON
-> > > +     bool
-> > > +     prompt "Expose power supply sensors as hwmon device"
-> > > +     depends on HWMON=y || HWMON=POWER_SUPPLY
-> > > +     default y
-> >
-> > Not sure if you want to enable that by default.
-> >
+On Thu, May 30, 2019 at 05:39:33PM +0300, Alexander Filippov wrote:
+> VESNIN is an OpenPower machine with an Aspeed 2400 BMC SoC manufactured
+> by YADRO.
 > 
-> That's what THERMAL_HWMON does which seems pretty analogous to this code.
+> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 234 ++++++++++++++++++++
+>  2 files changed, 235 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
 > 
-maintainer call to make.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 834cce80d1b8..811e9312cf22 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1259,6 +1259,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-microsoft-olympus.dtb \
+>  	aspeed-bmc-opp-lanyang.dtb \
+>  	aspeed-bmc-opp-palmetto.dtb \
+> +	aspeed-bmc-opp-vesnin.dtb \
+>  	aspeed-bmc-opp-romulus.dtb \
+>  	aspeed-bmc-opp-swift.dtb \
+>  	aspeed-bmc-opp-witherspoon.dtb \
 
-> > > +     help
-> > > +       This options enables API that allows sensors found on a
-> > > +       power supply device (current, voltage, temperature) to be
-> > > +       exposed as a hwmon device.
-> > > +
-> > > +       Say 'Y' here if you want power supplies to
-> > > +       have hwmon sysfs interface too.
-> > > +
-> > > +
-> > >   config PDA_POWER
-> > >       tristate "Generic PDA/phone power driver"
-> > >       depends on !S390
-> > > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> > > index f208273f9686..c47e88ba16b9 100644
-> > > --- a/drivers/power/supply/Makefile
-> > > +++ b/drivers/power/supply/Makefile
-> > > @@ -6,6 +6,7 @@ power_supply-$(CONFIG_SYSFS)          += power_supply_sysfs.o
-> > >   power_supply-$(CONFIG_LEDS_TRIGGERS)        += power_supply_leds.o
-> > >
-> > >   obj-$(CONFIG_POWER_SUPPLY)  += power_supply.o
-> > > +obj-$(CONFIG_POWER_SUPPLY_HWMON) += power_supply_hwmon.o
-> > >   obj-$(CONFIG_GENERIC_ADC_BATTERY)   += generic-adc-battery.o
-> > >
-> > >   obj-$(CONFIG_PDA_POWER)             += pda_power.o
-> > > diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-> > > new file mode 100644
-> > > index 000000000000..dca7f79fae6e
-> > > --- /dev/null
-> > > +++ b/drivers/power/supply/power_supply_hwmon.c
-> > > @@ -0,0 +1,329 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + *  power_supply_hwmon.c - power supply hwmon support.
-> > > + */
-> > > +
-> > > +#include <linux/hwmon.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/power_supply.h>
-> > > +
-> > Alphabetic order ?
-> >
-> 
-> Sure, will do in v2.
-> 
-> > > +struct power_supply_hwmon {
-> > > +     struct power_supply *psy;
-> > > +     unsigned long *props;
-> > > +};
-> > > +
-> > > +static int power_supply_hwmon_in_to_property(u32 attr)
-> > > +{
-> > > +     switch (attr) {
-> > > +     case hwmon_in_average:
-> > > +             return POWER_SUPPLY_PROP_VOLTAGE_AVG;
-> > > +     case hwmon_in_min:
-> > > +             return POWER_SUPPLY_PROP_VOLTAGE_MIN;
-> > > +     case hwmon_in_max:
-> > > +             return POWER_SUPPLY_PROP_VOLTAGE_MAX;
-> > > +     case hwmon_in_input:
-> > > +             return POWER_SUPPLY_PROP_VOLTAGE_NOW;
-> > > +     default:
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static int power_supply_hwmon_curr_to_property(u32 attr)
-> > > +{
-> > > +     switch (attr) {
-> > > +     case hwmon_curr_average:
-> > > +             return POWER_SUPPLY_PROP_CURRENT_AVG;
-> > > +     case hwmon_curr_max:
-> > > +             return POWER_SUPPLY_PROP_CURRENT_MAX;
-> > > +     case hwmon_curr_input:
-> > > +             return POWER_SUPPLY_PROP_CURRENT_NOW;
-> > > +     default:
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
-> > > +{
-> > > +     if (channel) {
-> > > +             switch (attr) {
-> > > +             case hwmon_temp_input:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_AMBIENT;
-> > > +             case hwmon_temp_min_alarm:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN;
-> > > +             case hwmon_temp_max_alarm:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX;
-> > > +             default:
-> > > +                     break;
-> > > +             }
-> > > +     } else {
-> > > +             switch (attr) {
-> > > +             case hwmon_temp_input:
-> > > +                     return POWER_SUPPLY_PROP_TEMP;
-> > > +             case hwmon_temp_max:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_MAX;
-> > > +             case hwmon_temp_min:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_MIN;
-> > > +             case hwmon_temp_min_alarm:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_ALERT_MIN;
-> > > +             case hwmon_temp_max_alarm:
-> > > +                     return POWER_SUPPLY_PROP_TEMP_ALERT_MAX;
-> > > +             default:
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static int
-> > > +power_supply_hwmon_to_property(enum hwmon_sensor_types type,
-> > > +                            u32 attr, int channel)
-> > > +{
-> > > +     switch (type) {
-> > > +     case hwmon_in:
-> > > +             return power_supply_hwmon_in_to_property(attr);
-> > > +     case hwmon_curr:
-> > > +             return power_supply_hwmon_curr_to_property(attr);
-> > > +     case hwmon_temp:
-> > > +             return power_supply_hwmon_temp_to_property(attr, channel);
-> > > +     default:
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
-> > > +                                       u32 attr)
-> > > +{
-> > > +     return type == hwmon_temp && attr == hwmon_temp_label;
-> > > +}
-> > > +
-> > > +static umode_t power_supply_hwmon_is_visible(const void *data,
-> > > +                                          enum hwmon_sensor_types type,
-> > > +                                          u32 attr, int channel)
-> > > +{
-> > > +     const struct power_supply_hwmon *psyhw = data;
-> > > +     int prop, is_writable;
-> > > +
-> > > +     if (power_supply_hwmon_is_a_label(type, attr))
-> > > +             return 0444;
-> > > +
-> > > +     prop = power_supply_hwmon_to_property(type, attr, channel);
-> > > +     if (prop < 0 || !test_bit(prop, psyhw->props))
-> > > +             return 0;
-> > > +
-> > > +     is_writable = power_supply_property_is_writeable(psyhw->psy, prop);
-> > > +
-> > > +     return (is_writable <= 0) ? 0444 : 0644;
-> >
-> > I a a bit concerned that this can result in writeable voltage/current/temp
-> > values (not just for limits), which would be very undesirable. It might be
-> > better to add another check to ensure that this does not happen.
-> >
-> 
-> OK, will do.
-> 
-> > > +}
-> > > +
-> > > +static int power_supply_hwmon_read_string(struct device *dev,
-> > > +                                       enum hwmon_sensor_types type,
-> > > +                                       u32 attr, int channel,
-> > > +                                       const char **str)
-> > > +{
-> > > +     *str = channel ? "temp" : "temp ambient";
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int
-> > > +power_supply_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > > +                     u32 attr, int channel, long *val)
-> > > +{
-> > > +     struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
-> > > +     struct power_supply *psy = psyhw->psy;
-> > > +     union power_supply_propval pspval;
-> > > +     int ret, prop;
-> > > +
-> > > +     prop = power_supply_hwmon_to_property(type, attr, channel);
-> > > +     if (prop < 0)
-> > > +             return prop;
-> > > +
-> > > +     ret  = power_supply_get_property(psy, prop, &pspval);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     switch (type) {
-> > > +     /*
-> > > +      * Both voltage and current is reported in units of
-> > > +      * microvolts/microamps, so we need to adjust it to
-> > > +      * milliamps(volts)
-> > > +      */
-> > > +     case hwmon_curr:
-> > > +     case hwmon_in:
-> > > +             pspval.intval /= 1000;
-> >
-> > DIV_ROUND_CLOSEST() ?
-> >
-> 
-> Yeah, good idea, will do.
-> 
-> > > +             break;
-> > > +     /*
-> > > +      * Temp needs to be converted from 1/10 C to milli-C
-> > > +      */
-> > > +     case hwmon_temp:
-> > > +             pspval.intval *= 100;
-> >
-> > intval is an int, so theoretically this could result in an overflow.
-> >
-> 
-> Sure, will change the code to use check_mul_overflow()
-> 
-> >
-> > > +             break;
-> > > +     default:
-> >
-> > Wouldn't this be an error ?
-> >
-> 
-> Shouldn't happen, but adding a error path here won't hurt.
-> 
-> > Personally I prefer direct value assignments. I don't see value in
-> > updating pspval.intval first only to assign it to *val later.
-> >
-> 
-> This won't work once I convert the code to use check_mul_overflow()
-> since it expects its argument to have the same type and "*val" is
-> long.
-> 
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     *val = pspval.intval;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int
-> > > +power_supply_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-> > > +                      u32 attr, int channel, long val)
-> > > +{
-> > > +     struct power_supply_hwmon *psyhw = dev_get_drvdata(dev);
-> > > +     struct power_supply *psy = psyhw->psy;
-> > > +     union power_supply_propval pspval;
-> > > +     int prop;
-> > > +
-> > > +     prop = power_supply_hwmon_to_property(type, attr, channel);
-> > > +     if (prop < 0)
-> > > +             return prop;
-> > > +
-> > > +     pspval.intval = val;
-> > > +
-> > > +     switch (type) {
-> > > +     /*
-> > > +      * Both voltage and current is reported in units of
-> > > +      * microvolts/microamps, so we need to adjust it to
-> > > +      * milliamps(volts)
-> > > +      */
-> > > +     case hwmon_curr:
-> > > +     case hwmon_in:
-> > > +             pspval.intval *= 1000;
-> >
-> > Range checks ? This can result in an overflow.
-> >
-> 
-> Will add check_mul_overflow() here as well.
-> 
-> > > +             break;
-> > > +     /*
-> > > +      * Temp needs to be converted from 1/10 C to milli-C
-> > > +      */
-> > > +     case hwmon_temp:
-> > > +             pspval.intval /= 100;
-> > > +             break;
-> > > +     default:
-> > > +             break;
-> >
-> > Wouldn't this be an error ?
-> >
-> 
-> Will add an error path in v2.
-> 
-> > > +     }
-> > > +
-> > > +     return power_supply_set_property(psy, prop, &pspval);
-> > > +}
-> > > +
-> > > +static const struct hwmon_ops power_supply_hwmon_ops = {
-> > > +     .is_visible     = power_supply_hwmon_is_visible,
-> > > +     .read           = power_supply_hwmon_read,
-> > > +     .write          = power_supply_hwmon_write,
-> > > +     .read_string    = power_supply_hwmon_read_string,
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
-> > > +     HWMON_CHANNEL_INFO(temp,
-> > > +                        HWMON_T_LABEL     |
-> > > +                        HWMON_T_INPUT     |
-> > > +                        HWMON_T_MAX       |
-> > > +                        HWMON_T_MIN       |
-> > > +                        HWMON_T_MIN_ALARM |
-> > > +                        HWMON_T_MIN_ALARM,
-> > > +
-> > > +                        HWMON_T_LABEL     |
-> > > +                        HWMON_T_INPUT     |
-> > > +                        HWMON_T_MIN_ALARM |
-> > > +                        HWMON_T_LABEL     |
-> > > +                        HWMON_T_MAX_ALARM),
-> > > +
-> > > +     HWMON_CHANNEL_INFO(curr,
-> > > +                        HWMON_C_AVERAGE |
-> > > +                        HWMON_C_MAX     |
-> > > +                        HWMON_C_INPUT),
-> > > +
-> > > +     HWMON_CHANNEL_INFO(in,
-> > > +                        HWMON_I_AVERAGE |
-> > > +                        HWMON_I_MIN     |
-> > > +                        HWMON_I_MAX     |
-> > > +                        HWMON_I_INPUT),
-> > > +     NULL
-> > > +};
-> > > +
-> > > +static const struct hwmon_chip_info power_supply_hwmon_chip_info = {
-> > > +     .ops = &power_supply_hwmon_ops,
-> > > +     .info = power_supply_hwmon_info,
-> > > +};
-> > > +
-> > > +static void power_supply_hwmon_bitmap_free(void *data)
-> > > +{
-> > > +     bitmap_free(data);
-> > > +}
-> > > +
-> > > +struct device *devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
-> > > +{
-> > > +     const struct power_supply_desc *desc = psy->desc;
-> > > +     struct power_supply_hwmon *psyhw;
-> > > +     struct device *dev = &psy->dev;
-> > > +     struct device *hwmon;
-> > > +     int ret, i;
-> > > +
-> > > +     if (!devres_open_group(dev, NULL, GFP_KERNEL))
-> > > +             return ERR_PTR(-ENOMEM);
-> > > +
-> > > +     psyhw = devm_kzalloc(dev, sizeof(*psyhw), GFP_KERNEL);
-> > > +     if (!psyhw) {
-> > > +             ret = -ENOMEM;
-> > > +             goto error;
-> > > +     }
-> > > +
-> > > +     psyhw->psy = psy;
-> > > +     psyhw->props = bitmap_zalloc(POWER_SUPPLY_PROP_TIME_TO_FULL_AVG + 1,
-> > > +                                  GFP_KERNEL);
-> > > +     if (!psyhw->props) {
-> > > +             ret = -ENOMEM;
-> > > +             goto error;
-> > > +     }
-> > > +
-> > > +     ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
-> > > +                           psyhw->props);
-> > > +     if (ret)
-> > > +             goto error;
-> > > +
-> > > +     for (i = 0; i < desc->num_properties; i++) {
-> > > +             const enum power_supply_property prop = desc->properties[i];
-> > > +
-> > > +             switch (prop) {
-> > > +             case POWER_SUPPLY_PROP_CURRENT_AVG:
-> > > +             case POWER_SUPPLY_PROP_CURRENT_MAX:
-> > > +             case POWER_SUPPLY_PROP_CURRENT_NOW:
-> > > +             case POWER_SUPPLY_PROP_TEMP:
-> > > +             case POWER_SUPPLY_PROP_TEMP_MAX:
-> > > +             case POWER_SUPPLY_PROP_TEMP_MIN:
-> > > +             case POWER_SUPPLY_PROP_TEMP_ALERT_MIN:
-> > > +             case POWER_SUPPLY_PROP_TEMP_ALERT_MAX:
-> > > +             case POWER_SUPPLY_PROP_TEMP_AMBIENT:
-> > > +             case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN:
-> > > +             case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX:
-> > > +             case POWER_SUPPLY_PROP_VOLTAGE_AVG:
-> > > +             case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-> > > +             case POWER_SUPPLY_PROP_VOLTAGE_MAX:
-> > > +             case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> > > +                     set_bit(prop, psyhw->props);
-> > > +                     break;
-> > > +             default:
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
-> > > +                                             psyhw,
-> > > +                                             &power_supply_hwmon_chip_info,
-> > > +                                             NULL);
-> > > +     ret = PTR_ERR_OR_ZERO(hwmon);
-> > > +     if (ret)
-> > > +             goto error;
-> > > +
-> > > +     devres_remove_group(dev, NULL);
-> >
-> > Why devres_remove_group() and not devres_close_group() ?
-> >
-> 
-> That's id-less group that'll never be used again, closing it and
-> keeping it around isn't really particularly useful to me.
-> 
-Ok, fine with me if it works. I have no idea what the semantics of devres
-groups is, much less what the difference between devres_remove_group() and
-devres_close_group() is.
+Hi Alexander
 
-> > > +     return hwmon;
-> >
-> > Why return a pointer to the hwmon device and not just an error code ?
-> >
-> 
-> Just to expose created hwmon device.
-> 
+Still not correctly sorted.
 
-Sure, but what for ?
-
-> > > +error:
-> > > +     devres_release_group(dev, NULL);
-> > > +     return ERR_PTR(ret);
-> > > +}
-> > > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > > index d9c0c094f8a0..839abfa2c640 100644
-> > > --- a/include/linux/power_supply.h
-> > > +++ b/include/linux/power_supply.h
-> > > @@ -481,4 +481,15 @@ static inline bool power_supply_is_watt_property(enum power_supply_property psp)
-> > >       return 0;
-> > >   }
-> > >
-> > > +#ifdef CONFIG_POWER_SUPPLY_HWMON
-> > > +extern struct device *
-> > > +devm_power_supply_add_hwmon_sysfs(struct power_supply *psy);
-> > > +#else
-> > > +static struct device *
-> > > +devm_power_supply_add_hwmon_sysfs(struct power_supply *psy)
-> > > +{
-> > > +     return 0;
-> >
-> > You might consider making the return code an int. Otherwise this gets difficult
-> > for the caller, who would have to check for IS_ERR() and NULL (if the device
-> > pointer is supposed to be used for anything).
-> >
-> 
-> Sure, if removing access to created hwmon device is OK, I am more than
-> happy to convert this to return an int.
-> 
-Again, the question is the opposite: You should not return a pointer unless
-you have a use case. "to expose created hwmon device" is not a use case.
-
-Thanks,
-Guenter
+      Andrew
