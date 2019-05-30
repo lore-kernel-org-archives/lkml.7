@@ -2,146 +2,228 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0253BC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF8525EE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:58:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="T/4O9utu"
+	by mail.kernel.org (Postfix) with ESMTP id D096E25EEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfE3R6U (ORCPT
+        id S1726652AbfE3SBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:58:20 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:55704 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726461AbfE3R6U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:58:20 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8F0FEC00DB;
-        Thu, 30 May 2019 17:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559239082; bh=5GP4w1Bpe5t07VP8WSgVlPbfP1asIntV9WMlEi3rPoY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=T/4O9utu9pPN7m60uY41ltPxBEK8Lws7ZwOUvxoq8FxRfdz+YjDpwMiIafaYtXDWp
-         JuHTMvc+8Bz7hRXgFgGx/fGpiZeyp46VOFiTn0VW8MVCZAXCGwwmV/xj60Mg4HO5Qh
-         GaDUN+y/i1XQxVm3QG7ys4NhGvOO5GsDVMZEI36TluK8wTqYRqUB6qFG9QXO0R93zq
-         05RquOVtgBMK14YsNRBzKBeGrdaMkyeEcjwNsrbVXAlfD/h/lvurghUpLSX47uVtvZ
-         a67BDzKbEiFpXckZKEkqRZ1Ns0QHztYD2uk3EApADovHRJq+49aw1hyTVvf2QX9DAc
-         hhmrFwGtNZYWg==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 90C13A0093;
-        Thu, 30 May 2019 17:58:19 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 10:58:19 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 23:28:16 +0530
-Received: from [10.10.161.35] (10.10.161.35) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 23:28:28 +0530
-Subject: extraneous generated EXTB (was Re: [PATCH 4/9] ARC: mm: do_page_fault
- refactor #3: tidyup vma access permission code)
-To:     Claudiu Zissulescu <Claudiu.Zissulescu@synopsys.com>
-CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "paltsev@snyopsys.com" <paltsev@snyopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-Newsgroups: gmane.linux.kernel,gmane.linux.kernel.arc
-References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
- <1557880176-24964-5-git-send-email-vgupta@synopsys.com>
- <1558027448.2682.11.camel@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
- <1558131743.2682.33.camel@synopsys.com>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <7923928f-1f4e-3fa8-3d38-40fcb2074b4a@synopsys.com>
-Date:   Thu, 30 May 2019 10:58:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 30 May 2019 14:01:14 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6657 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfE3SBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:01:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:01:11 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga006.jf.intel.com with ESMTP; 30 May 2019 11:01:10 -0700
+Date:   Thu, 30 May 2019 11:01:10 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        William Roberts <bill.c.roberts@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190530180110.GB23930@linux.intel.com>
+References: <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
+ <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
+ <20190528202407.GB13158@linux.intel.com>
+ <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
+ <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
+ <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
+ <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
+ <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1558131743.2682.33.camel@synopsys.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.35]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/19 3:23 PM, Eugeniy Paltsev wrote:
-> Hmmm,
+On Thu, May 30, 2019 at 09:14:10AM -0700, Andy Lutomirski wrote:
+> On Thu, May 30, 2019 at 8:04 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+> >
+> > On 5/30/19 10:31 AM, Andy Lutomirski wrote:
+> > > Hi all-
+> > >
+> > > After an offline discussion with Sean yesterday, here are some updates
+> > > to the user API parts of my proposal.
+> > >
+> > > Unfortunately, Sean convinced me that MAXPERM doesn't work the way I
+> > > described it because, for SGX2, the enclave loader won't know at load
+> > > time whether a given EAUG-ed page will ever be executed.  So here's an
+> > > update.
+> > >
+> > > First, here are the requrements as I see them, where EXECUTE, EXECMOD,
+> > > and EXECMEM could be substituted with other rules at the LSM's
+> > > discretion:
+> > >
+> > >   - You can create a WX or RWX mapping if and only if you have EXECMEM.
+> > >
+> > >   - To create an X mapping of an enclave page that has ever been W, you
+> > > need EXECMOD.
+> >
+> > EXECMOD to what file? The enclave file from which the page's content
+> > originated, the sigstruct file, or /dev/sgx/enclave?
 > 
-> so load the bool variable from memory is converted to such asm code:
+> I leave that decision to you :)  The user should need permission to do
+> an execmod thing on an enclave, however that wants to be encoded.
+
+But that decision dictates how the SGX API handles sigstruct.  If LSMs
+want to associate EXECMOD with sigstruct, then SGX needs to take sigstruct
+early and hold a reference to the file for the lifetime of the enclave.
+And if we're going to do that, the whole approach of inheriting
+permissions from source VMAs becomes unnecessary complexity.
+
+> >
+> > >   - To create an X mapping of an enclave page that came from EADD, you
+> > > need EXECUTE on the source file.  Optionally, we could also permit
+> > > this if you have EXECMOD.
+> >
+> > What is the "source file" i.e. the target of the check?  Enclave file,
+> > sigstruct file, or /dev/sgx/enclave?
 > 
-> ----------------->8------------------- 
-> ldb	r2,[some_bool_address]
-> extb_s	r2,r2
-> ----------------->8-------------------
-> 
-> Could you please describe that the magic is going on there?
-> 
-> This extb_s instruction looks completely useless here, according on the LDB description from PRM:
-> ----------------->8-------------------
-> LD LDH LDW LDB LDD:
-> The size of the requested data is specified by the data size field <.zz> and by default, data is zero
-> extended from the most-significant bit of the data to the most-significant bit of the destination
-> register.
-> ----------------->8-------------------
-> 
-> Am I missing something?
+> Enclave file -- that is, the file backing the vma from which the data is loaded.
+
+It wasn't explicitly called out in Andy's proposal(s), but the idea is
+that the SGX driver would effectively inherit permissions from the source
+VMA (EADD needs a source for the initial value of the encave page).
+
+I have two gripes with that approach:
+
+  - Requires enclave builder to mark enclave pages executable in the
+    non-enclave VMAs, which may unnecessarily require EXECMOD on the
+    source file, or even worse, EXECMEM, and potentially increases the
+    attack surface since the file must be executable.
+
+  - Is completely unnecessary if the enclave holds a reference to the
+    sigstruct file, as LSMs can easily apply labels to the sigstruct,
+    e.g. EXECUTE on the sigstruct instead of EXECUTE on the source file.
 
 
-@Claudiu is that a target specific optimization/tuning in ARC backend ?
+After the bajillion mails we've generated, AIUI we've come up with two
+concepts that are viable: inheriting permissions from the source VMA
+vs. using sigstruct as a proxy for the enclave.  Andy's proposals rely on
+the inheritance concept.  The proposal below is based on the sigstruct
+proxy concept.
 
+For those not familiar with SGX details, sigstruct can be used as a proxy
+because hardware enforces that the measurement stored in the sigstruct
+exactly matches the measurement generated by the enclave build process,
+e.g. adding a page as RX instead of R will change the measurement.
 
-> 
-> On Thu, 2019-05-16 at 17:37 +0000, Vineet Gupta wrote:
->> On 5/16/19 10:24 AM, Eugeniy Paltsev wrote:
->>>> +    unsigned int write = 0, exec = 0, mask;
->>>
->>> Probably it's better to use 'bool' type for 'write' and 'exec' as we really use them as a boolean variables.
->>
->> Right those are semantics, but the generated code for "bool" is not ideal - given
->> it is inherently a "char" it is promoted first to an int with an additional EXTB
->> which I really dislike.
->> Guess it is more of a style thing.
->>
->> -Vineet
+Core Concepts:
+  - FILE_{READ,WRITE,EXEC} on /dev/sgx/enclave effectively gates access to
+    EPC.  All real world enclaves will need all three permissions.
+  - sigstruct is the proxy for enclave from an LSM perspective, e.g.
+    SELinux can define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD and apply
+    them to the sigstruct file.
+  - Take sigstruct at ECREATE so that ADD_REGION immediately followed by
+    mprotect() works as expected (because SGX.mprotect() needs sigstruct
+    to pass to security_enclave_mprotect(), see below).
+  - SGX driver takes a reference to the backing sigstruct file if it
+    exists so that the file can be provided to LSMs during mprotect().
+  - Optional: SGX driver *requires* sigstruct to be backed by file, purely
+    to enforce userspace infrastructure is in place for LSM support.
 
+W^X handling:
+  - mmap() to /dev/sgx/enclave only allowed with PROT_NONE, i.e. force
+    userspace through mprotect() to simplify the kernel implementation.
+  - Add vm_ops mprotect() ops hook (I'll refer to SGX's implementation
+    as SGX.mprotect())
+  - Take explicit ALLOW_WRITE at ADD_REGION, a.k.a. EADD
+  - ADD_REGION also used to describe EAUG region (tentatively for SGX2).
+  - Track "can be written at some point in time (past or future)" as
+    ALLOW_WRITE (to avoid confusiong with MAY_WRITE).  A priori knowledge
+    of writability avoids having to track/coordinate PROT_WRITE across
+    VMAs and MMs.
+  - SGX.mprotect() returns -EPERM if PROT_WRITE && !ALLOW_WRITE.
+  - Add security_enclave_mprotect() LSM hook, called by SGX.mprotect(),
+    e.g. int security_enclave_mprotect(struct file *sigstruct,
+                                       unsigned long prot,
+                                       bool allow_write)
+  - Intention is that EXECMOD is required if PROT_EXEC and ALLOW_WRITE.
+
+Enclave {white,black}listing:
+  - Optional/Future: add security_enclave_create(), invoked during
+    SGX ECREATE ioctl(), e.g.
+       int security_enclave_create(struct vm_area_struct *sigstruct)
+
+  - If this LSM hook is implemented, having sigstruct at ECREATE
+    allows LSMs to determine whether or not the enclave is allowed to
+    execute before allocating EPC for the enclave, e.g. unwanted enclaves
+    can't DoS wanted enclaves.
+
+LSM implementation possibilities:
+
+  - Define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD, require them on the
+    process.  Does not require sigstruct to be backed by file, but cannot
+    achieve per-enclave granularity.  
+
+  - Define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD, require them on the
+    sigstruct, i.e. force sigstruct to reside in filesystem.  Allows
+    per-enclave granularity.
+
+  - Reuse FILE__EXECUTE and FILE__EXECMOD on sigstruct.  Likely has
+    implications that may or may not be concerning, e.g. the sigstruct
+    file itself is weirdly executable.
+
+  - Adding ENCLAVE__EXECUTE and ENCLAVE__EXECMOD means the sigstruct,
+    which may be emdedded in the same file as the enclave, does *not*
+    require FILE__EXECUTE or FILE__EXECMOD, e.g. can be read-only.
+
+  - LSMs can (will?) require ENCLAVE__EXECUTE and ENCLAVE__EXECMOD to
+    effectively map an enclave, even if the process acquired the enclave
+    via SCM_RIGHTS (enclaves are tracked by fds).  This is good or bad
+    depending on your perspective.
+
+Userspace changes:
+
+  - EADD ioctl adds flags param to take ALLOW_WRITE
+
+  - ECREATE ioctl takes sigstruct instead of EINIT
+
+  - Initial mmap() must be PROT_NONE.
+
+  - sigstruct likely needs to reside in a file (this may not affect
+    some userspace implementations).
