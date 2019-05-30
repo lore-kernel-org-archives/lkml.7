@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F36FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA034C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DB325263
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF95625263
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189767;
-	bh=bl2tX/LPrbTjmBMGofl2C4e06mLz01hY1QeO3K0QEN0=;
+	s=default; t=1559189774;
+	bh=d4nY/VhsQDHC+8KC5BHkFPOCTt/TPbxIy52XXQEdmIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zv45UcucDY2E7oFRedqjQ6cmM9zt6sKPT4ltClATiGvzYGJAqLyufR4HrHfHGePwI
-	 ne+7ajSAx/May16Ac0SQ8ohnWXmhCM4wVfrgDuhXYukAJgVmyBwlC7rZg87Wamdyl6
-	 mIW9poFMUvey1wAPkZS6+RDkvJV+xSFqX9kVXg1I=
+	b=viRRo1Ey2YnMCLcXBstOzYd2pQnQY5rc9tU3DC0S2umtrOlQ50E0zqfngY5K7+50/
+	 orff5DC91qMF8XcL+4vI4CZHa+mOu6MZuvo5kzldr801Zy+rEuOD1Amxnw6pJJ+Bu8
+	 Z5Io5Z+yI7MuTdbqjtexUnOSO2bdZ9bn/Ibl9jqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbfE3EQF (ORCPT
+        id S1728069AbfE3EQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbfE3DPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:52 -0400
+        id S1729539AbfE3DPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E0A924580;
-        Thu, 30 May 2019 03:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F264524580;
+        Thu, 30 May 2019 03:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186152;
-        bh=bl2tX/LPrbTjmBMGofl2C4e06mLz01hY1QeO3K0QEN0=;
+        s=default; t=1559186150;
+        bh=d4nY/VhsQDHC+8KC5BHkFPOCTt/TPbxIy52XXQEdmIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyAdrn30TQnFmbyAQxFAUR+Hxq0A3okBQKxjuCiFykEixVu/VLW5aomenwh7REtXs
-         AbLTX3S9Z652T6P3jC4HLyRH9OlB0jgELof5EidcSmmrQTwFKbiHjaysq7HpRVJHaV
-         efM9VMVgyZwYV/tJBlg1WYZUM9yuE60m35wCKa5k=
+        b=dLFOLPeU4hLUlZmFon8jubV69Gnc4BebUybhhHozC405p9HU577idGAhPYLxImtcV
+         7sMvoRg3B5bHklFemyj4RKE0kkxn2D/OsEljm1kbYL1TBQymU7TdkucsTrPD2HSgWs
+         urjxQhgpsD8FBbloiSK1KexdBp0Uf0Vj0+Qyy9Jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 336/346] spi: Fix zero length xfer bug
-Date:   Wed, 29 May 2019 20:06:49 -0700
-Message-Id: <20190530030557.766686934@linuxfoundation.org>
+Subject: [PATCH 5.0 332/346] regulator: wm831x: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:45 -0700
+Message-Id: <20190530030557.576059664@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,46 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
+[ Upstream commit 119c4f5085c45b60cb23c5595e45d06135b89518 ]
 
-This fixes a bug for messages containing both zero length and
-unidirectional xfers.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-The function spi_map_msg will allocate dummy tx and/or rx buffers
-for use with unidirectional transfers when the hardware can only do
-a bidirectional transfer.  That dummy buffer will be used in place
-of a NULL buffer even when the xfer length is 0.
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-Then in the function __spi_map_msg, if he hardware can dma,
-the zero length xfer will have spi_map_buf called on the dummy
-buffer.
-
-Eventually, __sg_alloc_table is called and returns -EINVAL
-because nents == 0.
-
-This fix prevents the error by not using the dummy buffer when
-the xfer length is zero.
-
-Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/wm831x-dcdc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 9a7def7c32370..0632a32c11055 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1024,6 +1024,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
- 		if (max_tx || max_rx) {
- 			list_for_each_entry(xfer, &msg->transfers,
- 					    transfer_list) {
-+				if (!xfer->len)
-+					continue;
- 				if (!xfer->tx_buf)
- 					xfer->tx_buf = ctlr->dummy_tx;
- 				if (!xfer->rx_buf)
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 5a5bc4bb08d26..4f5461ad7b629 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -183,9 +183,11 @@ static irqreturn_t wm831x_dcdc_uv_irq(int irq, void *data)
+ {
+ 	struct wm831x_dcdc *dcdc = data;
+ 
++	regulator_lock(dcdc->regulator);
+ 	regulator_notifier_call_chain(dcdc->regulator,
+ 				      REGULATOR_EVENT_UNDER_VOLTAGE,
+ 				      NULL);
++	regulator_unlock(dcdc->regulator);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -194,9 +196,11 @@ static irqreturn_t wm831x_dcdc_oc_irq(int irq, void *data)
+ {
+ 	struct wm831x_dcdc *dcdc = data;
+ 
++	regulator_lock(dcdc->regulator);
+ 	regulator_notifier_call_chain(dcdc->regulator,
+ 				      REGULATOR_EVENT_OVER_CURRENT,
+ 				      NULL);
++	regulator_unlock(dcdc->regulator);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.20.1
 
