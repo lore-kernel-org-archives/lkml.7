@@ -7,55 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3D8C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5EBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882AC250D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9E9250BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189291;
-	bh=0tLTZClcKKFgPoH9shh1EIWhEETmj6LdTSvdImpzG/Y=;
+	s=default; t=1559189301;
+	bh=/EzRxJH9Bmv5p2CdWxg0REiWSPClfGG6o9kLPMDmLrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K20/pwqPn4+6kDS91ZbiWTn1GFDEIJLjN34u0sZOzMlYX/y1gGrCMw2CXO3gmcH4i
-	 2ZvnRJ0eGvDS6hN8/p9Sd4F/QEal2lxQxxKYaeEyzZbdSymiqkRAGlQpz1JMUFwdiP
-	 MJmykGy1P+wLL48Y+0CGcxr5b2K2VJYfKIq/BTKM=
+	b=MmMAxwno8V4lAofsL6RawK2ggeGRkA55yIIVSxrqy8kw3MAuda0haVzvG09//kNP8
+	 0u4xMBa5MmWWtMlCEmWp1eiJT3HYZcroKELzXAmH7WidUZJdEpYh//Y2XcGtLS2V/L
+	 ZfOIdut7DFI+PqEhVmlwuJsP1/3bC+XsaFyhSFHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfE3EIK (ORCPT
+        id S1727366AbfE3EIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731082AbfE3DRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:23 -0400
+        id S1730180AbfE3DRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A0D8223CB;
-        Thu, 30 May 2019 03:17:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E9C2469C;
+        Thu, 30 May 2019 03:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186242;
-        bh=0tLTZClcKKFgPoH9shh1EIWhEETmj6LdTSvdImpzG/Y=;
+        s=default; t=1559186238;
+        bh=/EzRxJH9Bmv5p2CdWxg0REiWSPClfGG6o9kLPMDmLrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kiz7XKNEAtP8E+2KwIF+lH7v3c1T1RJiDbO5PY36fLeVratQYCJ5x8iffqHhGjmCo
-         NtlN/ocXB+F2Egqi2EWYlo2VrFUedzBOlzJsCefc3lPAW+pKl5p/XTtjfsMesEUM7f
-         nDy8tBiUkzsUWTd7egoFwIZq9nYi38XqaWmj2i7Y=
+        b=dr/4oRmxspTOjzGxxz6o6qZ3E+PW9a2GB6Q4METH3fhePIg9l42ZM1GWPXlqAOl2b
+         ay2jCKe4IpDcLrzw/jGMsqNrC5Un7zVVV3mXleyQ7ZdcpWxECdKherZqjDJ7VduFza
+         0e03HFPnCJqsaFZyOdw4NPWY1Ske+Jnu7nA5mts0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org,
+        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 155/276] perf/x86/intel/rapl: Add Icelake support
-Date:   Wed, 29 May 2019 20:05:13 -0700
-Message-Id: <20190530030535.236183817@linuxfoundation.org>
+Subject: [PATCH 4.19 149/276] i40e: Able to add up to 16 MAC filters on an untrusted VF
+Date:   Wed, 29 May 2019 20:05:07 -0700
+Message-Id: <20190530030534.923702091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -68,42 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b3377c3acb9e54cf86efcfe25f2e792bca599ed4 ]
+[ Upstream commit 06b6e2a2333eb3581567a7ac43ca465ef45f4daa ]
 
-Icelake support the same RAPL counters as Skylake.
+This patch fixes the problem with the driver being able to add only 7
+multicast MAC address filters instead of 16. The problem is fixed by
+changing the maximum number of MAC address filters to 16+1+1 (two extra
+are needed because the driver uses 1 for unicast MAC address and 1 for
+broadcast).
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-11-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/rapl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 91039ffed6333..2413169ce3627 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -780,6 +780,8 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index c6d24eaede184..d86f3fa7aa6a4 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2399,8 +2399,10 @@ static int i40e_vc_get_stats_msg(struct i40e_vf *vf, u8 *msg, u16 msglen)
+ 				      (u8 *)&stats, sizeof(stats));
+ }
  
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
-+
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
- 	{},
- };
+-/* If the VF is not trusted restrict the number of MAC/VLAN it can program */
+-#define I40E_VC_MAX_MAC_ADDR_PER_VF 12
++/* If the VF is not trusted restrict the number of MAC/VLAN it can program
++ * MAC filters: 16 for multicast, 1 for MAC, 1 for broadcast
++ */
++#define I40E_VC_MAX_MAC_ADDR_PER_VF (16 + 1 + 1)
+ #define I40E_VC_MAX_VLAN_PER_VF 8
  
+ /**
 -- 
 2.20.1
 
