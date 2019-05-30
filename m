@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C4DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3C8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD3025270
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA46B25270
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189904;
-	bh=pQK9U6rZP+L8wvsXni62ESRUUwgsKaFdxKJqAymMupU=;
+	s=default; t=1559189914;
+	bh=Y3eZz0Mm8BdAAV6CkfQUlxz2nBO3lsDVEhIClk1Z1yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SFCq7lKHo1kMDWjwEAZFEYXUrTlPBQMqj/E/i5xIlEH333oocQb+NWEC11HyWjDr1
-	 SY0sfnr822zosp2Gx456gFQQnaTw+QJi6Dksw59zx2dMv6ItSZWrnjYpMkw+X42jZa
-	 JzmcHtR2trzxhqLUoY5P2JnPQFn8Bo3oEpw0GB64=
+	b=PWEJ13KxOQ3pZUXvm4RxKfaycGgupPY/NbIfpRT22xSe8yNfyl+r6t6szTN2m1VHQ
+	 zY8xv9pKixP3sQAFBwcyefMJ+rrLZFuwJ+XLYW7aSPIvWkNUmB/wBI/luSPa74jkvF
+	 Ol60vf1lDD5vMWXKmoQArGlFoj9luPfGsT/gzBkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfE3ESW (ORCPT
+        id S1730725AbfE3ESd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730339AbfE3DPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730336AbfE3DPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B7A624569;
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E7E24547;
         Thu, 30 May 2019 03:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186131;
-        bh=pQK9U6rZP+L8wvsXni62ESRUUwgsKaFdxKJqAymMupU=;
+        bh=Y3eZz0Mm8BdAAV6CkfQUlxz2nBO3lsDVEhIClk1Z1yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qRzG+MHyRoa8NyXQ+Kg4EtbkMpAmjZx5ruyTfWHIM63zYjjsu51avSKwDlQ+/QyPX
-         M9+xzENW5jimJxxk38HrSzc7jn4CWqhxnk1NigKeIs5hOt0N6Rhi13ydqLaL0jbu9d
-         qH93+WwOHRgJVT2iRmfEhvQtgAhtv+wIyqVYAKU0=
+        b=PyK+ExBvsFclWbqKNJ8cuss/IeqCGJGN5YgCZ6RStL9CSbjHlxTmGmu7TII9ZxT7y
+         +0Fap8ikzBIL5e5OxX1iFQZVfmZXo8lo3RBmy2v1qgxh63UXF7TiXu6+0FAyzxLftA
+         znRiLBOlgGjG1tzI83bccC20UwigYeOR4KiG5UOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 294/346] e1000e: Disable runtime PM on CNP+
-Date:   Wed, 29 May 2019 20:06:07 -0700
-Message-Id: <20190530030555.754421107@linuxfoundation.org>
+Subject: [PATCH 5.0 293/346] media: staging/intel-ipu3: mark PM function as __maybe_unused
+Date:   Wed, 29 May 2019 20:06:06 -0700
+Message-Id: <20190530030555.706499889@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 459d69c407f9ba122f12216555c3012284dc9fd7 ]
+[ Upstream commit 948dff7cfa1d7653e7828e7b905863bd24ca5c02 ]
 
-There are some new e1000e devices can only be woken up from D3 one time,
-by plugging Ethernet cable. Subsequent cable plugging does set PME bit
-correctly, but it still doesn't get woken up.
+The imgu_rpm_dummy_cb() looks like an API misuse that is explained
+in the comment above it. Aside from that, it also causes a warning
+when power management support is disabled:
 
-Since e1000e connects to the root complex directly, we rely on ACPI to
-wake it up. In this case, the GPE from _PRW only works once and stops
-working after that. Though it appears to be a platform bug, e1000e
-maintainers confirmed that I219 does not support D3.
+drivers/staging/media/ipu3/ipu3.c:794:12: error: 'imgu_rpm_dummy_cb' defined but not used [-Werror=unused-function]
 
-So disable runtime PM on CNP+ chips. We may need to disable earlier
-generations if this bug also hit older platforms.
+The warning is at least easy to fix by marking the function as
+__maybe_unused.
 
-Bugzilla: https://bugzilla.kernel.org/attachment.cgi?id=280819
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 2 +-
+ drivers/staging/media/ipu3/ipu3.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 7acc61e4f6456..c10c9d7eadaac 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -7350,7 +7350,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_NEVER_SKIP);
- 
--	if (pci_dev_run_wake(pdev))
-+	if (pci_dev_run_wake(pdev) && hw->mac.type < e1000_pch_cnp)
- 		pm_runtime_put_noidle(&pdev->dev);
- 
+diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
+index d521b3afb8b1a..0b161888ec282 100644
+--- a/drivers/staging/media/ipu3/ipu3.c
++++ b/drivers/staging/media/ipu3/ipu3.c
+@@ -792,7 +792,7 @@ static int __maybe_unused imgu_resume(struct device *dev)
+  * PCI rpm framework checks the existence of driver rpm callbacks.
+  * Place a dummy callback here to avoid rpm going into error state.
+  */
+-static int imgu_rpm_dummy_cb(struct device *dev)
++static __maybe_unused int imgu_rpm_dummy_cb(struct device *dev)
+ {
  	return 0;
+ }
 -- 
 2.20.1
 
