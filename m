@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C44C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4642FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E210F2522D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155BF25230
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189725;
-	bh=0BmoonTxna+NdQ9k0o4RZwsAJRHfJzAL/uf9v3EHa+Y=;
+	s=default; t=1559189735;
+	bh=TYEXwey+GGV3MRpFcJH6spduaDj96IktnHJR5rZj4G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joNy7wLivkWyqYjPbBIqVbt6Iw2WNFesQyFXVWLdiz3dAeuidpaBeAy8l95xGmFQI
-	 NID6iUbhIImxREYOhAAEV1v8k2YRd99cNyByURyliN6TS2HQ4pOR4DJ4F/nAxIx6PD
-	 KXnzcXp+56KFuQN5ZAhloYLHJfM5QdpDtbvnY2rM=
+	b=KIinYJVAj5niJ+/tLWKS0vDp9hzWVWpblQNsc7N9Zn3nQ0n8XD4b9WxsQ+JfguHNL
+	 1nrAtR5+NcFYRj9O5yZ3R2uckGPK5XSttXUFyJ5TluJb+vcNcod1QuyHLZIIABjy6X
+	 WUDPowCJ8pUImmPNzkREwnP81DWT0uXnq6UURgPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbfE3EPX (ORCPT
+        id S1727049AbfE3EPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbfE3DQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729553AbfE3DQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:16:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 769EB24585;
-        Thu, 30 May 2019 03:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E32DD2458C;
+        Thu, 30 May 2019 03:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186160;
-        bh=0BmoonTxna+NdQ9k0o4RZwsAJRHfJzAL/uf9v3EHa+Y=;
+        bh=TYEXwey+GGV3MRpFcJH6spduaDj96IktnHJR5rZj4G4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdcXYTwPjEjxjxPk53sgExLZGrW+1BxrqwUFTsUKjpARxceh15awEiTbDI/u9KGkZ
-         inlh1DWf2BvERM7ldIliXrqqZ/u44agltyknucgeDQIZfUzWG3fR86u0ebbpCtJwuB
-         qtsnIlbSfgodYfURgOjrKMlYX8xDp3RCjFkJuNBE=
+        b=if9KBDSrcK+ls0goEu1qhQkXf9Y6Hr4dwLqLCymN6DkjsyPMkSTIPvLL4k041jQwb
+         iEhXG0zyLIu7jAza67vEob+maOklWxIOJ2/XEFxEt78wPmBXqhnVT0wlazlFzTIV1J
+         ajF4kq+MNb+dCQ9hDa6rLZD+fx1PM7r9ejB32lzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 311/346] scsi: lpfc: Fix FDMI manufacturer attribute value
-Date:   Wed, 29 May 2019 20:06:24 -0700
-Message-Id: <20190530030556.582661426@linuxfoundation.org>
+Subject: [PATCH 5.0 310/346] media: cedrus: Add a quirk for not setting DMA offset
+Date:   Wed, 29 May 2019 20:06:23 -0700
+Message-Id: <20190530030556.534980417@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,38 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d67f935b79a76ac9d86dde1a27bdd413feb5d987 ]
+[ Upstream commit 70a4f5cda82f7197c350099b66fd23506620810e ]
 
-The FDMI manufacturer value being reported on Linux is inconsistent with
-other OS's.
+H6 VPU doesn't work if DMA offset is set.
 
-Set the value to "Emulex Corporation" for consistency.
+Add a quirk for it.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_ct.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/media/sunxi/cedrus/cedrus.h    | 3 +++
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index 221f8fd87d242..912aad3d5b043 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2005,8 +2005,11 @@ lpfc_fdmi_hba_attr_manufacturer(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 256);
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+index 3acfdcf836912..726bef649ba6e 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -28,6 +28,8 @@
  
-+	/* This string MUST be consistent with other FC platforms
-+	 * supported by Broadcom.
-+	 */
- 	strncpy(ae->un.AttrString,
--		"Broadcom Inc.",
-+		"Emulex Corporation",
- 		       sizeof(ae->un.AttrString));
- 	len = strnlen(ae->un.AttrString,
- 			  sizeof(ae->un.AttrString));
+ #define CEDRUS_CAPABILITY_UNTILED	BIT(0)
+ 
++#define CEDRUS_QUIRK_NO_DMA_OFFSET	BIT(0)
++
+ enum cedrus_codec {
+ 	CEDRUS_CODEC_MPEG2,
+ 
+@@ -91,6 +93,7 @@ struct cedrus_dec_ops {
+ 
+ struct cedrus_variant {
+ 	unsigned int	capabilities;
++	unsigned int	quirks;
+ };
+ 
+ struct cedrus_dev {
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+index 300339fee1bc6..24a06a1260f0a 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -177,7 +177,8 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
+ 	 */
+ 
+ #ifdef PHYS_PFN_OFFSET
+-	dev->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
++	if (!(variant->quirks & CEDRUS_QUIRK_NO_DMA_OFFSET))
++		dev->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
+ #endif
+ 
+ 	ret = of_reserved_mem_device_init(dev->dev);
 -- 
 2.20.1
 
