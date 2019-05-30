@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400FCC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B838C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA3924F42
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1075324F40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188804;
-	bh=q4GEWxI8zFJV+i2pxijjdsUKmJrEI9Khc/QMjifhyWg=;
+	s=default; t=1559188809;
+	bh=an8IQFE+oE9Q58XxhNNdWBbllAu43dweJSmTzxFf5gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DDEZGMHJJFYmdx5lmuDJk4k/ARxZkfBSTQU82XcH7S4f+oXqaAgWaWVODct7RNMWe
-	 XUK8/DCKZLtwgbBV7FvX4XjemqnzELJc2T49FJkB+rfFdIPLE/YzpX64TmompzhTNF
-	 JPyo4g+rXl8Bbzdu/zK35f7gy+mGqxB1wAjJCxLE=
+	b=yBSDZv8Msgni5xOxppk5hBe2hw6vAwtp519ad1SyOaLvuolqkipVrrKsgQn+yM56e
+	 lRz8z3VdesA2mNnuvg/zXp6LpUXnVvCS710Ot/CR71kJjI9eWYGVsMXaWzXonBD3w0
+	 IcajP5TDJsaxwMaiyJ15A4obnZwVtgXLNe8NRMh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfE3EAD (ORCPT
+        id S1726477AbfE3EAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfE3DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:29 -0400
+        id S1731558AbfE3DS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D272474D;
-        Thu, 30 May 2019 03:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D108024741;
+        Thu, 30 May 2019 03:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186309;
-        bh=q4GEWxI8zFJV+i2pxijjdsUKmJrEI9Khc/QMjifhyWg=;
+        s=default; t=1559186307;
+        bh=an8IQFE+oE9Q58XxhNNdWBbllAu43dweJSmTzxFf5gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nexOqOp1JoiymgRlfP8mtw+7Kibcaa7XhNr76WG+PYY1LqGW5aoJ3OP9uiKtTfoMg
-         FDPWCCtzAsUcn0ZUpE1jnYDTlIpsVZ0GZm993CtrDpQSLMjHdH48jiD4W4AWkf2Jjq
-         laUCtc6E5+FGM/iG4UM7jQYIYOwHLHD4Sj+21Vh0=
+        b=sJvbbEVSGq7TnB3hsWQnl+o6TkABJImKUcd9RyhnJ/lGR1xjxymVzGNVkZ0wazWGi
+         gqZeeAxJfNv2ldf2U97k1hk3dog5YKDTPviNyJ/s+gpwGGJZXcK/zWoMffPRtpmAZN
+         YNZHbW2FRtKZdXcZqq7jddhBXpIBFh/VD0q5Q6NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 276/276] NFS: Fix a double unlock from nfs_match,get_client
-Date:   Wed, 29 May 2019 20:07:14 -0700
-Message-Id: <20190530030542.445869259@linuxfoundation.org>
+Subject: [PATCH 4.19 273/276] drm/sun4i: dsi: Change the start delay calculation
+Date:   Wed, 29 May 2019 20:07:11 -0700
+Message-Id: <20190530030542.271763109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,36 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
+[ Upstream commit da676c6aa6413d59ab0a80c97bbc273025e640b2 ]
 
-Now that nfs_match_client drops the nfs_client_lock, we should be
-careful
-to always return it in the same condition: locked.
+The current calculation for the video start delay in the current DSI driver
+is that it is the total vertical size, minus the front porch and sync length,
+plus 1. This equals to the active vertical size plus the back porch plus 1.
 
-Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
-Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+That 1 is coming in the Allwinner BSP from an variable that is set to 1.
+However, if we look at the Allwinner BSP more closely, and especially in
+the "legacy" code for the display (in drivers/video/sunxi/legacy/), we can
+see that this variable is actually computed from the porches and the sync
+minus 10, clamped between 8 and 100.
+
+This fixes the start delay symptom we've seen on some panels (vblank
+timeouts with vertical white stripes at the bottom of the panel).
+
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/6e5f72e68f47ca0223877464bf12f0c3f3978de8.1549896081.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 846d45cb1a3c8..c092661147b30 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -305,9 +305,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 			spin_unlock(&nn->nfs_client_lock);
- 			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			spin_lock(&nn->nfs_client_lock);
- 			if (error < 0)
- 				return ERR_PTR(error);
--			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index e3b34a3455460..3de41de43127b 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -357,7 +357,9 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
+ {
+-	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
++	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
++
++	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+ }
  
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
 -- 
 2.20.1
 
