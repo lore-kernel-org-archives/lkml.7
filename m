@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A99C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5CEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832BE24B3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F4723CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187263;
-	bh=3qcF+It7ZgF9O7yVVn6m42N5ieFLuWTJwpZZOOeBv+Y=;
+	s=default; t=1559187265;
+	bh=AKYKhN37l1ofoSY5p/TrruqFDqSsGXnhr/5Ei12xz9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhnG5y4zn2yfDTnz7N9HQqx07d/5l1BzqcFVje/ctXPHW5CFnoPTwVSHuLiSMDEWC
-	 FLW6hZ1qDZEkoq48/Zc7yMfdNGvDvt1+7kwkY+xsxge4G+6Cj8vprLMdrAgB/X6jMj
-	 tKRwjP5fChYa2HaoT8V4A7uAdYTFr8Fx3T9yxdo0=
+	b=s9I43btiLbaRKC7m22jkPQOp4GTi4XCdvTIiuuqU5uOqYiaDZFEiWwaXHTQXLcqBQ
+	 A6YHdNPDHU34G4aqRe9ITEI4NBBaPwTNOpE69sFZJpuhP0J9E90EAAt1mg1Kjdzb6L
+	 1wIX9ueApBlAUaKpsiCMwaE0HKkLbnLmLnLbfEDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbfE3D1V (ORCPT
+        id S2387980AbfE3D1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731877AbfE3DTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:23 -0400
+        id S1731872AbfE3DTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 544662484D;
-        Thu, 30 May 2019 03:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E6C24818;
+        Thu, 30 May 2019 03:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186363;
-        bh=3qcF+It7ZgF9O7yVVn6m42N5ieFLuWTJwpZZOOeBv+Y=;
+        s=default; t=1559186362;
+        bh=AKYKhN37l1ofoSY5p/TrruqFDqSsGXnhr/5Ei12xz9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlufcCxaQktqN+q6HrCxQMgHx3hO+p7cLDRgphCzaewYLsRQILCWZVKT7ijkAoJQ4
-         RZqLfRJQhqJWP/WmYIJgxcRdYScMJZvRmzd1Xy3OvpeVzuyNzBQaU6Blj9VaHQQNfz
-         89n2ad+te29vxE7BQuxoZqcYI1293Zt1jXRfHGSU=
+        b=DSS4CeOr5Si5NlW+lf2F6bQ7N+2P0NDiHIDFfAB+hSuam0aWx9yPfhbQ9lJjqgQdw
+         VChOnpohTNiWs0uqyutwxbh5AZ0W1eln7h7jcgxb+4WGs2U8FiNjwN53epBqFniZNn
+         Sp02kGtdVGrN2+vh4AplMH1QRIO9pnNWULyJlxgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/193] RDMA/cxgb4: Fix null pointer dereference on alloc_skb failure
-Date:   Wed, 29 May 2019 20:06:04 -0700
-Message-Id: <20190530030504.102789725@linuxfoundation.org>
+Subject: [PATCH 4.14 109/193] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
+Date:   Wed, 29 May 2019 20:06:03 -0700
+Message-Id: <20190530030503.987263643@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,36 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6d2a5a92e67d151c98886babdc86d530d27111c ]
+[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
 
-Currently if alloc_skb fails to allocate the skb a null skb is passed to
-t4_set_arp_err_handler and this ends up dereferencing the null skb.  Avoid
-the NULL pointer dereference by checking for a NULL skb and returning
-early.
+clock_getres() in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: b38a0ad8ec11 ("RDMA/cxgb4: Set arp error handler for PASS_ACCEPT_RPL messages")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+In particular, posix_get_hrtimer_res() does:
+
+    sec = 0;
+    ns = hrtimer_resolution;
+
+where 'hrtimer_resolution' depends on whether or not high resolution
+timers are enabled, which is a runtime decision.
+
+The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
+by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
+instead.
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/vdso_datapage.h | 1 +
+ arch/arm64/kernel/asm-offsets.c        | 2 +-
+ arch/arm64/kernel/vdso.c               | 3 +++
+ arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index e17f11782821b..d87f08cd78ad4 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -456,6 +456,8 @@ static struct sk_buff *get_skb(struct sk_buff *skb, int len, gfp_t gfp)
- 		skb_reset_transport_header(skb);
- 	} else {
- 		skb = alloc_skb(len, gfp);
-+		if (!skb)
-+			return NULL;
- 	}
- 	t4_set_arp_err_handler(skb, NULL, NULL);
- 	return skb;
+diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
+index 2b9a63771eda8..f89263c8e11af 100644
+--- a/arch/arm64/include/asm/vdso_datapage.h
++++ b/arch/arm64/include/asm/vdso_datapage.h
+@@ -38,6 +38,7 @@ struct vdso_data {
+ 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
+ 	__u32 tz_dsttime;
+ 	__u32 use_syscall;
++	__u32 hrtimer_res;
+ };
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index b5e43b01b396c..b4a0f4ab770ab 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -95,7 +95,7 @@ int main(void)
+   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
+   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
+   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
+-  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
++  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
+   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
+   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
+   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 2d419006ad433..ec0bb588d7553 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
+ 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
+ 
++	/* Read without the seqlock held by clock_getres() */
++	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
++
+ 	if (!use_syscall) {
+ 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
+ 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
+diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
+index 76320e9209651..df829c4346fac 100644
+--- a/arch/arm64/kernel/vdso/gettimeofday.S
++++ b/arch/arm64/kernel/vdso/gettimeofday.S
+@@ -301,13 +301,14 @@ ENTRY(__kernel_clock_getres)
+ 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
+ 	b.ne	1f
+ 
+-	ldr	x2, 5f
++	adr	vdso_data, _vdso_data
++	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
+ 	b	2f
+ 1:
+ 	cmp	w0, #CLOCK_REALTIME_COARSE
+ 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
+ 	b.ne	4f
+-	ldr	x2, 6f
++	ldr	x2, 5f
+ 2:
+ 	cbz	w1, 3f
+ 	stp	xzr, x2, [x1]
+@@ -321,8 +322,6 @@ ENTRY(__kernel_clock_getres)
+ 	svc	#0
+ 	ret
+ 5:
+-	.quad	CLOCK_REALTIME_RES
+-6:
+ 	.quad	CLOCK_COARSE_RES
+ 	.cfi_endproc
+ ENDPROC(__kernel_clock_getres)
 -- 
 2.20.1
 
