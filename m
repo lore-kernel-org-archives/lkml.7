@@ -2,235 +2,231 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C091C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E100C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2904C204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188942;
-	bh=fGKK+pcT+AlvrtG9AhPCrF4t6p1NfH72TS0Z4aRRBdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWEdbWbrpqPHsn1isnCdNljVB+U00iYPiZuGq+xb57jIW8btKLuRdWWgzYsr1SXlF
-	 rmM5yBUzlcjkPSnl+2rJp1k8cje28A/m7cpccP3fDJX5jFKbNotq2kGkyuqtO4fc0W
-	 xQeMkqo+et5HEy3HykJO+MHr0FNC7x2jBQvkwnNY=
+	by mail.kernel.org (Postfix) with ESMTP id 0A66F243AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Bqih8YLn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LZC8KP36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387896AbfE3ECQ (ORCPT
+        id S1731758AbfE3EC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731385AbfE3DSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:02 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744E224763;
-        Thu, 30 May 2019 03:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186281;
-        bh=fGKK+pcT+AlvrtG9AhPCrF4t6p1NfH72TS0Z4aRRBdg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrsKF599cxtxoeIRgws6IL74MN7DI7NWIyCjHgeCivfjJ9ANi0FfjQFINuTO+c6+9
-         Wm5xO/cewPJefF+3LG+H7tcRdgezI7d5k0S7meKwJETZiU/O/AZ1DYbnt3fg+ASw/i
-         4QAzk1yWkoOMJXFJSqqCEOOPEdyMHPQHWkO7gndc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>, Pu Wen <puwen@hygon.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 233/276] x86/mce: Handle varying MCA bank counts
-Date:   Wed, 29 May 2019 20:06:31 -0700
-Message-Id: <20190530030539.701299147@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 30 May 2019 00:02:27 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:57365 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726958AbfE3ECM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 00:02:12 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id DAB2C21FA7;
+        Thu, 30 May 2019 00:02:10 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 30 May 2019 00:02:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=qyIi9G9ln+NMQWurPQHYWug6XmoD14N
+        6qzo4ZOFsaOY=; b=Bqih8YLnL2VC2g+8JAzRNlikdAjAGB7W19vPi3fcYrRVV7e
+        o/CrIuGMifez0eB8jpJNdT/3Ft6BTkjteYu/PwkWi01a8DKDkcxN1P3pn6oMKBFs
+        QRvzEDSWFKBrsCoa3SRTzrFKDibbndeWhntyz4zOaSlwIpq0ectk3a025ay5jSQT
+        IXXQO64v5jlt5iGoKPVKlIiiOZ4lbqqrmriyFTSQ0U+UvHVVzQFcBX0oatx8djiK
+        aiFoiK4XTJ0+WlhzIQIWgdlROF+y+cWorvXm6ky2NC8EEBB24O/kx6NDl1ihPd3n
+        1LqP34eLwfFJJKdtc2FrWTctonW4g1OYa3kQ7Sg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=qyIi9G
+        9ln+NMQWurPQHYWug6XmoD14N6qzo4ZOFsaOY=; b=LZC8KP36MjQNGAwMOKxclA
+        pMXHy4rTEv/bM4O19IlKlhkg9CFwS42Cx2e4A5D0hbprPIJbPeWhiNmWO5Otx2s/
+        aqemrxMMLW0cIC0iI+fsUjAEiacuz7Wm6SxDcUGaZZxjqYYObOHR7ziyUESY3io5
+        H1RMZP6OGTEjHBJLIF1gQ4q78rAzWB50aXrpJTDcqn+FWmmlGpUk3eszmyrvUlSA
+        xrpmD1q12nFIBQ8Fs6ZEt26rRxykBm0jnLLTmUJkvwaatyjkMX2BcDcycnU17kam
+        tTR+n0YwzNrDn+6ejRMleun6pKTb6oOosyUqte84SY+tThZ1MghWLd1mVFYJvp6w
+        ==
+X-ME-Sender: <xms:wVXvXLxY60qWGyq1NkgwT9ZIUo-I84eI-TfgQ3hHyPRM5wXt2YSXTw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvkedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:wVXvXLFrjku1qhknIzEIpz4qiDiCkouHHrUfCykEWlCaNsp_vmcZKw>
+    <xmx:wVXvXAt51U9RjzmNfIFa_u7Y_fZHKFovUOxOk4pE4HNwTbv88Jlykg>
+    <xmx:wVXvXPXDjBNLjDSJDw3ZueJ9r8XapTg_fk_y9387Y9eiOVhV8gyJQQ>
+    <xmx:wlXvXA0uNKJw6-La1QmRmdQMkjtYDAyVdfVWexWCs1Ko-T3eNXa3TA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 33313E00A1; Thu, 30 May 2019 00:02:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-555-g49357e1-fmstable-20190528v2
+Mime-Version: 1.0
+Message-Id: <fe36fbac-e29c-4210-9af2-defca62e9c2a@www.fastmail.com>
+In-Reply-To: <20190529172103.1130525-1-vijaykhemka@fb.com>
+References: <20190529172103.1130525-1-vijaykhemka@fb.com>
+Date:   Thu, 30 May 2019 13:32:08 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Vijay Khemka" <vijaykhemka@fb.com>,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Patrick Venture" <venture@google.com>,
+        "Olof Johansson" <olof@lixom.net>, "Arnd Bergmann" <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     "Sai Dasari" <sdasari@fb.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] soc: aspeed: lpc-ctrl: make parameter optional
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 006c077041dc73b9490fffc4c6af5befe0687110 ]
-
-Linux reads MCG_CAP[Count] to find the number of MCA banks visible to a
-CPU. Currently, this number is the same for all CPUs and a warning is
-shown if there is a difference. The number of banks is overwritten with
-the MCG_CAP[Count] value of each following CPU that boots.
-
-According to the Intel SDM and AMD APM, the MCG_CAP[Count] value gives
-the number of banks that are available to a "processor implementation".
-The AMD BKDGs/PPRs further clarify that this value is per core. This
-value has historically been the same for every core in the system, but
-that is not an architectural requirement.
-
-Future AMD systems may have different MCG_CAP[Count] values per core,
-so the assumption that all CPUs will have the same MCG_CAP[Count] value
-will no longer be valid.
-
-Also, the first CPU to boot will allocate the struct mce_banks[] array
-using the number of banks based on its MCG_CAP[Count] value. The machine
-check handler and other functions use the global number of banks to
-iterate and index into the mce_banks[] array. So it's possible to use an
-out-of-bounds index on an asymmetric system where a following CPU sees a
-MCG_CAP[Count] value greater than its predecessors.
-
-Thus, allocate the mce_banks[] array to the maximum number of banks.
-This will avoid the potential out-of-bounds index since the value of
-mca_cfg.banks is capped to MAX_NR_BANKS.
-
-Set the value of mca_cfg.banks equal to the max of the previous value
-and the value for the current CPU. This way mca_cfg.banks will always
-represent the max number of banks detected on any CPU in the system.
-
-This will ensure that all CPUs will access all the banks that are
-visible to them. A CPU that can access fewer than the max number of
-banks will find the registers of the extra banks to be read-as-zero.
-
-Furthermore, print the resulting number of MCA banks in use. Do this in
-mcheck_late_init() so that the final value is printed after all CPUs
-have been initialized.
-
-Finally, get bank count from target CPU when doing injection with mce-inject
-module.
-
- [ bp: Remove out-of-bounds example, passify and cleanup commit message. ]
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20180727214009.78289-1-Yazen.Ghannam@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/mcheck/mce-inject.c | 14 +++++++-------
- arch/x86/kernel/cpu/mcheck/mce.c        | 22 +++++++---------------
- 2 files changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-index c805a06e14c38..ff1c00b695aed 100644
---- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-@@ -46,8 +46,6 @@
- static struct mce i_mce;
- static struct dentry *dfs_inj;
- 
--static u8 n_banks;
--
- #define MAX_FLAG_OPT_SIZE	4
- #define NBCFG			0x44
- 
-@@ -567,9 +565,15 @@ static void do_inject(void)
- static int inj_bank_set(void *data, u64 val)
- {
- 	struct mce *m = (struct mce *)data;
-+	u8 n_banks;
-+	u64 cap;
-+
-+	/* Get bank count on target CPU so we can handle non-uniform values. */
-+	rdmsrl_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
-+	n_banks = cap & MCG_BANKCNT_MASK;
- 
- 	if (val >= n_banks) {
--		pr_err("Non-existent MCE bank: %llu\n", val);
-+		pr_err("MCA bank %llu non-existent on CPU%d\n", val, m->extcpu);
- 		return -EINVAL;
- 	}
- 
-@@ -659,10 +663,6 @@ static struct dfs_node {
- static int __init debugfs_init(void)
- {
- 	unsigned int i;
--	u64 cap;
--
--	rdmsrl(MSR_IA32_MCG_CAP, cap);
--	n_banks = cap & MCG_BANKCNT_MASK;
- 
- 	dfs_inj = debugfs_create_dir("mce-inject", NULL);
- 	if (!dfs_inj)
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index 45bd926359f62..fee118b3b69fd 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -1480,13 +1480,12 @@ EXPORT_SYMBOL_GPL(mce_notify_irq);
- static int __mcheck_cpu_mce_banks_init(void)
- {
- 	int i;
--	u8 num_banks = mca_cfg.banks;
- 
--	mce_banks = kcalloc(num_banks, sizeof(struct mce_bank), GFP_KERNEL);
-+	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
- 	if (!mce_banks)
- 		return -ENOMEM;
- 
--	for (i = 0; i < num_banks; i++) {
-+	for (i = 0; i < MAX_NR_BANKS; i++) {
- 		struct mce_bank *b = &mce_banks[i];
- 
- 		b->ctl = -1ULL;
-@@ -1500,28 +1499,19 @@ static int __mcheck_cpu_mce_banks_init(void)
-  */
- static int __mcheck_cpu_cap_init(void)
- {
--	unsigned b;
- 	u64 cap;
-+	u8 b;
- 
- 	rdmsrl(MSR_IA32_MCG_CAP, cap);
- 
- 	b = cap & MCG_BANKCNT_MASK;
--	if (!mca_cfg.banks)
--		pr_info("CPU supports %d MCE banks\n", b);
--
--	if (b > MAX_NR_BANKS) {
--		pr_warn("Using only %u machine check banks out of %u\n",
--			MAX_NR_BANKS, b);
-+	if (WARN_ON_ONCE(b > MAX_NR_BANKS))
- 		b = MAX_NR_BANKS;
--	}
- 
--	/* Don't support asymmetric configurations today */
--	WARN_ON(mca_cfg.banks != 0 && b != mca_cfg.banks);
--	mca_cfg.banks = b;
-+	mca_cfg.banks = max(mca_cfg.banks, b);
- 
- 	if (!mce_banks) {
- 		int err = __mcheck_cpu_mce_banks_init();
--
- 		if (err)
- 			return err;
- 	}
-@@ -2503,6 +2493,8 @@ EXPORT_SYMBOL_GPL(mcsafe_key);
- 
- static int __init mcheck_late_init(void)
- {
-+	pr_info("Using %d MCE banks\n", mca_cfg.banks);
-+
- 	if (mca_cfg.recovery)
- 		static_branch_inc(&mcsafe_key);
- 
--- 
-2.20.1
 
 
+On Thu, 30 May 2019, at 02:51, Vijay Khemka wrote:
+> Makiing
 
+Typo here, but I'd prefer to see this patch go in, so
+
+> memory-region and flash as optional parameter in device
+> tree if user needs to use these parameter through ioctl then
+> need to define in devicetree.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-ctrl.c | 58 +++++++++++++++++-----------
+>  1 file changed, 36 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c 
+> b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> index a024f8042259..aca13779764a 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> @@ -68,6 +68,7 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, 
+> unsigned int cmd,
+>  		unsigned long param)
+>  {
+>  	struct aspeed_lpc_ctrl *lpc_ctrl = file_aspeed_lpc_ctrl(file);
+> +	struct device *dev = file->private_data;
+>  	void __user *p = (void __user *)param;
+>  	struct aspeed_lpc_ctrl_mapping map;
+>  	u32 addr;
+> @@ -90,6 +91,12 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, 
+> unsigned int cmd,
+>  		if (map.window_id != 0)
+>  			return -EINVAL;
+>  
+> +		/* If memory-region is not described in device tree */
+> +		if (!lpc_ctrl->mem_size) {
+> +			dev_dbg(dev, "Didn't find reserved memory\n");
+> +			return -ENXIO;
+> +		}
+> +
+>  		map.size = lpc_ctrl->mem_size;
+>  
+>  		return copy_to_user(p, &map, sizeof(map)) ? -EFAULT : 0;
+> @@ -126,9 +133,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file 
+> *file, unsigned int cmd,
+>  			return -EINVAL;
+>  
+>  		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
+> +			if (!lpc_ctrl->pnor_size) {
+> +				dev_dbg(dev, "Didn't find host pnor flash\n");
+> +				return -ENXIO;
+> +			}
+>  			addr = lpc_ctrl->pnor_base;
+>  			size = lpc_ctrl->pnor_size;
+>  		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
+> +			/* If memory-region is not described in device tree */
+> +			if (!lpc_ctrl->mem_size) {
+> +				dev_dbg(dev, "Didn't find reserved memory\n");
+> +				return -ENXIO;
+> +			}
+>  			addr = lpc_ctrl->mem_base;
+>  			size = lpc_ctrl->mem_size;
+>  		} else {
+> @@ -196,17 +212,17 @@ static int aspeed_lpc_ctrl_probe(struct 
+> platform_device *pdev)
+>  	if (!lpc_ctrl)
+>  		return -ENOMEM;
+>  
+> +	/* If flash is described in device tree then store */
+>  	node = of_parse_phandle(dev->of_node, "flash", 0);
+>  	if (!node) {
+> -		dev_err(dev, "Didn't find host pnor flash node\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	rc = of_address_to_resource(node, 1, &resm);
+> -	of_node_put(node);
+> -	if (rc) {
+> -		dev_err(dev, "Couldn't address to resource for flash\n");
+> -		return rc;
+> +		dev_dbg(dev, "Didn't find host pnor flash node\n");
+> +	} else {
+> +		rc = of_address_to_resource(node, 1, &resm);
+> +		of_node_put(node);
+> +		if (rc) {
+> +			dev_err(dev, "Couldn't address to resource for flash\n");
+> +			return rc;
+> +		}
+>  	}
+>  
+>  	lpc_ctrl->pnor_size = resource_size(&resm);
+> @@ -214,22 +230,22 @@ static int aspeed_lpc_ctrl_probe(struct 
+> platform_device *pdev)
+>  
+>  	dev_set_drvdata(&pdev->dev, lpc_ctrl);
+>  
+> +	/* If memory-region is described in device tree then store */
+>  	node = of_parse_phandle(dev->of_node, "memory-region", 0);
+>  	if (!node) {
+> -		dev_err(dev, "Didn't find reserved memory\n");
+> -		return -EINVAL;
+> -	}
+> +		dev_dbg(dev, "Didn't find reserved memory\n");
+> +	} else {
+> +		rc = of_address_to_resource(node, 0, &resm);
+> +		of_node_put(node);
+> +		if (rc) {
+> +			dev_err(dev, "Couldn't address to resource for reserved memory\n");
+> +			return -ENXIO;
+> +		}
+>  
+> -	rc = of_address_to_resource(node, 0, &resm);
+> -	of_node_put(node);
+> -	if (rc) {
+> -		dev_err(dev, "Couldn't address to resource for reserved memory\n");
+> -		return -ENOMEM;
+> +		lpc_ctrl->mem_size = resource_size(&resm);
+> +		lpc_ctrl->mem_base = resm.start;
+>  	}
+>  
+> -	lpc_ctrl->mem_size = resource_size(&resm);
+> -	lpc_ctrl->mem_base = resm.start;
+> -
+>  	lpc_ctrl->regmap = syscon_node_to_regmap(
+>  			pdev->dev.parent->of_node);
+>  	if (IS_ERR(lpc_ctrl->regmap)) {
+> @@ -258,8 +274,6 @@ static int aspeed_lpc_ctrl_probe(struct 
+> platform_device *pdev)
+>  		goto err;
+>  	}
+>  
+> -	dev_info(dev, "Loaded at %pr\n", &resm);
+> -
+>  	return 0;
+>  
+>  err:
+> -- 
+> 2.17.1
+> 
+>
