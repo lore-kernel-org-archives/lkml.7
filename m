@@ -2,165 +2,112 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39C6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE357C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B962B25792
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5FA2578D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wDt2SGJo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f+Oh6cI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfE3KvY (ORCPT
+        id S1726595AbfE3Kyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:51:24 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:57319 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbfE3KvY (ORCPT
+        Thu, 30 May 2019 06:54:51 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:46006 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfE3Kyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:51:24 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x4UApGno018683;
-        Thu, 30 May 2019 19:51:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4UApGno018683
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559213477;
-        bh=j5xMXtzlfJmtrDOpctpofJ+GhwQ4JC0Tahjh8T6hfJo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wDt2SGJoCbR8lZkqChfL+ohh3godb14CBnYHfsR842blEZ9HJtzhaG5JRuXHzPW0H
-         HuS/tqXXZRS0f6xuTiICGO4Jgu4+fjAcUYFpphsCf/aWsTLfQn/kelbj03rwpcFsow
-         E4zKd4JCdjdskMOMLi2GN+OY/XvYc5moE5pVZe6MlZVSE0mv/nxvdP/rGZ3ig05Ugx
-         tbgq7G/aziCXuWhXMDa+2IUFGlmEHdxS7nuGTmJf89G/ulL4KYhkSCSfExuJ/aDJeZ
-         3+Zp4a9GIm/MgIzg6BXdXxy7bRqJEDZRVn+Ov5re91eDUeQnJDBw2kprTbkkFaG75W
-         Ii/kpd8Xj+fgw==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id q64so4094769vsd.1;
-        Thu, 30 May 2019 03:51:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAWisKc3pbbkYoBUSlPMxQ6oX2uEbGJun76NCmSvcWhTWxj+TW8N
-        cFAryo/YUtJkEa6D1aW+qjzKpaT3w82eeJJvRTU=
-X-Google-Smtp-Source: APXvYqz1eQpgy1klSJRUBat0BPbDkemKQMZQlg44UME+WzfyPZ3ATsQu01dDSjF1W1pCCB66UyAzAWUE0x86MfG9NnE=
-X-Received: by 2002:a67:1783:: with SMTP id 125mr1567738vsx.54.1559213476461;
- Thu, 30 May 2019 03:51:16 -0700 (PDT)
+        Thu, 30 May 2019 06:54:51 -0400
+Received: by mail-ot1-f45.google.com with SMTP id t24so5130196otl.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 03:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H9yxvCBVLUZ22iym/X49g7BmHyoRHVeYfpzhUUaExWk=;
+        b=f+Oh6cI/+BXPVeuDxFfHoLSzuWDrYh7O/5x6u6aq/mFFWzISCX7o9nZZYGMesH4+D/
+         pQl6V3p5ozIEo6z7k9LdXIqP6UaSSD8yIdtDeBDhdbkoUAXGUzvmuunmn3GR5oUkXhtF
+         1jHM5F44DvOIDq4BHcDgpTjBZkA9iMfAE+SQ8kC8CZFSbYow6gEMtObX9AlJlgCHY6TS
+         +0E70BJQS/cCiz7H5GdwtmUuKihM+PQMVQsXFBDmMxqDji3sbk6oQ78lafiur047Vrt3
+         i293GhbZ2MqJ7zfjDkGVxxCRkC4SIyVNnbhkk7bA3CDz1xQECHp0pBC+b16v3QZwPKHo
+         wFJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H9yxvCBVLUZ22iym/X49g7BmHyoRHVeYfpzhUUaExWk=;
+        b=YXGivxz2rLK7TTOQDOLEltWzMt1ad0hnpzY0MJy6h8jk/YDyxoM2pOlUB3jVfGX5se
+         6ky137my3CF4ejCVmHEQu1bg33fjps7SUv0Fa8JUUkhCNwLqUtqRTB8Im1W1F7IFkRsL
+         YUUuCe9Jy3wjLZtVX7F5PYwHAHAmjwLgzzZoSJ5lKRopgnr0TstU2ZDgIQPR1jWlFTxf
+         c+PwxQdiyv1qc5pColMQCjWgblPKO56y+Ijnb7nNB20NE6o09I8nS4pvKMdXsAXcet2N
+         as+RMr/kABflnqVEySC7KnXu4oQAvj15OrfuCDXwUMGJNETir/pZlGjKKxnfsvLQSpCs
+         +4Mw==
+X-Gm-Message-State: APjAAAW61BG7Jahh49IltqoOINuItwzznoVTa/C/ykPDgWKSjzVN6tEw
+        YNcIljJmK8hlc6QOjG207rP5ZA==
+X-Google-Smtp-Source: APXvYqzrwDU340MtHjWTjnUNSNlrdSArjnqCVKEBR3/2qQV4Yxlwn7OtgMX4ZGuWt7LiDY3MzbBLIA==
+X-Received: by 2002:a05:6830:1408:: with SMTP id v8mr2180538otp.48.1559213690489;
+        Thu, 30 May 2019 03:54:50 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id l20sm810412otj.62.2019.05.30.03.54.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 03:54:49 -0700 (PDT)
+Date:   Thu, 30 May 2019 18:54:39 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCHv3 00/12] perf tools: Display eBPF code in intel_pt trace
+Message-ID: <20190530105439.GA5927@leoy-ThinkPad-X240s>
+References: <20190508132010.14512-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <1556887064-12882-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1556887064-12882-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 30 May 2019 19:50:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATKCRqcDWg4X_e2N3TuxTmfr34ZYJOJU=SbubE-+S4eTQ@mail.gmail.com>
-Message-ID: <CAK7LNATKCRqcDWg4X_e2N3TuxTmfr34ZYJOJU=SbubE-+S4eTQ@mail.gmail.com>
-Subject: Re: [PATCH] x86,sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     X86 ML <x86@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508132010.14512-1-jolsa@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi Jiri,
 
-On Fri, May 3, 2019 at 9:48 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> __builtin_constant_p(nr) is used everywhere now. It does not make
-> much sense to define IS_IMMEDIATE() as its alias.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Wed, May 08, 2019 at 03:19:58PM +0200, Jiri Olsa wrote:
+> hi,
+> this patchset adds dso support to read and display
+> bpf code in intel_pt trace output. I had to change
+> some of the kernel maps processing code, so hopefully
+> I did not break too many things ;-)
+> 
+> It's now possible to see bpf code flow via:
+> 
+>   # perf-with-kcore record pt -e intel_pt//ku -- sleep 1
+>   # perf-with-kcore script pt --insn-trace --xed
 
-Ping. Is this a good clean-up?
+This is very interesting work for me!
 
-Thanks.
+I want to verify this feature with Arm CoreSight trace, I have one
+question so that I have more direction for the tesing:
 
-> ---
->
->  arch/sh/include/asm/bitops-op32.h | 8 +++-----
->  arch/x86/include/asm/bitops.h     | 7 +++----
->  2 files changed, 6 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
-> index 4668803..cfe5465 100644
-> --- a/arch/sh/include/asm/bitops-op32.h
-> +++ b/arch/sh/include/asm/bitops-op32.h
-> @@ -16,11 +16,9 @@
->  #define BYTE_OFFSET(nr)                ((nr) % BITS_PER_BYTE)
->  #endif
->
-> -#define IS_IMMEDIATE(nr)       (__builtin_constant_p(nr))
-> -
->  static inline void __set_bit(int nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 __asm__ __volatile__ (
->                         "bset.b %1, @(%O2,%0)           ! __set_bit\n\t"
->                         : "+r" (addr)
-> @@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
->
->  static inline void __clear_bit(int nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 __asm__ __volatile__ (
->                         "bclr.b %1, @(%O2,%0)           ! __clear_bit\n\t"
->                         : "+r" (addr)
-> @@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
->   */
->  static inline void __change_bit(int nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 __asm__ __volatile__ (
->                         "bxor.b %1, @(%O2,%0)           ! __change_bit\n\t"
->                         : "+r" (addr)
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index 8e790ec..2621438 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-> @@ -45,7 +45,6 @@
->   * We do the locked ops that don't return the old value as
->   * a mask operation on a byte.
->   */
-> -#define IS_IMMEDIATE(nr)               (__builtin_constant_p(nr))
->  #define CONST_MASK_ADDR(nr, addr)      WBYTE_ADDR((void *)(addr) + ((nr)>>3))
->  #define CONST_MASK(nr)                 (1 << ((nr) & 7))
->
-> @@ -67,7 +66,7 @@
->  static __always_inline void
->  set_bit(long nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 asm volatile(LOCK_PREFIX "orb %1,%0"
->                         : CONST_MASK_ADDR(nr, addr)
->                         : "iq" ((u8)CONST_MASK(nr))
-> @@ -105,7 +104,7 @@ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
->  static __always_inline void
->  clear_bit(long nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 asm volatile(LOCK_PREFIX "andb %1,%0"
->                         : CONST_MASK_ADDR(nr, addr)
->                         : "iq" ((u8)~CONST_MASK(nr)));
-> @@ -186,7 +185,7 @@ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
->   */
->  static __always_inline void change_bit(long nr, volatile unsigned long *addr)
->  {
-> -       if (IS_IMMEDIATE(nr)) {
-> +       if (__builtin_constant_p(nr)) {
->                 asm volatile(LOCK_PREFIX "xorb %1,%0"
->                         : CONST_MASK_ADDR(nr, addr)
->                         : "iq" ((u8)CONST_MASK(nr)));
-> --
-> 2.7.4
->
+What's the bpf program you are suing for the testing?  e.g. some
+testing program under the kernel's folder $kernel/samples/bpf?
+Or you uses perf command to launch bpf program?
 
+[...]
 
--- 
-Best Regards
-Masahiro Yamada
+Thanks
+Leo Yan
