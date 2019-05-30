@@ -2,128 +2,149 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DDEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8024AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4982024F1A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189270;
-	bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwKnyYo+Hsed1IFeCsjUFWJE0mBOuJwbxmmRZLG7puX3ZxKkjSsKf9VtH2MFnORFv
-	 hq0JqLPePMd5Utcd9gAbZVRNrASn9palEjwhqRvK1DpFK4rfnCNcBFhSgIJ52ML3ky
-	 rw75MEBPsTRm2KNMb92oLYsnPZnUwLzVjnPa73TE=
+	by mail.kernel.org (Postfix) with ESMTP id 50A38250B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vGCwgvCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfE3EHt (ORCPT
+        id S1727014AbfE3EHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43845 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730287AbfE3DRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731084AbfE3DRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:25 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4073F24499;
-        Thu, 30 May 2019 03:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186245;
-        bh=s4kCazaRSWnzkH+QoFib8l1lxFponnhzdXNy2kqfGz0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTG6PsEME2qIO2LDZqn78nSQi+2WDWCDVcsqzPAAOivRP1v8MVwdTmCmISfJ/oBHD
-         A30x3jIQR5nat0IQ3S2eSYGduEfQnyqn4R0b7TJ3fNUcsqfHdsZUaSLv37cp4yNYmJ
-         4/y2yuzGi1kyCEA15jFKJpL3gMpwoVlvIm0FvrXE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 160/276] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:05:18 -0700
-Message-Id: <20190530030535.500200616@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Dt6n5N36z9sQr;
+        Thu, 30 May 2019 13:17:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559186242;
+        bh=9+KNxKl040dLwGXZ8/yu2FEkk+iG0IsjYZFOHUKcuRA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vGCwgvCrGbi8kUfybY6qOeaGw3gfTGVIT8rEt4UPomauQWv181+NLL04TfzN5TXqq
+         merrCo6EvDiX5DmvvtMzfXI4Q2rROxjGD45w+ksoTO/b51ssEyIJz+z098d+BdqqVB
+         wirJnpyma6zcPOyVSqzeUFHEamKtIFqhKpNkXgK0VWRWJQ751i1zMGYvHvktzmOC2v
+         I0klK38eCkHCwMlCFqe+u4w008uXBAxztBXSAxvqvraIPv6RNo/0M1LnVWzpq80CE+
+         zXDqaaC/1/myHKROvLerZjC980raeT1rbjAMz/Jow7+EkY68YwEJtkGDMQClzj2rev
+         q1y7g8uok0yRQ==
+Date:   Thu, 30 May 2019 13:17:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: linux-next: manual merge of the userns tree with the arc-current
+ tree
+Message-ID: <20190530131721.0af603a4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/w7Q+15IzRn7eThtdIF/Em2R"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
+--Sig_/w7Q+15IzRn7eThtdIF/Em2R
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+Hi all,
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
+Today's linux-next merge of the userns tree got a conflict in:
 
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
+  arch/arc/mm/fault.c
 
-Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/pc87427.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+between commits:
 
-diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
-index dc5a9d5ada516..81a05cd1a5121 100644
---- a/drivers/hwmon/pc87427.c
-+++ b/drivers/hwmon/pc87427.c
-@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
- #define LD_IN		1
- #define LD_TEMP		1
- 
-+static inline int superio_enter(int sioaddr)
-+{
-+	if (!request_muxed_region(sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+	return 0;
-+}
-+
- static inline void superio_outb(int sioaddr, int reg, int val)
- {
- 	outb(reg, sioaddr);
-@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
- {
- 	outb(0x02, sioaddr);
- 	outb(0x02, sioaddr + 1);
-+	release_region(sioaddr, 2);
- }
- 
- /*
-@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
- {
- 	u16 val;
- 	u8 cfg, cfg_b;
--	int i, err = 0;
-+	int i, err;
-+
-+	err = superio_enter(sioaddr);
-+	if (err)
-+		return err;
- 
- 	/* Identify device */
- 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
--- 
-2.20.1
+  a8c715b4dd73 ("ARC: mm: SIGSEGV userspace trying to access kernel virtual=
+ memory")
+  ea3885229b0f ("ARC: mm: do_page_fault refactor #5: scoot no_context to en=
+d")
+  acc639eca380 ("ARC: mm: do_page_fault refactor #6: error handlers to use =
+same pattern")
+  0c85612550a4 ("ARC: mm: do_page_fault refactor #7: fold the various error=
+ handling")
+  c5d7f7610d88 ("ARC: mm: do_page_fault refactor #8: release mmap_sem soone=
+r")
 
+from the arc-current tree and commits:
 
+  351b6825b3a9 ("signal: Explicitly call force_sig_fault on current")
+  2e1661d26736 ("signal: Remove the task parameter from force_sig_fault")
 
+from the userns tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arc/mm/fault.c
+index e93ea06c214c,5001f6418e92..000000000000
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@@ -187,21 -228,14 +187,21 @@@ bad_area
+  		return;
+  	}
+ =20
+ -	goto no_context;
+ +	if (fault & VM_FAULT_SIGBUS) {
+ +		sig =3D SIGBUS;
+ +		si_code =3D BUS_ADRERR;
+ +	}
+ +	else {
+ +		sig =3D SIGSEGV;
+ +	}
+ =20
+ -do_sigbus:
+ -	up_read(&mm->mmap_sem);
+ +	tsk->thread.fault_address =3D address;
+- 	force_sig_fault(sig, si_code, (void __user *)address, tsk);
+++	force_sig_fault(sig, si_code, (void __user *)address);
+ +	return;
+ =20
+ -	if (!user_mode(regs))
+ -		goto no_context;
+ +no_context:
+ +	if (fixup_exception(regs))
+ +		return;
+ =20
+ -	tsk->thread.fault_address =3D address;
+ -	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+ +	die("Oops", regs, address);
+  }
+
+--Sig_/w7Q+15IzRn7eThtdIF/Em2R
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzvS0EACgkQAVBC80lX
+0GxwLgf/Yb+XKEDiDHSEM4zEm0mSb5MepeW7+pG1D15FoMHOPIiG92B4sRcKtXSL
+P7MMxkKxKNOM95FcHmu26wn6E4LsHGxSPx8L9R3mNfcWxfeLxysNY6EHWuFpAzHe
+yqJhRimVsms/kNkj5+TJYYBz4dYMcapMfA7jvpZOaHOW2aaM9Ptkptm8CAW7C0jh
+NyE1tCTrGCoudV1rFrOz2W7JiW5qLe4+MgLuUZev+M+feyBgWZZCxWDGNx3HSFOr
+l9a5Pg9B9+PFbct3RV7HEH3k+7rFnqlYgmD41dB1CkKmZ/iEUuSpTYdSoNoCAWB/
+IcWjfJmSMRS40RUndj2UAYT9sqViGw==
+=zGZo
+-----END PGP SIGNATURE-----
+
+--Sig_/w7Q+15IzRn7eThtdIF/Em2R--
