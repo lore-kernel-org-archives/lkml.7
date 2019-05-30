@@ -2,99 +2,109 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F42C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FACC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E8525CB5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764C825CF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfE3PbU (ORCPT
+        id S1727119AbfE3Pgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:31:20 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38160 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726355AbfE3PbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:31:19 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 780E2B06B6B9790FDA8F;
-        Thu, 30 May 2019 23:31:16 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
- 23:31:14 +0800
-Subject: Re: [PATCH] drm/nouveau: Fix DEVICE_PRIVATE dependencies
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <jglisse@redhat.com>, <jgg@mellanox.com>, <rcampbell@nvidia.com>,
-        <leonro@mellanox.com>, <akpm@linux-foundation.org>,
-        <sfr@canb.auug.org.au>, <gregkh@linuxfoundation.org>,
-        <b.zolnierkie@samsung.com>
-References: <20190417142632.12992-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <583de550-d816-f619-d402-688c87c86fe3@huawei.com>
-Date:   Thu, 30 May 2019 23:31:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 30 May 2019 11:36:33 -0400
+Received: from mail-pg1-f178.google.com ([209.85.215.178]:37019 "EHLO
+        mail-pg1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfE3Pgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:36:33 -0400
+Received: by mail-pg1-f178.google.com with SMTP id 20so2241951pgr.4;
+        Thu, 30 May 2019 08:36:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1yMsWBa2LYm1ILpkgQW8NI9YdDqB00cGkBtVNDeSeMg=;
+        b=iejAcWWk/sgsNXqodzj0a7bpwEeVKrnkka8LoYxVwqX1b1hrsRoKfUI9phfaDNEQGC
+         HMlANp1GMWvPKbut3t0fzrbKpPa2fPq3pB2paHORRaVDdut0uJwS+2WUJZmg/Lp5Gq9p
+         guImv2uyJKE6z8u31Vksl18eQQJ9zhvV+84KlcmYNE0Oq4fsbdbPN7yjMsCaWfylxmxQ
+         ZVjKiIDORAe/p/C/M4eqEV3f1OkYlpeCF91gyMTChUwSzLAR9b7rEEnC7haqNKP31PGI
+         y2OAmzgF2NYsF4kO8GO4vmnhmNeWAGgbFtnP127uFubOYvQZMrUgFT2zJ5JHY26+qph6
+         rMBA==
+X-Gm-Message-State: APjAAAViyBM7Xvr0gno7ovCSrBqlXBGg+wsGo9cW+Kk7HzTJC10cLz9X
+        Dzr+pP8BZ+2GNP3P4T+C03M=
+X-Google-Smtp-Source: APXvYqwseK44AapTJu1In2XK3PtnbTcjNqAN7PFnhrcVu/mm9Jxmi3dTNPUz+Mpk7IptXTRS0gUnEQ==
+X-Received: by 2002:a63:2706:: with SMTP id n6mr4412443pgn.238.1559230592594;
+        Thu, 30 May 2019 08:36:32 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id m24sm2458298pgh.75.2019.05.30.08.36.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 08:36:31 -0700 (PDT)
+Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <20190530112811.3066-2-pbonzini@redhat.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <ad0578b0-ce73-85ed-b67d-70c5d8176a23@acm.org>
+Date:   Thu, 30 May 2019 08:36:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190417142632.12992-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190530112811.3066-2-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 5/30/19 4:28 AM, Paolo Bonzini wrote:
+> +static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+> +	.get_budget	= scsi_mq_get_budget,
+> +	.put_budget	= scsi_mq_put_budget,
+> +	.queue_rq	= scsi_queue_rq,
+> +	.complete	= scsi_softirq_done,
+> +	.timeout	= scsi_timeout,
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +	.show_rq	= scsi_show_rq,
+> +#endif
+> +	.init_request	= scsi_mq_init_request,
+> +	.exit_request	= scsi_mq_exit_request,
+> +	.initialize_rq_fn = scsi_initialize_rq,
+> +	.busy		= scsi_mq_lld_busy,
+> +	.map_queues	= scsi_map_queues,
+> +};
+> +
+> +static void scsi_commit_rqs(struct blk_mq_hw_ctx *hctx)
+> +{
+> +	struct request_queue *q = hctx->queue;
+> +	struct scsi_device *sdev = q->queuedata;
+> +	struct Scsi_Host *shost = sdev->host;
+> +
+> +	shost->hostt->commit_rqs(shost, hctx->queue_num);
+> +}
+> +
+>   static const struct blk_mq_ops scsi_mq_ops = {
+>   	.get_budget	= scsi_mq_get_budget,
+>   	.put_budget	= scsi_mq_put_budget,
+>   	.queue_rq	= scsi_queue_rq,
+> +	.commit_rqs	= scsi_commit_rqs,
+>   	.complete	= scsi_softirq_done,
+>   	.timeout	= scsi_timeout,
+>   #ifdef CONFIG_BLK_DEBUG_FS
 
-Friendly ping:
+Hi Paolo,
 
-Who can take this?
+Have you considered to modify the block layer such that a single 
+scsi_mq_ops structure can be used for all SCSI LLD types?
 
-On 2019/4/17 22:26, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> During randconfig builds, I occasionally run into an invalid configuration
-> 
-> WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
->   Depends on [n]: ARCH_HAS_HMM_DEVICE [=n] && ZONE_DEVICE [=n]
->   Selected by [y]:
->   - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && ARCH_HAS_HMM [=y] && DRM_NOUVEAU [=y] && STAGING [=y]
-> 
-> mm/memory.o: In function `do_swap_page':
-> memory.c:(.text+0x2754): undefined reference to `device_private_entry_fault'
-> 
-> commit 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring from device memory")
-> split CONFIG_DEVICE_PRIVATE dependencies from
-> ARCH_HAS_HMM to ARCH_HAS_HMM_DEVICE and ZONE_DEVICE,
-> so enable DRM_NOUVEAU_SVM will trigger this warning,
-> cause building failed.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring from device memory")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpu/drm/nouveau/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-> index 00cd9ab..99e30c1 100644
-> --- a/drivers/gpu/drm/nouveau/Kconfig
-> +++ b/drivers/gpu/drm/nouveau/Kconfig
-> @@ -74,7 +74,8 @@ config DRM_NOUVEAU_BACKLIGHT
->  
->  config DRM_NOUVEAU_SVM
->  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
-> -	depends on ARCH_HAS_HMM
-> +	depends on ARCH_HAS_HMM_DEVICE
-> +	depends on ZONE_DEVICE
->  	depends on DRM_NOUVEAU
->  	depends on STAGING
->  	select HMM_MIRROR
-> 
+Thanks,
 
+Bart.
