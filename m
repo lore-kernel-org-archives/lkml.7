@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B937C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F260C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B66C25618
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A52B255E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190624;
-	bh=c3ylOG23e2uaO1Qyo4knJrORs0BfMvOcAjDmTCaefMI=;
+	s=default; t=1559190632;
+	bh=B71QUzXxuY/5P12+ReZl2k2PlJJ2/W9n9mOxrKU+LfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bts9S1aLrX7m05BL4vs6tT8TyROq0xee3iRO5uIYPIgABJDfh4BwJbYci+quig4df
-	 F7oqZkUkhRez3NAFJjAZa8uG/ij2p7oU0uh2mVfxA1b2YGiPln5WVatCVxbEd9pCgJ
-	 AVYNd2bnBOMMtg8j77hn3vcHRiIulHxIxsirquS0=
+	b=MP1/w+zI5J9H647BRFq6Q36XKSY1ZT1G9w83YhZvUOD8+wnWpSpqfDlBi1pum2QxN
+	 SgrId8lsdlj2AM9e6RvyTIS5zWTLlNQ1sndgODnpCssv4yYb5EsvVs54KfFxOtrg7E
+	 izbzeSVxTvzSBQX02fWY2iWnSp6rnQCVcVTNOdb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfE3EaP (ORCPT
+        id S2388094AbfE3Eab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60686 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbfE3DN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:56 -0400
+        id S1727833AbfE3DNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD7EE24575;
-        Thu, 30 May 2019 03:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA9F72455A;
+        Thu, 30 May 2019 03:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186035;
-        bh=c3ylOG23e2uaO1Qyo4knJrORs0BfMvOcAjDmTCaefMI=;
+        bh=B71QUzXxuY/5P12+ReZl2k2PlJJ2/W9n9mOxrKU+LfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4+DRfnMvx3e6VFGFAMBaIogphJPvBSAr33NV01aTeLAQ81+aYqTnpjZzWWaJLNCv
-         SRtBXhJAIUXZ9JHcBvI1G1sKUAIEUmVHWoFB7tdgB8LAi80CtfCeIBa1dUQGZa/INB
-         iRqkiLVX2WSJYk/5/okR+th4nABtRhWe0WFO+VnQ=
+        b=N3YMsnwTiBn1Ky5yRwfvIkCYbCTCDQnHEVLAmJ12HFBEgr3SeOxlQsEJ7xKYloq3N
+         VgaNypX75yfVWmN+XLNDRNHk2fyZxtgaXrna54H3eSqMm4ZQeX3qDthHaaEDOP4NhN
+         gmL9t1xmoyCnFAtoDKCoHXEcJY2XJ3VyyMRl5CIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 122/346] vfio-ccw: Do not call flush_workqueue while holding the spinlock
-Date:   Wed, 29 May 2019 20:03:15 -0700
-Message-Id: <20190530030547.265517891@linuxfoundation.org>
+Subject: [PATCH 5.0 120/346] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 29 May 2019 20:03:13 -0700
+Message-Id: <20190530030547.161347467@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,67 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cea5dde42a83b5f0a039da672f8686455936b8d8 ]
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-Currently we call flush_workqueue while holding the subchannel
-spinlock. But flush_workqueue function can go to sleep, so
-do not call the function while holding the spinlock.
+clang has identified a code path in which it thinks a
+variable may be unused:
 
-Fixes the following bug:
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
 
-[  285.203430] BUG: scheduling while atomic: bash/14193/0x00000002
-[  285.203434] INFO: lockdep is turned off.
-....
-[  285.203485] Preemption disabled at:
-[  285.203488] [<000003ff80243e5c>] vfio_ccw_sch_quiesce+0xbc/0x120 [vfio_ccw]
-[  285.203496] CPU: 7 PID: 14193 Comm: bash Tainted: G        W
-....
-[  285.203504] Call Trace:
-[  285.203510] ([<0000000000113772>] show_stack+0x82/0xd0)
-[  285.203514]  [<0000000000b7a102>] dump_stack+0x92/0xd0
-[  285.203518]  [<000000000017b8be>] __schedule_bug+0xde/0xf8
-[  285.203524]  [<0000000000b95b5a>] __schedule+0x7a/0xc38
-[  285.203528]  [<0000000000b9678a>] schedule+0x72/0xb0
-[  285.203533]  [<0000000000b9bfbc>] schedule_timeout+0x34/0x528
-[  285.203538]  [<0000000000b97608>] wait_for_common+0x118/0x1b0
-[  285.203544]  [<0000000000166d6a>] flush_workqueue+0x182/0x548
-[  285.203550]  [<000003ff80243e6e>] vfio_ccw_sch_quiesce+0xce/0x120 [vfio_ccw]
-[  285.203556]  [<000003ff80245278>] vfio_ccw_mdev_reset+0x38/0x70 [vfio_ccw]
-[  285.203562]  [<000003ff802458b0>] vfio_ccw_mdev_remove+0x40/0x78 [vfio_ccw]
-[  285.203567]  [<000003ff801a499c>] mdev_device_remove_ops+0x3c/0x80 [mdev]
-[  285.203573]  [<000003ff801a4d5c>] mdev_device_remove+0xc4/0x130 [mdev]
-[  285.203578]  [<000003ff801a5074>] remove_store+0x6c/0xa8 [mdev]
-[  285.203582]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
-[  285.203588]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
-[  285.203593]  [<00000000003c187c>] vfs_write+0xb4/0x198
-[  285.203597]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
-[  285.203601]  [<0000000000b9e270>] system_call+0xdc/0x2d8
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Message-Id: <626bab8bb2958ae132452e1ddaf1b20882ad5a9d.1554756534.git.alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 0b3b9de45c602..64bb121ba5987 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -54,9 +54,9 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 5002838ea4760..f8986effcb501 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -327,10 +327,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
  
- 			wait_for_completion_timeout(&completion, 3*HZ);
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
  
--			spin_lock_irq(sch->lock);
- 			private->completion = NULL;
- 			flush_workqueue(vfio_ccw_work_q);
-+			spin_lock_irq(sch->lock);
- 			ret = cio_cancel_halt_clear(sch, &iretry);
- 		};
- 
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
 -- 
 2.20.1
 
