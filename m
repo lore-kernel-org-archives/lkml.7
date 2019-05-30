@@ -7,60 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1116C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C947DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9734824997
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA7024997
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wwta/Nfz"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GC9KdN6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfE3IRg (ORCPT
+        id S1727197AbfE3IRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:17:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60849 "EHLO
+        Thu, 30 May 2019 04:17:46 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48863 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3IRf (ORCPT
+        with ESMTP id S1725440AbfE3IRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:17:35 -0400
+        Thu, 30 May 2019 04:17:46 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8Gte02905184
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8Hdiu2905251
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:16:55 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8Gte02905184
+        Thu, 30 May 2019 01:17:39 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8Hdiu2905251
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559204216;
-        bh=emgwORxdB8CkVtvtgC0tsEMlgEFIslty5A0OUQmTyKE=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=Wwta/Nfz9o1+A0c7zAF8Om89/fMTwlRCQ5l484v6EFW/9GDA4Zfbq3kD2VEiC50GY
-         m+VZJIUj9jHmqO5q6tmc6WPLATgoUPTkEi57L6YcdhNgAP3kcMjtHbY9jpbE23oTgD
-         pu7NF61mJJAuhCibhhwL9FSl2U+Vmo22l22N0PlFRPHbv5jZAx9DgG0n44ByZp01uL
-         fPkScOVtDerp9MgrQbAe/jDuoWw8KGT5bI6+Wai4DYWnNs1HhrurVJTW2dy+AXNxXJ
-         LYicA+jiqugGSY3xGODiyNUNUyK2U71TB0tpILcGPd+8FRLpLErtX2l7Nn4O8AnZS8
-         254VEFDHh7sEw==
+        s=2019051801; t=1559204259;
+        bh=D5O7Tj1ZXryZWm+Uax95RpAl9rvoKuOhBxw4xwdpOyY=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=GC9KdN6kdcABtFVvnXyjNlSoODVYbCoKsgYpeuNwvRB5vQteJWypQB4d4t740F19b
+         WbR5tvSeR2lcb7FyhYzYfZQZ8oegqjxGeV+G5sB2fJn+hLXfq+Xk/7PFOKnwFrFyrL
+         GBE24JiGTiKEoKBZhfhyxW285U6VpXIB6ctSlDmMaaCkML4tFcXmuoLyX26mzLHLq5
+         3Gkc6g1feuwwPZdq+s/RalJKI5mQSK4+tGEsLklcyAi3YDyWQYuWzoa20yaG5tSM68
+         Q8gXOXVZjaqgYtM3KCXfQ0vgEmJ4e0q3GgmTlUCXEnL9SLnVfHobqxyTEEJl5G9OfI
+         KkuuJQ+SlFl/g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8GscR2905178;
-        Thu, 30 May 2019 01:16:54 -0700
-Date:   Thu, 30 May 2019 01:16:54 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8HcoT2905244;
+        Thu, 30 May 2019 01:17:38 -0700
+Date:   Thu, 30 May 2019 01:17:38 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-whpnfnw6xtd939odgt9bw9as@git.kernel.org>
-Cc:     wangnan0@huawei.com, ast@fb.com, acme@redhat.com,
-        daniel@iogearbox.net, kafai@fb.com, adrian.hunter@intel.com,
-        lclaudio@redhat.com, tglx@linutronix.de, andrii.nakryiko@gmail.com,
-        yhs@fb.com, songliubraving@fb.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, mingo@kernel.org
-Reply-To: namhyung@kernel.org, mingo@kernel.org, jolsa@kernel.org,
-          andrii.nakryiko@gmail.com, yhs@fb.com,
-          linux-kernel@vger.kernel.org, songliubraving@fb.com,
-          hpa@zytor.com, kafai@fb.com, adrian.hunter@intel.com,
-          daniel@iogearbox.net, tglx@linutronix.de, lclaudio@redhat.com,
-          wangnan0@huawei.com, acme@redhat.com, ast@fb.com
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-c6aba1bf258ff1ce201f112dafe1bdde601573dd@git.kernel.org>
+Cc:     hpa@zytor.com, jolsa@redhat.com, adrian.hunter@intel.com,
+        acme@redhat.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        tglx@linutronix.de
+Reply-To: adrian.hunter@intel.com, tglx@linutronix.de, acme@redhat.com,
+          hpa@zytor.com, jolsa@redhat.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190412113830.4126-2-adrian.hunter@intel.com>
+References: <20190412113830.4126-2-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf top: Lower message level for failure on
- synthesizing events for pre-existing BPF programs
-Git-Commit-ID: 2d45ef7033ec90104ae8e4c3996227bdad24dc76
+Subject: [tip:perf/core] perf scripts python: exported-sql-viewer.py: Change
+ python2 to python
+Git-Commit-ID: c6aba1bf258ff1ce201f112dafe1bdde601573dd
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,47 +70,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2d45ef7033ec90104ae8e4c3996227bdad24dc76
-Gitweb:     https://git.kernel.org/tip/2d45ef7033ec90104ae8e4c3996227bdad24dc76
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Mon, 20 May 2019 11:04:08 -0300
+Commit-ID:  c6aba1bf258ff1ce201f112dafe1bdde601573dd
+Gitweb:     https://git.kernel.org/tip/c6aba1bf258ff1ce201f112dafe1bdde601573dd
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Fri, 12 Apr 2019 14:38:23 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:45 -0300
 
-perf top: Lower message level for failure on synthesizing events for pre-existing BPF programs
+perf scripts python: exported-sql-viewer.py: Change python2 to python
 
-Move it from being a pr_warning() to a pr_debug(). Also capitalize BPF
-and explain what gets missing when we're not able to synthesize these
-events: we'll not be able to resolve symbols, etc.
+Now that there is also support for python3, there is no need to specify
+python2 explicitly.
 
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@fb.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-whpnfnw6xtd939odgt9bw9as@git.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/20190412113830.4126-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 2 +-
+ tools/perf/scripts/python/exported-sql-viewer.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 31d78d874fc7..6651377fd762 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1215,7 +1215,7 @@ static int __cmd_top(struct perf_top *top)
- 						&top->session->machines.host,
- 						&top->record_opts);
- 	if (ret < 0)
--		pr_warning("Couldn't synthesize bpf events.\n");
-+		pr_debug("Couldn't synthesize BPF events: Pre-existing BPF programs won't have symbols resolved.\n");
- 
- 	machine__synthesize_threads(&top->session->machines.host, &opts->target,
- 				    top->evlist->threads, false,
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index affed7d149be..9ff92a130655 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ # SPDX-License-Identifier: GPL-2.0
+ # exported-sql-viewer.py: view data from sql database
+ # Copyright (c) 2014-2018, Intel Corporation.
