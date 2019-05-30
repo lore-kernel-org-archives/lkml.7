@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA5CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD580C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB97324A77
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B245224A77
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186773;
-	bh=mj3NLwoyomYSM+hcO9K+n0XKllV0m5YM8lDNJf4s3LM=;
+	s=default; t=1559186778;
+	bh=UtnwMd7rG4/JK9kDlDjr3EYelZzqIrF4r2eMMgFde5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fs4xBPlRQCSE/mEFOsMLBq29OQk00UlhR2nOwHB+dJAKl5gCDNqYuFbxZ4va6Ri/q
-	 WtUPqj32vF+2BIjOtyz7fQdZS0JEz10JQ4Pp5tMjiyWOE0o7774VasZ3Kmab9pIaGF
-	 cJPNMBveFo0L3CcmIxBAadfDiEwerhyXgeYUz5Sw=
+	b=BCPaICOoSa9uRndmoUi4rfahLphcWupLUWAy8KfIaIcZdmXGpheB/htfcA9DriMzJ
+	 ejMPdtzcM2dcYhp/0ZViwII9GKxsraL5cLrnkWnrKiCr1wl63BNgDYFESfXdAHZFGh
+	 0cKjwvKGjkJ9ye/1M46zgfpxlzkR72a5Ss+djICw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387672AbfE3D0N (ORCPT
+        id S2387691AbfE3D0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731729AbfE3DSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:49 -0400
+        id S1731735AbfE3DSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7B324713;
-        Thu, 30 May 2019 03:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 490CA24800;
+        Thu, 30 May 2019 03:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186329;
-        bh=mj3NLwoyomYSM+hcO9K+n0XKllV0m5YM8lDNJf4s3LM=;
+        s=default; t=1559186331;
+        bh=UtnwMd7rG4/JK9kDlDjr3EYelZzqIrF4r2eMMgFde5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQGbucqk4WH1YGMuYjjbQBVIw9T9uNsx9whQIZXq6009mSURMr1L2hf3KY5q/18R/
-         7uaXuzAhtMqr8hZTIvaewYEcJLqIXPz8ptRoj+NRxJpbtScJieAXKYf2U+STeT583q
-         9wDKgk0T7duPfj+g+qmROMX5tF0oSB6p1aQFMXxk=
+        b=1GgpICQm9QVLLFMQbeoEvnolovkV9+/oN4AOH4k/UGRuYRDc0AhHjE4sNauba0R/S
+         D/O/TnoL1SHqvUDleuT7A0aPMzOZUY5rFRi19rtbFbNHcsYlwRaYYclLGdZQu8XksM
+         qMvqiEX+cyJw+K0RS6NfDU+XykP1iNs9M06+ts6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Flavio Suligoi <f.suligoi@asem.it>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 046/193] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 29 May 2019 20:05:00 -0700
-Message-Id: <20190530030456.034354001@linuxfoundation.org>
+Subject: [PATCH 4.14 050/193] spi: pxa2xx: fix SCR (divisor) calculation
+Date:   Wed, 29 May 2019 20:05:04 -0700
+Message-Id: <20190530030456.637295396@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,39 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit 29f2133717c527f492933b0622a4aafe0b3cbe9e ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+Calculate the divisor for the SCR (Serial Clock Rate), avoiding
+that the SSP transmission rate can be greater than the device rate.
 
-Make sure the pointer cleared if an error is reported.
+When the division between the SSP clock and the device rate generates
+a reminder, we have to increment by one the divisor.
+In this way the resulting SSP clock will never be greater than the
+device SPI max frequency.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+For example, with:
+
+ - ssp_clk  = 50 MHz
+ - dev freq = 15 MHz
+
+without this patch the SSP clock will be greater than 15 MHz:
+
+ - 25 MHz for PXA25x_SSP and CE4100_SSP
+ - 16,56 MHz for the others
+
+Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
+so the max rate of the SPI device clock is respected.
+
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/spi-pxa2xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 7406695ee5dc2..e00f5f49f21d1 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -446,8 +446,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index c0e915d8da5d2..efdae686a7619 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -938,10 +938,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
+ 
+ 	rate = min_t(int, ssp_clk, rate);
+ 
++	/*
++	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
++	 * that the SSP transmission rate can be greater than the device rate
++	 */
+ 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
+-		return (ssp_clk / (2 * rate) - 1) & 0xff;
++		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
+ 	else
+-		return (ssp_clk / rate - 1) & 0xfff;
++		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
+ }
+ 
+ static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
 -- 
 2.20.1
 
