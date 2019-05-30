@@ -2,105 +2,98 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7F4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50053C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E344257AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29529257B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zs+87dXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfE3LAa (ORCPT
+        id S1726701AbfE3LED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:00:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50354 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726359AbfE3LA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:00:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A629AEB8;
-        Thu, 30 May 2019 11:00:27 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 928B31E3C08; Thu, 30 May 2019 13:00:24 +0200 (CEST)
-Date:   Thu, 30 May 2019 13:00:24 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
-Message-ID: <20190530110024.GB29237@quack2.suse.cz>
-References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
- <20190529142504.GC32147@quack2.suse.cz>
- <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
+        Thu, 30 May 2019 07:04:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47007 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfE3LEC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:04:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y11so3709113pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=S/cb0m9xHhDHoKqKMiFimQZjtq/GGyzkBYH+5P+CN/0=;
+        b=zs+87dXY2uJHWUUk2UltFW9vWu7zXdUEpIxMKXcJPx8VZByqt6q5b8MmoQqAiPBIs0
+         rbhatuc4l5So1hpFoZOObOs+vi3UzRzxLYi8EZ98U+3THxPaAGcpEGyfNVZSJL4LPKHJ
+         KusupP2XA6wpIcYHn2evj4cWgrFh2GDjPpQNPwNn2cjECO2MkLAMRWej5ICmCRiowIGh
+         VrSlwUfeUy0Fi4/oBaS5iHv9Mt5jgI1duviHzObo/RhV8t/0U1OWEno2LskN1A3wWthg
+         ZfL8/Ic/lST3aXrc4TJ0MEPLD/L6TtCmHJHEydra4VrBEeC9CpaPSkQfsxvUXv81Crme
+         Dwbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S/cb0m9xHhDHoKqKMiFimQZjtq/GGyzkBYH+5P+CN/0=;
+        b=S6p63aY9u43TTeV2Jpf85Q9ummwoAF0zzdM2SmkAOT3A47Axs5+nixOSw2hJXWRsmV
+         lPcY7o52coWXgSIZA3mp2mruvBG/yqGsZBoqxh/EEZ/xGMMfJT35LF+KXToAmvnL/yKA
+         rSaYIB+FjJlbGDNq66FcHaUH6XJImMVqMheVixc0jiZWcp3uCyTjBdlWpX9RrTcO4QZk
+         867UJDEJv8tpTILORfRuiwOxfD3ExTVbJQhN6aBjkfxieTBwS/tRLYLmifZTAO8Tx1/h
+         dgadqpKEfLY/VUlmdG10fnZQGV8Rdcpf4TLSq/Pwf+AQnZHngWNvTtsrNPHwgVuZqPtP
+         eBnw==
+X-Gm-Message-State: APjAAAX0DDopoa6pqxaunrFrGd/g0knbabYGZtEUtNCowcqIx+QSyirp
+        facYJ7ZpskvvrmH5wwvMTDSxwA==
+X-Google-Smtp-Source: APXvYqz+vXGWZcBEZJYVx+rFv5sqTUAoCg0qb5bq3U1UYR5WpxnO0dE7UdJWmxFtnX3tHhlwh568aA==
+X-Received: by 2002:a62:e10f:: with SMTP id q15mr3069680pfh.56.1559214241664;
+        Thu, 30 May 2019 04:04:01 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id r44sm2250083pjb.13.2019.05.30.04.03.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 04:03:58 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:33:56 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
+        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 2/3] thermal: cpu_cooling: Make the power-related code
+ depend on IPA
+Message-ID: <20190530110356.vet2exwowdbm4umq@vireshk-i7>
+References: <20190530092038.12020-1-quentin.perret@arm.com>
+ <20190530092038.12020-3-quentin.perret@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190530092038.12020-3-quentin.perret@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29-05-19 18:53:21, Amir Goldstein wrote:
-> > > David,
-> > >
-> > > I am interested to know how you envision filesystem notifications would
-> > > look with this interface.
-> > >
-> > > fanotify can certainly benefit from providing a ring buffer interface to read
-> > > events.
-> > >
-> > > From what I have seen, a common practice of users is to monitor mounts
-> > > (somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
-> > > It'd be good if those users can use a single watch mechanism/API for
-> > > watching the mount namespace and filesystem events within mounts.
-> > >
-> > > A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
-> > > It provides users with two complete different mechanisms to watch error
-> > > and filesystem events. That is generally not a good thing to have.
-> > >
-> > > I am not asking that you implement fs_notify() before merging sb_notify()
-> > > and I understand that you have a use case for sb_notify().
-> > > I am asking that you show me the path towards a unified API (how a
-> > > typical program would look like), so that we know before merging your
-> > > new API that it could be extended to accommodate fsnotify events
-> > > where the final result will look wholesome to users.
-> >
-> > Are you sure we want to combine notification about file changes etc. with
-> > administrator-type notifications about the filesystem? To me these two
-> > sound like rather different (although sometimes related) things.
-> >
+On 30-05-19, 10:20, Quentin Perret wrote:
+> The core CPU cooling infrastructure has power-related functions
+> that have only one client: IPA. Since there can be no user of those
+> functions if IPA is not compiled in, make sure to guard them with
+> checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
+> unnecessarily.
 > 
-> Well I am sure that ring buffer for fanotify events would be useful, so
-> seeing that David is proposing a generic notification mechanism, I wanted
-> to know how that mechanism could best share infrastructure with fsnotify.
-> 
-> But apart from that I foresee the questions from users about why the
-> mount notification API and filesystem events API do not have better
-> integration.
-> 
-> The way I see it, the notification queue can serve several classes
-> of notifications and fsnotify could be one of those classes
-> (at least FAN_CLASS_NOTIF fits nicely to the model).
+> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+> ---
+>  drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
+>  1 file changed, 104 insertions(+), 110 deletions(-)
 
-I agree that for some type of fsnotify uses a ring buffer would make sense.
-But for others - such as permission events or unlimited queues - you cannot
-really use the ring buffer and I don't like the idea of having different
-ways of passing fsnotify events to userspace based on notification group
-type...
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+viresh
