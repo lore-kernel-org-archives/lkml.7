@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C0BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C181CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F40254C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9D8254D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190416;
-	bh=R7gNaj25tdMNC35+ZV7CjRrC2yT1q62O8mLOlnMZwfU=;
+	s=default; t=1559190423;
+	bh=Zjnm/CSMq+WhVMJ0o+aNEUs/uCH6cf9Umkgw6pLqbpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mixWYHhRXAqmxngMnxDb3igDy6RekWWrIhTzdqURWl7LbfX4p4yqRAgXfhOz6yxzj
-	 SOS+RDPkTKVWSK42DUbCk1MK6nh94UDIDMctunUkETgDdfNrPHl5+x+dru1onRUweD
-	 D7xxexsbKRw0h3zh0X/glEVuiuHJMqvOYyMdIZTU=
+	b=vDJ4JK8r5jW9vUkjFlciiW4XYxKDykd+zbWLak/4z6Wv83qWk2sdwMl2ZsndldgXB
+	 ASigR4Lu3zvnWtR2gZ1RhAJpUua0J2ePcOugniva1iMVLBIxgDx3RmtZ0+GGG4eirM
+	 Km+hPrkUab4zV4o6VNGAKzq2a/192dSTx2c4TlBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbfE3E0z (ORCPT
+        id S1733014AbfE3E1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfE3DO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:26 -0400
+        id S1729854AbfE3DOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F792455E;
-        Thu, 30 May 2019 03:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB5AE2455A;
+        Thu, 30 May 2019 03:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186066;
-        bh=R7gNaj25tdMNC35+ZV7CjRrC2yT1q62O8mLOlnMZwfU=;
+        s=default; t=1559186065;
+        bh=Zjnm/CSMq+WhVMJ0o+aNEUs/uCH6cf9Umkgw6pLqbpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GeoYXm70B+hMwYS2ZzxOsNjgHYXJo/5MP8ObwQCDSokdAQHY+hfHv/v/jqR4tvLZb
-         oe3HcGiBJJQbwXAyRijqQaOYC62QtXq2NM35MYRqyjxg/5K76ae7fqIwDSj2lqsKqT
-         AQgdhmtip5CTddW4WHpjncHTj4zO1s8trtQ7/9IE=
+        b=vQmvO0H2pVhidVKoTWcOmkZGTxnxuEHnSdHqS2H+RYQda2Q17BHF0B9JSch8FG4bg
+         ZCBgdAl8rkziKV9NJsABRsDhuqQe3iWUN/LYyGepUKB81M8w+XSy2syzCvf1jHVu+x
+         8xa4U68yOaKq28qrD/Fhzn4lEwKK909N9qnviTcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fritz Koenig <frkoenig@google.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 159/346] drm/msm: dpu: Dont set frame_busy_mask for async updates
-Date:   Wed, 29 May 2019 20:03:52 -0700
-Message-Id: <20190530030549.230649152@linuxfoundation.org>
+Subject: [PATCH 5.0 175/346] RDMA/cxgb4: Fix null pointer dereference on alloc_skb failure
+Date:   Wed, 29 May 2019 20:04:08 -0700
+Message-Id: <20190530030550.017430210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,47 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f98baa3109cea46083d2361ab14a0207d1b1bd16 ]
+[ Upstream commit a6d2a5a92e67d151c98886babdc86d530d27111c ]
 
-The frame_busy mask is used in frame_done event handling, which is not
-invoked for async commits. So an async commit will leave the
-frame_busy mask populated after it completes and future commits will start
-with the busy mask incorrect.
+Currently if alloc_skb fails to allocate the skb a null skb is passed to
+t4_set_arp_err_handler and this ends up dereferencing the null skb.  Avoid
+the NULL pointer dereference by checking for a NULL skb and returning
+early.
 
-This showed up on disable after cursor move. I was hitting the "this should
-not happen" comment in the frame event worker since frame_busy was set,
-we queued the event, but there were no frames pending (since async
-also doesn't set that).
-
-Reviewed-by: Fritz Koenig <frkoenig@google.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190130163220.138637-1-sean@poorly.run
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Addresses-Coverity: ("Dereference null return")
+Fixes: b38a0ad8ec11 ("RDMA/cxgb4: Set arp error handler for PASS_ACCEPT_RPL messages")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/cxgb4/cm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 57ac94d80bde1..1aea0fc894b26 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1561,8 +1561,14 @@ static void _dpu_encoder_kickoff_phys(struct dpu_encoder_virt *dpu_enc,
- 		if (!ctl)
- 			continue;
- 
--		if (phys->split_role != ENC_ROLE_SLAVE)
-+		/*
-+		 * This is cleared in frame_done worker, which isn't invoked
-+		 * for async commits. So don't set this for async, since it'll
-+		 * roll over to the next commit.
-+		 */
-+		if (!async && phys->split_role != ENC_ROLE_SLAVE)
- 			set_bit(i, dpu_enc->frame_busy_mask);
-+
- 		if (!phys->ops.needs_single_flush ||
- 				!phys->ops.needs_single_flush(phys))
- 			_dpu_encoder_trigger_flush(&dpu_enc->base, phys, 0x0,
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 25a81fbb0d4d5..f1819b5272560 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -457,6 +457,8 @@ static struct sk_buff *get_skb(struct sk_buff *skb, int len, gfp_t gfp)
+ 		skb_reset_transport_header(skb);
+ 	} else {
+ 		skb = alloc_skb(len, gfp);
++		if (!skb)
++			return NULL;
+ 	}
+ 	t4_set_arp_err_handler(skb, NULL, NULL);
+ 	return skb;
 -- 
 2.20.1
 
