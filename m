@@ -2,101 +2,114 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B10C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B30BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560772590E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:52:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ArXgolZZ"
+	by mail.kernel.org (Postfix) with ESMTP id 561B725914
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfE3MwS (ORCPT
+        id S1726593AbfE3MzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:52:18 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:50270 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfE3MwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:52:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1559220737; x=1590756737;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=O4eMaMbEMmqb10KzGuvzyUaJ2EVJ+M/kW9KVSV6qXKU=;
-  b=ArXgolZZFHDwKJ+koSulk8zmrsZMqcQi6IsZ9EY2JVEl5hMPCr67tb1x
-   wLWwnf81nNdl5MVt7ZO6gur7CgKoL3I5L9lvnuwyCHnkBTeossGezYgSz
-   4pgQ3NRpdlZgZtzO+Dg9NGOubmqMKbwGo8AL8ubGEq5WsqU+8AbeNkI+m
-   M=;
-X-IronPort-AV: E=Sophos;i="5.60,531,1549929600"; 
-   d="scan'208";a="677188830"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 30 May 2019 12:52:11 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 18792A221B;
-        Thu, 30 May 2019 12:52:07 +0000 (UTC)
-Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 30 May 2019 12:52:05 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 30 May 2019 12:52:04 +0000
-Received: from ub6d44c9ce3e25c.ant.amazon.com (10.125.236.61) by
- mail-relay.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 30 May 2019 12:52:01 +0000
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <nicolas.ferre@microchip.com>, <paulmck@linux.ibm.com>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <20190530115732.GB14088@kroah.com>
-From:   <hhhawa@amazon.com>
-Message-ID: <0ebfe8d7-3e0c-e0be-abd5-5e10b7d4b6aa@amazon.com>
-Date:   Thu, 30 May 2019 15:52:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 08:55:09 -0400
+Received: from gofer.mess.org ([88.97.38.141]:59129 "EHLO gofer.mess.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfE3MzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:55:09 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id B91936031C; Thu, 30 May 2019 13:55:06 +0100 (BST)
+Date:   Thu, 30 May 2019 13:55:06 +0100
+From:   Sean Young <sean@mess.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 00/12] Allwinner A64/H6 IR support
+Message-ID: <20190530125506.xnnk7tvruxnhqh6a@gofer.mess.org>
+References: <20190528161440.27172-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530115732.GB14088@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528161440.27172-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 2:57 PM, Greg KH wrote:
-> On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
->> +static void al_a57_edac_cpumerrsr(void *arg)
->> +{
->> +	struct edac_device_ctl_info *edac_dev =
->> +		(struct edac_device_ctl_info *)arg;
-> No need for casting anything here, just assign it.  Doesn't checkpatch
-> catch this type of thing these days?  You did run it, right?
+On Tue, May 28, 2019 at 06:14:28PM +0200, Clément Péron wrote:
+> Hi,
+> 
+> A64 IR support series[1] pointed out that an A31 bindings should be
+> introduced.
+> 
+> This series introduce the A31 compatible bindings, then switch it on
+> the already existing board.
+> 
+> Finally introduce A64 and H6 support.
+> 
+> I didn't enable the IR on other H6 boards as Ondrej reported an issue
+> on his board[2].
 
-I did, but checkpatch didn't catch this. I'll fix in next patch-set.
+For the whole series:
 
-Thanks for your review.
+Acked-by: Sean Young <sean@mess.org>
 
-
-Hanna
-
->
-> Please fix that up everywhere you do this in the driver.
->
->
-> thanks,
->
-> greg k-h
-
-
+> 
+> Regards,
+> Clément
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+> [2] https://lkml.org/lkml/2019/5/27/321
+> 
+> Changes since v2:
+>  - Disable IR for other H6 boards
+>  - Split DTS patch for H3/H5
+>  - Introduce IR quirks
+> 
+> Changes since v1:
+>  - Document reset lines as required since A31
+>  - Explain the memory mapping difference in commit log
+>  - Fix misspelling "Allwiner" to "Allwinner"
+> 
+> Clément Péron (10):
+>   dt-bindings: media: sunxi-ir: add A31 compatible
+>   media: rc: Introduce sunxi_ir_quirks
+>   media: rc: sunxi: Add A31 compatible
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   ARM: dts: sunxi: Prefer A31 bindings for IR
+>   dt-bindings: media: sunxi-ir: Add A64 compatible
+>   dt-bindings: media: sunxi-ir: Add H6 compatible
+>   arm64: dts: allwinner: h6: Add IR receiver node
+>   arm64: dts: allwinner: h6: Enable IR on Beelink GS1
+>   arm64: defconfig: enable IR SUNXI option
+> 
+> Igors Makejevs (1):
+>   arm64: dts: allwinner: a64: Add IR node
+> 
+> Jernej Skrabec (1):
+>   arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+> 
+>  .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+>  arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+>  arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 +++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 +++++
+>  arch/arm64/configs/defconfig                  |  1 +
+>  drivers/media/rc/sunxi-cir.c                  | 70 +++++++++++++++----
+>  11 files changed, 115 insertions(+), 20 deletions(-)
+> 
+> -- 
+> 2.20.1
