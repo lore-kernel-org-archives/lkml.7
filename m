@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B26EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A568CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46F0259FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7D4259D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191294;
-	bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+	s=default; t=1559191298;
+	bh=u8DTJcCxboMwaCpnCA+BRD1412Fvgn3zc28Z0ceiVQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXqKxOqi2uOOvRI4ZnuTgccdFXwu/4udax9alOu9Ac8ezOHNSDw+9pr4News3anfU
-	 AseN+QC4EfZe272rXyloXqKgfbq/jC+ZsJDNuzEFVnM2BDJ1TPAAn68Fv0h9KDpp+e
-	 yTWhHeATPe4j6TOg9OExrw7O71QPo8NLHhUtYUGc=
+	b=wujKHGljcqtbmRs+e1jiMNhpDgPyp5BM+89nNWmbtxjdG4eQ3eDKg2ks/RqWzf9+B
+	 TtfaaiQ6DtB85oYccNoMAfJMmJu0g2tH7WfAdNuGsLcYkMdom4HGMKuSeufnd3p6sU
+	 rX/kcmJi3krhV4tqjdnjFRbqMJiZnJer+c9CWbr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388617AbfE3Eld (ORCPT
+        id S1728995AbfE3DMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfE3DMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:25 -0400
+        id S1728267AbfE3DKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F3A24526;
-        Thu, 30 May 2019 03:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87192244A6;
+        Thu, 30 May 2019 03:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185944;
-        bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+        s=default; t=1559185852;
+        bh=u8DTJcCxboMwaCpnCA+BRD1412Fvgn3zc28Z0ceiVQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQyGkdbSrOtLj8wdzfMifK06uuQhv/kiojTU81fHRwyB6rgrQkDfRTFouprC8VtFs
-         TVA1CBl1NkjB13A0pkGx2cu5LLUEvR5W31VH6btVQOsHL9G4kNxu8xFgk7D1OVZmFZ
-         1WLEQlO5GarxF6GTgdLPyS2IFUjKsC99efg9KaGE=
+        b=P/tcl29THtS/FLl8aHnrcdtmqIkgUx26yxmT1UKU/3Mh1moWZcEyK7a0niGbWlXXM
+         vjoGcGr1aXnhH3G6cziFYzvRNS01Nx7ywmNsfUfg1bycl9bhwUMnZ0KrneAoYcr/ch
+         Xel03zGMtTvS9alw9HHcfPvmdPXIBeTKGmY11NdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 353/405] media: vimc: stream: fix thread state before sleep
-Date:   Wed, 29 May 2019 20:05:51 -0700
-Message-Id: <20190530030558.513663402@linuxfoundation.org>
+Subject: [PATCH 5.1 178/405] s390/qeth: handle error from qeth_update_from_chp_desc()
+Date:   Wed, 29 May 2019 20:02:56 -0700
+Message-Id: <20190530030550.098999881@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,47 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2978a505aaa981b279ef359f74ba93d25098e0a0 ]
+[ Upstream commit a4cdc9baee0740748f16e50cd70c2607510df492 ]
 
-The state TASK_UNINTERRUPTIBLE should be set just before
-schedule_timeout() call, so it knows the sleep mode it should enter.
-There is no point in setting TASK_UNINTERRUPTIBLE at the initialization
-of the thread as schedule_timeout() will set the state back to
-TASK_RUNNING.
+Subsequent code relies on the values that qeth_update_from_chp_desc()
+reads from the CHP descriptor. Rather than dealing with weird errors
+later on, just handle it properly here.
 
-This fixes a warning in __might_sleep() call, as it's expecting the
-task to be in TASK_RUNNING state just before changing the state to
-a sleeping state.
-
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-streamer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/qeth_core_main.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index fcc897fb247bc..392754c18046c 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -120,7 +120,6 @@ static int vimc_streamer_thread(void *data)
- 	int i;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 44bd6f04c145d..8c73a99daff3e 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -1308,7 +1308,7 @@ static void qeth_set_multiple_write_queues(struct qeth_card *card)
+ 	card->qdio.no_out_queues = 4;
+ }
  
- 	set_freezable();
--	set_current_state(TASK_UNINTERRUPTIBLE);
+-static void qeth_update_from_chp_desc(struct qeth_card *card)
++static int qeth_update_from_chp_desc(struct qeth_card *card)
+ {
+ 	struct ccw_device *ccwdev;
+ 	struct channel_path_desc_fmt0 *chp_dsc;
+@@ -1318,7 +1318,7 @@ static void qeth_update_from_chp_desc(struct qeth_card *card)
+ 	ccwdev = card->data.ccwdev;
+ 	chp_dsc = ccw_device_get_chp_desc(ccwdev, 0);
+ 	if (!chp_dsc)
+-		goto out;
++		return -ENOMEM;
  
- 	for (;;) {
- 		try_to_freeze();
-@@ -137,6 +136,7 @@ static int vimc_streamer_thread(void *data)
- 				break;
- 		}
- 		//wait for 60hz
-+		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule_timeout(HZ / 60);
+ 	card->info.func_level = 0x4100 + chp_dsc->desc;
+ 	if (card->info.type == QETH_CARD_TYPE_IQD)
+@@ -1333,6 +1333,7 @@ static void qeth_update_from_chp_desc(struct qeth_card *card)
+ 	kfree(chp_dsc);
+ 	QETH_DBF_TEXT_(SETUP, 2, "nr:%x", card->qdio.no_out_queues);
+ 	QETH_DBF_TEXT_(SETUP, 2, "lvl:%02x", card->info.func_level);
++	return 0;
+ }
+ 
+ static void qeth_init_qdio_info(struct qeth_card *card)
+@@ -4986,7 +4987,9 @@ int qeth_core_hardsetup_card(struct qeth_card *card, bool *carrier_ok)
+ 
+ 	QETH_DBF_TEXT(SETUP, 2, "hrdsetup");
+ 	atomic_set(&card->force_alloc_skb, 0);
+-	qeth_update_from_chp_desc(card);
++	rc = qeth_update_from_chp_desc(card);
++	if (rc)
++		return rc;
+ retry:
+ 	if (retries < 3)
+ 		QETH_DBF_MESSAGE(2, "Retrying to do IDX activates on device %x.\n",
+@@ -5641,7 +5644,9 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
  	}
  
+ 	qeth_setup_card(card);
+-	qeth_update_from_chp_desc(card);
++	rc = qeth_update_from_chp_desc(card);
++	if (rc)
++		goto err_chp_desc;
+ 
+ 	card->dev = qeth_alloc_netdev(card);
+ 	if (!card->dev) {
+@@ -5676,6 +5681,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 	qeth_core_free_discipline(card);
+ err_load:
+ 	free_netdev(card->dev);
++err_chp_desc:
+ err_card:
+ 	qeth_core_free_card(card);
+ err_dev:
 -- 
 2.20.1
 
