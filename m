@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEE2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1949C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A2624B06
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CEF24B04
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187484;
-	bh=cQdBM9Xz0Y7+kjgxoQTPLsP0hRNgeCXRLMGDgBIxynM=;
+	s=default; t=1559187487;
+	bh=ulusacNnrQBiMj7ktZxXDLnB92u6HH8UujHdL43sXdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0/1Rr2Ojzsag/liofR/tgS16tRE0fHTQ59zKANAMdIVPw4dYV7BtCJTtPZCrkxOu
-	 QVwJzHrVTvv66AacTdMw2SqXBK/PynDqyykq96UcPYwaZlqhVX483hOAggpjRTyxI1
-	 pVtdRQlstPlPTx7wiFGHmNw+e5MYkd+5ArPKACUg=
+	b=w8byko2d/g4a60QWQ4fzDq2/U5Sgd6621EMr/i4Z+stKpbibwaa3nIHzA89hnMLKY
+	 l64VlbVFas1tcNsp7/P7pB/pAs2k29qJRgCaw1uj9bYNv/7lpqZApslF7Owze6mcwz
+	 U6GgGn5YYQgc1za1e36dguF0TRGk3cbSJHc6AAEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbfE3DXd (ORCPT
+        id S1732238AbfE3DXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbfE3DR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:26 -0400
+        id S1731059AbfE3DRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7C824667;
-        Thu, 30 May 2019 03:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 408862469F;
+        Thu, 30 May 2019 03:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186246;
-        bh=cQdBM9Xz0Y7+kjgxoQTPLsP0hRNgeCXRLMGDgBIxynM=;
+        s=default; t=1559186240;
+        bh=ulusacNnrQBiMj7ktZxXDLnB92u6HH8UujHdL43sXdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nnVO4nrDf3IgXZVRkYy8GzL9ree0OyDuQtAe5fY4gYBjicAN/tHBevKz79m3Ywnys
-         0p9Pdzo8MBiKy5pcjGd+4sUytqBJ2hgVUAsBox81iVzbhI+h8yxPQz2Oog3RlJczrP
-         cUxM/qISlgWc2vfUjL6arZ5M4A2tdIK1XzkFo+f8=
+        b=J8Jaawx7HMBXjp5y23GDGaTk6+qz0U4YtKU/vvyHlVgB84LZR69DJH+B3gbmGo/vV
+         cHqNUdVM9SKxyonYLKFGMekZDBnY2Goza8taot2MTT1suyVCEtZ6T9eIFRS7hVou6G
+         xrL+XquymWYWbZYUa/EoA/bqFhnI7bpicev8wzzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 162/276] scsi: libsas: Do discovery on empty PHY to update PHY info
-Date:   Wed, 29 May 2019 20:05:20 -0700
-Message-Id: <20190530030535.599743068@linuxfoundation.org>
+Subject: [PATCH 4.19 152/276] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
+Date:   Wed, 29 May 2019 20:05:10 -0700
+Message-Id: <20190530030535.080336468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,53 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8649fc1c5e40e691d589ed825998c36a947491c ]
+[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
 
-When we discover the PHY is empty in sas_rediscover_dev(), the PHY
-information (like negotiated linkrate) is not updated.
+clock_getres() in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-As such, for a user examining sysfs for that PHY, they would see
-incorrect values:
+In particular, posix_get_hrtimer_res() does:
 
-root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
-root@(none)$ echo 0 > enable
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
+    sec = 0;
+    ns = hrtimer_resolution;
 
-So fix this, simply discover the PHY again, even though we know it's empty;
-in the above example, this gives us:
+where 'hrtimer_resolution' depends on whether or not high resolution
+timers are enabled, which is a runtime decision.
 
-root@(none)$ more negotiated_linkrate
-Phy disabled
+The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
+by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
+instead.
 
-We must do this after unregistering the device associated with the PHY
-(in sas_unregister_devs_sas_addr()).
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/include/asm/vdso_datapage.h | 1 +
+ arch/arm64/kernel/asm-offsets.c        | 2 +-
+ arch/arm64/kernel/vdso.c               | 3 +++
+ arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index e9ecc667e3fb4..231eb79efa320 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2040,6 +2040,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
- 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
- 		phy->phy_state = PHY_EMPTY;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
-+		/*
-+		 * Even though the PHY is empty, for convenience we discover
-+		 * the PHY to update the PHY info, like negotiated linkrate.
-+		 */
-+		sas_ex_phy_discover(dev, phy_id);
- 		return res;
- 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
- 		   dev_type_flutter(type, phy->attached_dev_type)) {
+diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
+index 2b9a63771eda8..f89263c8e11af 100644
+--- a/arch/arm64/include/asm/vdso_datapage.h
++++ b/arch/arm64/include/asm/vdso_datapage.h
+@@ -38,6 +38,7 @@ struct vdso_data {
+ 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
+ 	__u32 tz_dsttime;
+ 	__u32 use_syscall;
++	__u32 hrtimer_res;
+ };
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 323aeb5f2fe62..92fba851ce53a 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -99,7 +99,7 @@ int main(void)
+   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
+   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
+   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
+-  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
++  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
+   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
+   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
+   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 2d419006ad433..ec0bb588d7553 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
+ 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
+ 
++	/* Read without the seqlock held by clock_getres() */
++	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
++
+ 	if (!use_syscall) {
+ 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
+ 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
+diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
+index e8f60112818fc..856fee6d35129 100644
+--- a/arch/arm64/kernel/vdso/gettimeofday.S
++++ b/arch/arm64/kernel/vdso/gettimeofday.S
+@@ -308,13 +308,14 @@ ENTRY(__kernel_clock_getres)
+ 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
+ 	b.ne	1f
+ 
+-	ldr	x2, 5f
++	adr	vdso_data, _vdso_data
++	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
+ 	b	2f
+ 1:
+ 	cmp	w0, #CLOCK_REALTIME_COARSE
+ 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
+ 	b.ne	4f
+-	ldr	x2, 6f
++	ldr	x2, 5f
+ 2:
+ 	cbz	x1, 3f
+ 	stp	xzr, x2, [x1]
+@@ -328,8 +329,6 @@ ENTRY(__kernel_clock_getres)
+ 	svc	#0
+ 	ret
+ 5:
+-	.quad	CLOCK_REALTIME_RES
+-6:
+ 	.quad	CLOCK_COARSE_RES
+ 	.cfi_endproc
+ ENDPROC(__kernel_clock_getres)
 -- 
 2.20.1
 
