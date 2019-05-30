@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C39C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE540C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5788E244A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B847C244A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186899;
-	bh=G07YqjmcwnMdmuyaPQLQY6OURpY6A5BM4VT9U3TF1iI=;
+	s=default; t=1559186903;
+	bh=YEgBBnpiZperuwTHiXxXRxhtXbMxQGGyWhuCCgeH9X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNHvdiGjI2WHWcKig4NKXrz2RQIh/no3GRP3CMya2CWzjFtvjOeFObs9C4meKDEgU
-	 8kRJRjx2NqMEQt0a9Q06z0s0KO7+5OpZB5CQ/h7/eeueD48GvWO4TEGcIJlqYbv1J6
-	 3sR9IxfvjRRugHyKAAojzvWfRRMfQiFj2TmL0qe4=
+	b=gUUPDpiFvBOqPZUKgY+Zp3Rfcas1boePg4U0XLyszMnXI0gIugr1dqsRDGiMuNQ8x
+	 7f5E47nYkV2/heMUWLsjY+tHbBSRPTnIAtfFUmkNI1WPEdDXc6NxagDphZPvLi1Vnb
+	 dK1E8EvYbmI5QMUEeRasuEXN6plVkB/BMJvTt/7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388146AbfE3D2S (ORCPT
+        id S2387678AbfE3D2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731229AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:53 -0400
+        id S1732062AbfE3DTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:54 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFDDA248DE;
-        Thu, 30 May 2019 03:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56FFF248DF;
+        Thu, 30 May 2019 03:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186391;
-        bh=G07YqjmcwnMdmuyaPQLQY6OURpY6A5BM4VT9U3TF1iI=;
+        s=default; t=1559186393;
+        bh=YEgBBnpiZperuwTHiXxXRxhtXbMxQGGyWhuCCgeH9X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEuR2zP6pBUjue1dXSCzPEITCDEeud6qbPzLl036ZMkD7kGJSbbHhy/wueqoSXhpi
-         tHiOUIo+MHX8ocUVBK0K97BKmJ91KQoO0Fks/+sbhEx9v1vMPk2yyn5AaYaaEDRqLB
-         /pqsDbABUBDHgvdiHPTZk2kuLOqnDRj/Lwz9k2LE=
+        b=hLxG4MZBTZnaswrITPOtZ9WXqcu83DLkddMSpoqtjaeWAg/MNaEcS7DxwBJbGQ3g6
+         S8MlSBlW8nx0/WRYgwxo7YvaVxovtFXbg/eWXePC9sBoOaQufbAseEMwHt9vh+vtao
+         x2xEber/DYmF8K5GYD496ijBU4jWLkSpohd/ZmK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>,
-        Kay Sievers <kay@vrfy.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Sasha Levin <sashal@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 163/193] kobject: Dont trigger kobject_uevent(KOBJ_REMOVE) twice.
-Date:   Wed, 29 May 2019 20:06:57 -0700
-Message-Id: <20190530030510.715672847@linuxfoundation.org>
+        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 166/193] scsi: qedf: Add missing return in qedf_post_io_req() in the fcport offload check
+Date:   Wed, 29 May 2019 20:07:00 -0700
+Message-Id: <20190530030511.140980100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -63,70 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c03a0fd0b609e2f5c669c2b7f27c8e1928e9196e ]
+[ Upstream commit c5e06ba2f76809ad1492fdad312e81335df46bc5 ]
 
-syzbot is hitting use-after-free bug in uinput module [1]. This is because
-kobject_uevent(KOBJ_REMOVE) is called again due to commit 0f4dafc0563c6c49
-("Kobject: auto-cleanup on final unref") after memory allocation fault
-injection made kobject_uevent(KOBJ_REMOVE) from device_del() from
-input_unregister_device() fail, while uinput_destroy_device() is expecting
-that kobject_uevent(KOBJ_REMOVE) is not called after device_del() from
-input_unregister_device() completed.
+Fixes the following crash as the return was missing from the check if an
+fcport is offloaded. If we hit this code we continue to try to post an
+invalid task which can lead to the crash:
 
-That commit intended to catch cases where nobody even attempted to send
-"remove" uevents. But there is no guarantee that an event will ultimately
-be sent. We are at the point of no return as far as the rest of the kernel
-is concerned; there are no repeats or do-overs.
+[30259.616411] [0000:61:00.3]:[qedf_post_io_req:989]:3: Session not offloaded yet.
+[30259.616413] [0000:61:00.3]:[qedf_upload_connection:1340]:3: Uploading connection port_id=490020.
+[30259.623769] BUG: unable to handle kernel NULL pointer dereference at 0000000000000198
+[30259.631645] IP: [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.638816] PGD 0
+[30259.640841] Oops: 0000 [#1] SMP
+[30259.644098] Modules linked in: fuse xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables devlink ip6table_filter ip6_tables iptable_filter vfat fat ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib ib_ucm ib_umad dm_service_time skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel rpcrdma sunrpc rdma_ucm ib_uverbs lrw gf128mul ib_iser rdma_cm iw_cm ib_cm libiscsi scsi_transport_iscsi qedr(OE) glue_helper ablk_helper cryptd ib_core dm_round_robin joydev pcspkr ipmi_ssif ses enclosure ipmi_si ipmi_devintf ipmi_msghandler mei_me
+[30259.715529]  mei sg hpilo hpwdt shpchp wmi lpc_ich acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic uas usb_storage mgag200 qedf(OE) i2c_algo_bit libfcoe drm_kms_helper libfc syscopyarea sysfillrect scsi_transport_fc qede(OE) sysimgblt fb_sys_fops ptp ttm pps_core drm qed(OE) smartpqi crct10dif_pclmul crct10dif_common crc32c_intel i2c_core scsi_transport_sas scsi_tgt dm_mirror dm_region_hash dm_log dm_mod
+[30259.754237] CPU: 9 PID: 977 Comm: kdmwork-253:7 Kdump: loaded Tainted: G        W  OE  ------------   3.10.0-862.el7.x86_64 #1
+[30259.765664] Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 04/04/2018
+[30259.775000] task: ffff8c801efd0000 ti: ffff8c801efd8000 task.ti: ffff8c801efd8000
+[30259.782505] RIP: 0010:[<ffffffffc035b1ed>]  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.792116] RSP: 0018:ffff8c801efdbbb0  EFLAGS: 00010046
+[30259.797444] RAX: 0000000000000000 RBX: ffffa7f1450948d8 RCX: ffff8c7fe5bc40c8
+[30259.804600] RDX: ffff8c800715b300 RSI: ffffa7f1450948d8 RDI: ffff8c80169c2480
+[30259.811755] RBP: ffff8c801efdbc30 R08: 00000000000000ae R09: ffff8c800a314540
+[30259.818911] R10: ffff8c7fe5bc40c8 R11: ffff8c801efdb8ae R12: 0000000000000000
+[30259.826068] R13: ffff8c800715b300 R14: ffff8c80169c2480 R15: ffff8c8005da28e0
+[30259.833223] FS:  0000000000000000(0000) GS:ffff8c803f840000(0000) knlGS:0000000000000000
+[30259.841338] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[30259.847100] CR2: 0000000000000198 CR3: 000000081242e000 CR4: 00000000007607e0
+[30259.854256] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[30259.861412] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[30259.868568] PKRU: 00000000
+[30259.871278] Call Trace:
+[30259.873737]  [<ffffffffc035c948>] qedf_post_io_req+0x148/0x680 [qedf]
+[30259.880201]  [<ffffffffc035d070>] qedf_queuecommand+0x1f0/0x240 [qedf]
+[30259.886749]  [<ffffffffa329b050>] scsi_dispatch_cmd+0xb0/0x240
+[30259.892600]  [<ffffffffa32a45bc>] scsi_request_fn+0x4cc/0x680
+[30259.898364]  [<ffffffffa3118ad9>] __blk_run_queue+0x39/0x50
+[30259.903954]  [<ffffffffa3114393>] __elv_add_request+0xd3/0x260
+[30259.909805]  [<ffffffffa311baf0>] blk_insert_cloned_request+0xf0/0x1b0
+[30259.916358]  [<ffffffffc010b622>] map_request+0x142/0x220 [dm_mod]
+[30259.922560]  [<ffffffffc010b716>] map_tio_request+0x16/0x40 [dm_mod]
+[30259.928932]  [<ffffffffa2ebb1f5>] kthread_worker_fn+0x85/0x180
+[30259.934782]  [<ffffffffa2ebb170>] ? kthread_stop+0xf0/0xf0
+[30259.940284]  [<ffffffffa2ebae31>] kthread+0xd1/0xe0
+[30259.945176]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
+[30259.951290]  [<ffffffffa351f61d>] ret_from_fork_nospec_begin+0x7/0x21
+[30259.957750]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
+[30259.963860] Code: fe 41 55 49 89 d5 41 54 53 48 89 f3 48 83 ec 58 4c 8b 67 28 4c 8b 4e 18 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 4c 8b 7e 58 <49> 8b 84 24 98 01 00 00 48 8b 00 f6 80 31 01 00 00 10 0f 85 0b
+[30259.983372] RIP  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.990630]  RSP <ffff8c801efdbbb0>
+[30259.994127] CR2: 0000000000000198
 
-Also, it is not clear whether some subsystem depends on that commit.
-If no subsystem depends on that commit, it will be better to remove
-the state_{add,remove}_uevent_sent logic. But we don't want to risk
-a regression (in a patch which will be backported) by trying to remove
-that logic. Therefore, as a first step, let's avoid the use-after-free bug
-by making sure that kobject_uevent(KOBJ_REMOVE) won't be triggered twice.
-
-[1] https://syzkaller.appspot.com/bug?id=8b17c134fe938bbddd75a45afaa9e68af43a362d
-
-Reported-by: syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>
-Analyzed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Fixes: 0f4dafc0563c6c49 ("Kobject: auto-cleanup on final unref")
-Cc: Kay Sievers <kay@vrfy.org>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kobject_uevent.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/scsi/qedf/qedf_io.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-index f237a09a58627..3916cf0e2f0ae 100644
---- a/lib/kobject_uevent.c
-+++ b/lib/kobject_uevent.c
-@@ -340,6 +340,13 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
- 	struct uevent_sock *ue_sk;
- #endif
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index ded386036c277..f3e9df8dcd8f1 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -883,6 +883,7 @@ int qedf_post_io_req(struct qedf_rport *fcport, struct qedf_ioreq *io_req)
+ 	if (!test_bit(QEDF_RPORT_SESSION_READY, &fcport->flags)) {
+ 		QEDF_ERR(&(qedf->dbg_ctx), "Session not offloaded yet.\n");
+ 		kref_put(&io_req->refcount, qedf_release_cmd);
++		return -EINVAL;
+ 	}
  
-+	/*
-+	 * Mark "remove" event done regardless of result, for some subsystems
-+	 * do not want to re-trigger "remove" event via automatic cleanup.
-+	 */
-+	if (action == KOBJ_REMOVE)
-+		kobj->state_remove_uevent_sent = 1;
-+
- 	pr_debug("kobject: '%s' (%p): %s\n",
- 		 kobject_name(kobj), kobj, __func__);
- 
-@@ -441,10 +448,6 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
- 		kobj->state_add_uevent_sent = 1;
- 		break;
- 
--	case KOBJ_REMOVE:
--		kobj->state_remove_uevent_sent = 1;
--		break;
--
- 	case KOBJ_UNBIND:
- 		zap_modalias_env(env);
- 		break;
+ 	/* Obtain free SQE */
 -- 
 2.20.1
 
