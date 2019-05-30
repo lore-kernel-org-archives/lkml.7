@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2669C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105EDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E1622DA7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC0B248F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190476;
-	bh=Kk169pAbbcX7z6Btstk81E+FvhtTvb7zc2UpRbJBs74=;
+	s=default; t=1559190482;
+	bh=4JtowR7rR6MkcUqA8TLKs76CuClBze5Yn3jNnZd+7hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LPzfT5STceY423EQSAXzKm8ezBrnH/4hKd4mD+SOgSfSw+DhemDnLETd5H89KHs31
-	 ZdkHwez2wtMTb1d0/+AJWRmRzz4jl5T6p/MsVMX4h+ULWXHfzfCnv4Roy9fOiWBvI5
-	 7vXNwpAHmMu5h7qCYS5eIe6iQrlppplVkDet0LCs=
+	b=qtUUIi0AYiJncE7cRmk9SLyMyixTj24LHwHuMYbev3CtbVbzYzyqjWHq3MUkE3MWq
+	 F3tPgDqYNu7vqZLHCyqvHzHb8x0Vqa+Bro6dDbhqsVkuYGGZyWqjFA3ILsFGJO/TuY
+	 fVMPgqFUhCVLR/XN5qnESYxDznGiLsmlOq1IdnGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbfE3E1z (ORCPT
+        id S1731899AbfE3E2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbfE3DOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:18 -0400
+        id S1729799AbfE3DOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE2724569;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DEDE24561;
         Thu, 30 May 2019 03:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186058;
-        bh=Kk169pAbbcX7z6Btstk81E+FvhtTvb7zc2UpRbJBs74=;
+        s=default; t=1559186057;
+        bh=4JtowR7rR6MkcUqA8TLKs76CuClBze5Yn3jNnZd+7hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mg49cbPKrk5fN66IT79Sf7/Fzm8rWNcxpaTtfOVMSUk6eX/uI/4Sl9bNQnlDyZ1yh
-         5MwnkEb9gOE6ISVN+Xs0ibAhFyDEsjHE2G9IZnkemi+/tzzfwKOVCXNkiyXjc5dpV+
-         ChwuMtq9hDy3sfLaehLrYynQclXXOQ2ojcZqR4ik=
+        b=JtRefm1uz2PXZCk6m/zlFmjNI9eezGUkoNPHjAtmQaUcRG/swCvfr34B4HdOr4/eN
+         1ATuwfJej1AVQ2wPR3sTIqUnBdtS0boYX84UTRrs5XTKWy/zvppxleAljn1HqgooFn
+         IOps+cy/oUf4OrXiPjwYMPbXGtGH8BPn+D73gIPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shenghui Wang <shhuiw@foxmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 116/346] bcache: avoid potential memleak of list of journal_replay(s) in the CACHE_SYNC branch of run_cache_set
-Date:   Wed, 29 May 2019 20:03:09 -0700
-Message-Id: <20190530030546.959592924@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 114/346] nvme-tcp: fix a NULL deref when an admin connect times out
+Date:   Wed, 29 May 2019 20:03:07 -0700
+Message-Id: <20190530030546.868214849@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,58 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 95f18c9d1310730d075499a75aaf13bcd60405a7 ]
+[ Upstream commit 7a42589654ae79e1177f0d74306a02d6cef7bddf ]
 
-In the CACHE_SYNC branch of run_cache_set(), LIST_HEAD(journal) is used
-to collect journal_replay(s) and filled by bch_journal_read().
+If we timeout the admin startup sequence we might not yet have
+an I/O tagset allocated which causes the teardown sequence to crash.
+Make nvme_tcp_teardown_io_queues safe by not iterating inflight tags
+if the tagset wasn't allocated.
 
-If all goes well, bch_journal_replay() will release the list of
-jounal_replay(s) at the end of the branch.
-
-If something goes wrong, code flow will jump to the label "err:" and leave
-the list unreleased.
-
-This patch will release the list of journal_replay(s) in the case of
-error detected.
-
-v1 -> v2:
-* Move the release code to the location after label 'err:' to
-  simply the change.
-
-Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 39d57757467b ("nvme-tcp: fix timeout handler")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvme/host/tcp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index ee36e6b3bcad3..acf8e2e3890c7 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1782,6 +1782,8 @@ static void run_cache_set(struct cache_set *c)
- 	struct cache *ca;
- 	struct closure cl;
- 	unsigned int i;
-+	LIST_HEAD(journal);
-+	struct journal_replay *l;
- 
- 	closure_init_stack(&cl);
- 
-@@ -1939,6 +1941,12 @@ static void run_cache_set(struct cache_set *c)
- 	set_bit(CACHE_SET_RUNNING, &c->flags);
- 	return;
- err:
-+	while (!list_empty(&journal)) {
-+		l = list_first_entry(&journal, struct journal_replay, list);
-+		list_del(&l->list);
-+		kfree(l);
-+	}
-+
- 	closure_sync(&cl);
- 	/* XXX: test this, it's broken */
- 	bch_cache_set_error(c, "%s", err);
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 5f0a004252422..e71b0058c57bd 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1686,7 +1686,9 @@ static void nvme_tcp_teardown_admin_queue(struct nvme_ctrl *ctrl,
+ {
+ 	blk_mq_quiesce_queue(ctrl->admin_q);
+ 	nvme_tcp_stop_queue(ctrl, 0);
+-	blk_mq_tagset_busy_iter(ctrl->admin_tagset, nvme_cancel_request, ctrl);
++	if (ctrl->admin_tagset)
++		blk_mq_tagset_busy_iter(ctrl->admin_tagset,
++			nvme_cancel_request, ctrl);
+ 	blk_mq_unquiesce_queue(ctrl->admin_q);
+ 	nvme_tcp_destroy_admin_queue(ctrl, remove);
+ }
+@@ -1698,7 +1700,9 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
+ 		return;
+ 	nvme_stop_queues(ctrl);
+ 	nvme_tcp_stop_io_queues(ctrl);
+-	blk_mq_tagset_busy_iter(ctrl->tagset, nvme_cancel_request, ctrl);
++	if (ctrl->tagset)
++		blk_mq_tagset_busy_iter(ctrl->tagset,
++			nvme_cancel_request, ctrl);
+ 	if (remove)
+ 		nvme_start_queues(ctrl);
+ 	nvme_tcp_destroy_io_queues(ctrl, remove);
 -- 
 2.20.1
 
