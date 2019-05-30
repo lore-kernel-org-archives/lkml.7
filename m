@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986B1C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEECEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC8924F09
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9193250AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189256;
-	bh=9mN74IS5l551M+K45Wpi4YByjMfU5iywdiBE6Io9gqo=;
+	s=default; t=1559189261;
+	bh=TidmviLasrXwEKeg9q8yiiOaA0/c+twSVlsSQWk3Ed4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z91XpYtb7oOPf6B7wbCQPO/pqFoHY2RLRBxGNQFC7bYBKBQwwpHXtZ1AdcsrCmNWF
-	 ZN/0Bw36T+EXJxooua04BSeqfXyl04FBGZh9jjRY6Q4c7NNDR6XsQk5z1zlnEbxby/
-	 TC2ccxJ9lL3hIRlM/RhZF/3lM14hyiOl3G1RG0Cg=
+	b=HAIXMyWPv33C82Ui7OS2B6xObbf/jqsebJLpasRs6g4aKFBqaDOQyr8sXP0jJMQMD
+	 YZRj7L+wmohIjdfXGIc9V4Yz3cfoMVhxa0/5veb/tQQKmMVnuFocf3eeT/Zbvvk69z
+	 e03xLkLZzs7tYzrQOyHbfQRmj30DJDBusLFPoSTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfE3EHf (ORCPT
+        id S1727056AbfE3EHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729850AbfE3DR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:28 -0400
+        id S1730218AbfE3DR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D0924529;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9BE23B30;
         Thu, 30 May 2019 03:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186247;
-        bh=9mN74IS5l551M+K45Wpi4YByjMfU5iywdiBE6Io9gqo=;
+        bh=TidmviLasrXwEKeg9q8yiiOaA0/c+twSVlsSQWk3Ed4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKwPoQ5Yw+WxiQwmTzsk4wxAqUFbrWR1R7XLPyKd6qIL8oo6QLqe9NIwkd+LEBa2U
-         Ww8mVGrF9inH4pV0SIBTL3GIvFoVOVMNLFsAZ0FMVRObhLHPZWyJYz9HbLcc2/oxgI
-         nf6rSAEUxvuJtS9dgGCrtjfWGUZW12bqPdYDCCo8=
+        b=u/wNfpMylY4vPofAH0Cy53/IuaZHDhs9Ks3bz5WKOaWylSXPwUD6WAjogGl6RvgcZ
+         Yj9RcOQM1fWKM6Sy5Dz/kH4XCdaa6h14eVHdcf0dkMVucfF//LcW6yjck2xtAh2LJF
+         I3A3uLrfrn1x1jM526FJ/HfNg39T0K6B4p3oitvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 129/276] iio: adc: stm32-dfsdm: fix unmet direct dependencies detected
-Date:   Wed, 29 May 2019 20:04:47 -0700
-Message-Id: <20190530030533.855185574@linuxfoundation.org>
+Subject: [PATCH 4.19 164/276] mmc_spi: add a status check for spi_sync_locked
+Date:   Wed, 29 May 2019 20:05:22 -0700
+Message-Id: <20190530030535.701092438@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,38 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba7ecfe43d6bf12e2aa76705c45f7d187ae3d7c0 ]
+[ Upstream commit 611025983b7976df0183390a63a2166411d177f1 ]
 
-This fixes unmet direct dependencies seen when CONFIG_STM32_DFSDM_ADC
-is selected:
+In case spi_sync_locked fails, the fix reports the error and
+returns the error code upstream.
 
-WARNING: unmet direct dependencies detected for IIO_BUFFER_HW_CONSUMER
-  Depends on [n]: IIO [=y] && IIO_BUFFER [=n]
-  Selected by [y]:
-  - STM32_DFSDM_ADC [=y] && IIO [=y] && (ARCH_STM32 [=y] && OF [=y] ||
-    COMPILE_TEST [=n])
-
-Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/mmc_spi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 4a754921fb6f9..9421c1ec86f73 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -696,6 +696,7 @@ config STM32_DFSDM_ADC
- 	depends on (ARCH_STM32 && OF) || COMPILE_TEST
- 	select STM32_DFSDM_CORE
- 	select REGMAP_MMIO
-+	select IIO_BUFFER
- 	select IIO_BUFFER_HW_CONSUMER
- 	help
- 	  Select this option to support ADCSigma delta modulator for
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index 67f6bd24a9d0c..ea254d00541f1 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -819,6 +819,10 @@ mmc_spi_readblock(struct mmc_spi_host *host, struct spi_transfer *t,
+ 	}
+ 
+ 	status = spi_sync_locked(spi, &host->m);
++	if (status < 0) {
++		dev_dbg(&spi->dev, "read error %d\n", status);
++		return status;
++	}
+ 
+ 	if (host->dma_dev) {
+ 		dma_sync_single_for_cpu(host->dma_dev,
 -- 
 2.20.1
 
