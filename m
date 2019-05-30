@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541A2C46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C352AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6CB2455A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996D524561
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186051;
-	bh=3QIZPcRalKcKDFHU14CZdpeeSwM0JVMBt9IhR65Fwlw=;
+	s=default; t=1559186056;
+	bh=9kh/slr66QYpYJ/Ssr1OGdcECW0mfqhsC7QsEwBt1p0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l52GNTD4QjSh53/ioZYjaKcvFTxkJJEXW8GQmTskfspV0grHeDY3Y/e0azHqIh4xM
-	 fyF7xqE4xeH0+BHqKjdiZWBqH7KLHwqx2Kt/v/5/JZskrPtNyQ2itwUHNjQ9lNYLMR
-	 hNsyDsANUBNZcMbzbcCMnKuN7YviD8hO7zYrpKMs=
+	b=KL8DDMHCiObRH+wCX0J4VleBo2paOVmMqwLy+Zmf0doZL/VfOLIUNjZV5oscoOcDs
+	 /ZJrfMIRggP0a66zW9tP4jQOH/X9+QuvtejrkWu7X8j6EAJV0X/ZVuP8SO3HRb4Wsu
+	 SiCO7xQlOth3REH3si9yuK1hwIJR7il5VJodkUwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfE3DOK (ORCPT
+        id S1729789AbfE3DOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52728 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728726AbfE3DLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:54 -0400
+        id S1728145AbfE3DL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC6C24481;
-        Thu, 30 May 2019 03:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 507CD244D8;
+        Thu, 30 May 2019 03:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185913;
-        bh=3QIZPcRalKcKDFHU14CZdpeeSwM0JVMBt9IhR65Fwlw=;
+        s=default; t=1559185915;
+        bh=9kh/slr66QYpYJ/Ssr1OGdcECW0mfqhsC7QsEwBt1p0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RL3foP7m9pl/UB9Fdzbj1j4c8Enbe1erSutteW59eX1W/L95J/TRCmLaePBtEOvch
-         SaDystChBH8hcYBetOM4ZthHB+pP4k69mlZujsaQJqMtgWPWk9zh4Yo0cD19m6b7Tb
-         8d6my6qSwk7KsKV2MRFDWyK1A6KqFIrqg3DjSFuc=
+        b=x7H5aeTfhMz97IsTPL/gaeDOsZkNWHlf+ZIoFC82F+JJ+OeNamrTYemWT1v+O+gSs
+         +B89gX3t2EBcc2ezRQSMrUVn5LK7PLJ4XSkyGVYKZb10sypY2OBng6oGa3I1bJuvkZ
+         VIPsamLwOJXPnf4PjL8p3FW+hddxVUzZWeFeBJ0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 294/405] drm: rcar-du: lvds: Fix post-DLL divider calculation
-Date:   Wed, 29 May 2019 20:04:52 -0700
-Message-Id: <20190530030555.715789849@linuxfoundation.org>
+Subject: [PATCH 5.1 297/405] scsi: qedf: Add missing return in qedf_post_io_req() in the fcport offload check
+Date:   Wed, 29 May 2019 20:04:55 -0700
+Message-Id: <20190530030555.867167887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,45 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 167e535438ecc73d299340bb1269616432020dfb ]
+[ Upstream commit c5e06ba2f76809ad1492fdad312e81335df46bc5 ]
 
-The PLL parameters are computed by looping over the range of acceptable
-M, N and E values, and selecting the combination that produces the
-output frequency closest to the target. The internal frequency
-constraints are taken into account by restricting the tested values for
-the PLL parameters, reducing the search space. The target frequency,
-however, is only taken into account when computing the post-PLL divider,
-which can result in a 0 value for the divider when the PLL output
-frequency being tested is lower than half of the target frequency.
-Subsequent loops will produce a better set of PLL parameters, but for
-some of the iterations this can result in a division by 0.
+Fixes the following crash as the return was missing from the check if an
+fcport is offloaded. If we hit this code we continue to try to post an
+invalid task which can lead to the crash:
 
-Fix it by clamping the divider value. We could instead restrict the E
-values being tested in the inner loop, but that would require additional
-calculation that would likely be less efficient as the E parameter can
-only take three different values.
+[30259.616411] [0000:61:00.3]:[qedf_post_io_req:989]:3: Session not offloaded yet.
+[30259.616413] [0000:61:00.3]:[qedf_upload_connection:1340]:3: Uploading connection port_id=490020.
+[30259.623769] BUG: unable to handle kernel NULL pointer dereference at 0000000000000198
+[30259.631645] IP: [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.638816] PGD 0
+[30259.640841] Oops: 0000 [#1] SMP
+[30259.644098] Modules linked in: fuse xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables devlink ip6table_filter ip6_tables iptable_filter vfat fat ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib ib_ucm ib_umad dm_service_time skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel rpcrdma sunrpc rdma_ucm ib_uverbs lrw gf128mul ib_iser rdma_cm iw_cm ib_cm libiscsi scsi_transport_iscsi qedr(OE) glue_helper ablk_helper cryptd ib_core dm_round_robin joydev pcspkr ipmi_ssif ses enclosure ipmi_si ipmi_devintf ipmi_msghandler mei_me
+[30259.715529]  mei sg hpilo hpwdt shpchp wmi lpc_ich acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic uas usb_storage mgag200 qedf(OE) i2c_algo_bit libfcoe drm_kms_helper libfc syscopyarea sysfillrect scsi_transport_fc qede(OE) sysimgblt fb_sys_fops ptp ttm pps_core drm qed(OE) smartpqi crct10dif_pclmul crct10dif_common crc32c_intel i2c_core scsi_transport_sas scsi_tgt dm_mirror dm_region_hash dm_log dm_mod
+[30259.754237] CPU: 9 PID: 977 Comm: kdmwork-253:7 Kdump: loaded Tainted: G        W  OE  ------------   3.10.0-862.el7.x86_64 #1
+[30259.765664] Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 04/04/2018
+[30259.775000] task: ffff8c801efd0000 ti: ffff8c801efd8000 task.ti: ffff8c801efd8000
+[30259.782505] RIP: 0010:[<ffffffffc035b1ed>]  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.792116] RSP: 0018:ffff8c801efdbbb0  EFLAGS: 00010046
+[30259.797444] RAX: 0000000000000000 RBX: ffffa7f1450948d8 RCX: ffff8c7fe5bc40c8
+[30259.804600] RDX: ffff8c800715b300 RSI: ffffa7f1450948d8 RDI: ffff8c80169c2480
+[30259.811755] RBP: ffff8c801efdbc30 R08: 00000000000000ae R09: ffff8c800a314540
+[30259.818911] R10: ffff8c7fe5bc40c8 R11: ffff8c801efdb8ae R12: 0000000000000000
+[30259.826068] R13: ffff8c800715b300 R14: ffff8c80169c2480 R15: ffff8c8005da28e0
+[30259.833223] FS:  0000000000000000(0000) GS:ffff8c803f840000(0000) knlGS:0000000000000000
+[30259.841338] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[30259.847100] CR2: 0000000000000198 CR3: 000000081242e000 CR4: 00000000007607e0
+[30259.854256] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[30259.861412] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[30259.868568] PKRU: 00000000
+[30259.871278] Call Trace:
+[30259.873737]  [<ffffffffc035c948>] qedf_post_io_req+0x148/0x680 [qedf]
+[30259.880201]  [<ffffffffc035d070>] qedf_queuecommand+0x1f0/0x240 [qedf]
+[30259.886749]  [<ffffffffa329b050>] scsi_dispatch_cmd+0xb0/0x240
+[30259.892600]  [<ffffffffa32a45bc>] scsi_request_fn+0x4cc/0x680
+[30259.898364]  [<ffffffffa3118ad9>] __blk_run_queue+0x39/0x50
+[30259.903954]  [<ffffffffa3114393>] __elv_add_request+0xd3/0x260
+[30259.909805]  [<ffffffffa311baf0>] blk_insert_cloned_request+0xf0/0x1b0
+[30259.916358]  [<ffffffffc010b622>] map_request+0x142/0x220 [dm_mod]
+[30259.922560]  [<ffffffffc010b716>] map_tio_request+0x16/0x40 [dm_mod]
+[30259.928932]  [<ffffffffa2ebb1f5>] kthread_worker_fn+0x85/0x180
+[30259.934782]  [<ffffffffa2ebb170>] ? kthread_stop+0xf0/0xf0
+[30259.940284]  [<ffffffffa2ebae31>] kthread+0xd1/0xe0
+[30259.945176]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
+[30259.951290]  [<ffffffffa351f61d>] ret_from_fork_nospec_begin+0x7/0x21
+[30259.957750]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
+[30259.963860] Code: fe 41 55 49 89 d5 41 54 53 48 89 f3 48 83 ec 58 4c 8b 67 28 4c 8b 4e 18 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 4c 8b 7e 58 <49> 8b 84 24 98 01 00 00 48 8b 00 f6 80 31 01 00 00 10 0f 85 0b
+[30259.983372] RIP  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
+[30259.990630]  RSP <ffff8c801efdbbb0>
+[30259.994127] CR2: 0000000000000198
 
-Fixes: c25c01361199 ("drm: rcar-du: lvds: D3/E3 support")
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qedf/qedf_io.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index f0314790333ba..033f44e46daf4 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -283,7 +283,7 @@ static void rcar_lvds_d3_e3_pll_calc(struct rcar_lvds *lvds, struct clk *clk,
- 				 * divider.
- 				 */
- 				fout = fvco / (1 << e) / div7;
--				div = DIV_ROUND_CLOSEST(fout, target);
-+				div = max(1UL, DIV_ROUND_CLOSEST(fout, target));
- 				diff = abs(fout / div - target);
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index 6ca583bdde23c..29b51c4667217 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -902,6 +902,7 @@ int qedf_post_io_req(struct qedf_rport *fcport, struct qedf_ioreq *io_req)
+ 	if (!test_bit(QEDF_RPORT_SESSION_READY, &fcport->flags)) {
+ 		QEDF_ERR(&(qedf->dbg_ctx), "Session not offloaded yet.\n");
+ 		kref_put(&io_req->refcount, qedf_release_cmd);
++		return -EINVAL;
+ 	}
  
- 				if (diff < pll->diff) {
+ 	/* Obtain free SQE */
 -- 
 2.20.1
 
