@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2729FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8E2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC2C24494
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9722447A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185795;
-	bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
+	s=default; t=1559185798;
+	bh=TowusqZkdbphibd65Bc4guMeYN9nvPInafHrQJQPyqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYrUy/k1kcJNoRzLvzfZtPvqTb3SAwOxBGJsQVL/US/jiGcqZ+XFZhRXiWbxQGrV/
-	 2jG3hy2UCLeJn+CnSHIYJVigrHIDtnyoNjR/6zI8N39BovEg7cixlhNYdVDoLIlDLf
-	 AU6MB+/tHD5mJZwhz4uFMECF6bJLYKA1vwJmRTu8=
+	b=iXxzg3NkUiK67QkEi1EOl1aexmJKO7fXM9Gxyro/Ou4wJaeO4LSKDFB8CWYpObR6h
+	 aIFwO91u8hXOj+e7eeTXBakqVdxsLUg/SOvxJSvw6N5mpUw+HTRThoDZesWLHMEckF
+	 d85RHmvER/YrIQzj+Tom6XQOUEkNsIzXbaoqcHa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfE3DJx (ORCPT
+        id S1727865AbfE3DJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfE3DJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:40 -0400
+        id S1727699AbfE3DJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3522447B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 918B124499;
         Thu, 30 May 2019 03:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185780;
-        bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
+        bh=TowusqZkdbphibd65Bc4guMeYN9nvPInafHrQJQPyqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8TXreuDLI04VU+nAJZtxhZR4tq55dM+n1jvrv+6ctLbw9QPL4Jd0kCA5cpqXcN98
-         4EkSsGCwAANv4rmmxUsRojdFA37DwobrsjGaAbJFM+tX6PdM0+XcAri/465RBkV+tA
-         63a1BcTrWM5V0B5TtaqantKrHVJPA66KohbuB5O0=
+        b=L4dgMseXSdtfiQLJc1/BQPneQ37gvnbHdjE5RiR/HGZsmr4u0H+lkKiqse5WWst09
+         9kY+038e6f4SdKTaDgULXAaWvEPnMVRRlA2On1tWF2k87Gz7DAiUjSmggLwaXHeTUi
+         PSVumnJwvL7XHMCuQSGJoB3FSLY1L6jB5nM/zD6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 004/405] KVM: x86: fix return value for reserved EFER
-Date:   Wed, 29 May 2019 20:00:02 -0700
-Message-Id: <20190530030540.572663263@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
+        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
+        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
+        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 5.1 040/405] batman-adv: mcast: fix multicast tt/tvlv worker locking
+Date:   Wed, 29 May 2019 20:00:38 -0700
+Message-Id: <20190530030542.806103260@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,36 +65,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
+commit a3c7cd0cdf1107f891aff847ad481e34df727055 upstream.
 
-Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
-host-initiated writes", 2019-04-02) introduced a "return false" in a
-function returning int, and anyway set_efer has a "nonzero on error"
-conventon so it should be returning 1.
+Syzbot has reported some issues with the locking assumptions made for
+the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
+batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
+While hard/not reproduceable for us so far it seems that the
+delayed_work_pending() we use might not be quite safe from reordering.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Therefore this patch adds an explicit, new spinlock to protect the
+update of the mla_list and flags in bat_priv and then removes the
+WARN_ON(delayed_work_pending()).
+
+Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
+Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
+Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
+Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/main.c      |    1 +
+ net/batman-adv/multicast.c |   11 +++--------
+ net/batman-adv/types.h     |    5 +++++
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1288,7 +1288,7 @@ static int set_efer(struct kvm_vcpu *vcp
- 	u64 efer = msr_info->data;
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -161,6 +161,7 @@ int batadv_mesh_init(struct net_device *
+ 	spin_lock_init(&bat_priv->tt.commit_lock);
+ 	spin_lock_init(&bat_priv->gw.list_lock);
+ #ifdef CONFIG_BATMAN_ADV_MCAST
++	spin_lock_init(&bat_priv->mcast.mla_lock);
+ 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
+ #endif
+ 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
+--- a/net/batman-adv/multicast.c
++++ b/net/batman-adv/multicast.c
+@@ -325,8 +325,6 @@ static void batadv_mcast_mla_list_free(s
+  * translation table except the ones listed in the given mcast_list.
+  *
+  * If mcast_list is NULL then all are retracted.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+ 					struct hlist_head *mcast_list)
+@@ -334,8 +332,6 @@ static void batadv_mcast_mla_tt_retract(
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
- 	if (efer & efer_reserved_bits)
--		return false;
-+		return 1;
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
+ 				  list) {
+ 		if (mcast_list &&
+@@ -359,8 +355,6 @@ static void batadv_mcast_mla_tt_retract(
+  *
+  * Adds multicast listener announcements from the given mcast_list to the
+  * translation table if they have not been added yet.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
+ 				    struct hlist_head *mcast_list)
+@@ -368,8 +362,6 @@ static void batadv_mcast_mla_tt_add(stru
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
- 	if (!msr_info->host_initiated) {
- 		if (!__kvm_valid_efer(vcpu, efer))
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	if (!mcast_list)
+ 		return;
+ 
+@@ -658,7 +650,10 @@ static void batadv_mcast_mla_update(stru
+ 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
+ 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
+ 
++	spin_lock(&bat_priv->mcast.mla_lock);
+ 	__batadv_mcast_mla_update(bat_priv);
++	spin_unlock(&bat_priv->mcast.mla_lock);
++
+ 	batadv_mcast_start_timer(bat_priv);
+ }
+ 
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1224,6 +1224,11 @@ struct batadv_priv_mcast {
+ 	unsigned char bridged:1;
+ 
+ 	/**
++	 * @mla_lock: a lock protecting mla_list and mla_flags
++	 */
++	spinlock_t mla_lock;
++
++	/**
+ 	 * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP
+ 	 *  traffic
+ 	 */
 
 
