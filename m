@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F40AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6076DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE09249B2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33740249B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KRVPW7kB"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Dib+/ZLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfE3IUx (ORCPT
+        id S1727178AbfE3IVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:20:53 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59655 "EHLO
+        Thu, 30 May 2019 04:21:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38261 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3IUw (ORCPT
+        with ESMTP id S1725440AbfE3IVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:20:52 -0400
+        Thu, 30 May 2019 04:21:33 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8KY6F2905807
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8LGvk2906072
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:20:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8KY6F2905807
+        Thu, 30 May 2019 01:21:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8LGvk2906072
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559204435;
-        bh=BTchVz5BKNKzaxqUNw0bC9ENGpTpnX6HhxPlvMLpto8=;
+        s=2019051801; t=1559204477;
+        bh=BOpmNGG3C/si5Tq4iw4XVp70GH+uonk7eHF/SzEXYvw=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KRVPW7kBnqTQY4UUcvdqdt2twsfjnpNJa/MIszyl6ASc/R0/01s7m458ezeyuj9NV
-         Djbf1Z1Ff16VmdT/NSinEyGNPodzC4vRRYdWrzexfUHqHtgNFAlLRaWFHhOX06oRwD
-         DT8EvllFohRZzQv2lmbLVddDennLiIlmAzVlbgGZHnUL5l5OLiojJPSICJL1TAhfhk
-         FyeVuvFp3ZUPR9wgJUPys4Ok+HdQiu9yhe+KmWVMCCyrH+/l2LNJARH5jqqQxizFn6
-         +idI6oryE10hpD88mONzkn2jlvNrtb3Q1C4B6gWo/eft2ST3SHac5X/cqPKCiuhRtj
-         S5wAuJSNYWIkQ==
+        b=Dib+/ZLteRZOBxVN71KOx+GEEquh1nbXPQQkthrD9vcI81xJ0Hbi9NF275BDzUirR
+         lWkSqBTnSOZQhQocn+AzwwnYABmPAotjQuEJ/HXHLiLGJHDbVJ/dX2mwJkpSqJQktW
+         8TzrUrDhDc/IfTz/eSA8B5aADIIylw2POHiUna9hrNPbaRu1VzcLgJ+gQMdOnUI9XJ
+         qsgVRRP1kGc7EdSymszbLw7u0T8Y381ph0iDU6kjIIMObh2/wOwd+/BomQ5wn/y9q9
+         VpxJEAjK/9ntQynZ5py+yRgvoLXtwrKMGswDRuyMeQGUxGRt3tun8z7yuiS8DSABDW
+         OoKOgABaR2kiA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8KYlV2905804;
-        Thu, 30 May 2019 01:20:34 -0700
-Date:   Thu, 30 May 2019 01:20:34 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8LGWI2906069;
+        Thu, 30 May 2019 01:21:16 -0700
+Date:   Thu, 30 May 2019 01:21:16 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-3cd3216dbb421244b96b992f193e778a3baa2220@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
-        adrian.hunter@intel.com, hpa@zytor.com, tglx@linutronix.de,
-        jolsa@redhat.com
-Reply-To: jolsa@redhat.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          adrian.hunter@intel.com, acme@redhat.com, mingo@kernel.org
-In-Reply-To: <20190412113830.4126-6-adrian.hunter@intel.com>
-References: <20190412113830.4126-6-adrian.hunter@intel.com>
+Message-ID: <tip-c7b4f15ff79b539fed4c382e52e988548081bc9d@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, acme@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, mingo@kernel.org, adrian.hunter@intel.com,
+        hpa@zytor.com
+Reply-To: tglx@linutronix.de, jolsa@redhat.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          adrian.hunter@intel.com, hpa@zytor.com
+In-Reply-To: <20190412113830.4126-8-adrian.hunter@intel.com>
+References: <20190412113830.4126-8-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf scripts python: export-to-postgresql.py: Add
- support for pyside2
-Git-Commit-ID: 3cd3216dbb421244b96b992f193e778a3baa2220
+Subject: [tip:perf/core] perf intel-pt: Improve sync_switch by processing
+ PERF_RECORD_SWITCH* in events
+Git-Commit-ID: c7b4f15ff79b539fed4c382e52e988548081bc9d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,108 +70,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3cd3216dbb421244b96b992f193e778a3baa2220
-Gitweb:     https://git.kernel.org/tip/3cd3216dbb421244b96b992f193e778a3baa2220
+Commit-ID:  c7b4f15ff79b539fed4c382e52e988548081bc9d
+Gitweb:     https://git.kernel.org/tip/c7b4f15ff79b539fed4c382e52e988548081bc9d
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Fri, 12 Apr 2019 14:38:27 +0300
+AuthorDate: Fri, 12 Apr 2019 14:38:29 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:45 -0300
 
-perf scripts python: export-to-postgresql.py: Add support for pyside2
+perf intel-pt: Improve sync_switch by processing PERF_RECORD_SWITCH* in events
 
-pyside2 is the future for pyside support.
+sync_switch is a facility to synchronize decoding more closely with the
+point in the kernel when the context actually switched.
 
-Note pyside use Qt4 whereas pyside2 uses Qt5.
+Improve it by processing "context switch in" events.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190412113830.4126-6-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190412113830.4126-8-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-postgresql.py | 43 ++++++++++++++++++-----
- 1 file changed, 34 insertions(+), 9 deletions(-)
+ tools/perf/util/intel-pt.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index c3eae1d77d36..b2f481b0d28d 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -27,18 +27,31 @@ import datetime
- #
- # fedora:
- #
--#	$ sudo yum install postgresql postgresql-server python-pyside qt-postgresql
-+#	$ sudo yum install postgresql postgresql-server qt-postgresql
- #	$ sudo su - postgres -c initdb
- #	$ sudo service postgresql start
- #	$ sudo su - postgres
--#	$ createuser <your user id here>
-+#	$ createuser -s <your user id here>    # Older versions may not support -s, in which case answer the prompt below:
- #	Shall the new role be a superuser? (y/n) y
-+#	$ sudo yum install python-pyside
-+#
-+#	Alternately, to use Python3 and/or pyside 2, one of the following:
-+#		$ sudo yum install python3-pyside
-+#		$ pip install --user PySide2
-+#		$ pip3 install --user PySide2
- #
- # ubuntu:
- #
--#	$ sudo apt-get install postgresql python-pyside.qtsql libqt4-sql-psql
-+#	$ sudo apt-get install postgresql
- #	$ sudo su - postgres
- #	$ createuser -s <your user id here>
-+#	$ sudo apt-get install python-pyside.qtsql libqt4-sql-psql
-+#
-+#	Alternately, to use Python3 and/or pyside 2, one of the following:
-+#
-+#		$ sudo apt-get install python3-pyside.qtsql libqt4-sql-psql
-+#		$ sudo apt-get install python-pyside2.qtsql libqt5sql5-psql
-+#		$ sudo apt-get install python3-pyside2.qtsql libqt5sql5-psql
- #
- # An example of using this script with Intel PT:
- #
-@@ -199,7 +212,16 @@ import datetime
- #                   print "{0:>6}  {1:>10}  {2:>9}  {3:<30}  {4:>6}  {5:<30}".format(query.value(0), query.value(1), query.value(2), query.value(3), query.value(4), query.value(5))
- #                   call_path_id = query.value(6)
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 03b1da6d1da4..6aaba1146fc8 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -1914,6 +1914,44 @@ static int intel_pt_process_switch(struct intel_pt *pt,
+ 	return machine__set_current_tid(pt->machine, cpu, -1, tid);
+ }
  
--from PySide.QtSql import *
-+pyside_version_1 = True
-+if not "pyside-version-1" in sys.argv:
-+	try:
-+		from PySide2.QtSql import *
-+		pyside_version_1 = False
-+	except:
-+		pass
++static int intel_pt_context_switch_in(struct intel_pt *pt,
++				      struct perf_sample *sample)
++{
++	pid_t pid = sample->pid;
++	pid_t tid = sample->tid;
++	int cpu = sample->cpu;
 +
-+if pyside_version_1:
-+	from PySide.QtSql import *
++	if (pt->sync_switch) {
++		struct intel_pt_queue *ptq;
++
++		ptq = intel_pt_cpu_to_ptq(pt, cpu);
++		if (ptq && ptq->sync_switch) {
++			ptq->next_tid = -1;
++			switch (ptq->switch_state) {
++			case INTEL_PT_SS_NOT_TRACING:
++			case INTEL_PT_SS_UNKNOWN:
++			case INTEL_PT_SS_TRACING:
++				break;
++			case INTEL_PT_SS_EXPECTING_SWITCH_EVENT:
++			case INTEL_PT_SS_EXPECTING_SWITCH_IP:
++				ptq->switch_state = INTEL_PT_SS_TRACING;
++				break;
++			default:
++				break;
++			}
++		}
++	}
++
++	/*
++	 * If the current tid has not been updated yet, ensure it is now that
++	 * a "switch in" event has occurred.
++	 */
++	if (machine__get_current_tid(pt->machine, cpu) == tid)
++		return 0;
++
++	return machine__set_current_tid(pt->machine, cpu, pid, tid);
++}
++
+ static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
+ 				   struct perf_sample *sample)
+ {
+@@ -1925,7 +1963,7 @@ static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
  
- if sys.version_info < (3, 0):
- 	def toserverstr(str):
-@@ -255,11 +277,12 @@ def printdate(*args, **kw_args):
-         print(datetime.datetime.today(), *args, sep=' ', **kw_args)
- 
- def usage():
--	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
--	printerr("where:	columns		'all' or 'branches'")
--	printerr("		calls		'calls' => create calls and call_paths table")
--	printerr("		callchains	'callchains' => create call_paths table")
--	raise Exception("Too few arguments")
-+	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>] [<pyside-version-1>]");
-+	printerr("where:  columns            'all' or 'branches'");
-+	printerr("        calls              'calls' => create calls and call_paths table");
-+	printerr("        callchains         'callchains' => create call_paths table");
-+	printerr("        pyside-version-1   'pyside-version-1' => use pyside version 1");
-+	raise Exception("Too few or bad arguments")
- 
- if (len(sys.argv) < 2):
- 	usage()
-@@ -281,6 +304,8 @@ for i in range(3,len(sys.argv)):
- 		perf_db_export_calls = True
- 	elif (sys.argv[i] == "callchains"):
- 		perf_db_export_callchains = True
-+	elif (sys.argv[i] == "pyside-version-1"):
-+		pass
- 	else:
- 		usage()
- 
+ 	if (pt->have_sched_switch == 3) {
+ 		if (!out)
+-			return 0;
++			return intel_pt_context_switch_in(pt, sample);
+ 		if (event->header.type != PERF_RECORD_SWITCH_CPU_WIDE) {
+ 			pr_err("Expecting CPU-wide context switch event\n");
+ 			return -EINVAL;
