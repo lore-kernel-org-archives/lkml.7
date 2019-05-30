@@ -7,56 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25498C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748E6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F290224A9A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BDA20717
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186836;
-	bh=dBdt0Mj0rKev0+tWtSjsaimFMylCqUd3zYLueb9grdo=;
+	s=default; t=1559186844;
+	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyIu8s0TGFC6TaA6IHF/CFABfmuOF9QByB+3YC8hEv+e29aDPekuLMonLXw3WvXkf
-	 whMNdZklStCdaTkjKUM/xuE4DVjL+RBoEP26QXacAob2g+kf3KVgiAF79MLEWe0ngK
-	 eULxnWmwqfSYcWxoYO7k1Lkn77EZWFZjDy9gf48E=
+	b=rCncZ6UEiy79CmWab7E9flqokSEVB5K+wimE35U2jhrmAFECqGgIXlNpvbW5QPbsM
+	 olpid6KqrkuL4o5Fwyk4vpBXTSjJYAC258xRscISm7YLVS13/UpC7i5OFZvajIK+Ez
+	 muiMMWU17xUVNg2zBqHoHtVkEaqjs3XfjMpPA5S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfE3D1O (ORCPT
+        id S2387999AbfE3D1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731861AbfE3DTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:19 -0400
+        id S1731878AbfE3DTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED14F2485E;
-        Thu, 30 May 2019 03:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C818B2484B;
+        Thu, 30 May 2019 03:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186359;
-        bh=dBdt0Mj0rKev0+tWtSjsaimFMylCqUd3zYLueb9grdo=;
+        s=default; t=1559186363;
+        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g91ZQEXMOyXMo/Hu+g8ezBFkatSC9J/HiHh/F9g8iLA6s2qhPoCoOZe3bd+rF3Ly2
-         oIsGgCBfIxautH/ZqFx/XNPNNNmcaaMzJJnDEKo1L0wdjyH/bLM13u8Qsb7qd/+wQD
-         sRzGurLO+7LXlXT2186Z1/cIjJ4AZimmFuDL7rhU=
+        b=jZosiTMfQJZb1lK5qEQCeOi5gqunvpIxEjEygWJjcmCc9jUGoGZjseTTao/rgnzVG
+         NekBs778vAZUk/QaAG9lnqbxm2CHSE0OyiFSBhQq5x3jy/NH5hkRjxSzMadQUzkGuA
+         Uzb4oqyf0kX7vIMoIyrkHQbWcqQ/CRzN00Su+TMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/193] drm/msm: a5xx: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:05:57 -0700
-Message-Id: <20190530030503.211447709@linuxfoundation.org>
+Subject: [PATCH 4.14 111/193] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:06:05 -0700
+Message-Id: <20190530030504.249468936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -69,71 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cd5235c3135ea84b32469ea51b2aae384eda8af ]
+[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Mamta Shukla <mamtashukla555@gmail.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Sharat Masetty <smasetty@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org (open list)
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
+
+Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/hwmon/vt1211.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 17c59d839e6fa..f1aaa76cc2e4e 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -29,7 +29,7 @@ static void a5xx_dump(struct msm_gpu *gpu);
- static int zap_shader_load_mdt(struct device *dev, const char *fwname)
+diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
+index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
+--- a/drivers/hwmon/vt1211.c
++++ b/drivers/hwmon/vt1211.c
+@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
+ 	outb(ldn, sio_cip + 1);
+ }
+ 
+-static inline void superio_enter(int sio_cip)
++static inline int superio_enter(int sio_cip)
  {
- 	const struct firmware *fw;
--	struct device_node *np;
-+	struct device_node *np, *mem_np;
- 	struct resource r;
- 	phys_addr_t mem_phys;
- 	ssize_t mem_size;
-@@ -43,11 +43,13 @@ static int zap_shader_load_mdt(struct device *dev, const char *fwname)
- 	if (!np)
- 		return -ENODEV;
++	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio_cip);
+ 	outb(0x87, sio_cip);
++
++	return 0;
+ }
  
--	np = of_parse_phandle(np, "memory-region", 0);
--	if (!np)
-+	mem_np = of_parse_phandle(np, "memory-region", 0);
-+	of_node_put(np);
-+	if (!mem_np)
- 		return -EINVAL;
+ static inline void superio_exit(int sio_cip)
+ {
+ 	outb(0xaa, sio_cip);
++	release_region(sio_cip, 2);
+ }
  
--	ret = of_address_to_resource(np, 0, &r);
-+	ret = of_address_to_resource(mem_np, 0, &r);
-+	of_node_put(mem_np);
- 	if (ret)
- 		return ret;
+ /* ---------------------------------------------------------------------
+@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
  
+ static int __init vt1211_find(int sio_cip, unsigned short *address)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	int devid;
+ 
+-	superio_enter(sio_cip);
++	err = superio_enter(sio_cip);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
+ 	if (devid != SIO_VT1211_ID)
+ 		goto EXIT;
 -- 
 2.20.1
 
