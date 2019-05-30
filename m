@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98083C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37069C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C248245AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06307245AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186213;
-	bh=N/pF3K1NFhyQSZDSqQuVhgWuqwwXPTxyp50grt/9H4k=;
+	s=default; t=1559186215;
+	bh=u09o6bZ/R6++CAfLokmjezebCjIIfB4HAQkdEO2Orbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvOAFDBr035/R1pMPdzMCnculTJFryHKvvOOAdqagiOHTtqboyc0j3M7EunNKXMMj
-	 HdoVwWKJ6vFntI+5xW+yn3ADFg/Teeb+FbgAedAv6gBY4TJgiM1pYxELM8naDtpWF6
-	 82VXNWmer8DozQBOqdAny2cXx0XtFt6t140YmR+E=
+	b=GV5YxzcLbXUi2RNSXjw5op5GojPvmNxZkwKpZiDDfaA4flaQsTRpJ6un/QsEKiFs0
+	 L+URHmdETC1oZHFvfV6wv1eb8in3ofaleXd1gd5b84YUrdC6n7K/OhVgFbd8plIhew
+	 dJZ7QdBEMAtNEBsOeCvvNn+cFP6klMvLfYCyl+f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbfE3DQw (ORCPT
+        id S1730857AbfE3DQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729526AbfE3DNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728623AbfE3DNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FD742454E;
+        by mail.kernel.org (Postfix) with ESMTPSA id C592B2455A;
         Thu, 30 May 2019 03:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186016;
-        bh=N/pF3K1NFhyQSZDSqQuVhgWuqwwXPTxyp50grt/9H4k=;
+        bh=u09o6bZ/R6++CAfLokmjezebCjIIfB4HAQkdEO2Orbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRSbL17P3UpGSkrvJc6k2s1nVHn02ChU3CUD8zYxFNHuhnnt/begX7umkGzP3IMfE
-         UzJDF46Kncuuh9+1SSnw7vP6YOFdBFQVoZhv/Xi+cbV1VT6ESqUZM/H2ZKmnFTtrgL
-         t0Phb7TfGe8Z71+PPXpW55GbzghWJfwSINUu8FMQ=
+        b=N4wne45v4sM0S5+ZXi1IS6/UiBur6Iy6qq6CpXzAKv47hRo9a7o7GXOy8eFrMPXeD
+         zeJlcZ1Elw7fClFKFTIeFlSzkVe9sIw/DQgnovfUUlD0tZ6RskB+VjRDK+6dHslQs6
+         hysjQONv6dDsu/yU/yPAptUrU5xJlY+I5P3xI/Ds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 064/346] usb: dwc3: move synchronize_irq() out of the spinlock protected block
-Date:   Wed, 29 May 2019 20:02:17 -0700
-Message-Id: <20190530030544.308581434@linuxfoundation.org>
+Subject: [PATCH 5.0 082/346] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 29 May 2019 20:02:35 -0700
+Message-Id: <20190530030545.301521695@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,98 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41a91c606e7d2b74358a944525267cc451c271e8 ]
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context
-calling synchronize_irq() is not allowed. Move the problematic call out
-of the protected block to fix the following kernel BUG during system
-suspend:
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-BUG: sleeping function called from invalid context at kernel/irq/manage.c:112
-in_atomic(): 1, irqs_disabled(): 128, pid: 1601, name: rtcwake
-6 locks held by rtcwake/1601:
- #0: f70ac2a2 (sb_writers#7){.+.+}, at: vfs_write+0x130/0x16c
- #1: b5fe1270 (&of->mutex){+.+.}, at: kernfs_fop_write+0xc0/0x1e4
- #2: 7e597705 (kn->count#60){.+.+}, at: kernfs_fop_write+0xc8/0x1e4
- #3: 8b3527d0 (system_transition_mutex){+.+.}, at: pm_suspend+0xc4/0xc04
- #4: fc7f1c42 (&dev->mutex){....}, at: __device_suspend+0xd8/0x74c
- #5: 4b36507e (&(&dwc->lock)->rlock){....}, at: dwc3_gadget_suspend+0x24/0x3c
-irq event stamp: 11252
-hardirqs last  enabled at (11251): [<c09c54a4>] _raw_spin_unlock_irqrestore+0x6c/0x74
-hardirqs last disabled at (11252): [<c09c4d44>] _raw_spin_lock_irqsave+0x1c/0x5c
-softirqs last  enabled at (9744): [<c0102564>] __do_softirq+0x3a4/0x66c
-softirqs last disabled at (9737): [<c0128528>] irq_exit+0x140/0x168
-Preemption disabled at:
-[<00000000>]   (null)
-CPU: 7 PID: 1601 Comm: rtcwake Not tainted
-5.0.0-rc3-next-20190122-00039-ga3f4ee4f8a52 #5252
-Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[<c01110f0>] (unwind_backtrace) from [<c010d120>] (show_stack+0x10/0x14)
-[<c010d120>] (show_stack) from [<c09a4d04>] (dump_stack+0x90/0xc8)
-[<c09a4d04>] (dump_stack) from [<c014c700>] (___might_sleep+0x22c/0x2c8)
-[<c014c700>] (___might_sleep) from [<c0189d68>] (synchronize_irq+0x28/0x84)
-[<c0189d68>] (synchronize_irq) from [<c05cbbf8>] (dwc3_gadget_suspend+0x34/0x3c)
-[<c05cbbf8>] (dwc3_gadget_suspend) from [<c05bd020>] (dwc3_suspend_common+0x154/0x410)
-[<c05bd020>] (dwc3_suspend_common) from [<c05bd34c>] (dwc3_suspend+0x14/0x2c)
-[<c05bd34c>] (dwc3_suspend) from [<c051c730>] (platform_pm_suspend+0x2c/0x54)
-[<c051c730>] (platform_pm_suspend) from [<c05285d4>] (dpm_run_callback+0xa4/0x3dc)
-[<c05285d4>] (dpm_run_callback) from [<c0528a40>] (__device_suspend+0x134/0x74c)
-[<c0528a40>] (__device_suspend) from [<c052c508>] (dpm_suspend+0x174/0x588)
-[<c052c508>] (dpm_suspend) from [<c0182134>] (suspend_devices_and_enter+0xc0/0xe74)
-[<c0182134>] (suspend_devices_and_enter) from [<c0183658>] (pm_suspend+0x770/0xc04)
-[<c0183658>] (pm_suspend) from [<c0180ddc>] (state_store+0x6c/0xcc)
-[<c0180ddc>] (state_store) from [<c09a9a70>] (kobj_attr_store+0x14/0x20)
-[<c09a9a70>] (kobj_attr_store) from [<c02d6800>] (sysfs_kf_write+0x4c/0x50)
-[<c02d6800>] (sysfs_kf_write) from [<c02d594c>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02d594c>] (kernfs_fop_write) from [<c02593d8>] (__vfs_write+0x2c/0x160)
-[<c02593d8>] (__vfs_write) from [<c0259694>] (vfs_write+0xa4/0x16c)
-[<c0259694>] (vfs_write) from [<c0259870>] (ksys_write+0x40/0x8c)
-[<c0259870>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xed55ffa8 to 0xed55fff0)
-...
-
-Fixes: 01c10880d242 ("usb: dwc3: gadget: synchronize_irq dwc irq in suspend")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c   | 2 ++
- drivers/usb/dwc3/gadget.c | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index f944cea4056bc..72110a8c49d68 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1600,6 +1600,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
- 		spin_lock_irqsave(&dwc->lock, flags);
- 		dwc3_gadget_suspend(dwc);
- 		spin_unlock_irqrestore(&dwc->lock, flags);
-+		synchronize_irq(dwc->irq_gadget);
- 		dwc3_core_exit(dwc);
- 		break;
- 	case DWC3_GCTL_PRTCAP_HOST:
-@@ -1632,6 +1633,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
- 			spin_lock_irqsave(&dwc->lock, flags);
- 			dwc3_gadget_suspend(dwc);
- 			spin_unlock_irqrestore(&dwc->lock, flags);
-+			synchronize_irq(dwc->irq_gadget);
- 		}
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 1a20e5d8f0575..51df171b32ed3 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3454,7 +3454,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
+ 	}
+ 	ha->flags.msix_enabled = 1;
  
- 		dwc3_otg_exit(dwc);
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 9f941cdb0691d..1227e8f5a5c87 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -3385,8 +3385,6 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
- 	dwc3_disconnect_gadget(dwc);
- 	__dwc3_gadget_stop(dwc);
+@@ -3537,6 +3537,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
  
--	synchronize_irq(dwc->irq_gadget);
--
- 	return 0;
+ msix_out:
+ 	return ret;
++
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
  }
  
+ int
 -- 
 2.20.1
 
