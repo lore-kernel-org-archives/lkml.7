@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E360C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B92C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7881E25065
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD23125085
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189163;
-	bh=hP7Pn2TFsJ+M9ZcoamJ6klxsTa95U9lo4RWpMbOEv6U=;
+	s=default; t=1559189168;
+	bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNFY9vPBhRXTMNVksuMEaGAVI1NerpQqQRZQvqFN/Y+vc0GRC+i5ZfvpKJFC40bK/
-	 xGv01Si4Oe7l6NmoncZ42q/9g8KmlmJD2yiswLyVBO+pxB8k+xpmuLeNDs+U0ZdvDG
-	 h18seA1tTL6lz3s8umQm3jy0UGaJf79dAFNPmCVA=
+	b=h7sXHat3Dv7jl+Gqz9bkV5+XQSfM86/3QntK4WHuTNN3Hq7dV1bQK286JjFMPkltl
+	 dlXk7q4z/yv4TmVXmP72jXAWUVVXM8ZpZiqmmBybkyxkhQ6hSh1PGDfdGp1vPF65xI
+	 47EEL7H60JE/XRb9UqY70p8nUU/WGb58tjhGrlgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfE3EGD (ORCPT
+        id S1726959AbfE3EGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731184AbfE3DRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:38 -0400
+        id S1727628AbfE3DRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC746246F8;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F5FA246BB;
         Thu, 30 May 2019 03:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186256;
-        bh=hP7Pn2TFsJ+M9ZcoamJ6klxsTa95U9lo4RWpMbOEv6U=;
+        bh=GZUqsTk4DRyMhsW1KtZI2tC5X5LSHWq2AHH1vJ4K+oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xX9JTsT2WMEsvKQKP+7+t5Rwii37JyfVjPD8dOnQPJKSDG6eKGbFdPwOwF7rlOHJH
-         V1HQARbtHQxdFbFa3dcl217kNPbmV26lzN5EEcth0YjfVrBISLGaSMJ0GoSQlB4w7g
-         4WRs9nCUG+WG64DwV1yw9+LgTR4NcDhI2AFro32M=
+        b=PD0rnapvWqFn6yxQ05XwsIaBgxuBsyQfIfmaugVN0n1+MOtoLsIsKbMTYYEr8MM6L
+         oBCmgtChHkCSBu561yWPizbYoX0n7uflqE7B0ADOY5QF1Sy/NCxSTnaCU2US13n3ha
+         87YWOiHOui9t1vtTkH0dJwWp90Yuk9qfew4qIacM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <Alexandru.Ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/276] iio: ad_sigma_delta: Properly handle SPI bus locking vs CS assertion
-Date:   Wed, 29 May 2019 20:05:44 -0700
-Message-Id: <20190530030536.859176700@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        dri-devel@lists.freedesktop.org ("open list:DRM DRIVERS"),
+        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH 4.19 185/276] drm/pl111: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:05:43 -0700
+Message-Id: <20190530030536.807374138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,120 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df1d80aee963480c5c2938c64ec0ac3e4a0df2e0 ]
+[ Upstream commit bc29d3a69d4c1bd1a103e8b3c1ed81b807c1870b ]
 
-For devices from the SigmaDelta family we need to keep CS low when doing a
-conversion, since the device will use the MISO line as a interrupt to
-indicate that the conversion is complete.
+The call to of_find_matching_node_and_match returns a node pointer with
+refcount incremented thus it must be explicitly decremented after the
+last usage.
 
-This is why the driver locks the SPI bus and when the SPI bus is locked
-keeps as long as a conversion is going on. The current implementation gets
-one small detail wrong though. CS is only de-asserted after the SPI bus is
-unlocked. This means it is possible for a different SPI device on the same
-bus to send a message which would be wrongfully be addressed to the
-SigmaDelta device as well. Make sure that the last SPI transfer that is
-done while holding the SPI bus lock de-asserts the CS signal.
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/pl111/pl111_versatile.c:333:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:340:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:346:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:354:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:395:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:402:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <Alexandru.Ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Eric Anholt <eric@anholt.net> (supporter:DRM DRIVER FOR ARM PL111 CLCD)
+Cc: David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
+Cc: Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
+Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Cc: linux-kernel@vger.kernel.org (open list)
+Signed-off-by: Eric Anholt <eric@anholt.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad_sigma_delta.c       | 16 +++++++++++-----
- include/linux/iio/adc/ad_sigma_delta.h |  1 +
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/pl111/pl111_versatile.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-index ae2a5097f4493..25af4c76b57fe 100644
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -62,7 +62,7 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
- 	struct spi_transfer t = {
- 		.tx_buf		= data,
- 		.len		= size + 1,
--		.cs_change	= sigma_delta->bus_locked,
-+		.cs_change	= sigma_delta->keep_cs_asserted,
- 	};
- 	struct spi_message m;
- 	int ret;
-@@ -218,6 +218,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
+index b9baefdba38a1..1c318ad32a8cd 100644
+--- a/drivers/gpu/drm/pl111/pl111_versatile.c
++++ b/drivers/gpu/drm/pl111/pl111_versatile.c
+@@ -330,6 +330,7 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		ret = vexpress_muxfpga_init();
+ 		if (ret) {
+ 			dev_err(dev, "unable to initialize muxfpga driver\n");
++			of_node_put(np);
+ 			return ret;
+ 		}
  
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
- 	reinit_completion(&sigma_delta->completion);
- 
- 	ret = ad_sigma_delta_set_mode(sigma_delta, mode);
-@@ -235,9 +236,10 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
- 		ret = 0;
+@@ -337,17 +338,20 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		pdev = of_find_device_by_node(np);
+ 		if (!pdev) {
+ 			dev_err(dev, "can't find the sysreg device, deferring\n");
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 		map = dev_get_drvdata(&pdev->dev);
+ 		if (!map) {
+ 			dev_err(dev, "sysreg has not yet probed\n");
+ 			platform_device_put(pdev);
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 	} else {
+ 		map = syscon_node_to_regmap(np);
  	}
- out:
-+	sigma_delta->keep_cs_asserted = false;
-+	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
- 	sigma_delta->bus_locked = false;
- 	spi_bus_unlock(sigma_delta->spi->master);
--	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
++	of_node_put(np);
  
- 	return ret;
- }
-@@ -289,6 +291,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
- 	reinit_completion(&sigma_delta->completion);
- 
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_SINGLE);
-@@ -298,9 +301,6 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 	ret = wait_for_completion_interruptible_timeout(
- 			&sigma_delta->completion, HZ);
- 
--	sigma_delta->bus_locked = false;
--	spi_bus_unlock(sigma_delta->spi->master);
--
- 	if (ret == 0)
- 		ret = -EIO;
- 	if (ret < 0)
-@@ -316,7 +316,10 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 		sigma_delta->irq_dis = true;
- 	}
- 
-+	sigma_delta->keep_cs_asserted = false;
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
-+	sigma_delta->bus_locked = false;
-+	spi_bus_unlock(sigma_delta->spi->master);
- 	mutex_unlock(&indio_dev->mlock);
- 
- 	if (ret)
-@@ -353,6 +356,8 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
- 
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
-+
- 	ret = ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_CONTINUOUS);
- 	if (ret)
- 		goto err_unlock;
-@@ -381,6 +386,7 @@ static int ad_sd_buffer_postdisable(struct iio_dev *indio_dev)
- 		sigma_delta->irq_dis = true;
- 	}
- 
-+	sigma_delta->keep_cs_asserted = false;
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
- 
- 	sigma_delta->bus_locked = false;
-diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
-index 730ead1a46df6..57c122ae54523 100644
---- a/include/linux/iio/adc/ad_sigma_delta.h
-+++ b/include/linux/iio/adc/ad_sigma_delta.h
-@@ -66,6 +66,7 @@ struct ad_sigma_delta {
- 	bool			irq_dis;
- 
- 	bool			bus_locked;
-+	bool			keep_cs_asserted;
- 
- 	uint8_t			comm;
- 
+ 	if (IS_ERR(map)) {
+ 		dev_err(dev, "no Versatile syscon regmap\n");
 -- 
 2.20.1
 
