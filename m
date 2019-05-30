@@ -2,57 +2,58 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6825FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3512C24D22
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1500F248FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188095;
-	bh=hLBNMSxSz/L4jAZKh/L2aL9dvFAHIK+33TJbtnPfNkM=;
+	s=default; t=1559188098;
+	bh=w7+AWPVuzZQpjG6mkDajShr3EJ30H0mKphqY5xkQPN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofq3QTWb/b/7Rptk2+BCTDUhLoJ+knUryebnlV44iC93N7nk+s24oWhsivtFUw9H/
-	 S4cN5kU8Cyhz8WesgxHnfku+o/PKhAcTiaC4lu/ajcBEq8srbYSCwcya2g2gPxy2P4
-	 JGqxDSdl3TlWCRb6crS/v/WEWU9hB94GlrQ3c3As=
+	b=OwiGBz5xRJbHalF9sZ39pCJmBtf2z1KLuL1cnvr2kV951309AxW5gP5srdpUwHLmK
+	 H7JNzoE+iKYsAXoQ6UPYrPRz5pHJwYKVCdnyYWdplLvKTdBPjFp8fJ+06opiKuvTvA
+	 vlFrJu12bz37GIsmwRfbfde5mKu1QrX54j5Fk83Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbfE3DsO (ORCPT
+        id S1732739AbfE3DsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:48:14 -0400
+        Wed, 29 May 2019 23:48:12 -0400
 Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732176AbfE3DUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:22 -0400
+        id S1732181AbfE3DUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B315124929;
-        Thu, 30 May 2019 03:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F132490A;
+        Thu, 30 May 2019 03:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186421;
-        bh=hLBNMSxSz/L4jAZKh/L2aL9dvFAHIK+33TJbtnPfNkM=;
+        s=default; t=1559186422;
+        bh=w7+AWPVuzZQpjG6mkDajShr3EJ30H0mKphqY5xkQPN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6aponoBhS9j6qhfd5227MusfLsWtPGPEvcq911mrskiZ2ob5eruiu0S50+M+MCCu
-         nNgai0f/CpXDVAN3WGOgxk1vPzc4ggtdyPQISKAKw861kn7C0HCf7apmXCG9eEaaZg
-         GvQjT8IX+m663uCX7gKlcYcVxGKe/aLtreTbqQXE=
+        b=DHU4ufS6mV725DkTPtn0jp/Jm+0l+3eOGZ7LEaOSm7PYPwnzsJVqhfhiaQD+KLpKY
+         5JAie7997IyyLE6OuEU5sKR/DkYqJtBLY3Lq3QF0DdV+xA8BVob7yDiUKee90s0v3r
+         dCmQdqmTrQNXqWaXXVXv2LdAy4V3lBHDmH3l7t74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 176/193] hwrng: omap - Set default quality
-Date:   Wed, 29 May 2019 20:07:10 -0700
-Message-Id: <20190530030512.241993153@linuxfoundation.org>
+        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.9 001/128] ext4: do not delete unlinked inode from orphan list on failed truncate
+Date:   Wed, 29 May 2019 20:05:33 -0700
+Message-Id: <20190530030433.176015804@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,42 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62f95ae805fa9e1e84d47d3219adddd97b2654b7 ]
+From: Jan Kara <jack@suse.cz>
 
-Newer combinations of the glibc, kernel and openssh can result in long initial
-startup times on OMAP devices:
+commit ee0ed02ca93ef1ecf8963ad96638795d55af2c14 upstream.
 
-[    6.671425] systemd-rc-once[102]: Creating ED25519 key; this may take some time ...
-[  142.652491] systemd-rc-once[102]: Creating ED25519 key; done.
+It is possible that unlinked inode enters ext4_setattr() (e.g. if
+somebody calls ftruncate(2) on unlinked but still open file). In such
+case we should not delete the inode from the orphan list if truncate
+fails. Note that this is mostly a theoretical concern as filesystem is
+corrupted if we reach this path anyway but let's be consistent in our
+orphan handling.
 
-due to the blocking getrandom(2) system call:
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[  142.610335] random: crng init done
-
-Set the quality level for the omap hwrng driver allowing the kernel to use the
-hwrng as an entropy source at boot.
-
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/omap-rng.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
-index 74d11ae6abe9a..25173454efa32 100644
---- a/drivers/char/hw_random/omap-rng.c
-+++ b/drivers/char/hw_random/omap-rng.c
-@@ -442,6 +442,7 @@ static int omap_rng_probe(struct platform_device *pdev)
- 	priv->rng.read = omap_rng_do_read;
- 	priv->rng.init = omap_rng_init;
- 	priv->rng.cleanup = omap_rng_cleanup;
-+	priv->rng.quality = 900;
- 
- 	priv->rng.priv = (unsigned long)priv;
- 	platform_set_drvdata(pdev, priv);
--- 
-2.20.1
-
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5223,7 +5223,7 @@ int ext4_setattr(struct dentry *dentry,
+ 			up_write(&EXT4_I(inode)->i_data_sem);
+ 			ext4_journal_stop(handle);
+ 			if (error) {
+-				if (orphan)
++				if (orphan && inode->i_nlink)
+ 					ext4_orphan_del(NULL, inode);
+ 				goto err_out;
+ 			}
 
 
