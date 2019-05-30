@@ -2,105 +2,173 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6F6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C20CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784AE26172
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D0A26179
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uKKRLTmn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2e/Jzbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfE3Uo4 (ORCPT
+        id S1726548AbfE3UpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:44:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36112 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Uo4 (ORCPT
+        Thu, 30 May 2019 16:45:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36117 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbfE3Uo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:44:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u22so4701015pfm.3;
-        Thu, 30 May 2019 13:44:55 -0700 (PDT)
+        Thu, 30 May 2019 16:44:59 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u22so4701098pfm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/hPlUeB7QRpyN6BSt70ooadjF9ShdcJ+0NksjNsmhh0=;
-        b=uKKRLTmncKTjtxKELbCXFl5nzpsLeSsv0/mFeIa1Kwzu6/0IluuiQYREF0JV52ti87
-         24ftLE7f10ZtXt2t58I2xh0TS7VRACLjvVhLKd9ac1fM/62Zff5mXSP5sgXHRKNNJzNR
-         RbDwJl8LTRnqRonNgCwMcv81iLVYdI2cTnTGE+oh5XREr5lhHXHbbymzjLz5UdEn/YdZ
-         3s61awU9uHL4DmNc9kefNJg1d5e+sbMbUIoMLk0syQ2Vu/YJADT/YqpZTvod+dDpwYDR
-         65he84OO8Vw+2wiXAVyk1EG+xVRS9SqhEXwouE9ksqxVU6QpwYZk0JwRHled32uLz220
-         WUBQ==
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=q6AUBPvqyat2bLNM++F9NloXkkCwBt3/tItx63cMlpE=;
+        b=C2e/JzbpUueBW6GWiWsrwQbKeGbHeV+0umj6fYHo//SnFeP6ktUlkhrM4ciCTH1r01
+         GiqRMuwhQC4PFGeU4JtJ0cJmEDB1GcL+fEV+5ReV0/OX84vu6QQipYF9IhWRIseSCwye
+         Yd6Ny28KV9jXxKId1cKev/qx2qjNT0bNlIcUcOqT0gSzZOqgBx5CcDyj9XKs/HG3tl2u
+         A+9dmAt0jbXOjWnMgRSXENvJAGGJ+s8n42XCpdvtVEegDqVRT4irnQKFTlL8YP4C6XFA
+         m7/G009ugSO8iFwOfoNeeFB2/YjQO5yA7UBg1McHFypCDaz91MGXSxTYKuZtMWd09wdF
+         2lsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/hPlUeB7QRpyN6BSt70ooadjF9ShdcJ+0NksjNsmhh0=;
-        b=GjCrpnj69e1bzLOwNuY7X+4oHqH0xLqXPcIRyUzWYgI/+pQiTJXzOwmZWXdjM3v2v2
-         4v5ZiTTACGLX4yoaTMlmmuJ/Pz2Vynl6DiZZe6uhBogOoxl55+iAC8p8HvEBGE5CqiY0
-         yfpqZLgpSJnpfNN5SZ1joyHeVj+BxDmHMMOm8mAcocp5gGBwldmyZj1u1JXLyINxKYfb
-         uKmKatXbt6vofiCOQNcKzY91BKAO2LyKh7abnnfLfc+mMQ4XyA0b+tIH/KmysjX+7NF/
-         LfSUibZQFLjwEROj96fVMsFNwwd4wFLvJ9sjAazlyw/Z+Qnejtf+Nbo/GN7v3WUSiG4/
-         gOsQ==
-X-Gm-Message-State: APjAAAVjpzct6OKwzluQ8R64df1i3fWezNWO//3fn6Ns9v7iMuyTBjJb
-        Kg6HOsxhIZr67FSei91Ji9M=
-X-Google-Smtp-Source: APXvYqw+Yo4R3R765xOoY+EQq7QfZBlrNtGwrfx7gj15NKiG+YxtY1cTchBUX7FPnyS7Iu2Yfa8GkQ==
-X-Received: by 2002:aa7:9a1d:: with SMTP id w29mr5577340pfj.81.1559249095511;
-        Thu, 30 May 2019 13:44:55 -0700 (PDT)
-Received: from localhost.localdomain ([47.15.209.13])
-        by smtp.gmail.com with ESMTPSA id z9sm3235029pgc.82.2019.05.30.13.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 13:44:55 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     digetx@gmail.com, mchehab@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathan@nvidia.com,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: media: tegra-vde: Remove variable
-Date:   Fri, 31 May 2019 02:14:39 +0530
-Message-Id: <20190530204439.29830-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=q6AUBPvqyat2bLNM++F9NloXkkCwBt3/tItx63cMlpE=;
+        b=CT2hjKs7ZimHCKdAyq8mcZYCP032vQYVuW/+WmWV3IwJI34GEwk/bwG2Avqo4oR84v
+         qSBT8qCojuoo+yTe1w/2bSKaGWITyRbToft0JZHYqjmfI3lWXdJpS7oWSo8DH/XxVKGj
+         PHF53ta2qtD+0z5naEF7xXIKrNfNXAsV1AGlp5bSwp3biST5X5lzk/s/w3j9yuFmk1jE
+         hcl8L7P+K2UH0LaQ9T1xu10HIYEnN8NVe3jWcUZvpd1Sc69LOqH0CMtvlUfRYOtjMzXk
+         7BoequhP5KmMoPxBnaf6aL8LmKKUEIMnQIPv39fnehN+PrY16mFaOicyCLlzxW2ei2k5
+         V9DQ==
+X-Gm-Message-State: APjAAAXDw4N0rD+eI+Q+g/M8VUYoyGfPPdwM4BnnhOmW0ljSC69awyLB
+        24HX85VKT31qaTKl5BnWLOqMGQ==
+X-Google-Smtp-Source: APXvYqwupWORAT9iyn5M2LRuwVXU+wPnlXfdJiuevQ15iB/9Mq30VTKY+wUMHcd1Nm1Mx7YzW8V9nQ==
+X-Received: by 2002:a17:90a:2a09:: with SMTP id i9mr5287388pjd.103.1559249097503;
+        Thu, 30 May 2019 13:44:57 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id k22sm4021024pfk.54.2019.05.30.13.44.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 13:44:56 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Phil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        pjt@google.com
+Subject: Re: [PATCH v3 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+        <1559156926-31336-1-git-send-email-chiluk+linux@indeed.com>
+        <1559156926-31336-2-git-send-email-chiluk+linux@indeed.com>
+        <xm264l5dynrg.fsf@bsegall-linux.svl.corp.google.com>
+        <CAC=E7cU9GetuKVQE1HxXsSuOKgyxezXUmSH2ZDHOrLio_YZi1g@mail.gmail.com>
+Date:   Thu, 30 May 2019 13:44:55 -0700
+In-Reply-To: <CAC=E7cU9GetuKVQE1HxXsSuOKgyxezXUmSH2ZDHOrLio_YZi1g@mail.gmail.com>
+        (Dave Chiluk's message of "Thu, 30 May 2019 12:53:37 -0500")
+Message-ID: <xm26zhn3y8mw.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary variable iram_tables and use its value directly.
-Issue found using Coccinelle.
+Dave Chiluk <chiluk+linux@indeed.com> writes:
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/media/tegra-vde/tegra-vde.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> On Wed, May 29, 2019 at 02:05:55PM -0700, bsegall@google.com wrote:
+>> Dave Chiluk <chiluk+linux@indeed.com> writes:
+>>
+>> Yeah, having run the test, stranding only 1 ms per cpu rather than 5
+>> doesn't help if you only have 10 ms of quota and even 10 threads/cpus.
+>> The slack timer isn't important in this test, though I think it probably
+>> should be changed.
+> My min_cfs_rq_runtime was already set to 1ms.
 
-diff --git a/drivers/staging/media/tegra-vde/tegra-vde.c b/drivers/staging/media/tegra-vde/tegra-vde.c
-index a5020dbf6eef..3205973218e4 100644
---- a/drivers/staging/media/tegra-vde/tegra-vde.c
-+++ b/drivers/staging/media/tegra-vde/tegra-vde.c
-@@ -273,12 +273,10 @@ static void tegra_vde_setup_iram_entry(struct tegra_vde *vde,
- 				       unsigned int row,
- 				       u32 value1, u32 value2)
- {
--	u32 *iram_tables = vde->iram;
--
- 	trace_vde_setup_iram_entry(table, row, value1, value2);
- 
--	iram_tables[0x20 * table + row * 2] = value1;
--	iram_tables[0x20 * table + row * 2 + 1] = value2;
-+	vde->iram[0x20 * table + row * 2] = value1;
-+	vde->iram[0x20 * table + row * 2 + 1] = value2;
- }
- 
- static void tegra_vde_setup_iram_tables(struct tegra_vde *vde,
--- 
-2.19.1
+Yeah, I meant min_cfs_rq_runtime vs the 5ms if the slack stuff was
+broken.
 
+>
+> Additionally raising the amount of quota from 10ms to 50ms or even
+> 100ms, still results in throttling without full quota usage.
+>
+>> Decreasing min_cfs_rq_runtime helps, but would mean that we have to pull
+>> quota more often / always. The worst case here I think is where you
+>> run/sleep for ~1ns, so you wind up taking the lock twice every
+>> min_cfs_rq_runtime: once for assign and once to return all but min,
+>> which you then use up doing short run/sleep. I suppose that determines
+>> how much we care about this overhead at all.
+> I'm not so concerned about how inefficiently the user-space application
+> runs, as that's up to the invidual developer.
+
+Increasing scheduler overhead is something we generally try to prevent
+is what I was worried about.
+
+> The fibtest testcase, is
+> purely my approximation of what a java application with lots of worker
+> threads might do, as I didn't have a great deterministic java
+> reproducer, and I feared posting java to LKML.  I'm more concerned with
+> the fact that the user requested 10ms/period or 100ms/period and they
+> hit throttling while simultaneously not seeing that amount of cpu usage.
+> i.e. on an 8 core machine if I
+> $ ./runfibtest 1
+> Iterations Completed(M): 1886
+> Throttled for: 51
+> CPU Usage (msecs) = 507
+> $ ./runfibtest 8
+> Iterations Completed(M): 1274
+> Throttled for: 52
+> CPU Usage (msecs) = 380
+>
+> You see that in the 8 core case where we have 7 do nothing threads on
+> cpu's 1-7, we see only 380 ms of usage, and 52 periods of throttling
+> when we should have received ~500ms of cpu usage.
+>
+> Looking more closely at the __return_cfs_rq_runtime logic I noticed
+>         if (cfs_b->quota != RUNTIME_INF &&
+>             cfs_rq->runtime_expires == cfs_b->runtime_expires) {
+>
+> Which is awfully similar to the logic that was fixed by 512ac999.  Is it
+> possible that we are just not ever returning runtime back to the cfs_b
+> because of the runtime_expires comparison here?
+
+The relevant issue that patch fixes is that the old conditional was
+backwards. Also lowering min_cfs_rq_runtime to 0 fixes your testcase, so
+it's working.
+
+>
+>> Removing expiration means that in the worst case period and quota can be
+>> effectively twice what the user specified, but only on very particular
+>> workloads.
+> I'm only removing expiration of slices that have already been assigned
+> to individual cfs_rq.  My understanding is that there is at most one
+> cfs_rq per cpu, and each of those can have at most one slice of
+> available runtime.  So the worst case burst is slice_ms * cpus.  Please
+> help me understand how you get to twice user specified quota and period
+> as it's not obvious to me *(I've only been looking at this for a few
+> months).
+
+The reason that this effect is so significant is because slice_ms * cpus
+is roughly 100% of the quota. So yes, it's roughly the same thing.
+Unfortunately if there are more spare cpus on the system just doubling
+quota and period (keeping the same ratio) would not fix your issue,
+while removing expiration does while also potentially having that effect.
+
+>
+>> I think we should at least think about instead lowering
+>> min_cfs_rq_runtime to some smaller value
+> Do you mean lower than 1ms?
+
+Yes
