@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F72C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2CAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E2924AA7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C576624A84
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186828;
-	bh=qfICDiLunXHQGiuMdU6soxJavQnlBqyhnJcDoK1k6EU=;
+	s=default; t=1559186830;
+	bh=NMR8XkAYPWsJ/K5GhX9u+yDhCHUQdXQsKDfAjWrPucM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqT4cXqwwAl3KmaEC0dsEWSkj2vbz1871262KvzXAYcgSxxXQkwgMMwZ+lSZbHtPy
-	 sr+15oNi8ik4AUlt6U7f6f/aXj9OwI1LArK7SUHT6Lfhki9psNBSDvzD6doo7aEID7
-	 P/LxY1POln0AY3yIFNXsKiOs5aJy0vdTMT2tTrjQ=
+	b=ANt7/8HZvJz4gXvsbKgnTn/nYbOG8ItMmtLL08KbQ6Y2v5v4pz/BRIVvH0lvp2Dr6
+	 fSZ+SA3RaSeY1ZuiyR/uyO63bDzgTPzSS2+gmH6cN89PUNDWKRzslPjhjpcBDnYkgg
+	 unrvcPZ5YHpqH2zaFcIK3dzIjG9H54hAwW3ihzs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfE3D1H (ORCPT
+        id S1731517AbfE3D1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbfE3DTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:11 -0400
+        id S1731842AbfE3DTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A352524846;
-        Thu, 30 May 2019 03:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5812485B;
+        Thu, 30 May 2019 03:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186350;
-        bh=qfICDiLunXHQGiuMdU6soxJavQnlBqyhnJcDoK1k6EU=;
+        s=default; t=1559186354;
+        bh=NMR8XkAYPWsJ/K5GhX9u+yDhCHUQdXQsKDfAjWrPucM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0o24WOqWopK4nuqRp4KndC7wJk6oSynU7O7LJFA8nCEo77SHQEbanOn0aek6yWFK
-         hC5J1mGbtRW8o8CED+HiLDXDJUIehtT2spu+qytFUJHuRTumHKFqXgUgpvR/h/OU7p
-         6Xe9I7/2ip/a0R5jnSnw6LeOM16ogUr28T6vqZt8=
+        b=W4P64UudyFe8+svA7zhl4nqGKfRcusnXEqxmcmbrCtLioq9UsO+5Bi8GOebajRKTG
+         91R2FZCkEq1OU81kKQdlVZ7wKTbwjcyHpmbySM4x2dZ1dbTLnNOGoPYWfMsGY2aZqD
+         9Ocz4voPbCcS6iYi0U4K8A8Lmxn8j6MclcxHSoDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 089/193] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
-Date:   Wed, 29 May 2019 20:05:43 -0700
-Message-Id: <20190530030501.370244529@linuxfoundation.org>
+Subject: [PATCH 4.14 096/193] powerpc/numa: improve control of topology updates
+Date:   Wed, 29 May 2019 20:05:50 -0700
+Message-Id: <20190530030502.378465760@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,77 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
+[ Upstream commit 2d4d9b308f8f8dec68f6dbbff18c68ec7c6bd26f ]
 
-In preparation for adding asynchronous subdevice support to the driver,
-don't acquire v4l2_clk from the driver .probe() callback as that may
-fail if the clock is provided by a bridge driver which may be not yet
-initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
-which is going to be converted to v4l2_subdev_internal_ops.registered()
-callback, executed only when the bridge driver is ready.
+When booted with "topology_updates=no", or when "off" is written to
+/proc/powerpc/topology_updates, NUMA reassignments are inhibited for
+PRRN and VPHN events. However, migration and suspend unconditionally
+re-enable reassignments via start_topology_update(). This is
+incoherent.
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Check the topology_updates_enabled flag in
+start/stop_topology_update() so that callers of those APIs need not be
+aware of whether reassignments are enabled. This allows the
+administrative decision on reassignments to remain in force across
+migrations and suspensions.
+
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ arch/powerpc/mm/numa.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 07bc819f5819d..025869eec2ac9 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -822,9 +822,16 @@ static int ov6650_video_probe(struct i2c_client *client)
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 0a02c73a27b3c..417ea6db7b1d2 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1561,6 +1561,9 @@ int start_topology_update(void)
+ {
+ 	int rc = 0;
  
-+	priv->clk = v4l2_clk_get(&client->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = ov6650_s_power(&priv->subdev, 1);
- 	if (ret < 0)
--		return ret;
-+		goto eclkput;
- 
- 	msleep(20);
- 
-@@ -861,6 +868,11 @@ static int ov6650_video_probe(struct i2c_client *client)
- 
- done:
- 	ov6650_s_power(&priv->subdev, 0);
-+	if (!ret)
++	if (!topology_updates_enabled)
 +		return 0;
-+eclkput:
-+	v4l2_clk_put(priv->clk);
 +
- 	return ret;
- }
+ 	if (firmware_has_feature(FW_FEATURE_PRRN)) {
+ 		if (!prrn_enabled) {
+ 			prrn_enabled = 1;
+@@ -1590,6 +1593,9 @@ int stop_topology_update(void)
+ {
+ 	int rc = 0;
  
-@@ -1006,18 +1018,9 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
++	if (!topology_updates_enabled)
++		return 0;
++
+ 	if (prrn_enabled) {
+ 		prrn_enabled = 0;
+ #ifdef CONFIG_SMP
+@@ -1635,11 +1641,13 @@ static ssize_t topology_write(struct file *file, const char __user *buf,
  
--	priv->clk = v4l2_clk_get(&client->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
--	}
--
- 	ret = ov6650_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
-+	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
--	}
+ 	kbuf[read_len] = '\0';
  
- 	return ret;
- }
+-	if (!strncmp(kbuf, "on", 2))
++	if (!strncmp(kbuf, "on", 2)) {
++		topology_updates_enabled = true;
+ 		start_topology_update();
+-	else if (!strncmp(kbuf, "off", 3))
++	} else if (!strncmp(kbuf, "off", 3)) {
+ 		stop_topology_update();
+-	else
++		topology_updates_enabled = false;
++	} else
+ 		return -EINVAL;
+ 
+ 	return count;
+@@ -1654,9 +1662,7 @@ static const struct file_operations topology_ops = {
+ 
+ static int topology_update_init(void)
+ {
+-	/* Do not poll for changes if disabled at boot */
+-	if (topology_updates_enabled)
+-		start_topology_update();
++	start_topology_update();
+ 
+ 	if (!proc_create("powerpc/topology_updates", 0644, NULL, &topology_ops))
+ 		return -ENOMEM;
 -- 
 2.20.1
 
