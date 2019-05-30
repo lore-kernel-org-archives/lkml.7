@@ -2,440 +2,180 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35E7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CE2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC11425C55
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACB525C77
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lL0jFZyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfE3PMe (ORCPT
+        id S1727309AbfE3PNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:12:34 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38268 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3PMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:12:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 401CF341;
-        Thu, 30 May 2019 08:12:33 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F8A13F59C;
-        Thu, 30 May 2019 08:12:29 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:12:27 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, james.morse@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com
-Subject: Re: [PATCH V5 3/3] arm64/mm: Enable memory hot remove
-Message-ID: <20190530151227.GD56046@lakrids.cambridge.arm.com>
-References: <1559121387-674-1-git-send-email-anshuman.khandual@arm.com>
- <1559121387-674-4-git-send-email-anshuman.khandual@arm.com>
+        Thu, 30 May 2019 11:13:17 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55065 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfE3PNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:13:17 -0400
+Received: by mail-it1-f196.google.com with SMTP id h20so10459623itk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Eui9rhOOSVJFATgLQfCGElNgPrb4OxaEYuZCLtveNFI=;
+        b=lL0jFZyXj4J/Ygv652tIZe3DhYPOGYTmW6ZY+3SfO6Wh561kGa2XE2vP7SD8riaC/K
+         6MjIbSaBhpLEhFuBCvTgWUuPh5I1PqIK15SUDjDwNwpEFnomrlAKI+aX5IzfCTtMh0Ph
+         aR/JboBTnkQONECjroqMRGOrnmFn8sZSoLKgZoF2ota2m3GHqcjbOLMiCx0FxZpazIgY
+         8ekUxTlebeuu/Jgo0vHAjFJiGdos5EF/9QM/1c0HesGdp2q/synyRcimtImw8BE3aruN
+         /IxRaS9heQNupFlL9HMC+pvf8hLp3SlfsCfP4RLX6xovRdTiMi9mZEz9pqrNm/tYE/PS
+         eBUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Eui9rhOOSVJFATgLQfCGElNgPrb4OxaEYuZCLtveNFI=;
+        b=k2EQivWfx0NxGDHFi10ZMfmiymXItbTBOl2UE6qiLuJu4XywbcKSKxQVenFcDJ1ejE
+         pVJqYX9Yc9jrVi4eWUYHDW0O+IdNJkSYctt0rZ2F3V6pGXEZKIXdJ34kgMwyhv/KnIg1
+         IPaXWkgEqA2CWdxzUOuzPQiS1pUpHff4saLjJePInKWQYwxbgta64pUgXBlxQ/ZYi4B8
+         j6vePFzG46Nv7Vovwkg6PuDXxnUnsLR74CSY8U4N4Xe6BtxPO3FYZg6f0xkjbqF2u0+V
+         tA54bBEIapPN7u4RWe7u8R7Ump32Q1skpY2tRSsAV5ubOojD7cPuHHI20ddEe/pP1PD1
+         54qQ==
+X-Gm-Message-State: APjAAAWg55q/2Icp5lpoEvQ538oKTxyDxlRAMB8IbDXRP7OauesKv9tP
+        p8hj4NL066Kk5EmwNH+gEDAL2UENHPCaRZget9HGptINoGo=
+X-Google-Smtp-Source: APXvYqyhleoAdX565uQ6xxDGStKu19Q1bSx7tU5fBGlRoqZYCKlU8fKHxrwKIc1CJhFHh9RKbpp/OZAcrdvyVn75mCU=
+X-Received: by 2002:a02:b01c:: with SMTP id p28mr2849778jah.130.1559229195998;
+ Thu, 30 May 2019 08:13:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559121387-674-4-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
+ <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+ <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
+ <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au> <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
+ <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com> <AM6PR09MB3523A665C9D9334659F05F90D2180@AM6PR09MB3523.eurprd09.prod.outlook.com>
+In-Reply-To: <AM6PR09MB3523A665C9D9334659F05F90D2180@AM6PR09MB3523.eurprd09.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 30 May 2019 17:13:03 +0200
+Message-ID: <CAKv+Gu-5VvJpgECttU-JRSJDZc_WUvVpw1e4BFq4dQu3EHKu+w@mail.gmail.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+To:     Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Thu, 30 May 2019 at 16:53, Pascal Van Leeuwen
+<pvanleeuwen@insidesecure.com> wrote:
+>
+> >
+> > This might work:
+> >
+> > diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+> > index c0ece44f303b..3d313d2a279a 100644
+> > --- a/drivers/crypto/caam/caamalg.c
+> > +++ b/drivers/crypto/caam/caamalg.c
+> > @@ -1661,7 +1661,8 @@ static int aead_decrypt(struct aead_request *req)
+> >   * allocate and map the skcipher extended descriptor for skcipher
+> >   */
+> >  static struct skcipher_edesc *skcipher_edesc_alloc(struct
+> > skcipher_request *req,
+> > -                                                  int desc_bytes)
+> > +                                                  int desc_bytes,
+> > +                                                  u8 const *input_iv)
+> >  {
+> >         struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+> >         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+> > @@ -1745,7 +1746,7 @@ static struct skcipher_edesc
+> > *skcipher_edesc_alloc(struct skcipher_request *req,
+> >         /* Make sure IV is located in a DMAable area */
+> >         if (ivsize) {
+> >                 iv = (u8 *)edesc->hw_desc + desc_bytes + sec4_sg_bytes;
+> > -               memcpy(iv, req->iv, ivsize);
+> > +               memcpy(iv, input_iv, ivsize);
+> >
+> >                 iv_dma = dma_map_single(jrdev, iv, ivsize, DMA_TO_DEVICE);
+> >                 if (dma_mapping_error(jrdev, iv_dma)) {
+> > @@ -1801,7 +1802,8 @@ static int skcipher_encrypt(struct skcipher_request
+> > *req)
+> >         int ret = 0;
+> >
+> >         /* allocate extended descriptor */
+> > -       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
+> > +       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ,
+> > +                                    req->iv);
+> >         if (IS_ERR(edesc))
+> >                 return PTR_ERR(edesc);
+> >
+> > @@ -1832,13 +1834,11 @@ static int skcipher_decrypt(struct
+> > skcipher_request *req)
+> >         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+> >         int ivsize = crypto_skcipher_ivsize(skcipher);
+> >         struct device *jrdev = ctx->jrdev;
+> > +       u8 in_iv[AES_BLOCK_SIZE];
+> >         u32 *desc;
+> >         int ret = 0;
+> >
+> > -       /* allocate extended descriptor */
+> > -       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
+> > -       if (IS_ERR(edesc))
+> > -               return PTR_ERR(edesc);
+> > +       memcpy(in_iv, req->iv, ivsize);
+> >
+> >         /*
+> >          * The crypto API expects us to set the IV (req->iv) to the last
+> > @@ -1848,6 +1848,11 @@ static int skcipher_decrypt(struct skcipher_request
+> > *req)
+> >                 scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen
+> > -
+> >                                          ivsize, ivsize, 0);
+> >
+> > +       /* allocate extended descriptor */
+> > +       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ,
+> > in_iv);
+> > +       if (IS_ERR(edesc))
+> > +               return PTR_ERR(edesc);
+> > +
+> >         /* Create and submit job descriptor*/
+> >         init_skcipher_job(req, edesc, false);
+> >         desc = edesc->hw_desc;
+>
+> Interesting. This discussion made me reevaluate my own implementation.
+>
+> First thing I realised is that I *am* currently doing the IV copying with
+> the data buffer mapped for DMA ... If I understand correctly that may be a
+> bad idea on some systems? I which case I will need to do my copy earlier.
+>
 
-From reviwing the below, I can see some major issues that need to be
-addressed, which I've commented on below.
+Yes, this may break on non-coherent systems, since the DMA layer does
+not expect cachelines covering the mapped region to enter the dirty
+state while the mapping is active. DMA unmap does a clean+invalidate
+to make the data written to main memory by the device visible to the
+CPU, and it does not expect the 'clean' part of that operation to
+result in any writebacks. If such a writeback does occur, it does so
+at cacheline granularity, therefore potentially overwriting some data
+that was just written by the device.
 
-Andrew, please do not pick up this patch.
-
-On Wed, May 29, 2019 at 02:46:27PM +0530, Anshuman Khandual wrote:
-> The arch code for hot-remove must tear down portions of the linear map and
-> vmemmap corresponding to memory being removed. In both cases the page
-> tables mapping these regions must be freed, and when sparse vmemmap is in
-> use the memory backing the vmemmap must also be freed.
-> 
-> This patch adds a new remove_pagetable() helper which can be used to tear
-> down either region, and calls it from vmemmap_free() and
-> ___remove_pgd_mapping(). The sparse_vmap argument determines whether the
-> backing memory will be freed.
-> 
-> While freeing intermediate level page table pages bail out if any of it's
-
-Nit: s/it's/its/
-
-> entries are still valid. This can happen for partially filled kernel page
-> table either from a previously attempted failed memory hot add or while
-> removing an address range which does not span the entire page table page
-> range.
-> 
-> The vmemmap region may share levels of table with the vmalloc region. Take
-> the kernel ptl so that we can safely free potentially-shared tables.
-
-AFAICT, this is not sufficient; please see below for details.
-
-> While here update arch_add_memory() to handle __add_pages() failures by
-> just unmapping recently added kernel linear mapping. Now enable memory hot
-> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
-> 
-> This implementation is overall inspired from kernel page table tear down
-> procedure on X86 architecture.
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-
-Looking at this some more, I don't think this is quite right, and tI
-think that structure of the free_*() and remove_*() functions makes this
-unnecessarily hard to follow. We should aim for this to be obviously
-correct.
-
-The x86 code is the best template to follow here. As mentioned
-previously, I'm fairly certain it's not entirely correct (e.g. due to
-missing TLB maintenance), and we've already diverged a fair amount in
-fixing up obvious issues, so we shouldn't aim to mirror it.
-
-I think that the structure of unmap_region() is closer to what we want
-here -- do one pass to unmap leaf entries (and freeing the associated
-memory if unmapping the vmemmap), then do a second pass cleaning up any
-empty tables.
-
-In general I'm concerned that we don't strictly follow a
-clear->tlbi->free sequence, and free pages before tearing down their
-corresponding mapping. It doesn't feel great to leave a cacheable alias
-around, even transiently. Further, as commented below, the
-remove_p?d_table() functions leave stale leaf entries in the TLBs when
-removing section entries.
-
-> ---
->  arch/arm64/Kconfig  |   3 +
->  arch/arm64/mm/mmu.c | 211 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 212 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 697ea05..7f917fe 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -268,6 +268,9 @@ config HAVE_GENERIC_GUP
->  config ARCH_ENABLE_MEMORY_HOTPLUG
->  	def_bool y
->  
-> +config ARCH_ENABLE_MEMORY_HOTREMOVE
-> +	def_bool y
-> +
->  config SMP
->  	def_bool y
->  
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index a1bfc44..4803624 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -733,6 +733,187 @@ int kern_addr_valid(unsigned long addr)
->  
->  	return pfn_valid(pte_pfn(pte));
->  }
-> +
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +static void free_hotplug_page_range(struct page *page, ssize_t size)
-
-The size argument should never be negative, so size_t would be best.
-
-> +{
-> +	WARN_ON(PageReserved(page));
-> +	free_pages((unsigned long)page_address(page), get_order(size));
-> +}
-> +
-> +static void free_hotplug_pgtable_page(struct page *page)
-> +{
-> +	free_hotplug_page_range(page, PAGE_SIZE);
-> +}
-> +
-> +static void free_pte_table(pte_t *ptep, pmd_t *pmdp, unsigned long addr)
-> +{
-> +	struct page *page;
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PTE; i++) {
-> +		if (!pte_none(ptep[i]))
-> +			return;
-> +	}
-> +
-> +	page = pmd_page(READ_ONCE(*pmdp));
-> +	pmd_clear(pmdp);
-> +	__flush_tlb_kernel_pgtable(addr);
-> +	free_hotplug_pgtable_page(page);
-> +}
-> +
-> +static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr)
-> +{
-> +	struct page *page;
-> +	int i;
-> +
-> +	if (CONFIG_PGTABLE_LEVELS <= 2)
-> +		return;
-> +
-> +	for (i = 0; i < PTRS_PER_PMD; i++) {
-> +		if (!pmd_none(pmdp[i]))
-> +			return;
-> +	}
-> +
-> +	page = pud_page(READ_ONCE(*pudp));
-> +	pud_clear(pudp);
-> +	__flush_tlb_kernel_pgtable(addr);
-> +	free_hotplug_pgtable_page(page);
-> +}
-> +
-> +static void free_pud_table(pud_t *pudp, pgd_t *pgdp, unsigned long addr)
-> +{
-> +	struct page *page;
-> +	int i;
-> +
-> +	if (CONFIG_PGTABLE_LEVELS <= 3)
-> +		return;
-> +
-> +	for (i = 0; i < PTRS_PER_PUD; i++) {
-> +		if (!pud_none(pudp[i]))
-> +			return;
-> +	}
-> +
-> +	page = pgd_page(READ_ONCE(*pgdp));
-> +	pgd_clear(pgdp);
-> +	__flush_tlb_kernel_pgtable(addr);
-> +	free_hotplug_pgtable_page(page);
-> +}
-> +
-> +static void
-> +remove_pte_table(pmd_t *pmdp, unsigned long addr,
-
-Please put this on a single line.
-
-All the existing functions in this file (and the ones you add above)
-have the return type on the same line as the name, and since this
-portion of the prototype doesn't encroach 80 columns there's no reason
-to flow it.
-
-> +			unsigned long end, bool sparse_vmap)
-> +{
-> +	struct page *page;
-> +	pte_t *ptep, pte;
-> +	unsigned long start = addr;
-> +
-> +	for (; addr < end; addr += PAGE_SIZE) {
-> +		ptep = pte_offset_kernel(pmdp, addr);
-> +		pte = READ_ONCE(*ptep);
-> +
-> +		if (pte_none(pte))
-> +			continue;
-> +
-> +		WARN_ON(!pte_present(pte));
-> +		if (sparse_vmap) {
-> +			page = pte_page(pte);
-> +			free_hotplug_page_range(page, PAGE_SIZE);
-> +		}
-> +		pte_clear(&init_mm, addr, ptep);
-> +	}
-> +	flush_tlb_kernel_range(start, end);
-> +}
-
-For consistency we should use a do { ... } while (..., addr != end) loop
-to iterate over the page tables. All the other code in our mmu.c does
-that, and diverging from that doesn't save use anything here but does
-make review and maintenance harder.
-
-> +
-> +static void
-> +remove_pmd_table(pud_t *pudp, unsigned long addr,
-
-Same line please.
-
-> +			unsigned long end, bool sparse_vmap)
-> +{
-> +	unsigned long next;
-> +	struct page *page;
-> +	pte_t *ptep_base;
-> +	pmd_t *pmdp, pmd;
-> +
-> +	for (; addr < end; addr = next) {
-> +		next = pmd_addr_end(addr, end);
-> +		pmdp = pmd_offset(pudp, addr);
-> +		pmd = READ_ONCE(*pmdp);
-> +
-> +		if (pmd_none(pmd))
-> +			continue;
-> +
-> +		WARN_ON(!pmd_present(pmd));
-> +		if (pmd_sect(pmd)) {
-> +			if (sparse_vmap) {
-> +				page = pmd_page(pmd);
-> +				free_hotplug_page_range(page, PMD_SIZE);
-> +			}
-> +			pmd_clear(pmdp);
-
-As mentioned above, this has no corresponding TLB maintenance, and I'm
-concerned that we free the page before clearing the entry. If the page
-gets re-allocated elsewhere, whoever received the page may not be
-expecting a cacheable alias to exist other than the linear map.
-
-> +			continue;
-> +		}
-> +		ptep_base = pte_offset_kernel(pmdp, 0UL);
-> +		remove_pte_table(pmdp, addr, next, sparse_vmap);
-> +		free_pte_table(ptep_base, pmdp, addr);
-> +	}
-> +}
-> +
-> +static void
-> +remove_pud_table(pgd_t *pgdp, unsigned long addr,
-
-Same line please
-
-> +			unsigned long end, bool sparse_vmap)
-> +{
-> +	unsigned long next;
-> +	struct page *page;
-> +	pmd_t *pmdp_base;
-> +	pud_t *pudp, pud;
-> +
-> +	for (; addr < end; addr = next) {
-> +		next = pud_addr_end(addr, end);
-> +		pudp = pud_offset(pgdp, addr);
-> +		pud = READ_ONCE(*pudp);
-> +
-> +		if (pud_none(pud))
-> +			continue;
-> +
-> +		WARN_ON(!pud_present(pud));
-> +		if (pud_sect(pud)) {
-> +			if (sparse_vmap) {
-> +				page = pud_page(pud);
-> +				free_hotplug_page_range(page, PUD_SIZE);
-> +			}
-> +			pud_clear(pudp);
-
-Same issue as in remove_pmd_table().
-
-> +			continue;
-> +		}
-> +		pmdp_base = pmd_offset(pudp, 0UL);
-> +		remove_pmd_table(pudp, addr, next, sparse_vmap);
-> +		free_pmd_table(pmdp_base, pudp, addr);
-> +	}
-> +}
-> +
-> +static void
-> +remove_pagetable(unsigned long start, unsigned long end, bool sparse_vmap)
-
-Same line please (with the sparse_vmap argument flowed on to the next
-line as that will encroach 80 characters).
-
-> +{
-> +	unsigned long addr, next;
-> +	pud_t *pudp_base;
-> +	pgd_t *pgdp, pgd;
-> +
-> +	spin_lock(&init_mm.page_table_lock);
-
-Please add a comment above this to explain why we need to take the
-init_mm ptl. Per the cover letter, this should be something like:
-
-	/*
-	 * We may share tables with the vmalloc region, so we must take
-	 * the init_mm ptl so that we can safely free any
-	 * potentially-shared tables that we have emptied.
-	 */
-
-The vmalloc code doesn't hold the init_mm ptl when walking a table; it
-only takes the init_mm ptl when populating a none entry in
-__p??_alloc(), to avoid a race where two threads need to populate the
-entry.
-
-So AFAICT, taking the init_mm ptl here is not sufficient to make this
-safe.
-
-Thanks,
-Mark.
-
-> +	for (addr = start; addr < end; addr = next) {
-> +		next = pgd_addr_end(addr, end);
-> +		pgdp = pgd_offset_k(addr);
-> +		pgd = READ_ONCE(*pgdp);
-> +
-> +		if (pgd_none(pgd))
-> +			continue;
-> +
-> +		WARN_ON(!pgd_present(pgd));
-> +		pudp_base = pud_offset(pgdp, 0UL);
-> +		remove_pud_table(pgdp, addr, next, sparse_vmap);
-> +		free_pud_table(pudp_base, pgdp, addr);
-> +	}
-> +	spin_unlock(&init_mm.page_table_lock);
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_SPARSEMEM_VMEMMAP
->  #if !ARM64_SWAPPER_USES_SECTION_MAPS
->  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-> @@ -780,6 +961,9 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->  void vmemmap_free(unsigned long start, unsigned long end,
->  		struct vmem_altmap *altmap)
->  {
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +	remove_pagetable(start, end, true);
-> +#endif
->  }
->  #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
->  
-> @@ -1070,10 +1254,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
-> +{
-> +	WARN_ON(pgdir != init_mm.pgd);
-> +	remove_pagetable(start, start + size, false);
-> +}
-> +
->  int arch_add_memory(int nid, u64 start, u64 size,
->  			struct mhp_restrictions *restrictions)
->  {
-> -	int flags = 0;
-> +	int ret, flags = 0;
->  
->  	if (rodata_full || debug_pagealloc_enabled())
->  		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
-> @@ -1081,7 +1271,24 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
->  			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
->  
-> -	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
-> +	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
->  			   restrictions);
-> +	if (ret)
-> +		__remove_pgd_mapping(swapper_pg_dir,
-> +				     __phys_to_virt(start), size);
-> +	return ret;
-> +}
-> +
-> +#ifdef CONFIG_MEMORY_HOTREMOVE
-> +void arch_remove_memory(int nid, u64 start, u64 size,
-> +				struct vmem_altmap *altmap)
-> +{
-> +	unsigned long start_pfn = start >> PAGE_SHIFT;
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> +	struct zone *zone = page_zone(pfn_to_page(start_pfn));
-> +
-> +	__remove_pages(zone, start_pfn, nr_pages, altmap);
-> +	__remove_pgd_mapping(swapper_pg_dir, __phys_to_virt(start), size);
->  }
->  #endif
-> +#endif
-> -- 
-> 2.7.4
-> 
+> Second thing is the above implementation made me realise I don't need to
+> buffer the IV as part of the skcipher_request_ctx, I can just copy the
+> original req->iv to some local variable, pass a pointer to that along and
+> then overwrite req->iv directly. More elegant and hopefully also more
+> efficient ...
+>
