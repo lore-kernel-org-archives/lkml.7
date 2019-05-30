@@ -2,134 +2,170 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EC3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F5EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD07F256F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BC425701
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rKXipFQD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="lV/7r0ki";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="p8AI4i4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfE3IHu (ORCPT
+        id S1728036AbfE3IHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:07:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42325 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfE3IHu (ORCPT
+        Thu, 30 May 2019 04:07:55 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17341 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfE3IHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:07:50 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U86w2G2903560
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:06:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U86w2G2903560
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203618;
-        bh=ZvhgDNjsbWAuBYcQoOxO0xUG5Z6dvo09/2kLCYNbkYU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=rKXipFQDaNPOjtRbagzwI4GMdO8aFnKX9xL7FEago1kc/1+T4A8+ljnWaM7mypRK3
-         9/yjTRfA0CkRBOFakeghWRTeIiKZKvlDD/jawBUb1tRFARGfpisschgO8hYFxW28nN
-         11MZe5hipotuDtlxWSb9H+lVCriSuDrLj71C9fpz90YPhCTUBiquHrEAt7lSFXrtQo
-         SFE8EFnxfn6C2WgDkQ/QVFpZetS2HaW1REKX0zo2GNSjrD5WwQ4uEK4MIXMpCR+a4y
-         Xc+oED1t4906VmPThPwLV6wo1klFkBK5cpIuGIh5gQ9uqLBpJL5KFGpJfJ1yejapef
-         ycmRY6tY3sDHA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U86vWv2903557;
-        Thu, 30 May 2019 01:06:57 -0700
-Date:   Thu, 30 May 2019 01:06:57 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Namhyung Kim <tipbot@zytor.com>
-Message-ID: <tip-a0c0a4ac021b017e385d0328541ccfebeef165fc@git.kernel.org>
-Cc:     hbathini@linux.vnet.ibm.com, kjlx@templeofstupid.com,
-        acme@redhat.com, mingo@kernel.org, namhyung@kernel.org,
-        jolsa@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
-          hbathini@linux.vnet.ibm.com, kjlx@templeofstupid.com,
-          acme@redhat.com, namhyung@kernel.org, mingo@kernel.org,
-          tglx@linutronix.de, jolsa@redhat.com
-In-Reply-To: <20190522053250.207156-4-namhyung@kernel.org>
-References: <20190522053250.207156-4-namhyung@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf top: Add --namespaces option
-Git-Commit-ID: a0c0a4ac021b017e385d0328541ccfebeef165fc
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 30 May 2019 04:07:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559203685; x=1590739685;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=q5OkX1rLq2OezVbl5sTn+krp06pLKiK4tOQ2smfyLLE=;
+  b=lV/7r0kij0lbAtR0JMbm1OoPLxumOn5nZJEHUstEFWDt+PUfVgR/rScV
+   eqge68/DnFU1W80bJM5SRYUDzv8bw27Jo4IhTlaO5DvsTh6Qe9Mow0Q5K
+   X80ptkaxH3sbmI8hpQU37Id3MXk8ZOiZcinX3kBFXhw9o1ZVxa7+nRp6x
+   +stJclImZZgPaQ81Jikw1md3knEN6HhNtnYW4jP/JLhrDDqNDcHKQM4aU
+   kKip0XFnbF1OTHayqAcQtgzOMIPjNvmLSYnwoPxwsbeH4+ed1UqtYzHfo
+   nj3G36eL2c5Ok+y8PVgQ+1zoYYFAiAcISkwd2ca/zrfxYuMO/nDDaOZko
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.60,530,1549900800"; 
+   d="scan'208";a="208946033"
+Received: from mail-dm3nam05lp2052.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.52])
+  by ob1.hgst.iphmx.com with ESMTP; 30 May 2019 16:08:02 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q5OkX1rLq2OezVbl5sTn+krp06pLKiK4tOQ2smfyLLE=;
+ b=p8AI4i4R3tkcBrmFkgQjuR1xyU9ttk0sHW0j3q073VJ/zlD/xPE4DleRB/lx6R/Z+A1YMa1eeypaZQd5Jf0ikCgFoPPJjfKQl6vflh/+GJQlvo/w/WLDduKLg1jgQqO8eG1ApEKQL1keOIrO+iCBGO4ITXiasPJyiZ++xhrDB8A=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5903.namprd04.prod.outlook.com (20.179.23.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Thu, 30 May 2019 08:07:50 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::98ab:5e60:9c5c:4e0e]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::98ab:5e60:9c5c:4e0e%7]) with mapi id 15.20.1922.021; Thu, 30 May 2019
+ 08:07:50 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     "xvisor-devel@googlegroups.com" <xvisor-devel@googlegroups.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "opensbi@lists.infradead.org" <opensbi@lists.infradead.org>
+CC:     Ted Marena <Ted.Marena@wdc.com>,
+        Zvonimir Bandic <zvonimir.bandic@wdc.com>,
+        "waterman@eecs.berkeley.edu" <waterman@eecs.berkeley.edu>,
+        "krste@berkeley.edu" <krste@berkeley.edu>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: RISC-V Hypervisors
+Thread-Topic: RISC-V Hypervisors
+Thread-Index: AdUWvgbyyaU5prZHR4mrJ6KOrYge6A==
+Date:   Thu, 30 May 2019 08:07:50 +0000
+Message-ID: <MN2PR04MB6061C0E703D66476EEEA2C4D8D180@MN2PR04MB6061.namprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-originating-ip: [103.20.29.89]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3d2cc224-e414-460c-559a-08d6e4d5e909
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5903;
+x-ms-traffictypediagnostic: MN2PR04MB5903:
+x-ms-exchange-purlcount: 10
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <MN2PR04MB59035186E4EECA8A283D6EA58D180@MN2PR04MB5903.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(136003)(396003)(39860400002)(376002)(53754006)(199004)(189003)(99286004)(66066001)(486006)(53376002)(476003)(55016002)(54906003)(102836004)(8936002)(6506007)(256004)(33656002)(6116002)(25786009)(4326008)(7696005)(9686003)(110136005)(53936002)(6306002)(3846002)(26005)(2501003)(16799955002)(15188155005)(71190400001)(7736002)(68736007)(316002)(8676002)(966005)(73956011)(71200400001)(81166006)(66446008)(66476007)(76116006)(186003)(66946007)(64756008)(81156014)(305945005)(6436002)(478600001)(86362001)(14454004)(2201001)(72206003)(3480700005)(347745004)(52536014)(2906002)(74316002)(5660300002)(66556008)(19623215001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5903;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0gZMuQoX7NmGHGssoo4W3urBLmIunf2Y+6S4U4rDXxgJBW6mZ5sKec3haqvBZdaZgBpjZowfMa1NTOL8PmEb0Pbp6u2bOeRoMrYU0/Tct9Yu52ORm8L2LASI4MAVDfis8Yr9i0m6hopcCeljjioLJwUfdK/Fr5t0PzuLJZ8rXlEK/5K86z/ABJb8i4WGjA+OkM2Xc/T3eo9n6Si6y+gZa1lte8/46rQ/gJaJqN6uaqkNH0A+gPh8ee1NODLjyyQV1luXMNkSMMGiuNGO0lAmpe0UcDGaZzHuaP+05pdHer+zl1Vv4RlVkyJNb8AdoSqZQ44gJb0paqSeYGyC7ckmQYVsYk4V1IYd/tUEVi1QXJtrujZMHUjvNa2eOmBdl3O1n/a4CQDFR6FA5LBMzEP1ZWVIxmFdZBda/NTRnCGyWEc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d2cc224-e414-460c-559a-08d6e4d5e909
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 08:07:50.6225
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Anup.Patel@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a0c0a4ac021b017e385d0328541ccfebeef165fc
-Gitweb:     https://git.kernel.org/tip/a0c0a4ac021b017e385d0328541ccfebeef165fc
-Author:     Namhyung Kim <namhyung@kernel.org>
-AuthorDate: Wed, 22 May 2019 14:32:50 +0900
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:43 -0300
+Hi All,
 
-perf top: Add --namespaces option
+It's a great pleasure to inform everyone that we have RISC-V
+hypervisor extension available for QEMU and along with it we
+also have Xvisor (a baremetal type-1 hypervisor) working on
+QEMU with RISC-V hypervisor extension. Currently, we are able
+to boot two Linux RV64 Guests on Xvisor RV64.
 
-Since 'perf record' already have this option, let's have it for 'perf top'
-as well.
+This will be very useful to RISC-V CPU designers in validating
+their implementation of RISC-V hypervisor extensions.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Krister Johansen <kjlx@templeofstupid.com>
-Link: http://lkml.kernel.org/r/20190522053250.207156-4-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf-top.txt | 5 +++++
- tools/perf/builtin-top.c              | 5 +++++
- 2 files changed, 10 insertions(+)
+The QEMU RISC-V hypervisor emulation is done by Alistair and is
+available in riscv-hyp-work.next branch at:
+https://github.com/alistair23/qemu.git.
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index 44d89fb9c788..cfea87c6f38e 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -262,6 +262,11 @@ Default is to monitor all CPUS.
- 	The number of threads to run when synthesizing events for existing processes.
- 	By default, the number of threads equals to the number of online CPUs.
- 
-+--namespaces::
-+	Record events of type PERF_RECORD_NAMESPACES and display it with the
-+	'cgroup_id' sort key.
-+
-+
- INTERACTIVE PROMPTING KEYS
- --------------------------
- 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index fbbb0da43abb..31d78d874fc7 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1208,6 +1208,9 @@ static int __cmd_top(struct perf_top *top)
- 
- 	init_process_thread(top);
- 
-+	if (opts->record_namespaces)
-+		top->tool.namespace_events = true;
-+
- 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
- 						&top->session->machines.host,
- 						&top->record_opts);
-@@ -1500,6 +1503,8 @@ int cmd_top(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
- 			"number of thread to run event synthesize"),
-+	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
-+		    "Record namespaces events"),
- 	OPT_END()
- 	};
- 	struct perf_evlist *sb_evlist = NULL;
+At the moment, QEMU RISC-V hypervisor emulation patches are
+on QEMU mailing list for review.
+(Refer, https://lists.gnu.org/archive/html/qemu-devel/2019-05/msg06064.html=
+)
+
+The Xvisor RISC-V port is done by myself (Anup) and Atish. It
+can be found in master branch of Xvisor staging repo at:
+https://github.com/avpatel/xvisor-next.git.
+
+For more details on Xvisor, refer
+http://xhypervisor.org/
+http://xhypervisor.org/index.php?page=3Dnews/20150427
+
+The SBI runtime needs to support RISC-V hypervisor extensions.
+Particularly, we need to handle trap redirection, misaligned
+load/store emulation, and missing CSR emulation differently for
+HS-mode and VS-mode. We have extended OpenSBI to support RISC-V
+hypervisor extension and it is available in hyp_ext_changes_v1
+branch at:
+https://github.com/riscv/opensbi.git
+
+We have made great progress in KVM RISC-V (type-2 hypervisor) as
+well. Currently, we are debugging KVM RISC-V and KVMTOOL RISC-V
+port on QEMU. You can expect RFC patches soon in June/July 2019.
+
+The KVM RISC-V can be found in riscv_kvm_v1 branch at:
+https://github.com/avpatel/linux.git
+
+The KVMTOOL RISC-V port can be found in riscv_v1 branch at:
+https://github.com/avpatel/kvmtool.git
+
+There is an early work on Xen RISC-V port which is avaliable
+in alistair/riscv-port branch at:
+https://github.com/alistair23/xen.git
+
+We will be showing a demo of QEMU+OpenSBI+Xvisor+Linux at
+up-coming RISC-V Zurich Workshop.
+(Refer, https://tmt.knect365.com/risc-v-workshop-zurich/)
+
+Stay tuned for more exciting updates on RISC-V hypervisors.
+
+Regards,
+Anup
