@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9537AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7736FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F90925A44
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BC825A65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191370;
-	bh=n+u/WguqQF8MlrFw+6RnxXfno7gUgXsBE8I1I+UCr8o=;
+	s=default; t=1559191375;
+	bh=rxCrpIiaYEqi2GIngIkjWIgpI8uJuQnsod/o2MB2Q/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkTfsz7D9S9ZN+zrgwiRYgX1aOfAIcQjJmyq4x55+To4mg9Nt7zSiJVp/VVUa0Voj
-	 1D6W/eybMdDPaU3KR3Q9qGBKJnNz5HtfLvHYi1UywpO5jRJrOOk7CjwmT1e00PSgsp
-	 rv0qNsrynJhtKSmadpdX3Oy+KQha5CgUCZ6HUiWY=
+	b=eQ9Y1DouU8sL3lYO4jrSsQ5roSpAt76HqXnBZtAH1wc1dSiETCxJnyD8vh4kOYquN
+	 mQPD5KpDcw/ENXZ6vnkV3Nx9ZIW5P3bdpD8yjbB2mRWN1C+3OdxdNN290cfbsS0soS
+	 zEclJBf9fzTXHMOcWUg1LzRraQQBUOxlIQHKHyro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388681AbfE3Emt (ORCPT
+        id S1728897AbfE3DMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbfE3DMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728210AbfE3DKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF804244E8;
-        Thu, 30 May 2019 03:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98759244AB;
+        Thu, 30 May 2019 03:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185934;
-        bh=n+u/WguqQF8MlrFw+6RnxXfno7gUgXsBE8I1I+UCr8o=;
+        s=default; t=1559185844;
+        bh=rxCrpIiaYEqi2GIngIkjWIgpI8uJuQnsod/o2MB2Q/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI6n4uFyNXvq542M58bmYcAZOyzV9fVDq2GvxtyG34qU+n+PUrBv+TUuqHU9JvWni
-         dG1J1akWxgNqAsIvS/eMcsBmKQ5l1kt2CYJYwb7md73FHIANqLW/K0lMnYqiwkqige
-         +PQRovN2SRYdWS5G61N9bih0QwIygrxU5H4y/9xk=
+        b=izBlOvM22N1ZxObJuuftms+HsbGZc85TpW8GsSDF7QlTWCkm5zfPjrHj3U4SGhQxl
+         w5tLsOe+qSNTS3e5+rPaxjHMttXIhTxAkuFAq7pFfikV8kO+F/5vHznXjg72fFxuvH
+         mmaqKKLW0v0vkD9OhzGoW88VKpP8iUwRBYOoVMBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 288/405] media: gspca: Kill URBs on USB device disconnect
-Date:   Wed, 29 May 2019 20:04:46 -0700
-Message-Id: <20190530030555.440542283@linuxfoundation.org>
+Subject: [PATCH 5.1 164/405] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
+Date:   Wed, 29 May 2019 20:02:42 -0700
+Message-Id: <20190530030549.433629836@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,47 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b9ea7c2b57a0c9c3341fc6db039d1f7971a432e ]
+[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
 
-In order to prevent ISOC URBs from being infinitely resubmitted,
-the driver's USB disconnect handler must kill all the in-flight URBs.
+With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
+boundary.  This is necessary so that it can be repurposed later with
+different permissions.  However, in kernels with text larger than 16M,
+this pushes early_setup past 32M, incapable of being reached by the
+branch instruction.
 
-While here, change the URB packet status message to a debug level,
-to avoid spamming the console too much.
+Fix this by setting the CTR and branching there instead.
 
-This commit fixes a lockup caused by an interrupt storm coming
-from the URB completion handler.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+[mpe: Fix it to work on BE by using DOTSYM()]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/gspca/gspca.c | 4 +++-
+ arch/powerpc/kernel/head_64.S | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
-index ac70b36d67b7b..128935f2a217e 100644
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -294,7 +294,7 @@ static void fill_frame(struct gspca_dev *gspca_dev,
- 		/* check the packet status and length */
- 		st = urb->iso_frame_desc[i].status;
- 		if (st) {
--			pr_err("ISOC data error: [%d] len=%d, status=%d\n",
-+			gspca_dbg(gspca_dev, D_PACK, "ISOC data error: [%d] len=%d, status=%d\n",
- 			       i, len, st);
- 			gspca_dev->last_packet_type = DISCARD_PACKET;
- 			continue;
-@@ -1638,6 +1638,8 @@ void gspca_disconnect(struct usb_interface *intf)
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 3fad8d499767c..5321a11c28358 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -968,7 +968,9 @@ start_here_multiplatform:
  
- 	mutex_lock(&gspca_dev->usb_lock);
- 	gspca_dev->present = false;
-+	destroy_urbs(gspca_dev);
-+	gspca_input_destroy_urb(gspca_dev);
+ 	/* Restore parameters passed from prom_init/kexec */
+ 	mr	r3,r31
+-	bl	early_setup		/* also sets r13 and SPRG_PACA */
++	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
++	mtctr	r12
++	bctrl		/* also sets r13 and SPRG_PACA */
  
- 	vb2_queue_error(&gspca_dev->queue);
- 
+ 	LOAD_REG_ADDR(r3, start_here_common)
+ 	ld	r4,PACAKMSR(r13)
 -- 
 2.20.1
 
