@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C6AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C11C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF7824E10
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3BA24E13
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188428;
-	bh=6HhoEqfB900/gBNVZ2xAYHzCuhOQS/FB6bnJ+gdUPWU=;
+	s=default; t=1559188435;
+	bh=TIFyNDY9FzGlyx5lxUxH4rwVPK55GjuPa0XuZBHjypo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/usdUubqz9CLdZKfIMl8oD3BTgsxTOH9p5Pz//BY9oI9hlY5NSKbaKJ+LKHLAuN1
-	 ixXsxOeFwnO/B1LMDaav2h+GjjJ+v7Wd3IBlKmp/nrGuZh+QWK0Qvks86j72uB+kZ4
-	 txqqodJ3zJyC1N+L0pSGMtn5LCakTgYAqn852njg=
+	b=CnL0t5PChbG82sjqvGgH7LTgH1nN3vSRm4eom1eeAp3S/ykY29JrjmMR52L7pd8H5
+	 UBsl9dXTiFP7dIj40aKpzupyESgG4JrzY91NVeUvr1fyoIlwSC03OpMLOLyVCrbR9i
+	 /ffE+P7beMS69+hZ0dJHpeZ59/uvLuUu5n0QjzPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbfE3Dxr (ORCPT
+        id S2387802AbfE3Dxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731909AbfE3DT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:29 -0400
+        id S1729421AbfE3DT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F145624893;
-        Thu, 30 May 2019 03:19:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B9024888;
+        Thu, 30 May 2019 03:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186369;
-        bh=6HhoEqfB900/gBNVZ2xAYHzCuhOQS/FB6bnJ+gdUPWU=;
+        s=default; t=1559186367;
+        bh=TIFyNDY9FzGlyx5lxUxH4rwVPK55GjuPa0XuZBHjypo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqOQUy5GwOfMpDZfSRdRuyURxK4hFIuSm/drkV9Mw88oINYxerrJqtQmMpcGWcLvn
-         d+GAdQGHCzVR2QRs4hrNFJGBWq7hffLUDAxY/aAUs7sRLDQ++YQiIbf2bB1XngXKCy
-         SJpHmlFbqIpEYviQkRYLreYw31nXGFEbry9HWvx8=
+        b=nVwhr0TG64Jq1cV1sgzV3iqZ6TWPB9sVcLolDvcTFJCGZDfcZXw5qZaxM5O454vSV
+         /VNY1hR/QBXE7sesLZQaFJDZK208VaT7O34U5SWxya1ZUHw+fY4YL0z5mvZaHGOBF3
+         mplA9OL384D03YcebSKEG6lpsyJq6TVfHIt9d2pY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 077/193] vfio-ccw: Do not call flush_workqueue while holding the spinlock
-Date:   Wed, 29 May 2019 20:05:31 -0700
-Message-Id: <20190530030459.782377268@linuxfoundation.org>
+Subject: [PATCH 4.14 117/193] mmc: core: make pwrseq_emmc (partially) support sleepy GPIO controllers
+Date:   Wed, 29 May 2019 20:06:11 -0700
+Message-Id: <20190530030504.992800247@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,67 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cea5dde42a83b5f0a039da672f8686455936b8d8 ]
+[ Upstream commit 002ee28e8b322d4d4b7b83234b5d0f4ebd428eda ]
 
-Currently we call flush_workqueue while holding the subchannel
-spinlock. But flush_workqueue function can go to sleep, so
-do not call the function while holding the spinlock.
+pwrseq_emmc.c implements a HW reset procedure for eMMC chip by driving a
+GPIO line.
 
-Fixes the following bug:
+It registers the .reset() cb on mmc_pwrseq_ops and it registers a system
+restart notification handler; both of them perform reset by unconditionally
+calling gpiod_set_value().
 
-[  285.203430] BUG: scheduling while atomic: bash/14193/0x00000002
-[  285.203434] INFO: lockdep is turned off.
-....
-[  285.203485] Preemption disabled at:
-[  285.203488] [<000003ff80243e5c>] vfio_ccw_sch_quiesce+0xbc/0x120 [vfio_ccw]
-[  285.203496] CPU: 7 PID: 14193 Comm: bash Tainted: G        W
-....
-[  285.203504] Call Trace:
-[  285.203510] ([<0000000000113772>] show_stack+0x82/0xd0)
-[  285.203514]  [<0000000000b7a102>] dump_stack+0x92/0xd0
-[  285.203518]  [<000000000017b8be>] __schedule_bug+0xde/0xf8
-[  285.203524]  [<0000000000b95b5a>] __schedule+0x7a/0xc38
-[  285.203528]  [<0000000000b9678a>] schedule+0x72/0xb0
-[  285.203533]  [<0000000000b9bfbc>] schedule_timeout+0x34/0x528
-[  285.203538]  [<0000000000b97608>] wait_for_common+0x118/0x1b0
-[  285.203544]  [<0000000000166d6a>] flush_workqueue+0x182/0x548
-[  285.203550]  [<000003ff80243e6e>] vfio_ccw_sch_quiesce+0xce/0x120 [vfio_ccw]
-[  285.203556]  [<000003ff80245278>] vfio_ccw_mdev_reset+0x38/0x70 [vfio_ccw]
-[  285.203562]  [<000003ff802458b0>] vfio_ccw_mdev_remove+0x40/0x78 [vfio_ccw]
-[  285.203567]  [<000003ff801a499c>] mdev_device_remove_ops+0x3c/0x80 [mdev]
-[  285.203573]  [<000003ff801a4d5c>] mdev_device_remove+0xc4/0x130 [mdev]
-[  285.203578]  [<000003ff801a5074>] remove_store+0x6c/0xa8 [mdev]
-[  285.203582]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
-[  285.203588]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
-[  285.203593]  [<00000000003c187c>] vfs_write+0xb4/0x198
-[  285.203597]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
-[  285.203601]  [<0000000000b9e270>] system_call+0xdc/0x2d8
+If the eMMC reset line is tied to a GPIO controller whose driver can sleep
+(i.e. I2C GPIO controller), then the kernel would spit warnings when trying
+to reset the eMMC chip by means of .reset() mmc_pwrseq_ops cb (that is
+exactly what I'm seeing during boot).
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Message-Id: <626bab8bb2958ae132452e1ddaf1b20882ad5a9d.1554756534.git.alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Furthermore, on system reset we would gets to the system restart
+notification handler with disabled interrupts - local_irq_disable() is
+called in machine_restart() at least on ARM/ARM64 - and we would be in
+trouble when the GPIO driver tries to sleep (which indeed doesn't happen
+here, likely because in my case the machine specific code doesn't call
+do_kernel_restart(), I guess..).
+
+This patch fixes the .reset() cb to make use of gpiod_set_value_cansleep(),
+so that the eMMC gets reset on boot without complaints, while, since there
+isn't that much we can do, we avoid register the restart handler if the
+GPIO controller has a sleepy driver (and we spit a dev_notice() message to
+let people know)..
+
+This had been tested on a downstream 4.9 kernel with backported
+commit 83f37ee7ba33 ("mmc: pwrseq: Add reset callback to the struct
+mmc_pwrseq_ops") and commit ae60fb031cf2 ("mmc: core: Don't do eMMC HW
+reset when resuming the eMMC card"), because I couldn't boot my board
+otherwise. Maybe worth to RFT.
+
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/pwrseq_emmc.c | 38 ++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index d22759eb66407..59eb5e6d9c79d 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -52,9 +52,9 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+diff --git a/drivers/mmc/core/pwrseq_emmc.c b/drivers/mmc/core/pwrseq_emmc.c
+index efb8a7965dd4a..154f4204d58cb 100644
+--- a/drivers/mmc/core/pwrseq_emmc.c
++++ b/drivers/mmc/core/pwrseq_emmc.c
+@@ -30,19 +30,14 @@ struct mmc_pwrseq_emmc {
  
- 			wait_for_completion_timeout(&completion, 3*HZ);
+ #define to_pwrseq_emmc(p) container_of(p, struct mmc_pwrseq_emmc, pwrseq)
  
--			spin_lock_irq(sch->lock);
- 			private->completion = NULL;
- 			flush_workqueue(vfio_ccw_work_q);
-+			spin_lock_irq(sch->lock);
- 			ret = cio_cancel_halt_clear(sch, &iretry);
- 		};
+-static void __mmc_pwrseq_emmc_reset(struct mmc_pwrseq_emmc *pwrseq)
+-{
+-	gpiod_set_value(pwrseq->reset_gpio, 1);
+-	udelay(1);
+-	gpiod_set_value(pwrseq->reset_gpio, 0);
+-	udelay(200);
+-}
+-
+ static void mmc_pwrseq_emmc_reset(struct mmc_host *host)
+ {
+ 	struct mmc_pwrseq_emmc *pwrseq =  to_pwrseq_emmc(host->pwrseq);
  
+-	__mmc_pwrseq_emmc_reset(pwrseq);
++	gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
++	udelay(1);
++	gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
++	udelay(200);
+ }
+ 
+ static int mmc_pwrseq_emmc_reset_nb(struct notifier_block *this,
+@@ -50,8 +45,11 @@ static int mmc_pwrseq_emmc_reset_nb(struct notifier_block *this,
+ {
+ 	struct mmc_pwrseq_emmc *pwrseq = container_of(this,
+ 					struct mmc_pwrseq_emmc, reset_nb);
++	gpiod_set_value(pwrseq->reset_gpio, 1);
++	udelay(1);
++	gpiod_set_value(pwrseq->reset_gpio, 0);
++	udelay(200);
+ 
+-	__mmc_pwrseq_emmc_reset(pwrseq);
+ 	return NOTIFY_DONE;
+ }
+ 
+@@ -72,14 +70,18 @@ static int mmc_pwrseq_emmc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pwrseq->reset_gpio))
+ 		return PTR_ERR(pwrseq->reset_gpio);
+ 
+-	/*
+-	 * register reset handler to ensure emmc reset also from
+-	 * emergency_reboot(), priority 255 is the highest priority
+-	 * so it will be executed before any system reboot handler.
+-	 */
+-	pwrseq->reset_nb.notifier_call = mmc_pwrseq_emmc_reset_nb;
+-	pwrseq->reset_nb.priority = 255;
+-	register_restart_handler(&pwrseq->reset_nb);
++	if (!gpiod_cansleep(pwrseq->reset_gpio)) {
++		/*
++		 * register reset handler to ensure emmc reset also from
++		 * emergency_reboot(), priority 255 is the highest priority
++		 * so it will be executed before any system reboot handler.
++		 */
++		pwrseq->reset_nb.notifier_call = mmc_pwrseq_emmc_reset_nb;
++		pwrseq->reset_nb.priority = 255;
++		register_restart_handler(&pwrseq->reset_nb);
++	} else {
++		dev_notice(dev, "EMMC reset pin tied to a sleepy GPIO driver; reset on emergency-reboot disabled\n");
++	}
+ 
+ 	pwrseq->pwrseq.ops = &mmc_pwrseq_emmc_ops;
+ 	pwrseq->pwrseq.dev = dev;
 -- 
 2.20.1
 
