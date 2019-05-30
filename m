@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF594C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A68C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFDA25B06
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E9B25B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191521;
-	bh=baUWZtZsxQSldKk1601Ynm8AxfPykkInrWffQPTcdj8=;
+	s=default; t=1559191525;
+	bh=kSDMB93qouo8XN377zhespyfUO9e7dXJqdZ0dU7pCV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=paS07HyZSL2oehdHZEGl8WtiPYsAp2fEpPSVnewXLjMEbY+QD+7O3vYFQoF02F8qU
-	 8CX3yB1QGeK29qRmNUC2ssqQbn18c780JxGXemR76xbXdL00fukxtUWtH8/CgsG1Dw
-	 5KBru2HZ2/ixiNia9y3cZlTAMuj07G60/AXaPans=
+	b=D4GLx5kYotiiE1Qba+GO3yFWb8Upk/8dBvTx90prgAEl+ExQvl46Frb6+vd3v1ozF
+	 a1hOMMdpN4ichlUFMh/8Sk8KCBk6gyQy6B6vjLJbsaK6U384kRrrXSf4kFgk/nKqUx
+	 YuyoApXXf+wSKoI45l94+cEaVQ/8B0v1dA6cG/fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbfE3DLx (ORCPT
+        id S2388580AbfE3EpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfE3DKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:35 -0400
+        id S1728717AbfE3DLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08247244AE;
-        Thu, 30 May 2019 03:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 107B124503;
+        Thu, 30 May 2019 03:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185835;
-        bh=baUWZtZsxQSldKk1601Ynm8AxfPykkInrWffQPTcdj8=;
+        s=default; t=1559185912;
+        bh=kSDMB93qouo8XN377zhespyfUO9e7dXJqdZ0dU7pCV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W31J/QBY8QcQfixDSy9jRbZHlev+r/w6E9P0n248d76I3pI0kl2RKiwNcmo7sEqRJ
-         mBgg4WbJkszVVDfoBoHYooS9fZ4tigTO4eBaY8vyhky1qI4cbeKUbNiP7iQKg59oCw
-         2PxzYCorGNcANkqMxe+C2cERA+4ObLomrBgKK6dM=
+        b=B747tFAMcIwJszqD6SM7cZR/qKAIS07in9JS3YaqV6MXDxfZJMvChZuCXaUeW71ar
+         l6j4M/jgn6PfIf97F91uQzf5OnHdnyMYcDE46lAwdew8D0Q5mFGjrNAaNXz7px1i3K
+         qdSnF178Nq+zi+Z1eTX5WTk/T2XJ236kPspVHfV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 100/405] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 29 May 2019 20:01:38 -0700
-Message-Id: <20190530030546.087701453@linuxfoundation.org>
+Subject: [PATCH 5.1 284/405] habanalabs: prevent CPU soft lockup on Palladium
+Date:   Wed, 29 May 2019 20:04:42 -0700
+Message-Id: <20190530030555.249995994@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,42 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit e850b89f50d2c1439f58d547b888ee6e43312dea ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+Unmapping ptes in the device MMU on Palladium can take a long time, which
+can cause a kernel BUG of CPU soft lockup.
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
+This patch minimize the chances for this bug by sleeping a little between
+unmapping ptes.
 
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
-
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/habanalabs/memory.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index d25282b4a7dd1..73697e4b18a9d 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -421,7 +421,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index ce1fda40a8b81..fadaf557603f5 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -1046,10 +1046,17 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
  
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+ 	mutex_lock(&ctx->mmu_lock);
+ 
+-	for (i = 0 ; i < phys_pg_pack->npages ; i++, next_vaddr += page_size)
++	for (i = 0 ; i < phys_pg_pack->npages ; i++, next_vaddr += page_size) {
+ 		if (hl_mmu_unmap(ctx, next_vaddr, page_size))
+ 			dev_warn_ratelimited(hdev->dev,
+-				"unmap failed for vaddr: 0x%llx\n", next_vaddr);
++			"unmap failed for vaddr: 0x%llx\n", next_vaddr);
++
++		/* unmapping on Palladium can be really long, so avoid a CPU
++		 * soft lockup bug by sleeping a little between unmapping pages
++		 */
++		if (hdev->pldm)
++			usleep_range(500, 1000);
++	}
+ 
+ 	hdev->asic_funcs->mmu_invalidate_cache(hdev, true);
+ 
 -- 
 2.20.1
 
