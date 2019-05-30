@@ -2,56 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D2C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4B8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845AB24CA4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAEE24CA4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187925;
-	bh=ZCsxXdpu8EEZLeV/iQOFEU/H1o4X1Ff8AUSV1hp8S+4=;
+	s=default; t=1559187928;
+	bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOnFLDHZexnZCCpXsbJUswUSfQs11qLjXk2tz0Pr83946ChFXYuZYFrTw6CdOknAx
-	 ZyaXDycTYNSpLcpE95+CwOmrAFt/PP7N2HpduuuFwBOn6t/AXWFeh7yFofS2suGZk4
-	 RpuDiUuDPkwTMcTHaU85WEI0mRqPFMR4t0BRqxwY=
+	b=IeA6U+Ht/nTQI9Esk37AUPSG+cwEqEAQNoh+Zd/ELDSYBwm+t+nNHsUKVJ538Bpja
+	 beghlz9iNcTNKfiHBBREPzdf6GOcXxXt12PR89wxxMTGfU2ZSzi1r95V0CPeJ+z8jS
+	 1rkbL6PxubrH9hv64I0qMuFGAgx433TZ1Z0LojXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732855AbfE3DpY (ORCPT
+        id S1732342AbfE3DUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60102 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732344AbfE3DUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:49 -0400
+        id S1730572AbfE3DQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C34212497C;
-        Thu, 30 May 2019 03:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A94E2458A;
+        Thu, 30 May 2019 03:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186448;
-        bh=ZCsxXdpu8EEZLeV/iQOFEU/H1o4X1Ff8AUSV1hp8S+4=;
+        s=default; t=1559186162;
+        bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCoj6KAhiPqhqat+bxIJiULZrKuL0Ua3SkO24/t6e5rIhuzOveA2T150eSQxAMrUe
-         SayAgUOG0RRvXHYbInBHmdQC+l5kTcE78C+nVPB6kno4SzDfCVPkMNIwmEb/Cio4pM
-         yxvm8AUOg9j5p/qcJIN+LycKV2x0PljnzCBEcMYs=
+        b=jMKhxT/nntqrZw6YJ67VAzdRt2YSE691w+UPCpe54YyNLwBYcz2Ck7cjpqMrMBSiB
+         gcSn86Oqx9Eud42oBDDfyx08aCco1i/sllsoFnpF7Um8qTJXtoL1ACLHjzafRe+s2u
+         X1HygizBiXDvQa6X9JqwIil0ptITnUb7H9qxK+fg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/128] media: coda: clear error return value before picture run
-Date:   Wed, 29 May 2019 20:06:29 -0700
-Message-Id: <20190530030445.134089589@linuxfoundation.org>
+        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 011/276] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
+Date:   Wed, 29 May 2019 20:02:49 -0700
+Message-Id: <20190530030524.271602909@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
+From: Trac Hoang <trac.hoang@broadcom.com>
 
-The error return value is not written by some firmware codecs, such as
-MPEG-2 decode on CodaHx4. Clear the error return value before starting
-the picture run to avoid misinterpreting unrelated values returned by
-sequence initialization as error return value.
+commit ec0970e0a1b2c807c908d459641a9f9a1be3e130 upstream.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The iproc host eMMC/SD controller hold time does not meet the
+specification in the HS50 mode.  This problem can be mitigated
+by disabling the HISPD bit; thus forcing the controller output
+data to be driven on the falling clock edges rather than the
+rising clock edges.
+
+Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
+the change does not produce merge conflicts backporting to older kernel
+versions. In reality, the timing bug existed since the driver was first
+introduced but there is no need for this driver to be supported in kernel
+versions that old.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/platform/coda/coda-bit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/host/sdhci-iproc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index b6625047250d6..717ee9a6a80ef 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -1829,6 +1829,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	/* Clear decode success flag */
- 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -209,7 +209,8 @@ static const struct sdhci_iproc_data ipr
  
-+	/* Clear error return value */
-+	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
-+
- 	trace_coda_dec_pic_run(ctx, meta);
- 
- 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
--- 
-2.20.1
-
+ static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
+ 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+-		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
++		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
++		  SDHCI_QUIRK_NO_HISPD_BIT,
+ 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
+ 	.ops = &sdhci_iproc_ops,
+ };
 
 
