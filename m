@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38610C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E267C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A2925E60
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A2B25E61
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192036;
-	bh=qFjSTPMsUfvOtkrZNNJ0uzF/K6TRrBXGfznrF7cuUdc=;
+	s=default; t=1559192037;
+	bh=JiHI/TgLk+DcrLr+6I+X2S/Lr18PKHaI8i5a3ZmgMQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lrvIctYGINqIpHMNt9Rc2EflFnEVaK8ECMNIYfqFjPc74xyqZSe+ymF9SC15Qihu9
-	 83JaSTTNKfn86pernmvzKczCNtYqcSephwQ/oUIp5e2rWu8Jj2fXyqmBzqN6OEZeC4
-	 1MOjfTqq9C3Pye/QpEIxT3PgWpcHijpRbw2J59bc=
+	b=ERf+fO38ixGTeBfO4+XEj8ytfvsleg6NIYl4xKvQq46YKMWbETtMlok/XMaRSqN12
+	 AbgQfzef8r8hWhX3M4VmP4Tr4NKIKFV+cUQ838sa9/zFv/0oyEempf3hnCLfn/IHPr
+	 4BaUq33ABSDhxULrKla+bQF266d6p722XAng8hzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388736AbfE3Exz (ORCPT
+        id S1728133AbfE3DKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbfE3DKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:32 -0400
+        id S1727882AbfE3DJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDA5244A6;
-        Thu, 30 May 2019 03:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6902A24485;
+        Thu, 30 May 2019 03:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185832;
-        bh=qFjSTPMsUfvOtkrZNNJ0uzF/K6TRrBXGfznrF7cuUdc=;
+        s=default; t=1559185799;
+        bh=JiHI/TgLk+DcrLr+6I+X2S/Lr18PKHaI8i5a3ZmgMQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RFEsAEtNTMraKKbgN49DiJ/yVa3Dzo+14qpGi4R+2ZeAgbsCxGhZskrCC79XohEqX
-         1D0tFfE3Jz+65EQ+FrDwJKqBdtuUqWbMGOGCpAPqp8hdpwfn5PUSQzrpI78Jdv1y/w
-         7A3zyDBF8qAYalNBF71CXUHnw+t6c2XBtyuBUu9E=
+        b=CQBaWEO20xAY8ZKRJKTpULp24jiMlLa8o0rLLvtHb61/wvb/m15Ok4uG4/qmZmTvB
+         N32jgZaQv/NOgkmo5nIllL6+5TsbV7UnQdfNeZAr8x0r01qYQHmNvhfDt9yXtHk2dJ
+         LoWSGhh0+wkeUB7xov0Dxb7KPN9oQ6ceBIKGsfcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH 5.1 137/405] x86/build: Move _etext to actual end of .text
-Date:   Wed, 29 May 2019 20:02:15 -0700
-Message-Id: <20190530030548.030497482@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 076/405] powerpc/perf: Fix loop exit condition in nest_imc_event_init
+Date:   Wed, 29 May 2019 20:01:14 -0700
+Message-Id: <20190530030544.798185296@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -65,49 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
+[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+The data structure (i.e struct imc_mem_info) to hold the memory address
+information for nest imc units is allocated based on the number of nodes
+in the system.
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+nest_imc_event_init() traverse this struct array to calculate the memory
+base address for the event-cpu. If we fail to find a match for the event
+cpu's chip-id in imc_mem_info struct array, then the do-while loop will
+iterate until we crash.
+
+Fix this by changing the loop exit condition based on the number of
+non zero vbase elements in the array, since the allocation is done for
+nr_chips + 1.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/perf/imc-pmu.c               | 2 +-
+ arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index a5127b2c195f9..834659288ba9b 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -141,11 +141,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index 6159e9edddfd0..2d12f0037e3a5 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -499,7 +499,7 @@ static int nest_imc_event_init(struct perf_event *event)
+ 			break;
+ 		}
+ 		pcni++;
+-	} while (pcni);
++	} while (pcni->vbase != 0);
  
-+	/* End of text section */
-+	_etext = .;
-+
- 	NOTES :text :note
+ 	if (!flag)
+ 		return -ENODEV;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 58a07948c76e7..3d27f02695e41 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
+ 								nr_chips))
+ 		goto error;
  
- 	EXCEPTION_TABLE(16) :text = 0x9090
+-	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
++	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
+ 				    GFP_KERNEL);
+ 	if (!pmu_ptr->mem_info)
+ 		goto error;
 -- 
 2.20.1
 
