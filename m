@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A800C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD78C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35832449B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75448244A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186889;
-	bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+	s=default; t=1559186896;
+	bh=ZQFyU4cqT2U+b9/BORK7QRaVKcpBPZgIQWZKPkKE71M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwRWk4QzBasiTnVmwr0dOsM1qNQsEG8QH8bSH5DO1LZmk41+4LH9H/uOcFW4jSgae
-	 raTM1gxZL/Lizro+dFPoA5e8XTg5+T5Y3ZHRmG8a2MDeLt8xZYSm9cS8t0irVcYhp7
-	 GEbNgUq9Jp/MMTUd//tjBZ5ixg2VJS193G3aJlac=
+	b=jH+IFPYP9/pOs9gilsFdP4XYSTW0XqushA0PSAwpincwFlc0Oa5Vr/scgU5tMzSB4
+	 EkClKcJAPsua3L3allY+Y8VDc/2O7FzWZOUhr88UYzAHHcjZlnwNtGT3MpqMBVyUaS
+	 kH/+X/hJAOTsq8Yfv8/VmoNFObQ5MJ2OpxkMG7qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbfE3D2I (ORCPT
+        id S2387583AbfE3D2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731275AbfE3DTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:50 -0400
+        id S1731346AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 797322486B;
-        Thu, 30 May 2019 03:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F2AB248E3;
+        Thu, 30 May 2019 03:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186389;
-        bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+        s=default; t=1559186392;
+        bh=ZQFyU4cqT2U+b9/BORK7QRaVKcpBPZgIQWZKPkKE71M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oxxtk6B1szocWsO+llYI+z7GZLsG0ddIgHMCoskURcKthUuDARFF7Eq0vbfXGLGwp
-         LIOUe8NS0iwbwjPjICJD8NfWp/c91FZlLI2JQrEaZLEnficQRpHtI03wgTgCme/g7H
-         qeaMvSjYqhJWyZozT4oVVJQCjfpBpGVpStP+EPLE=
+        b=xcoqZ7O9XxK8sSCszF0yyXmx81SmG9w986oSTSwr7CiJ30SurQQLonJ2lrABnlioD
+         qLn+nzah+oUkEr6dHee7TEia7cV/2Wk9gC54SAp1AmK09ix9wAZvEgcOWWyOG/BS9q
+         qu+qZrw5aVw8DJ30tujXPxSHVlekN1nPEldLUDvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 159/193] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
-Date:   Wed, 29 May 2019 20:06:53 -0700
-Message-Id: <20190530030510.270374548@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 164/193] media: video-mux: fix null pointer dereferences
+Date:   Wed, 29 May 2019 20:06:58 -0700
+Message-Id: <20190530030510.795775492@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -67,45 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
+[ Upstream commit aeb0d0f581e2079868e64a2e5ee346d340376eae ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+devm_kcalloc may fail and return a null pointer. The fix returns
+-ENOMEM upon failures to avoid null pointer dereferences.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_utils.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/video-mux.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
-index b9e42b503a377..4f8bdb7650e84 100644
---- a/sound/soc/fsl/fsl_utils.c
-+++ b/sound/soc/fsl/fsl_utils.c
-@@ -75,6 +75,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
- 	iprop = of_get_property(dma_np, "cell-index", NULL);
- 	if (!iprop) {
- 		of_node_put(dma_np);
-+		of_node_put(dma_channel_np);
- 		return -EINVAL;
- 	}
- 	*dma_id = be32_to_cpup(iprop);
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index ee89ad76bee23..eedc0b99a891e 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -242,9 +242,14 @@ static int video_mux_probe(struct platform_device *pdev)
+ 	vmux->active = -1;
+ 	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
+ 				  GFP_KERNEL);
++	if (!vmux->pads)
++		return -ENOMEM;
++
+ 	vmux->format_mbus = devm_kcalloc(dev, num_pads,
+ 					 sizeof(*vmux->format_mbus),
+ 					 GFP_KERNEL);
++	if (!vmux->format_mbus)
++		return -ENOMEM;
+ 
+ 	for (i = 0; i < num_pads - 1; i++)
+ 		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
 -- 
 2.20.1
 
