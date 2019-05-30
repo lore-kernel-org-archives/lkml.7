@@ -2,152 +2,98 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA07C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04F1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C668218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8108E261A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnOvK8D+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KHCp4Wiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfE3WZp (ORCPT
+        id S1726583AbfE3W2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:25:45 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:43487 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3WZp (ORCPT
+        Thu, 30 May 2019 18:28:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55038 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3W2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:25:45 -0400
-Received: by mail-yw1-f68.google.com with SMTP id t5so3302129ywf.10;
-        Thu, 30 May 2019 15:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Kt2e7koKuS/w3st+6pWFlXYytQQLT+iijBY66G3TGIQ=;
-        b=SnOvK8D+8dpl/JHjhGSOn/PI1ZA6KFmskkWxxxQdlclHWjqHzPvtclCjTKeO36GZOk
-         ihwqNfm97yuAToZWuIj0NmC4XoK2WRFV69VbOVUfDRHKnbEheioPoQ9qmBbLxo5RkE7P
-         ia3nHxPpgZEUCunu1GQ1HXOwUd1dKSMjMGiwTQjwRQSPQh+chTyTkBJtmEYGuhzP0cj0
-         iOVE8gfcOErvVpykcJUqnxo16i4XNxAXatTaPEm8VCHg8ipPrl424x+xKOHuRFwCGQtB
-         qlapFWyryZ5rN+EI/cj+vyzzmCrtcU/DyfdkA+du4y8ZK4UgqN6DtNR/wZ/fIob5aoeG
-         jnNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=Kt2e7koKuS/w3st+6pWFlXYytQQLT+iijBY66G3TGIQ=;
-        b=rTkERJhYCaIeP0ezuDkpCbTR1GFCE99yOO3PkpZ8hSL21lzgZFbJnN9bDWmvHfUhBl
-         Lgo0lN6A2AdiPJxfuTjR2wjs4FJQRi84W556HVS494U9mLdf+NQ9uVPJmrOeUbW7VICX
-         cUv+dvpkNx+eBDmmzwoYGJkcNd3IP/Q1K5wDegV+41836BD+oeJ+ui7QOOanc7TAn1EB
-         DMkQsv44uJz/oPmGsvnCBx9AdjCmU5jd3p2mvDqRXeGm9mDdrk36KlAiofxcgV3RfSHu
-         CmbI/Cq3mQZvRCUOYB68ydpiNrzskTg5SrL0YTZoOTaLkV9rJfubqfP9crqm4mfjPrWO
-         dgBg==
-X-Gm-Message-State: APjAAAW6KW7Zrnvb0aw8o6jIMT3t9rvyafSr9AWR8/YyibRC9etIr6iN
-        UBfSaI6ugr/FQIkLfYlnPRYINqISGPj+kRJdbMY=
-X-Google-Smtp-Source: APXvYqxdINa9M9mKr8zLme+nf6O33yXjlqtzYPUvsQPUOfScvf6wA1/YkYHtuXtS+cQaog6bPnLQyU5UY/WjfuBPMX4=
-X-Received: by 2002:a81:59c2:: with SMTP id n185mr3501471ywb.21.1559255144144;
- Thu, 30 May 2019 15:25:44 -0700 (PDT)
+        Thu, 30 May 2019 18:28:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0VN5c421RywifIF8i/3tvMhN6mXfzQVaKnVDur62RGU=; b=KHCp4Wiwwi+f9S4LXp2IJWa5zG
+        SxnfG52Z9HxmHDW4gg74ulMSbpX0CDQGMZwMd+W5Zj+3lr0uW1f1hHekCH/7sjHKruEstLuNKJWji
+        olk3QfhPAS/s/B3FHzbOEj2ynup7ZWk48Me/GhtfyzAVBus//uBGdH+fLD4xK6DtTkJ6b3VRkyThS
+        4SKYhXskAK0TnZVr53SjW5ArJZZiNr6g6vNNrZqkCWt9zCwUk47K4GQVfBrUgqtecIi/gLuFzxFOt
+        gnPfHcQ5hIyijGQfOj0LZgCOctO4GZSAJb0BvI+seY1CoYVj/KtS7DdWCZlqkY2ELPdulpDWaLiFR
+        yLh9IG1Q==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWTXV-0003kU-A0; Thu, 30 May 2019 22:28:49 +0000
+Subject: Re: mmotm 2019-05-29-20-52 uploaded (mpls)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5a9fc4e5-eb29-99a9-dff6-2d4fdd5eb748@infradead.org>
+Date:   Thu, 30 May 2019 15:28:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190528161440.27172-1-peron.clem@gmail.com> <20190528161440.27172-11-peron.clem@gmail.com>
- <20190530145550.amalnxmx7kpokykv@core.my.home>
-In-Reply-To: <20190530145550.amalnxmx7kpokykv@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Fri, 31 May 2019 00:25:32 +0200
-Message-ID: <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add IR receiver node
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+On 5/29/19 8:53 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-05-29-20-52 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
+> You will need quilt to apply these patches to the latest Linus release (5.x
+> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> http://ozlabs.org/~akpm/mmotm/series
+> 
+> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> followed by the base kernel version against which this patch series is to
+> be applied.
+> 
 
-On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hello Cl=C3=A9ment,
->
-> On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Allwinner H6 IR is similar to A31 and can use same driver.
-> >
-> > Add support for it.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index 16c5c3d0fd81..649cbdfe452e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -647,6 +647,25 @@
-> >                               pins =3D "PL0", "PL1";
-> >                               function =3D "s_i2c";
-> >                       };
-> > +
-> > +                     r_ir_rx_pin: r-ir-rx-pin {
-> > +                             pins =3D "PL9";
-> > +                             function =3D "s_cir_rx";
-> > +                     };
-> > +             };
-> > +
-> > +             r_ir: ir@7040000 {
-> > +                             compatible =3D "allwinner,sun50i-h6-ir",
-> > +                                          "allwinner,sun6i-a31-ir";
-> > +                             reg =3D <0x07040000 0x400>;
-> > +                             interrupts =3D <GIC_SPI 109 IRQ_TYPE_LEVE=
-L_HIGH>;
-> > +                             clocks =3D <&r_ccu CLK_R_APB1_IR>,
-> > +                                      <&r_ccu CLK_IR>;
-> > +                             clock-names =3D "apb", "ir";
-> > +                             resets =3D <&r_ccu RST_R_APB1_IR>;
-> > +                             pinctrl-names =3D "default";
-> > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
-> > +                             status =3D "disabled";
-> >               };
->
-> Please make a comment here, that this is known broken on some boards and =
-may
-> result IRQ flood if enabled. Otherwise noone will know.
+on i386 or x86_64:
 
-I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
-suggested it.
-https://github.com/clementperon/linux/tree/h6_ir_v4
+when CONFIG_PROC_SYSCTL is not set/enabled:
 
-But maybe we could also use the bit 5 of the IRQ status.
+ld: net/mpls/af_mpls.o: in function `mpls_platform_labels':
+af_mpls.c:(.text+0x162a): undefined reference to `sysctl_vals'
+ld: net/mpls/af_mpls.o:(.rodata+0x830): undefined reference to `sysctl_vals'
+ld: net/mpls/af_mpls.o:(.rodata+0x838): undefined reference to `sysctl_vals'
+ld: net/mpls/af_mpls.o:(.rodata+0x870): undefined reference to `sysctl_vals'
 
-Regards, Clement
 
->
-> thanks,
->         o.
->
-> >               r_i2c: i2c@7081400 {
-> > --
-> > 2.20.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+~Randy
