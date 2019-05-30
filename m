@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D645C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D9BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA05325D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE3925D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191906;
-	bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+	s=default; t=1559191913;
+	bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlzWOlQMZ9vYPK3I4WZTkSc2dTvDpdy0vUhd4HyryFzvlUzuW4M1idm1dWrQf5cno
-	 R21koPLxRe3qilpP0cfQzdK6tJIXCe5znLPafrxS+HEO7FXvcl9Y9D+4rfZwbzRTno
-	 MMq9akONGZmzeU86Ri5qzb9lSSI2VnC0PfDbun+0=
+	b=WSfk24W0JB/JxBSJyHIeWlC3ezYPyTRGiYJn+S36rvS8NufZdPzXVjxbM1WE/R1SN
+	 hfVoRG/36nQhzz+J9Af+qIoSSx2aByjdvVs0XRbX/0+90LZR0kqLqPPJVZNtnN61W2
+	 vnmRmZ9L9oZRYqn69ul6ur5Vwxgjv7Pq7WfDNgZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfE3Evq (ORCPT
+        id S2389031AbfE3Evw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49108 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfE3DKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:55 -0400
+        id S1727543AbfE3DKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15F3D24476;
-        Thu, 30 May 2019 03:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F3E244A0;
+        Thu, 30 May 2019 03:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185854;
-        bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+        s=default; t=1559185851;
+        bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0aGR8TgqoXmINLQBJ9AMZaN+OJvSGD85mSm0aR5SyNXtO29mPZFE6ixkVfDdEdRn
-         PgSoR/szFU69skcu83rQW4HuPMBHt6/AKhPeElwKej2mryU7C28zMXSfjXwLAGTbz4
-         npZnxj7czbt9LjGWRNYsWCThKlp1l0sWT8uJfvFA=
+        b=B/2WqKnSGG296HFRptOTNu0bKo8GsZ9umt9fJfSmJYz9cWoGPLFLEKuVmU9/lCA7R
+         yii0rTFZjYC2tEJOx4xL6rb8NpDDPkyUPgAedMtCcz01WR4pbejulhFb37fc6Bl/1E
+         VIXoynDJ3GvPZo6t3UJue9s8Aw8ncgmvJzG6SdmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 180/405] x86/irq/64: Limit IST stack overflow check to #DB stack
-Date:   Wed, 29 May 2019 20:02:58 -0700
-Message-Id: <20190530030550.194242069@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 176/405] irq_work: Do not raise an IPI when queueing work on the local CPU
+Date:   Wed, 29 May 2019 20:02:54 -0700
+Message-Id: <20190530030550.017947240@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -66,80 +68,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
+[ Upstream commit 471ba0e686cb13752bc1ff3216c54b69a2d250ea ]
 
-Commit
+The QEMU PowerPC/PSeries machine model was not expecting a self-IPI,
+and it may be a bit surprising thing to do, so have irq_work_queue_on
+do local queueing when target is the current CPU.
 
-  37fe6a42b343 ("x86: Check stack overflow in detail")
-
-added a broad check for the full exception stack area, i.e. it considers
-the full exception stack area as valid.
-
-That's wrong in two aspects:
-
- 1) It does not check the individual areas one by one
-
- 2) #DF, NMI and #MCE are not enabling interrupts which means that a
-    regular device interrupt cannot happen in their context. In fact if a
-    device interrupt hits one of those IST stacks that's a bug because some
-    code path enabled interrupts while handling the exception.
-
-Limit the check to the #DB stack and consider all other IST stacks as
-'overflow' or invalid.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190409093403.20994-1-npiggin@gmail.com
+[ Simplified the preprocessor comments.
+  Fixed unbalanced curly brackets pointed out by Thomas. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ kernel/irq_work.c | 75 ++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 0469cd078db15..b50ac9c7397bb 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
- /*
-  * Probabilistic stack overflow check:
-  *
-- * Only check the stack in process context, because everything else
-- * runs on the big interrupt stacks. Checking reliably is too expensive,
-- * so we just check from interrupts.
-+ * Regular device interrupts can enter on the following stacks:
-+ *
-+ * - User stack
-+ *
-+ * - Kernel task stack
-+ *
-+ * - Interrupt stack if a device driver reenables interrupts
-+ *   which should only happen in really old drivers.
-+ *
-+ * - Debug IST stack
-+ *
-+ * All other contexts are invalid.
-  */
- static inline void stack_overflow_check(struct pt_regs *regs)
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index 6b7cdf17ccf89..73288914ed5e7 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -56,61 +56,70 @@ void __weak arch_irq_work_raise(void)
+ 	 */
+ }
+ 
+-/*
+- * Enqueue the irq_work @work on @cpu unless it's already pending
+- * somewhere.
+- *
+- * Can be re-enqueued while the callback is still in progress.
+- */
+-bool irq_work_queue_on(struct irq_work *work, int cpu)
++/* Enqueue on current CPU, work must already be claimed and preempt disabled */
++static void __irq_work_queue_local(struct irq_work *work)
  {
-@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 		return;
+-	/* All work should have been flushed before going offline */
+-	WARN_ON_ONCE(cpu_is_offline(cpu));
+-
+-#ifdef CONFIG_SMP
+-
+-	/* Arch remote IPI send/receive backend aren't NMI safe */
+-	WARN_ON_ONCE(in_nmi());
++	/* If the work is "lazy", handle it from next tick if any */
++	if (work->flags & IRQ_WORK_LAZY) {
++		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
++		    tick_nohz_tick_stopped())
++			arch_irq_work_raise();
++	} else {
++		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
++			arch_irq_work_raise();
++	}
++}
  
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
--	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
-+	estack_bottom = (u64)oist->ist[DEBUG_STACK];
-+	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
- 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
- 		return;
++/* Enqueue the irq work @work on the current CPU */
++bool irq_work_queue(struct irq_work *work)
++{
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
  
+-	if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
+-		arch_send_call_function_single_ipi(cpu);
+-
+-#else /* #ifdef CONFIG_SMP */
+-	irq_work_queue(work);
+-#endif /* #else #ifdef CONFIG_SMP */
++	/* Queue the entry and raise the IPI if needed. */
++	preempt_disable();
++	__irq_work_queue_local(work);
++	preempt_enable();
+ 
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(irq_work_queue);
+ 
+-/* Enqueue the irq work @work on the current CPU */
+-bool irq_work_queue(struct irq_work *work)
++/*
++ * Enqueue the irq_work @work on @cpu unless it's already pending
++ * somewhere.
++ *
++ * Can be re-enqueued while the callback is still in progress.
++ */
++bool irq_work_queue_on(struct irq_work *work, int cpu)
+ {
++#ifndef CONFIG_SMP
++	return irq_work_queue(work);
++
++#else /* CONFIG_SMP: */
++	/* All work should have been flushed before going offline */
++	WARN_ON_ONCE(cpu_is_offline(cpu));
++
+ 	/* Only queue if not already pending */
+ 	if (!irq_work_claim(work))
+ 		return false;
+ 
+-	/* Queue the entry and raise the IPI if needed. */
+ 	preempt_disable();
+-
+-	/* If the work is "lazy", handle it from next tick if any */
+-	if (work->flags & IRQ_WORK_LAZY) {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
+-		    tick_nohz_tick_stopped())
+-			arch_irq_work_raise();
++	if (cpu != smp_processor_id()) {
++		/* Arch remote IPI send/receive backend aren't NMI safe */
++		WARN_ON_ONCE(in_nmi());
++		if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
++			arch_send_call_function_single_ipi(cpu);
+ 	} else {
+-		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
+-			arch_irq_work_raise();
++		__irq_work_queue_local(work);
+ 	}
+-
+ 	preempt_enable();
+ 
+ 	return true;
++#endif /* CONFIG_SMP */
+ }
+-EXPORT_SYMBOL_GPL(irq_work_queue);
++
+ 
+ bool irq_work_needs_cpu(void)
+ {
 -- 
 2.20.1
 
