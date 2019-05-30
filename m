@@ -2,155 +2,185 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4638C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4590C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DBB262B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E027262B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:52:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8iFh+Nz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE3Wwu (ORCPT
+        id S1726706AbfE3Wwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:52:50 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37693 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfE3Wwu (ORCPT
+        Thu, 30 May 2019 18:52:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37111 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfE3Www (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:52:50 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y57so9151060qtk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 15:52:49 -0700 (PDT)
+        Thu, 30 May 2019 18:52:52 -0400
+Received: by mail-io1-f66.google.com with SMTP id e5so6573514iok.4;
+        Thu, 30 May 2019 15:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WqRv1eYw87mitTUNX+jAkK8xXVXgILIBliBYFvqQpD4=;
+        b=I8iFh+NzZRRRmN4wFokO7NUD8Nl70epcfUqFJXm0ax32zPrw0fbtQOXpjJ+ASVFPop
+         rcyFRKUAtpL1Qn/JL0/w3QO8aZWmlwtrrmoHAP8P+PcK+8o71mx1iAlsmbb6rkw5Twie
+         Q9ebWpONgW+g62jc7oJYbYF5+i/5BHNbKv886LuIw2DA/cuMmYoWGv0hDlZw76TzLUM0
+         qFN/dK79vIwfYGjca79Bjkf1SfES+/eyyyERts9sYN7PoCbhV0gzMaIE4EzPo9JoZm8c
+         jrQa2yJqVtZHH83foz663BibaVn9KLPy96H7Y1/6xB2mgQRaPEdJzb74o6qO1r8D7Mmm
+         zVRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t67ZC4MNc2SNAttzYwTDhyatXWg3h6kEvUy6EU0k9QU=;
-        b=nzdvPg9oLVcGDMgHAJSgtonZWBv7efleZ8z+KHHmeRNxZ3vNlXj3Ww8xOLZfT1kHon
-         P1WVwCRf+/78B3f5ZIaC/AxWdDxnO6na0rJVm7rL3m+yIUIziY+v947zvDBVt1LYtB1U
-         a02fzKtkJ3dspglfbSG5e22Jod7psn+/W6qBiyt1tG+KlVVSty3jHzsNtCG1kd5eFgQu
-         VuyPRsmw8aC09Fokhj020v2CRXwyMybSxi2A4v0QOCo67ZccZmfal8zs3RMJvKajBUlg
-         zCkuQgaZwJhN0zBaJV4u8I7rntcgyhMkddjsVSloahkAlB+b5AxaD+SkgvQUct3uloFh
-         fURA==
-X-Gm-Message-State: APjAAAUu2T4UAwvCYmnX4jyuRjwdlPqKR13F2VRnZnhsSGBwE0m1W5ts
-        l2IGw27QXLF7G7iPARc6sLfouQ==
-X-Google-Smtp-Source: APXvYqwTE8uNShrRUaGGlmcc2h+GxOEcZ6AH8JazaRG/qhRpJu7znm1zUJrRhfEE9Idohkf2/B2tSw==
-X-Received: by 2002:ad4:5146:: with SMTP id g6mr5719624qvq.136.1559256769266;
-        Thu, 30 May 2019 15:52:49 -0700 (PDT)
-Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
-        by smtp.gmail.com with ESMTPSA id j33sm2606122qtc.10.2019.05.30.15.52.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 15:52:48 -0700 (PDT)
-Date:   Thu, 30 May 2019 18:52:45 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Subject: Re: [RFC PATCH 00/11] mm / virtio: Provide support for paravirtual
- waste page treatment
-Message-ID: <20190530185143-mutt-send-email-mst@kernel.org>
-References: <20190530215223.13974.22445.stgit@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqRv1eYw87mitTUNX+jAkK8xXVXgILIBliBYFvqQpD4=;
+        b=NjmnMyiXTeKZzV5WH99kny2sNVsnvnRq4nIsnk25Fkkvyk7nR/7me4mqdk2Vmp5SXo
+         Hue6hm/UvPAtyaZqPpD6FhgIWOdDKa/CjKaOigRljuJX6oQCrhbcKtLZTdCbhWhuV7uc
+         4G0j/XCqRwstegWxwpd8KLxbM8OUaDM2DughpCH/jw3Y1wy73rKbv+VFtyBqc4H76DDD
+         bzqilDVl7x8VKQs3+77vZsyH64z9Zr7SgEddG05JeA6SG055smkzNv6azpXhpb1gL01Z
+         8XzRd3fdGd109kv31KjVUIFW66zhABxqSjAp6OMgc2PLokFzGzMkxh6GKo12+DmyFQTD
+         9RwA==
+X-Gm-Message-State: APjAAAXoeYzEUFtx3I/xQOhC6Gh5fcLhPkFf1zLtB+UmPWrG1RgUW63z
+        ShMWDigcIYzL+pI+7yFcAiz55BjK7tszN58Naag=
+X-Google-Smtp-Source: APXvYqw21dbtGqaaBiNIsp5/5TmlV3uYnegrqAHgYw+u67wKWL83EtBiw3w4VYHNeNegwbc0gky4NnkC9v56bjEY488=
+X-Received: by 2002:a5e:8b41:: with SMTP id z1mr164559iom.42.1559256770970;
+ Thu, 30 May 2019 15:52:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530215223.13974.22445.stgit@localhost.localdomain>
+References: <e070e241-fb65-a5b0-3155-7380a9203bcf@molgen.mpg.de>
+ <8627ea1e-8e51-c425-97f6-aeb57176e11a@gmail.com> <eb730f01-0c6d-0589-36cc-7193d64c1ee8@molgen.mpg.de>
+ <CANn89i+VvwMaHy2Br-0CcC3gPQ+PmG3Urpn4KpqL0P7XBykmcw@mail.gmail.com> <20190529093548.3df7ee73@hermes.lan>
+In-Reply-To: <20190529093548.3df7ee73@hermes.lan>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 30 May 2019 15:52:40 -0700
+Message-ID: <CAKgT0UdWmu3GjeMd9jmA=5FGQ=5cLnFb51arf+zkX7omc-G1fg@mail.gmail.com>
+Subject: Re: Driver has suspect GRO implementation, TCP performance may be compromised.
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:53:34PM -0700, Alexander Duyck wrote:
-> This series provides an asynchronous means of hinting to a hypervisor
-> that a guest page is no longer in use and can have the data associated
-> with it dropped. To do this I have implemented functionality that allows
-> for what I am referring to as "waste page treatment".
-> 
-> I have based many of the terms and functionality off of waste water
-> treatment, the idea for the similarity occured to me after I had reached
-> the point of referring to the hints as "bubbles", as the hints used the
-> same approach as the balloon functionality but would disappear if they
-> were touched, as a result I started to think of the virtio device as an
-> aerator. The general idea with all of this is that the guest should be
-> treating the unused pages so that when they end up heading "downstream"
-> to either another guest, or back at the host they will not need to be
-> written to swap.
+On Wed, May 29, 2019 at 9:38 AM Stephen Hemminger
+<stephen@networkplumber.org> wrote:
+>
+> On Wed, 29 May 2019 09:00:54 -0700
+> Eric Dumazet <edumazet@google.com> wrote:
+>
+> > On Wed, May 29, 2019 at 7:49 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+> > >
+> > > Dear Eric,
+> > >
+> > >
+> > > Thank you for the quick reply.
+> > >
+> > > On 05/28/19 19:18, Eric Dumazet wrote:
+> > > > On 5/28/19 8:42 AM, Paul Menzel wrote:
+> > >
+> > > >> Occasionally, Linux outputs the message below on the workstation Dell
+> > > >> OptiPlex 5040 MT.
+> > > >>
+> > > >>     TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised.
+> > > >>
+> > > >> Linux 4.14.55 and Linux 5.2-rc2 show the message, and the WWW also
+> > > >> gives some hits [1][2].
+> > > >>
+> > > >> ```
+> > > >> $ sudo ethtool -i net00
+> > > >> driver: e1000e
+> > > >> version: 3.2.6-k
+> > > >> firmware-version: 0.8-4
+> > > >> expansion-rom-version:
+> > > >> bus-info: 0000:00:1f.6
+> > > >> supports-statistics: yes
+> > > >> supports-test: yes
+> > > >> supports-eeprom-access: yes
+> > > >> supports-register-dump: yes
+> > > >> supports-priv-flags: no
+> > > >> ```
+> > > >>
+> > > >> Can the driver e1000e be improved?
+> > > >>
+> > > >> Any idea, what triggers this, as I do not see it every boot? Download
+> > > >> of big files?
+> > > >>
+> > > > Maybe the driver/NIC can receive frames bigger than MTU, although this would be strange.
+> > > >
+> > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > > index c61edd023b352123e2a77465782e0d32689e96b0..cb0194f66125bcba427e6e7e3cacf0c93040ef61 100644
+> > > > --- a/net/ipv4/tcp_input.c
+> > > > +++ b/net/ipv4/tcp_input.c
+> > > > @@ -150,8 +150,10 @@ static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb,
+> > > >                 rcu_read_lock();
+> > > >                 dev = dev_get_by_index_rcu(sock_net(sk), skb->skb_iif);
+> > > >                 if (!dev || len >= dev->mtu)
+> > > > -                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
+> > > > -                               dev ? dev->name : "Unknown driver");
+> > > > +                       pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised."
+> > > > +                               " len %u mtu %u\n",
+> > > > +                               dev ? dev->name : "Unknown driver",
+> > > > +                               len, dev ? dev->mtu : 0);
+> > > >                 rcu_read_unlock();
+> > > >         }
+> > > >  }
+> > >
+> > > I applied your patch on commit 9fb67d643 (Merge tag 'pinctrl-v5.2-2' of
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl):
+> > >
+> > >      [ 5507.291769] TCP: net00: Driver has suspect GRO implementation, TCP performance may be compromised. len 1856 mtu 1500
+> >
+> >
+> > The 'GRO' in the warning can be probably ignored, since this NIC does
+> > not implement its own GRO.
+> >
+> > You can confirm this with this debug patch:
+> >
+> > diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c
+> > b/drivers/net/ethernet/intel/e1000e/netdev.c
+> > index 0e09bede42a2bd2c912366a68863a52a22def8ee..014a43ce77e09664bda0568dd118064b006acd67
+> > 100644
+> > --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> > +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> > @@ -561,6 +561,9 @@ static void e1000_receive_skb(struct e1000_adapter *adapter,
+> >         if (staterr & E1000_RXD_STAT_VP)
+> >                 __vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), tag);
+> >
+> > +       if (skb->len > netdev->mtu)
+> > +               pr_err_ratelimited("received packet bigger (%u) than
+> > MTU (%u)\n",
+> > +                                  skb->len, netdev->mtu);
+> >         napi_gro_receive(&adapter->napi, skb);
+> >  }
+>
+> I think e1000 is one of those devices that only has receive limit as power of 2.
+> Therefore frames up to 2K can be received.
+>
+> There always some confusion in Linux about whether MTU is transmit only or devices
+> have to enforce it on receive.
 
-A lovely analogy.
+Actually I think there are some parts that don't have any receive
+limits that are supported by the e1000 part. What ends up happening is
+that we only drop the packet if it spans more than one buffer if I
+recall correctly, and buffer size is determined by MTU.
 
-> So for a bit of background for the treatment process, it is based on a
-> sequencing batch reactor (SBR)[1]. The treatment process itself has five
-> stages. The first stage is the fill, with this we take the raw pages and
-> add them to the reactor. The second stage is react, in this stage we hand
-> the pages off to the Virtio Balloon driver to have hints attached to them
-> and for those hints to be sent to the hypervisor. The third stage is
-> settle, in this stage we are waiting for the hypervisor to process the
-> pages, and we should receive an interrupt when it is completed. The fourth
-> stage is to decant, or drain the reactor of pages. Finally we have the
-> idle stage which we will go into if the reference count for the reactor
-> gets down to 0 after a drain, or if a fill operation fails to obtain any
-> pages and the reference count has hit 0. Otherwise we return to the first
-> state and start the cycle over again.
-
-will review the patchset closely shortly.
-
-> This patch set is still far more intrusive then I would really like for
-> what it has to do. Currently I am splitting the nr_free_pages into two
-> values and having to add a pointer and an index to track where we area in
-> the treatment process for a given free_area. I'm also not sure I have
-> covered all possible corner cases where pages can get into the free_area
-> or move from one migratetype to another.
-> 
-> Also I am still leaving a number of things hard-coded such as limiting the
-> lowest order processed to PAGEBLOCK_ORDER, and have left it up to the
-> guest to determine what size of reactor it wants to allocate to process
-> the hints.
-> 
-> Another consideration I am still debating is if I really want to process
-> the aerator_cycle() function in interrupt context or if I should have it
-> running in a thread somewhere else.
-> 
-> [1]: https://en.wikipedia.org/wiki/Sequencing_batch_reactor
-> 
-> ---
-> 
-> Alexander Duyck (11):
->       mm: Move MAX_ORDER definition closer to pageblock_order
->       mm: Adjust shuffle code to allow for future coalescing
->       mm: Add support for Treated Buddy pages
->       mm: Split nr_free into nr_free_raw and nr_free_treated
->       mm: Propogate Treated bit when splitting
->       mm: Add membrane to free area to use as divider between treated and raw pages
->       mm: Add support for acquiring first free "raw" or "untreated" page in zone
->       mm: Add support for creating memory aeration
->       mm: Count isolated pages as "treated"
->       virtio-balloon: Add support for aerating memory via bubble hinting
->       mm: Add free page notification hook
-> 
-> 
->  arch/x86/include/asm/page.h         |   11 +
->  drivers/virtio/Kconfig              |    1 
->  drivers/virtio/virtio_balloon.c     |   89 ++++++++++
->  include/linux/gfp.h                 |   10 +
->  include/linux/memory_aeration.h     |   54 ++++++
->  include/linux/mmzone.h              |  100 +++++++++--
->  include/linux/page-flags.h          |   32 +++
->  include/linux/pageblock-flags.h     |    8 +
->  include/uapi/linux/virtio_balloon.h |    1 
->  mm/Kconfig                          |    5 +
->  mm/Makefile                         |    1 
->  mm/aeration.c                       |  324 +++++++++++++++++++++++++++++++++++
->  mm/compaction.c                     |    4 
->  mm/page_alloc.c                     |  220 ++++++++++++++++++++----
->  mm/shuffle.c                        |   24 ---
->  mm/shuffle.h                        |   35 ++++
->  mm/vmstat.c                         |    5 -
->  17 files changed, 838 insertions(+), 86 deletions(-)
->  create mode 100644 include/linux/memory_aeration.h
->  create mode 100644 mm/aeration.c
-> 
-> --
+I always thought MTU only applied to transmit since it is kind of in
+the name. As a result I am pretty sure igb and ixgbe will be able to
+trigger this warning under certain circumstances as well. Also what
+about the case where someone sets the MTU to less than 1500? I think
+most NICs probably don't update their limits in such a case and
+wouldn't it also trigger a similar error?
