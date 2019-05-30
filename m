@@ -2,125 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21390C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B155C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E462A23430
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466E3218CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fyKw3Icz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wxvteZMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbfE3IDX (ORCPT
+        id S1727872AbfE3IES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:03:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45995 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfE3IDX (ORCPT
+        Thu, 30 May 2019 04:04:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46660 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfE3IES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:03:23 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U83FAu2901342
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:03:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U83FAu2901342
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203396;
-        bh=NRJWcde2jKWRjwmJQ0pTxVArWkbJNzjOKychCYNKfaQ=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=fyKw3IczQaFu5v/xF4EqjCpSpuRzynqbZYYBAQ5/PEcocK48SYEij8sF3O0ssvq6l
-         pFGY0RNvUtOpqCtRYTVQkDk6zxdPJYpCOktY/ujUb0DQFjAcI0NrQLIB2FLw9HKy6D
-         KGaJykO+q9UysS9M05zuBH1m2ti8U6GtLbDFKUBtTDK6Dbvqs8H9nQblvyptMH8XOh
-         EfB92e/LR1SH1aA+z51jmxncCBSSKlAcIJWEoIKq58fWny3pvZOrJ0OHqq6iEH6nOy
-         IkWivyJr23ruEsW82spkcltDkZDyM4BwDtx5H64TW32CqbuWrEL1zQs0w46sQDAfC3
-         I081gQzqYFRFQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U83EP12901336;
-        Thu, 30 May 2019 01:03:14 -0700
-Date:   Thu, 30 May 2019 01:03:14 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-nnt25wkpkow2w0yefhi6sb7q@git.kernel.org>
-Cc:     adrian.hunter@intel.com, tglx@linutronix.de, acme@redhat.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, jolsa@kernel.org,
-        namhyung@kernel.org, brendan.d.gregg@gmail.com, mingo@kernel.org,
-        lclaudio@redhat.com
-Reply-To: acme@redhat.com, adrian.hunter@intel.com, tglx@linutronix.de,
-          lclaudio@redhat.com, mingo@kernel.org, brendan.d.gregg@gmail.com,
-          jolsa@kernel.org, namhyung@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Introduce
- syscall_arg__scnprintf_strarray_flags
-Git-Commit-ID: f5b91dbba1a51d30a3fe78a5c6096392fa99471e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 30 May 2019 04:04:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZNHljSo+xuO+rijXANsB4tJFe4vq/fcU3WZ/qW7T1K4=; b=wxvteZMtqs4EUcTAMJWHqixz6
+        mFlqd2lJn4cAJwAR/hiRZrEL1HzdpfpSWviOKW76MazUqLmiCOX0GXm9QTDDGduA5qdqBmPAd1R7/
+        gtqvGkRUITnXCQaDqEVvt5XPaHTg+ZT+AMGLgBcwFJMbrTOd+9sLivPTHl8mHadihGFP0gX7iwini
+        Q8Pj3wSK1+yjR342xlFv6RVYcZ+uBZY/cOmdfazWIwbFvd8oxQeWoMEc04vYPX77/yQa648a+tnc3
+        5OW0ffbHO3MaepHn+iCGQ4H+GGlo9+ea+OgZeFcCBAVm+/3fFP9eqtKq+q2nEJa3OQDIFlizD1mXZ
+        w34kI7GWQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWG2a-0004nX-GI; Thu, 30 May 2019 08:04:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D70FB201B3992; Thu, 30 May 2019 10:03:58 +0200 (CEST)
+Date:   Thu, 30 May 2019 10:03:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     axboe@kernel.dk, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+Message-ID: <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1559161526-618-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f5b91dbba1a51d30a3fe78a5c6096392fa99471e
-Gitweb:     https://git.kernel.org/tip/f5b91dbba1a51d30a3fe78a5c6096392fa99471e
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 23 May 2019 18:05:03 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:43 -0300
+On Wed, May 29, 2019 at 04:25:26PM -0400, Qian Cai wrote:
 
-perf trace: Introduce syscall_arg__scnprintf_strarray_flags
+> Fixes: 0619317ff8ba ("block: add polled wakeup task helper")
 
-So that one can just define a strarray and process it as a set of flags,
-similar to syscall_arg__scnprintf_strarray() with plain arrays.
+What is the purpose of that patch ?! The Changelog doesn't mention any
+benefit or performance gain. So why not revert that?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-nnt25wkpkow2w0yefhi6sb7q@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c       | 5 +++++
- tools/perf/trace/beauty/beauty.h | 3 +++
- 2 files changed, 8 insertions(+)
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/blkdev.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 592669bcc536..290eb7528f54 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1803,7 +1803,7 @@ static inline void blk_wake_io_task(struct task_struct *waiter)
+>  	 * that case, we don't need to signal a wakeup, it's enough to just
+>  	 * mark us as RUNNING.
+>  	 */
+> -	if (waiter == current)
+> +	if (waiter == current && in_task())
+>  		__set_current_state(TASK_RUNNING);
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 87b6dd3c33f5..16bb8c04c689 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -403,6 +403,11 @@ static size_t syscall_arg__scnprintf_strarray(char *bf, size_t size,
- 
- #define SCA_STRARRAY syscall_arg__scnprintf_strarray
- 
-+size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	return strarray__scnprintf_flags(arg->parm, bf, size, arg->show_string_prefix, arg->val);
-+}
-+
- size_t strarrays__scnprintf(struct strarrays *sas, char *bf, size_t size, const char *intfmt, bool show_prefix, int val)
- {
- 	size_t printed;
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 90c1ee708dc9..ad874e0beba5 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -108,6 +108,9 @@ struct syscall_arg {
- 
- unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
- 
-+size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_STRARRAY_FLAGS syscall_arg__scnprintf_strarray_flags
-+
- size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_STRARRAYS syscall_arg__scnprintf_strarrays
- 
+NAK, No that's broken too.
+
+The right fix is something like:
+
+	if (waiter == current) {
+		barrier();
+		if (current->state & TASK_NORAL)
+			__set_current_state(TASK_RUNNING);
+	}
+
+But even that is yuck to do outside of the scheduler code, as it looses
+tracepoints and stats.
+
+So can we please just revert that original patch and start over -- if
+needed?
+
+>  	else
+>  		wake_up_process(waiter);
+> -- 
+> 1.8.3.1
+> 
