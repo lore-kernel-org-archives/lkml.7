@@ -2,94 +2,229 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38978C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF564C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1201A25C4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRtzPA/H"
+	by mail.kernel.org (Postfix) with ESMTP id 987DD25C4F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfE3PKU (ORCPT
+        id S1727209AbfE3PLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:10:20 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:38803 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3PKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:10:20 -0400
-Received: by mail-it1-f193.google.com with SMTP id i63so5642233ita.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zyQxQxyVFskcDbp6ulz3dvZGpYPkncRLdMElYABwYhA=;
-        b=NRtzPA/Hn8pbzqRibagEoNo/V5Qg/wwk5CxsPyGQLp27nnYx9FZsLehDiDxfTeJQfM
-         IPqUUPUAGiEl8AnFLcbydcqSRLlHa5dPuJB7XsbC8VjM8C1srReM8d1wXLzqM/mOjjf+
-         gm/ddtb0n3WuxxLY0OtXp58uh3qmum5BqTedbQFGzs3RzkL3yERijMRnCN2yMT1QIe1E
-         UdiofLdkDlEbKDoIWWLZElMdTqPHwgFyWP+6I+uSlDgrfQtyW7tmayU70gOG+6BeX3uN
-         uhx6HTzSIY/e1HUEaWoUXHrnJMU5t9LeUgVvQoXdkzvX4WqCFqrVEMIIAKl8MTcEtOIw
-         QH6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zyQxQxyVFskcDbp6ulz3dvZGpYPkncRLdMElYABwYhA=;
-        b=MB6f9dZUAopykgwVV6yMNxPqDko3+PfS8EN/tusosvZ03BFn1OFAd2Amu1O4WKxtKo
-         9diYzBl+BvalErmjf8J57ND1ve3QHRJ99EuaAV6JaXR5evT0BxvGCkv4sJMKBgOuO3/k
-         hZDHSl6FmGqCv+FLUlZNwU97tc93xVQLY9ybBI+S+sm4GGfxvNQEvTvah2kmKiEkZ7VQ
-         BY+sibWFSAac7ucjO0JlgL32/pn8kmW6pwcWiklg/WSUpHuHlog7owi+2rQdD/MoNgEj
-         7ZJqPNEUdupYlu5lNqzueYdW4Snh3S4BtaCo7DISWK//0qdIXbNk+xe64+WBaRLWY8Hn
-         kRMg==
-X-Gm-Message-State: APjAAAUZfvCyUi6qgMuW5jHDsQLjci/hNQbS6qSRKNsS1yYzO6I+tbD2
-        J+HvyfJkpS8ODdSZl+mWkMN9cIVBCJu7bgtpjZUnww==
-X-Google-Smtp-Source: APXvYqxp1MoBylNIkY2NH4ukDz3xswow/7OAoje8owcJBtlkgSz6gmoHvk2AJlQK7EpoAqj8yq1ltkK/3r3Ok/xm16c=
-X-Received: by 2002:a02:b01c:: with SMTP id p28mr2837219jah.130.1559229019226;
- Thu, 30 May 2019 08:10:19 -0700 (PDT)
+        Thu, 30 May 2019 11:11:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38186 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfE3PLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:11:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66C00341;
+        Thu, 30 May 2019 08:11:15 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A9563F59C;
+        Thu, 30 May 2019 08:11:09 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:11:07 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190530151105.GA35418@arrakis.emea.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190527143719.GA59948@MBP.local>
+ <20190528145411.GA709@e119886-lin.cambridge.arm.com>
+ <20190528154057.GD32006@arrakis.emea.arm.com>
+ <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
+ <20190529142008.5quqv3wskmpwdfbu@mbp>
+ <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
 MIME-Version: 1.0
-References: <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
- <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
- <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au> <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
- <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
- <20190530143438.d62y3woaogyivqpm@gondor.apana.org.au> <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
- <20190530150642.fswcxt6m2y4pnjon@gondor.apana.org.au>
-In-Reply-To: <20190530150642.fswcxt6m2y4pnjon@gondor.apana.org.au>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 30 May 2019 17:10:06 +0200
-Message-ID: <CAKv+Gu-Z5Ayq4-M6Mwi34epoS3rzuc4=YYnq8P22_ULc3MXicg@mail.gmail.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 17:06, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Thu, May 30, 2019 at 05:04:51PM +0200, Ard Biesheuvel wrote:
-> >
-> > But given your remark regarding CBC being the only algo that has this
-> > requirement, I wonder if this might be sufficient as well.
->
-> It's not that CBC is the only one with the requirement.  It's just
-> that this is the wrong output IV for CTR.
->
+On Wed, May 29, 2019 at 01:16:37PM -0600, Khalid Aziz wrote:
+> On 5/29/19 8:20 AM, Catalin Marinas wrote:
+> > On Tue, May 28, 2019 at 05:33:04PM -0600, Khalid Aziz wrote:
+> >> Steps 1 and 2 are accomplished by userspace by calling mprotect() with
+> >> PROT_ADI. Tags are set by storing tags in a loop, for example:
+> >>
+> >>         version = 10;
+> >>         tmp_addr = shmaddr;
+> >>         end = shmaddr + BUFFER_SIZE;
+> >>         while (tmp_addr < end) {
+> >>                 asm volatile(
+> >>                         "stxa %1, [%0]0x90\n\t"
+> >>                         :
+> >>                         : "r" (tmp_addr), "r" (version));
+> >>                 tmp_addr += adi_blksz;
+> >>         }
+> > 
+> > On arm64, a sequence similar to the above would live in the libc. So a
+> > malloc() call will tag the memory and return the tagged address to thePre-coloring could easily be done by 
+> > user.
+> > 
+> > We were not planning for a PROT_ADI/MTE but rather have MTE enabled for
+> > all user memory ranges. We may revisit this before we upstream the MTE
+> > support (probably some marginal benefit for the hardware not fetching
+> > the tags from memory if we don't need to, e.g. code sections).
+> > 
+> > Given that we already have the TBI feature and with MTE enabled the top
+> > byte is no longer ignored, we are planning for an explicit opt-in by the
+> > user via prctl() to enable MTE.
+> 
+> OK. I had initially proposed enabling ADI for a process using prctl().
+> Feedback I got was prctl was not a desirable interface and I ended up
+> making mprotect() with PROT_ADI enable ADI on the process instead. Just
+> something to keep in mind.
 
-Are there any generic templates relying on this for other algos than CBC?
+Thanks for the feedback. We'll keep this in mind when adding MTE
+support. In the way we plan to deploy this, it would be a libc decision
+to invoke the mmap() with the right flag.
+
+This could actually simplify the automatic page faulting below brk(),
+basically no tagged/coloured memory allowed implicitly. It needs
+feedback from the bionic/glibc folk.
+
+> >> With these semantics, giving mmap() or shamat() a tagged address is
+> >> meaningless since no tags have been stored at the addresses mmap() will
+> >> allocate and one can not store tags before memory range has been
+> >> allocated. If we choose to allow tagged addresses to come into mmap()
+> >> and shmat(), sparc code can strip the tags unconditionally and that may
+> >> help simplify ABI and/or code.
+> > 
+> > We could say that with TBI (pre-MTE support), the top byte is actually
+> > ignored on mmap(). Now, if you pass a MAP_FIXED with a tagged address,
+> > should the user expect the same tagged address back or stripping the tag
+> > is acceptable? If we want to keep the current mmap() semantics, I'd say
+> > the same tag is returned. However, with MTE this also implies that the
+> > memory was coloured.
+> 
+> Is assigning a tag aprivileged operationon ARM64? I am thinking not
+> since you mentioned libc could do it in a loop for malloc'd memory.
+
+Indeed it's not, the user can do it.
+
+> mmap() can return the same tagged address but I am uneasy about kernel
+> pre-coloring the pages. Database can mmap 100's of GB of memory. That is
+> lot of work being offloaded to the kernel to pre-color the page even if
+> done in batches as pages are faulted in.
+
+For anonymous mmap() for example, the kernel would have to zero the
+faulted in pages anyway. We can handle the colouring at the same time in
+clear_user_page() (as I said below, we have to clear the colour anyway
+from previous uses, so it's simply extending this to support something
+other than tag/colour 0 by default with no additional overhead).
+
+> > Since the user can probe the pre-existing colour in a faulted-in page
+> > (either with some 'ldxa' instruction or by performing a tag-checked
+> > access), the kernel should always pre-colour (even if colour 0) any
+> > allocated page. There might not be an obvious security risk but I feel
+> > uneasy about letting colours leak between address spaces (different user
+> > processes or between kernel and user).
+> 
+> On sparc, tags 0 and 15 are special in that 0 means untagged memory and
+> 15 means match any tag in the address. Colour 0 is the default for any
+> newly faulted in page on sparc.
+
+With MTE we don't have match-all/any tag in memory, only in the virtual
+address/pointer. So if we turn on MTE for all pages and the user
+accesses an address with a 0 tag, the underlying memory needs to be
+coloured with the same 0 value.
+
+> > Since we already need such loop in the kernel, we might as well allow
+> > user space to require a certain colour. This comes in handy for large
+> > malloc() and another advantage is that the C library won't be stuck
+> > trying to paint the whole range (think GB).
+> 
+> If kernel is going to pre-color all pages in a vma, we will need to
+> store the default tag in the vma. It will add more time to page fault
+> handling code. On sparc M7, kernel will need to execute additional 128
+> stxa instructions to set the tags on a normal page.
+
+As I said, since the user can retrieve an old colour using ldxa, the
+kernel should perform this operation anyway on any newly allocated page
+(unless you clear the existing colour on page freeing).
+
+> >> We can try to store tags for an entire region in vma but that is
+> >> expensive, plus on sparc tags are set in userspace with no
+> >> participation from kernel and now we need a way for userspace to
+> >> communicate the tags to kernel.
+> > 
+> > We can't support finer granularity through the mmap() syscall and, as
+> > you said, the vma is not the right thing to store the individual tags.
+> > With the above extension to mmap(), we'd have to store a colour per vma
+> > and prevent merging if different colours (we could as well use the
+> > pkeys mechanism we already have in the kernel but use a colour per vma
+> > instead of a key).
+> 
+> Since tags can change on any part of mmap region on sparc at any time
+> without kernel being involved, I am not sure I see much reason for
+> kernel to enforce any tag related restrictions.
+
+It's not enforcing a tag, more like the default colour for a faulted in
+page. Anyway, if sparc is going with default 0/untagged, that's fine as
+well. We may add this mmap() option to arm64 only.
+
+> >> From sparc point of view, making kernel responsible for assigning tags
+> >> to a page on page fault is full of pitfalls.
+> > 
+> > This could be just some arm64-specific but if you plan to deploy it more
+> > generically for sparc (at the C library level), you may find this
+> > useful.
+> 
+> Common semantics from app developer point of view will be very useful to
+> maintain. If arm64 says mmap with MAP_FIXED and a tagged address will
+> return a pre-colored page, I would rather have it be the same on any
+> architecture. Is there a use case that justifies kernel doing this extra
+> work?
+
+So if a database program is doing an anonymous mmap(PROT_TBI) of 100GB,
+IIUC for sparc the faulted-in pages will have random colours (on 64-byte
+granularity). Ignoring the information leak from prior uses of such
+pages, it would be the responsibility of the db program to issue the
+stxa. On arm64, since we also want to do this via malloc(), any large
+allocation would require all pages to be faulted in so that malloc() can
+set the write colour before being handed over to the user. That's what
+we want to avoid and the user is free to repaint the memory as it likes.
+
+-- 
+Catalin
