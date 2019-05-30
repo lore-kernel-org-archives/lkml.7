@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0A2C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DD5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4218250EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE675250E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189345;
-	bh=/DIIACrdSAI23wlqAuKh/YSRVxYGNSySwjOPobRpCtM=;
+	s=default; t=1559189356;
+	bh=dgVPfRnNrS9sF00eZQGA8PRNy4LT4oN8ILxqoCCnE5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FEx3BusZWKXUq305ct5aHwxL++dIQK9cyIdzLhjsEFzdzk61OtfhY/i1eLT0YYXFd
-	 jcSyLmz4cDW3bns4vN4WhK85WGHE1YxRhySV9t3HqDGcrA+zcHwPap8coSE/tPxtZ2
-	 oBAtU3u0rsDl3qpxS9r0nccZTOmk+0KGYG89QPMM=
+	b=SD8tKQsbkf2FtxzBRz40v2PYHybIH70kKOT2yXBmA98n5brwL0r5QRLBdKWw83Fub
+	 +8bYXA+PBnTucASlNeXetWlONGe1p8rWnbgLQhVY4OPe+J1N3zYchLqGGSkIxADRXw
+	 PQLs6uAWgh8v5BWBtyiXH5e67DQSAjHbolDLoJ6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbfE3DRO (ORCPT
+        id S1726961AbfE3EJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60432 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfE3DNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:52 -0400
+        id S1730967AbfE3DRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B7824534;
-        Thu, 30 May 2019 03:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D18224685;
+        Thu, 30 May 2019 03:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186032;
-        bh=/DIIACrdSAI23wlqAuKh/YSRVxYGNSySwjOPobRpCtM=;
+        s=default; t=1559186233;
+        bh=dgVPfRnNrS9sF00eZQGA8PRNy4LT4oN8ILxqoCCnE5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MupMW9nfCIGOYGDIOQjREDWSyH47Di2v8+CXYkThMuC+JIiE0Jc/v4XubQuRplVVV
-         XIrI4pNuMwx+YHosj/fy+unvwY+bgZvogq5SBJD7mkf4cCoVd00+TdHI+QVPZtRoK2
-         FBvw1N+Cb+xXXSfhjOZgLUoYKQJr47f8ZHpl2sTA=
+        b=JiDB2jvnI88PhcQeZybE2V2jnnpmm0ORtlJJbXzyV6PDGxvAM1AAnMXxg2QVGNACX
+         C+pRnTK89vQpO+5JhIOQCNpfE5TT9KX00kKOCXdNtXCJ+VinmcTQvWsTzermfRmBV3
+         EpwbyhYnG6A/L9d+JVaNsFy4413dugPsZ6ePts2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
+        kbuild test robot <lkp@intel.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 069/346] powerpc/perf: Fix loop exit condition in nest_imc_event_init
-Date:   Wed, 29 May 2019 20:02:22 -0700
-Message-Id: <20190530030544.554500619@linuxfoundation.org>
+Subject: [PATCH 4.19 139/276] staging: vc04_services: handle kzalloc failure
+Date:   Wed, 29 May 2019 20:04:57 -0700
+Message-Id: <20190530030534.392200891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,58 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
+[ Upstream commit a5112277872a56017b777770e2fd4324d4a6c866 ]
 
-The data structure (i.e struct imc_mem_info) to hold the memory address
-information for nest imc units is allocated based on the number of nodes
-in the system.
+The kzalloc here was being used without checking the return - if the
+kzalloc fails return VCHIQ_ERROR. The call-site of
+vchiq_platform_init_state() vchiq_init_state() was not responding
+to an allocation failure so checks for != VCHIQ_SUCCESS
+and pass VCHIQ_ERROR up to vchiq_platform_init() which then
+will fail with -EINVAL.
 
-nest_imc_event_init() traverse this struct array to calculate the memory
-base address for the event-cpu. If we fail to find a match for the event
-cpu's chip-id in imc_mem_info struct array, then the do-while loop will
-iterate until we crash.
-
-Fix this by changing the loop exit condition based on the number of
-non zero vbase elements in the array, since the allocation is done for
-nr_chips + 1.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Acked-By: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/imc-pmu.c               | 2 +-
- arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 3 +++
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index 4f34c7557bdb7..d1009fe3130b1 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -508,7 +508,7 @@ static int nest_imc_event_init(struct perf_event *event)
- 			break;
- 		}
- 		pcni++;
--	} while (pcni);
-+	} while (pcni->vbase != 0);
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index e767209030642..c7c8ef67b67fa 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -208,6 +208,9 @@ vchiq_platform_init_state(VCHIQ_STATE_T *state)
+ 	struct vchiq_2835_state *platform_state;
  
- 	if (!flag)
- 		return -ENODEV;
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 58a07948c76e7..3d27f02695e41 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
- 								nr_chips))
- 		goto error;
+ 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
++	if (!state->platform_state)
++		return VCHIQ_ERROR;
++
+ 	platform_state = (struct vchiq_2835_state *)state->platform_state;
  
--	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
-+	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
- 				    GFP_KERNEL);
- 	if (!pmu_ptr->mem_info)
- 		goto error;
+ 	platform_state->inited = 1;
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+index 7642ced314364..63ce567eb6b75 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+@@ -2537,6 +2537,8 @@ vchiq_init_state(VCHIQ_STATE_T *state, VCHIQ_SLOT_ZERO_T *slot_zero,
+ 	local->debug[DEBUG_ENTRIES] = DEBUG_MAX;
+ 
+ 	status = vchiq_platform_init_state(state);
++	if (status != VCHIQ_SUCCESS)
++		return VCHIQ_ERROR;
+ 
+ 	/*
+ 		bring up slot handler thread
 -- 
 2.20.1
 
