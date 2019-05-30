@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4291CC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEFBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5F625E93
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1A525E9D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192060;
-	bh=dRaay6V38ZQBoS8zKbaAnrP+HlvFnkld7aAPcWP7vLc=;
+	s=default; t=1559192064;
+	bh=XomZtjFDqLgRp2xBixwxsRoaZT+KXZ7SNXWy6aXFFXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PRBKIQEfGVS3mP8hTu8pvAuO2Ynp0RXIaa6WuaP2bvdywxyMvGlhzizt9rYhYSJJi
-	 nT+Qgn2DsbAOG9G1JEaEmx1wDGKXgjm8p7yQNu9dvorEXOYwFhfLxuYhdljI0Quap1
-	 cEO4ShUjBDV4L1/Rex7rj2vtPlty6KLSrGtkF1gI=
+	b=cAIA33ohkuo9Yp5zEj8DSkJnr3Qx70YtHnNN7UIqjd0PDUkJsEDmW20hdQ0fcVC60
+	 wn+HSDsd1qQn4aVQNaB8AZT3UMcfFQil+BReUcvjSNxgy49WJb1x7cbBbQSBUpunvx
+	 tS8wOt9MuZG9hordbOnGpWzW9akN9zzjmp3yluC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbfE3DK0 (ORCPT
+        id S2388798AbfE3EyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727824AbfE3DJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:51 -0400
+        id S1728089AbfE3DK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10CB62447C;
-        Thu, 30 May 2019 03:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BB824481;
+        Thu, 30 May 2019 03:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185791;
-        bh=dRaay6V38ZQBoS8zKbaAnrP+HlvFnkld7aAPcWP7vLc=;
+        s=default; t=1559185825;
+        bh=XomZtjFDqLgRp2xBixwxsRoaZT+KXZ7SNXWy6aXFFXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BeTGa269w6xvblCLUkQFD+dNtBeHGXB8RFu9D2WABYUOK+5VnhqehEzNKF2rQh8S0
-         U5CeEqNb6LDOaAN2UFyghaghW8POlNMmwpTjVXYznfB0tdst8CLVuMnj6upnArLv1I
-         KjL5pkWRtjBewKDFohPDfqG3Pf4e3yUwAQAcDASY=
+        b=KQ25fm5rqI9wEzh7nbH7sfTKmqdHMxZ+bFlPBleMijgn1nSqvNni3YtQmFOfCOgsk
+         iCzGcsSWv1gmDs1dE6StqlcH4gnRNGXjIKOPU8Q7TwNDS87tM24E10AJcr79lBJpqU
+         NHp/L9obFGIeDMe3i7OLjAjBq4n1OgWOxiO2oH2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 045/405] gfs2: Fix lru_count going negative
-Date:   Wed, 29 May 2019 20:00:43 -0700
-Message-Id: <20190530030543.087811743@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 125/405] nvme: set 0 capacity if namespace block size exceeds PAGE_SIZE
+Date:   Wed, 29 May 2019 20:02:03 -0700
+Message-Id: <20190530030547.356126129@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,109 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit 01fa017484ad98fccdeaab32db0077c574b6bd6f ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+If our target exposed a namespace with a block size that is greater
+than PAGE_SIZE, set 0 capacity on the namespace as we do not support it.
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+This issue encountered when the nvmet namespace was backed by a tempfile.
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
-
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/nvme/host/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index d32964cd11176..e4f6d39500bcc 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 2c43e12b70afc..8782d86a8ca38 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1591,6 +1591,10 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	sector_t capacity = le64_to_cpup(&id->nsze) << (ns->lba_shift - 9);
+ 	unsigned short bs = 1 << ns->lba_shift;
  
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
- {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
-+
- 	spin_lock(&lru_lock);
- 
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
++	if (ns->lba_shift > PAGE_SHIFT) {
++		/* unsupported block size, set capacity to 0 later */
++		bs = (1 << 9);
 +	}
+ 	blk_mq_freeze_queue(disk->queue);
+ 	blk_integrity_unregister(disk);
  
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
+@@ -1601,7 +1605,8 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	if (ns->ms && !ns->ext &&
+ 	    (ns->ctrl->ops->flags & NVME_F_METADATA_SUPPORTED))
+ 		nvme_init_integrity(disk, ns->ms, ns->pi_type);
+-	if (ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk))
++	if ((ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk)) ||
++	    ns->lba_shift > PAGE_SHIFT)
+ 		capacity = 0;
  
-@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- 		return;
- 
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
+ 	set_capacity(disk, capacity);
 -- 
 2.20.1
 
