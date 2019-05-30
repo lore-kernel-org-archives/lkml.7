@@ -5,55 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC3DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB76C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E882D251A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E994825270
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189916;
-	bh=5pDeNerl/1DxJPk5v26/hzMb2wiiuMRCLy2pj8wIa3g=;
+	s=default; t=1559189921;
+	bh=aoxyoPCuAgGkO3SV9RXleLnENqAvFJUJWdYOT0w20ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vyw7dQ2FvnGjTJifNH5a3hDzChD+1CigLI309jCGVJAF43yWQv2ann01duxfV2mmg
-	 /mXd9YrJdu8kVq6LmMLuGEtCpQ8Iw7VKou26H625Q9wjCXp8CvRXAmALhE7jvImtT0
-	 pOAyqcXzqyXuvc4pWooUX0tcXbvkVHvk9yCCa/og=
+	b=Kq2+c5MozduYfcLaOlipjy0T6JwCnJRnpQrKTB7HrBy4gwD9Sk6DJiHqvNQQqz+rT
+	 UQD+xlcy0AM4bYceuDmDHZeQjlG17uukf4srXApJM7eL01U05T0q8KPO0zgrFiJvB7
+	 i9ctMhPwQRIWIh5efqE3YUsLkZvxkjhH8pcw4Xns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfE3DPb (ORCPT
+        id S1731051AbfE3ESk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728221AbfE3DMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:55 -0400
+        id S1729338AbfE3DPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:31 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A66C024528;
-        Thu, 30 May 2019 03:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B268924559;
+        Thu, 30 May 2019 03:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185974;
-        bh=5pDeNerl/1DxJPk5v26/hzMb2wiiuMRCLy2pj8wIa3g=;
+        s=default; t=1559186130;
+        bh=aoxyoPCuAgGkO3SV9RXleLnENqAvFJUJWdYOT0w20ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eIBRR4qu4dKVC8RWfQRHyvqaAJ1Rx6LBef8Z+GxQc63h4kA10jBZrLLj+cPn1/Igd
-         ZeDQQA4JGchG0p5VdWWElIhx5cmenW1mKOvenRFsXfzNTfIonl5sSl/xPo6gonssig
-         KXJGil/41fLgVvOtf8Ovy69Fv7SWaoHC2zNk2P3c=
+        b=dxxb0O5VM+AriOsgU7gCMphE3j0AWqAIHZXJfwZ+uwg8ldG67Gc7+bzKqROMUYOxB
+         McuxExcfpsgBvRHMWKcVhvPTSDN2cdpEnzhWl+QinjE5082xf2fCB9dwmNUV5cX6Gy
+         i9JN2FfRegf61h25oz2oiq0z/OOmTG5kvuBL8PJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 387/405] regulator: wm831x: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:25 -0700
-Message-Id: <20190530030600.258027127@linuxfoundation.org>
+Subject: [PATCH 5.0 257/346] media: video-mux: fix null pointer dereferences
+Date:   Wed, 29 May 2019 20:05:30 -0700
+Message-Id: <20190530030554.010021267@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,55 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 119c4f5085c45b60cb23c5595e45d06135b89518 ]
+[ Upstream commit aeb0d0f581e2079868e64a2e5ee346d340376eae ]
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+devm_kcalloc may fail and return a null pointer. The fix returns
+-ENOMEM upon failures to avoid null pointer dereferences.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
-
-Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/wm831x-dcdc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/video-mux.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
-index 12b422373580c..d1873f94bca74 100644
---- a/drivers/regulator/wm831x-dcdc.c
-+++ b/drivers/regulator/wm831x-dcdc.c
-@@ -183,9 +183,11 @@ static irqreturn_t wm831x_dcdc_uv_irq(int irq, void *data)
- {
- 	struct wm831x_dcdc *dcdc = data;
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index c33900e3c23ef..4135165cdabe6 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -399,9 +399,14 @@ static int video_mux_probe(struct platform_device *pdev)
+ 	vmux->active = -1;
+ 	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
+ 				  GFP_KERNEL);
++	if (!vmux->pads)
++		return -ENOMEM;
++
+ 	vmux->format_mbus = devm_kcalloc(dev, num_pads,
+ 					 sizeof(*vmux->format_mbus),
+ 					 GFP_KERNEL);
++	if (!vmux->format_mbus)
++		return -ENOMEM;
  
-+	regulator_lock(dcdc->regulator);
- 	regulator_notifier_call_chain(dcdc->regulator,
- 				      REGULATOR_EVENT_UNDER_VOLTAGE,
- 				      NULL);
-+	regulator_unlock(dcdc->regulator);
- 
- 	return IRQ_HANDLED;
- }
-@@ -194,9 +196,11 @@ static irqreturn_t wm831x_dcdc_oc_irq(int irq, void *data)
- {
- 	struct wm831x_dcdc *dcdc = data;
- 
-+	regulator_lock(dcdc->regulator);
- 	regulator_notifier_call_chain(dcdc->regulator,
- 				      REGULATOR_EVENT_OVER_CURRENT,
- 				      NULL);
-+	regulator_unlock(dcdc->regulator);
- 
- 	return IRQ_HANDLED;
- }
+ 	for (i = 0; i < num_pads; i++) {
+ 		vmux->pads[i].flags = (i < num_pads - 1) ? MEDIA_PAD_FL_SINK
 -- 
 2.20.1
 
