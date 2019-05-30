@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D11C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7239EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACF924AB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC0F24ABE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186980;
-	bh=xHVzDq91aH0SJhrqyRTORQomLvIyxj+MOPYxDC+DYK4=;
+	s=default; t=1559186983;
+	bh=uhWnmlcoF64u9MNy02zFBaoTIoSFXPkx4megjZ25jHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bm5USM6JdO5YSz2xsmyXhgqJgkugy3GfyLBwzDmXD75El0U0U2wC70katibYlmNC/
-	 a6y7oxrLufnp8jAKNw0zxo+s3G/vm3FjXr0qcLWbWnJedhE6zz1ik5hCnLqI4eRcOG
-	 7Eb3BU40cZyWzGBtF6JnCCI98phghu5ZYvYZKGto=
+	b=u2iueq1Pc84B9ZxXXzQfHyJX1F4N+gTIuzLZ6N3LvEdn+tAE97GiVgKZzxXic6SSv
+	 Ivj6yIEu0Tl4N6aPX2y9EMprWRv2iR9TTC7l52uB3+Zkkk/ndRvCeWIjlaDh6FqUpU
+	 pfZRWNggn06V08Z5Y5M4aRaVS9xAv8nIvuQeqKPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfE3D3i (ORCPT
+        id S2388084AbfE3D3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbfE3DUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:47 -0400
+        id S1729807AbfE3DUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D8F2496F;
-        Thu, 30 May 2019 03:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 085662497E;
+        Thu, 30 May 2019 03:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186447;
-        bh=xHVzDq91aH0SJhrqyRTORQomLvIyxj+MOPYxDC+DYK4=;
+        s=default; t=1559186451;
+        bh=uhWnmlcoF64u9MNy02zFBaoTIoSFXPkx4megjZ25jHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAX7HdddUkmF56IjZtnmHpDnyuJ5b5ie8gPmEXg10EWvtVWspm3uAKK0k8h/0o5Ra
-         O5otIA/3O3rD0uD1vpBlW3B86ekuE9AXuy/er17XB4PcpeETMXMHP5zGunKt91cIg0
-         9FfyRb1nFm5l+pHo3BIt3cu9Q7y6FLYznocwrWv0=
+        b=kh1WaY8zfph02blH5dlBkPc7aZn2WPu4ORw/CyfT2z98dHShUgv2iJUFcC+kCwq9D
+         r77j/Gfpz3lSCCiH3+PdANw6S8lI+M3gEpHALl8prnBgEul//8jXdIlImhAdHeGQlT
+         fbZacUVrAae8SK2YOA25z89WsYyreLjoTvT6hTtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 037/128] iwlwifi: pcie: dont crash on invalid RX interrupt
-Date:   Wed, 29 May 2019 20:06:09 -0700
-Message-Id: <20190530030440.829423723@linuxfoundation.org>
+Subject: [PATCH 4.9 061/128] audit: fix a memory leak bug
+Date:   Wed, 29 May 2019 20:06:33 -0700
+Message-Id: <20190530030445.709897200@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,43 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
+[ Upstream commit 70c4cf17e445264453bc5323db3e50aa0ac9e81f ]
 
-If for some reason the device gives us an RX interrupt before we're
-ready for it, perhaps during device power-on with misconfigured IRQ
-causes mapping or so, we can crash trying to access the queues.
+In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+translate the payload data to the kernel's rule representation. In
+audit_data_to_entry(), depending on the audit field type, an audit tree may
+be created in audit_make_tree(), which eventually invokes kmalloc() to
+allocate the tree.  Since this tree is a temporary tree, it will be then
+freed in the following execution, e.g., audit_add_rule() if the message
+type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+temporary tree is not freed.
 
-Prevent that by checking that we actually have RXQs and that they
-were properly allocated.
+To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
+or AUDIT_DEL_RULE.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/auditfilter.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index c21f8bd32d08f..25f2a0aceaa21 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1225,10 +1225,15 @@ static void iwl_pcie_rx_handle_rb(struct iwl_trans *trans,
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
--	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
-+	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index cd4f41397c7e8..42b7251c597fb 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1095,22 +1095,24 @@ int audit_rule_change(int type, __u32 portid, int seq, void *data,
+ 	int err = 0;
+ 	struct audit_entry *entry;
  
-+	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
-+		return;
-+
-+	rxq = &trans_pcie->rxq[queue];
-+
- restart:
- 	spin_lock(&rxq->lock);
- 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
+-	entry = audit_data_to_entry(data, datasz);
+-	if (IS_ERR(entry))
+-		return PTR_ERR(entry);
+-
+ 	switch (type) {
+ 	case AUDIT_ADD_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_add_rule(entry);
+ 		audit_log_rule_change("add_rule", &entry->rule, !err);
+ 		break;
+ 	case AUDIT_DEL_RULE:
++		entry = audit_data_to_entry(data, datasz);
++		if (IS_ERR(entry))
++			return PTR_ERR(entry);
+ 		err = audit_del_rule(entry);
+ 		audit_log_rule_change("remove_rule", &entry->rule, !err);
+ 		break;
+ 	default:
+-		err = -EINVAL;
+ 		WARN_ON(1);
++		return -EINVAL;
+ 	}
+ 
+ 	if (err || type == AUDIT_DEL_RULE) {
 -- 
 2.20.1
 
