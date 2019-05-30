@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63086C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A39C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B88257AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23D22572E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190915;
-	bh=5cIoNPrYoOfe6SHmkc6fk808rFkjGP3Hjmm2cmWKvu8=;
+	s=default; t=1559190918;
+	bh=DDAiTRqEGOZMR5wKbJ4tM+vT0aH2qQvHbBxCDs12tLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A++y8jSVfJzKV3F/MnZpHQpxc/N2b7FeohwGPp9TrNRt+9wjWInfZlk+/fWuSSRjO
-	 6Ch93UPiMEmF7fJkCsz/sFvYMjH0MpoGIBmCe6Ueo0qg0iGFeNDd81vMpnSCgkiWMy
-	 KoXcrhxMiaDyV7nsOQdo/45uFTn25oQO7ql07uIE=
+	b=w3FIpjQXqnNhHve/RAtElMmhng/9DD26FGTzX35M1UWg+ztd8WSHSTPLfWHnVEbVO
+	 Y54thNVBPTKku2o7kXiN/yWRiQ1DrFaYxYX0s9MOEnejeFDbPewu56VBxdbOCwNGDd
+	 O6Cq3SHwTBaeboVeENkOaIfTA6ypDF1cfkgpJE3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388434AbfE3EfO (ORCPT
+        id S2388442AbfE3EfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbfE3DNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:16 -0400
+        id S1729379AbfE3DNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0075221BE2;
-        Thu, 30 May 2019 03:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F74244E8;
+        Thu, 30 May 2019 03:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185995;
-        bh=5cIoNPrYoOfe6SHmkc6fk808rFkjGP3Hjmm2cmWKvu8=;
+        s=default; t=1559185994;
+        bh=DDAiTRqEGOZMR5wKbJ4tM+vT0aH2qQvHbBxCDs12tLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gp7tqwgTeqPLAW0w4R5RWloce3JH8LeSQLfxvbOeaYT2I0l75DHKcNB+n+SvcA9zU
-         OBI/BlbjNnycy+SaPL1BnLcm1ET27Dxq5ZgcoVC2v1LS02KfVPsaYQK+tQ2TyLuZ6r
-         AD3/RaV9pwPl4X0zPrrLcjKTUVgW8XrYpIj+A/ps=
+        b=uooP3PbyAucODx5jvWTb1KeIQPWZ2l6rLs+kACC5uIMih7mXc6gX9ug5B30tF8yKm
+         5qHnFEX4LTv4t6IRRJ0Hhx4yfs1KbGM06Wt+InxuyIkL26+dM/06OF4MlU/K1U7F/A
+         fVeNmYrcwXzAmT6E/ff5RS48u+ijE9dGeKCdoH1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 041/346] Revert "btrfs: Honour FITRIM range constraints during free space trim"
-Date:   Wed, 29 May 2019 20:01:54 -0700
-Message-Id: <20190530030542.936701328@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.0 039/346] acct_on(): dont mess with freeze protection
+Date:   Wed, 29 May 2019 20:01:52 -0700
+Message-Id: <20190530030542.825843152@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -58,93 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-This reverts commit b9ee627187491547791aacf96d4dd8f4d9afbf1c.
+commit 9419a3191dcb27f24478d288abaab697228d28e6 upstream.
 
-There is currently no corresponding patch in master due to additional
-changes that would be significantly different from plain revert in the
-respective stable branch.
+What happens there is that we are replacing file->path.mnt of
+a file we'd just opened with a clone and we need the write
+count contribution to be transferred from original mount to
+new one.  That's it.  We do *NOT* want any kind of freeze
+protection for the duration of switchover.
 
-The range argument was not handled correctly and could cause trim to
-overlap allocated areas or reach beyond the end of the device. The
-address space that fitrim normally operates on is in logical
-coordinates, while the discards are done on the physical device extents.
-This distinction cannot be made with the current ioctl interface and
-caused the confusion.
+IOW, we should just use __mnt_{want,drop}_write() for that
+switchover; no need to bother with mnt_{want,drop}_write()
+there.
 
-The bug depends on the layout of block groups and does not always
-happen. The whole-fs trim (run by default by the fstrim tool) is not
-affected.
-
-Signed-off-by: David Sterba <dsterba@suse.com>
+Tested-by: Amir Goldstein <amir73il@gmail.com>
+Reported-by: syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/btrfs/extent-tree.c |   25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11191,9 +11191,9 @@ int btrfs_error_unpin_extent_range(struc
-  * held back allocations.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   struct fstrim_range *range, u64 *trimmed)
-+				   u64 minlen, u64 *trimmed)
- {
--	u64 start = range->start, len = 0;
-+	u64 start = 0, len = 0;
- 	int ret;
+---
+ fs/internal.h         |    2 --
+ include/linux/mount.h |    2 ++
+ kernel/acct.c         |    4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -80,9 +80,7 @@ extern int sb_prepare_remount_readonly(s
  
- 	*trimmed = 0;
-@@ -11236,8 +11236,8 @@ static int btrfs_trim_free_extents(struc
- 		if (!trans)
- 			up_read(&fs_info->commit_root_sem);
+ extern void __init mnt_init(void);
  
--		ret = find_free_dev_extent_start(trans, device, range->minlen,
--						 start, &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, minlen, start,
-+						 &start, &len);
- 		if (trans) {
- 			up_read(&fs_info->commit_root_sem);
- 			btrfs_put_transaction(trans);
-@@ -11250,16 +11250,6 @@ static int btrfs_trim_free_extents(struc
- 			break;
- 		}
+-extern int __mnt_want_write(struct vfsmount *);
+ extern int __mnt_want_write_file(struct file *);
+-extern void __mnt_drop_write(struct vfsmount *);
+ extern void __mnt_drop_write_file(struct file *);
  
--		/* If we are out of the passed range break */
--		if (start > range->start + range->len - 1) {
--			mutex_unlock(&fs_info->chunk_mutex);
--			ret = 0;
--			break;
--		}
--
--		start = max(range->start, start);
--		len = min(range->len, len);
--
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		mutex_unlock(&fs_info->chunk_mutex);
+ /*
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -86,6 +86,8 @@ extern bool mnt_may_suid(struct vfsmount
  
-@@ -11269,10 +11259,6 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
+ struct path;
+ extern struct vfsmount *clone_private_mount(const struct path *path);
++extern int __mnt_want_write(struct vfsmount *);
++extern void __mnt_drop_write(struct vfsmount *);
  
--		/* We've trimmed enough */
--		if (*trimmed >= range->len)
--			break;
--
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11356,7 +11342,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range->minlen,
-+					      &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ struct file_system_type;
+ extern struct vfsmount *vfs_kern_mount(struct file_system_type *type,
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -227,7 +227,7 @@ static int acct_on(struct filename *path
+ 		filp_close(file, NULL);
+ 		return PTR_ERR(internal);
+ 	}
+-	err = mnt_want_write(internal);
++	err = __mnt_want_write(internal);
+ 	if (err) {
+ 		mntput(internal);
+ 		kfree(acct);
+@@ -252,7 +252,7 @@ static int acct_on(struct filename *path
+ 	old = xchg(&ns->bacct, &acct->pin);
+ 	mutex_unlock(&acct->lock);
+ 	pin_kill(old);
+-	mnt_drop_write(mnt);
++	__mnt_drop_write(mnt);
+ 	mntput(mnt);
+ 	return 0;
+ }
 
 
