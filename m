@@ -2,56 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22655C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1333024069
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA3D245B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188362;
-	bh=Gv/H9w26YDcwmv+8qt2Uilgf7kakDx6hJzrcUwNIk4g=;
+	s=default; t=1559188369;
+	bh=KFjWdcM0j1PIjGo1SD5vVsinYegNqV/OwabGD7l4Pfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEdyBT9lQGd+M22nnK84hfI4+baKe4h5vEAqsPdVrhwC7IQrk25TGA/CtM6tJqmd4
-	 WZ6RdVCZu7NHkn7bUHhM0Ehj5JadP6mfFp8XfjSRSfyOj6SLtxSab/9slkch8Pw5kK
-	 z9w8m5rbM/CE51xBzYo6aLLCxng2twQ7DsmjmRe4=
+	b=2tuC1K9yhdyBmoAVQ38D1AImV5HYrZNj3fyduJGY8fe1QpEoc4zR4RIHg1cpih3G+
+	 OupPqJ8iPnhZz9Y7oUV7zB+SabF9hiBzxv6DQdyCSCkhYbSTTBhy8fFT2c0RciDxzF
+	 nJVQabJZbPeSApC/EFhEQ9cOAOWiGTmbMzrl/4js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387623AbfE3Dwk (ORCPT
+        id S1733144AbfE3Dws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731093AbfE3DTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731090AbfE3DTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2442E248AE;
-        Thu, 30 May 2019 03:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5435E248A8;
+        Thu, 30 May 2019 03:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186375;
-        bh=Gv/H9w26YDcwmv+8qt2Uilgf7kakDx6hJzrcUwNIk4g=;
+        s=default; t=1559186374;
+        bh=KFjWdcM0j1PIjGo1SD5vVsinYegNqV/OwabGD7l4Pfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vzq3xVzzlzVSz/0+p4xKE1bSedd9VegYplGxZfHSlwwTbZh5eGvbsdftSkCXVfF41
-         hyLsaAec4VH5QjWclmuBsL77+0Qwzlf5n4vxnH+A1Qj67XidDFIX4UkEYl+G6XMkA0
-         FYo7r4vTUSGUGBw5bKR7wjozxa3VtzuLJTw2TvIU=
+        b=XXAifGjZO0pl1hazm1o7GOOcvyiImdClKr28eowRJdrUViT4TBoJ+oopMuN6l3yJS
+         u1C7nhNbPO82dJ1sCkH2gngrisQRQuDIkxzHMsXS4X5ZAAQbZ1p953tYYrWFu+2s6o
+         sQa0BcYp+Y6flVNWIJNWMur0H6nc5OE5dzSh4SJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 135/193] x86/build: Keep local relocations with ld.lld
-Date:   Wed, 29 May 2019 20:06:29 -0700
-Message-Id: <20190530030507.215882392@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 133/193] cpufreq: kirkwood: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:06:27 -0700
+Message-Id: <20190530030506.915815320@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -64,42 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
+[ Upstream commit 7c468966f05ac9c17bb5948275283d34e6fe0660 ]
 
-The LLVM linker (ld.lld) defaults to removing local relocations, which
-causes KASLR boot failures. ld.bfd and ld.gold already handle this
-correctly. This adds the explicit instruction "--discard-none" during
-the link phase. There is no change in output for ld.bfd and ld.gold,
-but ld.lld now produces an image with all the needed relocations.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
-Link: https://github.com/ClangBuiltLinux/linux/issues/404
+Detected by coccinelle with the following warnings:
+./drivers/cpufreq/kirkwood-cpufreq.c:127:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 118, but without a corresponding object release within this function.
+./drivers/cpufreq/kirkwood-cpufreq.c:133:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 118, but without a corresponding object release within this function.
+
+and also do some cleanup:
+- of_node_put(np);
+- np = NULL;
+...
+of_node_put(np);
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/kirkwood-cpufreq.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index eb1f8f249dc35..b4c72da8a7adb 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -48,7 +48,7 @@ export REALMODE_CFLAGS
- export BITS
+diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
+index c2dd43f3f5d8a..8d63a6dc8383c 100644
+--- a/drivers/cpufreq/kirkwood-cpufreq.c
++++ b/drivers/cpufreq/kirkwood-cpufreq.c
+@@ -124,13 +124,14 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+ 	priv.cpu_clk = of_clk_get_by_name(np, "cpu_clk");
+ 	if (IS_ERR(priv.cpu_clk)) {
+ 		dev_err(priv.dev, "Unable to get cpuclk\n");
+-		return PTR_ERR(priv.cpu_clk);
++		err = PTR_ERR(priv.cpu_clk);
++		goto out_node;
+ 	}
  
- ifdef CONFIG_X86_NEED_RELOCS
--        LDFLAGS_vmlinux := --emit-relocs
-+        LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
+ 	err = clk_prepare_enable(priv.cpu_clk);
+ 	if (err) {
+ 		dev_err(priv.dev, "Unable to prepare cpuclk\n");
+-		return err;
++		goto out_node;
+ 	}
  
- #
+ 	kirkwood_freq_table[0].frequency = clk_get_rate(priv.cpu_clk) / 1000;
+@@ -161,20 +162,22 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+ 		goto out_ddr;
+ 	}
+ 
+-	of_node_put(np);
+-	np = NULL;
+-
+ 	err = cpufreq_register_driver(&kirkwood_cpufreq_driver);
+-	if (!err)
+-		return 0;
++	if (err) {
++		dev_err(priv.dev, "Failed to register cpufreq driver\n");
++		goto out_powersave;
++	}
+ 
+-	dev_err(priv.dev, "Failed to register cpufreq driver\n");
++	of_node_put(np);
++	return 0;
+ 
++out_powersave:
+ 	clk_disable_unprepare(priv.powersave_clk);
+ out_ddr:
+ 	clk_disable_unprepare(priv.ddr_clk);
+ out_cpu:
+ 	clk_disable_unprepare(priv.cpu_clk);
++out_node:
+ 	of_node_put(np);
+ 
+ 	return err;
 -- 
 2.20.1
 
