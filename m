@@ -2,55 +2,61 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9DFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690BF24C81
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20D124C6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187876;
-	bh=f/uod0iwRLio3JMBjO0UmblrUC2/9F1p45ejVxG6x3k=;
+	s=default; t=1559187882;
+	bh=Ff4fiUhKF78asIqhF4O+7RlfmrvJnhFpQLyghkBMiuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNE26Vuln71VOUOgmQC3tq5ng9V6VdMkNNVXT+AreBFD6E8LCf9TXkcPDL8MBhVw5
-	 nK3HWlibvS7hGmSY3EvdZT+fHO0k8G7weJjVT+Dgs1cUnInb9RxiWL00wSEacEmFeo
-	 +XPR0QNl/7nv+R2EKhKK3v018fBjAUHgsTrM+o8Y=
+	b=W4HjaCI/fj1hcoXBwSQ2wPYAYI5DPWYJrlUlul/NBnM/PuIl0ORoT3ZZGsVpLo+u/
+	 mH5sn/Sz1DOT0m3Fiv9Qqy/GlbAc9tWhRhZVOLx97DKlFuWU79/LGNzG2QkHxROGpQ
+	 IcExNn3BQDsClR4gV4HmAQHyRkcueqFARvGIRDuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfE3DU4 (ORCPT
+        id S1732877AbfE3Dol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730584AbfE3DQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:05 -0400
+        id S1732380AbfE3DU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C592458C;
-        Thu, 30 May 2019 03:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582EC2498D;
+        Thu, 30 May 2019 03:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186165;
-        bh=f/uod0iwRLio3JMBjO0UmblrUC2/9F1p45ejVxG6x3k=;
+        s=default; t=1559186455;
+        bh=Ff4fiUhKF78asIqhF4O+7RlfmrvJnhFpQLyghkBMiuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYRYk+B8vnMM41S2Fx3SfZYXi9GxGn4sxtXY+aQRTNJgdl5rc4Siyhg28WaLB8rER
-         piJqUtMwcBJEZ5fv0duk8lzUcYNN3Kehzi+4Lp7kDuqXxIEkM/5oV55U3aRMBmbJ62
-         cudWIKSAghxEqWLyK3ztP+sDOdn9hHeC70/k1neU=
+        b=K6PNh9Jnt+FmxYuQqUhP/vs14ff2m3AJ7RJUc3pfwJoJirYNjR9jI7C55G9bN2u42
+         yY0whLGJ1gMF6XMGc4GQfNylBFEumLt0H1qba53zh2Uq+ZHrse+4oB/I4t6A9r2UuW
+         iPjrpXBCS8RInF3oqYGdSBCWDk8IpKtE857Z0zzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 017/276] btrfs: dont double unlock on error in btrfs_punch_hole
-Date:   Wed, 29 May 2019 20:02:55 -0700
-Message-Id: <20190530030525.025076629@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 068/128] x86/irq/64: Limit IST stack overflow check to #DB stack
+Date:   Wed, 29 May 2019 20:06:40 -0700
+Message-Id: <20190530030446.997261154@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,40 +66,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
 
-commit 8fca955057b9c58467d1b231e43f19c4cf26ae8c upstream.
+Commit
 
-If we have an error writing out a delalloc range in
-btrfs_punch_hole_lock_range we'll unlock the inode and then goto
-out_only_mutex, where we will again unlock the inode.  This is bad,
-don't do this.
+  37fe6a42b343 ("x86: Check stack overflow in detail")
 
-Fixes: f27451f22996 ("Btrfs: add support for fallocate's zero range operation")
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+added a broad check for the full exception stack area, i.e. it considers
+the full exception stack area as valid.
 
+That's wrong in two aspects:
+
+ 1) It does not check the individual areas one by one
+
+ 2) #DF, NMI and #MCE are not enabling interrupts which means that a
+    regular device interrupt cannot happen in their context. In fact if a
+    device interrupt hits one of those IST stacks that's a bug because some
+    code path enabled interrupts while handling the exception.
+
+Limit the check to the #DB stack and consider all other IST stacks as
+'overflow' or invalid.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2565,10 +2565,8 @@ static int btrfs_punch_hole(struct inode
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index bcd1b82c86e81..005e9a77a664e 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -25,9 +25,18 @@ int sysctl_panic_on_stackoverflow;
+ /*
+  * Probabilistic stack overflow check:
+  *
+- * Only check the stack in process context, because everything else
+- * runs on the big interrupt stacks. Checking reliably is too expensive,
+- * so we just check from interrupts.
++ * Regular device interrupts can enter on the following stacks:
++ *
++ * - User stack
++ *
++ * - Kernel task stack
++ *
++ * - Interrupt stack if a device driver reenables interrupts
++ *   which should only happen in really old drivers.
++ *
++ * - Debug IST stack
++ *
++ * All other contexts are invalid.
+  */
+ static inline void stack_overflow_check(struct pt_regs *regs)
+ {
+@@ -52,8 +61,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
+ 		return;
  
- 	ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
- 					  &cached_state);
--	if (ret) {
--		inode_unlock(inode);
-+	if (ret)
- 		goto out_only_mutex;
--	}
+ 	oist = this_cpu_ptr(&orig_ist);
+-	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
+-	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
++	estack_bottom = (u64)oist->ist[DEBUG_STACK];
++	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
+ 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
+ 		return;
  
- 	path = btrfs_alloc_path();
- 	if (!path) {
+-- 
+2.20.1
+
 
 
