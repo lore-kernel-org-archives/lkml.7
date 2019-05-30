@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58037C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3016D24B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE2D24B57
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187300;
-	bh=ktULjbtGiu6USQiIsLXH9WoJV2uliWLQyEHGbCjaLcs=;
+	s=default; t=1559187305;
+	bh=jfxkctMCIVB7aXDL0oMHLtSlqc3xllSPxBiKeDPV98A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/YNTWhsVv9mWEbPluRTdPMOQ8w7XqQnOqa+sHrLuk0EJ6euLaKEHykIQiY3suDPP
-	 jqCTmLg2wySOMRhUMVAX8ffAL/iYyNpY/GrAEP+akFS5kFHec2kWFdlsNmqV5VdbbU
-	 p6YHQ6fTQNecaUk2vFZq4GFevxdpgw+UFME+91z0=
+	b=w6dqbKrTmFXNnovd9+SR2l5pikW3QoUR51zquh6BzZL8RFMN/rh25Qe+Wl63aV3N/
+	 jkO8gC1FDzJcdzpzm/J2GtBM+zU2S88ckaTljgbsIlcn4S4QFv+5NQaCREdVp81L95
+	 JXHN4VC4nZ4w+KM5EYYy+An1/dyQTAdne4WfGCFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbfE3D1C (ORCPT
+        id S1732611AbfE3D06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53900 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbfE3DTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:08 -0400
+        id S1731808AbfE3DTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65F602474A;
+        by mail.kernel.org (Postfix) with ESMTPSA id C9AEF2482A;
         Thu, 30 May 2019 03:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186347;
-        bh=ktULjbtGiu6USQiIsLXH9WoJV2uliWLQyEHGbCjaLcs=;
+        bh=jfxkctMCIVB7aXDL0oMHLtSlqc3xllSPxBiKeDPV98A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRReyaqO62nHMc1l6UcizGOGusMwC5uTv7PD9ZYLPKBbno/2ltdmmcWRmlZa6dtyV
-         0snfoWEtGGQBMycQPfmqe4cI5oS1WQvMkyJElw+OpBTe/bdw0k4cYSzhrJLIdUB7I0
-         OcsS4xbLWauETMrShMJBzqLpSjoPd4bZ5OQ0Kpjk=
+        b=g70C5iZnbttGxdWgQ6JFu5tEMO1dpwsk2aUd7Vth+ix+cwl/ZL4qhFtxEdVAErjd2
+         wjZJEV+D3pyRclX6FhDCJjmhQUQPDwRcaZDxoTwmkhM/AxZXg0h6UAHHpK2mFX0xBA
+         JT0prMGP2tvuXtBY/8KJ+QK7SAj/0a8ltB3juCQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/193] mm/uaccess: Use unsigned long to placate UBSAN warnings on older GCC versions
-Date:   Wed, 29 May 2019 20:05:36 -0700
-Message-Id: <20190530030500.276161260@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 083/193] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
+Date:   Wed, 29 May 2019 20:05:37 -0700
+Message-Id: <20190530030500.512773806@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,74 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
+[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
 
-Randy reported objtool triggered on his (GCC-7.4) build:
+According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
+https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
 
-  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
-  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+We should use a register-access-protocol request using the short input /
+output report ids. This is necessary because 27MHz HID++ receivers have
+a max-packetsize on their HIP++ endpoint of 8, so they cannot support
+long reports. Using a feature-access-protocol request (which is always
+long or very-long) with these will cause a timeout error, followed by
+the hidpp driver treating the device as not being HID++ capable.
 
-This is due to UBSAN generating signed-overflow-UB warnings where it
-should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
-uses through -fno-strict-overflow).
+This commit fixes this by switching to using a rap request to get the
+protocol version.
 
-Make the functions use 'unsigned long' throughout.
+Besides being tested with a (046d:c517) 27MHz receiver with various
+27MHz keyboards and mice, this has also been tested to not cause
+regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
+k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
+(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/strncpy_from_user.c | 5 +++--
- lib/strnlen_user.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index b53e1b5d80f42..e304b54c9c7dd 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -23,10 +23,11 @@
-  * hit it), 'max' is the address space maximum (and we return
-  * -EFAULT if we hit it).
-  */
--static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
-+static inline long do_strncpy_from_user(char *dst, const char __user *src,
-+					unsigned long count, unsigned long max)
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index b83d4173fc7f5..d209b12057d59 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -725,13 +725,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
+ 
+ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
  {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long res = 0;
-+	unsigned long res = 0;
++	const u8 ping_byte = 0x5a;
++	u8 ping_data[3] = { 0, 0, ping_byte };
+ 	struct hidpp_report response;
+ 	int ret;
  
- 	/*
- 	 * Truncate 'max' to the user-specified limit, so that
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 60d0bbda8f5e5..184f80f7bacfa 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -28,7 +28,7 @@
- static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long align, res = 0;
-+	unsigned long align, res = 0;
- 	unsigned long c;
+-	ret = hidpp_send_fap_command_sync(hidpp,
++	ret = hidpp_send_rap_command_sync(hidpp,
++			REPORT_ID_HIDPP_SHORT,
+ 			HIDPP_PAGE_ROOT_IDX,
+ 			CMD_ROOT_GET_PROTOCOL_VERSION,
+-			NULL, 0, &response);
++			ping_data, sizeof(ping_data), &response);
  
- 	/*
-@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
- 	 */
--	align = (sizeof(long) - 1) & (unsigned long)src;
-+	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
- 	src -= align;
- 	max += align;
+ 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
+ 		hidpp->protocol_major = 1;
+@@ -751,8 +754,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ 	if (ret)
+ 		return ret;
  
+-	hidpp->protocol_major = response.fap.params[0];
+-	hidpp->protocol_minor = response.fap.params[1];
++	if (response.rap.params[2] != ping_byte) {
++		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
++			__func__, response.rap.params[2], ping_byte);
++		return -EPROTO;
++	}
++
++	hidpp->protocol_major = response.rap.params[0];
++	hidpp->protocol_minor = response.rap.params[1];
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
