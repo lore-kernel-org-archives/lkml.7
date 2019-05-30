@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7AAC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6518CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA3224D51
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E9B24D58
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733266AbfE3Dto (ORCPT
+        id S1732281AbfE3Dtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53288 "EHLO huawei.com"
+        Wed, 29 May 2019 23:49:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18049 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387743AbfE3Dtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:49:32 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C7C93B2D6DC8094364CD;
-        Thu, 30 May 2019 11:49:27 +0800 (CST)
+        id S2387651AbfE3DtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:49:25 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B27A09DAB0CAA2FD2FCF;
+        Thu, 30 May 2019 11:49:22 +0800 (CST)
 Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 30 May 2019 11:49:19 +0800
+ 14.3.439.0; Thu, 30 May 2019 11:49:16 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         John Garry <john.garry@huawei.com>,
@@ -53,9 +53,9 @@ To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>,
         Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v8 6/7] iommu/amd: add support for IOMMU default DMA mode build options
-Date:   Thu, 30 May 2019 11:48:30 +0800
-Message-ID: <20190530034831.4184-7-thunder.leizhen@huawei.com>
+Subject: [PATCH v8 4/7] powernv/iommu: add support for IOMMU default DMA mode build options
+Date:   Thu, 30 May 2019 11:48:28 +0800
+Message-ID: <20190530034831.4184-5-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.21.0.windows.1
 In-Reply-To: <20190530034831.4184-1-thunder.leizhen@huawei.com>
 References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
@@ -69,44 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default DMA mode of AMD IOMMU is LAZY, this patch make it can be set
-to STRICT at build time. It can be overridden by boot option.
+The default DMA mode is PASSTHROUGH on powernv, this patch make it can be
+set to STRICT at build time. It can be overridden by boot option.
 
 There is no functional change.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/iommu/Kconfig          | 2 +-
- drivers/iommu/amd_iommu_init.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 3 ++-
+ drivers/iommu/Kconfig                     | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 126602b4e39972d..40208b9019be890 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+ 	va_end(args);
+ }
+ 
+-static bool pnv_iommu_bypass_disabled __read_mostly;
++static bool pnv_iommu_bypass_disabled __read_mostly =
++			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+ static bool pci_reset_phbs __read_mostly;
+ 
+ static int __init iommu_setup(char *str)
 diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index af580274b7c5270..f6c030433d38048 100644
+index 9b48c2fc20e14d3..b5af859956c4fda 100644
 --- a/drivers/iommu/Kconfig
 +++ b/drivers/iommu/Kconfig
-@@ -79,7 +79,7 @@ choice
+@@ -78,6 +78,7 @@ config IOMMU_DEBUGFS
+ choice
  	prompt "IOMMU default DMA mode"
  	depends on IOMMU_API
- 	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
--	default IOMMU_DEFAULT_LAZY if (INTEL_IOMMU || S390_IOMMU)
-+	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
++	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
+ 	default IOMMU_DEFAULT_LAZY if S390_IOMMU
  	default IOMMU_DEFAULT_STRICT
  	help
- 	  This option allows IOMMU DMA mode to be chose at build time, to
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index f977df90d2a4912..6b0bfa43f6faa32 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -166,7 +166,8 @@ struct ivmd_header {
- 					   to handle */
- LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
- 					   we find in ACPI */
--bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-+bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-+					/* if true, flush on every unmap */
+@@ -98,6 +99,7 @@ config IOMMU_DEFAULT_PASSTHROUGH
  
- LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
- 					   system */
+ config IOMMU_DEFAULT_LAZY
+ 	bool "lazy"
++	depends on !PPC_POWERNV
+ 	help
+ 	  Support lazy mode, where for every IOMMU DMA unmap operation, the
+ 	  flush operation of IOTLB and the free operation of IOVA are deferred.
 -- 
 1.8.3
 
