@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD78C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C39C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75448244A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5788E244A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186896;
-	bh=ZQFyU4cqT2U+b9/BORK7QRaVKcpBPZgIQWZKPkKE71M=;
+	s=default; t=1559186899;
+	bh=G07YqjmcwnMdmuyaPQLQY6OURpY6A5BM4VT9U3TF1iI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jH+IFPYP9/pOs9gilsFdP4XYSTW0XqushA0PSAwpincwFlc0Oa5Vr/scgU5tMzSB4
-	 EkClKcJAPsua3L3allY+Y8VDc/2O7FzWZOUhr88UYzAHHcjZlnwNtGT3MpqMBVyUaS
-	 kH/+X/hJAOTsq8Yfv8/VmoNFObQ5MJ2OpxkMG7qo=
+	b=rNHvdiGjI2WHWcKig4NKXrz2RQIh/no3GRP3CMya2CWzjFtvjOeFObs9C4meKDEgU
+	 8kRJRjx2NqMEQt0a9Q06z0s0KO7+5OpZB5CQ/h7/eeueD48GvWO4TEGcIJlqYbv1J6
+	 3sR9IxfvjRRugHyKAAojzvWfRRMfQiFj2TmL0qe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbfE3D2P (ORCPT
+        id S2388146AbfE3D2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731346AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731229AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2AB248E3;
-        Thu, 30 May 2019 03:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFDDA248DE;
+        Thu, 30 May 2019 03:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186392;
-        bh=ZQFyU4cqT2U+b9/BORK7QRaVKcpBPZgIQWZKPkKE71M=;
+        s=default; t=1559186391;
+        bh=G07YqjmcwnMdmuyaPQLQY6OURpY6A5BM4VT9U3TF1iI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcoqZ7O9XxK8sSCszF0yyXmx81SmG9w986oSTSwr7CiJ30SurQQLonJ2lrABnlioD
-         qLn+nzah+oUkEr6dHee7TEia7cV/2Wk9gC54SAp1AmK09ix9wAZvEgcOWWyOG/BS9q
-         qu+qZrw5aVw8DJ30tujXPxSHVlekN1nPEldLUDvs=
+        b=hEuR2zP6pBUjue1dXSCzPEITCDEeud6qbPzLl036ZMkD7kGJSbbHhy/wueqoSXhpi
+         tHiOUIo+MHX8ocUVBK0K97BKmJ91KQoO0Fks/+sbhEx9v1vMPk2yyn5AaYaaEDRqLB
+         /pqsDbABUBDHgvdiHPTZk2kuLOqnDRj/Lwz9k2LE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 164/193] media: video-mux: fix null pointer dereferences
-Date:   Wed, 29 May 2019 20:06:58 -0700
-Message-Id: <20190530030510.795775492@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>,
+        Kay Sievers <kay@vrfy.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Sasha Levin <sashal@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 163/193] kobject: Dont trigger kobject_uevent(KOBJ_REMOVE) twice.
+Date:   Wed, 29 May 2019 20:06:57 -0700
+Message-Id: <20190530030510.715672847@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,39 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aeb0d0f581e2079868e64a2e5ee346d340376eae ]
+[ Upstream commit c03a0fd0b609e2f5c669c2b7f27c8e1928e9196e ]
 
-devm_kcalloc may fail and return a null pointer. The fix returns
--ENOMEM upon failures to avoid null pointer dereferences.
+syzbot is hitting use-after-free bug in uinput module [1]. This is because
+kobject_uevent(KOBJ_REMOVE) is called again due to commit 0f4dafc0563c6c49
+("Kobject: auto-cleanup on final unref") after memory allocation fault
+injection made kobject_uevent(KOBJ_REMOVE) from device_del() from
+input_unregister_device() fail, while uinput_destroy_device() is expecting
+that kobject_uevent(KOBJ_REMOVE) is not called after device_del() from
+input_unregister_device() completed.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+That commit intended to catch cases where nobody even attempted to send
+"remove" uevents. But there is no guarantee that an event will ultimately
+be sent. We are at the point of no return as far as the rest of the kernel
+is concerned; there are no repeats or do-overs.
+
+Also, it is not clear whether some subsystem depends on that commit.
+If no subsystem depends on that commit, it will be better to remove
+the state_{add,remove}_uevent_sent logic. But we don't want to risk
+a regression (in a patch which will be backported) by trying to remove
+that logic. Therefore, as a first step, let's avoid the use-after-free bug
+by making sure that kobject_uevent(KOBJ_REMOVE) won't be triggered twice.
+
+[1] https://syzkaller.appspot.com/bug?id=8b17c134fe938bbddd75a45afaa9e68af43a362d
+
+Reported-by: syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>
+Analyzed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 0f4dafc0563c6c49 ("Kobject: auto-cleanup on final unref")
+Cc: Kay Sievers <kay@vrfy.org>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/video-mux.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/kobject_uevent.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-index ee89ad76bee23..eedc0b99a891e 100644
---- a/drivers/media/platform/video-mux.c
-+++ b/drivers/media/platform/video-mux.c
-@@ -242,9 +242,14 @@ static int video_mux_probe(struct platform_device *pdev)
- 	vmux->active = -1;
- 	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
- 				  GFP_KERNEL);
-+	if (!vmux->pads)
-+		return -ENOMEM;
-+
- 	vmux->format_mbus = devm_kcalloc(dev, num_pads,
- 					 sizeof(*vmux->format_mbus),
- 					 GFP_KERNEL);
-+	if (!vmux->format_mbus)
-+		return -ENOMEM;
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index f237a09a58627..3916cf0e2f0ae 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -340,6 +340,13 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 	struct uevent_sock *ue_sk;
+ #endif
  
- 	for (i = 0; i < num_pads - 1; i++)
- 		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
++	/*
++	 * Mark "remove" event done regardless of result, for some subsystems
++	 * do not want to re-trigger "remove" event via automatic cleanup.
++	 */
++	if (action == KOBJ_REMOVE)
++		kobj->state_remove_uevent_sent = 1;
++
+ 	pr_debug("kobject: '%s' (%p): %s\n",
+ 		 kobject_name(kobj), kobj, __func__);
+ 
+@@ -441,10 +448,6 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 		kobj->state_add_uevent_sent = 1;
+ 		break;
+ 
+-	case KOBJ_REMOVE:
+-		kobj->state_remove_uevent_sent = 1;
+-		break;
+-
+ 	case KOBJ_UNBIND:
+ 		zap_modalias_env(env);
+ 		break;
 -- 
 2.20.1
 
