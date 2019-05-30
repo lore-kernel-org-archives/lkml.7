@@ -5,49 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F052C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8839BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4DC245E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5862B245AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186189;
-	bh=7uK9JClRjBpcmWQyTcy+7AOYcOvd9/bhbDUILfDQj0s=;
+	s=default; t=1559186200;
+	bh=/27MC/24vy0pzlQ1bxrg2WEVvYdYFBSyYBq0wfcmfUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ydHipPREfE7adzqfsm56CXJ/LdQr/gGszIqV912HqsUbPAtJ9Mubjcov8pYUtJW9
-	 7AzXooB+0AWvu2hkWLFTtE/oHkPmiOdUFHQoVb3NirgWjYQxVUH42vgCDshTcHzkh7
-	 V5xbJ7yYyfbexzCAZ+xHxtwUxf4AvOZrRymgyZD8=
+	b=p4XS+Q60dlDKElxw49crbzhgy1I1rZTEJ15eLuOe9556xkfZEfyjKWMt4YzgETE5K
+	 TaKUtMw4CxzgAG9r3i6oBC/cdRyVC12BjmUv739Ct2xFYUEeuDweLlc0HPv2a1p9nK
+	 I4UAPvZzeCeeOgvAZ5gPE5i6DhsgJ9as9VaRepzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfE3DQ2 (ORCPT
+        id S1730750AbfE3DQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbfE3DNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:21 -0400
+        id S1729426AbfE3DNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7452721BE2;
-        Thu, 30 May 2019 03:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306E623D14;
+        Thu, 30 May 2019 03:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186000;
-        bh=7uK9JClRjBpcmWQyTcy+7AOYcOvd9/bhbDUILfDQj0s=;
+        s=default; t=1559186003;
+        bh=/27MC/24vy0pzlQ1bxrg2WEVvYdYFBSyYBq0wfcmfUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBjR1k1OUdRfEXMVgpMkFmzFLI9wvGraujExZPXuz5BqX3PGKZkUhsBHplcp6AoR4
-         Mi3Kj7VrlAgVP1XC1kII8oc77ZW4PZAsDwv0uz4fq9PIH8kw2A1ophKmT96PtHzCHS
-         WAIvnsbeHiVL4OR/6Qxtc0ms9e98vhmoLvN83+Us=
+        b=dy2mbto3EfvGjw8SNcvX6OkaAf3S63Q4DKdbzKEJVIBq88Ykz1uGJpuFmNLhNXQIE
+         VL/OBed8ujaSBxiFIOMF7oERee+GAT9ckERP0T6AeD3k+NQBwzkMsLPnXBGLMY5p7n
+         YUtEFD5w8xSflD47fpAlvtK4lDSrEIPOOkz0VjFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 051/346] selftests/bpf: set RLIMIT_MEMLOCK properly for test_libbpf_open.c
-Date:   Wed, 29 May 2019 20:02:04 -0700
-Message-Id: <20190530030543.506246977@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
+Subject: [PATCH 5.0 055/346] blk-mq: grab .q_usage_counter when queuing request from plug code path
+Date:   Wed, 29 May 2019 20:02:08 -0700
+Message-Id: <20190530030543.736817542@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,41 +65,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cea33701eb024bc6c920ab83940ee22afd29139 ]
+[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
 
-Test test_libbpf.sh failed on my development server with failure
-  -bash-4.4$ sudo ./test_libbpf.sh
-  [0] libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
-      Couldn't load basic 'r0 = 0' BPF program.
-  test_libbpf: failed at file test_l4lb.o
-  selftests: test_libbpf [FAILED]
-  -bash-4.4$
+Just like aio/io_uring, we need to grab 2 refcount for queuing one
+request, one is for submission, another is for completion.
 
-The reason is because my machine has 64KB locked memory by default which
-is not enough for this program to get locked memory.
-Similar to other bpf selftests, let us increase RLIMIT_MEMLOCK
-to infinity, which fixed the issue.
+If the request isn't queued from plug code path, the refcount grabbed
+in generic_make_request() serves for submission. In theroy, this
+refcount should have been released after the sumission(async run queue)
+is done. blk_freeze_queue() works with blk_sync_queue() together
+for avoiding race between cleanup queue and IO submission, given async
+run queue activities are canceled because hctx->run_work is scheduled with
+the refcount held, so it is fine to not hold the refcount when
+running the run queue work function for dispatch IO.
 
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+However, if request is staggered into plug list, and finally queued
+from plug code path, the refcount in submission side is actually missed.
+And we may start to run queue after queue is removed because the queue's
+kobject refcount isn't guaranteed to be grabbed in flushing plug list
+context, then kernel oops is triggered, see the following race:
+
+blk_mq_flush_plug_list():
+        blk_mq_sched_insert_requests()
+                insert requests to sw queue or scheduler queue
+                blk_mq_run_hw_queue
+
+Because of concurrent run queue, all requests inserted above may be
+completed before calling the above blk_mq_run_hw_queue. Then queue can
+be freed during the above blk_mq_run_hw_queue().
+
+Fixes the issue by grab .q_usage_counter before calling
+blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
+safe because the queue is absolutely alive before inserting request.
+
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: linux-scsi@vger.kernel.org,
+Cc: Martin K . Petersen <martin.petersen@oracle.com>,
+Cc: Christoph Hellwig <hch@lst.de>,
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_libbpf_open.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/blk-mq-sched.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/test_libbpf_open.c b/tools/testing/selftests/bpf/test_libbpf_open.c
-index 8fcd1c076add0..cbd55f5f8d598 100644
---- a/tools/testing/selftests/bpf/test_libbpf_open.c
-+++ b/tools/testing/selftests/bpf/test_libbpf_open.c
-@@ -11,6 +11,8 @@ static const char *__doc__ =
- #include <bpf/libbpf.h>
- #include <getopt.h>
- 
-+#include "bpf_rlimit.h"
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 0c98b6c1ca49c..1213556a20dad 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 				  struct list_head *list, bool run_queue_async)
+ {
+ 	struct elevator_queue *e;
++	struct request_queue *q = hctx->queue;
 +
- static const struct option long_options[] = {
- 	{"help",	no_argument,		NULL, 'h' },
- 	{"debug",	no_argument,		NULL, 'D' },
++	/*
++	 * blk_mq_sched_insert_requests() is called from flush plug
++	 * context only, and hold one usage counter to prevent queue
++	 * from being released.
++	 */
++	percpu_ref_get(&q->q_usage_counter);
+ 
+ 	e = hctx->queue->elevator;
+ 	if (e && e->type->ops.insert_requests)
+@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
+ 			blk_mq_try_issue_list_directly(hctx, list);
+ 			if (list_empty(list))
+-				return;
++				goto out;
+ 		}
+ 		blk_mq_insert_requests(hctx, ctx, list);
+ 	}
+ 
+ 	blk_mq_run_hw_queue(hctx, run_queue_async);
++ out:
++	percpu_ref_put(&q->q_usage_counter);
+ }
+ 
+ static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
 -- 
 2.20.1
 
