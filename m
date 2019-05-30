@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9582C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FEEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986922456E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585452457C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186037;
-	bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
+	s=default; t=1559186043;
+	bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1084swrdbJ5smOjIChRzu3Whw852rYRzI5HqiXhiIvuBKvrUbF+MRUaoANeXPMNN
-	 rpqsr1DqvO0ISicGKY7XoR7dDDENEF1t2Cv+vfjqf9hn8nWYU9yUHiglEF3BifXVWI
-	 3/8Chqyh87N24Mo1i4LYXdnbUeApxIaJGaDF/L0Y=
+	b=dGL+ubeF+jXUoX8WK69A99Pvbs18gpBUsUVcARwoJjo8eX1ulz8a5yDPIv8WRXPCK
+	 7Wqr3sNdS59W+lV01LFmHPu544MxvpTp+/VeHQAw/nDKI/ruZ5M/DIhl98Q246qauk
+	 FIQexKoC7NQLiwN/UgyrGqVCbtFx2gkWw4YQzNio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbfE3DN4 (ORCPT
+        id S1729689AbfE3DOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:56 -0400
+        Wed, 29 May 2019 23:14:02 -0400
 Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbfE3DLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:46 -0400
+        id S1728693AbfE3DLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9B7424496;
-        Thu, 30 May 2019 03:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FFE2446F;
+        Thu, 30 May 2019 03:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185905;
-        bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
+        s=default; t=1559185909;
+        bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKppSilaMNMP6rNJW3pB6IE1Li3ESZcPwOY0V6e6aX8JTdU+4ri6HYML3TwWZFnJW
-         eAv0WEjrHEgr60mkN0fGmv1GVeh8iB4A7GsV63lY8nyk1Tt3Jpt/BB4zpSuHDA8361
-         oL9AvTr5Hj+EosLRx/sUCZtVQI9flC1Xe6W6NKKY=
+        b=vEd9OY2lV96YkYKTENI+9bVFQe/735ytnHrQOrKbCvLP6sgUlILrX9MVkguLQJhar
+         NvFOCJ3H38EEOpCOXQCDrW4xIrQEE4pcE1JvWys4btiititZeadcwRHy2DPEweXg5Z
+         YMkcamXKH7pK+h8PCJQDW1ftUgOsPiU7A4+7mYog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <Alexandru.Ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 277/405] cxgb3/l2t: Fix undefined behaviour
-Date:   Wed, 29 May 2019 20:04:35 -0700
-Message-Id: <20190530030554.904397002@linuxfoundation.org>
+Subject: [PATCH 5.1 240/405] iio: ad_sigma_delta: Properly handle SPI bus locking vs CS assertion
+Date:   Wed, 29 May 2019 20:03:58 -0700
+Message-Id: <20190530030553.145118974@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,47 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
+[ Upstream commit df1d80aee963480c5c2938c64ec0ac3e4a0df2e0 ]
 
-The use of zero-sized array causes undefined behaviour when it is not
-the last member in a structure. As it happens to be in this case.
+For devices from the SigmaDelta family we need to keep CS low when doing a
+conversion, since the device will use the MISO line as a interrupt to
+indicate that the conversion is complete.
 
-Also, the current code makes use of a language extension to the C90
-standard, but the preferred mechanism to declare variable-length
-types such as this one is a flexible array member, introduced in
-C99:
+This is why the driver locks the SPI bus and when the SPI bus is locked
+keeps as long as a conversion is going on. The current implementation gets
+one small detail wrong though. CS is only de-asserted after the SPI bus is
+unlocked. This means it is possible for a different SPI device on the same
+bus to send a message which would be wrongfully be addressed to the
+SigmaDelta device as well. Make sure that the last SPI transfer that is
+done while holding the SPI bus lock de-asserts the CS signal.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last. Which is beneficial
-to cultivate a high-quality code.
-
-Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <Alexandru.Ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/ad_sigma_delta.c       | 16 +++++++++++-----
+ include/linux/iio/adc/ad_sigma_delta.h |  1 +
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-index c2fd323c40782..ea75f275023ff 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-@@ -75,8 +75,8 @@ struct l2t_data {
- 	struct l2t_entry *rover;	/* starting point for next allocation */
- 	atomic_t nfree;		/* number of free entries */
- 	rwlock_t lock;
--	struct l2t_entry l2tab[0];
- 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-+	struct l2t_entry l2tab[];
- };
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 54d9978b27405..a4310600a8536 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -62,7 +62,7 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
+ 	struct spi_transfer t = {
+ 		.tx_buf		= data,
+ 		.len		= size + 1,
+-		.cs_change	= sigma_delta->bus_locked,
++		.cs_change	= sigma_delta->keep_cs_asserted,
+ 	};
+ 	struct spi_message m;
+ 	int ret;
+@@ -218,6 +218,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
  
- typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
+ 
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, mode);
+@@ -235,9 +236,10 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 		ret = 0;
+ 	}
+ out:
++	sigma_delta->keep_cs_asserted = false;
++	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 	sigma_delta->bus_locked = false;
+ 	spi_bus_unlock(sigma_delta->spi->master);
+-	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	return ret;
+ }
+@@ -290,6 +292,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
+ 
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_SINGLE);
+@@ -299,9 +302,6 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	ret = wait_for_completion_interruptible_timeout(
+ 			&sigma_delta->completion, HZ);
+ 
+-	sigma_delta->bus_locked = false;
+-	spi_bus_unlock(sigma_delta->spi->master);
+-
+ 	if (ret == 0)
+ 		ret = -EIO;
+ 	if (ret < 0)
+@@ -322,7 +322,10 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
++	sigma_delta->bus_locked = false;
++	spi_bus_unlock(sigma_delta->spi->master);
+ 	mutex_unlock(&indio_dev->mlock);
+ 
+ 	if (ret)
+@@ -359,6 +362,8 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
++
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_CONTINUOUS);
+ 	if (ret)
+ 		goto err_unlock;
+@@ -387,6 +392,7 @@ static int ad_sd_buffer_postdisable(struct iio_dev *indio_dev)
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	sigma_delta->bus_locked = false;
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 7e84351fa2c05..6e9fb1932dde9 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -69,6 +69,7 @@ struct ad_sigma_delta {
+ 	bool			irq_dis;
+ 
+ 	bool			bus_locked;
++	bool			keep_cs_asserted;
+ 
+ 	uint8_t			comm;
+ 
 -- 
 2.20.1
 
