@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B60BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5B2C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0824F24A55
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C755A24A58
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186677;
-	bh=2YrukC3cEquubOCbw1IuRKiQl5aoHpT/7i1Fh9AHkO8=;
+	s=default; t=1559186678;
+	bh=9IM83kU3WNfz0QfBh+pLawTB58Dclw0rzHSXeY6vPLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpHjgQavysJdLHvP7/bhk84XurPub3JzWBQDq30WhVL4h6cKKphRqoWZkXaqkymLx
-	 oEPPsvSxO79rk5D6C5p5F/pbN9KL9wkMIrD6Ce1jznBCs+QgQwTHY6135ZnMSVsNMT
-	 axI/LH3kEBznAvf+aiOloRw+G7RMEG3Uc3eLXXrE=
+	b=OA6C4r8P/imias9wjO5Vv1LJVlRDeco8ABEdGP4bIp6523tebHW3k7WgBCfKqymZI
+	 k6gJEAMujL1kbGHDE3ANzmoFrZt2XfwV7kTzedekGDfQ9GwlAG9egVsukHyQpCA0bg
+	 fegSRxzJLuvevAeMUp2cPhU4awY2jxSOtQcwEFv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbfE3DYg (ORCPT
+        id S2387412AbfE3DYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:36 -0400
+        Wed, 29 May 2019 23:24:37 -0400
 Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfE3DSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:12 -0400
+        id S1731469AbfE3DSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC8524787;
-        Thu, 30 May 2019 03:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D06824789;
+        Thu, 30 May 2019 03:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186291;
-        bh=2YrukC3cEquubOCbw1IuRKiQl5aoHpT/7i1Fh9AHkO8=;
+        s=default; t=1559186293;
+        bh=9IM83kU3WNfz0QfBh+pLawTB58Dclw0rzHSXeY6vPLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0VYm0W5o+6gLXUQ6JojJmsEFsDtGLStJHFwGQw9mRKtArZhiBNyubMm6kWzTYYaq8
-         D+3R4qsb+jnyETv/9/GWP0znanyG1NNNzRn5Daoo69c8fCQ4gUS/hNBWR+IwsAqSgA
-         BKkmA2uTT3UCAuH6hKDT0xouJk+mHP/0wORvXfVw=
+        b=YZFNpbTrzv+msJiRdWF513oBMKvAe/7QEFgrqzZXQkIcPhKEXCmcvBgbOB8tBMA3J
+         +1swqqYeOwdGRZROX6m+WHMJ/N1+z+5jBhagVCaysgoLNCk8w49XNTZMRAom6fSMCK
+         G4xHfnQIoTw/peu1luXH+iBprhAAg/X05YoXpB1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
-        Sean Young <sean@mess.org>,
+        James Hutchinson <jahutchinson99@googlemail.com>,
+        Antti Palosaari <crope@iki.fi>, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 250/276] media: dvbsky: Avoid leaking dvb frontend
-Date:   Wed, 29 May 2019 20:06:48 -0700
-Message-Id: <20190530030540.774952700@linuxfoundation.org>
+Subject: [PATCH 4.19 251/276] media: m88ds3103: serialize reset messages in m88ds3103_set_frontend
+Date:   Wed, 29 May 2019 20:06:49 -0700
+Message-Id: <20190530030540.838285379@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,140 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdfa59cd63b184e1e96d51ff170fcac739bc6f6f ]
+[ Upstream commit 981fbe3da20a6f35f17977453bce7dfc1664d74f ]
 
-Commit 14f4eaeddabc ("media: dvbsky: fix driver unregister logic") fixed
-a use-after-free by removing the reference to the frontend after deleting
-the backing i2c device.
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=199323
 
-This has the unfortunate side effect the frontend device is never freed
-in the dvb core leaving a dangling device, leading to errors when the
-dvb core tries to register the frontend after e.g. a replug as reported
-here: https://www.spinics.net/lists/linux-media/msg138181.html
+Users are experiencing problems with the DVBSky S960/S960C USB devices
+since the following commit:
 
-media: dvbsky: issues with DVBSky T680CI
+9d659ae: ("locking/mutex: Add lock handoff to avoid starvation")
 
-===
-[  561.119145] sp2 8-0040: CIMaX SP2 successfully attached
-[  561.119161] usb 2-3: DVB: registering adapter 0 frontend 0 (Silicon Labs
-Si2168)...
-[  561.119174] sysfs: cannot create duplicate filename '/class/dvb/
-dvb0.frontend0'
-===
+The device malfunctions after running for an indeterminable period of
+time, and the problem can only be cleared by rebooting the machine.
 
-The use after free happened as dvb_usbv2_disconnect calls in this order:
-- dvb_usb_device::props->exit(...)
-- dvb_usbv2_adapter_frontend_exit(...)
-  + if (fe) dvb_unregister_frontend(fe)
-  + dvb_usb_device::props->frontend_detach(...)
+It is possible to encourage the problem to surface by blocking the
+signal to the LNB.
 
-Moving the release of the i2c device from exit() to frontend_detach()
-avoids the dangling pointer access and allows the core to unregister
-the frontend.
+Further debugging revealed the cause of the problem.
 
-This was originally reported for a DVBSky T680CI, but it also affects
-the MyGica T230C. As all supported devices structure the registration/
-unregistration identically, apply the change for all device types.
+In the following capture:
+- thread #1325 is running m88ds3103_set_frontend
+- thread #42 is running ts2020_stat_work
 
-Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+a> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 80
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 08
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 68 3f
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 08 ff
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 3d
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+b> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 00
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 21
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 66
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 60 02 10 0b
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+
+Two i2c messages are sent to perform a reset in m88ds3103_set_frontend:
+
+  a. 0x07, 0x80
+  b. 0x07, 0x00
+
+However, as shown in the capture, the regmap mutex is being handed over
+to another thread (ts2020_stat_work) in between these two messages.
+
+>From here, the device responds to every i2c message with an 07 message,
+and will only return to normal operation following a power cycle.
+
+Use regmap_multi_reg_write to group the two reset messages, ensuring
+both are processed before the regmap mutex is unlocked.
+
+Signed-off-by: James Hutchinson <jahutchinson99@googlemail.com>
+Reviewed-by: Antti Palosaari <crope@iki.fi>
 Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb-v2/dvbsky.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/media/dvb-frontends/m88ds3103.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-index e28bd8836751e..ae0814dd202a6 100644
---- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
-+++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-@@ -615,16 +615,18 @@ static int dvbsky_init(struct dvb_usb_device *d)
- 	return 0;
- }
+diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
+index dffd2d4bf1c8b..c25c927974089 100644
+--- a/drivers/media/dvb-frontends/m88ds3103.c
++++ b/drivers/media/dvb-frontends/m88ds3103.c
+@@ -309,6 +309,9 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
+ 	u16 u16tmp;
+ 	u32 tuner_frequency_khz, target_mclk;
+ 	s32 s32tmp;
++	static const struct reg_sequence reset_buf[] = {
++		{0x07, 0x80}, {0x07, 0x00}
++	};
  
--static void dvbsky_exit(struct dvb_usb_device *d)
-+static int dvbsky_frontend_detach(struct dvb_usb_adapter *adap)
- {
-+	struct dvb_usb_device *d = adap_to_d(adap);
- 	struct dvbsky_state *state = d_to_priv(d);
--	struct dvb_usb_adapter *adap = &d->adapter[0];
-+
-+	dev_dbg(&d->udev->dev, "%s: adap=%d\n", __func__, adap->id);
+ 	dev_dbg(&client->dev,
+ 		"delivery_system=%d modulation=%d frequency=%u symbol_rate=%d inversion=%d pilot=%d rolloff=%d\n",
+@@ -321,11 +324,7 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
+ 	}
  
- 	dvb_module_release(state->i2c_client_tuner);
- 	dvb_module_release(state->i2c_client_demod);
- 	dvb_module_release(state->i2c_client_ci);
+ 	/* reset */
+-	ret = regmap_write(dev->regmap, 0x07, 0x80);
+-	if (ret)
+-		goto err;
+-
+-	ret = regmap_write(dev->regmap, 0x07, 0x00);
++	ret = regmap_multi_reg_write(dev->regmap, reset_buf, 2);
+ 	if (ret)
+ 		goto err;
  
--	adap->fe[0] = NULL;
-+	return 0;
- }
- 
- /* DVB USB Driver stuff */
-@@ -640,11 +642,11 @@ static struct dvb_usb_device_properties dvbsky_s960_props = {
- 
- 	.i2c_algo         = &dvbsky_i2c_algo,
- 	.frontend_attach  = dvbsky_s960_attach,
-+	.frontend_detach  = dvbsky_frontend_detach,
- 	.init             = dvbsky_init,
- 	.get_rc_config    = dvbsky_get_rc_config,
- 	.streaming_ctrl   = dvbsky_streaming_ctrl,
- 	.identify_state	  = dvbsky_identify_state,
--	.exit             = dvbsky_exit,
- 	.read_mac_address = dvbsky_read_mac_addr,
- 
- 	.num_adapters = 1,
-@@ -667,11 +669,11 @@ static struct dvb_usb_device_properties dvbsky_s960c_props = {
- 
- 	.i2c_algo         = &dvbsky_i2c_algo,
- 	.frontend_attach  = dvbsky_s960c_attach,
-+	.frontend_detach  = dvbsky_frontend_detach,
- 	.init             = dvbsky_init,
- 	.get_rc_config    = dvbsky_get_rc_config,
- 	.streaming_ctrl   = dvbsky_streaming_ctrl,
- 	.identify_state	  = dvbsky_identify_state,
--	.exit             = dvbsky_exit,
- 	.read_mac_address = dvbsky_read_mac_addr,
- 
- 	.num_adapters = 1,
-@@ -694,11 +696,11 @@ static struct dvb_usb_device_properties dvbsky_t680c_props = {
- 
- 	.i2c_algo         = &dvbsky_i2c_algo,
- 	.frontend_attach  = dvbsky_t680c_attach,
-+	.frontend_detach  = dvbsky_frontend_detach,
- 	.init             = dvbsky_init,
- 	.get_rc_config    = dvbsky_get_rc_config,
- 	.streaming_ctrl   = dvbsky_streaming_ctrl,
- 	.identify_state	  = dvbsky_identify_state,
--	.exit             = dvbsky_exit,
- 	.read_mac_address = dvbsky_read_mac_addr,
- 
- 	.num_adapters = 1,
-@@ -721,11 +723,11 @@ static struct dvb_usb_device_properties dvbsky_t330_props = {
- 
- 	.i2c_algo         = &dvbsky_i2c_algo,
- 	.frontend_attach  = dvbsky_t330_attach,
-+	.frontend_detach  = dvbsky_frontend_detach,
- 	.init             = dvbsky_init,
- 	.get_rc_config    = dvbsky_get_rc_config,
- 	.streaming_ctrl   = dvbsky_streaming_ctrl,
- 	.identify_state	  = dvbsky_identify_state,
--	.exit             = dvbsky_exit,
- 	.read_mac_address = dvbsky_read_mac_addr,
- 
- 	.num_adapters = 1,
-@@ -748,11 +750,11 @@ static struct dvb_usb_device_properties mygica_t230c_props = {
- 
- 	.i2c_algo         = &dvbsky_i2c_algo,
- 	.frontend_attach  = dvbsky_mygica_t230c_attach,
-+	.frontend_detach  = dvbsky_frontend_detach,
- 	.init             = dvbsky_init,
- 	.get_rc_config    = dvbsky_get_rc_config,
- 	.streaming_ctrl   = dvbsky_streaming_ctrl,
- 	.identify_state	  = dvbsky_identify_state,
--	.exit             = dvbsky_exit,
- 
- 	.num_adapters = 1,
- 	.adapter = {
 -- 
 2.20.1
 
