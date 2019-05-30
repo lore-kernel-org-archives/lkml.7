@@ -2,208 +2,101 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8A1C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E971C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104B92618A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72B02618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9b/bK8E"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H1VqQ8Mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfE3UxT (ORCPT
+        id S1726579AbfE3Uyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:53:19 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33610 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3UxT (ORCPT
+        Thu, 30 May 2019 16:54:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54950 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Uyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:53:19 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p18so4890706qkk.0;
-        Thu, 30 May 2019 13:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z9CARR2sdyz0TzlZx5C1Y/HG1L1GZ/YQxjW8n3dkDtY=;
-        b=O9b/bK8EMj6Z/Aes6GvEEWWgQoaqgWaPkCaZ7cbWL42OrKuP7jCn08XnPqAmy2p306
-         8zhO25gwMO64WxuBI2gHUQlS/hvtoy5Caw3oUFl2PIjzGa0bYZkNqSLyaIzi2b1TeyUj
-         FF37jgA4vO32nO0WZtIk8qPAYjFw6a6a31YkeqEMWj6cA75nwjX6K+fNkXOSWkeNm8gG
-         IDAzymM/tDnhTeMvFQclwaOUNj9WlNGj9jdXrDTHK6nOYN4rb37VYFg2BOXyFCdWVDEX
-         3VX2YfBwDDiSgLEeBrbXF0Aaery1wJ4oqbzlGKl7kczZOsWjWFvMpf9Wln7u02PN41Hv
-         SoUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z9CARR2sdyz0TzlZx5C1Y/HG1L1GZ/YQxjW8n3dkDtY=;
-        b=svapGs1oKeMGqBlnffuFnXrQKXBdtui7HHL8QVPEEPx4t22/p8xva3OS3CN84NjKEL
-         HBN8mEOhrbObI3yoYBheq1PgJ+ErQU8CDTXWCLs90lwaIFx7+8lpDz5RR3Y5iwAi8/55
-         q5E1TDEf3exzj2Pst2hzKM158nKVg8tkUiqfS+d403HSCl6IIi6wR15cWi+6peWDZnAQ
-         VJodwbvw+M5nya623hOSXG/vLgULFGFaJpQ9d6VHokJoqt2NnalzLRiX1lqFllaDb5vM
-         i5Q6SLuhWeoqu6CyD8EU8Q8voXlFNQvb1yXbbhT0ujpN06OekkgYtpvPu4afMVPkFTl7
-         VdTA==
-X-Gm-Message-State: APjAAAXw+M2SQgC40kxqJ95Bdlybe5gia5EN0i7jmsU9qMpg5+6aauC7
-        MYabNBWRKDEjerfgQrLL2qbwofnx95egX//82OY=
-X-Google-Smtp-Source: APXvYqwWhPLets6g5KL70GsN0a/SBVH9vdVhMDcuBw1NjRTLVGKTPlYj7q6szJQZYwKJTGwxrKqHl3zy1Vgg7W+OTbs=
-X-Received: by 2002:a05:620a:12f8:: with SMTP id f24mr5129490qkl.202.1559249597898;
- Thu, 30 May 2019 13:53:17 -0700 (PDT)
+        Thu, 30 May 2019 16:54:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UKsBcM108403;
+        Thu, 30 May 2019 20:54:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=ODypozAerLNV/qGeHJPqtJFJozABAAaZHRXDF3WkeeE=;
+ b=H1VqQ8Mbp0VXzmkHQ4b5+kN0x7UMsTziL9j2TPr4OvwEe5RtZIrLNRWCBAzhPDrmvtY+
+ LneSmuhyriW7u/fRnYl07QeEdAWpU9X2J6ZnqXAimhArpziTJa6LxS18sVe3SIcjFZly
+ 1lB8qnkhxFsp40rO2F2O6ix/gBh3o9xFTX5Qb9JvKeT6Ut/6zATvBAn1jj7OCtNH5cP/
+ nZGwjLFPV0MViT9cUc7ylXDiMfNRbrh9iO+PKBgnegFkPpC8vhw3zQfeKSMl9aAc39D2
+ HNWbf6jcazqGJkuIGdURnF3W841tAIFanqF+0omrr8820kRMMn3UnOWnTzokauspVqiK EQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2spw4ttnyh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 20:54:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UKs4aL156896;
+        Thu, 30 May 2019 20:54:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sr31w3qbq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 20:54:10 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4UKs9TR011670;
+        Thu, 30 May 2019 20:54:09 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 May 2019 13:54:08 -0700
+Subject: Re: mmotm 2019-05-29-20-52 uploaded
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+References: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
+Cc:     Huang Ying <ying.huang@intel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <fac5f029-ef20-282e-b0d2-2357589839e8@oracle.com>
+Date:   Thu, 30 May 2019 13:54:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190530190800.7633-1-luke.r.nels@gmail.com>
-In-Reply-To: <20190530190800.7633-1-luke.r.nels@gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 30 May 2019 13:53:06 -0700
-Message-ID: <CAPhsuW4kMBSjpATqHrEhTmuqje=XZNGOrMyNur8f6K0RNQP=yw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bpf, riscv: fix bugs in JIT for 32-bit ALU operations
-To:     Luke Nelson <luke.r.nels@gmail.com>
-Cc:     Xi Wang <xi.wang@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=703
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9273 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=729 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:09 PM Luke Nelson <luke.r.nels@gmail.com> wrote:
->
-> In BPF, 32-bit ALU operations should zero-extend their results into
-> the 64-bit registers.  The current BPF JIT on RISC-V emits incorrect
-> instructions that perform either sign extension only (e.g., addw/subw)
-> or no extension on 32-bit add, sub, and, or, xor, lsh, rsh, arsh,
-> and neg.  This behavior diverges from the interpreter and JITs for
-> other architectures.
->
-> This patch fixes the bugs by performing zero extension on the destination
-> register of 32-bit ALU operations.
->
-> Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
-> Cc: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+On 5/29/19 8:53 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-05-29-20-52 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
 
-This is a little messy. How about we introduce some helper function
-like:
+With this kernel, I seem to get many messages such as:
 
-/* please find a better name... */
-emit_32_or_64(bool is64, const u32 insn_32, const u32 inst_64, struct
-rv_jit_context *ctx)
-{
-       if (is64)
-            emit(insn_64, ctx);
-       else {
-            emit(insn_32, ctx);
-           rd = xxxx;
-           emit_zext_32(rd, ctx);
-       }
-}
+get_swap_device: Bad swap file entry 1400000000000001
 
-Thanks,
-Song
+It would seem to be related to commit 3e2c19f9bef7e
+> * mm-swap-fix-race-between-swapoff-and-some-swap-operations.patch
 
-> ---
->  arch/riscv/net/bpf_jit_comp.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-> index 80b12aa5e10d..426d5c33ea90 100644
-> --- a/arch/riscv/net/bpf_jit_comp.c
-> +++ b/arch/riscv/net/bpf_jit_comp.c
-> @@ -751,22 +751,32 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->         case BPF_ALU | BPF_ADD | BPF_X:
->         case BPF_ALU64 | BPF_ADD | BPF_X:
->                 emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_SUB | BPF_X:
->         case BPF_ALU64 | BPF_SUB | BPF_X:
->                 emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_AND | BPF_X:
->         case BPF_ALU64 | BPF_AND | BPF_X:
->                 emit(rv_and(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_OR | BPF_X:
->         case BPF_ALU64 | BPF_OR | BPF_X:
->                 emit(rv_or(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_XOR | BPF_X:
->         case BPF_ALU64 | BPF_XOR | BPF_X:
->                 emit(rv_xor(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_MUL | BPF_X:
->         case BPF_ALU64 | BPF_MUL | BPF_X:
-> @@ -789,14 +799,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->         case BPF_ALU | BPF_LSH | BPF_X:
->         case BPF_ALU64 | BPF_LSH | BPF_X:
->                 emit(is64 ? rv_sll(rd, rd, rs) : rv_sllw(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_RSH | BPF_X:
->         case BPF_ALU64 | BPF_RSH | BPF_X:
->                 emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_ARSH | BPF_X:
->         case BPF_ALU64 | BPF_ARSH | BPF_X:
->                 emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->
->         /* dst = -dst */
-> @@ -804,6 +820,8 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->         case BPF_ALU64 | BPF_NEG:
->                 emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
->                      rv_subw(rd, RV_REG_ZERO, rd), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->
->         /* dst = BSWAP##imm(dst) */
-> @@ -958,14 +976,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->         case BPF_ALU | BPF_LSH | BPF_K:
->         case BPF_ALU64 | BPF_LSH | BPF_K:
->                 emit(is64 ? rv_slli(rd, rd, imm) : rv_slliw(rd, rd, imm), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_RSH | BPF_K:
->         case BPF_ALU64 | BPF_RSH | BPF_K:
->                 emit(is64 ? rv_srli(rd, rd, imm) : rv_srliw(rd, rd, imm), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->         case BPF_ALU | BPF_ARSH | BPF_K:
->         case BPF_ALU64 | BPF_ARSH | BPF_K:
->                 emit(is64 ? rv_srai(rd, rd, imm) : rv_sraiw(rd, rd, imm), ctx);
-> +               if (!is64)
-> +                       emit_zext_32(rd, ctx);
->                 break;
->
->         /* JUMP off */
-> --
-> 2.19.1
->
+-- 
+Mike Kravetz
