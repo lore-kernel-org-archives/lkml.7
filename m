@@ -4,177 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61405C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C32C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300BF25DFC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4A225E01
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfE3RJR (ORCPT
+        id S1726943AbfE3RKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:09:17 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:50574 "EHLO mail.hallyn.com"
+        Thu, 30 May 2019 13:10:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64258 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbfE3RJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:09:17 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 3568262D; Thu, 30 May 2019 12:09:13 -0500 (CDT)
-Date:   Thu, 30 May 2019 12:09:13 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-Message-ID: <20190530170913.GA16722@mail.hallyn.com>
-References: <cover.1554732921.git.rgb@redhat.com>
- <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco>
- <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco>
- <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco>
- <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+        id S1725961AbfE3RKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:10:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 10:10:45 -0700
+X-ExtLoop1: 1
+Received: from araj-mobl1.jf.intel.com ([10.251.6.93])
+  by fmsmga005.fm.intel.com with ESMTP; 30 May 2019 10:10:44 -0700
+Date:   Thu, 30 May 2019 10:10:44 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "tipbot@zytor.com" <tipbot@zytor.com>, "bp@suse.de" <bp@suse.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        David Wang <DavidWang@zhaoxin.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBSZTogW3RpcDp4ODYv?=
+ =?utf-8?Q?urgent=5D_x86=2Fmce=3A_Ensur?= =?utf-8?Q?e?= offline CPUs don' t
+ participate in rendezvous process
+Message-ID: <20190530171044.GA18559@araj-mobl1.jf.intel.com>
+References: <985acf114ab245fbab52caabf03bd280@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <985acf114ab245fbab52caabf03bd280@zhaoxin.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 06:39:48PM -0400, Paul Moore wrote:
-> On Wed, May 29, 2019 at 6:28 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> > On Wed, May 29, 2019 at 12:03:58PM -0400, Paul Moore wrote:
-> > > On Wed, May 29, 2019 at 11:34 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > >
-> > > > On Wed, May 29, 2019 at 11:29:05AM -0400, Paul Moore wrote:
-> > > > > On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > > > >
-> > > > > > On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
-> > > > > > > It is not permitted to unset the audit container identifier.
-> > > > > > > A child inherits its parent's audit container identifier.
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > >  /**
-> > > > > > > + * audit_set_contid - set current task's audit contid
-> > > > > > > + * @contid: contid value
-> > > > > > > + *
-> > > > > > > + * Returns 0 on success, -EPERM on permission failure.
-> > > > > > > + *
-> > > > > > > + * Called (set) from fs/proc/base.c::proc_contid_write().
-> > > > > > > + */
-> > > > > > > +int audit_set_contid(struct task_struct *task, u64 contid)
-> > > > > > > +{
-> > > > > > > +     u64 oldcontid;
-> > > > > > > +     int rc = 0;
-> > > > > > > +     struct audit_buffer *ab;
-> > > > > > > +     uid_t uid;
-> > > > > > > +     struct tty_struct *tty;
-> > > > > > > +     char comm[sizeof(current->comm)];
-> > > > > > > +
-> > > > > > > +     task_lock(task);
-> > > > > > > +     /* Can't set if audit disabled */
-> > > > > > > +     if (!task->audit) {
-> > > > > > > +             task_unlock(task);
-> > > > > > > +             return -ENOPROTOOPT;
-> > > > > > > +     }
-> > > > > > > +     oldcontid = audit_get_contid(task);
-> > > > > > > +     read_lock(&tasklist_lock);
-> > > > > > > +     /* Don't allow the audit containerid to be unset */
-> > > > > > > +     if (!audit_contid_valid(contid))
-> > > > > > > +             rc = -EINVAL;
-> > > > > > > +     /* if we don't have caps, reject */
-> > > > > > > +     else if (!capable(CAP_AUDIT_CONTROL))
-> > > > > > > +             rc = -EPERM;
-> > > > > > > +     /* if task has children or is not single-threaded, deny */
-> > > > > > > +     else if (!list_empty(&task->children))
-> > > > > > > +             rc = -EBUSY;
-> > > > > > > +     else if (!(thread_group_leader(task) && thread_group_empty(task)))
-> > > > > > > +             rc = -EALREADY;
-> > > > > > > +     read_unlock(&tasklist_lock);
-> > > > > > > +     if (!rc)
-> > > > > > > +             task->audit->contid = contid;
-> > > > > > > +     task_unlock(task);
-> > > > > > > +
-> > > > > > > +     if (!audit_enabled)
-> > > > > > > +             return rc;
-> > > > > >
-> > > > > > ...but it is allowed to change it (assuming
-> > > > > > capable(CAP_AUDIT_CONTROL), of course)? Seems like this might be more
-> > > > > > immediately useful since we still live in the world of majority
-> > > > > > privileged containers if we didn't allow changing it, in addition to
-> > > > > > un-setting it.
-> > > > >
-> > > > > The idea is that only container orchestrators should be able to
-> > > > > set/modify the audit container ID, and since setting the audit
-> > > > > container ID can have a significant effect on the records captured
-> > > > > (and their routing to multiple daemons when we get there) modifying
-> > > > > the audit container ID is akin to modifying the audit configuration
-> > > > > which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
-> > > > > is that you would only change the audit container ID from one
-> > > > > set/inherited value to another if you were nesting containers, in
-> > > > > which case the nested container orchestrator would need to be granted
-> > > > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > > > compromise).
-> > > >
-> > > > But then don't you want some kind of ns_capable() instead (probably
-> > > > not the obvious one, though...)? With capable(), you can't really nest
-> > > > using the audit-id and user namespaces together.
-> > >
-> > > You want capable() and not ns_capable() because you want to ensure
-> > > that the orchestrator has the rights in the init_ns as changes to the
-> > > audit container ID could have an auditing impact that spans the entire
-> > > system.
-> >
-> > Ok but,
-> >
-> > > > > The current thinking
-> > > > > is that you would only change the audit container ID from one
-> > > > > set/inherited value to another if you were nesting containers, in
-> > > > > which case the nested container orchestrator would need to be granted
-> > > > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > > > compromise).
-> >
-> > won't work in user namespaced containers, because they will never be
-> > capable(CAP_AUDIT_CONTROL); so I don't think this will work for
-> > nesting as is. But maybe nobody cares :)
+On Thu, May 30, 2019 at 09:13:39AM +0000, Tony W Wang-oc wrote:
+> On Thu, May 30, 2019, Tony W Wang-oc wrote:
+> > Hi Ashok,
+> > I have two questions about this patch, could you help to check:
+> > 
+> > 1, for broadcast #MC exceptions, this patch seems require #MC exception
+> > errors
+> > set MCG_STATUS_RIPV = 1.
+> > But for Intel CPU, some #MC exception errors set MCG_STATUS_RIPV = 0
+> > (like "Recoverable-not-continuable SRAR Type" Errors), for these errors
+> > the patch doesn't seem to work, is that okay?
+> > 
+> > 2, for LMCE exceptions, this patch seems require #MC exception errors
+> > set MCG_STATUS_RIPV = 0 to make sure LMCE be handled normally even
+> > on offline CPU.
+> > For LMCE errors set MCG_STAUS_RIPV = 1, the patch prevents offline CPU
+> > handle these LMCE errors, is that okay?
+> > 
 > 
-> That's fun :)
+> More specifically, this patch seems require #MC exceptions meet the condition
+> "MCG_STATUS_RIPV ^ MCG_STATUS_LMCES == 1"; But on a Xeon X5650 machine (SMP), 
+
+The offline CPU will never get a LMCE=1, since those only happen on the CPU 
+that's doing active work. Offline CPUs just sitting in idle.
+
+The specific error here is a PCC=1, so irrespective of what happens
+We do capture the errors in the per-cpu log, and kernel would panic. 
+
+What specifically this patch tries to achieve is to leave an error
+sitting with MCG-STATUS.MCIP=1 and another recoverable error would shut the 
+system dowm. 
+
+I don't see anything wrong with what this patch does.. 
+
+> "Data CACHE Level-2 Generic Error" does not meet this condition.
 > 
-> To be honest, I've never been a big fan of supporting nested
-> containers from an audit perspective, so I'm not really too upset
-> about this.  The k8s/cri-o folks seem okay with this, or at least I
-> haven't heard any objections; lxc folks, what do you have to say?
-
-I actually thought the answer to this (when last I looked, "some time" ago)
-was that userspace should track an audit message saying "task X in
-container Y is changing its auditid to Z", and then decide to also track Z.
-This should be doable, but a lot of extra work in userspace.
-
-Per-userns containerids would also work.  So task X1 is in containerid
-1 on the host and creates a new task Y in new userns;  it continues to
-be reported in init_user_ns as containerid 1 forever;  but in its own
-userns it can request to be known as some other containerid.  Audit
-socks would be per-userns, allowing root in a container to watch for
-audit events in its own (and descendent) namespaces.
-
-But again I'm sure we've gone over all this in the last few years.
-
-I suppose we can look at this as a "first step", and talk about
-making it user-ns-nestable later.  But agreed it's not useful in a
-lot of situations as is.
-
--serge
+> I got below message from: https://www.centos.org/forums/viewtopic.php?p=292742
+> 
+> Hardware event. This is not a software error.
+> MCE 0
+> CPU 4 BANK 6 TSC b7065eeaa18b0 
+> TIME 1545643603 Mon Dec 24 10:26:43 2018
+> MCG status:MCIP 
+> MCi status:
+> Uncorrected error
+> Error enabled
+> Processor context corrupt
+> MCA: Data CACHE Level-2 Generic Error
+> STATUS b200000080000106 MCGSTATUS 4
+> MCGCAP 1c09 APICID 4 SOCKETID 0 
+> CPUID Vendor Intel Family 6 Model 44
+> 
+> > Thanks
+> > Tony W Wang-oc
