@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54071C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01AEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211F4252EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7617E252EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190013;
-	bh=zUokycjIj3e95iE3BsdeuW5rOOv1PjK6A4ulbsLKQZM=;
+	s=default; t=1559190018;
+	bh=vHy8K4F2oTSkh+ABuNuxbpfb4iNAIVVsMFIVUOqjbdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/t1OHNegvo8hfOGKTpZZmuEtUGsBWGqv8JPX5yrUd5BRnwbDNPXDSxKs/NcYs8o4
-	 P0NbuYaX846AlsVd+595e97+kA/4d5/3Sl61VNZeb8MVMuxUIv+pnPb9oAZVTirpMC
-	 5uzP+qS8RVirkZW96rkDmlSGwudhvxt8TaUhXDiQ=
+	b=EMZod2MloRosVOQg2hLA/kZlBusgEORuKBD02Ii4O3XR9XWfHwbjb13o6+Xd5TLTW
+	 FMa2f02zKlBrttH6bkkSJSOL6Mi8E+QAnzqIbOwW4W7kyJHV2bO8/dGQvFBPqS0TKT
+	 zg5xOSibcGJw6WkHgXYaeLj1R7ut3aS5tZnOwaxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfE3EUL (ORCPT
+        id S1731020AbfE3EUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:20:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38384 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730241AbfE3DPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:22 -0400
+        id S1730238AbfE3DPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFD7245BD;
-        Thu, 30 May 2019 03:15:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E41DA2457F;
+        Thu, 30 May 2019 03:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186121;
-        bh=zUokycjIj3e95iE3BsdeuW5rOOv1PjK6A4ulbsLKQZM=;
+        bh=vHy8K4F2oTSkh+ABuNuxbpfb4iNAIVVsMFIVUOqjbdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AM+CImuicyQSSbk76i8ysGp5u+C//e9LTwdPJ5tBFeJ0B9WQv6o8vlQyq8Th3/RsW
-         y4pnIl/3kow4wa6QrnTa2+io9GoEJe7M9X4XBJ+s2vU6ZOdh09AJCpRrXTOAbGIpAA
-         pktHEiX7pEE5pa+yLpaBicO5isE/4qgxWst240JI=
+        b=EuqvCobHQ5KY/cA8HK1S0Pu/c07FDW5n4fXo/cThdDdPM1PqD394+/b/B2ELc6zQ3
+         Rppmq1A8V2+rW/z5Lu583QBjpKM5ZaKFCL3hPmFgJh+P9nQoRR1BaZ0RizxcCipsTU
+         QIuhLshmTZy0zd0rJqMNxx+CgZJgyPX0x/RGrom4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 277/346] scsi: qla4xxx: avoid freeing unallocated dma memory
-Date:   Wed, 29 May 2019 20:05:50 -0700
-Message-Id: <20190530030554.969402729@linuxfoundation.org>
+Subject: [PATCH 5.0 276/346] usb: core: Add PM runtime calls to usb_hcd_platform_shutdown
+Date:   Wed, 29 May 2019 20:05:49 -0700
+Message-Id: <20190530030554.922808419@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 608f729c31d4caf52216ea00d20092a80959256d ]
+[ Upstream commit 8ead7e817224d7832fe51a19783cb8fcadc79467 ]
 
-Clang -Wuninitialized notices that on is_qla40XX we never allocate any DMA
-memory in get_fw_boot_info() but attempt to free it anyway:
+If ohci-platform is runtime suspended, we can currently get an "imprecise
+external abort" on reboot with ohci-platform loaded when PM runtime
+is implemented for the SoC.
 
-drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                if (!(val & 0x07)) {
-                    ^~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
-        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
-                                                     ^~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
-                if (!(val & 0x07)) {
-                ^~~~~~~~~~~~~~~~~~~
-drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
-        dma_addr_t buf_dma;
-                          ^
-                           = 0
+Let's fix this by adding PM runtime support to usb_hcd_platform_shutdown.
 
-Skip the call to dma_free_coherent() here.
-
-Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 80289c885c07b..9edec8e27b7c1 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -5930,7 +5930,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
- 		val = rd_nvram_byte(ha, sec_addr);
- 		if (val & BIT_7)
- 			ddb_index[1] = (val & 0x7f);
--
-+		goto exit_boot_info;
- 	} else if (is_qla80XX(ha)) {
- 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
- 					 &buf_dma, GFP_KERNEL);
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 015b126ce4555..a5c8bcb7723b4 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -3001,6 +3001,9 @@ usb_hcd_platform_shutdown(struct platform_device *dev)
+ {
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+ 
++	/* No need for pm_runtime_put(), we're shutting down */
++	pm_runtime_get_sync(&dev->dev);
++
+ 	if (hcd->driver->shutdown)
+ 		hcd->driver->shutdown(hcd);
+ }
 -- 
 2.20.1
 
