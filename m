@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465DCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2729FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A662449D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC2C24494
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185792;
-	bh=CbZArB9MKUxnFEC4rTaoIMLibYwBCdr6PxR0TOtiaPE=;
+	s=default; t=1559185795;
+	bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xpm5ZlFz+STmExKOlkAJmBvjueKbUUNbjGd4wv+aLw8uT1h4etRd67edqgXfWC/UR
-	 kuWkDJsFJc028jhHGO5dDCYWjiUh9M/opmY/tFCbHqe9rH8l600Kh9Fi9EuiKx8Ots
-	 H0dXNEIYcS/QyAH2kjAnN2bF4+qFVY7Q3/6aaQhw=
+	b=tYrUy/k1kcJNoRzLvzfZtPvqTb3SAwOxBGJsQVL/US/jiGcqZ+XFZhRXiWbxQGrV/
+	 2jG3hy2UCLeJn+CnSHIYJVigrHIDtnyoNjR/6zI8N39BovEg7cixlhNYdVDoLIlDLf
+	 AU6MB+/tHD5mJZwhz4uFMECF6bJLYKA1vwJmRTu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfE3DJv (ORCPT
+        id S1727846AbfE3DJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727680AbfE3DJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:39 -0400
+        id S1727696AbfE3DJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81192448E;
-        Thu, 30 May 2019 03:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3522447B;
+        Thu, 30 May 2019 03:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185778;
-        bh=CbZArB9MKUxnFEC4rTaoIMLibYwBCdr6PxR0TOtiaPE=;
+        s=default; t=1559185780;
+        bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpVaH83nR8iqvTq8dAVkSmPEmYAGhiaHePhwaEYhB25tMPC/Rv6sm/RcUVFDRAazt
-         HdltDIcE/CXDE/lnugyymXdx8m+b4nN/Mx+WeelssgcaHjePvCgifvJkgjBxanArGJ
-         DO0ox7pyHKASoUkTn1g49IfZiow7uo2gZI8hR+HY=
+        b=T8TXreuDLI04VU+nAJZtxhZR4tq55dM+n1jvrv+6ctLbw9QPL4Jd0kCA5cpqXcN98
+         4EkSsGCwAANv4rmmxUsRojdFA37DwobrsjGaAbJFM+tX6PdM0+XcAri/465RBkV+tA
+         63a1BcTrWM5V0B5TtaqantKrHVJPA66KohbuB5O0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 037/405] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
-Date:   Wed, 29 May 2019 20:00:35 -0700
-Message-Id: <20190530030542.645291906@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 004/405] KVM: x86: fix return value for reserved EFER
+Date:   Wed, 29 May 2019 20:00:02 -0700
+Message-Id: <20190530030540.572663263@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit dad7e270ba712ba1c99cd2d91018af6044447a06 upstream.
+commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
 
-syzkaller reported crashes on kfree() called from
-vivid_vid_cap_s_selection(). This looks like a simple typo, as
-dev->bitmap_cap is allocated with vzalloc() throughout the file.
+Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
+host-initiated writes", 2019-04-02) introduced a "return false" in a
+function returning int, and anyway set_efer has a "nonzero on error"
+conventon so it should be returning 1.
 
-Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
-parts")
-
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Pavel Machek <pavel@denx.de>
+Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-vid-cap.c |    2 +-
+ arch/x86/kvm/x86.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -1007,7 +1007,7 @@ int vivid_vid_cap_s_selection(struct fil
- 		v4l2_rect_map_inside(&s->r, &dev->fmt_cap_rect);
- 		if (dev->bitmap_cap && (compose->width != s->r.width ||
- 					compose->height != s->r.height)) {
--			kfree(dev->bitmap_cap);
-+			vfree(dev->bitmap_cap);
- 			dev->bitmap_cap = NULL;
- 		}
- 		*compose = s->r;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1288,7 +1288,7 @@ static int set_efer(struct kvm_vcpu *vcp
+ 	u64 efer = msr_info->data;
+ 
+ 	if (efer & efer_reserved_bits)
+-		return false;
++		return 1;
+ 
+ 	if (!msr_info->host_initiated) {
+ 		if (!__kvm_valid_efer(vcpu, efer))
 
 
