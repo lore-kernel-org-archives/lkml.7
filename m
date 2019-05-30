@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF93C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C92C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B5825E8B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497B825EBD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192090;
-	bh=wuTJFjnd0fE2xg30wPdCtn3UAvUzITI1qIY5UXPwr6Q=;
+	s=default; t=1559192091;
+	bh=3RCxgWEyXcSUgOh3L8bO5IkpkOryQ3Q4vhOf9zYAuZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmTwRqycrcenTRfGoqjxlvsxTTxNQj5m43+nnQasgkkeRqex+1PYnJkZ5m3KD+7u9
-	 PewC7VvIb3O+VaBtkDB/BeieJwRcM8LIH+mRel6Hh1PxRAA1V2hbkA5W4MYf30LmWx
-	 tctpvB++H/bzudlzeXxhEDxIRz73GurA9i1M0kSk=
+	b=bjTXf98O2yjO/K6+lGMq/9acrzXjadJZSh8RbLfysfWImT1XIqYueezj1lYDomoud
+	 zaG442e+WLqOn3NCCdLWaqFqJktoaGf0Yta5BisCHqTEcAegDZ6WYMwqzRrq+oyPTA
+	 F/t0x0ndBymFt9DDDNMznJjvwV+qQ/QYlygSINoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbfE3Eys (ORCPT
+        id S2389129AbfE3Eyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbfE3DKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:20 -0400
+        id S1728042AbfE3DKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C782244C5;
-        Thu, 30 May 2019 03:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 258EB24493;
+        Thu, 30 May 2019 03:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185819;
-        bh=wuTJFjnd0fE2xg30wPdCtn3UAvUzITI1qIY5UXPwr6Q=;
+        s=default; t=1559185820;
+        bh=3RCxgWEyXcSUgOh3L8bO5IkpkOryQ3Q4vhOf9zYAuZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFyLYsmze/s8cqpc6vDAQ1mUENB1NDGNXJD6G4WKAsWIyhTKhbmn0RlULFRWHAPiT
-         feO46Du/yBi3bDj1K4TBal6BFJ3mW50rjJjRUyK2hVdkG0KFT+Dn5efB6YlBaKrVwA
-         Qzy+I+r6RDHqAD6Oo43+7mc0a/qr6hR9ux8uZlq8=
+        b=eWUiY/8Eg1WJPe/knam2yaEdyJ3MmDatUps7OnuYwpZ9bHk4HQWBFJGdfhpMw4cBc
+         mk5Oo2tt8WLxTqre0jZ0xsQaJyfhuKWz0dw1i1S+HadNYCnyC6IjLYIwvzkd+My9gd
+         lpEKn/PezjRQBRjmEueDyvCiE3EbmyE8mfOOK5+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 114/405] dmaengine: pl330: _stop: clear interrupt status
-Date:   Wed, 29 May 2019 20:01:52 -0700
-Message-Id: <20190530030546.767460667@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 116/405] drm: prefix header search paths with $(srctree)/
+Date:   Wed, 29 May 2019 20:01:54 -0700
+Message-Id: <20190530030546.869328633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,90 +64,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
+[ Upstream commit 43068cb7ba1f6ceb1523e947c84002b2a61fd6d4 ]
 
-This patch kill instructs the DMAC to immediately terminate
-execution of a thread. and then clear the interrupt status,
-at last, stop generating interrupts for DMA_SEV. to guarantee
-the next dma start is clean. otherwise, one interrupt maybe leave
-to next start and make some mistake.
+Currently, the Kbuild core manipulates header search paths in a crazy
+way [1].
 
-we can reporduce the problem as follows:
+To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
+the search paths in the srctree. Some Makefiles are already written in
+that way, but not all. The goal of this work is to make the notation
+consistent, and finally get rid of the gross hacks.
 
-DMASEV: modify the event-interrupt resource, and if the INTEN sets
-function as interrupt, the DMAC will set irq<event_num> HIGH to
-generate interrupt. write INTCLR to clear interrupt.
+Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
+("kbuild: do not drop -I without parameter").
 
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			    mask INTEN
-		|				|
-		|			     DMAKILL
-		|				|
-		|			spin_unlock_irqrestore
+[1]: https://patchwork.kernel.org/patch/9632347/
 
-in above case, a interrupt was left, and if we unmask INTEN, the DMAC
-will set irq<event_num> HIGH to generate interrupt.
-
-to fix this, do as follows:
-
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			     DMAKILL
-		|				|
-		|			   clear INTCLR
-		|			    mask INTEN
-		|				|
-		|			spin_unlock_irqrestore
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/Makefile         | 2 +-
+ drivers/gpu/drm/arm/display/komeda/Makefile | 4 ++--
+ drivers/gpu/drm/i915/gvt/Makefile           | 2 +-
+ drivers/gpu/drm/msm/Makefile                | 6 +++---
+ drivers/gpu/drm/nouveau/Kbuild              | 8 ++++----
+ 5 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index eec79fdf27a5b..56695ffb5d377 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -966,6 +966,7 @@ static void _stop(struct pl330_thread *thrd)
- {
- 	void __iomem *regs = thrd->dmac->base;
- 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
-+	u32 inten = readl(regs + INTEN);
+diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
+index 466da5954a682..62bf9da25e4b3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/Makefile
++++ b/drivers/gpu/drm/amd/amdgpu/Makefile
+@@ -23,7 +23,7 @@
+ # Makefile for the drm device driver.  This driver provides support for the
+ # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
  
- 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
- 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
-@@ -978,10 +979,13 @@ static void _stop(struct pl330_thread *thrd)
+-FULL_AMD_PATH=$(src)/..
++FULL_AMD_PATH=$(srctree)/$(src)/..
+ DISPLAY_FOLDER_NAME=display
+ FULL_AMD_DISPLAY_PATH = $(FULL_AMD_PATH)/$(DISPLAY_FOLDER_NAME)
  
- 	_emit_KILL(0, insn);
+diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
+index 1b875e5dc0f6f..a72e30c0e03d3 100644
+--- a/drivers/gpu/drm/arm/display/komeda/Makefile
++++ b/drivers/gpu/drm/arm/display/komeda/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
  
--	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
--
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
-+
-+	/* clear the event */
-+	if (inten & (1 << thrd->ev))
-+		writel(1 << thrd->ev, regs + INTCLR);
-+	/* Stop generating interrupts for SEV */
-+	writel(inten & ~(1 << thrd->ev), regs + INTEN);
- }
+ ccflags-y := \
+-	-I$(src)/../include \
+-	-I$(src)
++	-I $(srctree)/$(src)/../include \
++	-I $(srctree)/$(src)
  
- /* Start doing req 'idx' of thread 'thrd' */
+ komeda-y := \
+ 	komeda_drv.o \
+diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
+index 271fb46d4dd0d..ea8324abc784a 100644
+--- a/drivers/gpu/drm/i915/gvt/Makefile
++++ b/drivers/gpu/drm/i915/gvt/Makefile
+@@ -5,5 +5,5 @@ GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
+ 	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
+ 	fb_decoder.o dmabuf.o page_track.o
+ 
+-ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
++ccflags-y				+= -I $(srctree)/$(src) -I $(srctree)/$(src)/$(GVT_DIR)/
+ i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
+diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+index 56a70c74af4ed..b7b1ebdc81902 100644
+--- a/drivers/gpu/drm/msm/Makefile
++++ b/drivers/gpu/drm/msm/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ccflags-y := -Idrivers/gpu/drm/msm
+-ccflags-y += -Idrivers/gpu/drm/msm/disp/dpu1
+-ccflags-$(CONFIG_DRM_MSM_DSI) += -Idrivers/gpu/drm/msm/dsi
++ccflags-y := -I $(srctree)/$(src)
++ccflags-y += -I $(srctree)/$(src)/disp/dpu1
++ccflags-$(CONFIG_DRM_MSM_DSI) += -I $(srctree)/$(src)/dsi
+ 
+ msm-y := \
+ 	adreno/adreno_device.o \
+diff --git a/drivers/gpu/drm/nouveau/Kbuild b/drivers/gpu/drm/nouveau/Kbuild
+index 581404e6544d4..378c5dd692b0b 100644
+--- a/drivers/gpu/drm/nouveau/Kbuild
++++ b/drivers/gpu/drm/nouveau/Kbuild
+@@ -1,7 +1,7 @@
+-ccflags-y += -I$(src)/include
+-ccflags-y += -I$(src)/include/nvkm
+-ccflags-y += -I$(src)/nvkm
+-ccflags-y += -I$(src)
++ccflags-y += -I $(srctree)/$(src)/include
++ccflags-y += -I $(srctree)/$(src)/include/nvkm
++ccflags-y += -I $(srctree)/$(src)/nvkm
++ccflags-y += -I $(srctree)/$(src)
+ 
+ # NVKM - HW resource manager
+ #- code also used by various userspace tools/tests
 -- 
 2.20.1
 
