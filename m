@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DE9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F231C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C7C24482
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E97D244BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185821;
-	bh=MbN0Gjltzp8CmPfQZSiyn81eybuXFk4Chh1qol6L8EA=;
+	s=default; t=1559185824;
+	bh=aEHkIAT4SvhZrfz4NOR4ZJzVuz4032hA/XKpYXwF+0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JAQT+u8hJ9VXMyNJ/4Pu1jRv0X5DzzkMGX6ClrevbbX9WJ4az6DAJwnLdaUg7Gq0T
-	 Ecu6KX62HIWgNtZ0K2w2gI4BUvq96lYUuWCAz4BtlRL8MrYlkAG8vA88rC9DPxe3Jd
-	 1iKOmdF9L9BLipnlk5quJ6J0y6DjUnA9Mj+xXseE=
+	b=bvy/Wm6R7incL1V8K24Bo4o+dYhjfrS+2Gf40QhlQ2Y/RmP2AwL0MKFBHJiCdLYp3
+	 vr+cEUw4lUeGCcrTj67DvsWaKjciKZsVsRVAd27Tjh7DBE0x1CMAu4QBT3eQ1cloM5
+	 22j2SZy+D/TgO+9Pr69sNm6pnH+IclON5neSeFps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfE3DKV (ORCPT
+        id S1728064AbfE3DKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbfE3DJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:50 -0400
+        id S1727815AbfE3DJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1185724490;
-        Thu, 30 May 2019 03:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC382446F;
+        Thu, 30 May 2019 03:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185789;
-        bh=MbN0Gjltzp8CmPfQZSiyn81eybuXFk4Chh1qol6L8EA=;
+        s=default; t=1559185790;
+        bh=aEHkIAT4SvhZrfz4NOR4ZJzVuz4032hA/XKpYXwF+0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VN3EsqZGMcoHS8wMucaPZ14hNNQ5A9lSxaRPypU8nI0hc0yNrAMn6zNw+U7e8Ad/3
-         KnHRIN03ieZrwI9y3DQL9CDEr8la1AOykvbRGPlF9BLRfbo3vRdrXVZRrA1VIlDmiY
-         BeoHvayGop1L5gHbBzuCpw6Y5nJh0GbF9dXA2poo=
+        b=xOaKSsJrhwMvgDB5k1q6MOTbXDn51VMGOxVgtW2m75sZdhFFdVdlO3TYkwGkB4qxz
+         0b2oZA30VDJJrcQTqNwcA5CUU448OA5zog9f0MG3liIBm1ZMSCUCITWcXu7TZ2/HhT
+         Yt+g2bPjP+v67UIgpOftp56viiM2j0rt/hZ0JbF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 059/405] ice: Separate if conditions for ice_set_features()
-Date:   Wed, 29 May 2019 20:00:57 -0700
-Message-Id: <20190530030543.931314010@linuxfoundation.org>
+Subject: [PATCH 5.1 061/405] blk-mq: split blk_mq_alloc_and_init_hctx into two parts
+Date:   Wed, 29 May 2019 20:00:59 -0700
+Message-Id: <20190530030544.028497142@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,49 +67,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8f529ff912073f778e3cd74e87fb69a36499fc2f ]
+[ Upstream commit 7c6c5b7c9186e3fb5b10afb8e5f710ae661144c6 ]
 
-Set features can have multiple features turned on|off in a single
-call.  Grouping these all in an if/else means after one condition
-is met, other conditions/features will not be evaluated.  Break
-the if/else statements by feature to ensure all features will be
-handled properly.
+Split blk_mq_alloc_and_init_hctx into two parts, and one is
+blk_mq_alloc_hctx() for allocating all hctx resources, another
+is blk_mq_init_hctx() for initializing hctx, which serves as
+counter-part of blk_mq_exit_hctx().
 
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Bart Van Assche <bart.vanassche@wdc.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: Martin K . Petersen <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ block/blk-mq.c | 139 ++++++++++++++++++++++++++-----------------------
+ 1 file changed, 75 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 47cc3f905b7ff..ac30288720f71 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -2545,6 +2545,9 @@ static int ice_set_features(struct net_device *netdev,
- 	struct ice_vsi *vsi = np->vsi;
- 	int ret = 0;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b0e5e67e20a28..8a41cc5974fe1 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2284,15 +2284,65 @@ static void blk_mq_exit_hw_queues(struct request_queue *q,
+ 	}
+ }
  
-+	/* Multiple features can be changed in one call so keep features in
-+	 * separate if/else statements to guarantee each feature is checked
-+	 */
- 	if (features & NETIF_F_RXHASH && !(netdev->features & NETIF_F_RXHASH))
- 		ret = ice_vsi_manage_rss_lut(vsi, true);
- 	else if (!(features & NETIF_F_RXHASH) &&
-@@ -2557,8 +2560,9 @@ static int ice_set_features(struct net_device *netdev,
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_RX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_RX))
- 		ret = ice_vsi_manage_vlan_stripping(vsi, false);
--	else if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
--		 !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
++static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
++{
++	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
 +
-+	if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
-+	    !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
- 		ret = ice_vsi_manage_vlan_insertion(vsi);
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_TX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
++	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
++			   __alignof__(struct blk_mq_hw_ctx)) !=
++		     sizeof(struct blk_mq_hw_ctx));
++
++	if (tag_set->flags & BLK_MQ_F_BLOCKING)
++		hw_ctx_size += sizeof(struct srcu_struct);
++
++	return hw_ctx_size;
++}
++
+ static int blk_mq_init_hctx(struct request_queue *q,
+ 		struct blk_mq_tag_set *set,
+ 		struct blk_mq_hw_ctx *hctx, unsigned hctx_idx)
+ {
+-	int node;
++	hctx->queue_num = hctx_idx;
++
++	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
++
++	hctx->tags = set->tags[hctx_idx];
++
++	if (set->ops->init_hctx &&
++	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
++		goto unregister_cpu_notifier;
+ 
+-	node = hctx->numa_node;
++	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx,
++				hctx->numa_node))
++		goto exit_hctx;
++	return 0;
++
++ exit_hctx:
++	if (set->ops->exit_hctx)
++		set->ops->exit_hctx(hctx, hctx_idx);
++ unregister_cpu_notifier:
++	blk_mq_remove_cpuhp(hctx);
++	return -1;
++}
++
++static struct blk_mq_hw_ctx *
++blk_mq_alloc_hctx(struct request_queue *q, struct blk_mq_tag_set *set,
++		int node)
++{
++	struct blk_mq_hw_ctx *hctx;
++	gfp_t gfp = GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY;
++
++	hctx = kzalloc_node(blk_mq_hw_ctx_size(set), gfp, node);
++	if (!hctx)
++		goto fail_alloc_hctx;
++
++	if (!zalloc_cpumask_var_node(&hctx->cpumask, gfp, node))
++		goto free_hctx;
++
++	atomic_set(&hctx->nr_active, 0);
+ 	if (node == NUMA_NO_NODE)
+-		node = hctx->numa_node = set->numa_node;
++		node = set->numa_node;
++	hctx->numa_node = node;
+ 
+ 	INIT_DELAYED_WORK(&hctx->run_work, blk_mq_run_work_fn);
+ 	spin_lock_init(&hctx->lock);
+@@ -2300,58 +2350,45 @@ static int blk_mq_init_hctx(struct request_queue *q,
+ 	hctx->queue = q;
+ 	hctx->flags = set->flags & ~BLK_MQ_F_TAG_SHARED;
+ 
+-	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
+-
+-	hctx->tags = set->tags[hctx_idx];
+-
+ 	/*
+ 	 * Allocate space for all possible cpus to avoid allocation at
+ 	 * runtime
+ 	 */
+ 	hctx->ctxs = kmalloc_array_node(nr_cpu_ids, sizeof(void *),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node);
++			gfp, node);
+ 	if (!hctx->ctxs)
+-		goto unregister_cpu_notifier;
++		goto free_cpumask;
+ 
+ 	if (sbitmap_init_node(&hctx->ctx_map, nr_cpu_ids, ilog2(8),
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node))
++				gfp, node))
+ 		goto free_ctxs;
+-
+ 	hctx->nr_ctx = 0;
+ 
+ 	spin_lock_init(&hctx->dispatch_wait_lock);
+ 	init_waitqueue_func_entry(&hctx->dispatch_wait, blk_mq_dispatch_wake);
+ 	INIT_LIST_HEAD(&hctx->dispatch_wait.entry);
+ 
+-	if (set->ops->init_hctx &&
+-	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
+-		goto free_bitmap;
+-
+ 	hctx->fq = blk_alloc_flush_queue(q, hctx->numa_node, set->cmd_size,
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY);
++			gfp);
+ 	if (!hctx->fq)
+-		goto exit_hctx;
+-
+-	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx, node))
+-		goto free_fq;
++		goto free_bitmap;
+ 
+ 	if (hctx->flags & BLK_MQ_F_BLOCKING)
+ 		init_srcu_struct(hctx->srcu);
++	blk_mq_hctx_kobj_init(hctx);
+ 
+-	return 0;
++	return hctx;
+ 
+- free_fq:
+-	blk_free_flush_queue(hctx->fq);
+- exit_hctx:
+-	if (set->ops->exit_hctx)
+-		set->ops->exit_hctx(hctx, hctx_idx);
+  free_bitmap:
+ 	sbitmap_free(&hctx->ctx_map);
+  free_ctxs:
+ 	kfree(hctx->ctxs);
+- unregister_cpu_notifier:
+-	blk_mq_remove_cpuhp(hctx);
+-	return -1;
++ free_cpumask:
++	free_cpumask_var(hctx->cpumask);
++ free_hctx:
++	kfree(hctx);
++ fail_alloc_hctx:
++	return NULL;
+ }
+ 
+ static void blk_mq_init_cpu_queues(struct request_queue *q,
+@@ -2695,51 +2732,25 @@ struct request_queue *blk_mq_init_sq_queue(struct blk_mq_tag_set *set,
+ }
+ EXPORT_SYMBOL(blk_mq_init_sq_queue);
+ 
+-static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
+-{
+-	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
+-
+-	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
+-			   __alignof__(struct blk_mq_hw_ctx)) !=
+-		     sizeof(struct blk_mq_hw_ctx));
+-
+-	if (tag_set->flags & BLK_MQ_F_BLOCKING)
+-		hw_ctx_size += sizeof(struct srcu_struct);
+-
+-	return hw_ctx_size;
+-}
+-
+ static struct blk_mq_hw_ctx *blk_mq_alloc_and_init_hctx(
+ 		struct blk_mq_tag_set *set, struct request_queue *q,
+ 		int hctx_idx, int node)
+ {
+ 	struct blk_mq_hw_ctx *hctx;
+ 
+-	hctx = kzalloc_node(blk_mq_hw_ctx_size(set),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-			node);
++	hctx = blk_mq_alloc_hctx(q, set, node);
+ 	if (!hctx)
+-		return NULL;
+-
+-	if (!zalloc_cpumask_var_node(&hctx->cpumask,
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-				node)) {
+-		kfree(hctx);
+-		return NULL;
+-	}
+-
+-	atomic_set(&hctx->nr_active, 0);
+-	hctx->numa_node = node;
+-	hctx->queue_num = hctx_idx;
++		goto fail;
+ 
+-	if (blk_mq_init_hctx(q, set, hctx, hctx_idx)) {
+-		free_cpumask_var(hctx->cpumask);
+-		kfree(hctx);
+-		return NULL;
+-	}
+-	blk_mq_hctx_kobj_init(hctx);
++	if (blk_mq_init_hctx(q, set, hctx, hctx_idx))
++		goto free_hctx;
+ 
+ 	return hctx;
++
++ free_hctx:
++	kobject_put(&hctx->kobj);
++ fail:
++	return NULL;
+ }
+ 
+ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
 -- 
 2.20.1
 
