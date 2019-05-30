@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C61DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84960C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DFA2421E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546F12421E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191981;
-	bh=u+nUiTKKKXyldh9p4wc93XIBYk6vNLNZaGRrS5m1MzU=;
+	s=default; t=1559191988;
+	bh=5mpJYdrDYFJZ4rsIuXEv/X6DFib4s+JmFa4WhOa4HfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xg2SfSXnzkDVNGyA2Klm99dEZNs1Rtgrr+E9GYlonkTVgAEiihb79dBJsTS18T6hT
-	 xoZH5vMIS/31V88D7PUO4zrNjPnLUWskuw7f8XZm1bVvbQMITnqwTVy5doBQo9SSEF
-	 xUIwMILsUzl1XYmDTpS8AtjdaE2JhEiINMVg+1Gg=
+	b=BBgoAjVqAAKKVv+4+xUKwI3Z57vS1DPC1N+pYhbnWLjx3fIDDFpnTDo1L8dbWg/Ph
+	 IpyOYBjacrKm4d4wLInDIdh19EoIndFSSm05wd8MZxewD9c9B2gHfndVokQUuMRs4J
+	 BSp6J9ciyurj5gzSo8+K7AGyofLni5No+++F2Qvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389013AbfE3ExB (ORCPT
+        id S2389092AbfE3ExH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbfE3DKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:42 -0400
+        id S1728186AbfE3DKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814B124481;
+        by mail.kernel.org (Postfix) with ESMTPSA id 12B46244BC;
         Thu, 30 May 2019 03:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185841;
-        bh=u+nUiTKKKXyldh9p4wc93XIBYk6vNLNZaGRrS5m1MzU=;
+        bh=5mpJYdrDYFJZ4rsIuXEv/X6DFib4s+JmFa4WhOa4HfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRpHTpIEFLwDjBVhRUzPrIM9i3Q8XSSZ3xIwS8F0BWdnvuoH80V+Lp9PqV2Ai/t4V
-         f/wCC2vC1tAIbBWQoLUmAWj4T+THQ4lKq2dMhQgoIkjeUnv3c9UFkcLymRLdCNC9t5
-         uarOilVW738JpkutgEspk4OsdmOeOw/bAzDdpoRs=
+        b=zCCc2bOtIJsywM1Yde8XwUsGO31hPQqwJ5tN6rAislVzOtnoCExrzLPJQPprLo633
+         YO7GjXUYlLN89kvU/05HQ3DXNqSx19N7r93RZitPCOJMq7UCK0rffGkp5gBfNkez/R
+         3+PrRuRhHf1YGiuE3ctlFMJjVTFzskK00zg61wBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 141/405] mm/uaccess: Use unsigned long to placate UBSAN warnings on older GCC versions
-Date:   Wed, 29 May 2019 20:02:19 -0700
-Message-Id: <20190530030548.253878102@linuxfoundation.org>
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 158/405] media: stm32-dcmi: fix crash when subdev do not expose any formats
+Date:   Wed, 29 May 2019 20:02:36 -0700
+Message-Id: <20190530030549.136440100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,74 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
+[ Upstream commit 33dfeb62e23c31619d2197850f7e8b50e8cc5466 ]
 
-Randy reported objtool triggered on his (GCC-7.4) build:
+Do not access sd_formats[] if num_of_sd_formats is zero, ie
+subdev sensor didn't expose any formats.
 
-  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
-  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
-
-This is due to UBSAN generating signed-overflow-UB warnings where it
-should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
-uses through -fno-strict-overflow).
-
-Make the functions use 'unsigned long' throughout.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/strncpy_from_user.c | 5 +++--
- lib/strnlen_user.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 58eacd41526c5..023ba9f3b99f0 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -23,10 +23,11 @@
-  * hit it), 'max' is the address space maximum (and we return
-  * -EFAULT if we hit it).
-  */
--static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
-+static inline long do_strncpy_from_user(char *dst, const char __user *src,
-+					unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long res = 0;
-+	unsigned long res = 0;
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index a1f0801081ba9..922855b6025c7 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -811,6 +811,9 @@ static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
  
- 	/*
- 	 * Truncate 'max' to the user-specified limit, so that
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 1c1a1b0e38a5f..7f2db3fe311fd 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -28,7 +28,7 @@
- static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long align, res = 0;
-+	unsigned long align, res = 0;
- 	unsigned long c;
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
+ 	}
+@@ -989,6 +992,9 @@ static int dcmi_set_sensor_format(struct stm32_dcmi *dcmi,
  
- 	/*
-@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
- 	 */
--	align = (sizeof(long) - 1) & (unsigned long)src;
-+	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
- 	src -= align;
- 	max += align;
- 
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
+ 	}
 -- 
 2.20.1
 
