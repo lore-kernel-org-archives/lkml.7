@@ -2,122 +2,151 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A81C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62669C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A87824DF1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2584C252BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSN84Nue"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TAM6/8Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfE3Mh2 (ORCPT
+        id S1726583AbfE3Mjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:37:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38441 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfE3Mh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:37:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a186so3189909pfa.5;
-        Thu, 30 May 2019 05:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p+DG2d0FvxKbWywBMoCSOvRR/YJEudwxtMY2Mp3L0uA=;
-        b=pSN84Nueu+mX5LVWf2d3ytDynzJ6AalNM7GRwoawN35iXT7uboqC26KRaN+2xnRfIQ
-         8zmRE5PLKAQ1NlF31XZdFT2YG8daPtcQU67NvQzhoQw2rFliJ6Tewd6uUkMmf5RbOgtn
-         dxaSsGXAdtKrGP42uTraxeodTJEsR8fZTWgB+r2xSChO/ZajN2F+ZbUcBXpibR2xnBBB
-         UFERLjWPzXQ3vJZZ/wGnYwo4eGiKMmPvSaCuKuL0C+4bKB/gvew6xRlh4jnK4p3EXIF+
-         tfd6Lx/zmXq/jC2JTnk9R2QR1zhtwZzyxLKDVzsP4xbb3R3lj1Vd80ilF39ZT8OeHwS0
-         5Sqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p+DG2d0FvxKbWywBMoCSOvRR/YJEudwxtMY2Mp3L0uA=;
-        b=KyXG8Uv6rYHm9cpja427fjYQeU9Oq4cgl9RsH4c5xlNUgY4QzPxhimWL3NLoOO84vn
-         CSoVbdDzGwTxJyffuDo9bTJXRJWsBJBWGksA8OtqCz+58aPdHA3l5ZCh3xgS4OMuaPhM
-         647NZBOcuJuCL88XDdhTOQLikpMrCyGqodjCVuBelOLe+6OdQcBoiolAPlspNpmt8/PK
-         cBYN4DkefzPunV3qq55Cfs+yiQ0Hr7uqPecyh8soBFdkjreDVIROJqvgl7IK2hYSKx2V
-         gYmTETvG2TFsOZohT8UuzfZksbQv0KpUL6bfmsjSfqjP8R3KBX98F+yD0tmthnJAe6vR
-         uE/A==
-X-Gm-Message-State: APjAAAVMDCe3hIDa+weV2qZyxb3PpkuHL84faoTROvJdYTv3SoBFj+O5
-        2sZfRpthN3o1LN4N/RPg49Y=
-X-Google-Smtp-Source: APXvYqzCXnK5vZc38a1gg6xnBIWUu0AiECzfFdovLYSOjGz8ovpq8WBP+dm4jV/kz2CuxUB7Tw/cxg==
-X-Received: by 2002:a62:4e0c:: with SMTP id c12mr3461676pfb.17.1559219847373;
-        Thu, 30 May 2019 05:37:27 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q7sm2655251pjb.0.2019.05.30.05.37.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:37:26 -0700 (PDT)
-Subject: Re: [PATCH] IB/mlx5: Limit to 64-bit builds
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ariel Levkovich <lariel@mellanox.com>
-References: <1559216144-2085-1-git-send-email-linux@roeck-us.net>
- <20190530122251.GD6251@mtr-leonro.mtl.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <2cfc38a3-33a9-5f22-6757-189ebbb93ce6@roeck-us.net>
-Date:   Thu, 30 May 2019 05:37:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190530122251.GD6251@mtr-leonro.mtl.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 30 May 2019 08:39:37 -0400
+Received: from mail-eopbgr790114.outbound.protection.outlook.com ([40.107.79.114]:44096
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726128AbfE3Mjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:39:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=LLBqLQQtMUa2jQLty58NWPbFp940lzadlYR4b4VGbiNsJ1Y/s2baN2UR1vm6RLX93+k8S2ACioULx8E1+2okwJ6QB3qdydRkcOHfUuXLJ9vw3sZbwW4WqwQVcspq1B2iX+qfwSv+7D/XHmywl/RyjKh8+EF4Z9wVygyX5WOAUAc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4vJ9qKaDwnc0OT7xj/8PPFeAE8V0MZbhSpqTqdNZMxo=;
+ b=n3L+NifHbiC9MfpWsAPmrlGahS501ri7Z8EZldaxwOJF4T3QUcDkbt1Z8Y08a0oDhOK/UI+k6R0dDUth9OTGA79x12kGytrBMwv2kwEk4pTwHZz7+7ehcpU7PmIW6KOKmHyWPEwCU91M5a0+F1ZbgjOhxDLTnjNYzj8/y7KS1QI=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4vJ9qKaDwnc0OT7xj/8PPFeAE8V0MZbhSpqTqdNZMxo=;
+ b=TAM6/8Iuc6CRlYZE6hO1G/Zl5CxtTbBb1iMZiaQixikj0tkFQSb78DF8c2aXDkmoR3+/U+74EDTauO8Jl2if/TlSergMxUuIafbZFKRiLrirmdo6KqrOsRo/hH7Z8OOOvHTLiktSy7ksGSzSOL5P7T0spSEctw2gTf3rVC8616g=
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12)
+ by BYAPR21MB1288.namprd21.prod.outlook.com (2603:10b6:a03:10a::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.3; Thu, 30 May
+ 2019 12:39:33 +0000
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b]) by BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b%7]) with mapi id 15.20.1943.015; Thu, 30 May 2019
+ 12:39:33 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH v3 2/2] Drivers: hv: Move Hyper-V clocksource code to new
+ clocksource driver
+Thread-Topic: [PATCH v3 2/2] Drivers: hv: Move Hyper-V clocksource code to new
+ clocksource driver
+Thread-Index: AQHVFJzHNl4KBQP76kq8rU1v4qba66aDcFoAgAAtg+A=
+Date:   Thu, 30 May 2019 12:39:33 +0000
+Message-ID: <BYAPR21MB122115920E78B7897FDC7BE9D7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com>
+ <1558969089-13204-3-git-send-email-mikelley@microsoft.com>
+ <87r28gl1d1.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87r28gl1d1.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-30T12:39:30.3975535Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bad36bc6-94e8-4270-bb43-85fadc3ce727;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6dfa94de-e46e-4666-8ca7-08d6e4fbde6f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR21MB1288;
+x-ms-traffictypediagnostic: BYAPR21MB1288:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB1288824D40F7C68D89A48A23D7180@BYAPR21MB1288.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(346002)(39860400002)(136003)(189003)(199004)(256004)(446003)(71190400001)(3846002)(476003)(102836004)(11346002)(4326008)(8990500004)(22452003)(7416002)(81166006)(33656002)(14454004)(86362001)(6436002)(26005)(81156014)(486006)(6116002)(99286004)(54906003)(186003)(55016002)(9686003)(52396003)(25786009)(66066001)(74316002)(2906002)(71200400001)(7696005)(478600001)(8936002)(66556008)(8676002)(6246003)(52536014)(76176011)(316002)(76116006)(6506007)(305945005)(10290500003)(229853002)(73956011)(10090500001)(7736002)(5660300002)(66446008)(64756008)(68736007)(107886003)(53936002)(66946007)(6916009)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1288;H:BYAPR21MB1221.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FzEA7Z5pTo5Zh21+e0RVHlvVcS6Jdilj0oBZm49bmej82SGIaPsD60PC/JeUsfhdXUoi0lkWEd6Zb7eaufNcJxJJqfQ2lujW7DPE+jcz5uPjzmtb7vMDW6ptH1Asfg5xyQZp+RmPDY//R8OuyJ/B31pnSUp0sHoZnGKbR4w9qIlVJkoLKjd6P+EaDCTWMF1mpEy2ki3Iq+VUGAIn8iqam2+O3LLfoyu/e8hcy5p5wAmQAYZpSDjyV4RmKrL4Aa2JK1Lwc1/scLkMuuJqQxoklpHg4okGtWUzsKS8fI0W2prxSfg8hEVD3POCnP6IZ5YsLqfAbo+ydMV0qInA+v554jSkAl8g02+cNiL0jp4tyx9gT5CKpCH5OfRwasqAfOUHoxKL9ZeFycNYWVaBzTrjJnMKI4LqAslYnIsj7KJMszg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dfa94de-e46e-4666-8ca7-08d6e4fbde6f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 12:39:33.7001
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1288
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 5:22 AM, Leon Romanovsky wrote:
-> On Thu, May 30, 2019 at 04:35:44AM -0700, Guenter Roeck wrote:
->> 32-bit builds fail with errors such as
->>
->> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> 
-> It is fixed in rdma-rc.
-> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-rc&id=37eb86c4507abcb14fc346863e83aa8751aa4675
-> 
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, May 30, 2019 2=
+:48 AM
+> > +		/*
+> > +		 * sched_clock_register is needed on ARM64 but
+> > +		 * is a no-op on x86
+> > +		 */
+> > +		sched_clock_register(read_hv_sched_clock_msr,
+> > +						64, HV_CLOCK_HZ);
+>=20
+> I'm not sure about ARM, but MSR-based clocksource would be a really bad
+> choice for sched clock on x86, this will slow things down
+> significantly. Luckily, as you're validly stating above,
+> sched_clock_register() is a no-op on x86 as we don't define
+> CONFIG_GENERIC_SCHED_CLOCK.
+>=20
+> Can we actually *not* do sched_clock_register() in case
+> TSC page is unavailable (and revert to counting jiffies or whatever)?
+>=20
 
-Excellent, and sorry for the noise.
+We can't skip the sched_clock_register() on ARM64 because it
+does define CONFIG_GENERIC_SCHED_CLOCK.  However, Hyper-V
+should always provide REFERENCE_TSC_AVAILALBE on ARM64,
+so we should never end up in the MSR-based code on ARM64.
+Arguably that means the call to sched_clock_register() could be
+removed since it's a no-op on x86.  But I'd like to keep it for symmetry
+and in case there's a testing/debugging situation on ARM64 where
+we want to clear REFERENCE_TSC_AVAILABLE and go down the
+MSR-based code path.
 
-Guenter
-
-> Thanks
-> 
->>
->> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
->> Cc: Ariel Levkovich <lariel@mellanox.com>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>   drivers/infiniband/hw/mlx5/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/infiniband/hw/mlx5/Kconfig b/drivers/infiniband/hw/mlx5/Kconfig
->> index ea248def4556..574b97da7a43 100644
->> --- a/drivers/infiniband/hw/mlx5/Kconfig
->> +++ b/drivers/infiniband/hw/mlx5/Kconfig
->> @@ -1,7 +1,7 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->>   config MLX5_INFINIBAND
->>   	tristate "Mellanox 5th generation network adapters (ConnectX series) support"
->> -	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE
->> +	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE && 64BIT
->>   	---help---
->>   	  This driver provides low-level InfiniBand support for
->>   	  Mellanox Connect-IB PCI Express host channel adapters (HCAs).
->> --
->> 2.7.4
->>
-> 
-
+Michael
