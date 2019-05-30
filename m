@@ -2,76 +2,91 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81600C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BBFC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE5925A07
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DFD25A07
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q6+JwilL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q6+JwilL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfE3N6K (ORCPT
+        id S1726840AbfE3N6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:58:10 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38196 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfE3N6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:58:10 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hWLZF-0005tr-Ru; Thu, 30 May 2019 21:58:05 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hWLZA-0003jj-Hg; Thu, 30 May 2019 21:58:00 +0800
-Date:   Thu, 30 May 2019 21:58:00 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-Message-ID: <20190530135800.ekcso3n2p5zkg6yv@gondor.apana.org.au>
-References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
- <20190529202728.GA35103@gmail.com>
- <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au>
- <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 30 May 2019 09:58:51 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46250 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfE3N6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:58:50 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CDE31607CA; Thu, 30 May 2019 13:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559224729;
+        bh=ZhapyRz7rpO7+RXjnPRw8coTCr3ij19lsTGVLI65SL4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q6+JwilLbIhB+XoM/3S6CaEKG5a6wNZx5/wkuJWPEAD0A5cUs0buLCy5OTbV1/9qO
+         lG22IAs9K95buf1UgYiFVUoMSScNTJJPqYFbZfgNQ+4VILP+EGeMcHaKjbcrL5bAPk
+         O41rBltZWg7/J1QtkiWuwFnTq+jyjFMGnJ2PGLas=
+Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: amasule@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 722026049C;
+        Thu, 30 May 2019 13:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559224729;
+        bh=ZhapyRz7rpO7+RXjnPRw8coTCr3ij19lsTGVLI65SL4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q6+JwilLbIhB+XoM/3S6CaEKG5a6wNZx5/wkuJWPEAD0A5cUs0buLCy5OTbV1/9qO
+         lG22IAs9K95buf1UgYiFVUoMSScNTJJPqYFbZfgNQ+4VILP+EGeMcHaKjbcrL5bAPk
+         O41rBltZWg7/J1QtkiWuwFnTq+jyjFMGnJ2PGLas=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 722026049C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
+From:   Aniket Masule <amasule@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH 0/5] media: venus: Update clock scaling and core selection
+Date:   Thu, 30 May 2019 19:28:23 +0530
+Message-Id: <1559224708-6039-1-git-send-email-amasule@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:45:47PM +0000, Iuliana Prodan wrote:
->
-> On the current structure of caamalg, to work, iv needs to be copied 
-> before memcpy(iv, req->iv, ivsize), from skcipher_edesc_alloc function. 
-> For this we need edesc, but this cannot be allocated before knowing how 
-> much memory we need. So, to make it work, we'll need to modify more in CAAM.
+In this patch series, clock scaling and core selection methods are
+updated. Current clock scaling and core selection methods are same
+for vpu4 and previous versions. Introducing load calculations using
+vpp cycles, which indicates the cycles required by video hardware to
+process each macroblock. Clock scaling is now done more precisely using
+vpp cycles. Instance is assigned to core with minimum load, instead of
+of static assignment.
 
-All the copying does is:
+Aniket Masule (5):
+  media: venus: Add codec data table
+  media: venus: Initialize codec data
+  media: venus: Update clock scaling
+  media: venus: Add interface for load per core
+  media: venus: Update core selection
 
-	if (ivsize)
-		scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
-					 ivsize, ivsize, 0);
+ drivers/media/platform/qcom/venus/core.c       |  13 ++
+ drivers/media/platform/qcom/venus/core.h       |  15 ++
+ drivers/media/platform/qcom/venus/helpers.c    | 189 +++++++++++++++++++++++--
+ drivers/media/platform/qcom/venus/helpers.h    |   3 +-
+ drivers/media/platform/qcom/venus/hfi_helper.h |   1 +
+ drivers/media/platform/qcom/venus/hfi_parser.h |   5 +
+ drivers/media/platform/qcom/venus/vdec.c       |   9 +-
+ drivers/media/platform/qcom/venus/venc.c       |   8 +-
+ 8 files changed, 229 insertions(+), 14 deletions(-)
 
-Why do you need to allocate the edesc before doing this?
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
