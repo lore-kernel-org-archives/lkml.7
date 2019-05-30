@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B82C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D084C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227C02402E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0462F2428D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188669;
-	bh=u8zNnoG6PqrkyKn4qilzjyDWIEhdw3ItXift4UJ8oBo=;
+	s=default; t=1559188676;
+	bh=g3m7bodQ6vo14Ps6d5WWyAcDcR3EOLYJj6Uq2u3ZAMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cdp7wTnpASQ5kT1KdMerIj807NxCjLfSWa9M92BMj3a+zyrI3El/QqVzRjvkAmy6D
-	 cqIa3CAVEWMUkujFLEKAUWaAe34E6AspPcnIbv3M0rUXBBaLpzMoBehT3OTpDD6np3
-	 TpiQ9kKs6Wh7iLa6ov1xnyt/1iM5YtVAvBRWe6qY=
+	b=CybqYFuMRimtInn5hbLPRIEUFd2t+JpYhyqeYvqN6xVyZfJnyLDnF1OXoMRhvoF9P
+	 2i+aPD0Evnq8KXIg6jwjtDv2ALalvJqISGruWzlxAEeSDTJjW+VnXb9y76wLD6SPxO
+	 ZcNTmiqpdhSSAdUi7nyKuXwrHGBXFYs5iqxBA9ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733201AbfE3D5s (ORCPT
+        id S2387983AbfE3D5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731711AbfE3DSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731698AbfE3DSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E90982479B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 17BCE247D8;
         Thu, 30 May 2019 03:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186327;
-        bh=u8zNnoG6PqrkyKn4qilzjyDWIEhdw3ItXift4UJ8oBo=;
+        s=default; t=1559186326;
+        bh=g3m7bodQ6vo14Ps6d5WWyAcDcR3EOLYJj6Uq2u3ZAMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcS9lol5zSryfCvupHkLcLkv6yGxbJtj8aeydd2CVo2BcWg0wfUr9fblLSwL9HMBf
-         Y3FugSh7ieOmJGqqya0fd9MYgxFg0+IAWrr9foNnHPPEhd2PQkTKnpAoHrRxnEM+3m
-         2qPGE79RvMg/jKOVdo3JpiD3TuF6VojM61XscRKc=
+        b=nFvRTuS343x1N3T5IyYl91Gt2gfE0XrZ4Jgxbh8HavEi4HZC+01La4al2howbkMu7
+         fvXWxw44rrEyTwS/REPZXtfRfXMpWRd6QhOJu4Zs8AekaCrQHgwG/08htP8oMr4KCP
+         iLvJ/kOXyTR16ZkxEAyb8LfCzCN89iFDb+rJ+dq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 041/193] mmc: core: Verify SD bus width
-Date:   Wed, 29 May 2019 20:04:55 -0700
-Message-Id: <20190530030455.247316698@linuxfoundation.org>
+Subject: [PATCH 4.14 040/193] gfs2: Fix occasional glock use-after-free
+Date:   Wed, 29 May 2019 20:04:54 -0700
+Message-Id: <20190530030455.027656488@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,53 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
+[ Upstream commit 9287c6452d2b1f24ea8e84bd3cf6f3c6f267f712 ]
 
-The SD Physical Layer Spec says the following: Since the SD Memory Card
-shall support at least the two bus modes 1-bit or 4-bit width, then any SD
-Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
+This patch has to do with the life cycle of glocks and buffers.  When
+gfs2 metadata or journaled data is queued to be written, a gfs2_bufdata
+object is assigned to track the buffer, and that is queued to various
+lists, including the glock's gl_ail_list to indicate it's on the active
+items list.  Once the page associated with the buffer has been written,
+it is removed from the ail list, but its life isn't over until a revoke
+has been successfully written.
 
-This change verifies the card has specified a bus width.
+So after the block is written, its bufdata object is moved from the
+glock's gl_ail_list to a file-system-wide list of pending revokes,
+sd_log_le_revoke.  At that point the glock still needs to track how many
+revokes it contributed to that list (in gl_revokes) so that things like
+glock go_sync can ensure all the metadata has been not only written, but
+also revoked before the glock is granted to a different node.  This is
+to guarantee journal replay doesn't replay the block once the glock has
+been granted to another node.
 
-AMD SDHC Device 7806 can get into a bad state after a card disconnect
-where anything transferred via the DATA lines will always result in a
-zero filled buffer. Currently the driver will continue without error if
-the HC is in this condition. A block device will be created, but reading
-from it will result in a zero buffer. This makes it seem like the SD
-device has been erased, when in actuality the data is never getting
-copied from the DATA lines to the data buffer.
+Ross Lagerwall recently discovered a race in which an inode could be
+evicted, and its glock freed after its ail list had been synced, but
+while it still had unwritten revokes on the sd_log_le_revoke list.  The
+evict decremented the glock reference count to zero, which allowed the
+glock to be freed.  After the revoke was written, function
+revoke_lo_after_commit tried to adjust the glock's gl_revokes counter
+and clear its GLF_LFLUSH flag, at which time it referenced the freed
+glock.
 
-SCR is the first command in the SD initialization sequence that uses the
-DATA lines. By checking that the response was invalid, we can abort
-mounting the card.
+This patch fixes the problem by incrementing the glock reference count
+in gfs2_add_revoke when the glock's first bufdata object is moved from
+the glock to the global revokes list. Later, when the glock's last such
+bufdata object is freed, the reference count is decremented. This
+guarantees that whichever process finishes last (the revoke writing or
+the evict) will properly free the glock, and neither will reference the
+glock after it has been freed.
 
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/gfs2/glock.c | 1 +
+ fs/gfs2/log.c   | 3 ++-
+ fs/gfs2/lops.c  | 6 ++++--
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index eb9de21349679..fe2ef52135b6b 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -216,6 +216,14 @@ static int mmc_decode_scr(struct mmc_card *card)
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index cd6a64478a026..aea1ed0aebd0f 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -140,6 +140,7 @@ void gfs2_glock_free(struct gfs2_glock *gl)
+ {
+ 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
  
- 	if (scr->sda_spec3)
- 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
-+
-+	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
-+	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
-+	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
-+		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
-+		return -EINVAL;
-+	}
-+
- 	return 0;
++	BUG_ON(atomic_read(&gl->gl_revokes));
+ 	rhashtable_remove_fast(&gl_hash_table, &gl->gl_node, ht_parms);
+ 	smp_mb();
+ 	wake_up_glock(gl);
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index f72c442314062..483b82e2be923 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -588,7 +588,8 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
+ 	bd->bd_bh = NULL;
+ 	bd->bd_ops = &gfs2_revoke_lops;
+ 	sdp->sd_log_num_revoke++;
+-	atomic_inc(&gl->gl_revokes);
++	if (atomic_inc_return(&gl->gl_revokes) == 1)
++		gfs2_glock_hold(gl);
+ 	set_bit(GLF_LFLUSH, &gl->gl_flags);
+ 	list_add(&bd->bd_list, &sdp->sd_log_le_revoke);
  }
- 
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index c8ff7b7954f05..049f8c6721b4a 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -660,8 +660,10 @@ static void revoke_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
+ 		list_del_init(&bd->bd_list);
+ 		gl = bd->bd_gl;
+-		atomic_dec(&gl->gl_revokes);
+-		clear_bit(GLF_LFLUSH, &gl->gl_flags);
++		if (atomic_dec_return(&gl->gl_revokes) == 0) {
++			clear_bit(GLF_LFLUSH, &gl->gl_flags);
++			gfs2_glock_queue_put(gl);
++		}
+ 		kmem_cache_free(gfs2_bufdata_cachep, bd);
+ 	}
+ }
 -- 
 2.20.1
 
