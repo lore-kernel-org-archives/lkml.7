@@ -2,97 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED9F25855
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42B025866
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIvI7TKl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEU1+Nez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfE3Lfs (ORCPT
+        id S1726924AbfE3Lgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:35:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43364 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfE3Lfr (ORCPT
+        Thu, 30 May 2019 07:36:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41109 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3Lgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:35:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn7so2441898plb.10;
-        Thu, 30 May 2019 04:35:47 -0700 (PDT)
+        Thu, 30 May 2019 07:36:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so4750029lfa.8;
+        Thu, 30 May 2019 04:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=Gt0gUf0AQbrtJK63hcCvf0nmCK2kTuZ6XzEzk2of5ZQ=;
-        b=ZIvI7TKl3IrUTcNtE7do2ad/sqMf0L09luhAg7lm8GG4B6M8sMvXew4ID39CXRwi3w
-         YnOhkOf/+3mL6Mzd149eQR8BWCYbCzgNY40XBnLpWDbVBwyixJIlMlGOI+l584OUU1nJ
-         /IJkh0vkkLEzcMmugu/6UtJTarJoeC+a6UdsUVRsYowSCkx9mjU/EMSMOO1/egxjDuJR
-         zFASo2URvqCLTC2jsNvybmAUMui0yb/vcRaZ1Qu9wn3Pa8InZjCOCi/wzazSs/ibZvSQ
-         X3SqwkaIgzBA00zq0FzBroHq0O5nnw3/0UceSr5dOQzZXWJD+f+NopPIHF+rmKW4/RXU
-         cEAQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oEF/ywkpwzyXdp32mRceU7ioagbppOL/tUNLr/bCKp8=;
+        b=QEU1+NezxGHtIr28TVARywmZg9hUS3PGpriHim+cVtRwL/W2XtNppYGgfYoMHF72zJ
+         h3LOJqrQMP770oWHxrfVYn2RmwqNe/N6stwVIf58U3m1Lu7S1SBIcBdhZlPE6faZbKXZ
+         LwEBeHn/nMpfA/3cuPklxecot2loPcfSMJlXSSj/kE73Jc+i3uJhA7+2jLXKd5zrm3YM
+         ckUeT9huzoAnDSyUyT2RrJhnUUWNk29CbhwE7XuWWuD/fvU+90gtmY6O8GWOfw9eOFTh
+         0M9a7Hv97z4xfD8NrjYx4cu3W1YQTLCTOYmYM/Cid8bPv/Oetxscp4mxx4Y9kqv/Kgm8
+         lEsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=Gt0gUf0AQbrtJK63hcCvf0nmCK2kTuZ6XzEzk2of5ZQ=;
-        b=Y8Q83hx4MnvZsVnJ5T4w9nGp0tiHgA/P8rhTdMB23HAcY6Q7bcmllgu5YvnCttdwHK
-         w3sr1JvSOKJj5al4fKERHAs7i8OUnY7Px98XhD6As9ioyu5yvi6K79zoLnFE3gJyBPjM
-         7g/kiISwo+BQn1bjjbG6cYo6aUp1rVT2u1l5+sfHzBberLceFPHDmnkpkhTkV2haVaw5
-         KO0FRVCoAURiJdXqIA/qZl77RzONsbwtzxF1PR/+b9HGlsCCyCJUP2Q6VXSVCgtGFols
-         RZjOGjzuZ6mbm418oVZTfKrN8BpNrqlVfKnHlZdI9BYJZ9ufCI2ck7qQtnmAjeWXGXCe
-         gt7g==
-X-Gm-Message-State: APjAAAXX/BYOlQj3cQcuJn7WxM8uCNWlJIqMomV5MiumSxr3DZNd+vfa
-        Pyd70ESeGyFea8g/tj0i9Yk=
-X-Google-Smtp-Source: APXvYqykuZ4mMIqMrhhMN+jNTuTfDgkesJM4mLM9Y1u6c+MYbZtMrGMBTZuoUncnu/pqD7aym4+HPQ==
-X-Received: by 2002:a17:902:b584:: with SMTP id a4mr3357771pls.333.1559216147397;
-        Thu, 30 May 2019 04:35:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x18sm4620520pfj.17.2019.05.30.04.35.46
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oEF/ywkpwzyXdp32mRceU7ioagbppOL/tUNLr/bCKp8=;
+        b=W4qy+RAQn8iwgwzNSsr5kpKuZPzS5RAIrrMoSAQgQ2SKOnVt0Co9AiYw1XpH1ds4Cc
+         YuUNelpKvdlmJiFcaF9/cHG7camBRpPzoMQ+Zu22SQw45QWu8tMOQ1PNkVsKRKbXltzD
+         oFl+FrIn0UvLfuRH9r+zHYVwGeKwmj8PtNGRRSlmzSxAcCuL9XC/R4KM6I28qOjFyPq3
+         SWjhIxtpYSsG7OIUq+5qjCtrFiGX7cc1vGFeoEuOUzklYvkSWQLHhFZYYqAf3t9MoMMd
+         QdUa7qkkJ3lsKLeHc4xP5gAFH9Aig0o81NTRr1glOpCDLqosGbC86XTLFGG6tgIYAwHM
+         tkfA==
+X-Gm-Message-State: APjAAAXGtMQdqXNKc4uQ5ToAYjEqL5/ijhnRmKGKN3zTESC0U5WRAdvb
+        53UMvCOzmFGkZOgCVjp28QzNRKUj
+X-Google-Smtp-Source: APXvYqxVnboaMVCWDp5xI2htvEZX2PPYC8bvapApOlk4UlewjeaslCV/Rmb5lhl1/WrzSjVrW3pprQ==
+X-Received: by 2002:ac2:5310:: with SMTP id c16mr1850010lfh.119.1559216200941;
+        Thu, 30 May 2019 04:36:40 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id l25sm444919lfk.57.2019.05.30.04.36.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 04:35:46 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Ariel Levkovich <lariel@mellanox.com>
-Subject: [PATCH] IB/mlx5: Limit to 64-bit builds
-Date:   Thu, 30 May 2019 04:35:44 -0700
-Message-Id: <1559216144-2085-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 May 2019 04:36:40 -0700 (PDT)
+Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
+Date:   Thu, 30 May 2019 14:36:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-32-bit builds fail with errors such as
+30.05.2019 9:14, Bitan Biswas пишет:
+> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
+> except for BUG/BUG_ON checks
 
-ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
+hence there is absolutely no good reason in making system unusable on a
+software bug. BUG_ON may be more useful for development, but not for a
+casual daily usage.
 
-Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
-Cc: Ariel Levkovich <lariel@mellanox.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/infiniband/hw/mlx5/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
 
-diff --git a/drivers/infiniband/hw/mlx5/Kconfig b/drivers/infiniband/hw/mlx5/Kconfig
-index ea248def4556..574b97da7a43 100644
---- a/drivers/infiniband/hw/mlx5/Kconfig
-+++ b/drivers/infiniband/hw/mlx5/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config MLX5_INFINIBAND
- 	tristate "Mellanox 5th generation network adapters (ConnectX series) support"
--	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE
-+	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE && 64BIT
- 	---help---
- 	  This driver provides low-level InfiniBand support for
- 	  Mellanox Connect-IB PCI Express host channel adapters (HCAs).
+> @@ -1034,7 +1038,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>  	u32 *buffer = NULL;
+>  	int err = 0;
+>  	bool dma;
+> -	u16 xfer_time = 100;
+> +	u16 xfer_tm = 100;
+
+What's wrong with the "time"? I'm finding the "xfer_tm" as a very
+unintuitive naming.
+
 -- 
-2.7.4
-
+Dmitry
