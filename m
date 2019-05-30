@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5F5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D47C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C19024A0F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B73B24A2A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186605;
-	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+	s=default; t=1559186610;
+	bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sAyq08pjsAwPKdoikUgOHur9qZkId3l0go5QpxKOPACYgBk4Gz804z1u0x3bHUPHa
-	 WfVFAB/+zdCjJ5SELz1RVcPJ1RFQ9bGEKm4t9KCTdbjYcAnzJmAO+7WjQS+Kdgsf+/
-	 xQUkWLjr7SXKfiR4V7PmktrNRiSkE/Ei+AOllDgo=
+	b=PqHAxCoqhsG2VmN+z94NZ5voT0CwlNfobD7fjEwLXmzq0LZWZ1UMp5tONBolGoT7Y
+	 AE8AvYdltOURnExj1yaNQBx+4M/8CCkgh1EDi5my8s3CBGofcqKgmsOft5S2y5dpOX
+	 tjVsm4N2qg5W2v3nUMrLIZbHqAFacxVETv69hu9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733055AbfE3DXY (ORCPT
+        id S1733059AbfE3DX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730252AbfE3DRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:24 -0400
+        id S1731100AbfE3DRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3EED24109;
-        Thu, 30 May 2019 03:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B1824479;
+        Thu, 30 May 2019 03:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186243;
-        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+        s=default; t=1559186244;
+        bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jm73/i180Z8UH6WFGDuDhoWmlJA2mO4FWxiepnAHOIeqFexZCwMkqIPA9cw1z6S0o
-         +JqNbFMFhhd8w32pQmyxeNrUDT0RFhlwg3ADUpxfhKMoReGSg0NsmAALW2Qg6rNbju
-         noVx/jguPNZqdFFcmkjiQNvF+a6p4xDg+YAMJM+o=
+        b=2kYaiLQ/8h7V4PaO4FrXzoknc7RjRjyPWajsU90Ye0tn/+AMqEhHoEz0vC60GEhOn
+         mjrMf+Ro6x+irTkrdk87GnJlrwEB0ASHSS3G7RPls23YtEIBlYXGRQJ4nn/KIj2aHl
+         gIIIOuu+go9PbpleR/xQ5WlIqpKhBTpIS+Cy+Tws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/276] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:05:15 -0700
-Message-Id: <20190530030535.346718926@linuxfoundation.org>
+Subject: [PATCH 4.19 159/276] hwmon: (smsc47b397) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:05:17 -0700
+Message-Id: <20190530030535.446686774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -59,7 +61,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
+[ Upstream commit 8c0826756744c0ac1df600a5e4cca1a341b13101 ]
 
 Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
@@ -70,57 +72,56 @@ Use request_muxed_region() to ensure that IO access on the requested
 address space is supported, and to ensure that access by multiple drivers
 is synchronized.
 
-Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/vt1211.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/hwmon/smsc47b397.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
-index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
---- a/drivers/hwmon/vt1211.c
-+++ b/drivers/hwmon/vt1211.c
-@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
- 	outb(ldn, sio_cip + 1);
+diff --git a/drivers/hwmon/smsc47b397.c b/drivers/hwmon/smsc47b397.c
+index 6bd2007565603..cbdb5c4991ae3 100644
+--- a/drivers/hwmon/smsc47b397.c
++++ b/drivers/hwmon/smsc47b397.c
+@@ -72,14 +72,19 @@ static inline void superio_select(int ld)
+ 	superio_outb(0x07, ld);
  }
  
--static inline void superio_enter(int sio_cip)
-+static inline int superio_enter(int sio_cip)
+-static inline void superio_enter(void)
++static inline int superio_enter(void)
  {
-+	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++	if (!request_muxed_region(REG, 2, DRVNAME))
 +		return -EBUSY;
 +
- 	outb(0x87, sio_cip);
- 	outb(0x87, sio_cip);
-+
+ 	outb(0x55, REG);
 +	return 0;
  }
  
- static inline void superio_exit(int sio_cip)
+ static inline void superio_exit(void)
  {
- 	outb(0xaa, sio_cip);
-+	release_region(sio_cip, 2);
+ 	outb(0xAA, REG);
++	release_region(REG, 2);
  }
  
- /* ---------------------------------------------------------------------
-@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
- 
- static int __init vt1211_find(int sio_cip, unsigned short *address)
- {
--	int err = -ENODEV;
+ #define SUPERIO_REG_DEVID	0x20
+@@ -300,8 +305,12 @@ static int __init smsc47b397_find(void)
+ 	u8 id, rev;
+ 	char *name;
+ 	unsigned short addr;
 +	int err;
- 	int devid;
- 
--	superio_enter(sio_cip);
-+	err = superio_enter(sio_cip);
++
++	err = superio_enter();
 +	if (err)
 +		return err;
  
-+	err = -ENODEV;
- 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
- 	if (devid != SIO_VT1211_ID)
- 		goto EXIT;
+-	superio_enter();
+ 	id = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
+ 
+ 	switch (id) {
 -- 
 2.20.1
 
