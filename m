@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91ADC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E848C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9910B24A77
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011C024A77
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186796;
-	bh=QP1POT/RpiZp1yNC2eCRKp00tyzQRi3oVWsk3RE0y2k=;
+	s=default; t=1559186800;
+	bh=pIQPawHZ5IFuCUzabyBZl2wAqFNJ+HzJXZxHmV9vQ/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKJmM01FAzNKqjR2XVuKvwkA8tmFCkHo7mzZujRgWVjWLvl4DhlGBaP16HLSn9bFF
-	 ISKa06HLcjHKMfoYwtseSrV4/YwDRYiKOe1ti01zTpnWFGjKPNA+E3VrvbYoc5MmNm
-	 URYuDB36Euvg02GHe1pnZCoPnb+q1/oFa8yhivC4=
+	b=2N4BFQOakskSWuhIYcAwdlYU5PHF9QtLX9d4xjP+9m//wuTikIK8AZxxkIbaCE7lZ
+	 Fwsb7sUtXTt69PxpoQ2MTa4Hr4oH+jVyTbHgU6qfSOfvlSkGqgmIJikF6d11vijmkq
+	 5v4Hr2Y2G4VfmJ5Eji3G11ZedDBgUvTuH1enHEQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387734AbfE3D0f (ORCPT
+        id S1732558AbfE3D0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731755AbfE3DS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:58 -0400
+        id S1731763AbfE3DS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AAE424818;
-        Thu, 30 May 2019 03:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF952481B;
+        Thu, 30 May 2019 03:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186337;
-        bh=QP1POT/RpiZp1yNC2eCRKp00tyzQRi3oVWsk3RE0y2k=;
+        s=default; t=1559186338;
+        bh=pIQPawHZ5IFuCUzabyBZl2wAqFNJ+HzJXZxHmV9vQ/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q7zk8o1wJbbq6NW3PtIu2EKAw8pzCLVzJ+FtiFKeC16iA+tWZtd/BmaN+2+qEgnrd
-         BLbzZaYFrks8Trq6MAEiASubAYx086WgMQf8Qro95n7bCRDt+LXUQDGJkKIRr/IYaV
-         /T+HjALI7vw7iKVv2t8rXOduzY+bLUhMaAOV+1qI=
+        b=Y64OVnWMdi8a38PiaThErMb/kYBDimVuxee+TKEyMaU2kmZnIVXxD/rDmN+VSspTX
+         wJ496edYqtdYds89vCl1/yI1J2Xn8Q6U00Ocgq8UrxvL4FoKeek9DEWl+lMKzeuwO2
+         SuX5d9ZqJY1kMBtW/xDk1G7Py/3yA4sDPNuXRUzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 060/193] btrfs: fix panic during relocation after ENOSPC before writeback happens
-Date:   Wed, 29 May 2019 20:05:14 -0700
-Message-Id: <20190530030457.835382127@linuxfoundation.org>
+Subject: [PATCH 4.14 062/193] iwlwifi: pcie: dont crash on invalid RX interrupt
+Date:   Wed, 29 May 2019 20:05:16 -0700
+Message-Id: <20190530030458.067993242@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,118 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
+[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
 
-We've been seeing the following sporadically throughout our fleet
+If for some reason the device gives us an RX interrupt before we're
+ready for it, perhaps during device power-on with misconfigured IRQ
+causes mapping or so, we can crash trying to access the queues.
 
-panic: kernel BUG at fs/btrfs/relocation.c:4584!
-netversion: 5.0-0
-Backtrace:
- #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
- #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
- #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
- #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
- #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
- #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
- #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
-    [exception RIP: btrfs_reloc_cow_block+692]
-    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
-    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
-    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
-    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
-    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
-    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
- #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
- #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
+Prevent that by checking that we actually have RXQs and that they
+were properly allocated.
 
-The way relocation moves data extents is by creating a reloc inode and
-preallocating extents in this inode and then copying the data into these
-preallocated extents.  Once we've done this for all of our extents,
-we'll write out these dirty pages, which marks the extent written, and
-goes into btrfs_reloc_cow_block().  From here we get our current
-reloc_control, which _should_ match the reloc_control for the current
-block group we're relocating.
-
-However if we get an ENOSPC in this path at some point we'll bail out,
-never initiating writeback on this inode.  Not a huge deal, unless we
-happen to be doing relocation on a different block group, and this block
-group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
-btrfs_reloc_cow_block(), because we expect to be done modifying the data
-inode.  We are in fact done modifying the metadata for the data inode
-we're currently using, but not the one from the failed block group, and
-thus we BUG_ON().
-
-(This happens when writeback finishes for extents from the previous
-group, when we are at btrfs_finish_ordered_io() which updates the data
-reloc tree (inode item, drops/adds extent items, etc).)
-
-Fix this by writing out the reloc data inode always, and then breaking
-out of the loop after that point to keep from tripping this BUG_ON()
-later.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ add note from Filipe ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 5feb8b03ffe86..9fa6db6a6f7d5 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4403,27 +4403,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
- 		mutex_lock(&fs_info->cleaner_mutex);
- 		ret = relocate_block_group(rc);
- 		mutex_unlock(&fs_info->cleaner_mutex);
--		if (ret < 0) {
-+		if (ret < 0)
- 			err = ret;
--			goto out;
--		}
--
--		if (rc->extents_found == 0)
--			break;
--
--		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index a40ad4675e19e..953e0254a94c1 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1252,10 +1252,15 @@ static void iwl_pcie_rx_handle_rb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+-	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
++	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
  
-+		/*
-+		 * We may have gotten ENOSPC after we already dirtied some
-+		 * extents.  If writeout happens while we're relocating a
-+		 * different block group we could end up hitting the
-+		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
-+		 * btrfs_reloc_cow_block.  Make sure we write everything out
-+		 * properly so we don't trip over this problem, and then break
-+		 * out of the loop if we hit an error.
-+		 */
- 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
- 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
- 						       (u64)-1);
--			if (ret) {
-+			if (ret)
- 				err = ret;
--				goto out;
--			}
- 			invalidate_mapping_pages(rc->data_inode->i_mapping,
- 						 0, -1);
- 			rc->stage = UPDATE_DATA_PTRS;
- 		}
++	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
++		return;
 +
-+		if (err < 0)
-+			goto out;
++	rxq = &trans_pcie->rxq[queue];
 +
-+		if (rc->extents_found == 0)
-+			break;
-+
-+		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
-+
- 	}
- 
- 	WARN_ON(rc->block_group->pinned > 0);
+ restart:
+ 	spin_lock(&rxq->lock);
+ 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
 -- 
 2.20.1
 
