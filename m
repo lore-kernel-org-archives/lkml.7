@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AA4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE5DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE60924AD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C6A24AE9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187056;
-	bh=Ii7qMkYcjjVzozbmnE/rugwNgmWxmQdi3t8GEyWlHUA=;
+	s=default; t=1559187060;
+	bh=lIVMaLhmshgVfq45JXAYLYb6R1A9DPD6T82LQI64QZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slIHTzI/q1aI4QleH8pANXxpnqA0GtdN/m9r5jVVqMswINCJKeUuewsF3mVDo+H5S
-	 xa/DK6r6nO+E9e/qaWaVoyUQiutpFidfFhGhspj5euh9MelJptdjoRvhuvWyeB+oOS
-	 WH1PlXUkeK0minAIe+CNmbfkL2Q9mMA1H9BIOf+U=
+	b=zLJ0ZztG+Os4WNlN3vZqrQAh71u2koQhVvfXUUppGhTBUFvOr8j+5bk3j+v0T54fY
+	 dIFhKtq/wYbyLoGf+mW8r0IEeWaybSQZYWLx6dlOmvMbLh+2A10sTlpg82H/4R70nF
+	 L4uzLmUFuKSi1j2S6STEmx3+Mt8EjC6ajcGEgzNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388610AbfE3Daa (ORCPT
+        id S2388599AbfE3Da3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388114AbfE3D3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:29:49 -0400
+        id S1731537AbfE3DV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 393AE24AC1;
-        Thu, 30 May 2019 03:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44ECA249E6;
+        Thu, 30 May 2019 03:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186988;
-        bh=Ii7qMkYcjjVzozbmnE/rugwNgmWxmQdi3t8GEyWlHUA=;
+        s=default; t=1559186489;
+        bh=lIVMaLhmshgVfq45JXAYLYb6R1A9DPD6T82LQI64QZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eag/3AEF6Fj8RLN8XLG/UX4i0cSeSA7cb/5soZfKAlEarrDvCzIkS9J4+8osdMn33
-         qO2/B4h8twqO4R9OXFYT3xuG8EeLTEX1+73M3av6xgYhLk38GlfpUiVFbhZUs/as2V
-         FranlJ0bnuTzoaokNF6kG74FCWw5Xkod2v4Wkf2s=
+        b=MTSX9EUtZaDc+ng3q0HmnB+Of7OqC3B216P2Nm46uuDKHfVj8tN3j8VK7Cb14ymLv
+         d6gGnHcdKHx7s4IqD81KWPYeWBv98/IR9RgMrOy5zzCiaIUYJ9M9om7K0kbCt6UPuA
+         kVQkCJ1B/w7+AjumqtotUrg/1QXXdrIWVRZ3eu4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Li, Meng" <Meng.Li@windriver.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 151/405] perf/arm-cci: Remove broken race mitigation
-Date:   Wed, 29 May 2019 20:02:29 -0700
-Message-Id: <20190530030548.785235781@linuxfoundation.org>
+Subject: [PATCH 4.9 082/128] PM / core: Propagate dev->power.wakeup_path when no callbacks
+Date:   Wed, 29 May 2019 20:06:54 -0700
+Message-Id: <20190530030449.649947405@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,98 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0d2e2a82d4de298d006bf8eddc86829e3c7da820 ]
+[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
 
-Uncore PMU drivers face an awkward cyclic dependency wherein:
+The dev->power.direct_complete flag may become set in device_prepare() in
+case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
+set). This leads to a broken behaviour, when there is child having wakeup
+enabled and relies on its parent to be used in the wakeup path.
 
- - They have to pick a valid online CPU to associate with before
-   registering the PMU device, since it will get exposed to userspace
-   immediately.
- - The PMU registration has to be be at least partly complete before
-   hotplug events can be handled, since trying to migrate an
-   uninitialised context would be bad.
- - The hotplug handler has to be ready as soon as a CPU is chosen, lest
-   it go offline without the user-visible cpumask value getting updated.
+More precisely, when the direct complete path becomes selected for the
+child in __device_suspend(), the propagation of the dev->power.wakeup_path
+becomes skipped as well.
 
-The arm-cci driver has tried to solve this by using get_cpu() to pick
-the current CPU and prevent it from disappearing while both
-registrations are performed, but that results in taking mutexes with
-preemption disabled, which makes certain configurations very unhappy:
+Let's address this problem, by checking if the device is a part the wakeup
+path or has wakeup enabled, then prevent the direct complete path from
+being used.
 
-[ 1.983337] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:2004
-[ 1.983340] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
-[ 1.983342] Preemption disabled at:
-[ 1.983353] [<ffffff80089801f4>] cci_pmu_probe+0x1dc/0x488
-[ 1.983360] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.20-rt8-yocto-preempt-rt #1
-[ 1.983362] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
-[ 1.983364] Call trace:
-[ 1.983369] dump_backtrace+0x0/0x158
-[ 1.983372] show_stack+0x24/0x30
-[ 1.983378] dump_stack+0x80/0xa4
-[ 1.983383] ___might_sleep+0x138/0x160
-[ 1.983386] __might_sleep+0x58/0x90
-[ 1.983391] __rt_mutex_lock_state+0x30/0xc0
-[ 1.983395] _mutex_lock+0x24/0x30
-[ 1.983400] perf_pmu_register+0x2c/0x388
-[ 1.983404] cci_pmu_probe+0x2bc/0x488
-[ 1.983409] platform_drv_probe+0x58/0xa8
-
-It is not feasible to resolve all the possible races outside of the perf
-core itself, so address the immediate bug by following the example of
-nearly every other PMU driver and not even trying to do so. Registering
-the hotplug notifier first should minimise the window in which things
-can go wrong, so that's about as much as we can reasonably do here. This
-also revealed an additional race in assigning the global pointer too
-late relative to the hotplug notifier, which gets fixed in the process.
-
-Reported-by: Li, Meng <Meng.Li@windriver.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reported-by: Loic Pallardy <loic.pallardy@st.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[ rjw: Comment cleanup ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm-cci.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/base/power/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
-index bfd03e0233084..8f8606b9bc9ee 100644
---- a/drivers/perf/arm-cci.c
-+++ b/drivers/perf/arm-cci.c
-@@ -1684,21 +1684,24 @@ static int cci_pmu_probe(struct platform_device *pdev)
- 	raw_spin_lock_init(&cci_pmu->hw_events.pmu_lock);
- 	mutex_init(&cci_pmu->reserve_mutex);
- 	atomic_set(&cci_pmu->active_events, 0);
--	cci_pmu->cpu = get_cpu();
--
--	ret = cci_pmu_init(cci_pmu, pdev);
--	if (ret) {
--		put_cpu();
--		return ret;
--	}
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 98517216879d5..a2714890fe431 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1383,6 +1383,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
+ 	if (dev->power.syscore)
+ 		goto Complete;
  
-+	cci_pmu->cpu = raw_smp_processor_id();
-+	g_cci_pmu = cci_pmu;
- 	cpuhp_setup_state_nocalls(CPUHP_AP_PERF_ARM_CCI_ONLINE,
- 				  "perf/arm/cci:online", NULL,
- 				  cci_pmu_offline_cpu);
--	put_cpu();
--	g_cci_pmu = cci_pmu;
++	/* Avoid direct_complete to let wakeup_path propagate. */
++	if (device_may_wakeup(dev) || dev->power.wakeup_path)
++		dev->power.direct_complete = false;
 +
-+	ret = cci_pmu_init(cci_pmu, pdev);
-+	if (ret)
-+		goto error_pmu_init;
-+
- 	pr_info("ARM %s PMU driver probed", cci_pmu->model->name);
- 	return 0;
-+
-+error_pmu_init:
-+	cpuhp_remove_state(CPUHP_AP_PERF_ARM_CCI_ONLINE);
-+	g_cci_pmu = NULL;
-+	return ret;
- }
- 
- static int cci_pmu_remove(struct platform_device *pdev)
+ 	if (dev->power.direct_complete) {
+ 		if (pm_runtime_status_suspended(dev)) {
+ 			pm_runtime_disable(dev);
 -- 
 2.20.1
 
