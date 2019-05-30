@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD22AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9537AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32A82501F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F90925A44
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191366;
-	bh=dfEg2HOpaul2hogvunM38ZcGW3iNqFcO1GoCYEy8P4Q=;
+	s=default; t=1559191370;
+	bh=n+u/WguqQF8MlrFw+6RnxXfno7gUgXsBE8I1I+UCr8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WerFtPqgDTZpEoy+ge6Dee55P784O0u+NX3+R4Vgtp6M96BgvPjvfnN/lSSgr/RR4
-	 GsBINhYZJVSRFC7Fm/GWkmekQ/tkM8dY60Csvc7TCo1DHB+m/jYzLNoqFIhwWH/jwq
-	 L0oEWtIJdG0UoeWFBSrUFpfmgppyx6lZ05MLo85M=
+	b=vkTfsz7D9S9ZN+zrgwiRYgX1aOfAIcQjJmyq4x55+To4mg9Nt7zSiJVp/VVUa0Voj
+	 1D6W/eybMdDPaU3KR3Q9qGBKJnNz5HtfLvHYi1UywpO5jRJrOOk7CjwmT1e00PSgsp
+	 rv0qNsrynJhtKSmadpdX3Oy+KQha5CgUCZ6HUiWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfE3Emq (ORCPT
+        id S2388681AbfE3Emt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbfE3DMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:15 -0400
+        id S1728893AbfE3DMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6BD244A0;
-        Thu, 30 May 2019 03:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF804244E8;
+        Thu, 30 May 2019 03:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185934;
-        bh=dfEg2HOpaul2hogvunM38ZcGW3iNqFcO1GoCYEy8P4Q=;
+        bh=n+u/WguqQF8MlrFw+6RnxXfno7gUgXsBE8I1I+UCr8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGUeHRkKwPhi4hKrdT6dKYQ9+KIuKv5XBeIrGcsUtvZ+Sqt++F3qv1KosoI/kUo9c
-         /DNrFtL51iQr132FJbCJkRDI0KP1HSbXj5m3ehzCj0IvMSuGejXAGW2ukvatDX2+Gp
-         naob9zo5VuvwvbviObWzXvGADU/SzEyW7szu0N9Y=
+        b=EI6n4uFyNXvq542M58bmYcAZOyzV9fVDq2GvxtyG34qU+n+PUrBv+TUuqHU9JvWni
+         dG1J1akWxgNqAsIvS/eMcsBmKQ5l1kt2CYJYwb7md73FHIANqLW/K0lMnYqiwkqige
+         +PQRovN2SRYdWS5G61N9bih0QwIygrxU5H4y/9xk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 289/405] efifb: Omit memory map check on legacy boot
-Date:   Wed, 29 May 2019 20:04:47 -0700
-Message-Id: <20190530030555.482106919@linuxfoundation.org>
+Subject: [PATCH 5.1 288/405] media: gspca: Kill URBs on USB device disconnect
+Date:   Wed, 29 May 2019 20:04:46 -0700
+Message-Id: <20190530030555.440542283@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -66,54 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c2999c281ea2d2ebbdfce96cecc7b52e2ae7c406 ]
+[ Upstream commit 9b9ea7c2b57a0c9c3341fc6db039d1f7971a432e ]
 
-Since the following commit:
+In order to prevent ISOC URBs from being infinitely resubmitted,
+the driver's USB disconnect handler must kill all the in-flight URBs.
 
-  38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+While here, change the URB packet status message to a debug level,
+to avoid spamming the console too much.
 
-efifb_probe() checks its memory range via efi_mem_desc_lookup(),
-and this leads to a spurious error message:
+This commit fixes a lockup caused by an interrupt storm coming
+from the URB completion handler.
 
-   EFI_MEMMAP is not enabled
-
-at every boot on KVM.  This is quite annoying since the error message
-appears even if you set "quiet" boot option.
-
-Since this happens on legacy boot, which strangely enough exposes
-a EFI framebuffer via screen_info, let's double check that we are
-doing an EFI boot before attempting to access the EFI memory map.
-
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Tested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190328193429.21373-3-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/efifb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/gspca/gspca.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index fd02e8a4841d6..9f39f0c360e0c 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
- 	info->apertures->ranges[0].base = efifb_fix.smem_start;
- 	info->apertures->ranges[0].size = size_remap;
+diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
+index ac70b36d67b7b..128935f2a217e 100644
+--- a/drivers/media/usb/gspca/gspca.c
++++ b/drivers/media/usb/gspca/gspca.c
+@@ -294,7 +294,7 @@ static void fill_frame(struct gspca_dev *gspca_dev,
+ 		/* check the packet status and length */
+ 		st = urb->iso_frame_desc[i].status;
+ 		if (st) {
+-			pr_err("ISOC data error: [%d] len=%d, status=%d\n",
++			gspca_dbg(gspca_dev, D_PACK, "ISOC data error: [%d] len=%d, status=%d\n",
+ 			       i, len, st);
+ 			gspca_dev->last_packet_type = DISCARD_PACKET;
+ 			continue;
+@@ -1638,6 +1638,8 @@ void gspca_disconnect(struct usb_interface *intf)
  
--	if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
-+	if (efi_enabled(EFI_BOOT) &&
-+	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
- 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
- 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
- 			pr_err("efifb: video memory @ 0x%lx spans multiple EFI memory regions\n",
+ 	mutex_lock(&gspca_dev->usb_lock);
+ 	gspca_dev->present = false;
++	destroy_urbs(gspca_dev);
++	gspca_input_destroy_urb(gspca_dev);
+ 
+ 	vb2_queue_error(&gspca_dev->queue);
+ 
 -- 
 2.20.1
 
