@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72A6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC880C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A279A24B9C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C694224B9C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187563;
-	bh=g9GXAV1aYrM2IeSdlcdt9+gSGt7PsEwDcONjUrPnz7M=;
+	s=default; t=1559187566;
+	bh=thiQbOlfxqJZyvdYRAbL63KGaSN2f9Fz6AwelGLDbRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ATt4FRR2e1ToUanU5CHwbdqhpWCEpxUdFEcVcv7zNJaLEnQ/5dLRmph9BJ7J4YVDD
-	 U45kX2avx5eVSoIVK/xLsi+Kwl0FAo7aKnMUyoOUht4k0ZRwAGfW2Q/Mpq23VxIkm4
-	 3S01rF/596Q9ybLZGyOhFx9IRMi8occTCvaFbu74=
+	b=Nt6KgvMm6w97aCFytvqtX7QmWcblFwk+SzOzb4eT71a38EktFWcnNqWG1JeD7Memz
+	 nYonSTLAlakHnhE7yLM8QD0PSvIY6a7t0JgUI4Lp03WOhLtkZs/dyrFlVbgubtQfpY
+	 AWkdoaRLznZCPXv/pjQTzwQHUMEBksVBWWI0Nj64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732773AbfE3DWP (ORCPT
+        id S1732746AbfE3DWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfE3DQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:39 -0400
+        id S1730734AbfE3DQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A008E24600;
-        Thu, 30 May 2019 03:16:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73631245F8;
+        Thu, 30 May 2019 03:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186197;
-        bh=g9GXAV1aYrM2IeSdlcdt9+gSGt7PsEwDcONjUrPnz7M=;
+        s=default; t=1559186196;
+        bh=thiQbOlfxqJZyvdYRAbL63KGaSN2f9Fz6AwelGLDbRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeyTiYzEhQCf8ix4DSuuCp77bFKbewD5NJjxSJfba8guWREgZqfA9KCgwHMxv0Qk6
-         3YsUAvm01D3Xf7ODRr2NTpuiO5hDtAHPcwXZO4Par31Kpc4LeWj2DXSF8magdO4JzZ
-         FumWI67cALEuXTfDKZDBGwaprfAz5v8jgszEBwLE=
+        b=f8m8t1p9kY8H3z8V9Cnu9UdEW6UiGtZH3Wd6A45j7MnqP7/WfDRim5QG3znOUwzJu
+         8U1RAiRt0fc1kXy0D0Puv7NNU04t9rXWyREQuRW2ZpZOqVOrETZHPdF++jgdxh2sWe
+         H+6ccs91LOXfD6/JIBnIUSoW4K24WlnkZzHVvkUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Ravikumar Bangoria <ravi.bangoria@in.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/276] powerpc/watchdog: Use hrtimers for per-CPU heartbeat
-Date:   Wed, 29 May 2019 20:03:51 -0700
-Message-Id: <20190530030530.952077629@linuxfoundation.org>
+Subject: [PATCH 4.19 070/276] media: stm32-dcmi: return appropriate error codes during probe
+Date:   Wed, 29 May 2019 20:03:48 -0700
+Message-Id: <20190530030530.607146114@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -64,194 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ae3f6e130e8dc6188b59e3b4ebc2f16e9c8d053 ]
+[ Upstream commit b5b5a27bee5884860798ffd0f08e611a3942064b ]
 
-Using a jiffies timer creates a dependency on the tick_do_timer_cpu
-incrementing jiffies. If that CPU has locked up and jiffies is not
-incrementing, the watchdog heartbeat timer for all CPUs stops and
-creates false positives and confusing warnings on local CPUs, and
-also causes the SMP detector to stop, so the root cause is never
-detected.
+During probe, return the provided errors value instead of -ENODEV.
+This allows the driver to be deferred probed if needed.
 
-Fix this by using hrtimer based timers for the watchdog heartbeat,
-like the generic kernel hardlockup detector.
-
-Cc: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Reported-by: Ravikumar Bangoria <ravi.bangoria@in.ibm.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Acked-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/watchdog.c | 81 +++++++++++++++++-----------------
- 1 file changed, 40 insertions(+), 41 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
-index 3c6ab22a0c4e3..af3c15a1d41eb 100644
---- a/arch/powerpc/kernel/watchdog.c
-+++ b/arch/powerpc/kernel/watchdog.c
-@@ -77,7 +77,7 @@ static u64 wd_smp_panic_timeout_tb __read_mostly; /* panic other CPUs */
- 
- static u64 wd_timer_period_ms __read_mostly;  /* interval between heartbeat */
- 
--static DEFINE_PER_CPU(struct timer_list, wd_timer);
-+static DEFINE_PER_CPU(struct hrtimer, wd_hrtimer);
- static DEFINE_PER_CPU(u64, wd_timer_tb);
- 
- /* SMP checker bits */
-@@ -293,21 +293,21 @@ void soft_nmi_interrupt(struct pt_regs *regs)
- 	nmi_exit();
- }
- 
--static void wd_timer_reset(unsigned int cpu, struct timer_list *t)
--{
--	t->expires = jiffies + msecs_to_jiffies(wd_timer_period_ms);
--	if (wd_timer_period_ms > 1000)
--		t->expires = __round_jiffies_up(t->expires, cpu);
--	add_timer_on(t, cpu);
--}
--
--static void wd_timer_fn(struct timer_list *t)
-+static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- {
- 	int cpu = smp_processor_id();
- 
-+	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
-+		return HRTIMER_NORESTART;
-+
-+	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
-+		return HRTIMER_NORESTART;
-+
- 	watchdog_timer_interrupt(cpu);
- 
--	wd_timer_reset(cpu, t);
-+	hrtimer_forward_now(hrtimer, ms_to_ktime(wd_timer_period_ms));
-+
-+	return HRTIMER_RESTART;
- }
- 
- void arch_touch_nmi_watchdog(void)
-@@ -323,37 +323,22 @@ void arch_touch_nmi_watchdog(void)
- }
- EXPORT_SYMBOL(arch_touch_nmi_watchdog);
- 
--static void start_watchdog_timer_on(unsigned int cpu)
--{
--	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
--
--	per_cpu(wd_timer_tb, cpu) = get_tb();
--
--	timer_setup(t, wd_timer_fn, TIMER_PINNED);
--	wd_timer_reset(cpu, t);
--}
--
--static void stop_watchdog_timer_on(unsigned int cpu)
--{
--	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
--
--	del_timer_sync(t);
--}
--
--static int start_wd_on_cpu(unsigned int cpu)
-+static void start_watchdog(void *arg)
- {
-+	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
-+	int cpu = smp_processor_id();
- 	unsigned long flags;
- 
- 	if (cpumask_test_cpu(cpu, &wd_cpus_enabled)) {
- 		WARN_ON(1);
--		return 0;
-+		return;
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 721564176d8c0..100a5922d75fd 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1645,7 +1645,7 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	dcmi->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+ 	if (IS_ERR(dcmi->rstc)) {
+ 		dev_err(&pdev->dev, "Could not get reset control\n");
+-		return -ENODEV;
++		return PTR_ERR(dcmi->rstc);
  	}
  
- 	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
--		return 0;
-+		return;
- 
- 	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
--		return 0;
-+		return;
- 
- 	wd_smp_lock(&flags);
- 	cpumask_set_cpu(cpu, &wd_cpus_enabled);
-@@ -363,27 +348,40 @@ static int start_wd_on_cpu(unsigned int cpu)
+ 	/* Get bus characteristics from devicetree */
+@@ -1660,7 +1660,7 @@ static int dcmi_probe(struct platform_device *pdev)
+ 	of_node_put(np);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not parse the endpoint\n");
+-		return -ENODEV;
++		return ret;
  	}
- 	wd_smp_unlock(&flags);
  
--	start_watchdog_timer_on(cpu);
-+	*this_cpu_ptr(&wd_timer_tb) = get_tb();
+ 	if (ep.bus_type == V4L2_MBUS_CSI2) {
+@@ -1673,8 +1673,9 @@ static int dcmi_probe(struct platform_device *pdev)
  
--	return 0;
-+	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer->function = watchdog_timer_fn;
-+	hrtimer_start(hrtimer, ms_to_ktime(wd_timer_period_ms),
-+		      HRTIMER_MODE_REL_PINNED);
- }
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+-		dev_err(&pdev->dev, "Could not get irq\n");
+-		return -ENODEV;
++		if (irq != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Could not get irq\n");
++		return irq;
+ 	}
  
--static int stop_wd_on_cpu(unsigned int cpu)
-+static int start_watchdog_on_cpu(unsigned int cpu)
- {
-+	return smp_call_function_single(cpu, start_watchdog, NULL, true);
-+}
-+
-+static void stop_watchdog(void *arg)
-+{
-+	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
-+	int cpu = smp_processor_id();
- 	unsigned long flags;
+ 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -1694,12 +1695,13 @@ static int dcmi_probe(struct platform_device *pdev)
+ 					dev_name(&pdev->dev), dcmi);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
+-		return -ENODEV;
++		return ret;
+ 	}
  
- 	if (!cpumask_test_cpu(cpu, &wd_cpus_enabled))
--		return 0; /* Can happen in CPU unplug case */
-+		return; /* Can happen in CPU unplug case */
+ 	mclk = devm_clk_get(&pdev->dev, "mclk");
+ 	if (IS_ERR(mclk)) {
+-		dev_err(&pdev->dev, "Unable to get mclk\n");
++		if (PTR_ERR(mclk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Unable to get mclk\n");
+ 		return PTR_ERR(mclk);
+ 	}
  
--	stop_watchdog_timer_on(cpu);
-+	hrtimer_cancel(hrtimer);
- 
- 	wd_smp_lock(&flags);
- 	cpumask_clear_cpu(cpu, &wd_cpus_enabled);
- 	wd_smp_unlock(&flags);
- 
- 	wd_smp_clear_cpu_pending(cpu, get_tb());
-+}
- 
--	return 0;
-+static int stop_watchdog_on_cpu(unsigned int cpu)
-+{
-+	return smp_call_function_single(cpu, stop_watchdog, NULL, true);
- }
- 
- static void watchdog_calc_timeouts(void)
-@@ -402,7 +400,7 @@ void watchdog_nmi_stop(void)
- 	int cpu;
- 
- 	for_each_cpu(cpu, &wd_cpus_enabled)
--		stop_wd_on_cpu(cpu);
-+		stop_watchdog_on_cpu(cpu);
- }
- 
- void watchdog_nmi_start(void)
-@@ -411,7 +409,7 @@ void watchdog_nmi_start(void)
- 
- 	watchdog_calc_timeouts();
- 	for_each_cpu_and(cpu, cpu_online_mask, &watchdog_cpumask)
--		start_wd_on_cpu(cpu);
-+		start_watchdog_on_cpu(cpu);
- }
- 
- /*
-@@ -423,7 +421,8 @@ int __init watchdog_nmi_probe(void)
- 
- 	err = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
- 					"powerpc/watchdog:online",
--					start_wd_on_cpu, stop_wd_on_cpu);
-+					start_watchdog_on_cpu,
-+					stop_watchdog_on_cpu);
- 	if (err < 0) {
- 		pr_warn("could not be initialized");
- 		return err;
 -- 
 2.20.1
 
