@@ -2,79 +2,99 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5DDC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4A3C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FE125941
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559221451;
-	bh=k3Go0/VjoRePfOIkwYY5BwatXzbg2FsH2u8FcDlRKFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i3K94KSD1KnT9ujqqObiXdH9Iik19Xszq/Lm6SjktgwVnUXFHWfKuj0c2KOt2nz03
-	 mMtBHZvMGA3XW+lmaMuC4kLwVcqVTPIrqz3xz7cqbS7ChP1N69hKRLJW3N8rUvS2HW
-	 KY9m0+EecEipe3sV7yzI6ZmjdeHrIB7ekPasSFz0=
+	by mail.kernel.org (Postfix) with ESMTP id 7329025941
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfE3NEK (ORCPT
+        id S1726896AbfE3NFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:04:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfE3NEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:04:08 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14EC425945;
-        Thu, 30 May 2019 13:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559221448;
-        bh=k3Go0/VjoRePfOIkwYY5BwatXzbg2FsH2u8FcDlRKFM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FhO5mVtSSmTcf9VNmJ7aR+BQE7/uJc2lpymo3nie3NH0Cs1EO13BbnIROZqR2OAi6
-         pZv5R0G5PbCzF9k9VlnqrjMMtc9pRtHxVGzmlBlG67yssp04MQVS0tL5A+/Rhcsl5J
-         92u2eBIAnTLY6DvjwAEH6/fbARJhYgFdxfG7WuMw=
-Date:   Thu, 30 May 2019 08:04:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab+samsung@kernel.org
-Subject: Re: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
-Message-ID: <20190530130407.GJ28250@google.com>
-References: <20190514144734.19760-1-changbin.du@gmail.com>
- <20190520061014.qtq6tc366pnnqcio@mail.google.com>
- <20190529163510.3dd4dc2d@lwn.net>
- <20190530030139.GI28250@google.com>
+        Thu, 30 May 2019 09:05:00 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:40444 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfE3NE7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:04:59 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hWKjq-0001o6-J4; Thu, 30 May 2019 07:04:58 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hWKjp-0006KM-2L; Thu, 30 May 2019 07:04:58 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Eric Wong <e@80x24.org>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        'Oleg Nesterov' <oleg@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm\@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd\@arndb.de" <arnd@arndb.de>,
+        "dbueso\@suse.de" <dbueso@suse.de>,
+        "axboe\@kernel.dk" <axboe@kernel.dk>,
+        "dave\@stgolabs.net" <dave@stgolabs.net>,
+        "jbaron\@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio\@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani\@gmail.com" <omar.kilani@gmail.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+        <20190529161157.GA27659@redhat.com>
+        <b05cec7f9e8f457281e689576a7a360f@AcuMS.aculab.com>
+        <20190529185012.qqeqq4fsolprknrz@dcvr>
+Date:   Thu, 30 May 2019 08:04:50 -0500
+In-Reply-To: <20190529185012.qqeqq4fsolprknrz@dcvr> (Eric Wong's message of
+        "Wed, 29 May 2019 18:50:12 +0000")
+Message-ID: <87ef4grt3h.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530030139.GI28250@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1hWKjp-0006KM-2L;;;mid=<87ef4grt3h.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+tK8wFikScRQNziP7B/XxiQEAJ+eiy2zc=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: pselect/etc semantics
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 10:01:39PM -0500, Bjorn Helgaas wrote:
-> On Wed, May 29, 2019 at 04:35:10PM -0600, Jonathan Corbet wrote:
-> > On Mon, 20 May 2019 06:10:15 +0000
-> > Changbin Du <changbin.du@gmail.com> wrote:
-> > 
-> > > Bjorn and Jonathan,
-> > > Could we consider to merge this serias now? Thanks.
-> > 
-> > Somewhat belatedly, but I think we could.  Bjorn, do you have a preference
-> > for which tree this goes through?  I don't remember if we'd come to an
-> > agreement on that or not, sorry...
-> 
-> Actually, let me at least take a look at these.  I noticed that
-> renames caused some of the ACPI docs to end up with lines >80 columns,
-> and I'd prefer to avoid that.  So maybe I'll take these after all if
-> that's OK.
+Eric Wong <e@80x24.org> writes:
 
-I applied these to pci/docs for v5.3, thanks!
+> Agreed...  I believe cmogstored has always had a bug in the way
+> it uses epoll_pwait because it failed to check interrupts if:
+>
+> a) an FD is ready + interrupt
+> b) epoll_pwait returns 0 on interrupt
+>
+> The bug remains in userspace for a), which I will fix by adding
+> an interrupt check when an FD is ready.  The window is very
+> small for a) and difficult to trigger, and also in a rare code
+> path.
+>
+> The b) case is the kernel bug introduced in 854a6ed56839a40f
+> ("signal: Add restore_user_sigmask()").
+>
+> I don't think there's any disagreement that b) is a kernel bug.
+
+See my reply to Oleg.  I think (b) is a regression that needs to be
+fixed.  I do not think that (b) is a kernel bug.  Both versions of the
+of what sigmask means posix and naive will allow (b).
+
+Because fundamentally the sigmask is restored after the rest of the
+system call happens.
+
+Eric
