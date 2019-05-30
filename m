@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F005EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B442C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA059251C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62066251B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189585;
-	bh=kr1mZsj8ygrObG5nQgZ3wG80bWrkj5wGYBAuMQDFlWQ=;
+	s=default; t=1559189593;
+	bh=xLK+GB7522f2QXrf/TUYNcfRXdrfcjqNLXPFEZK22mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pp9UTY5UQHJ4ha6W9/JH2F9PyIABPgTEf2UCTAggjA5si6rSDSppnrI3B0oJ3gBBU
-	 BF+sy6tU7G2Y/gdZ4USfrsD3l6LO5MFW9q6v1mKm8hjI9R0CnTu3siHxxZYqI/GnoZ
-	 IKRng/Bkm+N4nJXy8dtzcF3IZplv+Nxju9Shshq0=
+	b=yhPPngVqkkoWWPO6dIoA2mZ4859aPt9U6GT49yUW7yniljRHTevdQwQNuDPcT+dDY
+	 XZXpn8slzTM+GVPEr2/3tiPJ3ypUxm8bCx8SqJaORaEQOabfr2F1i49lHbL9OytGFI
+	 mSu1wJMg77DmtkZFjEn+6KFBL1r5w8Z/GCPJKGDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfE3ENA (ORCPT
+        id S1730881AbfE3ENM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbfE3DQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:27 -0400
+        id S1730665AbfE3DQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CF52458C;
-        Thu, 30 May 2019 03:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC482458C;
+        Thu, 30 May 2019 03:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186187;
-        bh=kr1mZsj8ygrObG5nQgZ3wG80bWrkj5wGYBAuMQDFlWQ=;
+        s=default; t=1559186183;
+        bh=xLK+GB7522f2QXrf/TUYNcfRXdrfcjqNLXPFEZK22mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBvskeImPKfmHsilzgw7fB8c0ygSmsW/bCxU+kO6Cd5obV5u9J3OzePAOtaG+3ugH
-         IOjWqMrgAyRuFRE3g2CvK/n8KW+jSgO0pc26c3zhNicR4i/9yH4PghZmnWj93FHJPE
-         q+RRLb2oHFKb41HoRPpNHHZJRece6xB/1QWJvNe0=
+        b=KnYLYhKgdBZ8dE7tlWrzhlFfVn4yeQDjv+JuqwGFsv17INrVZfrRx6nU5c+e7OLbl
+         OzjzIoy5r8TbxQBjYFUjsMUJ2Qlwt2TFSOwxMqQfKo/2qcArj51nLci3/7KHZH3CFy
+         6aJPJtXyfXX7CCYytcxCV016WZy8/g7ql5oMYGmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        Stephan Klein <stephan.klein@wegfinder.at>
-Subject: [PATCH 4.19 055/276] hv_netvsc: fix race that may miss tx queue wakeup
-Date:   Wed, 29 May 2019 20:03:33 -0700
-Message-Id: <20190530030528.713320653@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 049/276] mmc: core: Verify SD bus width
+Date:   Wed, 29 May 2019 20:03:27 -0700
+Message-Id: <20190530030527.953816859@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,56 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93aa4792c3908eac87ddd368ee0fe0564148232b ]
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-When the ring buffer is almost full due to RX completion messages, a
-TX packet may reach the "low watermark" and cause the queue stopped.
-If the TX completion arrives earlier than queue stopping, the wakeup
-may be missed.
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-This patch moves the check for the last pending packet to cover both
-EAGAIN and success cases, so the queue will be reliably waked up when
-necessary.
+This change verifies the card has specified a bus width.
 
-Reported-and-tested-by: Stephan Klein <stephan.klein@wegfinder.at>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
+
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
+
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index fb12b63439c67..35413041dcf81 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -872,12 +872,6 @@ static inline int netvsc_send_pkt(
- 	} else if (ret == -EAGAIN) {
- 		netif_tx_stop_queue(txq);
- 		ndev_ctx->eth_stats.stop_queue++;
--		if (atomic_read(&nvchan->queue_sends) < 1 &&
--		    !net_device->tx_disable) {
--			netif_tx_wake_queue(txq);
--			ndev_ctx->eth_stats.wake_queue++;
--			ret = -ENOSPC;
--		}
- 	} else {
- 		netdev_err(ndev,
- 			   "Unable to send packet pages %u len %u, ret %d\n",
-@@ -885,6 +879,15 @@ static inline int netvsc_send_pkt(
- 			   ret);
- 	}
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index d0d9f90e7cdfb..cfb8ee24eaba1 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -216,6 +216,14 @@ static int mmc_decode_scr(struct mmc_card *card)
  
-+	if (netif_tx_queue_stopped(txq) &&
-+	    atomic_read(&nvchan->queue_sends) < 1 &&
-+	    !net_device->tx_disable) {
-+		netif_tx_wake_queue(txq);
-+		ndev_ctx->eth_stats.wake_queue++;
-+		if (ret == -EAGAIN)
-+			ret = -ENOSPC;
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
 +	}
 +
- 	return ret;
+ 	return 0;
  }
  
 -- 
