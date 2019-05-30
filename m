@@ -2,112 +2,165 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73387C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E61C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567E625D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19B025D12
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ibTaG1qk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfE3Ptb (ORCPT
+        id S1727416AbfE3Ptg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:49:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38924 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbfE3Ptb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:49:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D74CC341;
-        Thu, 30 May 2019 08:49:30 -0700 (PDT)
-Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 393A33F59C;
-        Thu, 30 May 2019 08:49:29 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:49:26 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>, stable@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Ensure that PERST is asserted for at least
- 100 ms
-Message-ID: <20190530154926.GE13993@redmoon>
-References: <20190529094352.5961-1-niklas.cassel@linaro.org>
- <20190529125232.GA28250@google.com>
+        Thu, 30 May 2019 11:49:36 -0400
+Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:51524
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727147AbfE3Ptc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:49:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N4VhIAMP+vYb+hX1wa84OBgkG1r0ptiv6LE3EMVT/A8=;
+ b=ibTaG1qkyX1q/WC9GufXcj5fQ9YrBrvprCTD5LAO1Wc2FHhWIZoUParniw8vwjBcrytDod1DCmH0fV1Yp9uIvowVzkvQiu9UI7/N13K89YE56yGABhvIv10Rr2IEECHUZeTgynr+DAAkIDYMTJ5g7EgXLRUUlpYR19XxfwK5j1k=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5038.eurprd05.prod.outlook.com (20.177.52.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Thu, 30 May 2019 15:49:28 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1943.016; Thu, 30 May 2019
+ 15:49:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Yuehaibing <yuehaibing@huawei.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>
+CC:     "bskeggs@redhat.com" <bskeggs@redhat.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "rcampbell@nvidia.com" <rcampbell@nvidia.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH] drm/nouveau: Fix DEVICE_PRIVATE dependencies
+Thread-Topic: [PATCH] drm/nouveau: Fix DEVICE_PRIVATE dependencies
+Thread-Index: AQHU9Smp7DtPqq1csU6J+upeBQ7IX6aEDxgAgAAFFYA=
+Date:   Thu, 30 May 2019 15:49:27 +0000
+Message-ID: <20190530154923.GJ13461@mellanox.com>
+References: <20190417142632.12992-1-yuehaibing@huawei.com>
+ <583de550-d816-f619-d402-688c87c86fe3@huawei.com>
+In-Reply-To: <583de550-d816-f619-d402-688c87c86fe3@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR1501CA0010.namprd15.prod.outlook.com
+ (2603:10b6:207:17::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb64e4a5-1883-4fa3-abde-08d6e516657f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5038;
+x-ms-traffictypediagnostic: VI1PR05MB5038:
+x-microsoft-antispam-prvs: <VI1PR05MB5038A0DBC9732A6345508206CF180@VI1PR05MB5038.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1186;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(39860400002)(366004)(376002)(189003)(199004)(53754006)(6486002)(110136005)(446003)(486006)(66446008)(53936002)(86362001)(14454004)(6512007)(478600001)(54906003)(7416002)(7736002)(81156014)(26005)(186003)(1076003)(8936002)(8676002)(4326008)(6436002)(3846002)(305945005)(33656002)(66556008)(5660300002)(6116002)(64756008)(81166006)(2616005)(73956011)(66476007)(2906002)(25786009)(102836004)(36756003)(71200400001)(71190400001)(66066001)(256004)(76176011)(99286004)(316002)(386003)(229853002)(68736007)(66946007)(14444005)(53546011)(6246003)(52116002)(11346002)(6506007)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5038;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mD+yXMynfy4cxpwEDWUiTZK3y7e3HTcdtyeyxxhGMJYJCRoGQjggi/MVCYWDaEZhTs6JRyaO65Im0wo83Z7roj+akgVuSIaSi/tUocwZyEnlBMIhH+kT540cISNX7AQnsgvYJxOWqxXlHrvHnDs+oNoF+mLvxbpKeoChDYV/HwBsqbk8TOgVfqHsmDPMhu6nXgF85ULOdp+55FuClaG6W9OBO40IuayZ60NDABOdE2ofDNbpHDLNr7SOhbnZXe4wQC2qSZ/6BrKjUsHVNxQBIo+HyQFVZGCs6lhpfcAKMCwljEFtq957iVez48KViXGjvLMCslgwnV1JN2Bh7tLJATJGvN0Wg3jzvcoPxTJWizt1z7WllEXvcnqizgfXvP4Dlzc9QgcNgtOaNRsA/V/msr+SYHruZjBesDW69tYjOxs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <56987BA9B86175409FE65B63660189BB@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529125232.GA28250@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb64e4a5-1883-4fa3-abde-08d6e516657f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 15:49:27.8018
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 07:52:32AM -0500, Bjorn Helgaas wrote:
-> On Wed, May 29, 2019 at 11:43:52AM +0200, Niklas Cassel wrote:
-> > Currently, there is only a 1 ms sleep after asserting PERST.
-> > 
-> > Reading the datasheets for different endpoints, some require PERST to be
-> > asserted for 10 ms in order for the endpoint to perform a reset, others
-> > require it to be asserted for 50 ms.
-> > 
-> > Several SoCs using this driver uses PCIe Mini Card, where we don't know
-> > what endpoint will be plugged in.
-> 
-> I think this patch is absolutely the right thing to do.  We don't know
-> what might be plugged in, so we should support arbitrary endpoints.
-> 
-> One could imagine some sort of DT property to identify closed
-> environments where there is no need to support arbitrary endpoints and
-> it might be desirable to reduce the delay.  But that should wait
-> until there's a need for it and if the need *does* arise, hopefully
-> the definition of such a property could be generic across all SoCs.
-> 
-> > The PCI Express Card Electromechanical Specification specifies:
-> > "On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
-> > the power rails achieving specified operating limits."
-> 
-> It'd be nice to include the complete citation, i.e., "PCI Express Card
-> Electromechanical Specification r2.0, sec 2.2"
 
-I will add it and merge the patch.
+On Thu, May 30, 2019 at 11:31:12PM +0800, Yuehaibing wrote:
+> Hi all,
+>=20
+> Friendly ping:
+>=20
+> Who can take this?
+>=20
+> On 2019/4/17 22:26, Yue Haibing wrote:
+> > From: YueHaibing <yuehaibing@huawei.com>
+> >=20
+> > During randconfig builds, I occasionally run into an invalid configurat=
+ion
+> >=20
+> > WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
+> >   Depends on [n]: ARCH_HAS_HMM_DEVICE [=3Dn] && ZONE_DEVICE [=3Dn]
+> >   Selected by [y]:
+> >   - DRM_NOUVEAU_SVM [=3Dy] && HAS_IOMEM [=3Dy] && ARCH_HAS_HMM [=3Dy] &=
+& DRM_NOUVEAU [=3Dy] && STAGING [=3Dy]
+> >=20
+> > mm/memory.o: In function `do_swap_page':
+> > memory.c:(.text+0x2754): undefined reference to `device_private_entry_f=
+ault'
+> >=20
+> > commit 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring=
+ from device memory")
+> > split CONFIG_DEVICE_PRIVATE dependencies from
+> > ARCH_HAS_HMM to ARCH_HAS_HMM_DEVICE and ZONE_DEVICE,
+> > so enable DRM_NOUVEAU_SVM will trigger this warning,
+> > cause building failed.
+> >=20
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring=
+ from device memory")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >  drivers/gpu/drm/nouveau/Kconfig | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/=
+Kconfig
+> > index 00cd9ab..99e30c1 100644
+> > +++ b/drivers/gpu/drm/nouveau/Kconfig
+> > @@ -74,7 +74,8 @@ config DRM_NOUVEAU_BACKLIGHT
+> > =20
+> >  config DRM_NOUVEAU_SVM
+> >  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+> > -	depends on ARCH_HAS_HMM
+> > +	depends on ARCH_HAS_HMM_DEVICE
+> > +	depends on ZONE_DEVICE
+> >  	depends on DRM_NOUVEAU
+> >  	depends on STAGING
+> >  	select HMM_MIRROR
+> >=20
 
-Thanks,
-Lorenzo
+I'm expecting to take a patch like this into the new hmm git tree once
+Jerome sends his Final Solution for the kconfig problems.
 
-> > Add a sleep of 100 ms before deasserting PERST, in order to ensure that
-> > we are compliant with the spec.
-> > 
-> > Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > Cc: stable@vger.kernel.org # 4.5+
-> > ---
-> > Changes since v1:
-> > Move the sleep into qcom_ep_reset_deassert()
-> > 
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0ed235d560e3..5d1713069d14 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -178,6 +178,8 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >  
-> >  static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
-> >  {
-> > +	/* Ensure that PERST has been asserted for at least 100 ms */
-> > +	msleep(100);
-> >  	gpiod_set_value_cansleep(pcie->reset, 0);
-> >  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-> >  }
-> > -- 
-> > 2.21.0
-> > 
+Maybe it is this patch, Jerome??
+
+Regards,
+Jason=20
