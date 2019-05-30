@@ -2,108 +2,91 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DBEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794CAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE3A252BD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:41:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZXxpMeU"
+	by mail.kernel.org (Postfix) with ESMTP id 4C6D0239EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfE3Mll (ORCPT
+        id S1726682AbfE3Mmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:41:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41686 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfE3Mll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:41:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z3so1957635pgp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=XS1GrKWyZnetUAZw+qazRGfQxYpyPONGBgzB6aYIx5A=;
-        b=mZXxpMeUoxhFtGjHpOeOq0JQCsoUcLJunKvq34tfWEpz3NigldLVt48RoEHRDhAK7E
-         Ec7MbSqDutMds072aG5Nt9c5FLczVZmkBk+4EuYaaCxFMd/Keb3Kg3zJ9gbJVUBKw+p9
-         vFltyinHtCqD/jyTUVLyWhQQNjsD+zG+0R4lfoVO2AKOXVo0xlg61T/DPhPq/+ZbAzVQ
-         rwH+K9N86xQ2ElLG6Wu8YZyJD/00PvygPD7uq1cVhnPYcA4ka0DqofVfpaGFBZODg2Ao
-         O3TBsf14TwA6EibzsUq1ratPIlLFi/hl9GEyrt0JPTRosG63ke0kRsLocSWPYoCaEjQg
-         6qDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=XS1GrKWyZnetUAZw+qazRGfQxYpyPONGBgzB6aYIx5A=;
-        b=HQ07VlKVjDavJj5zNf5LA+EQSbs4DTPINbzvFysw0LIMkT6XyCWE/p1EqQS4as/zE2
-         BhgpKpqhQD04ytV32fft3Fdn84V0ui2JPjX52hOVXwmMXR8yOvP9e1EwqFD9WLiy3CPj
-         pdDpcSRUJCFcnyE0xRIiRaFsdEfwiGMbk/Kht/MiacOKMJ0srPHW03+fj6AUMO0W3NJp
-         1wQuZc2a4Tllcs6FMK/FDs5Os8hKgLRWvdPn6ML6bE+zAiFKoe687uEZi6b2YrEOYWOs
-         B46A1DiwYawEdl1N0uMIshHpePTi7B8ZgVVzHXnFnO1b3HjclpGW5AFfWKwg1hTQhB2f
-         BL8Q==
-X-Gm-Message-State: APjAAAU0cLcF5MWhbQFkr0hGchhvIlwtJepw8+6FccgSu1QhJ9jkUnFS
-        i0M4EbWil82yTYiwt/JfpuH3xZdW
-X-Google-Smtp-Source: APXvYqwHaPaUzmbngUUvySaIWmgLA10Ha00cYu+v6Z+5LeZNSGiN4e3d0GKVwQtNCJARLSLTQ4orJw==
-X-Received: by 2002:a62:2b82:: with SMTP id r124mr3527860pfr.235.1559220100409;
-        Thu, 30 May 2019 05:41:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b15sm2419333pfi.141.2019.05.30.05.41.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:41:39 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Zankel <chris@zankel.net>
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Thu, 30 May 2019 05:41:38 -0700
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 May 2019 08:42:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33660 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfE3Mmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:42:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 05:42:53 -0700
+X-ExtLoop1: 1
+Received: from rajneesh-desk.iind.intel.com ([10.66.179.4])
+  by orsmga007.jf.intel.com with ESMTP; 30 May 2019 05:42:49 -0700
+From:   Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, bp@suse.de,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: [PATCH] x86/cpu: Add Icelake-NNPI to Intel family
+Date:   Thu, 30 May 2019 18:08:27 +0530
+Message-Id: <20190530123827.8218-1-rajneesh.bhardwaj@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+Add the CPUID model number of Icelake Neural Network Processor for Deep
+Learning Inference (ICL-NNPI) to the Intel family list. Icelake NNPI uses
+model number 0x9D and this will be documented in a future version of Intel
+Software Development Manual.
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
-
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
-
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index c0ec24349421..176cb46bcf12 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9f15384c504a..087de5d3b93a 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -53,6 +53,7 @@
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
- {
- 	return memblock_reserve(start, end - start);
- }
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+ /* "Small Core" Processors (Atom) */
+ 
 -- 
-2.7.4
+2.17.1
 
