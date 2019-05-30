@@ -2,141 +2,145 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D14C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568CAC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA4525AE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B7625B59
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="ZieqnJ7Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBpwSYdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfE3Gpw (ORCPT
+        id S1727460AbfE3Grn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 02:45:52 -0400
-Received: from mail-eopbgr30090.outbound.protection.outlook.com ([40.107.3.90]:48386
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727273AbfE3Gpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 02:45:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UBrNGSgkZ21YD5Q63BnIjqJhWQk0lwUGyBgRz8fs5Lk=;
- b=ZieqnJ7QhyllSUrzGlD8db7O9JBYtkvBIKV6g/U7pqR4ymxz2HbMIZlWKb82O9PW7pbQY1Wmz4aEtohPi5PW1PBKyun0fE8F/LVlvSJFtHvQaembHw0tWnvN+gkXFYzpMQLfFiuDR+grYvdgqOIVOH8CZzOyiFmGkbGERKO65y4=
-Received: from DB6PR07MB3336.eurprd07.prod.outlook.com (10.170.223.150) by
- DB6PR07MB3368.eurprd07.prod.outlook.com (10.175.233.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.13; Thu, 30 May 2019 06:45:48 +0000
-Received: from DB6PR07MB3336.eurprd07.prod.outlook.com
- ([fe80::8c1c:dbc5:e07b:2cf9]) by DB6PR07MB3336.eurprd07.prod.outlook.com
- ([fe80::8c1c:dbc5:e07b:2cf9%6]) with mapi id 15.20.1943.016; Thu, 30 May 2019
- 06:45:48 +0000
-From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Topic: [PATCH] hwmon: pmbus: protect read-modify-write with lock
-Thread-Index: AQHVFrNQ+99R7vZxXEmCmU50geAhdg==
-Date:   Thu, 30 May 2019 06:45:48 +0000
-Message-ID: <20190530064509.GA13789@localhost.localdomain>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0301CA0010.eurprd03.prod.outlook.com
- (2603:10a6:3:76::20) To DB6PR07MB3336.eurprd07.prod.outlook.com
- (2603:10a6:6:1f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=krzysztof.adamski@nokia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [131.228.32.190]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5bf69563-b5c6-4e45-8567-08d6e4ca72af
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR07MB3368;
-x-ms-traffictypediagnostic: DB6PR07MB3368:
-x-microsoft-antispam-prvs: <DB6PR07MB33687D572FBF5729D9FC1BB2EF180@DB6PR07MB3368.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(366004)(396003)(376002)(199004)(189003)(486006)(7736002)(73956011)(4326008)(305945005)(66446008)(66066001)(386003)(66476007)(508600001)(53936002)(6512007)(64756008)(9686003)(14454004)(6506007)(3846002)(8936002)(66556008)(6116002)(110136005)(102836004)(61506002)(8676002)(81156014)(81166006)(71200400001)(256004)(476003)(14444005)(71190400001)(54906003)(52116002)(66946007)(86362001)(33656002)(6486002)(5660300002)(68736007)(25786009)(186003)(316002)(2906002)(6436002)(1076003)(99286004)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR07MB3368;H:DB6PR07MB3336.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TbQ5vX4AzRSFK3tDIkghpLR8bXo5eAxhoJneC/Yu73fgUyf8WV56c/jbNIIHj+HSHNa1mQkyKPXPVRb3+hOWJP4dWXptwUVE8m/gqRpi6VPTitSiGo8kDwakNtdpBQY2ADICB7dF0kdf6AQaN5m/ubUVVtUrcgkZrNlFmevEVmLFYsRyT/SplCOzLxgLBC8Hwb3tYypMNQyGQdHRFNsrlF82ZTlHmmK4CigSF7ELOf9xkN4750pSZUxCh0l8GBRe/mP1GOwKmQVAgICugHbX4cXqlhKWSOj56ZnJ/My3JC1Q7RJBJLOAmM1mc/XKJMHcuRPmeH/JhZ95PgoB4J8vTyCULtjuKXzJ3sazHjz3aGE96z60fjMHkpcuqRACOyCHeYJZ6IGjCTWsZGE9PtJegh5pCT4xGlWsBO0VX+4GC84=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <51762DD8C076964D9B6394DE0B4DA36C@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 May 2019 02:47:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33514 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Grm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 02:47:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so3381301wrx.0;
+        Wed, 29 May 2019 23:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DO/5ZsnV2P22FWG7dbYT8elgxWLzn6BI3xdKucMQxz0=;
+        b=KBpwSYdbjcxfJ26l1zE96Rtck196NAn/ViYt5zQCZQlOJT997V30nzjPZLbEmtz5Gu
+         MPb2iTSGEBDvOexi6Tuehn2eVkt8A2JuQi1ABYKoDLE0zAIBuCDkq7feRC7qGMyVGM3J
+         M79vMFED1RgGDaX2x4G8vaafjCMnBIHk7K3P70VkHAwojZ4qp3llSXc/UqOz0KWm2Odi
+         TyONvv6hSe4aTE4MKVqWsdPHCqrCAc+z/adgB2LWVISzGCk7T049voHus+d8W9KRMdrj
+         RpjnU81vw8m4WiymIcpcAkwsA8ADAJW7ErcnD5z+BzCHLsbjprcrJimnVnS+CaxtEvVf
+         cXJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DO/5ZsnV2P22FWG7dbYT8elgxWLzn6BI3xdKucMQxz0=;
+        b=ICbmbA+IrscjfJhUQrcAlQ+UccUiqkfib6mNzB447zSvRdWwQNuXuXYlZL4jGoS9Qd
+         UtugK/G5b1UEHLtkBark9Er6lPv3RD9XC8nHvS4B+pwcCnmPyuuvnbLazEsxWQst4cOW
+         ApljUjEIYldpjPqM0wbEWfitD+7DC+SBfBJSEjDo1bUM0w22w81iPzeY1evubHblVLa7
+         WvpO5PE5F3rU5PqAXR2yihtUq8JScUNFFiwU6kCETnmiPvH7Ig6QZyOGqMdbZKaJeVFi
+         hcDyM/klsheUjzCzmNuNhIJrQ81uUTG8rT/g3Ik0XdQRQXcepHjwtGMMWGPwQdtdPMOh
+         JRlw==
+X-Gm-Message-State: APjAAAX1LKHjiGljcY3vSNjoeGGl+poNEHEoHIABVB5on0OMgxtqY5X5
+        5bCsS0AXTQwS6YhKgJ0iockt+H8=
+X-Google-Smtp-Source: APXvYqwAurjV/yV2lWA+2QP3qtnTvOsQWMjzs8DvvongBREAkK43Fh5+l7DcwjWB0lKGf4sVfz2pXw==
+X-Received: by 2002:a5d:4089:: with SMTP id o9mr1363688wrp.6.1559198860957;
+        Wed, 29 May 2019 23:47:40 -0700 (PDT)
+Received: from avx2 ([46.53.251.224])
+        by smtp.gmail.com with ESMTPSA id o8sm2801097wra.4.2019.05.29.23.47.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 23:47:40 -0700 (PDT)
+Date:   Thu, 30 May 2019 09:47:38 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH] elf: align AT_RANDOM bytes
+Message-ID: <20190530064738.GA5504@avx2>
+References: <20190529213708.GA10729@avx2>
+ <20190529152020.c9d0ed1c6194328f751fe0f9@linux-foundation.org>
+ <201905291559.87E96F79@keescook>
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bf69563-b5c6-4e45-8567-08d6e4ca72af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 06:45:48.1134
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: krzysztof.adamski@nokia.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR07MB3368
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201905291559.87E96F79@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The operation done in the pmbus_update_fan() function is a
-read-modify-write operation but it lacks any kind of lock protection
-which may cause problems if run more than once simultaneously. This
-patch uses an existing update_lock mutex to fix this problem.
+On Wed, May 29, 2019 at 04:00:23PM -0700, Kees Cook wrote:
+> On Wed, May 29, 2019 at 03:20:20PM -0700, Andrew Morton wrote:
+> > On Thu, 30 May 2019 00:37:08 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> > 
+> > > AT_RANDOM content is always misaligned on x86_64:
+> > > 
+> > > 	$ LD_SHOW_AUXV=1 /bin/true | grep AT_RANDOM
+> > > 	AT_RANDOM:       0x7fff02101019
+> > > 
+> > > glibc copies first few bytes for stack protector stuff, aligned
+> > > access should be slightly faster.
+> > 
+> > I just don't understand the implications of this.  Is there
+> > (badly-behaved) userspace out there which makes assumptions about the
+> > current alignment?
+> > 
+> > How much faster, anyway?  How frequently is the AT_RANDOM record
+> > accessed?
+> > 
+> > I often have questions such as these about your performance/space
+> > tweaks :(.  Please try to address them as a matter of course when
+> > preparing changelogs?
+> > 
+> > And let's Cc Kees, who wrote the thing.
+> > 
+> > > --- a/fs/binfmt_elf.c
+> > > +++ b/fs/binfmt_elf.c
+> > > @@ -144,11 +144,15 @@ static int padzero(unsigned long elf_bss)
+> > >  #define STACK_ALLOC(sp, len) ({ \
+> > >  	elf_addr_t __user *old_sp = (elf_addr_t __user *)sp; sp += len; \
+> > >  	old_sp; })
+> > > +#define STACK_ALIGN(sp, align)	\
+> > > +	((typeof(sp))(((unsigned long)sp + (int)align - 1) & ~((int)align - 1)))
+> > 
+> > I suspect plain old ALIGN() could be used here.
+> > 
+> > >  #else
+> > >  #define STACK_ADD(sp, items) ((elf_addr_t __user *)(sp) - (items))
+> > >  #define STACK_ROUND(sp, items) \
+> > >  	(((unsigned long) (sp - items)) &~ 15UL)
+> > >  #define STACK_ALLOC(sp, len) ({ sp -= len ; sp; })
+> > > +#define STACK_ALIGN(sp, align)	\
+> > > +	((typeof(sp))((unsigned long)sp & ~((int)align - 1)))
+> > 
+> > And maybe there's a helper which does this, dunno.
+> > 
+> > >  #endif
+> > >  
+> > >  #ifndef ELF_BASE_PLATFORM
+> > > @@ -217,6 +221,12 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
+> > >  			return -EFAULT;
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * glibc copies first bytes for stack protector purposes
+> > > +	 * which are misaligned on x86_64 because strlen("x86_64") + 1 == 7.
+> > > +	 */
+> > > +	p = STACK_ALIGN(p, sizeof(long));
+> > > +
+> 
+> I have no objection to eating some bytes here. Though perhaps things could just
+> be reordered to leave all the aligned things together and put all the
+> strings later?
 
-Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
----
-
-I'm resending this patch to proper recipients this time. Sorry if the
-previous submission confused anybody.
-
- drivers/hwmon/pmbus/pmbus_core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_c=
-ore.c
-index ef7ee90ee785..94adbede7912 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -268,6 +268,7 @@ int pmbus_update_fan(struct i2c_client *client, int pag=
-e, int id,
- 	int rv;
- 	u8 to;
-=20
-+	mutex_lock(&data->update_lock);
- 	from =3D pmbus_read_byte_data(client, page,
- 				    pmbus_fan_config_registers[id]);
- 	if (from < 0)
-@@ -278,11 +279,15 @@ int pmbus_update_fan(struct i2c_client *client, int p=
-age, int id,
- 		rv =3D pmbus_write_byte_data(client, page,
- 					   pmbus_fan_config_registers[id], to);
- 		if (rv < 0)
--			return rv;
-+			goto out;
- 	}
-=20
--	return _pmbus_write_word_data(client, page,
--				      pmbus_fan_command_registers[id], command);
-+	rv =3D _pmbus_write_word_data(client, page,
-+				    pmbus_fan_command_registers[id], command);
-+
-+out:
-+	mutex_lock(&data->update_lock);
-+	return rv;
- }
- EXPORT_SYMBOL_GPL(pmbus_update_fan);
-=20
---=20
-2.20.1
-
+There should be no bytes wasted in fact. Auxv array is aligned and
+whole stack is aligned once more at 16 bytes. On x86_64 AT_RANDOM content
+and "x86_64" AT_PLATFORM string are put higher, so that 1 byte doesn't
+change anything.
