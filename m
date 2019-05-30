@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD6EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF80C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2292474A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05C1247D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186314;
-	bh=PDSOmHvRNjoz1b2d9autjhaMFPH4WSNsyzQs/WTlYD4=;
+	s=default; t=1559186317;
+	bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJAo8jbJAjxfjvPj3Ntz9pH53OmsJLJJKO82WxcaEAeRfUIotq9lcp4+7QXH1Paf1
-	 bpit+zLM0CRAMiinSWb5RIxFINI4/dIKMbBGgqPSZbpSJweeyKQHpEg8JWtAWfuEHX
-	 ejS8XoeNiQI6P/itZiLIvVHszqSR5MFSDjO/fLLI=
+	b=vy+hqjAO++Ml2Shb57PXKhq8u7Rk9s5FKxUCDZOnwWtELPQAnjJlhyn16NMYZ7l3X
+	 L9uyAJnlHxiN8ZEHd733+Ge1P0kmR25CfBOcT+zW9ua8/nGvyzua28y2SOgrnCwcdS
+	 0TVU8F5JQvcuNIa/EaR+MzZfybAKUNS+hJXYsYjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbfE3DSd (ORCPT
+        id S1730300AbfE3DSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729919AbfE3DOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:37 -0400
+        id S1729920AbfE3DOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:38 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5F7C2455C;
-        Thu, 30 May 2019 03:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA9A23D83;
+        Thu, 30 May 2019 03:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186076;
-        bh=PDSOmHvRNjoz1b2d9autjhaMFPH4WSNsyzQs/WTlYD4=;
+        s=default; t=1559186077;
+        bh=W6hhyP4Sz0xsqJqXoWMUMQRgHBcyX134EWeoywxxvPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wqA3+mIvKll6XGaIK/ZiuEvfQZtTTxn0Gg6bby/LxubnhYWgieIbcl1eWJSfJhi9F
-         0CLWvt491iJqC2GJG0TtP7AbdxGhupeWYvV059Heo1mEv2cJEIXptoJHBXlHw36kFY
-         P3mOHop7qiVXYZ4osMhAvrLMJlQtDLS4X4XFyYW8=
+        b=Z3jGteJ5GUOesnEnfnb1jPsiQf7lkGBu3uCDrp/3zXzjwFiOTlTbL35nWGaGahVa1
+         DnNTZ/vkjVSF6tfzvvfGsb9Y5EzcKXCFKpImi+giu3G1FVthpi0GOhnkcDhB44CWOP
+         AdFaD88b35fVqpSVc8j9LLKrD0YGaHlAUsyZwtNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Randy Li <ayaka@soulik.info>,
-        Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 194/346] clk: rockchip: Fix video codec clocks on rk3288
-Date:   Wed, 29 May 2019 20:04:27 -0700
-Message-Id: <20190530030550.899549748@linuxfoundation.org>
+Subject: [PATCH 5.0 195/346] extcon: arizona: Disable mic detect if running when driver is removed
+Date:   Wed, 29 May 2019 20:04:28 -0700
+Message-Id: <20190530030550.954858775@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,81 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00c0cd9e59d265b393553e9afa54fee8b10e8158 ]
+[ Upstream commit 00053de52231117ddc154042549f2256183ffb86 ]
 
-It appears that there is a typo in the rk3288 TRM.  For
-GRF_SOC_CON0[7] it says that 0 means "vepu" and 1 means "vdpu".  It's
-the other way around.
+Microphone detection provides the button detection features on the
+Arizona CODECs as such it will be running if the jack is currently
+inserted. If the driver is unbound whilst the jack is still inserted
+this will cause warnings from the regulator framework as the MICVDD
+regulator is put but was never disabled.
 
-How do I know?  Here's my evidence:
+Correct this by disabling microphone detection on driver removal and if
+the microphone detection was running disable the regulator and put the
+runtime reference that was currently held.
 
-1. Prior to commit 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec
-   using the new muxgrf type on rk3288") we always pretended that we
-   were using "aclk_vdpu" and the comment in the code said that this
-   matched the default setting in the system.  In fact the default
-   setting is 0 according to the TRM and according to reading memory
-   at bootup.  In addition rk3288-based Chromebooks ran like this and
-   the video codecs worked.
-2. With the existing clock code if you boot up and try to enable the
-   new VIDEO_ROCKCHIP_VPU as a module (and without "clk_ignore_unused"
-   on the command line), you get errors like "failed to get ack on
-   domain 'pd_video', val=0x80208".  After flipping vepu/vdpu things
-   init OK.
-3. If I export and add both the vepu and vdpu to the list of clocks
-   for RK3288_PD_VIDEO I can get past the power domain errors, but now
-   I freeze when the vpu_mmu gets initted.
-4. If I just mark the "vdpu" as IGNORE_UNUSED then everything boots up
-   and probes OK showing that somehow the "vdpu" was important to keep
-   enabled.  This is because we were actually using it as a parent.
-5. After this change I can hack "aclk_vcodec_pre" to parent from
-   "aclk_vepu" using assigned-clocks and the video codec still probes
-   OK.
-6. Rockchip has said so on the mailing list [1].
-
-...so let's fix it.
-
-Let's also add CLK_SET_RATE_PARENT to "aclk_vcodec_pre" as suggested
-by Jonas Karlman.  Prior to the same commit you could do
-clk_set_rate() on "aclk_vcodec" and it would change "aclk_vdpu".
-That's because "aclk_vcodec" was a simple gate clock (always gets
-CLK_SET_RATE_PARENT) and its direct parent was "aclk_vdpu".  After
-that commit "aclk_vcodec_pre" gets in the way so we need to add
-CLK_SET_RATE_PARENT to it too.
-
-[1] https://lkml.kernel.org/r/1d17b015-9e17-34b9-baf8-c285dc1957aa@rock-chips.com
-
-Fixes: 4d3e84f99628 ("clk: rockchip: describe aclk_vcodec using the new muxgrf type on rk3288")
-Suggested-by: Jonas Karlman <jonas@kwiboo.se>
-Suggested-by: Randy Li <ayaka@soulik.info>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/extcon/extcon-arizona.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index f3bbcdfa88ead..623c5f684987c 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -219,7 +219,7 @@ PNAME(mux_hsadcout_p)	= { "hsadc_src", "ext_hsadc" };
- PNAME(mux_edp_24m_p)	= { "ext_edp_24m", "xin24m" };
- PNAME(mux_tspout_p)	= { "cpll", "gpll", "npll", "xin27m" };
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index da0e9bc4262fa..9327479c719c2 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -1726,6 +1726,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
+ 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
+ 	struct arizona *arizona = info->arizona;
+ 	int jack_irq_rise, jack_irq_fall;
++	bool change;
++
++	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
++				 ARIZONA_MICD_ENA, 0,
++				 &change);
++
++	if (change) {
++		regulator_disable(info->micvdd);
++		pm_runtime_put(info->dev);
++	}
  
--PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vepu", "aclk_vdpu" };
-+PNAME(mux_aclk_vcodec_pre_p)	= { "aclk_vdpu", "aclk_vepu" };
- PNAME(mux_usbphy480m_p)		= { "sclk_otgphy1_480m", "sclk_otgphy2_480m",
- 				    "sclk_otgphy0_480m" };
- PNAME(mux_hsicphy480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
-@@ -420,7 +420,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
- 	COMPOSITE(0, "aclk_vdpu", mux_pll_src_cpll_gpll_usb480m_p, 0,
- 			RK3288_CLKSEL_CON(32), 14, 2, MFLAGS, 8, 5, DFLAGS,
- 			RK3288_CLKGATE_CON(3), 11, GFLAGS),
--	MUXGRF(0, "aclk_vcodec_pre", mux_aclk_vcodec_pre_p, 0,
-+	MUXGRF(0, "aclk_vcodec_pre", mux_aclk_vcodec_pre_p, CLK_SET_RATE_PARENT,
- 			RK3288_GRF_SOC_CON(0), 7, 1, MFLAGS),
- 	GATE(ACLK_VCODEC, "aclk_vcodec", "aclk_vcodec_pre", 0,
- 		RK3288_CLKGATE_CON(9), 0, GFLAGS),
+ 	gpiod_put(info->micd_pol_gpio);
+ 
 -- 
 2.20.1
 
