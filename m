@@ -2,63 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAA7C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E91C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4F1257A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EC5257B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190930;
-	bh=sC2z9WCsFCOJcp5EHMfsCLX6mFudLB9MFEjfDebUoe4=;
+	s=default; t=1559190934;
+	bh=FG0jL5+rD8oinBF3d0IvCIWcpVZPSVgTH/kRbxm0j+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3gJC0FUHftKaVKAI0wJRhFcOgh6o9xiLXpNViCVipjyzGj5Jt00NsPxFPnZCt9h/
-	 We/Awpds716eGW236cPPl8vshwleNgQC2LcteN9VcDdCPPITYvbaJicvXnTn3oJ1bd
-	 yMsabNG5cGOB28zWsraWAhcoKI0FPlEclXvv5/ek=
+	b=E5wha8hIOm9if8n+fduNt32kRrrmxvSt/XZcbulafGVgqkf0LvXKwtgi6JJ87ucX6
+	 6BTUwlS/SdOpx2S26lAZ3yx1q9az5uZi0pVSHo6WxETujSji24l7p3JRIpxuyEYdev
+	 NqmVLQjbbHIOk5hVuBCfMuVX1Dyama2w/qMGZurc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfE3DNN (ORCPT
+        id S1731878AbfE3Efd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50644 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:35:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfE3DLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:24 -0400
+        id S1727909AbfE3DNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E97244B0;
-        Thu, 30 May 2019 03:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACF3A2454D;
+        Thu, 30 May 2019 03:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185884;
-        bh=sC2z9WCsFCOJcp5EHMfsCLX6mFudLB9MFEjfDebUoe4=;
+        s=default; t=1559185989;
+        bh=FG0jL5+rD8oinBF3d0IvCIWcpVZPSVgTH/kRbxm0j+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hm/iuw8hn9nMB22JYjyUaYkMw4vTAbZjfiAAc9/NCJTf3eMx8SXnbLDzh7rX3+4Fl
-         r/XJ71vmti3m1uSUDXyidIR6crU6xaMcWCkM6gCnR88SVEXpuNqRGLYHfMzYjFQKAF
-         LhwC+Cl45fJCdvS/aVHFs6iSzEdXg/cERafw5L9U=
+        b=2qXG02KsBNADXHVvvCDCzI+RDoBWzRGmeNMPVkBRBlExyaJsG4Z3yJPettgsMvWCO
+         /8gL8sH7j11kD7NMTAhlZwZBQKYq529csdxJPhkj5nAns6/LRysbmWKy4EMAjDMb/F
+         bgJSJqutLt1xDgrpt1knHYgy81cveAekHdMjWhI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 193/405] perf/x86/msr: Add Icelake support
-Date:   Wed, 29 May 2019 20:03:11 -0700
-Message-Id: <20190530030550.771254712@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.0 033/346] media: vb2: add waiting_in_dqbuf flag
+Date:   Wed, 29 May 2019 20:01:46 -0700
+Message-Id: <20190530030542.483709505@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -68,43 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf50d79a8cfe5adae37fec026220b009559bbeed ]
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-Icelake is the same as the existing Skylake parts.
+commit d65842f7126aa1a87fb44b7c9980c12630ed4f33 upstream.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-12-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Calling VIDIOC_DQBUF can release the core serialization lock pointed to
+by vb2_queue->lock if it has to wait for a new buffer to arrive.
+
+However, if userspace dup()ped the video device filehandle, then it is
+possible to read or call DQBUF from two filehandles at the same time.
+
+It is also possible to call REQBUFS from one filehandle while the other
+is waiting for a buffer. This will remove all the buffers and reallocate
+new ones. Removing all the buffers isn't the problem here (that's already
+handled correctly by DQBUF), but the reallocating part is: DQBUF isn't
+aware that the buffers have changed.
+
+This is fixed by setting a flag whenever the lock is released while waiting
+for a buffer to arrive. And checking the flag where needed so we can return
+-EBUSY.
+
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Reported-by: Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/events/msr.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/common/videobuf2/videobuf2-core.c |   22 ++++++++++++++++++++++
+ include/media/videobuf2-core.h                  |    1 +
+ 2 files changed, 23 insertions(+)
 
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index a878e6286e4af..f3f4c2263501d 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -89,6 +89,7 @@ static bool test_intel(int idx)
- 	case INTEL_FAM6_SKYLAKE_X:
- 	case INTEL_FAM6_KABYLAKE_MOBILE:
- 	case INTEL_FAM6_KABYLAKE_DESKTOP:
-+	case INTEL_FAM6_ICELAKE_MOBILE:
- 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
- 			return true;
- 		break;
--- 
-2.20.1
-
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -672,6 +672,11 @@ int vb2_core_reqbufs(struct vb2_queue *q
+ 		return -EBUSY;
+ 	}
+ 
++	if (q->waiting_in_dqbuf && *count) {
++		dprintk(1, "another dup()ped fd is waiting for a buffer\n");
++		return -EBUSY;
++	}
++
+ 	if (*count == 0 || q->num_buffers != 0 ||
+ 	    (q->memory != VB2_MEMORY_UNKNOWN && q->memory != memory)) {
+ 		/*
+@@ -807,6 +812,10 @@ int vb2_core_create_bufs(struct vb2_queu
+ 	}
+ 
+ 	if (!q->num_buffers) {
++		if (q->waiting_in_dqbuf && *count) {
++			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
++			return -EBUSY;
++		}
+ 		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
+ 		q->memory = memory;
+ 		q->waiting_for_buffers = !q->is_output;
+@@ -1638,6 +1647,11 @@ static int __vb2_wait_for_done_vb(struct
+ 	for (;;) {
+ 		int ret;
+ 
++		if (q->waiting_in_dqbuf) {
++			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
++			return -EBUSY;
++		}
++
+ 		if (!q->streaming) {
+ 			dprintk(1, "streaming off, will not wait for buffers\n");
+ 			return -EINVAL;
+@@ -1665,6 +1679,7 @@ static int __vb2_wait_for_done_vb(struct
+ 			return -EAGAIN;
+ 		}
+ 
++		q->waiting_in_dqbuf = 1;
+ 		/*
+ 		 * We are streaming and blocking, wait for another buffer to
+ 		 * become ready or for streamoff. Driver's lock is released to
+@@ -1685,6 +1700,7 @@ static int __vb2_wait_for_done_vb(struct
+ 		 * the locks or return an error if one occurred.
+ 		 */
+ 		call_void_qop(q, wait_finish, q);
++		q->waiting_in_dqbuf = 0;
+ 		if (ret) {
+ 			dprintk(1, "sleep was interrupted\n");
+ 			return ret;
+@@ -2572,6 +2588,12 @@ static size_t __vb2_perform_fileio(struc
+ 	if (!data)
+ 		return -EINVAL;
+ 
++	if (q->waiting_in_dqbuf) {
++		dprintk(3, "another dup()ped fd is %s\n",
++			read ? "reading" : "writing");
++		return -EBUSY;
++	}
++
+ 	/*
+ 	 * Initialize emulator on first call.
+ 	 */
+--- a/include/media/videobuf2-core.h
++++ b/include/media/videobuf2-core.h
+@@ -586,6 +586,7 @@ struct vb2_queue {
+ 	unsigned int			start_streaming_called:1;
+ 	unsigned int			error:1;
+ 	unsigned int			waiting_for_buffers:1;
++	unsigned int			waiting_in_dqbuf:1;
+ 	unsigned int			is_multiplanar:1;
+ 	unsigned int			is_output:1;
+ 	unsigned int			copy_timestamp:1;
 
 
