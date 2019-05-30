@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119FBC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0146EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D531825F0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFF025F18
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192143;
-	bh=PD2AYPz817jElRbCQweCXOfi52cb+0RkBa5KHvCc86A=;
+	s=default; t=1559192150;
+	bh=B4k9Ns39y91ECWxO73rdluGX0H8+6lrDfIsjeMYIB8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cq+viI1rbP36OAwlHhvZ13Xldo7HRMIHGUYmkvjHX4g2kD4ZHxLJr7SxzKRd7ohES
-	 1rg7KwijENfKqBEflewf8rhIDSuFamWDJZyURsK0HE1dgDr74wDC9VaHhHWMeqWBK/
-	 wEOyWXNi1WhGOKDUgEJC3ka2jwriaF4W+2eNcBoI=
+	b=pZNO6ri/rBbDDmXWK0fN8RobRlRtW8Hk+DJcx9xbri0IBkZsawO2tdaMnVcL6LfZX
+	 JpZqcy62ydUcXDK2bHIhVwYspvrcobaYZK8ACailMDM34shiZOhwPR1a12Eu2jebZZ
+	 MHdPlExWuA8NLMDVPeX0EcD97Wl4dlVaAO49JgOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388966AbfE3Ezn (ORCPT
+        id S2389182AbfE3Ezu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfE3DKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728001AbfE3DKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:10:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17BC244BB;
-        Thu, 30 May 2019 03:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A7D244BC;
+        Thu, 30 May 2019 03:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185813;
-        bh=PD2AYPz817jElRbCQweCXOfi52cb+0RkBa5KHvCc86A=;
+        s=default; t=1559185814;
+        bh=B4k9Ns39y91ECWxO73rdluGX0H8+6lrDfIsjeMYIB8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iPTIKL1oaW9V4hQUzux+TGY98ypv9w9wPjPqPFblQaDxuNZpdUYJnhZcOKeIGm+65
-         UxZsvqad3ofS4YUnyYdKVPYnVW/Ads2cyPFwbaeKTqKDB1lkdxhK/4WGsOVAxX3p+8
-         NLnQuAthaiL+hF46H/bnal/IjHPudTxB1zZgsUSU=
+        b=vOX32ZzL1gOSnVuABNaeywWavPf+ZqyheaelKiNaq1KH4QzAO0nh44Y3DT16k3X3G
+         7JUbInx0+CvWkGFn9rSTXw5uZH97SZej5umhAQmroCeD/5mxb10PBqOsgs0JPiCQpA
+         leh0A5eWVyONghNKaSuTQAJEyAWKjMrj4K7f/Bu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 104/405] ALSA: hda: fix unregister device twice on ASoC driver
-Date:   Wed, 29 May 2019 20:01:42 -0700
-Message-Id: <20190530030546.277528476@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 105/405] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
+Date:   Wed, 29 May 2019 20:01:43 -0700
+Message-Id: <20190530030546.320446374@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,41 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d95c51776b2edb4d4ebcea00b6e5a1fe538ce66 ]
+[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
 
-snd_hda_codec_device_new() is used by both legacy HDA and ASoC
-driver. However, we will call snd_hdac_device_unregister() in
-snd_hdac_ext_bus_device_remove() for ASoC device. This patch uses
-the type flag in hdac_device struct to determine is it a ASoC device
-or legacy HDA device and call snd_hdac_device_unregister() in
-snd_hda_codec_dev_free() only if it is a legacy HDA device.
+The NOHZ idle balancer runs on the lowest idle CPU. This can
+interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+housekeeping CPUs.
 
-Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+HK_FLAG_SCHED is not used for this because it is not set anywhere
+at the moment. This could be folded into HK_FLAG_SCHED once that
+option is fixed.
+
+The problem was observed with increased jitter on an application
+running on CPU0, caused by NOHZ idle load balancing being run on
+CPU1 (an SMT sibling).
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_codec.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 701a69d856f5f..b20eb7fc83eb2 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -832,7 +832,13 @@ static int snd_hda_codec_dev_free(struct snd_device *device)
- 	struct hda_codec *codec = device->device_data;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 35f3ea3750844..232491e3ed0db 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9551,22 +9551,26 @@ static inline int on_null_domain(struct rq *rq)
+  * - When one of the busy CPUs notice that there may be an idle rebalancing
+  *   needed, they will kick the idle load balancer, which then does idle
+  *   load balancing for all the idle CPUs.
++ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
++ *   anywhere yet.
+  */
  
- 	codec->in_freeing = 1;
--	snd_hdac_device_unregister(&codec->core);
-+	/*
-+	 * snd_hda_codec_device_new() is used by legacy HDA and ASoC driver.
-+	 * We can't unregister ASoC device since it will be unregistered in
-+	 * snd_hdac_ext_bus_device_remove().
-+	 */
-+	if (codec->core.type == HDA_DEV_LEGACY)
-+		snd_hdac_device_unregister(&codec->core);
- 	codec_display_power(codec, false);
- 	put_device(hda_codec_dev(codec));
- 	return 0;
+ static inline int find_new_ilb(void)
+ {
+-	int ilb = cpumask_first(nohz.idle_cpus_mask);
++	int ilb;
+ 
+-	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+-		return ilb;
++	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
++			      housekeeping_cpumask(HK_FLAG_MISC)) {
++		if (idle_cpu(ilb))
++			return ilb;
++	}
+ 
+ 	return nr_cpu_ids;
+ }
+ 
+ /*
+- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+- * CPU (if there is one).
++ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
++ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+  */
+ static void kick_ilb(unsigned int flags)
+ {
 -- 
 2.20.1
 
