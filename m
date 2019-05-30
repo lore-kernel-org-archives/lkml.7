@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0DBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5F5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30DC24A0F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C19024A0F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186602;
-	bh=B3DhlEJ4ntR8egRJP5RlZfeyVV2zTNXwZoWVRbGKFCE=;
+	s=default; t=1559186605;
+	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nACJhpWurqpn89Z546KcRpk4HClTwIEGQMUzpDjLXeqT+ckzIcx8QjOLClxUe1DC3
-	 C7rb+mDX5CDMxs3PIND1/1B76KCHpSXr075i8oedVnh0XpiEaPxQAsUjwWcYlYcBeS
-	 fQTiKqzBDBvWd/FJYHmymOMIUiQr/+v0ABi3JgEE=
+	b=sAyq08pjsAwPKdoikUgOHur9qZkId3l0go5QpxKOPACYgBk4Gz804z1u0x3bHUPHa
+	 WfVFAB/+zdCjJ5SELz1RVcPJ1RFQ9bGEKm4t9KCTdbjYcAnzJmAO+7WjQS+Kdgsf+/
+	 xQUkWLjr7SXKfiR4V7PmktrNRiSkE/Ei+AOllDgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733049AbfE3DXV (ORCPT
+        id S1733055AbfE3DXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731079AbfE3DRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:22 -0400
+        id S1730252AbfE3DRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7F702463F;
-        Thu, 30 May 2019 03:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3EED24109;
+        Thu, 30 May 2019 03:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186242;
-        bh=B3DhlEJ4ntR8egRJP5RlZfeyVV2zTNXwZoWVRbGKFCE=;
+        s=default; t=1559186243;
+        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvvINWwa7TkoOxfxqMbQDJoQYKY+wx0nwIwBK8HaIG6MjOBct5meD37BIbvIOlkOr
-         +ud3nDxZHVmj4tCoFyBUMCCKi7Ka91OGZKXUjPNOFhVrmBLVWsqdxaaKQxIGKSez/a
-         2/Z9+K7u1KGfuz87vRnvAHA8VXqs/IHehDIpwORo=
+        b=jm73/i180Z8UH6WFGDuDhoWmlJA2mO4FWxiepnAHOIeqFexZCwMkqIPA9cw1z6S0o
+         +JqNbFMFhhd8w32pQmyxeNrUDT0RFhlwg3ADUpxfhKMoReGSg0NsmAALW2Qg6rNbju
+         noVx/jguPNZqdFFcmkjiQNvF+a6p4xDg+YAMJM+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 128/276] media: pvrusb2: Prevent a buffer overflow
-Date:   Wed, 29 May 2019 20:04:46 -0700
-Message-Id: <20190530030533.803120908@linuxfoundation.org>
+Subject: [PATCH 4.19 157/276] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:05:15 -0700
+Message-Id: <20190530030535.346718926@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,58 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c1ced46c7b49ad7bc064e68d966e0ad303f917fb ]
+[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
 
-The ctrl_check_input() function is called from pvr2_ctrl_range_check().
-It's supposed to validate user supplied input and return true or false
-depending on whether the input is valid or not.  The problem is that
-negative shifts or shifts greater than 31 are undefined in C.  In
-practice with GCC they result in shift wrapping so this function returns
-true for some inputs which are not valid and this could result in a
-buffer overflow:
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-    drivers/media/usb/pvrusb2/pvrusb2-ctrl.c:205 pvr2_ctrl_get_valname()
-    warn: uncapped user index 'names[val]'
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-The cptr->hdw->input_allowed_mask mask is configured in pvr2_hdw_create()
-and the highest valid bit is BIT(4).
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-Fixes: 7fb20fa38caa ("V4L/DVB (7299): pvrusb2: Improve logic which handles input choice availability")
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 2 ++
- drivers/media/usb/pvrusb2/pvrusb2-hdw.h | 1 +
- 2 files changed, 3 insertions(+)
+ drivers/hwmon/vt1211.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-index a8519da0020bf..673fdca8d2dac 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-@@ -666,6 +666,8 @@ static int ctrl_get_input(struct pvr2_ctrl *cptr,int *vp)
- 
- static int ctrl_check_input(struct pvr2_ctrl *cptr,int v)
- {
-+	if (v < 0 || v > PVR2_CVAL_INPUT_MAX)
-+		return 0;
- 	return ((1 << v) & cptr->hdw->input_allowed_mask) != 0;
+diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
+index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
+--- a/drivers/hwmon/vt1211.c
++++ b/drivers/hwmon/vt1211.c
+@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
+ 	outb(ldn, sio_cip + 1);
  }
  
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
-index 25648add77e58..bd2b7a67b7322 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
-@@ -50,6 +50,7 @@
- #define PVR2_CVAL_INPUT_COMPOSITE 2
- #define PVR2_CVAL_INPUT_SVIDEO 3
- #define PVR2_CVAL_INPUT_RADIO 4
-+#define PVR2_CVAL_INPUT_MAX PVR2_CVAL_INPUT_RADIO
+-static inline void superio_enter(int sio_cip)
++static inline int superio_enter(int sio_cip)
+ {
++	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio_cip);
+ 	outb(0x87, sio_cip);
++
++	return 0;
+ }
  
- enum pvr2_config {
- 	pvr2_config_empty,    /* No configuration */
+ static inline void superio_exit(int sio_cip)
+ {
+ 	outb(0xaa, sio_cip);
++	release_region(sio_cip, 2);
+ }
+ 
+ /* ---------------------------------------------------------------------
+@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
+ 
+ static int __init vt1211_find(int sio_cip, unsigned short *address)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	int devid;
+ 
+-	superio_enter(sio_cip);
++	err = superio_enter(sio_cip);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
+ 	if (devid != SIO_VT1211_ID)
+ 		goto EXIT;
 -- 
 2.20.1
 
