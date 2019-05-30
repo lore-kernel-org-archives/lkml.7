@@ -2,100 +2,135 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE65BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF94C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16A624CEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFCD24CEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wXKeDR6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfE3KnP (ORCPT
+        id S1726831AbfE3KoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:43:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49108 "EHLO mx1.suse.de"
+        Thu, 30 May 2019 06:44:05 -0400
+Received: from mail-eopbgr30058.outbound.protection.outlook.com ([40.107.3.58]:31110
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfE3KnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:43:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5E8B3ACEE;
-        Thu, 30 May 2019 10:43:13 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 04DA8DA85E; Thu, 30 May 2019 12:44:06 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.2-rc3
-Date:   Thu, 30 May 2019 12:44:01 +0200
-Message-Id: <cover.1559167316.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.21.0
+        id S1725440AbfE3KoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 06:44:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VDyy5oM6CejoAPXC8eRyn4WaMFvf43wM9mhb2FcfdTE=;
+ b=wXKeDR6cPpg0DSyLhv3tNPpaxW1KGrUgGtLoRN2aJfx7iDVWB1lswpugBb9/s3JKKh1IGEyDKHERxfNlKC2EXhdjfqwgECyuwdFPmX6MeT5kCftulesVs4jdZr/da9d0X+1+pT6dp71RHIf48of8ebP2N1NLNjmnjEVOPGCjtHw=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4942.eurprd08.prod.outlook.com (10.255.158.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Thu, 30 May 2019 10:43:58 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.021; Thu, 30 May 2019
+ 10:43:58 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH 0/2] drm/komeda: Add writeback downscaling split support
+Thread-Topic: [PATCH 0/2] drm/komeda: Add writeback downscaling split support
+Thread-Index: AQHVFtSWfnHeHgfsa0Wgx/8gmSiP5A==
+Date:   Thu, 30 May 2019 10:43:58 +0000
+Message-ID: <20190530104335.2395-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR04CA0069.apcprd04.prod.outlook.com
+ (2603:1096:202:15::13) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b90f080-5868-457a-202e-08d6e4ebb865
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR08MB4942;
+x-ms-traffictypediagnostic: VE1PR08MB4942:
+x-ms-exchange-purlcount: 10
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB4942D13C33DF6437D2887A14B3180@VE1PR08MB4942.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(376002)(396003)(189003)(199004)(25786009)(26005)(66476007)(6116002)(3846002)(73956011)(103116003)(54906003)(66446008)(4326008)(476003)(2616005)(66556008)(256004)(68736007)(186003)(64756008)(386003)(14454004)(6306002)(66946007)(55236004)(102836004)(110136005)(52116002)(99286004)(6506007)(966005)(2201001)(50226002)(6436002)(8676002)(86362001)(6512007)(305945005)(6486002)(81156014)(71200400001)(81166006)(2501003)(66066001)(8936002)(36756003)(7736002)(2906002)(486006)(5660300002)(316002)(1076003)(53936002)(478600001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4942;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PsKcoIq43BomiEetCo3Rn79j73h5LTHXbpmAC9YaYndyXbhtjR9sGIjRBN/PNjQsh4xBb7PW32YEu7vd0mHjGC/IXSDdcTwtlKPuZOwWlTY0rRiGJNQEvM7ribnVj6mCZJjX/y78nPbUNGJaAohmMQ/b0saz/vfPHUwUDCVL4EwR+ZgjP1g1+NycvWauSDXa+BdK6PQfAIcMRHmQxayi1eovBaRHT0QnxfdY+p9C7Rhos5vmqsuebAV28gmSpcbPIO+arioMJFFck9Z6ZAom4Y74CMUuk4zsEvEfhDTMs6X99OQtWd/X+fBoEh7aZAyNe6bYCvKeBgWUJDmeLkh7Z5ngMQ88Tj6cAA3EgcqIlaMH+HlYrcH44vQGvbpBquGSCigjRa+63q/j5nDytkgMNq7ZuAtUx5JfaXEBe1BGlxE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b90f080-5868-457a-202e-08d6e4ebb865
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 10:43:58.4994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4942
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-a few more fixes for bugs reported by users, fuzzing tools and
-regressions:
-
-* fix crashes in relocation
-  * resuming interrupted balance operation does not properly clean up
-    orphan trees
-  * with enabled qgroups, resuming needs to be more careful about
-    block groups due to limited context when updating qgroups
-
-* fsync and logging fixes found by fuzzing
-
-* incremental send fixes for no-holes and clone
-
-* fix spin lock type used in timer function for zstd
-
-No merge conflicts, please pull. Thanks.
-
-----------------------------------------------------------------
-The following changes since commit 4e9845eff5a8027b5181d5bff56a02991fe46d48:
-
-  Btrfs: tree-checker: detect file extent items with overlapping ranges (2019-05-16 14:33:51 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc2-tag
-
-for you to fetch changes up to 06989c799f04810f6876900d4760c0edda369cf7:
-
-  Btrfs: fix race updating log root item during fsync (2019-05-28 19:26:46 +0200)
-
-----------------------------------------------------------------
-Dennis Zhou (1):
-      btrfs: correct zstd workspace manager lock to use spin_lock_bh()
-
-Filipe Manana (5):
-      Btrfs: incremental send, fix file corruption when no-holes feature is enabled
-      Btrfs: incremental send, fix emission of invalid clone operations
-      Btrfs: fix fsync not persisting changed attributes of a directory
-      Btrfs: fix wrong ctime and mtime of a directory after log replay
-      Btrfs: fix race updating log root item during fsync
-
-Nikolay Borisov (1):
-      btrfs: Ensure replaced device doesn't have pending chunk allocation
-
-Qu Wenruo (2):
-      btrfs: reloc: Also queue orphan reloc tree for cleanup to avoid BUG_ON()
-      btrfs: qgroup: Check bg while resuming relocation to avoid NULL pointer dereference
-
- fs/btrfs/dev-replace.c | 35 +++++++++++++++++++++++----------
- fs/btrfs/inode.c       | 14 ++++++++++++--
- fs/btrfs/qgroup.c      |  8 +++++++-
- fs/btrfs/relocation.c  | 27 ++++++++++++++++++--------
- fs/btrfs/send.c        | 52 +++++++++++++++++++++++++++++++++++++++++++++++---
- fs/btrfs/tree-log.c    | 20 ++++++-------------
- fs/btrfs/zstd.c        | 20 +++++++++----------
- 7 files changed, 128 insertions(+), 48 deletions(-)
+V3JpdGViYWNrIHNwbGl0IGlzIGFsc28gZm9yIHdvcmthcm91bmQgdGhlIHNpemUgbGltaXRhdGlv
+biBvZiBkNzEgc2NhbGVyLg0KTGlrZSBsYXllcl9zcGxpdCwgd3JpdGViYWNrIGRvd25zY2FsaW5n
+IGFsc28gY2FuIHVzZSB0d28gc2NhbGVycyB0byBoYW5kbGUNCnRoZSBzY2FsaW5nIGhhbGYtYnkt
+aGFsZi4gVGhlIG9ubHkgZGlmZmVybmVuY2UgaXMgd3JpdGJhY2sgbmVlZHMgYQ0Kc3RhbmRhbG9u
+ZSBjb21wb25lbnQgKHNwbGl0dGVyKSdzIGhlbHAgdG8gc3BsaXQgdGhlIGNvbXBvc2l0aW9uIHJl
+c3VsdC4NClRoZSBkYXRhIHBpcGVsaW5lIG9mIHdyaXRlYmFjayBzcGxpdCBhcyBiZWxvdzoNCg0K
+ICAgICAgICAgICAgICAgICAgIC8tPiBzY2FsZXItMCAtPlwNCiBjb21waXogLT4gc3BsaXR0ZXIg
+ICAgICAgICAgICAgICAgbWVyZ2VyIC0+IHdiX2xheWVyIC0+IG1lbW9yeQ0KICAgICAgICAgICAg
+ICAgICAgIFwtPiBzY2FsZXItMSAtPi8NCg0KRGVwZW5kcyBvbjoNCi0gaHR0cHM6Ly9wYXRjaHdv
+cmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy81ODcxMC8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJl
+ZWRlc2t0b3Aub3JnL3Nlcmllcy81OTAwMC8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0
+b3Aub3JnL3Nlcmllcy81OTAwMi8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
+L3Nlcmllcy81OTc0Ny8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmll
+cy81OTkxNS8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDA4
+My8NCi0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDY5OC8NCi0g
+aHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDg1Ni8NCi0gaHR0cHM6
+Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MDg5My8NCi0gaHR0cHM6Ly9wYXRj
+aHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MTM3MC8NCg0KSmFtZXMgUWlhbiBXYW5nIChB
+cm0gVGVjaG5vbG9neSBDaGluYSkgKDIpOg0KICBkcm0va29tZWRhOiBBZGQgbmV3IGNvbXBvbmVu
+dCBrb21lZGFfc3BsaXR0ZXINCiAgZHJtL2tvbWVkYTogRW5hYmxlIHdyaXRlYmFjayBzcGxpdCBz
+dXBwb3J0DQoNCiAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgICAg
+fCAgNjMgKysrKysrKysrKw0KIC4uLi9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBl
+bGluZS5jICB8ICAgMyArDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVs
+aW5lLmggIHwgIDIzICsrKy0NCiAuLi4vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0
+YXRlLmMgICAgfCAxMTcgKysrKysrKysrKysrKysrKy0tDQogLi4uL2FybS9kaXNwbGF5L2tvbWVk
+YS9rb21lZGFfcHJpdmF0ZV9vYmouYyAgIHwgIDUwICsrKysrKysrDQogLi4uL2FybS9kaXNwbGF5
+L2tvbWVkYS9rb21lZGFfd2JfY29ubmVjdG9yLmMgIHwgIDE3ICsrLQ0KIDYgZmlsZXMgY2hhbmdl
+ZCwgMjU3IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQ0KDQotLQ0KMi4xNy4xDQo=
