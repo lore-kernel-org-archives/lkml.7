@@ -2,56 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABE6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AB6C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A1D25079
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CB825079
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189179;
-	bh=a7LZHAGSnn7a+kd0ARbVNsTrdcYFhfOU/2ik8HLnMxU=;
+	s=default; t=1559189183;
+	bh=xNydASI18Rj2zLvBaJytxcUwe6gFezTCWCARsuFWbys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/M9jm3NUzOnQ1OaDU9NsAjGL+Yt7SOIbJbsLJdnC2wDrvdcgbhbb0I9TSwlQWOtn
-	 ed8eEb+jmffFjcsBuiA45ue5leMswPISUwtGn3XDeCVK3rOafnQ6P8UNcDb4UVl/nu
-	 mDIbFXq/Sp8nySGoVD8bYpp9WaxAkq4CLZyxafe0=
+	b=mMJp42gVMwAIMdvUKMsqauEmsGuzGwoCu7TQv/2ZMYea8hbPS33+IYYy9K58mRZVB
+	 ECkbscF20RVBh9yce5HzY6mupDTP3jfiD56colK3/oi3Wt+aQkSbUMTgoCH1zGoddi
+	 bOtfuTeZ0oZvRfB7T9czfAoxEVtYLNOsMpzKrS08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfE3EGS (ORCPT
+        id S1727008AbfE3EGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:06:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731181AbfE3DRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:36 -0400
+        id S1731173AbfE3DRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2FFD246F4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0458D246EE;
         Thu, 30 May 2019 03:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186255;
-        bh=a7LZHAGSnn7a+kd0ARbVNsTrdcYFhfOU/2ik8HLnMxU=;
+        bh=xNydASI18Rj2zLvBaJytxcUwe6gFezTCWCARsuFWbys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2BJdFEnzgJRByjOK42sZaJegtWTtPhbNWf4uBRVVseK1NRPYOkppWjbOY6g7Dq6/S
-         vegZdZo2VqwHC4TvWh9mMEXMU2pw0d+PuPfnCR7g5pDeB3ClFyS0a4ZbYZFzyhCWU8
-         XPUfHt91IiNBu/eVUkJVB/jDrxaipMpt4jWBNFjs=
+        b=rx43P8SqF9Czn9kYPEX5u0IrTVeMmLWayk1ETrTcFBma+YOQ3wUgPcQo4/PDGLR1c
+         zgJ9gE17jp/XeQbcukueJOnXIirTB2p1Ijkis5r3GthKYYQ7qnd5E0K/vITMKHEIXP
+         MYdkXj1ZEhTCFQ6nbw2AP1E0d2OP0FKrtitdBnBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/276] x86/build: Keep local relocations with ld.lld
-Date:   Wed, 29 May 2019 20:05:42 -0700
-Message-Id: <20190530030536.752838183@linuxfoundation.org>
+        Jann Horn <jannh@google.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 174/276] x86/microcode: Fix the ancient deprecated microcode loading method
+Date:   Wed, 29 May 2019 20:05:32 -0700
+Message-Id: <20190530030536.226687991@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -64,42 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
+[ Upstream commit 24613a04ad1c0588c10f4b5403ca60a73d164051 ]
 
-The LLVM linker (ld.lld) defaults to removing local relocations, which
-causes KASLR boot failures. ld.bfd and ld.gold already handle this
-correctly. This adds the explicit instruction "--discard-none" during
-the link phase. There is no change in output for ld.bfd and ld.gold,
-but ld.lld now produces an image with all the needed relocations.
+Commit
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+  2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+
+added the new define UCODE_NEW to denote that an update should happen
+only when newer microcode (than installed on the system) has been found.
+
+But it missed adjusting that for the old /dev/cpu/microcode loading
+interface. Fix it.
+
+Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
-Link: https://github.com/ClangBuiltLinux/linux/issues/404
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com>
+Link: https://lkml.kernel.org/r/20190405133010.24249-3-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/microcode/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index ffc823a8312fb..ab2071e40efe3 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
- export BITS
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index b9bc8a1a584e3..b43ddefd77f45 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -418,8 +418,9 @@ static int do_microcode_update(const void __user *buf, size_t size)
+ 		if (ustate == UCODE_ERROR) {
+ 			error = -1;
+ 			break;
+-		} else if (ustate == UCODE_OK)
++		} else if (ustate == UCODE_NEW) {
+ 			apply_microcode_on_target(cpu);
++		}
+ 	}
  
- ifdef CONFIG_X86_NEED_RELOCS
--        LDFLAGS_vmlinux := --emit-relocs
-+        LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
- 
- #
+ 	return error;
 -- 
 2.20.1
 
