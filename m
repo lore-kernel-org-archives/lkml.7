@@ -2,114 +2,124 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8219FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215B1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5322F25AF0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D2525AF2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn5s0nZS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vqlNLopf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfE3Oam (ORCPT
+        id S1726820AbfE3ObA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:30:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46147 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3Oal (ORCPT
+        Thu, 30 May 2019 10:31:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57960 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfE3Oa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:30:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y11so4058003pfm.13;
-        Thu, 30 May 2019 07:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nm5F0NoYud8dFTyRO4X6rwct4PghoxDGwB9Sv0Qk1Bg=;
-        b=Rn5s0nZSWi8EQ+5KmOiZcdafiRF3NPaY2mYvVgKqGV5PDivqeK82NNLvOJOC91Adz6
-         g6XEnt7yL37uVtJzHYDFR72JhLA8wm18aaQYg2ViWbIZGsn0W4hosX0YYZFxTiBn8lf5
-         4BLI/mj63WI6eaSl+TJDa5xy4nSJOiaTg5cgn925Qqytlr+ET0lP0nKqD/lzpARAED1Y
-         Z06Nk2LhgeMiOyZn1WGhBDmJp52e3SxJlfit3wgX8EaOqUzAsLcbM3UU2uVOdUKt0t7I
-         w6ap5NxGY7znmoXNfc4/z6wcnJyqyvD64l2mHHDYCFCF1+46KdAKCV8OA+h/fViLuAK0
-         aZJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nm5F0NoYud8dFTyRO4X6rwct4PghoxDGwB9Sv0Qk1Bg=;
-        b=nWEGzBVLWCpDXwjVU45H7sAoegeQR1VL3SNPIvm8jpfMwCJ1hKOd3LdkEhbuSmLwTt
-         Uai5FneCpZXGBc5HJom/Uy8fxNz9lZsSNzNTulqwWk5PTBl+E9YiYBBoPXdp5W81fIFv
-         tXkBVbtosNVkMRhn1Y86m94cofXQHY55RvsSBgmbOyMJIK/E+bOfVjD6Q2xm7VoiiKZ/
-         jtqfFCEJUrvIq/nop8NKGqZjNcdXqFqDLF1ZIMnUtPRH89IgR4ZaiTEGYRvWGRtCgM+V
-         XgzsXz6/G79VZs7Ckn2Vo07+7ZM0Awo+0kF5ZUFEYsUV+YpINoTDgnb653HydaYiS75w
-         PmUw==
-X-Gm-Message-State: APjAAAWV/LWIKWhpre42+yyzKiFDkocIbacqVa1rvwX6RNhv1VAB+9Qt
-        Fkns5/OU9oh4r/FYgcZqL84=
-X-Google-Smtp-Source: APXvYqyf6RJQmExoYDAgn2nmPkTagv/GH+iSu2/KlyPfNpnjMuk7f+ZEwsIb1a9yhxSYO/bhI35eJw==
-X-Received: by 2002:aa7:8495:: with SMTP id u21mr4002574pfn.125.1559226641022;
-        Thu, 30 May 2019 07:30:41 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id c129sm3232904pfg.178.2019.05.30.07.30.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 07:30:40 -0700 (PDT)
-Date:   Thu, 30 May 2019 07:30:37 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-Message-ID: <20190530143037.iky5kk3h4ssmec3f@localhost>
-References: <20190528235627.1315-1-olteanv@gmail.com>
- <20190529045207.fzvhuu6d6jf5p65t@localhost>
- <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
- <20190530034555.wv35efen3igwwzjq@localhost>
- <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
+        Thu, 30 May 2019 10:30:59 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UEUqEa063847;
+        Thu, 30 May 2019 09:30:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559226652;
+        bh=Cg30MeZA99CqmwGHpSCXMESG3MfaMxR7+LwVQ+Gg4Uo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vqlNLopfA8qkd2o5CEXM8oA8SZd2A64ck04yKT09X0fpUzrQ60JaBUuH7AKhWkXqI
+         lgtye+vVpoZ/o6EXhtL7TktSyIhnBJts9Xyt1vCIL6dDSBAMFV06Ge9clwdOXmr3y0
+         mVmjvKCNgz+8g58Qxs7HTTp+JjgKqgK4gDb730FQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UEUqx7095739
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 May 2019 09:30:52 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
+ May 2019 09:30:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 30 May 2019 09:30:49 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UEUnRo039151;
+        Thu, 30 May 2019 09:30:49 -0500
+Subject: Re: [PATCH v3 1/9] leds: multicolor: Add sysfs interface definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <20190523190820.29375-2-dmurphy@ti.com>
+ <f01ac400-efda-80a8-4d63-1e2add5e054a@gmail.com>
+ <185abdd6-100c-0a71-2da9-8f556d8ea701@ti.com>
+ <333167d0-4615-2fbe-e933-cbca623998ef@gmail.com>
+ <e54d9d29-5daa-fd3a-a5a9-ebd2450882ee@ti.com>
+ <c947d07c-2a8d-b9a8-b2ac-6c249ac54bca@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ee675df2-9097-8e1b-b9db-a42017ac06b6@ti.com>
+Date:   Thu, 30 May 2019 09:30:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <c947d07c-2a8d-b9a8-b2ac-6c249ac54bca@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:01:23PM +0300, Vladimir Oltean wrote:
-> In fact that's why it doesn't work: because linuxptp adds ptp_dst_mac
-> (01-1B-19-00-00-00) and (01-80-C2-00-00-0E) to the MAC's multicast
-> filter, but the switch in its great wisdom mangles bytes
-> 01-1B-19-xx-xx-00 of the DMAC to place the switch id and source port
-> there (a rudimentary tagging mechanism). So the frames are no longer
-> accepted by this multicast MAC filter on the DSA master port unless
-> it's put in ALLMULTI or PROMISC.
+Jacek
 
-IOW, it is not linuxptp's choice to use these modes, but rather this
-is caused by a limitation of your device.
- 
-> If the meta frames weren't associated with the correct link-local
-> frame, then the whole expect_meta -> SJA1105_STATE_META_ARRIVED
-> mechanism would go haywire, but it doesn't.
+On 5/28/19 1:29 PM, Jacek Anaszewski wrote:
+> On 5/28/19 8:19 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 5/28/19 12:44 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 5/28/19 7:32 PM, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 5/27/19 3:00 PM, Jacek Anaszewski wrote:
+>>>>> Hi Dan,
+>>>>>
+>>>>> Thank you for the update.
+>>>>>
+>>>>> One thing is missing here - we need to document how legacy brightness
+>>>>> levels map to the sub-LED color levels, i.e. what you do in
+>>>>> multicolor_set_brightness().
+>>>>
+>>>>
+>>>> Ok so i will need to document the algorithm that is used to 
+>>>> determine the color LED brightness.
+>>>
+>>> Right, and please send just an update of that single patch.
+>>>
+>>
+>> So you are asking for v4 with only this patch updated.
+>
+> Not exactly - I am asking for v4 of this patch. We don't need
+> to spam the lists with the rest of unaltered patches from the series.
+>
+> The interface seems to be the most vital part of this patch set,
+> and it is possible that it will undergo at least slight modifications.
+>
+> We will move to discussing the code once we achieve a total consensus.
+>
 
-Not necessarily.  If two frames that arrive at nearly the same time
-get their timestamps mixed up, that would be enough to break the time
-values but without breaking your state machine.
+Sorry for the late reply.  OK I have updated the sysfs documentation but 
+in doing so I am also going to send in v4 of the sysfs documentation as 
+it explains the interfaces in more detail. Also I will be adding more 
+technical information into that sysfs doc on what is done and what to 
+expect and it's usage.
 
-> I was actually thinking it has something to do with the fact that I
-> shouldn't apply frequency corrections on timestamps of PTP delay
-> messages. Does that make any sense?
 
-What do you mean by that?  Is the driver altering PTP message fields?
+Dan
 
-Thanks,
-Richard
