@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B42C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAECC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C27D25AC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CFA25A87
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfE3OUY (ORCPT
+        id S1727444AbfE3OU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:20:24 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49024 "EHLO inva020.nxp.com"
+        Thu, 30 May 2019 10:20:29 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47142 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726498AbfE3OT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:19:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63FE91A0179;
-        Thu, 30 May 2019 16:19:55 +0200 (CEST)
+        id S1726454AbfE3OT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:19:56 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C226B2005D7;
+        Thu, 30 May 2019 16:19:54 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 57C171A016B;
-        Thu, 30 May 2019 16:19:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B4BD620027F;
+        Thu, 30 May 2019 16:19:54 +0200 (CEST)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C38CA2026B;
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BF522061C;
         Thu, 30 May 2019 16:19:54 +0200 (CEST)
 From:   laurentiu.tudor@nxp.com
 To:     netdev@vger.kernel.org, madalin.bucur@nxp.com, roy.pledge@nxp.com,
@@ -36,9 +36,9 @@ Cc:     Joakim.Tjernlund@infinera.com, davem@davemloft.net,
         linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v3 3/6] dpaa_eth: defer probing after qbman
-Date:   Thu, 30 May 2019 17:19:48 +0300
-Message-Id: <20190530141951.6704-4-laurentiu.tudor@nxp.com>
+Subject: [PATCH v3 2/6] fsl/fman: add API to get the device behind a fman port
+Date:   Thu, 30 May 2019 17:19:47 +0300
+Message-Id: <20190530141951.6704-3-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
 References: <20190530141951.6704-1-laurentiu.tudor@nxp.com>
@@ -50,60 +50,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Enabling SMMU altered the order of device probing causing the dpaa1
-ethernet driver to get probed before qbman and causing a boot crash.
-Add predictability in the probing order by deferring the ethernet
-driver probe after qbman and portals by using the recently introduced
-qbman APIs.
+Add an API that retrieves the 'struct device' that the specified fman
+port probed against. The new API will be used in a subsequent iommu
+enablement related patch.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
 ---
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/net/ethernet/freescale/fman/fman_port.c | 14 ++++++++++++++
+ drivers/net/ethernet/freescale/fman/fman_port.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index d3f2408dc9e8..975f307f0caa 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2774,6 +2774,37 @@ static int dpaa_eth_probe(struct platform_device *pdev)
- 	int err = 0, i, channel;
- 	struct device *dev;
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
+index ee82ee1384eb..bd76c9730692 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.c
++++ b/drivers/net/ethernet/freescale/fman/fman_port.c
+@@ -1728,6 +1728,20 @@ u32 fman_port_get_qman_channel_id(struct fman_port *port)
+ }
+ EXPORT_SYMBOL(fman_port_get_qman_channel_id);
  
-+	err = bman_is_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failing probe due to bman probe error\n");
-+		return -ENODEV;
-+	}
-+	err = qman_is_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failing probe due to qman probe error\n");
-+		return -ENODEV;
-+	}
-+	err = bman_portals_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev,
-+			"failing probe due to bman portals probe error\n");
-+		return -ENODEV;
-+	}
-+	err = qman_portals_probed();
-+	if (!err)
-+		return -EPROBE_DEFER;
-+	if (err < 0) {
-+		dev_err(&pdev->dev,
-+			"failing probe due to qman portals probe error\n");
-+		return -ENODEV;
-+	}
++/**
++ * fman_port_get_device
++ * port:	Pointer to the FMan port device
++ *
++ * Get the 'struct device' associated to the specified FMan port device
++ *
++ * Return: pointer to associated 'struct device'
++ */
++struct device *fman_port_get_device(struct fman_port *port)
++{
++	return port->dev;
++}
++EXPORT_SYMBOL(fman_port_get_device);
 +
- 	/* device used for DMA mapping */
- 	dev = pdev->dev.parent;
- 	err = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(40));
+ int fman_port_get_hash_result_offset(struct fman_port *port, u32 *offset)
+ {
+ 	if (port->buffer_offsets.hash_result_offset == ILLEGAL_BASE)
+diff --git a/drivers/net/ethernet/freescale/fman/fman_port.h b/drivers/net/ethernet/freescale/fman/fman_port.h
+index 9dbb69f40121..82f12661a46d 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_port.h
++++ b/drivers/net/ethernet/freescale/fman/fman_port.h
+@@ -157,4 +157,6 @@ int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp);
+ 
+ struct fman_port *fman_port_bind(struct device *dev);
+ 
++struct device *fman_port_get_device(struct fman_port *port);
++
+ #endif /* __FMAN_PORT_H */
 -- 
 2.17.1
 
