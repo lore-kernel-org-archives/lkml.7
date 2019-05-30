@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC1C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C74C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33CD258FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6733D258E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191151;
-	bh=sTG8xHWnywbndeLRxXkdSjYXkgYJTnlYbd1AZr8ln0M=;
+	s=default; t=1559191157;
+	bh=iyYhyzwjSKdo9HU+rtPr7PdzkHWb+QaJqJfY4l4hY0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztnfvThG8oR7mpBvD8Puqs//Z8bJd4gEV9LZzWDZvbrIZtEXSZWUOQp2CdF0/Rfh8
-	 VPUr/VR+0vVXqPjQmudVTi3ruX+fIccSkuMyrQwN14vybP3LAOvGhYR0E23Ai/FMyl
-	 +cep1vquzAZwviI1C/J41RDpb/fIyPDM0Wv6Rejw=
+	b=camjzMwKRJZycVTcWmpWTNjDf+aP73T6qJ2/IdEXvfgvJuvQN79F3ZhLMAKeHE6mw
+	 rU/rQxhZTU9BjhraR5kpj4d8HOI2SQl9dvSQCjZFGVa7mO78WZtspLK5k6uHg1vtL+
+	 MYy15eHFQZllBZCedCEbAJQxpwb8QDU0/Lh+SQEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfE3DMk (ORCPT
+        id S2388628AbfE3EjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49876 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbfE3DLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:06 -0400
+        id S1729140AbfE3DMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1EBC244EC;
-        Thu, 30 May 2019 03:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2284023DE3;
+        Thu, 30 May 2019 03:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185866;
-        bh=sTG8xHWnywbndeLRxXkdSjYXkgYJTnlYbd1AZr8ln0M=;
+        s=default; t=1559185959;
+        bh=iyYhyzwjSKdo9HU+rtPr7PdzkHWb+QaJqJfY4l4hY0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1Z8XWg51kGCKlegohYiCoynVzuYjcIdt1EEahtpnV+D+bYtTyvgiuVRi4Hlhm+fZ
-         v5GFLhFzf7hMWGT0zivo7i+CDFqijrtUUbPErrTR1JxrBGtRUr3fafXTaIxjxjJLnp
-         Tw3L6pD4n6DX+EK9a5pXkZUiiunUdNt3OBjb7Mg8=
+        b=lkDsg+kMdffh1M5C3cI73avBi+UjJJDQf2pKTo1P8akHPXJiyAoGzXAv5+HXCwNts
+         EHzowfApzmERlo0Vd4muFfTG4RjtScHBFoR8mmRcTp7mu4VYc6w0zgHMeJ9KTOJUK8
+         Lqsg9IslDeSWgP7+7w68ojr2FJyv5OeEjlplI8uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 205/405] mmc: sdhci-of-esdhc: add erratum eSDHC5 support
-Date:   Wed, 29 May 2019 20:03:23 -0700
-Message-Id: <20190530030551.518488537@linuxfoundation.org>
+Subject: [PATCH 5.1 377/405] regulator: wm831x ldo: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:15 -0700
+Message-Id: <20190530030559.808789632@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,36 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a46e42712596b51874f04c73f1cdf1017f88df52 ]
+[ Upstream commit 8be64b6d87bd47d81753b60ddafe70102ebfd76b ]
 
-Software writing to the Transfer Type configuration register
-(system clock domain) can cause a setup/hold violation in the
-CRC flops (card clock domain), which can cause write accesses
-to be sent with corrupt CRC values. This issue occurs only for
-write preceded by read. this erratum is to fix this issue.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
+
+Fixes: d1c6b4fe668b ("regulator: Add WM831x LDO support")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/regulator/wm831x-ldo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index 4e669b4edfc11..9da53e548691b 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -1074,6 +1074,9 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
+diff --git a/drivers/regulator/wm831x-ldo.c b/drivers/regulator/wm831x-ldo.c
+index e4a6f888484ec..fcd038e7cd803 100644
+--- a/drivers/regulator/wm831x-ldo.c
++++ b/drivers/regulator/wm831x-ldo.c
+@@ -51,9 +51,11 @@ static irqreturn_t wm831x_ldo_uv_irq(int irq, void *data)
+ {
+ 	struct wm831x_ldo *ldo = data;
  
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p4080-esdhc") ||
++	regulator_lock(ldo->regulator);
+ 	regulator_notifier_call_chain(ldo->regulator,
+ 				      REGULATOR_EVENT_UNDER_VOLTAGE,
+ 				      NULL);
++	regulator_unlock(ldo->regulator);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.20.1
 
