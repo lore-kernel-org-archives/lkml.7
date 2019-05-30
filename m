@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E9FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC0E24811
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C6924812
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186923;
-	bh=5zpwOjDO1fpQzwqoXZLpNd3AB+Dz2aPEnFSCm18DBbw=;
+	s=default; t=1559186935;
+	bh=S0RtJDyOdJxOcZGkcElDQaz2DuMFWae4Nk8Vcu5JZk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d1m9u9fWKrqaJgiiO4A+KsWWq+k7371OYthyDHdELqIBh/aECFs0PYNrVqGGLUcES
-	 +NAyQGds9va47o50nLnElXtgCHG76VY3mrmZhfQLm2pgxSE+LDQvOU0PlYGG0vSTJn
-	 IWfia35QykgwiEDe7/r6UpqJpCx0lHfRPQk0KVQ0=
+	b=pmbpp3iX+ZopV5YZyGfFcRh01lxZOWR2IyRmo0fIErb+7eSRqAxaRCy9iTt6gZwT0
+	 yi+XM4dabQ8iEX/NzY/WMPl2jVj2Q/Mv5yxLI2nJ2bsNF5NkiX85+YaMsHPDAbog49
+	 DBFzq+QS40bjKCP1IXnOOoigYgQcxY3v9RuoaYZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbfE3D2m (ORCPT
+        id S2388250AbfE3D2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57716 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbfE3DUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:02 -0400
+        id S1730512AbfE3DUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A7B24818;
-        Thu, 30 May 2019 03:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2E324820;
+        Thu, 30 May 2019 03:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186402;
-        bh=5zpwOjDO1fpQzwqoXZLpNd3AB+Dz2aPEnFSCm18DBbw=;
+        s=default; t=1559186420;
+        bh=S0RtJDyOdJxOcZGkcElDQaz2DuMFWae4Nk8Vcu5JZk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+ODpfgw2HsNsYdRjxceF1M+bECaodCU2DyspYVg3LLCFGZPsh7TPlT73JagECNY3
-         s5STgWKbkrtaJZmw1pEDC1TqkpZICYpQtCr+rUpTTQjvyq3PSY7dN3K2hlVVWP9x1c
-         5D+cKFbAH0I1S01yLuB9unYJB+c1Czy8blUq8qh8=
+        b=prI+XrSRDOO0gS4bk1FVYWBFfYPidAo9YkHdkGtIL19x+Sr3k0Y9cQNE3oJpgfufB
+         zofsjJZIcWJ593e9S/G2U92Z6ypMGXhLzMEz2eA/H7DGHMlyennVyRWL5lS/EMQMV9
+         82xTV/NWBHUxEvytLCu++z/AXhCsTlW3yjFglWmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 186/193] spi : spi-topcliff-pch: Fix to handle empty DMA buffers
-Date:   Wed, 29 May 2019 20:07:20 -0700
-Message-Id: <20190530030513.027633848@linuxfoundation.org>
+Subject: [PATCH 4.14 173/193] scsi: qla4xxx: avoid freeing unallocated dma memory
+Date:   Wed, 29 May 2019 20:07:07 -0700
+Message-Id: <20190530030512.001954376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,63 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f37d8e67f39e6d3eaf4cc5471e8a3d21209843c6 ]
+[ Upstream commit 608f729c31d4caf52216ea00d20092a80959256d ]
 
-pch_alloc_dma_buf allocated tx, rx DMA buffers which can fail. Further,
-these buffers are used without a check. The patch checks for these
-failures and sends the error upstream.
+Clang -Wuninitialized notices that on is_qla40XX we never allocate any DMA
+memory in get_fw_boot_info() but attempt to free it anyway:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                if (!(val & 0x07)) {
+                    ^~~~~~~~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
+        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+                                                     ^~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
+                if (!(val & 0x07)) {
+                ^~~~~~~~~~~~~~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
+        dma_addr_t buf_dma;
+                          ^
+                           = 0
+
+Skip the call to dma_free_coherent() here.
+
+Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-topcliff-pch.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
-index 97d137591b18d..4389ab80c23e6 100644
---- a/drivers/spi/spi-topcliff-pch.c
-+++ b/drivers/spi/spi-topcliff-pch.c
-@@ -1294,18 +1294,27 @@ static void pch_free_dma_buf(struct pch_spi_board_data *board_dat,
- 				  dma->rx_buf_virt, dma->rx_buf_dma);
- }
- 
--static void pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
-+static int pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
- 			      struct pch_spi_data *data)
- {
- 	struct pch_spi_dma_ctrl *dma;
-+	int ret;
- 
- 	dma = &data->dma;
-+	ret = 0;
- 	/* Get Consistent memory for Tx DMA */
- 	dma->tx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->tx_buf_dma, GFP_KERNEL);
-+	if (!dma->tx_buf_virt)
-+		ret = -ENOMEM;
-+
- 	/* Get Consistent memory for Rx DMA */
- 	dma->rx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->rx_buf_dma, GFP_KERNEL);
-+	if (!dma->rx_buf_virt)
-+		ret = -ENOMEM;
-+
-+	return ret;
- }
- 
- static int pch_spi_pd_probe(struct platform_device *plat_dev)
-@@ -1382,7 +1391,9 @@ static int pch_spi_pd_probe(struct platform_device *plat_dev)
- 
- 	if (use_dma) {
- 		dev_info(&plat_dev->dev, "Use DMA for data transfers\n");
--		pch_alloc_dma_buf(board_dat, data);
-+		ret = pch_alloc_dma_buf(board_dat, data);
-+		if (ret)
-+			goto err_spi_register_master;
- 	}
- 
- 	ret = spi_register_master(master);
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 630b7404843d0..4421f9bdfcf77 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -5939,7 +5939,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
+ 		val = rd_nvram_byte(ha, sec_addr);
+ 		if (val & BIT_7)
+ 			ddb_index[1] = (val & 0x7f);
+-
++		goto exit_boot_info;
+ 	} else if (is_qla80XX(ha)) {
+ 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
+ 					 &buf_dma, GFP_KERNEL);
 -- 
 2.20.1
 
