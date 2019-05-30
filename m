@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C11C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B50BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3BA24E13
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1528424CAB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188435;
-	bh=TIFyNDY9FzGlyx5lxUxH4rwVPK55GjuPa0XuZBHjypo=;
+	s=default; t=1559188437;
+	bh=uXUyQnom1ZyT0LjF8TENhfFmRzHTBOF3OVN24+Bvjno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnL0t5PChbG82sjqvGgH7LTgH1nN3vSRm4eom1eeAp3S/ykY29JrjmMR52L7pd8H5
-	 UBsl9dXTiFP7dIj40aKpzupyESgG4JrzY91NVeUvr1fyoIlwSC03OpMLOLyVCrbR9i
-	 /ffE+P7beMS69+hZ0dJHpeZ59/uvLuUu5n0QjzPg=
+	b=hmsek59FkV+Vq3WE/WAut7wDxUDHMOY6F5wEKOue5twTjhdO+3oGMHONXfn1e3taI
+	 J/4nM/PVSeFcEKBFyKX5VjWYs5HVIuAwbOGgv7W8c/Kfy77EjJWQszZYlUPe+yRY2c
+	 5XOACzEWOfTafw8aBl44vI+vs7JmFUwf0YHlCkq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387802AbfE3Dxy (ORCPT
+        id S2387814AbfE3Dx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfE3DT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730540AbfE3DT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B9024888;
+        by mail.kernel.org (Postfix) with ESMTPSA id D14182488A;
         Thu, 30 May 2019 03:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186367;
-        bh=TIFyNDY9FzGlyx5lxUxH4rwVPK55GjuPa0XuZBHjypo=;
+        bh=uXUyQnom1ZyT0LjF8TENhfFmRzHTBOF3OVN24+Bvjno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVwhr0TG64Jq1cV1sgzV3iqZ6TWPB9sVcLolDvcTFJCGZDfcZXw5qZaxM5O454vSV
-         /VNY1hR/QBXE7sesLZQaFJDZK208VaT7O34U5SWxya1ZUHw+fY4YL0z5mvZaHGOBF3
-         mplA9OL384D03YcebSKEG6lpsyJq6TVfHIt9d2pY=
+        b=JeZHt450OifOtizEOFEUDOxF0VxcpPcEBKy0gUmAEhlIQh996blvYpu8FspOT7DPq
+         5ladBs6tHJYbflLYy/qPc3dG2bKGgSqIjOqtrJw2lXcGvswQVIjPYAuvbjipOiguFT
+         uzBGDh/KfDVHSkHI23GbkDl4kE3UbevyhJd5vHeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/193] mmc: core: make pwrseq_emmc (partially) support sleepy GPIO controllers
-Date:   Wed, 29 May 2019 20:06:11 -0700
-Message-Id: <20190530030504.992800247@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 075/193] bcache: add failure check to run_cache_set() for journal replay
+Date:   Wed, 29 May 2019 20:05:29 -0700
+Message-Id: <20190530030459.667354211@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,114 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 002ee28e8b322d4d4b7b83234b5d0f4ebd428eda ]
+[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
 
-pwrseq_emmc.c implements a HW reset procedure for eMMC chip by driving a
-GPIO line.
+Currently run_cache_set() has no return value, if there is failure in
+bch_journal_replay(), the caller of run_cache_set() has no idea about
+such failure and just continue to execute following code after
+run_cache_set().  The internal failure is triggered inside
+bch_journal_replay() and being handled in async way. This behavior is
+inefficient, while failure handling inside bch_journal_replay(), cache
+register code is still running to start the cache set. Registering and
+unregistering code running as same time may introduce some rare race
+condition, and make the code to be more hard to be understood.
 
-It registers the .reset() cb on mmc_pwrseq_ops and it registers a system
-restart notification handler; both of them perform reset by unconditionally
-calling gpiod_set_value().
+This patch adds return value to run_cache_set(), and returns -EIO if
+bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
+such failure and stop registering code flow immedidately inside
+register_cache_set().
 
-If the eMMC reset line is tied to a GPIO controller whose driver can sleep
-(i.e. I2C GPIO controller), then the kernel would spit warnings when trying
-to reset the eMMC chip by means of .reset() mmc_pwrseq_ops cb (that is
-exactly what I'm seeing during boot).
+If journal replay fails, run_cache_set() can report error immediately
+to register_cache_set(). This patch makes the failure handling for
+bch_journal_replay() be in synchronized way, easier to understand and
+debug, and avoid poetential race condition for register-and-unregister
+in same time.
 
-Furthermore, on system reset we would gets to the system restart
-notification handler with disabled interrupts - local_irq_disable() is
-called in machine_restart() at least on ARM/ARM64 - and we would be in
-trouble when the GPIO driver tries to sleep (which indeed doesn't happen
-here, likely because in my case the machine specific code doesn't call
-do_kernel_restart(), I guess..).
-
-This patch fixes the .reset() cb to make use of gpiod_set_value_cansleep(),
-so that the eMMC gets reset on boot without complaints, while, since there
-isn't that much we can do, we avoid register the restart handler if the
-GPIO controller has a sleepy driver (and we spit a dev_notice() message to
-let people know)..
-
-This had been tested on a downstream 4.9 kernel with backported
-commit 83f37ee7ba33 ("mmc: pwrseq: Add reset callback to the struct
-mmc_pwrseq_ops") and commit ae60fb031cf2 ("mmc: core: Don't do eMMC HW
-reset when resuming the eMMC card"), because I couldn't boot my board
-otherwise. Maybe worth to RFT.
-
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/pwrseq_emmc.c | 38 ++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ drivers/md/bcache/super.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/core/pwrseq_emmc.c b/drivers/mmc/core/pwrseq_emmc.c
-index efb8a7965dd4a..154f4204d58cb 100644
---- a/drivers/mmc/core/pwrseq_emmc.c
-+++ b/drivers/mmc/core/pwrseq_emmc.c
-@@ -30,19 +30,14 @@ struct mmc_pwrseq_emmc {
- 
- #define to_pwrseq_emmc(p) container_of(p, struct mmc_pwrseq_emmc, pwrseq)
- 
--static void __mmc_pwrseq_emmc_reset(struct mmc_pwrseq_emmc *pwrseq)
--{
--	gpiod_set_value(pwrseq->reset_gpio, 1);
--	udelay(1);
--	gpiod_set_value(pwrseq->reset_gpio, 0);
--	udelay(200);
--}
--
- static void mmc_pwrseq_emmc_reset(struct mmc_host *host)
- {
- 	struct mmc_pwrseq_emmc *pwrseq =  to_pwrseq_emmc(host->pwrseq);
- 
--	__mmc_pwrseq_emmc_reset(pwrseq);
-+	gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
-+	udelay(1);
-+	gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
-+	udelay(200);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 175bab2d72067..85a5afe01d397 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1560,7 +1560,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	return NULL;
  }
  
- static int mmc_pwrseq_emmc_reset_nb(struct notifier_block *this,
-@@ -50,8 +45,11 @@ static int mmc_pwrseq_emmc_reset_nb(struct notifier_block *this,
+-static void run_cache_set(struct cache_set *c)
++static int run_cache_set(struct cache_set *c)
  {
- 	struct mmc_pwrseq_emmc *pwrseq = container_of(this,
- 					struct mmc_pwrseq_emmc, reset_nb);
-+	gpiod_set_value(pwrseq->reset_gpio, 1);
-+	udelay(1);
-+	gpiod_set_value(pwrseq->reset_gpio, 0);
-+	udelay(200);
+ 	const char *err = "cannot allocate memory";
+ 	struct cached_dev *dc, *t;
+@@ -1652,7 +1652,9 @@ static void run_cache_set(struct cache_set *c)
+ 		if (j->version < BCACHE_JSET_VERSION_UUID)
+ 			__uuid_write(c);
  
--	__mmc_pwrseq_emmc_reset(pwrseq);
- 	return NOTIFY_DONE;
+-		bch_journal_replay(c, &journal);
++		err = "bcache: replay journal failed";
++		if (bch_journal_replay(c, &journal))
++			goto err;
+ 	} else {
+ 		pr_notice("invalidating existing data");
+ 
+@@ -1720,11 +1722,13 @@ static void run_cache_set(struct cache_set *c)
+ 	flash_devs_run(c);
+ 
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+-	return;
++	return 0;
+ err:
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
++
++	return -EIO;
  }
  
-@@ -72,14 +70,18 @@ static int mmc_pwrseq_emmc_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwrseq->reset_gpio))
- 		return PTR_ERR(pwrseq->reset_gpio);
+ static bool can_attach_cache(struct cache *ca, struct cache_set *c)
+@@ -1788,8 +1792,11 @@ static const char *register_cache_set(struct cache *ca)
+ 	ca->set->cache[ca->sb.nr_this_dev] = ca;
+ 	c->cache_by_alloc[c->caches_loaded++] = ca;
  
--	/*
--	 * register reset handler to ensure emmc reset also from
--	 * emergency_reboot(), priority 255 is the highest priority
--	 * so it will be executed before any system reboot handler.
--	 */
--	pwrseq->reset_nb.notifier_call = mmc_pwrseq_emmc_reset_nb;
--	pwrseq->reset_nb.priority = 255;
--	register_restart_handler(&pwrseq->reset_nb);
-+	if (!gpiod_cansleep(pwrseq->reset_gpio)) {
-+		/*
-+		 * register reset handler to ensure emmc reset also from
-+		 * emergency_reboot(), priority 255 is the highest priority
-+		 * so it will be executed before any system reboot handler.
-+		 */
-+		pwrseq->reset_nb.notifier_call = mmc_pwrseq_emmc_reset_nb;
-+		pwrseq->reset_nb.priority = 255;
-+		register_restart_handler(&pwrseq->reset_nb);
-+	} else {
-+		dev_notice(dev, "EMMC reset pin tied to a sleepy GPIO driver; reset on emergency-reboot disabled\n");
+-	if (c->caches_loaded == c->sb.nr_in_set)
+-		run_cache_set(c);
++	if (c->caches_loaded == c->sb.nr_in_set) {
++		err = "failed to run cache set";
++		if (run_cache_set(c) < 0)
++			goto err;
 +	}
  
- 	pwrseq->pwrseq.ops = &mmc_pwrseq_emmc_ops;
- 	pwrseq->pwrseq.dev = dev;
+ 	return NULL;
+ err:
 -- 
 2.20.1
 
