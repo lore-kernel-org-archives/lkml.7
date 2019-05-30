@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0743CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99981C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5682488A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6896424B53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187751;
-	bh=vYAoTxErGQYqbKWmND6VrkBSraZ9jAq4UoHhROvyS5w=;
+	s=default; t=1559187757;
+	bh=35VzWg7XzJEd309TcxEQUOQeVMVEZlIgONPaFW+jbAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJSRRQmFgQY5ZSH6YFOGq1rqcVQKaSd7RVC/k0Kz2TJwv6pn1UGISk672mSdH+PyQ
-	 LhPwHAXTFFG7kNwdjp/qs/bZt66a8ejFi0dGvKJPqRxXhwmBhlluaXcEkEAERdFH6S
-	 zBjVSCTqgIsgtzvsS83NXNVggLM+c8jU0aNAmcDQ=
+	b=p7bAtcAjEU/flUJIlrC9kQWp7BhjaXJ+SjvLI1t0CTp62Y0O99Sfuz1E8ExtSybrx
+	 oq+pe82r7W2pZseT4tOldNxOJIBGcJv4qvbKjxVoQvtfu5idzvyiYpu5sRErOVWD3F
+	 ZLwCauANn5MV/QMXw7LH9OO8pRW3mCcFp7+ut0+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732636AbfE3Dmb (ORCPT
+        id S1732618AbfE3Dmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732461AbfE3DVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:08 -0400
+        id S1732454AbfE3DVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E15249BF;
-        Thu, 30 May 2019 03:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC9A2496D;
+        Thu, 30 May 2019 03:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186467;
-        bh=vYAoTxErGQYqbKWmND6VrkBSraZ9jAq4UoHhROvyS5w=;
+        bh=35VzWg7XzJEd309TcxEQUOQeVMVEZlIgONPaFW+jbAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RaUdoC2RZfQIg81ISc6hDo2WenNPlNtUI7DiR5XkbvncrUJ7N5cnQwxAkAMqpTXeq
-         anp68irNQjqH9ZtcEXc2prtrJnTLV6G2n+zKAWMe2VuYwAWxFVQ9Xr22LxYdfl4W8K
-         0LxMUJqQAICOI1FYSdiRG6Ri/fgiKRfKv2puq5zM=
+        b=p+FT1DSSqAxrZeBaFFHgPNzsehPntMpZkYFPncKlueiLoXcJmp1KSXCVotxSe1nQ5
+         fRg1ZZ5b0jNJbxcfqGOfwW+2DZ2AWSrjYW/PU/sfGTB7bOBuJ713s+8UahJedsn+mg
+         jeMru5iBpM+TWCkxRYAgIZQDJE1cMNWvwDdC6LRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 093/128] mwifiex: Fix mem leak in mwifiex_tm_cmd
-Date:   Wed, 29 May 2019 20:07:05 -0700
-Message-Id: <20190530030451.436111915@linuxfoundation.org>
+Subject: [PATCH 4.9 092/128] rtlwifi: fix a potential NULL pointer dereference
+Date:   Wed, 29 May 2019 20:07:04 -0700
+Message-Id: <20190530030451.285057779@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,46 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 003b686ace820ce2d635a83f10f2d7f9c147dabc ]
+[ Upstream commit 765976285a8c8db3f0eb7f033829a899d0c2786e ]
 
-'hostcmd' is alloced by kzalloc, should be freed before
-leaving from the error handling cases, otherwise it will
-cause mem leak.
+In case alloc_workqueue fails, the fix reports the error and
+returns to avoid NULL pointer dereference.
 
-Fixes: 3935ccc14d2c ("mwifiex: add cfg80211 testmode support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/base.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 4da3541471e61..46d0099fd6e82 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -4018,16 +4018,20 @@ static int mwifiex_tm_cmd(struct wiphy *wiphy, struct wireless_dev *wdev,
- 
- 		if (mwifiex_send_cmd(priv, 0, 0, 0, hostcmd, true)) {
- 			dev_err(priv->adapter->dev, "Failed to process hostcmd\n");
-+			kfree(hostcmd);
- 			return -EFAULT;
- 		}
- 
- 		/* process hostcmd response*/
- 		skb = cfg80211_testmode_alloc_reply_skb(wiphy, hostcmd->len);
--		if (!skb)
-+		if (!skb) {
-+			kfree(hostcmd);
- 			return -ENOMEM;
-+		}
- 		err = nla_put(skb, MWIFIEX_TM_ATTR_DATA,
- 			      hostcmd->len, hostcmd->cmd);
- 		if (err) {
-+			kfree(hostcmd);
- 			kfree_skb(skb);
- 			return -EMSGSIZE;
- 		}
+diff --git a/drivers/net/wireless/realtek/rtlwifi/base.c b/drivers/net/wireless/realtek/rtlwifi/base.c
+index 4ac928bf1f8e6..7de18ed10db8e 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/base.c
++++ b/drivers/net/wireless/realtek/rtlwifi/base.c
+@@ -466,6 +466,11 @@ static void _rtl_init_deferred_work(struct ieee80211_hw *hw)
+ 	/* <2> work queue */
+ 	rtlpriv->works.hw = hw;
+ 	rtlpriv->works.rtl_wq = alloc_workqueue("%s", 0, 0, rtlpriv->cfg->name);
++	if (unlikely(!rtlpriv->works.rtl_wq)) {
++		pr_err("Failed to allocate work queue\n");
++		return;
++	}
++
+ 	INIT_DELAYED_WORK(&rtlpriv->works.watchdog_wq,
+ 			  (void *)rtl_watchdog_wq_callback);
+ 	INIT_DELAYED_WORK(&rtlpriv->works.ips_nic_off_wq,
 -- 
 2.20.1
 
