@@ -2,163 +2,126 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A247BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B45257E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF87257D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JcqHwJVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfE3IPk (ORCPT
+        id S1726875AbfE3IQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:15:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39118 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725440AbfE3IPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:15:39 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 67677EBEDAA20966E231;
-        Thu, 30 May 2019 16:15:36 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
- 16:15:35 +0800
-Subject: Re: [PATCH -next] platform/chrome: cros_ec_lpc: Make some symbols
- static
-To:     Guenter Roeck <groeck@google.com>
-References: <20190529150749.8032-1-yuehaibing@huawei.com>
- <CABXOdTfbfWsan3MH0e=pnQ2DKw5p===1s4hKcnDdbRUwARPSDg@mail.gmail.com>
-CC:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <e11f1097-7010-064d-1b82-17d6d8b697ec@huawei.com>
-Date:   Thu, 30 May 2019 16:15:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 30 May 2019 04:16:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35827 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfE3IQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 04:16:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8GCHb2905139
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 30 May 2019 01:16:12 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8GCHb2905139
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559204173;
+        bh=E9vElWTLNhS7QK+btXZx2c4ZOYPCWXmdZxHZrCXGCrg=;
+        h=Date:From:Cc:Reply-To:To:Subject:From;
+        b=JcqHwJVZ1y0Rltccl4SbD0982Dg7l0k+06HkNQ2T16wECFDmVH+Ylf9sie2WuTpGs
+         iCJif3tR/HNsjU/oe3KYzuyOdWp5B8Or3oXjBuBXFExXgXytDWHT6DVMreraG1JOAK
+         kRSB/WHiPTxjG+Q0PdrXEXRmQIXifwoCWRbePZewUN3dAF5Bo9NMa2aIgkHXuto66G
+         mI8Mpj9dTxHPg9Nnf7SnmHCSpxiPaTZ8kGeqFyP5oXpWjP65MdgAF8E+rQxbOpULE6
+         rh7eQZMiAH2dYMfkkMXlE9QLsKLRAcKggVLBvw5veWXtulXaMDBwR3VXYNBkp+UENP
+         S1XWIgodnDEfw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8GCmZ2905136;
+        Thu, 30 May 2019 01:16:12 -0700
+Date:   Thu, 30 May 2019 01:16:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-brmp2415zxpbhz45etkgjoma@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        acme@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+        jolsa@kernel.org, namhyung@kernel.org, mingo@kernel.org
+Reply-To: adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, acme@redhat.com
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf python: Remove -fstack-protector-strong if
+ clang doesn't have it
+Git-Commit-ID: 7952fa3b54bf6834dca22a21363c7caf78525720
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTfbfWsan3MH0e=pnQ2DKw5p===1s4hKcnDdbRUwARPSDg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/29 23:12, Guenter Roeck wrote:
-> On Wed, May 29, 2019 at 8:08 AM YueHaibing <yuehaibing@huawei.com> wrote:
->>
->> Fix sparse warning:
->>
->> drivers/platform/chrome/cros_ec_debugfs.c:256:30: warning: symbol 'cros_ec_console_log_fops' was not declared. Should it be static?
->> drivers/platform/chrome/cros_ec_debugfs.c:265:30: warning: symbol 'cros_ec_pdinfo_fops' was not declared. Should it be static?
->> drivers/platform/chrome/cros_ec_lightbar.c:550:24: warning: symbol 'cros_ec_lightbar_attr_group' was not declared. Should it be static?
->> drivers/platform/chrome/cros_ec_sysfs.c:338:24: warning: symbol 'cros_ec_attr_group' was not declared. Should it be static?
->> drivers/platform/chrome/cros_ec_vbc.c:104:24: warning: symbol 'cros_ec_vbc_attr_group' was not declared. Should it be static?
->> drivers/platform/chrome/cros_ec_lpc.c:408:25: warning: symbol 'cros_ec_lpc_pm_ops' was not declared. Should it be static?
->>
-> 
-> The subject is misleading: The patch does not only affect cros_ec_lpc.
+Commit-ID:  7952fa3b54bf6834dca22a21363c7caf78525720
+Gitweb:     https://git.kernel.org/tip/7952fa3b54bf6834dca22a21363c7caf78525720
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Tue, 28 May 2019 17:36:46 -0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-Sorry, will fix it in v2.
+perf python: Remove -fstack-protector-strong if clang doesn't have it
 
-> 
-> Guenter
-> 
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/platform/chrome/cros_ec_debugfs.c  | 4 ++--
->>  drivers/platform/chrome/cros_ec_lightbar.c | 2 +-
->>  drivers/platform/chrome/cros_ec_lpc.c      | 2 +-
->>  drivers/platform/chrome/cros_ec_sysfs.c    | 2 +-
->>  drivers/platform/chrome/cros_ec_vbc.c      | 2 +-
->>  5 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
->> index 4c2a27f6a6d0..4578eb3e0731 100644
->> --- a/drivers/platform/chrome/cros_ec_debugfs.c
->> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
->> @@ -241,7 +241,7 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
->>                                        read_buf, p - read_buf);
->>  }
->>
->> -const struct file_operations cros_ec_console_log_fops = {
->> +static const struct file_operations cros_ec_console_log_fops = {
->>         .owner = THIS_MODULE,
->>         .open = cros_ec_console_log_open,
->>         .read = cros_ec_console_log_read,
->> @@ -250,7 +250,7 @@ const struct file_operations cros_ec_console_log_fops = {
->>         .release = cros_ec_console_log_release,
->>  };
->>
->> -const struct file_operations cros_ec_pdinfo_fops = {
->> +static const struct file_operations cros_ec_pdinfo_fops = {
->>         .owner = THIS_MODULE,
->>         .open = simple_open,
->>         .read = cros_ec_pdinfo_read,
->> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
->> index d30a6650b0b5..23a82ee4c785 100644
->> --- a/drivers/platform/chrome/cros_ec_lightbar.c
->> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
->> @@ -547,7 +547,7 @@ static struct attribute *__lb_cmds_attrs[] = {
->>         NULL,
->>  };
->>
->> -struct attribute_group cros_ec_lightbar_attr_group = {
->> +static struct attribute_group cros_ec_lightbar_attr_group = {
->>         .name = "lightbar",
->>         .attrs = __lb_cmds_attrs,
->>  };
->> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
->> index c9c240fbe7c6..aaa21803633a 100644
->> --- a/drivers/platform/chrome/cros_ec_lpc.c
->> +++ b/drivers/platform/chrome/cros_ec_lpc.c
->> @@ -405,7 +405,7 @@ static int cros_ec_lpc_resume(struct device *dev)
->>  }
->>  #endif
->>
->> -const struct dev_pm_ops cros_ec_lpc_pm_ops = {
->> +static const struct dev_pm_ops cros_ec_lpc_pm_ops = {
->>         SET_LATE_SYSTEM_SLEEP_PM_OPS(cros_ec_lpc_suspend, cros_ec_lpc_resume)
->>  };
->>
->> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
->> index fe0b7614ae1b..3edb237bf8ed 100644
->> --- a/drivers/platform/chrome/cros_ec_sysfs.c
->> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
->> @@ -335,7 +335,7 @@ static umode_t cros_ec_ctrl_visible(struct kobject *kobj,
->>         return a->mode;
->>  }
->>
->> -struct attribute_group cros_ec_attr_group = {
->> +static struct attribute_group cros_ec_attr_group = {
->>         .attrs = __ec_attrs,
->>         .is_visible = cros_ec_ctrl_visible,
->>  };
->> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
->> index 8392a1ec33a7..2aaefed87eb4 100644
->> --- a/drivers/platform/chrome/cros_ec_vbc.c
->> +++ b/drivers/platform/chrome/cros_ec_vbc.c
->> @@ -101,7 +101,7 @@ static struct bin_attribute *cros_ec_vbc_bin_attrs[] = {
->>         NULL
->>  };
->>
->> -struct attribute_group cros_ec_vbc_attr_group = {
->> +static struct attribute_group cros_ec_vbc_attr_group = {
->>         .name = "vbc",
->>         .bin_attrs = cros_ec_vbc_bin_attrs,
->>  };
->> --
->> 2.17.1
->>
->>
-> 
-> .
-> 
+Some distros put -fstack-protector-strong in the compiler flags to be
+used to build python extensions, but then, the clang version in that
+distro doesn't know about that, only gcc does.
 
+Check if that is the case and remove it from the set of options used to
+build the python binding with clang.
+
+Case at hand:
+
+oraclelinux:7
+
+  $ head -2 /etc/os-release
+  NAME="Oracle Linux Server"
+  VERSION="7.6"
+  $ grep stack-protector /usr/lib64/python2.7/_sysconfigdata.py | head -1 | cut -c-120
+ 'CFLAGS': '-fno-strict-aliasing -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --para
+  $
+  gcc version 4.8.5 20150623 (Red Hat 4.8.5-36.0.1) (GCC)
+  clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+
+  clang: error: unknown argument: '-fstack-protector-strong'
+  clang: error: unknown argument: '-fstack-protector-strong'
+  error: command 'clang' failed with exit status 1
+  cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+  make[2]: *** [/tmp/build/perf/python/perf.so] Error 1
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-brmp2415zxpbhz45etkgjoma@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b5a167b43ce..a1a68a2fa917 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -17,6 +17,8 @@ if cc == "clang":
+             vars[var] = sub("-fcf-protection", "", vars[var])
+         if not clang_has_option("-fstack-clash-protection"):
+             vars[var] = sub("-fstack-clash-protection", "", vars[var])
++        if not clang_has_option("-fstack-protector-strong"):
++            vars[var] = sub("-fstack-protector-strong", "", vars[var])
+ 
+ from distutils.core import setup, Extension
+ 
