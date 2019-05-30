@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5634FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB82C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA1725EE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CADCC25EEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192108;
-	bh=dlpeELhXynNtRWlCUyGvwo7e1S508Vbdu8BFD8k0F1A=;
+	s=default; t=1559192119;
+	bh=Hx/9KAYVK97mnvSDuNU+dPrOJ3A2j8SqY9kszNUgStI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6tz0qhcBm9ffOyt+R8KhKIR9dl99UbA54gxgKNPAqgT0Y/CbOIcCM3FhPy2WL55d
-	 HgJ4YclYmQGzTDH2VJES0Mn+pna1EQYARUcEevOk5s0+E/XntW+ib2IAKC9FRU5WFh
-	 lXTTU6uLjlFlSIDw4TcToB5DqNCZp48FBfce5NBU=
+	b=wfo8revBPuAHifrvXfkb58XIWbJ6z4/v8ir0A3PHWcfps0SaldoA/MW81BhoVngsl
+	 BujCOMrI9HLAptOO+NVG68o/sIZBDllaY/hTAvGGEja2uej3US/EWfKCiCy8KgVJvO
+	 l/h/PXuFyYsXp+WqKLF4YhtXBpcNQoMbSmpmJfHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389145AbfE3EzH (ORCPT
+        id S2389111AbfE3EzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47008 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbfE3DKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:18 -0400
+        id S1728022AbfE3DKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD86F24482;
-        Thu, 30 May 2019 03:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF4BE2449D;
+        Thu, 30 May 2019 03:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185817;
-        bh=dlpeELhXynNtRWlCUyGvwo7e1S508Vbdu8BFD8k0F1A=;
+        s=default; t=1559185816;
+        bh=Hx/9KAYVK97mnvSDuNU+dPrOJ3A2j8SqY9kszNUgStI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bNJLg/DNx2EN+VaHIWC1SLO5XLsMHlEmLi2GADVq2KtYE6S+uosshFf4GdIa5JGdb
-         IoLDI01jNxbNh/o3oNp7346aZQeSjsEkvM/rkJvnLr9clU7IDsFIB1pV8OKKstIbtv
-         l6ZVO+LahvdVn49FrbU8ZjVB84IMtsx23SYsmqUI=
+        b=H79yEwZjXE0cIjprwvR8nMvGscsywJ7wMNPkmLQp7ie4J9aWAbNicxTMn9whmns5D
+         kpEDPzNWqLF+p1w2f57gwnIpS79AmMAEBL2XrpjgwtDxxr0akOJ15fMhZfE7Y8j61Y
+         7enJTay/6PtBr4Lr4Kq48hUZEhHC/ZGrdNVOLyxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 111/405] s390: qeth: address type mismatch warning
-Date:   Wed, 29 May 2019 20:01:49 -0700
-Message-Id: <20190530030546.618006429@linuxfoundation.org>
+Subject: [PATCH 5.1 110/405] net: phy: improve genphy_soft_reset
+Date:   Wed, 29 May 2019 20:01:48 -0700
+Message-Id: <20190530030546.569711943@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -63,60 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
+[ Upstream commit 8c90b795e90f7753d23c18e8b95dd71b4a18c5d9 ]
 
-clang produces a harmless warning for each use for the qeth_adp_supported
-macro:
+PHY's behave differently when being reset. Some reset registers to
+defaults, some don't. Some trigger an autoneg restart, some don't.
 
-drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
-      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
-        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
-            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
-        qeth_is_ipa_supported(&c->options.adp, f)
-        ~~~~~~~~~~~~~~~~~~~~~                  ^
+So let's also set the autoneg restart bit when resetting. Then PHY
+behavior should be more consistent. Clearing BMCR_ISOLATE serves the
+same purpose and is borrowed from genphy_restart_aneg.
 
-Add a version of this macro that uses the correct types, and
-remove the unused qeth_adp_enabled() macro that has the same
-problem.
+BMCR holds the speed / duplex settings in fixed mode. Therefore
+we may have an issue if a soft reset resets BMCR to its default.
+So better call genphy_setup_forced() afterwards in fixed mode.
+We've seen no related complaint in the last >10 yrs, so let's
+treat it as an improvement.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/phy/phy_device.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index c851cf6e01c43..d603dfea97ab2 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -163,6 +163,12 @@ struct qeth_vnicc_info {
- 	bool rx_bcast_enabled;
- };
- 
-+static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
-+		enum qeth_ipa_setadp_cmd func)
-+{
-+	return (ipa->supported_funcs & func);
-+}
-+
- static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
- 		enum qeth_ipa_funcs func)
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index cd5966b0db571..f6a6cc5bf118d 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1829,13 +1829,25 @@ EXPORT_SYMBOL(genphy_read_status);
+  */
+ int genphy_soft_reset(struct phy_device *phydev)
  {
-@@ -176,9 +182,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
- }
++	u16 res = BMCR_RESET;
+ 	int ret;
  
- #define qeth_adp_supported(c, f) \
--	qeth_is_ipa_supported(&c->options.adp, f)
--#define qeth_adp_enabled(c, f) \
--	qeth_is_ipa_enabled(&c->options.adp, f)
-+	qeth_is_adp_supported(&c->options.adp, f)
- #define qeth_is_supported(c, f) \
- 	qeth_is_ipa_supported(&c->options.ipa4, f)
- #define qeth_is_enabled(c, f) \
+-	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
++	if (phydev->autoneg == AUTONEG_ENABLE)
++		res |= BMCR_ANRESTART;
++
++	ret = phy_modify(phydev, MII_BMCR, BMCR_ISOLATE, res);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return phy_poll_reset(phydev);
++	ret = phy_poll_reset(phydev);
++	if (ret)
++		return ret;
++
++	/* BMCR may be reset to defaults */
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		ret = genphy_setup_forced(phydev);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(genphy_soft_reset);
+ 
 -- 
 2.20.1
 
