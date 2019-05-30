@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29ECC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152EEC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FF325951
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE46725925
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191188;
-	bh=r4n9B0Nzlwy+WTd/3TjJMZizJyy4JvP92WwFbRE+sXY=;
+	s=default; t=1559191192;
+	bh=i7eLbFAQAjCbfhNZt6Bf5Nr83J9BFysTNOqwNOwg3kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdjlcMqzGFVLYpFh83kv+XJ/y5pFFyzp4wJq6Gq6L14DBt57C2RsyYf26RmsZ32Lx
-	 1C4+20yByeKo93xxcQOYAUzvPdnZw+cw0f0xsyjM2KhsQwwN5uPEfDb5hy/qcugnNg
-	 QQkHoiP81nYkt6ivfIZIwWUsZw/ykwkABoP0b3Rg=
+	b=OLa4gyWuVEk+uYTX51E5ntKknbxxEVB1yQ8ciDq82gyT5mQrqpBIN0kuFASEAiIKg
+	 9dTBOB7ql28vijJB95RjwMYttVaMFsnSNnQAtkvIMzCUtsC5Ov6/E5G//Jyn4bWmBa
+	 B3Sk9MoEP0yn5YwV2Xehdq7cUfthTxuopMXIsjxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388576AbfE3Ejr (ORCPT
+        id S2388595AbfE3Ejw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55772 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728239AbfE3DMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727858AbfE3DMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADFE923C5A;
-        Thu, 30 May 2019 03:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949A923DE3;
+        Thu, 30 May 2019 03:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185956;
-        bh=r4n9B0Nzlwy+WTd/3TjJMZizJyy4JvP92WwFbRE+sXY=;
+        s=default; t=1559185955;
+        bh=i7eLbFAQAjCbfhNZt6Bf5Nr83J9BFysTNOqwNOwg3kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQBYa2peTvOp9qBk8W78Kcsa1yb42wxDhMVtBlhavxTQrC6rM/7haJsrfKJ3+/PMj
-         b4pqZyV4ARYIO8sWkip4Wd+hMp3p2o2WAA9GUVUZXrPmpNXQCpWhlFGv4wbFyS9ta5
-         XKSU7r2Mm4PEZ1hK2TvfQFvtynAr03ynPq+JS4eA=
+        b=X+eSmScZe4DE8C+gnSe7skD2tqoBDeSgIT90rQzVlCObdUYZ3dhG0bqCeYAoAupiW
+         m/2DLgiPuayPQnmyvZWU2i0O+GMo7J6VEz81Eal1CvB6pbnNicGnoM18MwP3hUsQXG
+         ceohP3xjpsUN6IiwsADFGu3au+K9VQBdYgqOAxb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
+        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 373/405] drm: writeback: Fix leak of writeback job
-Date:   Wed, 29 May 2019 20:06:11 -0700
-Message-Id: <20190530030559.595289366@linuxfoundation.org>
+Subject: [PATCH 5.1 371/405] audit: fix a memleak caused by auditing load module
+Date:   Wed, 29 May 2019 20:06:09 -0700
+Message-Id: <20190530030559.497448759@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,88 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e482ae9b5fdc01a343f22f52930e85a6cfdf85eb ]
+[ Upstream commit 95e0b46fcebd7dbf6850dee96046e4c4ddc7f69c ]
 
-Writeback jobs are allocated when the WRITEBACK_FB_ID is set, and
-deleted when the jobs complete. This results in both a memory leak of
-the job and a leak of the framebuffer if the atomic commit returns
-before the job is queued for processing, for instance if the atomic
-check fails or if the commit runs in test-only mode.
+module.name will be allocated unconditionally when auditing load
+module, and audit_log_start() can fail with other reasons, or
+audit_log_exit maybe not called, caused module.name is not freed
 
-Fix this by implementing the drm_writeback_cleanup_job() function and
-calling it from __drm_atomic_helper_connector_destroy_state(). As
-writeback jobs are removed from the state when they're queued for
-processing, any job left in the state when the state gets destroyed
-needs to be cleaned up.
+so free module.name in audit_free_context and __audit_syscall_exit
 
-The existing declaration of the drm_writeback_cleanup_job() function
-without an implementation hints that this problem was considered, but
-never addressed.
+unreferenced object 0xffff88af90837d20 (size 8):
+  comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
+  hex dump (first 8 bytes):
+    69 78 67 62 65 00 ff ff                          ixgbe...
+  backtrace:
+    [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
+    [<00000000c1491e61>] load_module+0x64f/0x3850
+    [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
+    [<0000000000d4a478>] do_syscall_64+0x117/0x400
+    [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<000000007dc331dd>] 0xffffffffffffffff
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Fixes: ca86cad7380e3 ("audit: log module name on init_module")
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+[PM: manual merge fixup in __audit_syscall_exit()]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_state_helper.c |  4 ++++
- drivers/gpu/drm/drm_writeback.c           | 14 +++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ kernel/auditsc.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_state_helper.c b/drivers/gpu/drm/drm_atomic_state_helper.c
-index 4985384e51f6e..59ffb6b9c7453 100644
---- a/drivers/gpu/drm/drm_atomic_state_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_state_helper.c
-@@ -30,6 +30,7 @@
- #include <drm/drm_connector.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_device.h>
-+#include <drm/drm_writeback.h>
- 
- #include <linux/slab.h>
- #include <linux/dma-fence.h>
-@@ -412,6 +413,9 @@ __drm_atomic_helper_connector_destroy_state(struct drm_connector_state *state)
- 
- 	if (state->commit)
- 		drm_crtc_commit_put(state->commit);
-+
-+	if (state->writeback_job)
-+		drm_writeback_cleanup_job(state->writeback_job);
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index d1eab1d4a930e..fa7b8047aab89 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -840,6 +840,13 @@ static inline void audit_proctitle_free(struct audit_context *context)
+ 	context->proctitle.len = 0;
  }
- EXPORT_SYMBOL(__drm_atomic_helper_connector_destroy_state);
  
-diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-index c20e6fe00cb38..2d75032f81591 100644
---- a/drivers/gpu/drm/drm_writeback.c
-+++ b/drivers/gpu/drm/drm_writeback.c
-@@ -268,6 +268,15 @@ void drm_writeback_queue_job(struct drm_writeback_connector *wb_connector,
- }
- EXPORT_SYMBOL(drm_writeback_queue_job);
- 
-+void drm_writeback_cleanup_job(struct drm_writeback_job *job)
++static inline void audit_free_module(struct audit_context *context)
 +{
-+	if (job->fb)
-+		drm_framebuffer_put(job->fb);
-+
-+	kfree(job);
++	if (context->type == AUDIT_KERN_MODULE) {
++		kfree(context->module.name);
++		context->module.name = NULL;
++	}
 +}
-+EXPORT_SYMBOL(drm_writeback_cleanup_job);
-+
- /*
-  * @cleanup_work: deferred cleanup of a writeback job
-  *
-@@ -280,10 +289,9 @@ static void cleanup_work(struct work_struct *work)
- 	struct drm_writeback_job *job = container_of(work,
- 						     struct drm_writeback_job,
- 						     cleanup_work);
--	drm_framebuffer_put(job->fb);
--	kfree(job);
--}
+ static inline void audit_free_names(struct audit_context *context)
+ {
+ 	struct audit_names *n, *next;
+@@ -923,6 +930,7 @@ int audit_alloc(struct task_struct *tsk)
  
-+	drm_writeback_cleanup_job(job);
-+}
+ static inline void audit_free_context(struct audit_context *context)
+ {
++	audit_free_module(context);
+ 	audit_free_names(context);
+ 	unroll_tree_refs(context, NULL, 0);
+ 	free_tree_refs(context);
+@@ -1266,7 +1274,6 @@ static void show_special(struct audit_context *context, int *call_panic)
+ 		audit_log_format(ab, "name=");
+ 		if (context->module.name) {
+ 			audit_log_untrustedstring(ab, context->module.name);
+-			kfree(context->module.name);
+ 		} else
+ 			audit_log_format(ab, "(null)");
  
- /**
-  * drm_writeback_signal_completion - Signal the completion of a writeback job
+@@ -1697,6 +1704,7 @@ void __audit_syscall_exit(int success, long return_code)
+ 	context->in_syscall = 0;
+ 	context->prio = context->state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+ 
++	audit_free_module(context);
+ 	audit_free_names(context);
+ 	unroll_tree_refs(context, NULL, 0);
+ 	audit_free_aux(context);
 -- 
 2.20.1
 
