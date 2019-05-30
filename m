@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F27C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C56C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6012124818
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05D624818
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186361;
-	bh=bmIDE/+Xkt7XGk6yuVmAAmrVXMMsgGwQY8tQHKItI5Q=;
+	s=default; t=1559186365;
+	bh=LzKJXOeiQ17vHM3+ckSUF66amKUIRGoN2NeYO7IoEGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zC3gUKmb6BwgBXLhxznlVM8rMWrW1gMe7K9DCGFSEA9pl1f5DyC8jbOjVtjfADKV0
-	 H991Vxi3MFPo/K8W9T79LoTDV0+gMwGme9MYziD6gOKYgRP8CW2m5ZUArUsNzrbB3G
-	 rriS1HcVQt93n5NH8G99vcQ4Ysk0rjCZPWNHbVPI=
+	b=XhTexGgK7bg0jEfRQZTJYsWCBFgmQctsjo5CZDuypTOe7xx3YRnziuHzmvZuumWtG
+	 0uo03Y7M+MiMuvV6mcAxQXtEW1T6g4AOL0bkTYPwwLKajlsWZENyj24cTUm8hUps2k
+	 psuq5a2DkCJHnAwESR9VnjOPgAS9DDWztzGmlNoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfE3DTT (ORCPT
+        id S1731886AbfE3DTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbfE3DPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:19 -0400
+        id S1730214AbfE3DPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C339244EF;
-        Thu, 30 May 2019 03:15:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A0DA2457F;
+        Thu, 30 May 2019 03:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186119;
-        bh=bmIDE/+Xkt7XGk6yuVmAAmrVXMMsgGwQY8tQHKItI5Q=;
+        s=default; t=1559186118;
+        bh=LzKJXOeiQ17vHM3+ckSUF66amKUIRGoN2NeYO7IoEGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQuK9lolGGdshfgdds0Qw/u6GEg4tC5xE/bn0Wcj5x8tP62LVmslzWiuOoli2ZhsL
-         V3ZOho3b0d+sRXwm/Ipxh6re5kRYGoT52Tj40MibC1d/X7I+Z8VDKUsG8B6EpERwXu
-         tDP10nZodyiEd+cL1SsgAIdfqo2a1KiletCzIJ/U=
+        b=1QGnyzd2mAdtdtvkVMHyxhxQLZswQ62PWT3bqCN348zSBJzPyLUFZ8Xsfu4XM5+FW
+         66RxRTkLnxDRQz4k4yLC9ndaYtg5gVO0Mkx1cuywYZT/0WCdmSprxBtGdVTSoDHPJg
+         e3j7CPzsZxGf7zT8Y0XQ5Mlfzc1KscCuuyr/Z9m0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 273/346] rcuperf: Fix cleanup path for invalid perf_type strings
-Date:   Wed, 29 May 2019 20:05:46 -0700
-Message-Id: <20190530030554.792114392@linuxfoundation.org>
+Subject: [PATCH 5.0 255/346] spi: tegra114: reset controller on probe
+Date:   Wed, 29 May 2019 20:05:28 -0700
+Message-Id: <20190530030553.921625409@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,50 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
+[ Upstream commit 019194933339b3e9b486639c8cb3692020844d65 ]
 
-If the specified rcuperf.perf_type is not in the rcu_perf_init()
-function's perf_ops[] array, rcuperf prints some console messages and
-then invokes rcu_perf_cleanup() to set state so that a future torture
-test can run.  However, rcu_perf_cleanup() also attempts to end the
-test that didn't actually start, and in doing so relies on the value
-of cur_ops, a value that is not particularly relevant in this case.
-This can result in confusing output or even follow-on failures due to
-attempts to use facilities that have not been properly initialized.
+Fixes: SPI driver can be built as module so perform SPI controller reset
+on probe to make sure it is in valid state before initiating transfer.
 
-This commit therefore sets the value of cur_ops to NULL in this case and
-inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
-relying on an irrelevant cur_ops value.
-
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcuperf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/spi/spi-tegra114.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index b459da70b4fc3..5444a78314512 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -501,6 +501,10 @@ rcu_perf_cleanup(void)
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index a76acedd7e2f4..a1888dc6a938a 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -1067,27 +1067,19 @@ static int tegra_spi_probe(struct platform_device *pdev)
  
- 	if (torture_cleanup_begin())
- 		return;
-+	if (!cur_ops) {
-+		torture_cleanup_end();
-+		return;
+ 	spi_irq = platform_get_irq(pdev, 0);
+ 	tspi->irq = spi_irq;
+-	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
+-			tegra_spi_isr_thread, IRQF_ONESHOT,
+-			dev_name(&pdev->dev), tspi);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
+-					tspi->irq);
+-		goto exit_free_master;
+-	}
+ 
+ 	tspi->clk = devm_clk_get(&pdev->dev, "spi");
+ 	if (IS_ERR(tspi->clk)) {
+ 		dev_err(&pdev->dev, "can not get clock\n");
+ 		ret = PTR_ERR(tspi->clk);
+-		goto exit_free_irq;
++		goto exit_free_master;
+ 	}
+ 
+ 	tspi->rst = devm_reset_control_get_exclusive(&pdev->dev, "spi");
+ 	if (IS_ERR(tspi->rst)) {
+ 		dev_err(&pdev->dev, "can not get reset\n");
+ 		ret = PTR_ERR(tspi->rst);
+-		goto exit_free_irq;
++		goto exit_free_master;
+ 	}
+ 
+ 	tspi->max_buf_size = SPI_FIFO_DEPTH << 2;
+@@ -1095,7 +1087,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 
+ 	ret = tegra_spi_init_dma_param(tspi, true);
+ 	if (ret < 0)
+-		goto exit_free_irq;
++		goto exit_free_master;
+ 	ret = tegra_spi_init_dma_param(tspi, false);
+ 	if (ret < 0)
+ 		goto exit_rx_dma_free;
+@@ -1117,18 +1109,32 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
+ 		goto exit_pm_disable;
+ 	}
++
++	reset_control_assert(tspi->rst);
++	udelay(2);
++	reset_control_deassert(tspi->rst);
+ 	tspi->def_command1_reg  = SPI_M_S;
+ 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
+ 	pm_runtime_put(&pdev->dev);
++	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
++				   tegra_spi_isr_thread, IRQF_ONESHOT,
++				   dev_name(&pdev->dev), tspi);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
++			tspi->irq);
++		goto exit_pm_disable;
 +	}
  
- 	if (reader_tasks) {
- 		for (i = 0; i < nrealreaders; i++)
-@@ -621,6 +625,7 @@ rcu_perf_init(void)
- 		pr_cont("\n");
- 		WARN_ON(!IS_MODULE(CONFIG_RCU_PERF_TEST));
- 		firsterr = -EINVAL;
-+		cur_ops = NULL;
- 		goto unwind;
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "can not register to master err %d\n", ret);
+-		goto exit_pm_disable;
++		goto exit_free_irq;
  	}
- 	if (cur_ops->init)
+ 	return ret;
+ 
++exit_free_irq:
++	free_irq(spi_irq, tspi);
+ exit_pm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+@@ -1136,8 +1142,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 	tegra_spi_deinit_dma_param(tspi, false);
+ exit_rx_dma_free:
+ 	tegra_spi_deinit_dma_param(tspi, true);
+-exit_free_irq:
+-	free_irq(spi_irq, tspi);
+ exit_free_master:
+ 	spi_master_put(master);
+ 	return ret;
 -- 
 2.20.1
 
