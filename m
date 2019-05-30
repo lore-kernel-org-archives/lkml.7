@@ -2,104 +2,94 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2CAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB949C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C66425660
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891BC25663
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taNAEZaz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzF+DW8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfE3Jie (ORCPT
+        id S1727626AbfE3JjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:38:34 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37400 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbfE3Jid (ORCPT
+        Thu, 30 May 2019 05:39:07 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:32833 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfE3JjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:38:33 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r10so4997820otd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:38:33 -0700 (PDT)
+        Thu, 30 May 2019 05:39:07 -0400
+Received: by mail-wm1-f48.google.com with SMTP id v19so5649885wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=z64OqaBKebP/IGWv/kYHRoni/+OEoO1da+k1V6PUKYs=;
-        b=taNAEZazM5IQxDbQ2mFszG0wR4L81GyL8Ap+4mK1C4thAbnUHxhoyKSjldtfqzLsV0
-         3z7MsKrcBT+S2M57pYMgvw0YQzde10soZ8rGblawSfQkUGbHZYqsrL6oR8feVKI4XiHR
-         t4JaujT8q/ihoVuP9gn68k3ErB1wfeDBc2pS6RMXtuUstFv5nvZs0ZlYuKENfyZgNegI
-         33oCc15MK3LnRxkAl1qH2a7CpXF2wc76FxX8E8X4ZlZ3wDptQ7pRWUoBsKzCqtNGKm33
-         qa+fVH30kPtJgGwZ2UtaITKQa18pg3tj2qalI0ZojV8ARrBP4cHZx0CEk4lNphT1b/HI
-         qSxg==
+        d=gmail.com; s=20161025;
+        h=from:subject:to:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=JwUIsqd459o226NuphV7ZoRoN1/Y+yAcPXTD37P/UA0=;
+        b=hzF+DW8s54OP7n03EIBYbHGiIWf5SysY90EfbriJhQAsi5vJDIfxzdAXJ/1Py+B4Au
+         auCJpdbcU76qHptLRr4kstSFW8DgoyFYVkAEdi2ADyQPTpG/d5k9P0tCDTioy3IjFslb
+         Dfo9wlRNyoA+18OZUyHkHCzfXGLuneIEx7nE4/8hnOV8RqYA5yhlviGSjI3W9KGlTtu5
+         2rjfb6ziHmEgfUt6mfyjY2NDLI9kVg825U/LlgXFwUFi3zM1OQoNxMZ1kiTcwhc1neMX
+         lSkV443d4+kEWXWHBDclteMw08mP4tVbx16eOo9miaB8s7PHpllRqCjllJF2Z/hLDAvx
+         GQ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=z64OqaBKebP/IGWv/kYHRoni/+OEoO1da+k1V6PUKYs=;
-        b=n1fey8qgKtF46jiO0Tazf91dgBBr33ghnWUFIvMitvAps6aIcQD0vYbAJVeyQ9g7Fw
-         o0ftKPHpphdrPBc2/RmQgIwsX3lIXcgi0eqQ6Bl7jkCKvjAhy0no3tTaqafnVkvBcvdS
-         GJggZ5RRn6+mxKOBbdKcgrdoAnJWFaIhhSZTMZtzfrEJtcUC3/j4Z5bAZum5h7Vs+T97
-         gI97UwXTNIe3cPB3ZsEkMtS3APV1HRaccsh2+RoF40KIrvlV8SE3b3EUnUFOv+LoC2Jd
-         i4NK2M8tFUECZZmbj05Pa+HKnS01TIzNhGe42/P65DwTLdMKa6BtTS+WOiE6+cT6gYCJ
-         KaKw==
-X-Gm-Message-State: APjAAAXnjnBoxwLq4kWWf6I6BNn2lAPgcrkCvVY0dPm+7LnnNTpfRbmm
-        tl0khrDrgQxOK0Mb2d4g8swt3A==
-X-Google-Smtp-Source: APXvYqxE42qqSq3/b3A52dqvsNMPY45C4CdoXVx6xSqZbXgF13nUjYtNHddR0pa3GAxe8EDTE3gMIQ==
-X-Received: by 2002:a9d:6195:: with SMTP id g21mr37277otk.179.1559209112907;
-        Thu, 30 May 2019 02:38:32 -0700 (PDT)
-Received: from localhost.localdomain (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id t21sm844082otj.46.2019.05.30.02.38.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 02:38:31 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf symbols: Remove unused variable 'err'
-Date:   Thu, 30 May 2019 17:38:01 +0800
-Message-Id: <20190530093801.20510-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=JwUIsqd459o226NuphV7ZoRoN1/Y+yAcPXTD37P/UA0=;
+        b=h89R9GnpbPTPtStyAVpZSKJzTAOTXqokZuEabklA5g9IHPGFp9mSIwZjqBKCn3UjZt
+         F6LS6kau/0d67mZb7pyBDBQUjS+1QUNTZUspJ11q5cfUZuu/MeNM1AhzXA0s+b39OmZs
+         a5yWyrJ1Qzt2HgAab1epWwkuTg7sp0WGaCTprtDPS9gLTfdR4QLZQVCF15lM1IlGRfNA
+         lJCZC0E6slKl/5ioQIPN40VQNwmSWTdxRGKi1CYsGssUyLZY5FBJPqzMszvLSGooyyOq
+         0E4lghlW4NIspH80R0YEKh6j1j713xxyA/GUe9Zgp/KI8c3+SkZf3gJyyGQayedY4cby
+         i5QA==
+X-Gm-Message-State: APjAAAWAVCOhQFI/evBPANbSo+BxxHeABjeXjEgn031GhbjyNYIGAWkR
+        ctZqvl06JA/NbVfL314ISCCYjW1O
+X-Google-Smtp-Source: APXvYqzqymi9mIlfYjDD4MzTUjzL5E3k8/lhzrnArC0FefuQ6+UuqCaRXEGGSZnzOWoGIgt3zhoDyg==
+X-Received: by 2002:a1c:9eca:: with SMTP id h193mr1640821wme.125.1559209144970;
+        Thu, 30 May 2019 02:39:04 -0700 (PDT)
+Received: from [192.168.1.51] (ip-78-45-105-225.net.upcbroadband.cz. [78.45.105.225])
+        by smtp.googlemail.com with ESMTPSA id k125sm4893663wmb.34.2019.05.30.02.39.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 02:39:04 -0700 (PDT)
+From:   Zdenek Kaspar <zkaspar82@gmail.com>
+Subject: MDS/SSB Mitigation for pre-Nehalem/Older Intel Hardware?
+To:     linux-kernel@vger.kernel.org
+Message-ID: <ca61553a-1334-17e8-bcbe-335705cc8215@gmail.com>
+Date:   Thu, 30 May 2019 11:39:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variable 'err' is defined but never used in function symsrc__init(),
-remove it and directly return -1 at the end of the function.
+Hello everyone,
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/symbol-elf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+on old CPU the current situation looks like this:
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 4ad106a5f2c0..fdc5bd7dbb90 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -699,7 +699,6 @@ bool __weak elf__needs_adjust_symbols(GElf_Ehdr ehdr)
- int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 		 enum dso_binary_type type)
- {
--	int err = -1;
- 	GElf_Ehdr ehdr;
- 	Elf *elf;
- 	int fd;
-@@ -793,7 +792,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	elf_end(elf);
- out_close:
- 	close(fd);
--	return err;
-+	return -1;
- }
- 
- /**
--- 
-2.17.1
+l1tf:Mitigation: PTE Inversion; VMX: EPT disabled
+mds:Vulnerable: Clear CPU buffers attempted, no microcode; SMT disabled
+meltdown:Mitigation: PTI
+spec_store_bypass:Vulnerable
+spectre_v1:Mitigation: __user pointer sanitization
+spectre_v2:Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
 
+There's no way to mitigate some issues without microcode
+and Intel doesn't provide new updates for old hardware.
+
+The Deep Dive document for MDS includes: "software sequences
+to overwrite buffers" but it goes back only to Nehalem.
+
+Are there any plans for software fixes especially for older CPUs?
+
+TIA, Z.
