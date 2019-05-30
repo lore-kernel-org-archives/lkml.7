@@ -2,171 +2,119 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2726C46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23C82553D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D84D25605
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IObnS4Ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfE3Hbu (ORCPT
+        id S1726735AbfE3HiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:31:50 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:5027 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726027AbfE3Hbu (ORCPT
+        Thu, 30 May 2019 03:38:03 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43719 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfE3HiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:31:50 -0400
-X-UUID: b68e1545f7d44cc9bb1f86ad0f0b3d3b-20190530
-X-UUID: b68e1545f7d44cc9bb1f86ad0f0b3d3b-20190530
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1253275830; Thu, 30 May 2019 15:31:40 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 30 May
- 2019 15:31:39 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 15:31:39 +0800
-Message-ID: <1559201499.8487.40.camel@mhfsdcap03>
-Subject: Re: [v3 PATCH] usb: create usb_debug_root for gadget only
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 May 2019 15:31:39 +0800
-In-Reply-To: <87k1ebj8vt.fsf@linux.intel.com>
-References: <cffd6d75f69e4d908c8f39b8a60ddae27d6b7c88.1559028752.git.chunfeng.yun@mediatek.com>
-         <87k1ebj8vt.fsf@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 30 May 2019 03:38:02 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m14so3215923qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 00:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4maX8l5l7zxqXpvb7GBDy3cvUeNR3LgJtCZ3+Mtu/zs=;
+        b=IObnS4WwDgXEcSl2mzx38IGgBkv2XERkmVIojRuiswXqH5M+L4E+vwKpl2sS0ktYUd
+         bxeIYm9eBNLUr4B6oVKMPSVByBvelsfeqgmf1LbVRJAdhBh9Aye4MXQB+qmz1KVty1Jp
+         n8AX7sqtR4EhD37R8U8hBZuyanEu5ZcxyJtNhMZFwPe5Azo6OaNnwDX50bhTOnzTcPuo
+         GzcYV9k+78TXLkA/9XKWD4XkjwauRHDuNFaQztK4d2S7qpzoXvYhi+BZ0RqGGQ/5fiyP
+         diUwLc1pZ3L/laT1awq55Yasz5R4DspcyainhY7NWced+q318j0d7UXZ9aHzW4WlqNAV
+         /0ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4maX8l5l7zxqXpvb7GBDy3cvUeNR3LgJtCZ3+Mtu/zs=;
+        b=gdr/tNIfYlHMQVmvtxcpzKcF7KGTcN3lSaV0XLQq9fFB7P9LgDXGKYw1UKFY9qAWby
+         Lq6rX4GldDBH1X5AxrmbUvxZMYQ2slqMXZSLBfpVLZYmwj17CFfJqhpEtGj9oreRxySs
+         2rHOrIdbmZdMl4iQI5lo/s2kjJ8mHV8ouiZ9GCYj0RV9r0Qun7zJcepLDEq6pE18geIC
+         E0nOKGMkn+dLTral96omCjA/vBcQfV1RMUcNvVFo0rfsE7cL7uxFW4QeSWEThhIns5pZ
+         E5MWwggpZGhDLnbafZfJqNUtDApRaLkEYClfcRnH+0ve8KjueLWfpgtP2sLFMvxL6hP9
+         kgpQ==
+X-Gm-Message-State: APjAAAWOonnnysVH3AVRBzHwjcm/6AKOH2N+2n3BKjr8rvOs+I1T9bHa
+        JlQ5V3HoV3haot6Ack2Zcvv6pFCmzOB1qCFz4qQ=
+X-Google-Smtp-Source: APXvYqxbJTb6/Jdyc59jeVZpyMXG+FQa/CO673FUbHk5o1Gmo0AmZnLPQ0uvs3HDPPy7mO5OD/NcIflZGyvm6mxdKzc=
+X-Received: by 2002:a37:9c8:: with SMTP id 191mr1801707qkj.341.1559201881785;
+ Thu, 30 May 2019 00:38:01 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20190516080015.16033-1-duyuyang@gmail.com> <20190516080015.16033-12-duyuyang@gmail.com>
+ <20190529114451.GA12812@tardis>
+In-Reply-To: <20190529114451.GA12812@tardis>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Thu, 30 May 2019 15:37:50 +0800
+Message-ID: <CAHttsrZ962Gw_6OA6J6GEhAx06yV70B5PEzqGEaYGDNSy57-3A@mail.gmail.com>
+Subject: Re: [PATCH v2 11/17] locking/lockdep: Adjust lockdep selftest cases
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, will.deacon@arm.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
+        paulmck@linux.ibm.com, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
-On Tue, 2019-05-28 at 11:11 +0300, Felipe Balbi wrote:
-> Hi,
-> 
-> Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
-> > diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> > index 7fcb9f782931..88b3ee03a12d 100644
-> > --- a/drivers/usb/core/usb.c
-> > +++ b/drivers/usb/core/usb.c
-> > @@ -1190,7 +1190,7 @@ EXPORT_SYMBOL_GPL(usb_debug_root);
-> >  
-> >  static void usb_debugfs_init(void)
-> >  {
-> > -	usb_debug_root = debugfs_create_dir("usb", NULL);
-> > +	usb_debug_root = debugfs_create_dir(USB_DEBUG_ROOT_NAME, NULL);
-> >  	debugfs_create_file("devices", 0444, usb_debug_root, NULL,
-> >  			    &usbfs_devices_fops);
-> >  }
-> 
-> might be a better idea to move this to usb common. Then have a function
-> which can be called by both host and gadget to maybe create the
-> directory:
-> 
-> static struct dentry *usb_debug_root;
-> 
-> struct dentry *usb_debugfs_init(void)
-> {
-> 	if (!usb_debug_root)
->         	usb_debug_root = debugfs_create_dir("usb", NULL);
-> 
-> 	return usb_debug_root;
-> }
-> 
-> 
-> Then usb core would be updated to something like:
-> 
-> static void usb_core_debugfs_init(void)
-> {
-> 	struct dentry *root = usb_debugfs_init();
-> 
-> 	debugfs_create_file("devices", 0444, root, NULL, &usbfs_devices_fops);
-> }
-> 
-I find a problem when move usb_debugfs_init() and usb_debugfs_cleanup()
-into usb common, it's easy to create "usb" directory, but difficult to
-cleanup it:
+Thanks for review.
 
-common/common.c
+On Wed, 29 May 2019 at 19:44, Boqun Feng <boqun.feng@gmail.com> wrote:
+>
+> > @@ -424,7 +424,7 @@ static void rwsem_ABBA2(void)
+> >       ML(Y1);
+> >       RSL(X1);
+> >       RSU(X1);
+> > -     MU(Y1); // should fail
+> > +     MU(Y1); // should NOT fail
+>
+> I'm afraid you get this wrong ;-) reader of rwsem is non-recursive if I
+> understand correctly, so case like:
+>
+>         Task 0                  Task 1
+>
+>         down_read(A);
+>                                 mutex_lock(B);
+>
+>                                 down_read(A);
+>         mutex_lock(B);
+>
+> can be a deadlock, if we consider a third independent task:
+>
+>         Task 0                  Task 1                  Task 2
+>
+>         down_read(A);
+>                                 mutex_lock(B);
+>                                                         down_write(A);
+>                                 down_read(A);
+>         mutex_lock(B);
+>
+> in this case, Task 1 can not get it's lock for A, therefore, deadlock.
 
-struct dentry *usb_debugfs_init(void)
-{
-    if (!usb_debug_root)
-        usb_debug_root = debugfs_create_dir("usb", NULL);
+Well, yes. This situation is damn counterintuitive and looks
+suboptimal, but I guess I can understand why this is done so. It is a
+shame read locks are not 100% concurrent. I wish I were bright enough
+to have figured this out on my own.
 
-    return usb_debug_root;
-}
+Ok, now this perhaps can be easily remedied. it is merely a matter
+that finally I can set straight the lock exclusiveness table, and then
+from there the only change seems to be now only recursive-read locks
+are no deadlock.
 
-void usb_debugfs_cleanup(void)
-{
-    debugfs_remove_recursive(usb_debug_root);
-    usb_debug_root = NULL;
-}
-
-core/usb.c
-
-static void usb_core_debugfs_init(void)
-{
-    struct dentry *root = usb_debugfs_init();
-
-    debugfs_create_file("devices", 0444, root, NULL,
-&usbfs_devices_fops);
-}
-
-static int __init usb_init(void)
-{
-    ...
-    usb_core_debugfs_init();
-    ...
-}
-
-static void __exit usb_exit(void)
-{
-    ...
-    usb_debugfs_cleanup();
-    // will be error, gadget may use it.
-    ...
-}
-
-gadget/udc/core.c
-
-static int __init usb_udc_init(void)
-{
-    ...
-    usb_debugfs_init();
-    ...
-}
-
-static void __exit usb_udc_exit(void)
-{
-    ...
-    usb_debugfs_cleanup();
-    // can't cleanup in fact, usb core may use it.
-}
-
-How to handle this case? introduce a reference count? do you have any
-suggestion?
-
-Thanks a lot
-
-
-
-
-
+Thanks,
+Yuyang
