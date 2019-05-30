@@ -2,254 +2,260 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5666C28CC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9581D23A85
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559232866;
-	bh=1s8Cs2JQUU40YRbwjNco7sbSB4A0GwXuuKK25BIeJkI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1I26Btv399w/KGs06gMBD5ELvfgJecADNxP6GFiYQ2uJChUfu3nI9BX2mu3Ohgn5Y
-	 xiPGakkgeB02dXP67csA3uN5ctR8TLHhQ1xnJt2bL/Seqnt4bWxEIMEu+R4m56DA8m
-	 Pb2fXWPkeL1290K5YORs3fvRnXpDlolChTpyyzGA=
+	by mail.kernel.org (Postfix) with ESMTP id EF0CB25D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:15:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iLQl/tzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfE3QO0 (ORCPT
+        id S1727418AbfE3QPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfE3QOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:14:25 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB6A125D96
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 16:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559232864;
-        bh=1s8Cs2JQUU40YRbwjNco7sbSB4A0GwXuuKK25BIeJkI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VCnboiF82xTt7afpDzh2drPNaR0hSnvkhXzqo7HzeDBqDcCyifW0ENfGgnDFO54bi
-         PY1AbT4sAPpLgBcGQUhJBYLnq0+I2h8LQpsKq0TYyG9FWXDYvf6TQnd1O97R/MorgT
-         L5bSZn9zL8wvLXCM8h/UfiuF6xtVTrNRuMhe8ddI=
-Received: by mail-wr1-f51.google.com with SMTP id w13so4565633wru.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:14:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAVNC84KPX1YBaMaYDPe0dMfk5Rd7XLnZU6I1YVta6cvT5cWJCdC
-        g1Q+0RaeiL8IZ6LYSvOJurxV8wWKROVakZ2DP9a6Qw==
-X-Google-Smtp-Source: APXvYqxis8xI59982mu7Yhvv+04e4RgHrrniVwLY5B1ZbAFhCM3Isc04LA54cAB7i14rTn8pfA3Z7xFpjtbLEa0lHWY=
-X-Received: by 2002:adf:fe90:: with SMTP id l16mr3106260wrr.221.1559232862193;
- Thu, 30 May 2019 09:14:22 -0700 (PDT)
+        Thu, 30 May 2019 12:15:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39543 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfE3QPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:15:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so4268823pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QdCnbVnvU3JKpvLwtQ0RZP1XXmjXKTawTWYBTDGInu4=;
+        b=iLQl/tzlA9IoLss9iCFQI/uNGICbYiY4oejGcOmvASeKUe1o9NBlHzZdiKIU2xU58Y
+         3pKqXYhhLPDvcUMN7eyQqGRC4IryxuvQMWpUXEv8jnvIzDG7kZZg9PxBjkDzEFxg+RQf
+         IVDhR19utfM7z+cRwAL4kdXgETyC+JmOUaA4KHKVd+GagQ+bXc+lAzNsMdpe3bzXPDPx
+         KDOv/heXOJc5v7KdT7sv1ibco32xt7Ynm8VHLcvCtns9QqQ/Lj7JCkgVMV9pp/OkoWPD
+         Zcc+T3tyl96dUAbeOBndyhsXipIkP4D9akQIpA985eo1aayznx92rFD0B7fd/9tZaa6C
+         VapA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QdCnbVnvU3JKpvLwtQ0RZP1XXmjXKTawTWYBTDGInu4=;
+        b=QTTjYXMwuwXfm4zE4i8bo+1wsrrVOWsgPJzR71MXMqrX2IV2KbQFJ5fgsX5mfQKxbR
+         oxPjkPoPe8pm0qDHDCVynO1a5fpDeFvrfI6Li32h9AKHVrNxz/XximrsKlpGe848v5Xh
+         uMWx1FQ2a6Ip0u0HaLf2xMB3Pl0/7pnKHgfzR+QCOeKSj4fXQd/nudqxa00yv+vAMB0I
+         abypmwwP5g9m/U57a0pLnOH8txlXapx9Ft0uFguILWpB0q7vO5fVpnh8OJ+aQaS5NKN3
+         BkVqqMTUXvQHe+DBhq0CsXVZc0npNVFkqMxNm5QUZe008J//gm6yslJ/12966KIafVBD
+         nnJQ==
+X-Gm-Message-State: APjAAAWsjQ3ZQ3X2WSBe438O+QWeWCW0z6Xuh0VbP95wBYnvsaIHVARJ
+        Ib1HOOrpkFfCRzIlkp8/SkQmWg==
+X-Google-Smtp-Source: APXvYqzdneacRJ3jMe8/a4aYeOWI8YILi6WoYZXJpCLl8ovLvQkhojhfLpNV90VPB11YoHs72pAphw==
+X-Received: by 2002:a17:90a:240c:: with SMTP id h12mr4366079pje.12.1559232951269;
+        Thu, 30 May 2019 09:15:51 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::7ef9])
+        by smtp.gmail.com with ESMTPSA id s42sm7645186pjc.5.2019.05.30.09.15.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 09:15:50 -0700 (PDT)
+Date:   Thu, 30 May 2019 12:15:48 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: fix page cache convergence regression
+Message-ID: <20190530161548.GA8415@cmpxchg.org>
+References: <20190524153148.18481-1-hannes@cmpxchg.org>
+ <20190524160417.GB1075@bombadil.infradead.org>
+ <20190524173900.GA11702@cmpxchg.org>
 MIME-Version: 1.0
-References: <20190524175458.GB365@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F654E8E1D@ORSMSX116.amr.corp.intel.com>
- <CALCETrUw5sEr-MHPMU4CzEzkrejDs-JOThHB9Buhoxo5-rdpRw@mail.gmail.com>
- <20190524200333.GF365@linux.intel.com> <CALCETrUyAAhnQ+RUeN1L41TKj-vcD2CNt-FJ9siO=Zo6gvH1Aw@mail.gmail.com>
- <20190524224107.GJ365@linux.intel.com> <683B5E3D-AFB6-4B45-8D39-B00847312209@amacapital.net>
- <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com> <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov> <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
-In-Reply-To: <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 30 May 2019 09:14:10 -0700
-X-Gmail-Original-Message-ID: <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
-Message-ID: <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524173900.GA11702@cmpxchg.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 8:04 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
->
-> On 5/30/19 10:31 AM, Andy Lutomirski wrote:
-> > Hi all-
-> >
-> > After an offline discussion with Sean yesterday, here are some updates
-> > to the user API parts of my proposal.
-> >
-> > Unfortunately, Sean convinced me that MAXPERM doesn't work the way I
-> > described it because, for SGX2, the enclave loader won't know at load
-> > time whether a given EAUG-ed page will ever be executed.  So here's an
-> > update.
-> >
-> > First, here are the requrements as I see them, where EXECUTE, EXECMOD,
-> > and EXECMEM could be substituted with other rules at the LSM's
-> > discretion:
-> >
-> >   - You can create a WX or RWX mapping if and only if you have EXECMEM.
-> >
-> >   - To create an X mapping of an enclave page that has ever been W, you
-> > need EXECMOD.
->
-> EXECMOD to what file? The enclave file from which the page's content
-> originated, the sigstruct file, or /dev/sgx/enclave?
+Are there any objections or feedback on the proposed fix below? This
+is kind of a serious regression.
 
-I leave that decision to you :)  The user should need permission to do
-an execmod thing on an enclave, however that wants to be encoded.
-
->
-> >   - To create an X mapping of an enclave page that came from EADD, you
-> > need EXECUTE on the source file.  Optionally, we could also permit
-> > this if you have EXECMOD.
->
-> What is the "source file" i.e. the target of the check?  Enclave file,
-> sigstruct file, or /dev/sgx/enclave?
-
-Enclave file -- that is, the file backing the vma from which the data is loaded.
-
->
-> >
-> > And I have two design proposals.  One is static and one is dynamic.
-> > To implement either one, we will probably need a new .may_mprotect vm
-> > operation, and that operation can call an LSM hook.  Or we can give
-> > LSMs a way to detect that a given vm_area_struct is an enclave.  As I
-> > see it, this is an implementation detail that is certainly solveable.
-> >
-> >
-> > Static proposal:
-> >
-> >
-> > EADD takes an execute_intent flag.  It calls a new hook:
-> >
-> >    int security_enclave_load(struct vm_area_struct *source, bool execute_intent);
-> >
-> > This hook will fail if execute_intent==true and the caller has neither
-> > EXECUTE, EXECMOD, nor EXECMEM.
->
-> EADD execute_intent flag is originally provided by whom (userspace or
-> driver) on what basis? Which file is referenced by source->vm_file? Why
-> trigger all three checks up front versus only checking if needed?  Won't
-> this trigger a lot of unnecessary EXECMOD and EXECMEM denials that will
-> need to be dontaudit'd? What if there is a mismatch between
-> execute_intent and the initial permissions?
-
-It's provided by userspace based on whether it thinks the data in
-question is enclave code.  source->vm_file is the file from which the
-code is being loaded.  I'm assuming that the user code will only set
-excute_intent ==true if it actually wants to execute the code, so, if
-there's a denial, it will be fatal.  The normal case will be that the
-request will be granted on the basis of EXECUTE.
-
->
-> >
-> > EAUG sets execute_intent = false.
-> >
-> > EINIT takes a sigstruct pointer.  SGX can (when initially upstreamed
-> > or later on once there's demand) call a new hook:
-> >
-> >    security_enclave_init(struct sigstruct *sigstruct, struct
-> > vm_area_struct *source);
->
-> Is struct sigstruct the same as struct sgx_sigstruct in the current
-> patches (i.e. just the sigstruct data, no file)?  What file is
-> referenced by source->vm_file (the sigstruct or the enclave or
-> /dev/sgx/enclave)?  Is this hook only for enforcing a whitelist on what
-> enclaves can be loaded?  What is the target of the check?
-
-sigstruct is just the data.  source->vm_file is the file from which
-the sigstruct came, which could be a .sigstruct file or could be the
-main executable or a DSO that contains an embedded enclave.  The
-sigstruct data is there so that an LSM (not necessarily SELinux) could
-check MRENCLAVE or MRSIGNER, and the source is there so that the
-file's label can be checked.
-
->
-> > mmap() and mprotect() will require EXECMEM to create WX or RWX
-> > mappings.  They will require EXECMOD to create RX or X mappings of an
-> > execute_intent==false page.  They require no permissions in the other
-> > cases.
->
-> Does this occur for both setting initial permissions and runtime
-> permissions or just runtime? Both userspace- and driver-initiated
-> mmap/mprotect operations or just userspace-initiated ones?  Does the
-> driver use interfaces that call the mmap/mprotect hooks or lower level
-> functions?
-
-These would occur for any mmap(), mprotect(), or ioctl() that changes
-VMA permissions.  Actually arranging for the hooks to be called is an
-implementation detail that might require a new .mprotect vm_operation.
-As an alternative, security_enclave_init() or similar could supply
-may_execmod and may_execmem flags to the driver, and the driver could
-do these checks on its own when mmap() and mprotect() happen without a
-new LSM callback.
-
->
-> >
-> >
-> > Dynamic proposal:
-> >
-> >
-> > EADD does not take any special flags.  It does something like this internally:
-> >
-> >    bool execute_intent = true;
-> >    int security_enclave_load(struct vm_area_struct *source, bool
-> > *execute_intent);
-> >
-> > The implementation of security_enclave_load() may set *execute_intent to false.
-> > The driver records execute_intent after the LSM is done.
->
-> On what basis does LSM decide whether to set *execute_intent?  If the
-> process lacks all three permissions? What if there is a mismatch with
-> the initial permissions?
->
-
-I think it would set *execute_intent=false if the process lacks
-EXECUTE on source->vm_file.  I'm not sure any more complexity is
-required.  If the enclave has EXECMOD, then it will still work on the
-basis of the mmap/mprotect rules.
-
-> >
-> > mmap() and mprotect() will require EXECMEM to create WX or RWX
-> > mappings.  They will require EXECMOD to create RX or X mappings of an
-> > execute_intent==false page.  They require no permissions in the other
-> > cases.
-> >
-> >
-> >
-> > A benefit of the static proposal is that audit failures due to a lack
-> > of EXECUTE permission are easy to implement and to understand in the
-> > lods.  With the dynamic model, we can only really audit the lack of
-> > EXECMOD or EXECMEM.  A benefit of the dynamic model is that we hide
-> > what is arguably a decently large wart from the API.
-> >
->
+On Fri, May 24, 2019 at 01:39:00PM -0400, Johannes Weiner wrote:
+> From 63a0dbc571ff38f7c072c62d6bc28192debe37ac Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Fri, 24 May 2019 10:12:46 -0400
+> Subject: [PATCH] mm: fix page cache convergence regression
+> 
+> Since a28334862993 ("page cache: Finish XArray conversion"), on most
+> major Linux distributions, the page cache doesn't correctly transition
+> when the hot data set is changing, and leaves the new pages thrashing
+> indefinitely instead of kicking out the cold ones.
+> 
+> On a freshly booted, freshly ssh'd into virtual machine with 1G RAM
+> running stock Arch Linux:
+> 
+> [root@ham ~]# ./reclaimtest.sh
+> + dd of=workingset-a bs=1M count=0 seek=600
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + ./mincore workingset-a
+> 153600/153600 workingset-a
+> + dd of=workingset-b bs=1M count=0 seek=600
+> + cat workingset-b
+> + cat workingset-b
+> + cat workingset-b
+> + cat workingset-b
+> + ./mincore workingset-a workingset-b
+> 104029/153600 workingset-a
+> 120086/153600 workingset-b
+> + cat workingset-b
+> + cat workingset-b
+> + cat workingset-b
+> + cat workingset-b
+> + ./mincore workingset-a workingset-b
+> 104029/153600 workingset-a
+> 120268/153600 workingset-b
+> 
+> workingset-b is a 600M file on a 1G host that is otherwise entirely
+> idle. No matter how often it's being accessed, it won't get cached.
+> 
+> While investigating, I noticed that the non-resident information gets
+> aggressively reclaimed - /proc/vmstat::workingset_nodereclaim. This is
+> a problem because a workingset transition like this relies on the
+> non-resident information tracked in the page cache tree of evicted
+> file ranges: when the cache faults are refaults of recently evicted
+> cache, we challenge the existing active set, and that allows a new
+> workingset to establish itself.
+> 
+> Tracing the shrinker that maintains this memory revealed that all page
+> cache tree nodes were allocated to the root cgroup. This is a problem,
+> because 1) the shrinker sizes the amount of non-resident information
+> it keeps to the size of the cgroup's other memory and 2) on most major
+> Linux distributions, only kernel threads live in the root cgroup and
+> everything else gets put into services or session groups:
+> 
+> [root@ham ~]# cat /proc/self/cgroup
+> 0::/user.slice/user-0.slice/session-c1.scope
+> 
+> As a result, we basically maintain no non-resident information for the
+> workloads running on the system, thus breaking the caching algorithm.
+> 
+> Looking through the code, I found the culprit in the above-mentioned
+> patch: when switching from the radix tree to xarray, it dropped the
+> __GFP_ACCOUNT flag from the tree node allocations - the flag that
+> makes sure the allocated memory gets charged to and tracked by the
+> cgroup of the calling process - in this case, the one doing the fault.
+> 
+> To fix this, allow xarray users to specify per-tree flag that makes
+> xarray allocate nodes using __GFP_ACCOUNT. Then restore the page cache
+> tree annotation to request such cgroup tracking for the cache nodes.
+> 
+> With this patch applied, the page cache correctly converges on new
+> workingsets again after just a few iterations:
+> 
+> [root@ham ~]# ./reclaimtest.sh
+> + dd of=workingset-a bs=1M count=0 seek=600
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + cat workingset-a
+> + ./mincore workingset-a
+> 153600/153600 workingset-a
+> + dd of=workingset-b bs=1M count=0 seek=600
+> + cat workingset-b
+> + ./mincore workingset-a workingset-b
+> 124607/153600 workingset-a
+> 87876/153600 workingset-b
+> + cat workingset-b
+> + ./mincore workingset-a workingset-b
+> 81313/153600 workingset-a
+> 133321/153600 workingset-b
+> + cat workingset-b
+> + ./mincore workingset-a workingset-b
+> 63036/153600 workingset-a
+> 153600/153600 workingset-b
+> 
+> Cc: stable@vger.kernel.org # 4.20+
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  fs/inode.c             |  2 +-
+>  include/linux/xarray.h |  1 +
+>  lib/xarray.c           | 12 ++++++++++--
+>  3 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index e9d18b2c3f91..cd67859dbaf1 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -361,7 +361,7 @@ EXPORT_SYMBOL(inc_nlink);
+>  
+>  static void __address_space_init_once(struct address_space *mapping)
+>  {
+> -	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ);
+> +	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ | XA_FLAGS_ACCOUNT);
+>  	init_rwsem(&mapping->i_mmap_rwsem);
+>  	INIT_LIST_HEAD(&mapping->private_list);
+>  	spin_lock_init(&mapping->private_lock);
+> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+> index 0e01e6129145..5921599b6dc4 100644
+> --- a/include/linux/xarray.h
+> +++ b/include/linux/xarray.h
+> @@ -265,6 +265,7 @@ enum xa_lock_type {
+>  #define XA_FLAGS_TRACK_FREE	((__force gfp_t)4U)
+>  #define XA_FLAGS_ZERO_BUSY	((__force gfp_t)8U)
+>  #define XA_FLAGS_ALLOC_WRAPPED	((__force gfp_t)16U)
+> +#define XA_FLAGS_ACCOUNT	((__force gfp_t)32U)
+>  #define XA_FLAGS_MARK(mark)	((__force gfp_t)((1U << __GFP_BITS_SHIFT) << \
+>  						(__force unsigned)(mark)))
+>  
+> diff --git a/lib/xarray.c b/lib/xarray.c
+> index 6be3acbb861f..446b956c9188 100644
+> --- a/lib/xarray.c
+> +++ b/lib/xarray.c
+> @@ -298,6 +298,8 @@ bool xas_nomem(struct xa_state *xas, gfp_t gfp)
+>  		xas_destroy(xas);
+>  		return false;
+>  	}
+> +	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
+> +		gfp |= __GFP_ACCOUNT;
+>  	xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+>  	if (!xas->xa_alloc)
+>  		return false;
+> @@ -325,6 +327,8 @@ static bool __xas_nomem(struct xa_state *xas, gfp_t gfp)
+>  		xas_destroy(xas);
+>  		return false;
+>  	}
+> +	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
+> +		gfp |= __GFP_ACCOUNT;
+>  	if (gfpflags_allow_blocking(gfp)) {
+>  		xas_unlock_type(xas, lock_type);
+>  		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+> @@ -358,8 +362,12 @@ static void *xas_alloc(struct xa_state *xas, unsigned int shift)
+>  	if (node) {
+>  		xas->xa_alloc = NULL;
+>  	} else {
+> -		node = kmem_cache_alloc(radix_tree_node_cachep,
+> -					GFP_NOWAIT | __GFP_NOWARN);
+> +		gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN;
+> +
+> +		if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
+> +			gfp |= __GFP_ACCOUNT;
+> +
+> +		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
+>  		if (!node) {
+>  			xas_set_err(xas, -ENOMEM);
+>  			return NULL;
+> -- 
+> 2.21.0
+> 
