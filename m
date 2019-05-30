@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58100C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B2EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F6523CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B736923CCD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187232;
-	bh=/yWJP0rcANcNhtnq/8KxUj2EE2aniIXHmsQP1TEQToo=;
+	s=default; t=1559187241;
+	bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAIplyEmZeu8gxkgxVcrv+2qIuxK+dwt/kKrWdH5YUP3MNeuSEbmV7B3+vDiEcgil
-	 wmXw/KCCZi1VKEgfZrKggh+Lh26sQW3bPIkt1lQNIIWDAyqEFdfHuZIo2wnwNSXRlr
-	 vaeZ2TsVz1k38D8QBhHJ1kUnNPKxyJcxAZekHHxI=
+	b=mu9g50YoKWeMR+5Fh3D4xBQtnA7dq7sFYwp+yWdU8/xHOlchA2k2iztnXTSRfCOD3
+	 9Ejlwa+QpfE0vrUJ68jWjYn8FL96pTZsvc5gFjBy9gpczB2lmye8/fEwIxlMaF459X
+	 DyX/yCcjSylVyih0boMulFbfVhtKOIwPp2ysaHH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388101AbfE3D17 (ORCPT
+        id S2388064AbfE3D1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbfE3DTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:45 -0400
+        id S1731984AbfE3DTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A427248AE;
-        Thu, 30 May 2019 03:19:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5A3248B2;
+        Thu, 30 May 2019 03:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186384;
-        bh=/yWJP0rcANcNhtnq/8KxUj2EE2aniIXHmsQP1TEQToo=;
+        s=default; t=1559186379;
+        bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tp99IVbYddypPJQ4nA9XirYJd6uoiTbrmaS4cJAw4e4e0zYvGFJvPx+tW37m9XQvf
-         g3x/GydJe/BLhWu/Nx0Syf0t2rtVdP5VATyuNbA+JAYqFYb7m0zX7zoG0nwd/YUq06
-         XHCoUeHE8G8CsFTh5QIQR4yVpctwUnj8/HosQmM8=
+        b=w3nsfLwvCs/M4OYqIoYQrKKy2LferRTQgSfSln+t5y46M7pp4/pRvMFKQb0r60dDq
+         ixpq15YMJ4sZaAmM0xiAXbh7Nm7sLtGiZMX5ku9GvU3Mm+WV5mW4D9O2dG47ybHo6v
+         1nWfAdf/cBlVze2n2L8CBk3BUxvfbayTRMcc98DM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 150/193] scsi: ufs: Avoid configuring regulator with undefined voltage range
-Date:   Wed, 29 May 2019 20:06:44 -0700
-Message-Id: <20190530030509.112113839@linuxfoundation.org>
+Subject: [PATCH 4.14 142/193] b43: shut up clang -Wuninitialized variable warning
+Date:   Wed, 29 May 2019 20:06:36 -0700
+Message-Id: <20190530030508.178316332@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,57 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b141e8cfd54ba3e5c610717295b2a02aab26a05 ]
+[ Upstream commit d825db346270dbceef83b7b750dbc29f1d7dcc0e ]
 
-For regulators used by UFS, vcc, vccq and vccq2 will have voltage range
-initialized by ufshcd_populate_vreg(), however other regulators may have
-undefined voltage range if dt-bindings have no such definition.
+Clang warns about what is clearly a case of passing an uninitalized
+variable into a static function:
 
-In above undefined case, both "min_uV" and "max_uV" fields in ufs_vreg
-struct will be zero values and these values will be configured on
-regulators in different power modes.
+drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lpphy_papd_cal(dev, gains, 0, 1, 30);
+                                    ^~~~~
+drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
+        struct lpphy_tx_gains gains, oldgains;
+        ^
+1 error generated.
 
-Currently this may have no harm if both "min_uV" and "max_uV" always keep
-"zero values" because regulator_set_voltage() will always bypass such
-invalid values and return "good" results.
+However, this function is empty, and its arguments are never evaluated,
+so gcc in contrast does not warn here. Both compilers behave in a
+reasonable way as far as I can tell, so we should change the code
+to avoid the warning everywhere.
 
-However improper values shall be fixed to avoid potential bugs.  Simply
-bypass voltage configuration if voltage range is not defined.
+We could just eliminate the lpphy_papd_cal() function entirely,
+given that it has had the TODO comment in it for 10 years now
+and is rather unlikely to ever get done. I'm doing a simpler
+change here, and just pass the 'oldgains' variable in that has
+been initialized, based on the guess that this is what was
+originally meant.
 
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/wireless/broadcom/b43/phy_lp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c2395b8e72894..d8f0a1ccd9b19 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6580,12 +6580,15 @@ static int ufshcd_config_vreg(struct device *dev,
- 	name = vreg->name;
+diff --git a/drivers/net/wireless/broadcom/b43/phy_lp.c b/drivers/net/wireless/broadcom/b43/phy_lp.c
+index 6922cbb99a044..5a0699fb4b9ab 100644
+--- a/drivers/net/wireless/broadcom/b43/phy_lp.c
++++ b/drivers/net/wireless/broadcom/b43/phy_lp.c
+@@ -1834,7 +1834,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
+ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+ {
+ 	struct b43_phy_lp *lpphy = dev->phy.lp;
+-	struct lpphy_tx_gains gains, oldgains;
++	struct lpphy_tx_gains oldgains;
+ 	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
  
- 	if (regulator_count_voltages(reg) > 0) {
--		min_uV = on ? vreg->min_uV : 0;
--		ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
--		if (ret) {
--			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
-+		if (vreg->min_uV && vreg->max_uV) {
-+			min_uV = on ? vreg->min_uV : 0;
-+			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
-+			if (ret) {
-+				dev_err(dev,
-+					"%s: %s set voltage failed, err=%d\n",
- 					__func__, name, ret);
--			goto out;
-+				goto out;
-+			}
- 		}
+ 	lpphy_read_tx_pctl_mode_from_hardware(dev);
+@@ -1848,9 +1848,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+ 	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
  
- 		uA_load = on ? vreg->max_uA : 0;
+ 	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
+-		lpphy_papd_cal(dev, gains, 0, 1, 30);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
+ 	else
+-		lpphy_papd_cal(dev, gains, 0, 1, 65);
++		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
+ 
+ 	if (old_afe_ovr)
+ 		lpphy_set_tx_gains(dev, oldgains);
 -- 
 2.20.1
 
