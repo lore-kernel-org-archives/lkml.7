@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651EEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D338BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B92125ABB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0B725ADB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191447;
-	bh=Lt4gn8Zax1A1k0bW3kZVZAUEGQyIjyfrREkDlcuqJEs=;
+	s=default; t=1559191456;
+	bh=hf+vsL+YZwpSI6oLtJCY9c9z03Kmr2j8vsgQ8N+3tSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpMDROQvHyEmacga2hxauHW6JMmPL1Z/9y+pzhWUJmAuZVV05QrSxfMGp8OtVaQt0
-	 xfvWDdYVLVI5/wELd/Tv9aX3zmSJy/NdWgvcrb9MB7bF9ukicKHPPAjqYDCgOE2owK
-	 tqawzC4vlfbJ4fLqtC/bHKmlxZK6Nt3diYsZ2GdI=
+	b=QmdHqwsD/5ebQWnvpRxIqtIKx8OQZH1hX6+WR+J5LUiDYJbFzsbIwXDEub3j3Vgq4
+	 uUnJN2LGvHGKUAVUVYeo6VsCBMkxTr3r5SP8GG/FJGuYPFaZxp89Si5kJyKuASJE6G
+	 IZIGBHTHY1+dZBYrHWzywx7UKRZFEI7BlrJOuYsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388414AbfE3EoG (ORCPT
+        id S2388687AbfE3EoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53524 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbfE3DMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:06 -0400
+        id S1728169AbfE3DME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C5024527;
-        Thu, 30 May 2019 03:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D62AC24516;
+        Thu, 30 May 2019 03:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185926;
-        bh=Lt4gn8Zax1A1k0bW3kZVZAUEGQyIjyfrREkDlcuqJEs=;
+        s=default; t=1559185924;
+        bh=hf+vsL+YZwpSI6oLtJCY9c9z03Kmr2j8vsgQ8N+3tSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpAW13m2mzPDIjKObYwDThABF2s6LFTIRVS+5GcKA4Kn/RZrSmd1CJBrAW54n18F8
-         EAxvioYsvmWvRsN4n136p7USpNTvhiGupaBh/8HFgC2pcLTDJkURfUCHZv++P7GjCL
-         kHOjRwaSuF8CW3JnwYXbkzvBNxzx+Vsy5DYuUQXE=
+        b=cEeluIufYjyRlFA896bTUTBmEQNm0urn+1ZVp+y3OmYgAShsl3pS6rNsteLOBIuJs
+         rI4z9chvX8KVzJKtswrEBnolLIkkOjBQWU4dDOXGasmDMEPPjctDytuPjpDwkmTpro
+         WfjpKKNmbpOGsgCbtJKYswhhjFCwt7z7WSo4Y4vY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 316/405] scsi: lpfc: avoid uninitialized variable warning
-Date:   Wed, 29 May 2019 20:05:14 -0700
-Message-Id: <20190530030556.767435137@linuxfoundation.org>
+Subject: [PATCH 5.1 286/405] media: video-mux: fix null pointer dereferences
+Date:   Wed, 29 May 2019 20:04:44 -0700
+Message-Id: <20190530030555.342385321@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,60 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit faf5a744f4f8d76e7c03912b5cd381ac8045f6ec ]
+[ Upstream commit aeb0d0f581e2079868e64a2e5ee346d340376eae ]
 
-clang -Wuninitialized incorrectly sees a variable being used without
-initialization:
+devm_kcalloc may fail and return a null pointer. The fix returns
+-ENOMEM upon failures to avoid null pointer dereferences.
 
-drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                lport = (struct lpfc_nvme_lport *)localport->private;
-                                                  ^~~~~~~~~
-drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
-        struct nvme_fc_local_port *localport;
-                                            ^
-                                             = NULL
-1 error generated.
-
-This is clearly in dead code, as the condition leading up to it is always
-false when CONFIG_NVME_FC is disabled, and the variable is always
-initialized when nvme_fc_register_localport() got called successfully.
-
-Change the preprocessor conditional to the equivalent C construct, which
-makes the code more readable and gets rid of the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/platform/video-mux.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 1aa00d2c3f74e..9defff7118846 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -2080,15 +2080,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
- 		lpfc_nvme_template.max_hw_queues =
- 			phba->sli4_hba.num_present_cpu;
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index 0ba30756e1e40..d8cd5f5cb10d6 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -419,9 +419,14 @@ static int video_mux_probe(struct platform_device *pdev)
+ 	vmux->active = -1;
+ 	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
+ 				  GFP_KERNEL);
++	if (!vmux->pads)
++		return -ENOMEM;
++
+ 	vmux->format_mbus = devm_kcalloc(dev, num_pads,
+ 					 sizeof(*vmux->format_mbus),
+ 					 GFP_KERNEL);
++	if (!vmux->format_mbus)
++		return -ENOMEM;
  
-+	if (!IS_ENABLED(CONFIG_NVME_FC))
-+		return ret;
-+
- 	/* localport is allocated from the stack, but the registration
- 	 * call allocates heap memory as well as the private area.
- 	 */
--#if (IS_ENABLED(CONFIG_NVME_FC))
-+
- 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
- 					 &vport->phba->pcidev->dev, &localport);
--#else
--	ret = -ENOMEM;
--#endif
- 	if (!ret) {
- 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
- 				 "6005 Successfully registered local "
+ 	for (i = 0; i < num_pads; i++) {
+ 		vmux->pads[i].flags = (i < num_pads - 1) ? MEDIA_PAD_FL_SINK
 -- 
 2.20.1
 
