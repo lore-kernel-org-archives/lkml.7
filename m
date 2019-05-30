@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5C3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D19C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08AF2572E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883DB2575E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190849;
-	bh=nYfAnsHdSsbiudxhqGRTeUXvDrYgCLXbkbi9Pet7MSE=;
+	s=default; t=1559190852;
+	bh=oddKV1yeYzoI5BnCJbnLiq9Kkmk8WXXws4bnaRGvVLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkypNAJfarepSd/Vp4dDDWShCDqyDRl8fQvrRWlqjc3k254YKc9egazVbvPhtEAtT
-	 mu4IDm9HSGZh5j2gcYI/A7rODmyYvUqTKhr916NSkO/myOJnrEirgTbLywTvR2hYbY
-	 1lBtQ/7dFZTmByfvT9Q8ubAzHbDaBA64j9lYDyR4=
+	b=T7FFJcva0JJCNn/IImAb/t5SARbp+0uBoCRnTzppBHVhiPH5OGE6bhuVLc/Z8RMkE
+	 dhEfogmsfHgoYPZl+7G0gn1j4oHkMS1EfUTnTrpD0qQQquUZknlWp5mkXlPEZC5CxY
+	 DB59HIkO0bf7nBHNQ+PWJiIndCy7ytWptK0NLAaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388034AbfE3EeI (ORCPT
+        id S2388314AbfE3EeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbfE3DN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729444AbfE3DN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E269E23D83;
-        Thu, 30 May 2019 03:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F8C24544;
+        Thu, 30 May 2019 03:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186006;
-        bh=nYfAnsHdSsbiudxhqGRTeUXvDrYgCLXbkbi9Pet7MSE=;
+        s=default; t=1559186004;
+        bh=oddKV1yeYzoI5BnCJbnLiq9Kkmk8WXXws4bnaRGvVLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JB8pGLyO2nmDI7QojoZP41PFihKl5MqCJNmpSf1GHeor96zy/YgxYidcqQroRZktj
-         2znjlpqL5yo5wNd/l77gxwQuWofBw8F/xJmJOXgGS7O2XlUmh6pwb6b8YM26cixAtj
-         aOHaSGL/UK35qiSw/muuSGQadl4pTEHVDIcF0NP8=
+        b=wX04bB7taLBWkKlTh2syHYoSivTCLAHznJF3JhBG41Tl7VfkjSksdLNOn34uHyVE8
+         VXdEYDGCqAPvo8LqMjfbUM9a6Vu6tqxELGDYTN5F2WRuE9PsSKNWYtDZ1uRb14ssZ8
+         FeAVcaQvjWmVdtZ0MLxKV7CVIi2OAWjVtUCZ1VrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 060/346] Bluetooth: Ignore CC events not matching the last HCI command
-Date:   Wed, 29 May 2019 20:02:13 -0700
-Message-Id: <20190530030544.103046474@linuxfoundation.org>
+Subject: [PATCH 5.0 058/346] net: ena: fix: set freed objects to NULL to avoid failing future allocations
+Date:   Wed, 29 May 2019 20:02:11 -0700
+Message-Id: <20190530030543.981049190@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,190 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f80c5dad7b6467b884c445ffea45985793b4b2d0 ]
+[ Upstream commit 8ee8ee7fe87bf64738ab4e31be036a7165608b27 ]
 
-This commit makes the kernel not send the next queued HCI command until
-a command complete arrives for the last HCI command sent to the
-controller. This change avoids a problem with some buggy controllers
-(seen on two SKUs of QCA9377) that send an extra command complete event
-for the previous command after the kernel had already sent a new HCI
-command to the controller.
+In some cases when a queue related allocation fails, successful past
+allocations are freed but the pointer that pointed to them is not
+set to NULL. This is a problem for 2 reasons:
+1. This is generally a bad practice since this pointer might be
+accidentally accessed in the future.
+2. Future allocations using the same pointer check if the pointer
+is NULL and fail if it is not.
 
-The problem was reproduced when starting an active scanning procedure,
-where an extra command complete event arrives for the LE_SET_RANDOM_ADDR
-command. When this happends the kernel ends up not processing the
-command complete for the following commmand, LE_SET_SCAN_PARAM, and
-ultimately behaving as if a passive scanning procedure was being
-performed, when in fact controller is performing an active scanning
-procedure. This makes it impossible to discover BLE devices as no device
-found events are sent to userspace.
+Fixed this by setting such pointers to NULL in the allocation of
+queue related objects.
 
-This problem is reproducible on 100% of the attempts on the affected
-controllers. The extra command complete event can be seen at timestamp
-27.420131 on the btmon logs bellow.
+Also refactored the code of ena_setup_tx_resources() to goto-style
+error handling to avoid code duplication of resource freeing.
 
-Bluetooth monitor ver 5.50
-= Note: Linux version 5.0.0+ (x86_64)                                  0.352340
-= Note: Bluetooth subsystem version 2.22                               0.352343
-= New Index: 80:C5:F2:8F:87:84 (Primary,USB,hci0)               [hci0] 0.352344
-= Open Index: 80:C5:F2:8F:87:84                                 [hci0] 0.352345
-= Index Info: 80:C5:F2:8F:87:84 (Qualcomm)                      [hci0] 0.352346
-@ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.352347
-@ MGMT Open: btmon (privileged) version 1.14                  {0x0002} 0.352366
-@ MGMT Open: btmgmt (privileged) version 1.14                {0x0003} 27.302164
-@ MGMT Command: Start Discovery (0x0023) plen 1       {0x0003} [hci0] 27.302310
-        Address type: 0x06
-          LE Public
-          LE Random
-< HCI Command: LE Set Random Address (0x08|0x0005) plen 6   #1 [hci0] 27.302496
-        Address: 15:60:F2:91:B2:24 (Non-Resolvable)
-> HCI Event: Command Complete (0x0e) plen 4                 #2 [hci0] 27.419117
-      LE Set Random Address (0x08|0x0005) ncmd 1
-        Status: Success (0x00)
-< HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7  #3 [hci0] 27.419244
-        Type: Active (0x01)
-        Interval: 11.250 msec (0x0012)
-        Window: 11.250 msec (0x0012)
-        Own address type: Random (0x01)
-        Filter policy: Accept all advertisement (0x00)
-> HCI Event: Command Complete (0x0e) plen 4                 #4 [hci0] 27.420131
-      LE Set Random Address (0x08|0x0005) ncmd 1
-        Status: Success (0x00)
-< HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2      #5 [hci0] 27.420259
-        Scanning: Enabled (0x01)
-        Filter duplicates: Enabled (0x01)
-> HCI Event: Command Complete (0x0e) plen 4                 #6 [hci0] 27.420969
-      LE Set Scan Parameters (0x08|0x000b) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Command Complete (0x0e) plen 4                 #7 [hci0] 27.421983
-      LE Set Scan Enable (0x08|0x000c) ncmd 1
-        Status: Success (0x00)
-@ MGMT Event: Command Complete (0x0001) plen 4        {0x0003} [hci0] 27.422059
-      Start Discovery (0x0023) plen 1
-        Status: Success (0x00)
-        Address type: 0x06
-          LE Public
-          LE Random
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0003} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0002} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0001} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci.h |  1 +
- net/bluetooth/hci_core.c    |  5 +++++
- net/bluetooth/hci_event.c   | 12 ++++++++++++
- net/bluetooth/hci_request.c |  5 +++++
- net/bluetooth/hci_request.h |  1 +
- 5 files changed, 24 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 25 ++++++++++++--------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index c36dc1e20556a..60b7cbc0a6cb4 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -270,6 +270,7 @@ enum {
- 	HCI_FORCE_BREDR_SMP,
- 	HCI_FORCE_STATIC_ADDR,
- 	HCI_LL_RPA_RESOLUTION,
-+	HCI_CMD_PENDING,
- 
- 	__HCI_NUM_FLAGS,
- };
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 7352fe85674be..c25c664a25040 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4337,6 +4337,9 @@ void hci_req_cmd_complete(struct hci_dev *hdev, u16 opcode, u8 status,
- 		return;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 41c1c9acb3246..9b03d7e404f83 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -224,28 +224,23 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
+ 	if (!tx_ring->tx_buffer_info) {
+ 		tx_ring->tx_buffer_info = vzalloc(size);
+ 		if (!tx_ring->tx_buffer_info)
+-			return -ENOMEM;
++			goto err_tx_buffer_info;
  	}
  
-+	/* If we reach this point this event matches the last command sent */
-+	hci_dev_clear_flag(hdev, HCI_CMD_PENDING);
-+
- 	/* If the command succeeded and there's still more commands in
- 	 * this request the request is not yet complete.
- 	 */
-@@ -4447,6 +4450,8 @@ static void hci_cmd_work(struct work_struct *work)
+ 	size = sizeof(u16) * tx_ring->ring_size;
+ 	tx_ring->free_tx_ids = vzalloc_node(size, node);
+ 	if (!tx_ring->free_tx_ids) {
+ 		tx_ring->free_tx_ids = vzalloc(size);
+-		if (!tx_ring->free_tx_ids) {
+-			vfree(tx_ring->tx_buffer_info);
+-			return -ENOMEM;
+-		}
++		if (!tx_ring->free_tx_ids)
++			goto err_free_tx_ids;
+ 	}
  
- 		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
- 		if (hdev->sent_cmd) {
-+			if (hci_req_status_pend(hdev))
-+				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
- 			atomic_dec(&hdev->cmd_cnt);
- 			hci_send_frame(hdev, skb);
- 			if (test_bit(HCI_RESET, &hdev->flags))
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index ac2826ce162b9..ef5ae4c7e286b 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3404,6 +3404,12 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
- 	hci_req_cmd_complete(hdev, *opcode, *status, req_complete,
- 			     req_complete_skb);
+ 	size = tx_ring->tx_max_header_size;
+ 	tx_ring->push_buf_intermediate_buf = vzalloc_node(size, node);
+ 	if (!tx_ring->push_buf_intermediate_buf) {
+ 		tx_ring->push_buf_intermediate_buf = vzalloc(size);
+-		if (!tx_ring->push_buf_intermediate_buf) {
+-			vfree(tx_ring->tx_buffer_info);
+-			vfree(tx_ring->free_tx_ids);
+-			return -ENOMEM;
+-		}
++		if (!tx_ring->push_buf_intermediate_buf)
++			goto err_push_buf_intermediate_buf;
+ 	}
  
-+	if (hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
-+		bt_dev_err(hdev,
-+			   "unexpected event for opcode 0x%4.4x", *opcode);
-+		return;
-+	}
+ 	/* Req id ring for TX out of order completions */
+@@ -259,6 +254,15 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
+ 	tx_ring->next_to_clean = 0;
+ 	tx_ring->cpu = ena_irq->cpu;
+ 	return 0;
 +
- 	if (atomic_read(&hdev->cmd_cnt) && !skb_queue_empty(&hdev->cmd_q))
- 		queue_work(hdev->workqueue, &hdev->cmd_work);
- }
-@@ -3511,6 +3517,12 @@ static void hci_cmd_status_evt(struct hci_dev *hdev, struct sk_buff *skb,
- 		hci_req_cmd_complete(hdev, *opcode, ev->status, req_complete,
- 				     req_complete_skb);
- 
-+	if (hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
-+		bt_dev_err(hdev,
-+			   "unexpected event for opcode 0x%4.4x", *opcode);
-+		return;
-+	}
-+
- 	if (atomic_read(&hdev->cmd_cnt) && !skb_queue_empty(&hdev->cmd_q))
- 		queue_work(hdev->workqueue, &hdev->cmd_work);
- }
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index ca73d36cc1494..e9a95ed654915 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -46,6 +46,11 @@ void hci_req_purge(struct hci_request *req)
- 	skb_queue_purge(&req->cmd_q);
++err_push_buf_intermediate_buf:
++	vfree(tx_ring->free_tx_ids);
++	tx_ring->free_tx_ids = NULL;
++err_free_tx_ids:
++	vfree(tx_ring->tx_buffer_info);
++	tx_ring->tx_buffer_info = NULL;
++err_tx_buffer_info:
++	return -ENOMEM;
  }
  
-+bool hci_req_status_pend(struct hci_dev *hdev)
-+{
-+	return hdev->req_status == HCI_REQ_PEND;
-+}
-+
- static int req_run(struct hci_request *req, hci_req_complete_t complete,
- 		   hci_req_complete_skb_t complete_skb)
- {
-diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
-index 692cc8b133682..55b2050cc9ff0 100644
---- a/net/bluetooth/hci_request.h
-+++ b/net/bluetooth/hci_request.h
-@@ -37,6 +37,7 @@ struct hci_request {
- 
- void hci_req_init(struct hci_request *req, struct hci_dev *hdev);
- void hci_req_purge(struct hci_request *req);
-+bool hci_req_status_pend(struct hci_dev *hdev);
- int hci_req_run(struct hci_request *req, hci_req_complete_t complete);
- int hci_req_run_skb(struct hci_request *req, hci_req_complete_skb_t complete);
- void hci_req_add(struct hci_request *req, u16 opcode, u32 plen,
+ /* ena_free_tx_resources - Free I/O Tx Resources per Queue
+@@ -378,6 +382,7 @@ static int ena_setup_rx_resources(struct ena_adapter *adapter,
+ 		rx_ring->free_rx_ids = vzalloc(size);
+ 		if (!rx_ring->free_rx_ids) {
+ 			vfree(rx_ring->rx_buffer_info);
++			rx_ring->rx_buffer_info = NULL;
+ 			return -ENOMEM;
+ 		}
+ 	}
 -- 
 2.20.1
 
