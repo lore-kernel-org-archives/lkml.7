@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C352AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342A8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996D524561
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0434E2456A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186056;
-	bh=9kh/slr66QYpYJ/Ssr1OGdcECW0mfqhsC7QsEwBt1p0=;
+	s=default; t=1559186059;
+	bh=dJfhr74dfhlzBQ06oDacfJP3wgeQgcEy2cx2MN0M1ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KL8DDMHCiObRH+wCX0J4VleBo2paOVmMqwLy+Zmf0doZL/VfOLIUNjZV5oscoOcDs
-	 /ZJrfMIRggP0a66zW9tP4jQOH/X9+QuvtejrkWu7X8j6EAJV0X/ZVuP8SO3HRb4Wsu
-	 SiCO7xQlOth3REH3si9yuK1hwIJR7il5VJodkUwQ=
+	b=T5hTr1tOtM0oWcMO4Dsx4vwrVB6fX3Yyce5PYmxviUpxFj5YzsDQWpp6R8JTxgv3I
+	 ebhRnD3SibT2vF4t1Y36aqWDb8D8QJUpbg51y3a0HrKCVWDr/cuQPJ51+KirjSHxSk
+	 w3jqAbxYtHMvmrXjpeoLfbKXY5Sag/2PB1raM/fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfE3DOQ (ORCPT
+        id S1729805AbfE3DOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:16 -0400
+        Wed, 29 May 2019 23:14:17 -0400
 Received: from mail.kernel.org ([198.145.29.99]:52812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbfE3DL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:56 -0400
+        id S1728754AbfE3DL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507CD244D8;
-        Thu, 30 May 2019 03:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC3E24481;
+        Thu, 30 May 2019 03:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185915;
-        bh=9kh/slr66QYpYJ/Ssr1OGdcECW0mfqhsC7QsEwBt1p0=;
+        s=default; t=1559185917;
+        bh=dJfhr74dfhlzBQ06oDacfJP3wgeQgcEy2cx2MN0M1ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7H5aeTfhMz97IsTPL/gaeDOsZkNWHlf+ZIoFC82F+JJ+OeNamrTYemWT1v+O+gSs
-         +B89gX3t2EBcc2ezRQSMrUVn5LK7PLJ4XSkyGVYKZb10sypY2OBng6oGa3I1bJuvkZ
-         VIPsamLwOJXPnf4PjL8p3FW+hddxVUzZWeFeBJ0o=
+        b=sl4g/6+xedYkBKuswD0PXGD19t5nEzArP613mqDqMLNjqRiloTwtKfoL3nvmaZN81
+         3gmO9FHl6NS8VrGNs7zlOuFVTJBr98Isgl53UIGRPKOtWZqQx7BfCkcsxiJVDB3Zm/
+         NdawRLmoycDknb8ArS9CeZcYcjLvd0WD2P9K5kPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, siliu@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 297/405] scsi: qedf: Add missing return in qedf_post_io_req() in the fcport offload check
-Date:   Wed, 29 May 2019 20:04:55 -0700
-Message-Id: <20190530030555.867167887@linuxfoundation.org>
+Subject: [PATCH 5.1 301/405] virtio_console: initialize vtermno value for ports
+Date:   Wed, 29 May 2019 20:04:59 -0700
+Message-Id: <20190530030556.048247301@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,77 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5e06ba2f76809ad1492fdad312e81335df46bc5 ]
+[ Upstream commit 4b0a2c5ff7215206ea6135a405f17c5f6fca7d00 ]
 
-Fixes the following crash as the return was missing from the check if an
-fcport is offloaded. If we hit this code we continue to try to post an
-invalid task which can lead to the crash:
+For regular serial ports we do not initialize value of vtermno
+variable. A garbage value is assigned for non console ports.
+The value can be observed as a random integer with [1].
 
-[30259.616411] [0000:61:00.3]:[qedf_post_io_req:989]:3: Session not offloaded yet.
-[30259.616413] [0000:61:00.3]:[qedf_upload_connection:1340]:3: Uploading connection port_id=490020.
-[30259.623769] BUG: unable to handle kernel NULL pointer dereference at 0000000000000198
-[30259.631645] IP: [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.638816] PGD 0
-[30259.640841] Oops: 0000 [#1] SMP
-[30259.644098] Modules linked in: fuse xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables devlink ip6table_filter ip6_tables iptable_filter vfat fat ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib ib_ucm ib_umad dm_service_time skx_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel rpcrdma sunrpc rdma_ucm ib_uverbs lrw gf128mul ib_iser rdma_cm iw_cm ib_cm libiscsi scsi_transport_iscsi qedr(OE) glue_helper ablk_helper cryptd ib_core dm_round_robin joydev pcspkr ipmi_ssif ses enclosure ipmi_si ipmi_devintf ipmi_msghandler mei_me
-[30259.715529]  mei sg hpilo hpwdt shpchp wmi lpc_ich acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic uas usb_storage mgag200 qedf(OE) i2c_algo_bit libfcoe drm_kms_helper libfc syscopyarea sysfillrect scsi_transport_fc qede(OE) sysimgblt fb_sys_fops ptp ttm pps_core drm qed(OE) smartpqi crct10dif_pclmul crct10dif_common crc32c_intel i2c_core scsi_transport_sas scsi_tgt dm_mirror dm_region_hash dm_log dm_mod
-[30259.754237] CPU: 9 PID: 977 Comm: kdmwork-253:7 Kdump: loaded Tainted: G        W  OE  ------------   3.10.0-862.el7.x86_64 #1
-[30259.765664] Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 04/04/2018
-[30259.775000] task: ffff8c801efd0000 ti: ffff8c801efd8000 task.ti: ffff8c801efd8000
-[30259.782505] RIP: 0010:[<ffffffffc035b1ed>]  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.792116] RSP: 0018:ffff8c801efdbbb0  EFLAGS: 00010046
-[30259.797444] RAX: 0000000000000000 RBX: ffffa7f1450948d8 RCX: ffff8c7fe5bc40c8
-[30259.804600] RDX: ffff8c800715b300 RSI: ffffa7f1450948d8 RDI: ffff8c80169c2480
-[30259.811755] RBP: ffff8c801efdbc30 R08: 00000000000000ae R09: ffff8c800a314540
-[30259.818911] R10: ffff8c7fe5bc40c8 R11: ffff8c801efdb8ae R12: 0000000000000000
-[30259.826068] R13: ffff8c800715b300 R14: ffff8c80169c2480 R15: ffff8c8005da28e0
-[30259.833223] FS:  0000000000000000(0000) GS:ffff8c803f840000(0000) knlGS:0000000000000000
-[30259.841338] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[30259.847100] CR2: 0000000000000198 CR3: 000000081242e000 CR4: 00000000007607e0
-[30259.854256] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[30259.861412] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[30259.868568] PKRU: 00000000
-[30259.871278] Call Trace:
-[30259.873737]  [<ffffffffc035c948>] qedf_post_io_req+0x148/0x680 [qedf]
-[30259.880201]  [<ffffffffc035d070>] qedf_queuecommand+0x1f0/0x240 [qedf]
-[30259.886749]  [<ffffffffa329b050>] scsi_dispatch_cmd+0xb0/0x240
-[30259.892600]  [<ffffffffa32a45bc>] scsi_request_fn+0x4cc/0x680
-[30259.898364]  [<ffffffffa3118ad9>] __blk_run_queue+0x39/0x50
-[30259.903954]  [<ffffffffa3114393>] __elv_add_request+0xd3/0x260
-[30259.909805]  [<ffffffffa311baf0>] blk_insert_cloned_request+0xf0/0x1b0
-[30259.916358]  [<ffffffffc010b622>] map_request+0x142/0x220 [dm_mod]
-[30259.922560]  [<ffffffffc010b716>] map_tio_request+0x16/0x40 [dm_mod]
-[30259.928932]  [<ffffffffa2ebb1f5>] kthread_worker_fn+0x85/0x180
-[30259.934782]  [<ffffffffa2ebb170>] ? kthread_stop+0xf0/0xf0
-[30259.940284]  [<ffffffffa2ebae31>] kthread+0xd1/0xe0
-[30259.945176]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
-[30259.951290]  [<ffffffffa351f61d>] ret_from_fork_nospec_begin+0x7/0x21
-[30259.957750]  [<ffffffffa2ebad60>] ? insert_kthread_work+0x40/0x40
-[30259.963860] Code: fe 41 55 49 89 d5 41 54 53 48 89 f3 48 83 ec 58 4c 8b 67 28 4c 8b 4e 18 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 4c 8b 7e 58 <49> 8b 84 24 98 01 00 00 48 8b 00 f6 80 31 01 00 00 10 0f 85 0b
-[30259.983372] RIP  [<ffffffffc035b1ed>] qedf_init_task.isra.16+0x3d/0x450 [qedf]
-[30259.990630]  RSP <ffff8c801efdbbb0>
-[30259.994127] CR2: 0000000000000198
+[1] vim /sys/kernel/debug/virtio-ports/vport*p*
 
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This patch initialize the value of vtermno for console serial
+ports to '1' and regular serial ports are initiaized to '0'.
+
+Reported-by: siliu@redhat.com
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf_io.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/virtio_console.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
-index 6ca583bdde23c..29b51c4667217 100644
---- a/drivers/scsi/qedf/qedf_io.c
-+++ b/drivers/scsi/qedf/qedf_io.c
-@@ -902,6 +902,7 @@ int qedf_post_io_req(struct qedf_rport *fcport, struct qedf_ioreq *io_req)
- 	if (!test_bit(QEDF_RPORT_SESSION_READY, &fcport->flags)) {
- 		QEDF_ERR(&(qedf->dbg_ctx), "Session not offloaded yet.\n");
- 		kref_put(&io_req->refcount, qedf_release_cmd);
-+		return -EINVAL;
- 	}
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index fbeb71953526a..05dbfdb9f4aff 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -75,7 +75,7 @@ struct ports_driver_data {
+ 	/* All the console devices handled by this driver */
+ 	struct list_head consoles;
+ };
+-static struct ports_driver_data pdrvdata;
++static struct ports_driver_data pdrvdata = { .next_vtermno = 1};
  
- 	/* Obtain free SQE */
+ static DEFINE_SPINLOCK(pdrvdata_lock);
+ static DECLARE_COMPLETION(early_console_added);
+@@ -1394,6 +1394,7 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	port->async_queue = NULL;
+ 
+ 	port->cons.ws.ws_row = port->cons.ws.ws_col = 0;
++	port->cons.vtermno = 0;
+ 
+ 	port->host_connected = port->guest_connected = false;
+ 	port->stats = (struct port_stats) { 0 };
 -- 
 2.20.1
 
