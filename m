@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45431C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802AAC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF2225015
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5519625A84
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191388;
-	bh=ZeRxG86R+FVc7/S6lyEeqTu71EyFgNs7/FMQs5SVgZI=;
+	s=default; t=1559191392;
+	bh=6ZasBnQkNWDrauYS3P0AR+Bx7T/GvEgr4cuwvTY9LWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWFnuSDVN+6OCctdgs56PHpB6F03n4724+O5GVinHehQGZZrQPCmkX9r1i1qa/s6I
-	 5ThI7MNszbgEvTzOXtIfaNlLVVD8MllQju7jw4rg5wWzbkHI6iiYQ1izgGKz+tsVsb
-	 lWWBq+IBjHDNlctKFeflxoJ82oyUTYmQRmES+LDU=
+	b=hJIdtbrAa8BfY+a6ROwjU5a0rfKzS2mDJIWvTle6xdH9/TdENdhZyPMssvWDeNnEr
+	 9CE9EQuK/ZJNePUrqzXIVCTR0cTn8DnLokU7xPbjJlwU/XbqxgjjgwPzAwqNOVSxXD
+	 hFolu88xC8r8qz3YesK2VYN0uyNqL0Sq0uVxSmP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388587AbfE3EnG (ORCPT
+        id S2388723AbfE3EnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfE3DMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728876AbfE3DMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA59E2446F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 849A6244A0;
         Thu, 30 May 2019 03:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185933;
-        bh=ZeRxG86R+FVc7/S6lyEeqTu71EyFgNs7/FMQs5SVgZI=;
+        s=default; t=1559185932;
+        bh=6ZasBnQkNWDrauYS3P0AR+Bx7T/GvEgr4cuwvTY9LWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqPUmvdpPeslw+ROWE7+wy0At+kdn4LjA5FOEZX4oXSwpEj1jL6UySPFcZV48l+E6
-         x1zpmTytGQNn6q3H9rblByy/EbaxaenTL19zgfBZFUmdfu0pUFcqSmollgFjtYH72M
-         hbM5TmvIk6PbzIPlOZaK0GwUItl08W+x9KAkE+60=
+        b=x0M1KdQ5xh1mChOa96AwYK4QiiNqUozf9HNku9MRSw5FwYfxybqZS5C2Wo4d4wvjo
+         5OLkWTLSGf04i+0mljyozbaw8pXMs2eXcb/n8+GZK3JQvvRVE8Al1sJcfX+MHONDwL
+         GYqti1iOY8wo8t/rV+YtNKeQ+MoC903JA1f5gBR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 329/405] regulator: add regulator_get_linear_step() stub helper
-Date:   Wed, 29 May 2019 20:05:27 -0700
-Message-Id: <20190530030557.387558374@linuxfoundation.org>
+Subject: [PATCH 5.1 328/405] spi: export tracepoint symbols to modules
+Date:   Wed, 29 May 2019 20:05:26 -0700
+Message-Id: <20190530030557.335473736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,46 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7287275b4301e230be9e4569431c7dacb67ebc13 ]
+[ Upstream commit ca1438dcb34c7fcad63b6ce14ea63a870b92a69b ]
 
-The regulator header has empty inline functions for most interfaces,
-but not regulator_get_linear_step(), which has just grown a user
-that does not depend on regulators otherwise:
+The newly added tracepoints in the spi-mxs driver cause a link
+error when the driver is a loadable module:
 
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c: In function 'get_alignment_from_regulator':
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c:555:19: error: implicit declaration of function 'regulator_get_linear_step'; did you mean 'regulator_get_drvdata'? [-Werror=implicit-function-declaration]
-  align->step_uv = regulator_get_linear_step(reg);
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~
-                   regulator_get_drvdata
-cc1: all warnings being treated as errors
-scripts/Makefile.build:278: recipe for target 'drivers/clk/tegra/clk-tegra124-dfll-fcpu.o' failed
+ERROR: "__tracepoint_spi_transfer_stop" [drivers/spi/spi-mxs.ko] undefined!
+ERROR: "__tracepoint_spi_transfer_start" [drivers/spi/spi-mxs.ko] undefined!
 
-Add the missing stub along the others.
+I'm not quite sure where to put the export statements, but
+directly after the inclusion of the header seems as good as
+any other place.
 
-Fixes: b3cf8d069505 ("clk: tegra: dfll: CVB calculation alignment with the regulator")
+Fixes: f3fdea3af405 ("spi: mxs: add tracing to custom .transfer_one_message callback")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/regulator/consumer.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/spi/spi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index f3f76051e8b00..aaf3cee704397 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -478,6 +478,11 @@ static inline int regulator_is_supported_voltage(struct regulator *regulator,
- 	return 0;
- }
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index e3f2e15b75ad4..6cb72287eac82 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -36,6 +36,8 @@
  
-+static inline unsigned int regulator_get_linear_step(struct regulator *regulator)
-+{
-+	return 0;
-+}
-+
- static inline int regulator_set_current_limit(struct regulator *regulator,
- 					     int min_uA, int max_uA)
- {
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/spi.h>
++EXPORT_TRACEPOINT_SYMBOL(spi_transfer_start);
++EXPORT_TRACEPOINT_SYMBOL(spi_transfer_stop);
+ 
+ #include "internals.h"
+ 
 -- 
 2.20.1
 
