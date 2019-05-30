@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F6CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E27525A75
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E238425A87
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191398;
-	bh=oGMgnOnKZhEXrJDQyhTO2LVkP6kwGWwuTovV+BkBQls=;
+	s=default; t=1559191405;
+	bh=0s+FdrxQyBQqyT7+UtTeo2sVNyCRXt20aXWkTRMk/MI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcfKGFYekB5MEmuxh7Nx93N5cGmx+UO2Lvqbhuq4s6aG9AL2PADBLdOG6WYgJ3wpd
-	 dG9Ib2Wt7KjJcutcgnPdBXqT0UhweR4MQzlMUT2hpJJR9jXCYMDRWvoPs5n7qYTMCA
-	 wn+DXvXw4wjsFU2gxSYcorKFQMnltsC6nYQdbmOE=
+	b=Gp/iqqGBPp9Xy3qDKUmpKa9Th1/gwRn0KdIlDUREa3oEw6P4Zq8oqCxbbJQvz8Qld
+	 TIozRRdiG9n85G1dJcOAWpHeqD0B7/2csrGY1/m627MPv+1DD2D2xCBw5QdcyKO+d+
+	 ImP0VirMZ77psZFPcK4qysyxCXi9/3Uc4axtMFc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388734AbfE3EnR (ORCPT
+        id S2388727AbfE3EnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfE3DML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728199AbfE3DML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 736FD244A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1E8244EF;
         Thu, 30 May 2019 03:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185931;
-        bh=oGMgnOnKZhEXrJDQyhTO2LVkP6kwGWwuTovV+BkBQls=;
+        bh=0s+FdrxQyBQqyT7+UtTeo2sVNyCRXt20aXWkTRMk/MI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YcAgeHxR7p04B/SwIyccv79ZcBCp7+CRWO8AqhpM4ik0qxuROFGPCLABarXC43BDo
-         cQsgkQTs0csDucffkFXOXus6CbY1buZM36l+iofwvCgGuZdNJqZc3GAKoDwN9P/BuI
-         TfvNmYy9TSdt+ovOo1rMbwwGgI84C6jYlVQjr4kM=
+        b=iA9/bT7Loi20LXhPBkOsfcPstjtboNPlXTS2ioB5gpLthzT7vKgOrr8k5iHATwsbF
+         6bZhDWh+0ZkVOdCdF2n4Livkn+x9J04L9b4inl/2jt6MtnVRFpF+sG0HRYUcaBeHGf
+         3chupx3rqi7o9QiO/l0Djj9Lix859WBN/JrxRQTU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 326/405] thunderbolt: Fix to check return value of ida_simple_get
-Date:   Wed, 29 May 2019 20:05:24 -0700
-Message-Id: <20190530030557.239961713@linuxfoundation.org>
+Subject: [PATCH 5.1 325/405] hwrng: omap - Set default quality
+Date:   Wed, 29 May 2019 20:05:23 -0700
+Message-Id: <20190530030557.190127753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,45 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9aabb68568b473bf2f0b179d053b403961e42e4d ]
+[ Upstream commit 62f95ae805fa9e1e84d47d3219adddd97b2654b7 ]
 
-In enumerate_services, ida_simple_get on failure can return an error and
-leaks memory. The patch ensures that the dev_set_name is set on non
-failure cases, and releases memory during failure.
+Newer combinations of the glibc, kernel and openssh can result in long initial
+startup times on OMAP devices:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[    6.671425] systemd-rc-once[102]: Creating ED25519 key; this may take some time ...
+[  142.652491] systemd-rc-once[102]: Creating ED25519 key; done.
+
+due to the blocking getrandom(2) system call:
+
+[  142.610335] random: crng init done
+
+Set the quality level for the omap hwrng driver allowing the kernel to use the
+hwrng as an entropy source at boot.
+
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/xdomain.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/char/hw_random/omap-rng.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-index e27dd8beb94be..e0642dcb8b9bd 100644
---- a/drivers/thunderbolt/xdomain.c
-+++ b/drivers/thunderbolt/xdomain.c
-@@ -740,6 +740,7 @@ static void enumerate_services(struct tb_xdomain *xd)
- 	struct tb_service *svc;
- 	struct tb_property *p;
- 	struct device *dev;
-+	int id;
+diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
+index b65ff69628995..e9b6ac61fb7f6 100644
+--- a/drivers/char/hw_random/omap-rng.c
++++ b/drivers/char/hw_random/omap-rng.c
+@@ -443,6 +443,7 @@ static int omap_rng_probe(struct platform_device *pdev)
+ 	priv->rng.read = omap_rng_do_read;
+ 	priv->rng.init = omap_rng_init;
+ 	priv->rng.cleanup = omap_rng_cleanup;
++	priv->rng.quality = 900;
  
- 	/*
- 	 * First remove all services that are not available anymore in
-@@ -768,7 +769,12 @@ static void enumerate_services(struct tb_xdomain *xd)
- 			break;
- 		}
- 
--		svc->id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
-+		id = ida_simple_get(&xd->service_ids, 0, 0, GFP_KERNEL);
-+		if (id < 0) {
-+			kfree(svc);
-+			break;
-+		}
-+		svc->id = id;
- 		svc->dev.bus = &tb_bus_type;
- 		svc->dev.type = &tb_service_type;
- 		svc->dev.parent = &xd->dev;
+ 	priv->rng.priv = (unsigned long)priv;
+ 	platform_set_drvdata(pdev, priv);
 -- 
 2.20.1
 
