@@ -2,54 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8198DC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B7C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA7425FF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A1925FF7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192302;
-	bh=oQ2SeGOQu9iHPbVZedgYxDzhJB7H1HLmK4H2HDHddqc=;
+	s=default; t=1559192305;
+	bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQPqadEuWZ+Ctt+UXigtuj/Ppc0c+qD0mihePSdQcu+kSE6HKWMqxh9PNFdpwGnXH
-	 IGdU1ZQg2miODP9ddahiq1P6aRaz8FGSrKCV5OuzWYxSnvM+qvx6ogYZ8pNB2ChzJG
-	 3tJR4JZH69GNV3OXWE2kBEEMyjE+RkycbHu4SOFY=
+	b=qyvSh+GOa2S/Vay2fgbNdvUeC6SZWh1gT9fEswhNU0+EP5Qj+oV0swhVPJOPitMiw
+	 kLIP/rwaY87jweLQV+ByD7lEJOvJViw2+OdcigLn1l5KRMjSzglUIF5uAU2Mr/U2R0
+	 a3Fes8QvSXwWeqsHf+ydlg0GxBYHtyWf/g8KqytY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfE3DJt (ORCPT
+        id S2389139AbfE3E6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44512 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727679AbfE3DJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:38 -0400
+        id S1727785AbfE3DJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523CB24492;
-        Thu, 30 May 2019 03:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AC02447C;
+        Thu, 30 May 2019 03:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185778;
-        bh=oQ2SeGOQu9iHPbVZedgYxDzhJB7H1HLmK4H2HDHddqc=;
+        s=default; t=1559185788;
+        bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEwrY/bi1voLcGLT9TClH7zreOkOQQiqSA3cjwfSnDK+mRhztREo4lAUbYR/uqlYO
-         JD29lzxGEJNU15tbnrYO8OGynj8n9aRHag6lq6SvjIZhR0DlMB8XIBtcI2qEJ/aRlc
-         lCOis7YssEOzoCT9DqqzmKxA9RektYaXT3ZUsRhY=
+        b=HbZnQBnxgu4jhpuhPHmUunLz7Wf/IkSQBqiPBWBP7E7/8dJ87fryMla/GLd+KwwjL
+         eCrlJ93pre4fM3WDfMasqqQm4UO4mrXIjRs7ymcpuITf7oJMJQjgavn9iavnwGJO7b
+         uO6/u3MmLynY/yK957/4hY0dSRry6S9HDcmcepEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 036/405] media: vb2: add waiting_in_dqbuf flag
-Date:   Wed, 29 May 2019 20:00:34 -0700
-Message-Id: <20190530030542.590936828@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 058/405] bpftool: exclude bash-completion/bpftool from .gitignore pattern
+Date:   Wed, 29 May 2019 20:00:56 -0700
+Message-Id: <20190530030543.827288335@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,113 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+[ Upstream commit a7d006714724de4334c5e3548701b33f7b12ca96 ]
 
-commit d65842f7126aa1a87fb44b7c9980c12630ed4f33 upstream.
+tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
+intended to ignore the following build artifact:
 
-Calling VIDIOC_DQBUF can release the core serialization lock pointed to
-by vb2_queue->lock if it has to wait for a new buffer to arrive.
+  tools/bpf/bpftool/bpftool
 
-However, if userspace dup()ped the video device filehandle, then it is
-possible to read or call DQBUF from two filehandles at the same time.
+However, the .gitignore entry is effective not only for the current
+directory, but also for any sub-directories.
 
-It is also possible to call REQBUFS from one filehandle while the other
-is waiting for a buffer. This will remove all the buffers and reallocate
-new ones. Removing all the buffers isn't the problem here (that's already
-handled correctly by DQBUF), but the reallocating part is: DQBUF isn't
-aware that the buffers have changed.
+So, from the point of .gitignore grammar, the following check-in file
+is also considered to be ignored:
 
-This is fixed by setting a flag whenever the lock is released while waiting
-for a buffer to arrive. And checking the flag where needed so we can return
--EBUSY.
+  tools/bpf/bpftool/bash-completion/bpftool
 
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Reported-by: Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As the manual gitignore(5) says "Files already tracked by Git are not
+affected", this is not a problem as far as Git is concerned.
 
+However, Git is not the only program that parses .gitignore because
+.gitignore is useful to distinguish build artifacts from source files.
+
+For example, tar(1) supports the --exclude-vcs-ignore option. As of
+writing, this option does not work perfectly, but it intends to create
+a tarball excluding files specified by .gitignore.
+
+So, I believe it is better to fix this issue.
+
+You can fix it by prefixing the pattern with a slash; the leading slash
+means the specified pattern is relative to the current directory.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/videobuf2/videobuf2-core.c |   22 ++++++++++++++++++++++
- include/media/videobuf2-core.h                  |    1 +
- 2 files changed, 23 insertions(+)
+ tools/bpf/bpftool/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -672,6 +672,11 @@ int vb2_core_reqbufs(struct vb2_queue *q
- 		return -EBUSY;
- 	}
- 
-+	if (q->waiting_in_dqbuf && *count) {
-+		dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+		return -EBUSY;
-+	}
-+
- 	if (*count == 0 || q->num_buffers != 0 ||
- 	    (q->memory != VB2_MEMORY_UNKNOWN && q->memory != memory)) {
- 		/*
-@@ -807,6 +812,10 @@ int vb2_core_create_bufs(struct vb2_queu
- 	}
- 
- 	if (!q->num_buffers) {
-+		if (q->waiting_in_dqbuf && *count) {
-+			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+			return -EBUSY;
-+		}
- 		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
- 		q->memory = memory;
- 		q->waiting_for_buffers = !q->is_output;
-@@ -1659,6 +1668,11 @@ static int __vb2_wait_for_done_vb(struct
- 	for (;;) {
- 		int ret;
- 
-+		if (q->waiting_in_dqbuf) {
-+			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+			return -EBUSY;
-+		}
-+
- 		if (!q->streaming) {
- 			dprintk(1, "streaming off, will not wait for buffers\n");
- 			return -EINVAL;
-@@ -1686,6 +1700,7 @@ static int __vb2_wait_for_done_vb(struct
- 			return -EAGAIN;
- 		}
- 
-+		q->waiting_in_dqbuf = 1;
- 		/*
- 		 * We are streaming and blocking, wait for another buffer to
- 		 * become ready or for streamoff. Driver's lock is released to
-@@ -1706,6 +1721,7 @@ static int __vb2_wait_for_done_vb(struct
- 		 * the locks or return an error if one occurred.
- 		 */
- 		call_void_qop(q, wait_finish, q);
-+		q->waiting_in_dqbuf = 0;
- 		if (ret) {
- 			dprintk(1, "sleep was interrupted\n");
- 			return ret;
-@@ -2585,6 +2601,12 @@ static size_t __vb2_perform_fileio(struc
- 	if (!data)
- 		return -EINVAL;
- 
-+	if (q->waiting_in_dqbuf) {
-+		dprintk(3, "another dup()ped fd is %s\n",
-+			read ? "reading" : "writing");
-+		return -EBUSY;
-+	}
-+
- 	/*
- 	 * Initialize emulator on first call.
- 	 */
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -595,6 +595,7 @@ struct vb2_queue {
- 	unsigned int			start_streaming_called:1;
- 	unsigned int			error:1;
- 	unsigned int			waiting_for_buffers:1;
-+	unsigned int			waiting_in_dqbuf:1;
- 	unsigned int			is_multiplanar:1;
- 	unsigned int			is_output:1;
- 	unsigned int			copy_timestamp:1;
+diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
+index 67167e44b7266..8248b8dd89d4b 100644
+--- a/tools/bpf/bpftool/.gitignore
++++ b/tools/bpf/bpftool/.gitignore
+@@ -1,5 +1,5 @@
+ *.d
+-bpftool
++/bpftool
+ bpftool*.8
+ bpf-helpers.*
+ FEATURE-DUMP.bpftool
+-- 
+2.20.1
+
 
 
