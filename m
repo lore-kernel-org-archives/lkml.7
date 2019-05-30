@@ -2,59 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D9CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBC4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938942411E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E00524B4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187746;
-	bh=EkBCv1heqGKzTiAmeF4zZ0mO7WABHV4kA/21WAkBZRM=;
+	s=default; t=1559187749;
+	bh=uX0O8fFyjqjn47LlhwbHs8LWWpB51mG9r7AbkqwtLpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f5SOKrKZRPeitvyalNR/m9TvM9arWAFBd7LXeEpxcB0GMftksf6j0n1qWsi7kl41s
-	 cPTN3sBDKVVceCvW291+DdsAR1aTZWKjW8JE0XHboF/cvwNGisdMgA8Yl2XgHkeQoa
-	 NciAf8IlEj+qIsr6Jl70iWgQGAWnYuHc1YLRmxDE=
+	b=qNKGzU1oUA13ZuZvc1YqMYeKvgqTG4Y8DV8KwFwh5Ry86Sjy/x2C1KnT9JgXbw54+
+	 33MNaRXdDE/hUAQU/E7pFqujcXLhTnL7DJiOS8HNExyM+yEzYba8+pcgX3Eznx0f0p
+	 jlKrC6DW7YUi7PkSmeuZTBOoYhFc+T3bnxbyZ8EY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfE3DmZ (ORCPT
+        id S1732463AbfE3DVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732490AbfE3DVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:13 -0400
+        id S1730633AbfE3DQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E31249D8;
-        Thu, 30 May 2019 03:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54909245AF;
+        Thu, 30 May 2019 03:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186473;
-        bh=EkBCv1heqGKzTiAmeF4zZ0mO7WABHV4kA/21WAkBZRM=;
+        s=default; t=1559186174;
+        bh=uX0O8fFyjqjn47LlhwbHs8LWWpB51mG9r7AbkqwtLpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1toQv7zJrbGTIqPRYDkUSU4jyLBU/gMJXUAXXu8x72qAQEhBPl93gQwoDa+W1sbTH
-         E1XWBNnO6baqZSVoC2Bt6yCQJBAA0unyBAQ3AI9rsNzYIdr9O4Wf/E+6u0Nua1tsEo
-         aQd2BXqxscRLeMM1g6OKDSTVc2R99XWQepeZszP0=
+        b=WTrI3gLg0W2bYMtNWWNYmW639dTP76Qpcy3OVfwIByoGdybP3O8Vid6qZAXuGbCRl
+         6tSXAV5B1BysXn8KiH3wa6Fsy+pq7soN8bmAqerFfb/ePXnvBHjaXReyY9cR2HW36T
+         yRfhv+1EsZiaOH5+afY7ZLYrHK5GGSCpHUubgx4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 103/128] x86/ia32: Fix ia32_restore_sigcontext() AC leak
-Date:   Wed, 29 May 2019 20:07:15 -0700
-Message-Id: <20190530030453.278831048@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 008/276] Revert "scsi: sd: Keep disk read-only when re-reading partition"
+Date:   Wed, 29 May 2019 20:02:46 -0700
+Message-Id: <20190530030524.061242852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,87 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 67a0514afdbb8b2fc70b771b8c77661a9cb9d3a9 ]
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-Objtool spotted that we call native_load_gs_index() with AC set.
-Re-arrange the code to avoid that.
+commit 8acf608e602f6ec38b7cc37b04c80f1ce9a1a6cc upstream.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This reverts commit 20bd1d026aacc5399464f8328f305985c493cde3.
+
+This patch introduced regressions for devices that come online in
+read-only state and subsequently switch to read-write.
+
+Given how the partition code is currently implemented it is not
+possible to persist the read-only flag across a device revalidate
+call. This may need to get addressed in the future since it is common
+for user applications to proactively call BLKRRPART.
+
+Reverting this commit will re-introduce a regression where a
+device-initiated revalidate event will cause the admin state to be
+forgotten. A separate patch will address this issue.
+
+Fixes: 20bd1d026aac ("scsi: sd: Keep disk read-only when re-reading partition")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/ia32/ia32_signal.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/scsi/sd.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index cb13c0564ea7b..9978ea4382bf6 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -60,9 +60,8 @@
- } while (0)
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2605,7 +2605,6 @@ sd_read_write_protect_flag(struct scsi_d
+ 	int res;
+ 	struct scsi_device *sdp = sdkp->device;
+ 	struct scsi_mode_data data;
+-	int disk_ro = get_disk_ro(sdkp->disk);
+ 	int old_wp = sdkp->write_prot;
  
- #define RELOAD_SEG(seg)		{		\
--	unsigned int pre = GET_SEG(seg);	\
-+	unsigned int pre = (seg) | 3;		\
- 	unsigned int cur = get_user_seg(seg);	\
--	pre |= 3;				\
- 	if (pre != cur)				\
- 		set_user_seg(seg, pre);		\
- }
-@@ -71,6 +70,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 				   struct sigcontext_32 __user *sc)
- {
- 	unsigned int tmpflags, err = 0;
-+	u16 gs, fs, es, ds;
- 	void __user *buf;
- 	u32 tmp;
- 
-@@ -78,16 +78,10 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 	current->restart_block.fn = do_no_restart_syscall;
- 
- 	get_user_try {
--		/*
--		 * Reload fs and gs if they have changed in the signal
--		 * handler.  This does not handle long fs/gs base changes in
--		 * the handler, but does not clobber them at least in the
--		 * normal case.
--		 */
--		RELOAD_SEG(gs);
--		RELOAD_SEG(fs);
--		RELOAD_SEG(ds);
--		RELOAD_SEG(es);
-+		gs = GET_SEG(gs);
-+		fs = GET_SEG(fs);
-+		ds = GET_SEG(ds);
-+		es = GET_SEG(es);
- 
- 		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
- 		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
-@@ -105,6 +99,17 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 		buf = compat_ptr(tmp);
- 	} get_user_catch(err);
- 
-+	/*
-+	 * Reload fs and gs if they have changed in the signal
-+	 * handler.  This does not handle long fs/gs base changes in
-+	 * the handler, but does not clobber them at least in the
-+	 * normal case.
-+	 */
-+	RELOAD_SEG(gs);
-+	RELOAD_SEG(fs);
-+	RELOAD_SEG(ds);
-+	RELOAD_SEG(es);
-+
- 	err |= fpu__restore_sig(buf, 1);
- 
- 	force_iret();
--- 
-2.20.1
-
+ 	set_disk_ro(sdkp->disk, 0);
+@@ -2646,7 +2645,7 @@ sd_read_write_protect_flag(struct scsi_d
+ 			  "Test WP failed, assume Write Enabled\n");
+ 	} else {
+ 		sdkp->write_prot = ((data.device_specific & 0x80) != 0);
+-		set_disk_ro(sdkp->disk, sdkp->write_prot || disk_ro);
++		set_disk_ro(sdkp->disk, sdkp->write_prot);
+ 		if (sdkp->first_scan || old_wp != sdkp->write_prot) {
+ 			sd_printk(KERN_NOTICE, sdkp, "Write Protect is %s\n",
+ 				  sdkp->write_prot ? "on" : "off");
 
 
