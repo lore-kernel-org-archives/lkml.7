@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4A5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C34C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8619224D45
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA0C242B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188701;
-	bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
+	s=default; t=1559188704;
+	bh=q3keB0v+aXlx7TPKd91zN0OyffwostDe+8q8y4YvT+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dweOxyfPT/4vEoQiloCIdkYIwtjo5bwClOxu0Ek/G2n6tVlhnE2UUVSq6w7L1R9et
-	 3J6i+o0U9fRrx2K7gcFMKtm6x5bcpE92hhjFzCUg574d8eiMJb4uA5Uc9/Jb2JJj4y
-	 Tw5S3YBtlaQwsbTZIksqiR7c0Y/7dr1QmcyljhRc=
+	b=lbZ48OxkWnklts1Rdy8hSVgvrH+bQigcPdOsp86T+2PatzzcIZaNBlOyYa3hzp6yT
+	 igo6qHnNhKEUqLjScZJB+th3o+aShBTIJXxQFwnvSz6fibteRBHKi7WZ5xtNccGxtO
+	 8gDcxYy/me9AmjHatXLxhu0Dd4qxFUTNSvdf3oPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfE3DSo (ORCPT
+        id S2387704AbfE3D6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbfE3DOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:48 -0400
+        id S1731666AbfE3DSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E849423D83;
-        Thu, 30 May 2019 03:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCCBE2474D;
+        Thu, 30 May 2019 03:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186088;
-        bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
+        s=default; t=1559186323;
+        bh=q3keB0v+aXlx7TPKd91zN0OyffwostDe+8q8y4YvT+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbezbJ11DUFdW9EKse9HL9wYH4HgNKUiYmIwHzhAM+H0pmYQ9tokbVataoSwnOJ01
-         dbAdpiGYw72f6+udAYzLKb344/g3RM/IIVRmzjlvDR4sY+NxjM9RsiC0x/2inVA+4o
-         RFpPo7Pre5nPF+W33dXYxOAgnWfP1FsDydaaHULI=
+        b=On6AAT6/Fh19TsP5kblq83u65AP9RFrWTr2maTegxbTkgkHrY3yHf2yeyy5jBSSJw
+         lgJVHDIqhTiqEWmRTO0eAHJpnS1FrVjbfd8um59du7bUdSugAXf4FPOzujzACUjg/A
+         x2Zi9ovSNODGLwZKlqZmR6UkfUpuB/n7qbETMZ1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <Alexandru.Ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 216/346] iio: ad_sigma_delta: Properly handle SPI bus locking vs CS assertion
-Date:   Wed, 29 May 2019 20:04:49 -0700
-Message-Id: <20190530030552.040282078@linuxfoundation.org>
+Subject: [PATCH 4.14 036/193] gfs2: Fix lru_count going negative
+Date:   Wed, 29 May 2019 20:04:50 -0700
+Message-Id: <20190530030454.417171741@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,120 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df1d80aee963480c5c2938c64ec0ac3e4a0df2e0 ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-For devices from the SigmaDelta family we need to keep CS low when doing a
-conversion, since the device will use the MISO line as a interrupt to
-indicate that the conversion is complete.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-This is why the driver locks the SPI bus and when the SPI bus is locked
-keeps as long as a conversion is going on. The current implementation gets
-one small detail wrong though. CS is only de-asserted after the SPI bus is
-unlocked. This means it is possible for a different SPI device on the same
-bus to send a message which would be wrongfully be addressed to the
-SigmaDelta device as well. Make sure that the last SPI transfer that is
-done while holding the SPI bus lock de-asserts the CS signal.
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <Alexandru.Ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad_sigma_delta.c       | 16 +++++++++++-----
- include/linux/iio/adc/ad_sigma_delta.h |  1 +
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-index 54d9978b27405..a4310600a8536 100644
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -62,7 +62,7 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
- 	struct spi_transfer t = {
- 		.tx_buf		= data,
- 		.len		= size + 1,
--		.cs_change	= sigma_delta->bus_locked,
-+		.cs_change	= sigma_delta->keep_cs_asserted,
- 	};
- 	struct spi_message m;
- 	int ret;
-@@ -218,6 +218,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d5284d0dbdb59..cd6a64478a026 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
  
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
- 	reinit_completion(&sigma_delta->completion);
- 
- 	ret = ad_sigma_delta_set_mode(sigma_delta, mode);
-@@ -235,9 +236,10 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
- 		ret = 0;
- 	}
- out:
-+	sigma_delta->keep_cs_asserted = false;
-+	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
- 	sigma_delta->bus_locked = false;
- 	spi_bus_unlock(sigma_delta->spi->master);
--	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
- 
- 	return ret;
- }
-@@ -290,6 +292,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
- 	reinit_completion(&sigma_delta->completion);
- 
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_SINGLE);
-@@ -299,9 +302,6 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 	ret = wait_for_completion_interruptible_timeout(
- 			&sigma_delta->completion, HZ);
- 
--	sigma_delta->bus_locked = false;
--	spi_bus_unlock(sigma_delta->spi->master);
--
- 	if (ret == 0)
- 		ret = -EIO;
- 	if (ret < 0)
-@@ -322,7 +322,10 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
- 		sigma_delta->irq_dis = true;
- 	}
- 
-+	sigma_delta->keep_cs_asserted = false;
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
-+	sigma_delta->bus_locked = false;
-+	spi_bus_unlock(sigma_delta->spi->master);
- 	mutex_unlock(&indio_dev->mlock);
- 
- 	if (ret)
-@@ -359,6 +362,8 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
- 
- 	spi_bus_lock(sigma_delta->spi->master);
- 	sigma_delta->bus_locked = true;
-+	sigma_delta->keep_cs_asserted = true;
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
 +
- 	ret = ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_CONTINUOUS);
- 	if (ret)
- 		goto err_unlock;
-@@ -387,6 +392,7 @@ static int ad_sd_buffer_postdisable(struct iio_dev *indio_dev)
- 		sigma_delta->irq_dis = true;
+ 	spin_lock(&lru_lock);
+ 
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
+ 
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
+ }
+ 
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
+ 
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1158,8 +1162,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
  	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
  
-+	sigma_delta->keep_cs_asserted = false;
- 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
- 
- 	sigma_delta->bus_locked = false;
-diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
-index 7e84351fa2c05..6e9fb1932dde9 100644
---- a/include/linux/iio/adc/ad_sigma_delta.h
-+++ b/include/linux/iio/adc/ad_sigma_delta.h
-@@ -69,6 +69,7 @@ struct ad_sigma_delta {
- 	bool			irq_dis;
- 
- 	bool			bus_locked;
-+	bool			keep_cs_asserted;
- 
- 	uint8_t			comm;
- 
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1454,6 +1457,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1461,7 +1465,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1496,6 +1499,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
