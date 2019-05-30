@@ -2,129 +2,231 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6934BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6F12190F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3578622ADA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:13:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hZjRVsOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbfE3INA convert rfc822-to-8bit (ORCPT
+        id S1728100AbfE3INH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:13:00 -0400
-Received: from torres.zugschlus.de ([85.214.131.164]:53206 "EHLO
-        torres.zugschlus.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfE3IM7 (ORCPT
+        Thu, 30 May 2019 04:13:07 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52471 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfE3ING (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:12:59 -0400
-Received: from mh by torres.zugschlus.de with local (Exim 4.92)
-        (envelope-from <mh+netdev@zugschlus.de>)
-        id 1hWGBF-0006wP-MX; Thu, 30 May 2019 10:12:57 +0200
-Date:   Thu, 30 May 2019 10:12:57 +0200
-From:   Marc Haber <mh+netdev@zugschlus.de>
-To:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: iwl_mvm_add_new_dqa_stream_wk BUG in lib/list_debug.c:56
-Message-ID: <20190530081257.GA26133@torres.zugschlus.de>
+        Thu, 30 May 2019 04:13:06 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8Cff82904613
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 30 May 2019 01:12:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8Cff82904613
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559203962;
+        bh=aAZ8BRG+yeRcO4aQFz1TniPOkjFLVk+Loti+j3Al4EM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=hZjRVsOhEjzAig0Kl6APrw6DaoHPLUJGuzbNvxABWkBiIlOG+Ykptr28edgl5Es4Q
+         otTfViIv5RiowgL612IKnSE9EpZTkZVktJ/Tm9k1pSCm3ozV55QP9KhBI02w/LzpaZ
+         dQUx6Fo6sl3mlbTOKGNL+KXuBrF8tsoTaBF6W21PVlyKR+LuSuaWdk5PLrqhksN0dl
+         vVCf6PptqC4muiV2DRqOdh0LCZTIh6vw3OPlL92frN8eai+4e5yzq8neJpKIBkj3bL
+         xh9Hg5SdNhTnYNCNuGPZFZJCKnBvW8vS4nI3b0q7yshe3c1YGO59heUHMQbmjHALdy
+         OSD9l0tmkGQvg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8CfMa2904610;
+        Thu, 30 May 2019 01:12:41 -0700
+Date:   Thu, 30 May 2019 01:12:41 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-490c8cc949eca14bfdbee0ad1cd1c6d3ddf46b77@git.kernel.org>
+Cc:     ak@linux.intel.com, peterz@infradead.org, sdf@google.com,
+        adrian.hunter@intel.com, mingo@kernel.org, acme@redhat.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        songliubraving@fb.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, hpa@zytor.com, jolsa@kernel.org
+Reply-To: mingo@kernel.org, acme@redhat.com, peterz@infradead.org,
+          ak@linux.intel.com, adrian.hunter@intel.com, sdf@google.com,
+          alexander.shishkin@linux.intel.com, songliubraving@fb.com,
+          jolsa@kernel.org, hpa@zytor.com, namhyung@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <20190508132010.14512-11-jolsa@kernel.org>
+References: <20190508132010.14512-11-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf script: Add --show-bpf-events to show eBPF
+ related events
+Git-Commit-ID: 490c8cc949eca14bfdbee0ad1cd1c6d3ddf46b77
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit-ID:  490c8cc949eca14bfdbee0ad1cd1c6d3ddf46b77
+Gitweb:     https://git.kernel.org/tip/490c8cc949eca14bfdbee0ad1cd1c6d3ddf46b77
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Wed, 8 May 2019 15:20:08 +0200
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-on my primary notebook, a Lenovo X260, with an Intel Wireless 8260
-(8086:24f3), running Debian unstable, I have started to see network
-hangs since upgrading to kernel 5.1. In this situation, I cannot
-restart Network-Manager (the call just hangs), I can log out of X, but
-the system does not cleanly shut down and I need to Magic SysRq myself
-out of the running system. This happens about once every two days.
+perf script: Add --show-bpf-events to show eBPF related events
 
-dmesg:
-[38083.673678] lanw0: authenticate with 92:2a:a8:cb:8b:6c
-[38083.682971] lanw0: send auth to 92:2a:a8:cb:8b:6c (try 1/3)
-[38083.693860] lanw0: authenticated
-[38083.697711] lanw0: associate with 92:2a:a8:cb:8b:6c (try 1/3)
-[38083.703029] lanw0: RX ReassocResp from 92:2a:a8:cb:8b:6c (capab=0x411 status=0 aid=1)
-[38083.705838] lanw0: associated
-[38114.658765] lanw0: disconnect from AP 92:2a:a8:cb:8b:6c for new auth to 02:9f:c2:ab:b6:9f
-[38114.671649] lanw0: authenticate with 02:9f:c2:ab:b6:9f
-[38114.680074] lanw0: send auth to 02:9f:c2:ab:b6:9f (try 1/3)
-[38114.692359] lanw0: authenticated
-[38114.693609] lanw0: associate with 02:9f:c2:ab:b6:9f (try 1/3)
-[38114.698697] lanw0: RX ReassocResp from 02:9f:c2:ab:b6:9f (capab=0x411 status=0 aid=1)
-[38114.700878] lanw0: associated
-[38179.708187] lanw0: disconnect from AP 02:9f:c2:ab:b6:9f for new auth to 92:2a:a8:cb:8b:6c
-[38179.720183] lanw0: authenticate with 92:2a:a8:cb:8b:6c
-[38179.728924] lanw0: send auth to 92:2a:a8:cb:8b:6c (try 1/3)
-[38179.741439] lanw0: authenticated
-[38179.745606] lanw0: associate with 92:2a:a8:cb:8b:6c (try 1/3)
-[38179.750579] lanw0: RX ReassocResp from 92:2a:a8:cb:8b:6c (capab=0x411 status=0 aid=1)
-[38179.752854] lanw0: associated
-[38179.854525] list_del corruption. next->prev should be ffff88839d6167f8, but was ffff88839d616108
-[38179.854533] ------------[ cut here ]------------
-[38179.854535] kernel BUG at lib/list_debug.c:56!
-[38179.854539] invalid opcode: 0000 [#2] SMP PTI
-[38179.854542] CPU: 0 PID: 1869 Comm: kworker/0:2 Tainted: G      D    O      5.1.1-zgws1 #5.1.1.20190514.3
-[38179.854543] Hardware name: LENOVO 20F5S5X100/20F5S5X100, BIOS R02ET63W (1.36 ) 12/15/2017
-[38179.854552] Workqueue: events iwl_mvm_add_new_dqa_stream_wk [iwlmvm]
-[38179.854556] RIP: 0010:__list_del_entry_valid.cold.1+0x20/0x4c
-[38179.854557] Code: e3 d8 81 e8 a7 f2 da ff 0f 0b 48 89 fe 48 89 c2 48 c7 c7 20 e4 d8 81 e8 93 f2 da ff 0f 0b 48 c7 c7 d0 e4 d8 81 e8 85 f2 da ff <0f> 0b 48 89 f2 48 89 fe 48 c7 c7 90 e4 d8 81 e8 71 f2 da ff 0f 0b
-38179.854559] RSP: 0018:ffffc9000844fde8 EFLAGS: 00010246
-[38179.854560] RAX: 0000000000000054 RBX: ffff88839d6167f8 RCX: 0000000000000000
-[38179.854561] RDX: 0000000000000000 RSI: ffff8884318164d8 RDI: ffff8884318164d8
-[38179.854562] RBP: ffff888150a56888 R08: 000000000000042a R09: 0000000000000063
-[38179.854563] R10: 0000000000000000 R11: ffffc9000844fc88 R12: 000000000000000a
-[38179.854564] R13: 0000000000000000 R14: ffff88842bdfe388 R15: 0000000000000000
-[38179.854566] FS:  0000000000000000(0000) GS:ffff888431800000(0000) knlGS:0000000000000000
-[38179.854567] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[38179.854568] CR2: 00007f87c26a5000 CR3: 000000033154a006 CR4: 00000000003626f0
-[38179.854569] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[38179.854570] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[38179.854571] Call Trace:
-[38179.854578]  iwl_mvm_add_new_dqa_stream_wk+0x2b2/0x760 [iwlmvm]
-[38179.854582]  process_one_work+0x195/0x3d0
-[38179.854584]  worker_thread+0x2b/0x390
-[38179.854586]  ? create_worker+0x190/0x190
-[38179.854588]  kthread+0x111/0x130
-[38179.854589]  ? kthread_bind+0x20/0x20
-[38179.854592]  ret_from_fork+0x35/0x40
-[38179.854594] Modules linked in: vhost_net vhost tap ext2 mmc_block tun hid_generic usbhid hid ctr ccm rfcomm fuse acpi_call(O) cpufreq_userspace cpufreq_powersave cpufreq_conservative cmac bnep option cdc_ether btusb usbnet btbcm btintel usb_wwan mii usbserial bluetooth hmac drbg ansi_cprng ecdh_generic msr bridge stp llc dummy ip6t_REJECT arc4 nf_reject_ipv6 ip6_tables nft_chain_nat ipt_MASQUERADE nf_nat wmi_bmof nft_chain_route_ipv4 snd_hda_codec_hdmi iwlmvm xt_TCPMSS mac80211 snd_hda_codec_realtek nft_counter snd_hda_codec_generic iwlwifi snd_hda_intel intel_rapl snd_hda_codec x86_pkg_temp_thermal intel_powerclamp ipt_REJECT nf_reject_ipv4 kvm_intel xt_tcpudp snd_hda_core kvm irqbypass snd_hwdep xt_conntrack intel_cstate intel_rapl_perf nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 snd_pcm nft_compat input_leds serio_raw snd_timer cfg80211 thinkpad_acpi nf_tables sg nvram mei_hdcp ledtrig_audio intel_pch_thermal tpm_tis snd nfnetlink tpm_tis_core soundcore tpm rfkill wmi rng_core a
- c battery
-[38179.854623]  evdev pcc_cpufreq button tcp_bbr sch_fq nfsd auth_rpcgss nfs_acl lockd grace coretemp sunrpc loop ip_tables x_tables autofs4 btrfs zlib_deflate ext4 crc16 mbcache jbd2 algif_skcipher af_alg dm_crypt dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor uas usb_storage raid6_pq libcrc32c crc32c_generic raid1 raid0 multipath linear md_mod sd_mod crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel rtsx_pci_sdmmc mmc_core aesni_intel aes_x86_64 crypto_simd cryptd glue_helper ahci libahci psmouse xhci_pci i2c_i801 e1000e libata xhci_hcd rtsx_pci mfd_core scsi_mod usbcore usb_common i915 i2c_algo_bit drm_kms_helper drm i2c_core thermal video
-[38179.854652] ---[ end trace fd93637fcde969e6 ]---
-[38179.854654] RIP: 0010:compaction_alloc+0x569/0x8c0
-[38179.854656] Code: 62 01 00 00 49 be 00 00 00 00 00 16 00 00 eb 72 48 b8 00 00 00 00 00 ea ff ff 49 89 da 49 c1 e2 06 4d 8d 2c 02 4d 85 ed 74 3b <41> 8b 45 30 25 80 00 00 f0 3d 00 00 00 f0 0f 84 f9 00 00 00 41 80
-[38179.854657] RSP: 0018:ffffc90001a5f900 EFLAGS: 00010286
-[38179.854658] RAX: ffffea0000000000 RBX: 80000000000ffe00 RCX: 000000000000003c
-[38179.854659] RDX: 80000000000ffe00 RSI: 0000000000000000 RDI: ffff8884417f42c0
-[38179.854660] RBP: 8000000000100000 R08: 0000000000000000 R09: ffff8884417fab80
-[38179.854661] R10: 0000000003ff8000 R11: 8000000000122c00 R12: 0000000000000020
-[38179.854662] R13: ffffea0003ff8000 R14: 0000160000000000 R15: ffffc90001a5fae0
-[38179.854664] FS:  0000000000000000(0000) GS:ffff888431800000(0000) knlGS:0000000000000000
-[38179.854665] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[38179.854666] CR2: 00007f87c26a5000 CR3: 000000033154a006 CR4: 00000000003626f0
-[38179.854667] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[38179.854667] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Add the --show-bpf-events command line option to show the eBPF related events:
 
+  PERF_RECORD_KSYMBOL
+  PERF_RECORD_BPF_EVENT
 
-Is that a known issue? I currently have this with 5.1.5, are there patches in
-the queue that may be candidates to stabilize my wireless again?
+Usage:
 
-Greetings
-Marc
+  # perf record -a
+  ...
+  # perf script --show-bpf-events
+  ...
+  swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0ef971d len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+  swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 36
+  ...
 
+Committer testing:
 
--- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
+  # perf script --show-bpf-events | egrep -i 'PERF_RECORD_(BPF|KSY)'
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc029a6c3 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 47
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc029c1ae len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 48
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc02ddd1c len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 49
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc02dfc11 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 50
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc045da0a len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 51
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc04ef4b4 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 52
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc09e15da len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 53
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0d2b1a3 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 54
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0fd9850 len 381 type 1 flags 0x0 name bpf_prog_819967866022f1e1_sys_enter
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 179
+    0 PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0feb1ec len 191 type 1 flags 0x0 name bpf_prog_c1bd85c092d6e4aa_sys_exit
+    0 PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 180
+  ^C[root@quaco pt]# perf evlist
+  intel_pt//ku
+  dummy:u
+  #
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Link: http://lkml.kernel.org/r/20190508132010.14512-11-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Documentation/perf-script.txt |  3 +++
+ tools/perf/builtin-script.c              | 42 ++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 9b0d04dd2a61..af8282782911 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -313,6 +313,9 @@ OPTIONS
+ --show-round-events
+ 	Display finished round events i.e. events of type PERF_RECORD_FINISHED_ROUND.
+ 
++--show-bpf-events
++	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
++
+ --demangle::
+ 	Demangle symbol names to human readable form. It's enabled by default,
+ 	disable with --no-demangle.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 7adaa6c63a0b..3a48a2627670 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1606,6 +1606,7 @@ struct perf_script {
+ 	bool			show_namespace_events;
+ 	bool			show_lost_events;
+ 	bool			show_round_events;
++	bool			show_bpf_events;
+ 	bool			allocated;
+ 	bool			per_event_dump;
+ 	struct cpu_map		*cpus;
+@@ -2318,6 +2319,41 @@ process_finished_round_event(struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
++static int
++process_bpf_events(struct perf_tool *tool __maybe_unused,
++		   union perf_event *event,
++		   struct perf_sample *sample,
++		   struct machine *machine)
++{
++	struct thread *thread;
++	struct perf_script *script = container_of(tool, struct perf_script, tool);
++	struct perf_session *session = script->session;
++	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
++
++	if (machine__process_ksymbol(machine, event, sample) < 0)
++		return -1;
++
++	if (!evsel->attr.sample_id_all) {
++		perf_event__fprintf(event, stdout);
++		return 0;
++	}
++
++	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
++	if (thread == NULL) {
++		pr_debug("problem processing MMAP event, skipping it.\n");
++		return -1;
++	}
++
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   event->header.type, stdout);
++		perf_event__fprintf(event, stdout);
++	}
++
++	thread__put(thread);
++	return 0;
++}
++
+ static void sig_handler(int sig __maybe_unused)
+ {
+ 	session_done = 1;
+@@ -2420,6 +2456,10 @@ static int __cmd_script(struct perf_script *script)
+ 		script->tool.ordered_events = false;
+ 		script->tool.finished_round = process_finished_round_event;
+ 	}
++	if (script->show_bpf_events) {
++		script->tool.ksymbol   = process_bpf_events;
++		script->tool.bpf_event = process_bpf_events;
++	}
+ 
+ 	if (perf_script__setup_per_event_dump(script)) {
+ 		pr_err("Couldn't create the per event dump files\n");
+@@ -3439,6 +3479,8 @@ int cmd_script(int argc, const char **argv)
+ 		    "Show lost events (if recorded)"),
+ 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
+ 		    "Show round events (if recorded)"),
++	OPT_BOOLEAN('\0', "show-bpf-events", &script.show_bpf_events,
++		    "Show bpf related events (if recorded)"),
+ 	OPT_BOOLEAN('\0', "per-event-dump", &script.per_event_dump,
+ 		    "Dump trace output to files named by the monitored events"),
+ 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
