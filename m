@@ -2,167 +2,101 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FE8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E30C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9A3262FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E099262FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AL2QJjoa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KH3mYn0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfE3XOk (ORCPT
+        id S1726589AbfE3XRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 19:14:40 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35992 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfE3XOk (ORCPT
+        Thu, 30 May 2019 19:17:18 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42149 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfE3XRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 19:14:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so2193729wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 16:14:38 -0700 (PDT)
+        Thu, 30 May 2019 19:17:18 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g24so1902287eds.9;
+        Thu, 30 May 2019 16:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kcs+Dimqzyx/uVCujQjdqtoK4zBXkmMm9p1zvfOFELk=;
-        b=AL2QJjoa5trskdixffyPiivNS9h2SkCgCLH9GaWUWjL7AzJxCsYgj3O/NLJ6hL9eM3
-         92bJdV7BJNMOKl98NO15YIyF6u6un6rHJd3j/IMGTJRgFxODIeupdxYrjP/Hdfm3mx1Y
-         kKzyB+XDuMnQx3aPoKTb6+aoYdeqdth9mACb14dy4UUud9cpFmGI5X42v+fSVNMAzwmC
-         JIpHS36mLZ448JgaTtolCBYpIzX31paMUKSIHyjrZA3fgZQzVdgSsO9wPpllFnCtr5oA
-         5xFuf3/axeMxT/09EmcrGWcZPzGmcfm62rKIn1NrGrEtkUfm6BfgWzaDB156KtJQJil+
-         TYvQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=8OuX4xShfNASS1kU8dLb0K1y+qLHuVxh22K4Er6Vwk0=;
+        b=KH3mYn0gHZuJL8QRMPVXovnbxLJCVRy8MUXPWOmrRKKwPPnnhowfJE5JGNGY/iyBal
+         HCwmGbgbTOI8NEFztLRQdkL3RnniYglTXoKno2LF9LeBCaxSx/wP0ZoG0itMVKKRDPmk
+         5pdXTjEG+Ucq5Wzt3Anr27481Qk9gC/LYcwaLu5h3IrR9C1kv21ItqVs57zDvw9spHhd
+         sQsxehz03mTRPnjdN3jd1OKt56jNexDDmSylD2gbleX7twbJPKt6GjTANvPBn/RX2u2d
+         ane8D7xR6YgEmbuocDLkG8Zp7ySp6TgPNrq5Q06BaxkpW+61eS1LrzQSW8QCqPoGzyc7
+         HtSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kcs+Dimqzyx/uVCujQjdqtoK4zBXkmMm9p1zvfOFELk=;
-        b=dhI+3ReZqhg8mNV91aOarsv4XZGDN+H+qiYM9XBVrof5q/DRk04E98tDMC1B6AaBOl
-         EVAEH+SzefUh71JJgP91yRYSeWbBVD5Z2EH96Ub/Z2LRPcP9fCus0ldmIBhHRWH0WjuC
-         3iiYodXnfn7Eg7rISnGz1I87jn0M6cV4daz37VE0f3FnoLjKXUo45wuN/o41XK+aatH0
-         h7DEcsAN3BhQZEekOpXcGWn4rQMxA4Ds/obBWFocPGSALiMT7xbTYTtHhdIUTHGXi5zD
-         q9XPm0OorFX/PqkYiVhlTo50vuPdTI8ltNRWcn9NFljrGO1aFk2u/g6TQEfPnThKx79Y
-         CL+g==
-X-Gm-Message-State: APjAAAWYX2WvyImlHks+HSWYJSedO9g+StqDNwX7rYAeSyUKk7cgnOxE
-        i08oBzXqtWa3Eqjn05cJn2ujAtJa
-X-Google-Smtp-Source: APXvYqwA7DiXkTHbxZPRGLz2uLZ27ZubHFT0/JVDMtxXg2nbisDjBDXQ4eMFYJeK+dLPpsFQcH3z7Q==
-X-Received: by 2002:a5d:6b03:: with SMTP id v3mr4106162wrw.309.1559258077433;
-        Thu, 30 May 2019 16:14:37 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id s10sm2561125wrt.66.2019.05.30.16.14.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8OuX4xShfNASS1kU8dLb0K1y+qLHuVxh22K4Er6Vwk0=;
+        b=o7uhhfYS0ByDPw4eQnqAHf/23DibfHb7G8vtWIzkc6Jwh2k2Fl8yhhcB6DHtwErGBm
+         sDkc4A6ty9RpSIMQ/fiv8sqsk9beiR2GXWzz9mnlAKhDIHqRa81rumv+Ki6e0AE90u5B
+         un/ITyn6yObvbEDf1Fmep6LK+UC7/aGUKmop47YbLBtQmeddBaFAzYtOW7btuUW+UQsr
+         2ZeHGm6/BE4MBbiziUhNz3ikU95EPuJo/jCwJlvZUQHpTdvDmaiVpkRlP3QORl5HPIKm
+         ALQvAXWNkDI+bHaeTxzpqEWpUcHk3sor3X9mvjHF/PL3zwpeX/abe6vlS/L8d6myM3IP
+         QolQ==
+X-Gm-Message-State: APjAAAVM/ZtQx9Kdcyksd4FSxLg+TRMgXb8I3QjzLv1+wfFZjgQHl4/w
+        4M9gOC1bhnoKQKiZr7/mlR/mxrpm
+X-Google-Smtp-Source: APXvYqyMC4qGSTVgdOQhe33bp8TEa1zZ1dv2k4qCdG/f2Fg+AjPD+O9YIaOKNrbTeHwIwRdh7GrO+Q==
+X-Received: by 2002:a50:e048:: with SMTP id g8mr7783570edl.26.1559258236714;
+        Thu, 30 May 2019 16:17:16 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f3sm656568ejo.90.2019.05.30.16.17.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 16:14:36 -0700 (PDT)
-Subject: Re: [PATCH 0/2] arm64: smp: Include smp_plat.h from smp.h
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190530230518.4334-1-f.fainelli@gmail.com>
+        Thu, 30 May 2019 16:17:16 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <c0492b62-0ad2-3dae-7a6d-06e89afd59fe@gmail.com>
-Date:   Thu, 30 May 2019 16:14:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190530230518.4334-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
+Subject: [PATCH] irqchip/bcm7038-l1: Fix build on ARM/ARM64
+Date:   Thu, 30 May 2019 16:16:58 -0700
+Message-Id: <20190530231658.23273-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 4:05 PM, Florian Fainelli wrote:
-> Hi ARM64 maintainers,
-> 
-> This patch series aims at enabling irq-bcm7038-l1.c on
-> ARM64/ARCH_BRCMSTB, this driver makes use of cpu_logical_map[] and in
-> order to avoid adding a CONFIG_ARM64 conditional inclusion of
-> smp_plat.h, instead smp.h includes smp_plat.h, which is in turn included
-> by linux/smp.h.
-> 
-> If you like the approach, I would suggest to carry that through the
-> Broadcom ARM64 SoC pull request for 5.3.
+The driver uses cpu_logical_map[] which is defined under
+arch/{arm,arm64}/include/asm/smp_plat.h.
 
-ARM (32-bit) needs the same thing kind of thing so a conditional include
-may be appropriate after all...
+Fixes: 5f7f0317ed28 ("IRQCHIP: Add new driver for BCM7038-style level 1 interrupt controllers")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/irqchip/irq-bcm7038-l1.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> Thank you!
-> 
-> Florian Fainelli (2):
->   arm64: smp: Include smp_plat.h from smp.h
->   arm64: Enable BCM7038_L1_IRQ for ARCH_BRCMSTB
-> 
->  arch/arm64/Kconfig.platforms      | 1 +
->  arch/arm64/include/asm/smp.h      | 1 +
->  arch/arm64/include/asm/smp_plat.h | 1 +
->  3 files changed, 3 insertions(+)
-> 
-
-
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 0acebac1920b..970857a32508 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -30,6 +30,9 @@
+ #include <linux/types.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++#include <asm/smp_plat.h>
++#endif
+ 
+ #define IRQS_PER_WORD		32
+ #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
 -- 
-Florian
+2.17.1
+
