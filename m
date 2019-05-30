@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59909C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DF9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4DE241EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB933249C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186560;
-	bh=eMfYIMmN8IRYeFVqqs0Ntci4tZ4bgEYCeE5PmwQgDkM=;
+	s=default; t=1559186563;
+	bh=pRR8xyc7V7a1apafxT/GTH2wc5m69MgW/7XbEafPfXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TtwdvTs77rBXpPRf58gDlQARGNzQmDKfKTpD9LH5KyZVwMTzV51phSnmRkRIWmhU3
-	 uMTTeUtVZUrncJb7OApAVMUaO6PVo7jHuiVHIES1eUqcP3KR9G3XFxOQMhYOqWLDiy
-	 Brv3rSbJLV2N3q1cme/Or6AOEhm1Lu6srhfBZ8Yk=
+	b=DwydUoBYSK8fr5ciE0tdrSp4jeSOCyxcsHRbziTglLhp9FdnWMozlroJoqNthRa6e
+	 nrNoafXze14D4afoN01+dzoRicVOR/sDmSLKUhOn/xcHlSaNmhER6+gZ5E2XvzDmsT
+	 8cOJpfIgRplgVCcrPAqEJs9iC4o1E0Bps6dYs12Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbfE3DWj (ORCPT
+        id S1732882AbfE3DWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44396 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729909AbfE3DQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:57 -0400
+        id S1730880AbfE3DQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1A4E24645;
-        Thu, 30 May 2019 03:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69EB24645;
+        Thu, 30 May 2019 03:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186217;
-        bh=eMfYIMmN8IRYeFVqqs0Ntci4tZ4bgEYCeE5PmwQgDkM=;
+        s=default; t=1559186218;
+        bh=pRR8xyc7V7a1apafxT/GTH2wc5m69MgW/7XbEafPfXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWeglRWcu/r0mppLQnEdoyv7PhV1uniS8UQENaHbcU8q69Wq4Pq32qHtkHHNTqe/X
-         t0nwM6hne4fmSCUPJ+2CttASDPlZpWAvsqFn0iB7YM+PJLRafFqov8nDK9D2qAngf7
-         QEf4bq8zWrOTuyaK9OB5yd0CZ0BeF2Anj546DBsA=
+        b=0oceNEOgDN5liLjUfkpxXB1CI7HwfO/AUaldN8FZY/78Z/utV9dGVljCSz2EP9J++
+         iPxN3xjzH25uLGAjriVoiMPdWZ+9WMFaLgxy7xcF64IW0iKwXFr78aEyQI2ckFHTEa
+         dhk4RZtbmXr21S9MgfQMCKQgcLXDvuP0/G2Cnfag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 105/276] bcache: add failure check to run_cache_set() for journal replay
-Date:   Wed, 29 May 2019 20:04:23 -0700
-Message-Id: <20190530030532.608636349@linuxfoundation.org>
+        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 108/276] vfio-ccw: Do not call flush_workqueue while holding the spinlock
+Date:   Wed, 29 May 2019 20:04:26 -0700
+Message-Id: <20190530030532.775058200@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -59,92 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
+[ Upstream commit cea5dde42a83b5f0a039da672f8686455936b8d8 ]
 
-Currently run_cache_set() has no return value, if there is failure in
-bch_journal_replay(), the caller of run_cache_set() has no idea about
-such failure and just continue to execute following code after
-run_cache_set().  The internal failure is triggered inside
-bch_journal_replay() and being handled in async way. This behavior is
-inefficient, while failure handling inside bch_journal_replay(), cache
-register code is still running to start the cache set. Registering and
-unregistering code running as same time may introduce some rare race
-condition, and make the code to be more hard to be understood.
+Currently we call flush_workqueue while holding the subchannel
+spinlock. But flush_workqueue function can go to sleep, so
+do not call the function while holding the spinlock.
 
-This patch adds return value to run_cache_set(), and returns -EIO if
-bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
-such failure and stop registering code flow immedidately inside
-register_cache_set().
+Fixes the following bug:
 
-If journal replay fails, run_cache_set() can report error immediately
-to register_cache_set(). This patch makes the failure handling for
-bch_journal_replay() be in synchronized way, easier to understand and
-debug, and avoid poetential race condition for register-and-unregister
-in same time.
+[  285.203430] BUG: scheduling while atomic: bash/14193/0x00000002
+[  285.203434] INFO: lockdep is turned off.
+....
+[  285.203485] Preemption disabled at:
+[  285.203488] [<000003ff80243e5c>] vfio_ccw_sch_quiesce+0xbc/0x120 [vfio_ccw]
+[  285.203496] CPU: 7 PID: 14193 Comm: bash Tainted: G        W
+....
+[  285.203504] Call Trace:
+[  285.203510] ([<0000000000113772>] show_stack+0x82/0xd0)
+[  285.203514]  [<0000000000b7a102>] dump_stack+0x92/0xd0
+[  285.203518]  [<000000000017b8be>] __schedule_bug+0xde/0xf8
+[  285.203524]  [<0000000000b95b5a>] __schedule+0x7a/0xc38
+[  285.203528]  [<0000000000b9678a>] schedule+0x72/0xb0
+[  285.203533]  [<0000000000b9bfbc>] schedule_timeout+0x34/0x528
+[  285.203538]  [<0000000000b97608>] wait_for_common+0x118/0x1b0
+[  285.203544]  [<0000000000166d6a>] flush_workqueue+0x182/0x548
+[  285.203550]  [<000003ff80243e6e>] vfio_ccw_sch_quiesce+0xce/0x120 [vfio_ccw]
+[  285.203556]  [<000003ff80245278>] vfio_ccw_mdev_reset+0x38/0x70 [vfio_ccw]
+[  285.203562]  [<000003ff802458b0>] vfio_ccw_mdev_remove+0x40/0x78 [vfio_ccw]
+[  285.203567]  [<000003ff801a499c>] mdev_device_remove_ops+0x3c/0x80 [mdev]
+[  285.203573]  [<000003ff801a4d5c>] mdev_device_remove+0xc4/0x130 [mdev]
+[  285.203578]  [<000003ff801a5074>] remove_store+0x6c/0xa8 [mdev]
+[  285.203582]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
+[  285.203588]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
+[  285.203593]  [<00000000003c187c>] vfs_write+0xb4/0x198
+[  285.203597]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
+[  285.203601]  [<0000000000b9e270>] system_call+0xdc/0x2d8
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Message-Id: <626bab8bb2958ae132452e1ddaf1b20882ad5a9d.1554756534.git.alifm@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index d8190804aee9b..2409507d7bff8 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1770,7 +1770,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
- 	return NULL;
- }
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index fabd9798e4c47..0e0a743aeaf69 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -54,9 +54,9 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
  
--static void run_cache_set(struct cache_set *c)
-+static int run_cache_set(struct cache_set *c)
- {
- 	const char *err = "cannot allocate memory";
- 	struct cached_dev *dc, *t;
-@@ -1866,7 +1866,9 @@ static void run_cache_set(struct cache_set *c)
- 		if (j->version < BCACHE_JSET_VERSION_UUID)
- 			__uuid_write(c);
+ 			wait_for_completion_timeout(&completion, 3*HZ);
  
--		bch_journal_replay(c, &journal);
-+		err = "bcache: replay journal failed";
-+		if (bch_journal_replay(c, &journal))
-+			goto err;
- 	} else {
- 		pr_notice("invalidating existing data");
+-			spin_lock_irq(sch->lock);
+ 			private->completion = NULL;
+ 			flush_workqueue(vfio_ccw_work_q);
++			spin_lock_irq(sch->lock);
+ 			ret = cio_cancel_halt_clear(sch, &iretry);
+ 		};
  
-@@ -1934,7 +1936,7 @@ static void run_cache_set(struct cache_set *c)
- 	flash_devs_run(c);
- 
- 	set_bit(CACHE_SET_RUNNING, &c->flags);
--	return;
-+	return 0;
- err:
- 	while (!list_empty(&journal)) {
- 		l = list_first_entry(&journal, struct journal_replay, list);
-@@ -1945,6 +1947,8 @@ static void run_cache_set(struct cache_set *c)
- 	closure_sync(&cl);
- 	/* XXX: test this, it's broken */
- 	bch_cache_set_error(c, "%s", err);
-+
-+	return -EIO;
- }
- 
- static bool can_attach_cache(struct cache *ca, struct cache_set *c)
-@@ -2008,8 +2012,11 @@ static const char *register_cache_set(struct cache *ca)
- 	ca->set->cache[ca->sb.nr_this_dev] = ca;
- 	c->cache_by_alloc[c->caches_loaded++] = ca;
- 
--	if (c->caches_loaded == c->sb.nr_in_set)
--		run_cache_set(c);
-+	if (c->caches_loaded == c->sb.nr_in_set) {
-+		err = "failed to run cache set";
-+		if (run_cache_set(c) < 0)
-+			goto err;
-+	}
- 
- 	return NULL;
- err:
 -- 
 2.20.1
 
