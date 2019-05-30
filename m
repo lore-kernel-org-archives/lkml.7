@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42702C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9BC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126B324812
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E4624AA5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186947;
-	bh=VPQvvo3SHXkAvfMTpOO34xbhbXNiy6XSCXnSvFBY4f4=;
+	s=default; t=1559186948;
+	bh=f9RTrFood7C9TPZiH7Zo+u6mJHYGeTHsZ0qxtpkC5ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=en83KFwWAyaTI6weDNWkAKErrT7/yMRE0/y4JBMeW8ejnTGGmzqQCuHj1F9zzMicy
-	 oCy/aWaxgI098JtF/pzdx40cJLdCLIbpuAOmN4xkZPv3/dMxqD1YQMGSW7Wv/GMR/B
-	 5/Z3wbrL7wq2VCvWd30BaBwyiHisHAwEN03Ve5k8=
+	b=epyi/7bUA0N/BbEKMMNkVNtj/Ub3TwEduww2pxjdO2S7PYPaZD6o3UCnMQ4t3Tedg
+	 NKFRZOOkixn7Z3L71UO1zkPILiK0+YfiuUG8IqSYQBhDfX7WmaR5XBq0gHbMSk+M2X
+	 symGNXFJjK63gLDD5LPaFQd8f7gzAxnBoVVR2pBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388292AbfE3D3F (ORCPT
+        id S2388300AbfE3D3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58674 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732199AbfE3DU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:27 -0400
+        id S1732207AbfE3DU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B290A24937;
-        Thu, 30 May 2019 03:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE9E2486B;
+        Thu, 30 May 2019 03:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186426;
-        bh=VPQvvo3SHXkAvfMTpOO34xbhbXNiy6XSCXnSvFBY4f4=;
+        s=default; t=1559186428;
+        bh=f9RTrFood7C9TPZiH7Zo+u6mJHYGeTHsZ0qxtpkC5ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hT60qDdmq+bsePlh16gfK2aB58oHV3LcgOrIAedBmtgzCgFqpcu+dN0cAi9hNsmVg
-         YVfDcf1oafHL6Qgr3eRyIpSnVLfc/8L0S8FgbUEjfYTp+bxzJgbg6vhhhV51Jaj5Er
-         n+RggXBpUss9cPMF5xnGLyddQH010lwnihhWScPc=
+        b=vLP9KbYbnJ5i8/7Sa8Osy6kfK08tAJ9xbwT3i0BCnfpcNxlD8MItofGmF7SB26Vrz
+         sYMIvuJLPOhGS0T2yTHu4yuNEhn0kRqQNXCDvfZu2QPXh4tJuj0ING9CwlJyo2SE/Z
+         KeJtXKpOPUpuWRHcXp7lCnFc27NBAHjWV62CZHGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 017/128] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
-Date:   Wed, 29 May 2019 20:05:49 -0700
-Message-Id: <20190530030437.846627438@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.9 019/128] at76c50x-usb: Dont register led_trigger if usb_register_driver failed
+Date:   Wed, 29 May 2019 20:05:51 -0700
+Message-Id: <20190530030438.150546112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,37 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit dad7e270ba712ba1c99cd2d91018af6044447a06 upstream.
+commit 09ac2694b0475f96be895848687ebcbba97eeecf upstream.
 
-syzkaller reported crashes on kfree() called from
-vivid_vid_cap_s_selection(). This looks like a simple typo, as
-dev->bitmap_cap is allocated with vzalloc() throughout the file.
+Syzkaller report this:
 
-Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
-parts")
+[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
+[ 1213.469530] #PF error: [normal kernel read fault]
+[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
+[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
+[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
+[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
+[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
+[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
+[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
+[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
+[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
+[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
+[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
+[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
+[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
+[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1213.473514] PKRU: 55555554
+[ 1213.473514] Call Trace:
+[ 1213.473514]  led_trigger_register+0x112/0x3f0
+[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
+[ 1213.473514]  ? 0xffffffffc1c10000
+[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
+[ 1213.473514]  do_one_initcall+0xbc/0x47d
+[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
+[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
+[ 1213.473514]  do_init_module+0x1b5/0x547
+[ 1213.473514]  load_module+0x6405/0x8c10
+[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
+[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
+[ 1213.473514]  ? find_held_lock+0x32/0x1c0
+[ 1213.473514]  ? cap_capable+0x1ae/0x210
+[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
+[ 1213.473514]  __do_sys_finit_module+0x162/0x190
+[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
+[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
+[ 1213.473514]  ? wait_for_completion+0x370/0x370
+[ 1213.473514]  ? vfs_write+0x204/0x4a0
+[ 1213.473514]  ? do_syscall_64+0x18/0x450
+[ 1213.473514]  do_syscall_64+0x9f/0x450
+[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 1213.473514] RIP: 0033:0x462e99
+[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
+[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
+[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
 
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+If usb_register failed, no need to call led_trigger_register_simple.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1264b951463a ("at76c50x-usb: add driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-vid-cap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/atmel/at76c50x-usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -984,7 +984,7 @@ int vivid_vid_cap_s_selection(struct fil
- 		v4l2_rect_map_inside(&s->r, &dev->fmt_cap_rect);
- 		if (dev->bitmap_cap && (compose->width != s->r.width ||
- 					compose->height != s->r.height)) {
--			kfree(dev->bitmap_cap);
-+			vfree(dev->bitmap_cap);
- 			dev->bitmap_cap = NULL;
- 		}
- 		*compose = s->r;
+--- a/drivers/net/wireless/atmel/at76c50x-usb.c
++++ b/drivers/net/wireless/atmel/at76c50x-usb.c
+@@ -2583,8 +2583,8 @@ static int __init at76_mod_init(void)
+ 	if (result < 0)
+ 		printk(KERN_ERR DRIVER_NAME
+ 		       ": usb_register failed (status %d)\n", result);
+-
+-	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
++	else
++		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
+ 	return result;
+ }
+ 
 
 
