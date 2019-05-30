@@ -2,78 +2,97 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7617C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A541125855
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED9F25855
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIvI7TKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfE3Lek (ORCPT
+        id S1726823AbfE3Lfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:34:40 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:43520 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfE3Lek (ORCPT
+        Thu, 30 May 2019 07:35:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43364 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfE3Lfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:34:40 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hWJKQ-0000Em-VG; Thu, 30 May 2019 05:34:39 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hWJKO-0006Qe-QZ; Thu, 30 May 2019 05:34:38 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190530153316.60907d8f@canb.auug.org.au>
-Date:   Thu, 30 May 2019 06:34:31 -0500
-In-Reply-To: <20190530153316.60907d8f@canb.auug.org.au> (Stephen Rothwell's
-        message of "Thu, 30 May 2019 15:33:16 +1000")
-Message-ID: <87lfyoxjjs.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hWJKO-0006Qe-QZ;;;mid=<87lfyoxjjs.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+hppo6812nckxwl1zXuK7D0VioxNqVA10=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: linux-next: build warning after merge of the userns tree
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Thu, 30 May 2019 07:35:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id gn7so2441898plb.10;
+        Thu, 30 May 2019 04:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=Gt0gUf0AQbrtJK63hcCvf0nmCK2kTuZ6XzEzk2of5ZQ=;
+        b=ZIvI7TKl3IrUTcNtE7do2ad/sqMf0L09luhAg7lm8GG4B6M8sMvXew4ID39CXRwi3w
+         YnOhkOf/+3mL6Mzd149eQR8BWCYbCzgNY40XBnLpWDbVBwyixJIlMlGOI+l584OUU1nJ
+         /IJkh0vkkLEzcMmugu/6UtJTarJoeC+a6UdsUVRsYowSCkx9mjU/EMSMOO1/egxjDuJR
+         zFASo2URvqCLTC2jsNvybmAUMui0yb/vcRaZ1Qu9wn3Pa8InZjCOCi/wzazSs/ibZvSQ
+         X3SqwkaIgzBA00zq0FzBroHq0O5nnw3/0UceSr5dOQzZXWJD+f+NopPIHF+rmKW4/RXU
+         cEAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=Gt0gUf0AQbrtJK63hcCvf0nmCK2kTuZ6XzEzk2of5ZQ=;
+        b=Y8Q83hx4MnvZsVnJ5T4w9nGp0tiHgA/P8rhTdMB23HAcY6Q7bcmllgu5YvnCttdwHK
+         w3sr1JvSOKJj5al4fKERHAs7i8OUnY7Px98XhD6As9ioyu5yvi6K79zoLnFE3gJyBPjM
+         7g/kiISwo+BQn1bjjbG6cYo6aUp1rVT2u1l5+sfHzBberLceFPHDmnkpkhTkV2haVaw5
+         KO0FRVCoAURiJdXqIA/qZl77RzONsbwtzxF1PR/+b9HGlsCCyCJUP2Q6VXSVCgtGFols
+         RZjOGjzuZ6mbm418oVZTfKrN8BpNrqlVfKnHlZdI9BYJZ9ufCI2ck7qQtnmAjeWXGXCe
+         gt7g==
+X-Gm-Message-State: APjAAAXX/BYOlQj3cQcuJn7WxM8uCNWlJIqMomV5MiumSxr3DZNd+vfa
+        Pyd70ESeGyFea8g/tj0i9Yk=
+X-Google-Smtp-Source: APXvYqykuZ4mMIqMrhhMN+jNTuTfDgkesJM4mLM9Y1u6c+MYbZtMrGMBTZuoUncnu/pqD7aym4+HPQ==
+X-Received: by 2002:a17:902:b584:: with SMTP id a4mr3357771pls.333.1559216147397;
+        Thu, 30 May 2019 04:35:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x18sm4620520pfj.17.2019.05.30.04.35.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 04:35:46 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ariel Levkovich <lariel@mellanox.com>
+Subject: [PATCH] IB/mlx5: Limit to 64-bit builds
+Date:   Thu, 30 May 2019 04:35:44 -0700
+Message-Id: <1559216144-2085-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+32-bit builds fail with errors such as
 
-> Hi Eric,
->
-> After merging the userns tree, today's linux-next build (i386 defconfig)
-> produced this warning:
->
-> arch/x86/mm/fault.c: In function 'do_sigbus':
-> arch/x86/mm/fault.c:1017:22: warning: unused variable 'tsk' [-Wunused-variable]
->   struct task_struct *tsk = current;
->                       ^~~
->
-> Introduced by commit
->
->   351b6825b3a9 ("signal: Explicitly call force_sig_fault on current")
->
-> The remaining used of "tsk" are protected by CONFIG_MEMORY_FAILURE.
+ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
 
-Yes.  Thank you.  I will add a commit to move tsk inside
-CONFIG_MEMORY_FAILURE.
+Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+Cc: Ariel Levkovich <lariel@mellanox.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/infiniband/hw/mlx5/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Eric
+diff --git a/drivers/infiniband/hw/mlx5/Kconfig b/drivers/infiniband/hw/mlx5/Kconfig
+index ea248def4556..574b97da7a43 100644
+--- a/drivers/infiniband/hw/mlx5/Kconfig
++++ b/drivers/infiniband/hw/mlx5/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config MLX5_INFINIBAND
+ 	tristate "Mellanox 5th generation network adapters (ConnectX series) support"
+-	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE
++	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE && 64BIT
+ 	---help---
+ 	  This driver provides low-level InfiniBand support for
+ 	  Mellanox Connect-IB PCI Express host channel adapters (HCAs).
+-- 
+2.7.4
 
