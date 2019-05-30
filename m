@@ -2,105 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E60C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE9124BBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFE4DqoY"
+	by mail.kernel.org (Postfix) with ESMTP id 13F0F24BB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559187616;
+	bh=d03wGcSLh8G/HpcgAyBKycnljy+lMikE51SomgRCph0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I3v7KBtb+0VF4gp1NHIJbRhwug81+zPNUu7dO8LPKDyCXXHNflN0ZWyHbyl145jt2
+	 D+M/nQKrdtMxAVDoMbstsjoGauUQ/W9tvTCoqizXemN7L/CVgLSSyp6CfQsuyl0GDq
+	 deXGf0GBVk/j9fLlSiVj4vBG2gEskz/Vo7ptA6tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfE3DkI (ORCPT
+        id S1730486AbfE3DkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:40:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41469 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729531AbfE3DkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:40:04 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q17so3017399pfq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 20:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=On4X9gP05IE6u39GfyTMWmnrBCSblT4ly+1lTynpuxM=;
-        b=WFE4DqoYhBaDtI9vw3yEq3Sxu3mrMEHM4SNbqfZDx7gvEkRpIDcYfZQiHrSXQ1Bc7B
-         FK+LpSF8yaLmLfFN5JYb7uj1zjEQektzjXwoPdv3ZQaKBCm/ElkH+ni23Al/lwx2KgQG
-         AfhookdRR5uoVsK8/zss+h1bMt9jBNPhTzG4Eu+a25QFFV5nu4WB7B5plmiZ4sM8rbZL
-         pgvBSDmABvSSWZbepyvbrSth84KbKOm07FT4plShm+qxtdFkO5tu5ztV326tDGiLQ2rt
-         YKnj2Yn+0yF+fzra8DM4HhFuSscDR9floBREUQ12DB/kazlg2m+CadyTZmQZP6i7qqZA
-         1PNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=On4X9gP05IE6u39GfyTMWmnrBCSblT4ly+1lTynpuxM=;
-        b=qceonGsqykFoKCiorq+OC80Sw+ccvuEgmWmu3FMKH8ADvUqpVqVqycCqFSD505jRNC
-         1NWtogBNbGZMJtwLoquuBCYcJGpkMU49/3G3mN1lMgcS4vZIlfc+BqYjcTT7hLamzaGD
-         EGHr4xpwM4crmhul0AtyI+2rN/IIgVbFhUCfVhuyMcb5jxqHMlBfuF8ttTrBQleOFX+q
-         1ZmeXousGRRy0Wx8LtdrHeO9kMHjJw8kgXsA1bs0hPos81azVXMqceGcHNuqSQO2SQBH
-         DaP17K1tGHaNC5iCPgzjcjr+32o0H3otRTUyfyTmDMptRoI8RMWnaWR2YZrNB8UcQFT9
-         hkgQ==
-X-Gm-Message-State: APjAAAXpCt3XpwFNzQZgw9PNpES4mstIvQdMdII+BDj00IshcD4+oirW
-        S4/3WbjbfO+bWwBvS7AEVpU=
-X-Google-Smtp-Source: APXvYqxuFSdogN4yad6fsZaedYCCU8dUKIXjf4voXj6fUVc2vKA9MzYgvckHtvbeiGEpL+lIZvhLKA==
-X-Received: by 2002:a17:90a:b393:: with SMTP id e19mr1414944pjr.91.1559187603609;
-        Wed, 29 May 2019 20:40:03 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id r4sm1155654pfq.134.2019.05.29.20.39.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 20:40:03 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:39:49 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     ssantosh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] knav_qmss_queue: fix a missing-check bug in
- knav_pool_create()
-Message-ID: <20190530033949.GA8895@zhanggen-UX430UQ>
+        Wed, 29 May 2019 23:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732585AbfE3DV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:29 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E0224A15;
+        Thu, 30 May 2019 03:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186488;
+        bh=d03wGcSLh8G/HpcgAyBKycnljy+lMikE51SomgRCph0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a8fbKN8rY6FrlR7vR4dCY4YPj3Fs1BDsy4aqonGbvbuMHLcRScQAK2sTTv8rKLWAy
+         57RvtCPqVat3zQD7IiZ6qTw87czDkTj2SxMqqkr3XTlLEsYLDfABbAdQ38fgi4kQgw
+         4pCEBTNsGvvVXnuqdZe9VRYsbsVASCkhDhNLNBMM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 091/128] iio: common: ssp_sensors: Initialize calculated_time in ssp_common_process_data
+Date:   Wed, 29 May 2019 20:07:03 -0700
+Message-Id: <20190530030451.119446450@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In knav_pool_create(), 'pool->name' is allocated by kstrndup(). It
-returns NULL when fails. So 'pool->name' should be checked. And free
-'pool' when error.
+[ Upstream commit 6f9ca1d3eb74b81f811a87002de2d51640d135b1 ]
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+When building with -Wsometimes-uninitialized, Clang warns:
+
+drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: warning: variable
+'calculated_time' is used uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
+
+While it isn't wrong, this will never be a problem because
+iio_push_to_buffers_with_timestamp only uses calculated_time
+on the same condition that it is assigned (when scan_timestamp
+is not zero). While iio_push_to_buffers_with_timestamp is marked
+as inline, Clang does inlining in the optimization stage, which
+happens after the semantic analysis phase (plus inline is merely
+a hint to the compiler).
+
+Fix this by just zero initializing calculated_time.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/394
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index 8b41837..0f8cb28 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -814,6 +814,12 @@ void *knav_pool_create(const char *name,
- 	}
+ drivers/iio/common/ssp_sensors/ssp_iio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
+index a3ae165f8d9f3..16180e6321bd4 100644
+--- a/drivers/iio/common/ssp_sensors/ssp_iio.c
++++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
+@@ -80,7 +80,7 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
+ 			    unsigned int len, int64_t timestamp)
+ {
+ 	__le32 time;
+-	int64_t calculated_time;
++	int64_t calculated_time = 0;
+ 	struct ssp_sensor_data *spd = iio_priv(indio_dev);
  
- 	pool->name = kstrndup(name, KNAV_NAME_SIZE - 1, GFP_KERNEL);
-+	if (!pool->name) {
-+		dev_err(kdev->dev, "failed to duplicate for pool(%s)\n",
-+			name);
-+		ret = -ENOMEM;
-+		goto err_name;
-+	}
- 	pool->kdev = kdev;
- 	pool->dev = kdev->dev;
- 
-@@ -864,6 +870,7 @@ void *knav_pool_create(const char *name,
- 	mutex_unlock(&knav_dev_lock);
- err:
- 	kfree(pool->name);
-+err_name:
- 	devm_kfree(kdev->dev, pool);
- 	return ERR_PTR(ret);
- }
+ 	if (indio_dev->scan_bytes == 0)
+-- 
+2.20.1
+
+
+
