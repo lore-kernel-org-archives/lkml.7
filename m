@@ -2,52 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2646C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C3EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D8624CD1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF37B24CE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188002;
-	bh=JcgCuUVI0KmRJ06DvIXV4qPc+VcdQWGfunt/RgHyQ7Y=;
+	s=default; t=1559188008;
+	bh=KnTVExqNKtl5Xl8ksL32IR1ybhO8+AKU6IU8voJuysE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lC0tTE+6WsQezN9OCmAi8vCnfB7lVAHCBmEnz2aYwHBK3Jd5BtwTBCmMHGRDkG99x
-	 wPZH+PI3Z3uNaqcHPRSjtq6zj4gAk5ml7PQCpfAWX93hdiR+Nnd089eul7cZqP1JkN
-	 bT6o/V/1/SUEcPw647SgJLDTiUHW+OMGWACa4mIU=
+	b=Gh4JG8jYuH/EZwAOX/qKGrp2iOlbnR9zT45N+ogckJneH3nAEe6rQXM0pSdo0uqUF
+	 xBOsNCje0gm6ioSq0oxlR0MlwVGZ0xM6gWL7YMjvfLOgPPv6ZbkJyqSnCsuav1TMVD
+	 Focwkx2tHBBeWX9tin5gtTvUpme2qHmd5AlEnX6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfE3Dqh (ORCPT
+        id S1733141AbfE3Dqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59372 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732270AbfE3DUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:38 -0400
+        id S1732268AbfE3DUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8F324956;
-        Thu, 30 May 2019 03:20:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B2E24934;
+        Thu, 30 May 2019 03:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186438;
-        bh=JcgCuUVI0KmRJ06DvIXV4qPc+VcdQWGfunt/RgHyQ7Y=;
+        s=default; t=1559186437;
+        bh=KnTVExqNKtl5Xl8ksL32IR1ybhO8+AKU6IU8voJuysE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bg39lxITW27RQ1iybNMDJkpUH/SM5s6obIhlR9CTxREmCpR/N50O6OQULlp1OkMhC
-         TlcY6LvQdMwpMkhuXU6yQr59VKgNiXI7gqFSfcaZyJsTwsiyaVig+D2gJJ0VT5zMWa
-         V7Y7YPx6xKRi6SJ0DtkKFQtmhWyRfbvMP75sZCAU=
+        b=dNYLMMLIfGpQClsXSAIXC+yFZde+v2MK1gnHRyVTBhnUlvUi+gCrFJHTRhmFLPPdX
+         R18DM5HZeWtHMKDbJ9oEG3jxbxXDqMh7QyKzU3XnJCGuGmyq7lJ1dcSVBNXkbwayd3
+         gKbmqsVFfrEp95bejfMERlOsHzaEqhOF6OnoEnWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 005/128] crypto: vmx - CTR: always increment IV as quadword
-Date:   Wed, 29 May 2019 20:05:37 -0700
-Message-Id: <20190530030434.182426001@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 034/128] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
+Date:   Wed, 29 May 2019 20:06:06 -0700
+Message-Id: <20190530030440.503603979@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,57 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
 
-commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
+When building with -Wunused-but-set-variable, the compiler shouts about
+a number of pte_unmap() users, since this expands to an empty macro on
+arm64:
 
-The kernel self-tests picked up an issue with CTR mode:
-alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
+  | mm/gup.c: In function 'gup_pte_range':
+  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/gup.c: At top level:
+  | mm/memory.c: In function 'copy_pte_range':
+  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/swap_state.c: In function 'swap_ra_info':
+  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/madvise.c: In function 'madvise_free_pte_range':
+  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
 
-Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
-after 3 increments it should wrap around to 0.
+Rewrite pte_unmap() as a static inline function, which silences the
+warnings.
 
-In the aesp8-ppc code from OpenSSL, there are two paths that
-increment IVs: the bulk (8 at a time) path, and the individual
-path which is used when there are fewer than 8 AES blocks to
-process.
-
-In the bulk path, the IV is incremented with vadduqm: "Vector
-Add Unsigned Quadword Modulo", which does 128-bit addition.
-
-In the individual path, however, the IV is incremented with
-vadduwm: "Vector Add Unsigned Word Modulo", which instead
-does 4 32-bit additions. Thus the IV would instead become
-FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
-
-Use vadduqm.
-
-This was probably a typo originally, what with q and w being
-adjacent. It is a pretty narrow edge case: I am really
-impressed by the quality of the kernel self-tests!
-
-Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Acked-by: Nayna Jain <nayna@linux.ibm.com>
-Tested-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/vmx/aesp8-ppc.pl
-+++ b/drivers/crypto/vmx/aesp8-ppc.pl
-@@ -1318,7 +1318,7 @@ Loop_ctr32_enc:
- 	addi		$idx,$idx,16
- 	bdnz		Loop_ctr32_enc
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 3a30a3994e4a2..73e3718356b05 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -413,6 +413,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 	return pmd_val(pmd) & PHYS_MASK & (s32)PAGE_MASK;
+ }
  
--	vadduwm		$ivec,$ivec,$one
-+	vadduqm		$ivec,$ivec,$one
- 	 vmr		$dat,$inptail
- 	 lvx		$inptail,0,$inp
- 	 addi		$inp,$inp,16
++static inline void pte_unmap(pte_t *pte) { }
++
+ /* Find an entry in the third-level page table. */
+ #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+ 
+@@ -421,7 +423,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+ #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while (0)
+ #define pte_unmap_nested(pte)		do { } while (0)
+ 
+ #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
+-- 
+2.20.1
+
 
 
