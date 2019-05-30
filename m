@@ -2,187 +2,120 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5EFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A195CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9156025CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3D125CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfE3PSs convert rfc822-to-8bit (ORCPT
+        id S1727927AbfE3PTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:18:48 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27506 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727848AbfE3PS1 (ORCPT
+        Thu, 30 May 2019 11:19:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47578 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726469AbfE3PTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:18:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-82-RoxVEz8lP36untm5FoSrBA-1; Thu, 30 May 2019 16:18:22 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 30 May 2019 16:18:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 30 May 2019 16:18:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-CC:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "e@80x24.org" <e@80x24.org>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: pselect/etc semantics
-Thread-Topic: pselect/etc semantics
-Thread-Index: AQHVFufSWpjj98PrdUiaI6VbWN/dmKaDr0MA
-Date:   Thu, 30 May 2019 15:18:21 +0000
-Message-ID: <9150b8cb8123426492a82e193f45229e@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com> <87woi8rt96.fsf@xmission.com>
-In-Reply-To: <87woi8rt96.fsf@xmission.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-MC-Unique: RoxVEz8lP36untm5FoSrBA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Thu, 30 May 2019 11:19:07 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UFIfhv006683
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:19:05 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2stfk76wq4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:18:50 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 16:17:19 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 16:17:13 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UFHClc32309440
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 15:17:12 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A80D4B2068;
+        Thu, 30 May 2019 15:17:12 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87998B2074;
+        Thu, 30 May 2019 15:17:12 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 15:17:12 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 06C4F16C5D84; Thu, 30 May 2019 08:17:14 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 21/21] rcutorture: Upper case solves the case of the vanishing NULL pointer
+Date:   Thu, 30 May 2019 08:17:12 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190530151650.GA422@linux.ibm.com>
+References: <20190530151650.GA422@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19053015-0072-0000-0000-000004354F49
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210791; UDB=6.00636161; IPR=6.00991825;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:17:17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053015-0073-0000-0000-00004C6B6B5D
+Message-Id: <20190530151712.1612-21-paulmck@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=15 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman
-> Sent: 30 May 2019 14:01
-> Oleg Nesterov <oleg@redhat.com> writes:
-> 
-> > Al, Linus, Eric, please help.
-> >
-> > The previous discussion was very confusing, we simply can not understand each
-> > other.
-> >
-> > To me everything looks very simple and clear, but perhaps I missed something
-> > obvious? Please correct me.
-> 
-> If I have read this thread correctly the core issue is that ther is a
-> program that used to work and that fails now.  The question is why.
-> 
-> There are two ways the semantics for a sigmask changing system call
-> can be defined.  The naive way and by reading posix.  I will pick
-> on pselect.
-> 
-> The naive way:
-> int pselect(int nfds, fd_set *readfds, fd_set *writefds,
->             fd_set *exceptfds, const struct timespec *timeout,
->             const sigset_t *sigmask)
-> {
->     sigset_t oldmask;
-> 	int ret;
-> 
->     if (sigmask)
-> 		sigprocmask(SIG_SETMASK, sigmask, &oldmask);
-> 
-> 	ret = select(nfds, readfds, writefds, exceptfds, timeout);
-> 
-> 	if (sigmask)
-> 		sigprocmask(SIG_SETMASK, &oldmask, NULL);
-> 
->     return ret;
-> }
-> 
-> The standard for pselect behavior at
-> https://pubs.opengroup.org/onlinepubs/009695399/functions/pselect.html
-> says:
-> > If sigmask is not a null pointer, then the pselect() function shall
-> > replace the signal mask of the caller by the set of signals pointed to
-> > by sigmask before examining the descriptors, and shall restore the
-> > signal mask of the calling thread before returning.
+Various security techniques can obfuscate pointer printouts on the
+console.  Unfortunately, rcutorture relies on either "null" or all zeroes
+to identify the last few statistics printouts at the end of the test.
+These need to be identified because failing to do so will results in
+false-positive complaints about grace-period hangs.
 
-Right, but that bit says nothing about when signals are 'delivered'.
-Section 2.4 of http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html 
-isn't very enlightening either - well, pretty impenetrable really. 
-But since the ToG specs don't require a user-kernel boundary I believe
-that the signal handler is expected to be called as soon as it is unmasked.
+This commit therefore prints the "ver:" in capitals ("VER:") when
+the RCU-protected pointer has been set to NULL, which causes rcutorture's
+parse-console.sh script to correctly ignore these lines.
 
-Now, for async signals, the kernel can always pretend that they happened
-slightly later than they actually did.
-So signal delivery is delayed until 'return to user'.
-In some cases system calls are restarted to make the whole thing transparent.
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/rcu/rcutorture.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-For pselect() etc I think this means:
-
-1) Signal handlers can only be called if EINTR is returned.
-2) If a signal is deliverable after the mask is changed
-   then the signal hander must be called.
-   This means EINTR must be returned.
-   ie this must be detected before checking anything else.
-3) A signal that is raised after the wait completes can be
-   'deemed' to have happened after the mask is restored
-   and left masked until the applications next pselect() call.
-4) As an optimisation a signal that arrives after the timer
-   expires, but before the mask is restored can be 'deemed'
-   to have happened before the timeout expired and EINTR
-   returned.
-
-Now not all system calls that use a temporary mask may want to
-work that way.
-In particular they may want to return 'success' and have the
-signal handlers called.
-
-So maybe the set_xxx() function that installs to user's mask
-should return:
-   -ve:   errno value
-     0:   no signal pending
-     1:   signal pending.
-
-And the update_xxx() function that restores the saved mask
-should take a parameter to indicate whether signal handlers
-should be called maybe 'bool call_handlers' and return 0/1
-depending on whether signals were pending.
-
-pselect() then contains:
-	rval = set_xxx();
-	if (rval) {
-		if (rval < 0)
-			return rval;
-		update_xxx(true);
-		return -EINTR:
-	}
-
-	rval = wait....();
-
-#if 0  // don't report late signals
-	update_xxx(rval == -EINTR);
-#else  // report signals after timeout
-	if (update_xxx(!rval || rval == -EINTR))
-		rval == -EINTR;
-#endif
-
-	return rval;
-}
-
-    David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 89be0f492f78..fce4e7e6f502 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -1408,8 +1408,9 @@ rcu_torture_stats_print(void)
+ 	}
+ 
+ 	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
+-	pr_cont("rtc: %p ver: %lu tfle: %d rta: %d rtaf: %d rtf: %d ",
++	pr_cont("rtc: %p %s: %lu tfle: %d rta: %d rtaf: %d rtf: %d ",
+ 		rcu_torture_current,
++		rcu_torture_current ? "ver" : "VER",
+ 		rcu_torture_current_version,
+ 		list_empty(&rcu_torture_freelist),
+ 		atomic_read(&n_rcu_torture_alloc),
+-- 
+2.17.1
 
