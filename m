@@ -2,120 +2,125 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68751C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E98CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48EC325DE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0228F25DE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfE3Q53 (ORCPT
+        id S1727777AbfE3Q7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:57:29 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39898 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbfE3Q51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:57:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B60E3341;
-        Thu, 30 May 2019 09:57:26 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E133F5AF;
-        Thu, 30 May 2019 09:57:20 -0700 (PDT)
-Date:   Thu, 30 May 2019 17:57:18 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-Message-ID: <20190530165717.GC35418@arrakis.emea.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
- <20190527143719.GA59948@MBP.local>
- <20190528145411.GA709@e119886-lin.cambridge.arm.com>
- <20190528154057.GD32006@arrakis.emea.arm.com>
- <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
- <20190529142008.5quqv3wskmpwdfbu@mbp>
- <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
- <20190530151105.GA35418@arrakis.emea.arm.com>
- <f79336b5-46b4-39c0-b754-23366207e32d@oracle.com>
+        Thu, 30 May 2019 12:59:19 -0400
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:26719 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfE3Q7T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:59:19 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 May 2019 12:59:18 EDT
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=ian.jackson@eu.citrix.com; spf=Pass smtp.mailfrom=Ian.Jackson@citrix.com; spf=None smtp.helo=postmaster@MIAPEX02MSOL01.citrite.net
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  ian.jackson@eu.citrix.com) identity=pra;
+  client-ip=23.29.105.83; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="ian.jackson@eu.citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
+  Ian.Jackson@citrix.com designates 23.29.105.83 as permitted
+  sender) identity=mailfrom; client-ip=23.29.105.83;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="Ian.Jackson@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:23.29.105.83 ip4:162.221.156.50 ~all"
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@MIAPEX02MSOL01.citrite.net) identity=helo;
+  client-ip=23.29.105.83; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="Ian.Jackson@citrix.com";
+  x-sender="postmaster@MIAPEX02MSOL01.citrite.net";
+  x-conformance=sidf_compatible
+IronPort-SDR: j6Jla5bEjOysbWY33LQgBsckjzCSiUp/Xf80ERNKwuOaABxlNxI+FRTakiLW97oJOwguOEb3FY
+ Jsl8qgbIv/ozrbZ7fOVFrNTUaJtHliMomnFkbKdCSbhSWR33Rag3S1RIA1rhLVw6B2pzJiEy0r
+ ZHaXA2byisdFFypizTBrmsu0SmkRPjzGiCXiYUOrT+z2urjMQX5MHCsyMHVaf5PKkGA79LJZ9U
+ KdQyqKksZgusjCHkBMn622oo8tSbmeRngv04mVrJaCXwgrfnm/rZIMviUVqIMbiR5uzigWR6mD
+ XWg=
+X-SBRS: 2.7
+X-MesageID: 1092333
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 23.29.105.83
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.60,531,1549947600"; 
+   d="scan'208";a="1092333"
+From:   Ian Jackson <ian.jackson@eu.citrix.com>
+To:     <xen-devel@lists.xenproject.org>
+CC:     Ian Jackson <ian.jackson@eu.citrix.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: [OSSTEST PATCH] ts-kernel-build: Disable CONFIG_ARCH_QCOM in Xen Project CI
+Date:   Thu, 30 May 2019 17:51:23 +0100
+Message-ID: <20190530165123.22593-1-ian.jackson@eu.citrix.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <c78c372a-4cf4-9721-38f2-d173eecee27e@arm.com>
+References: <c78c372a-4cf4-9721-38f2-d173eecee27e@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f79336b5-46b4-39c0-b754-23366207e32d@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:05:55AM -0600, Khalid Aziz wrote:
-> On 5/30/19 9:11 AM, Catalin Marinas wrote:
-> > So if a database program is doing an anonymous mmap(PROT_TBI) of 100GB,
-> > IIUC for sparc the faulted-in pages will have random colours (on 64-byte
-> > granularity). Ignoring the information leak from prior uses of such
-> > pages, it would be the responsibility of the db program to issue the
-> > stxa. On arm64, since we also want to do this via malloc(), any large
-> > allocation would require all pages to be faulted in so that malloc() can
-> > set the write colour before being handed over to the user. That's what
-> > we want to avoid and the user is free to repaint the memory as it likes.
-> 
-> On sparc, any newly allocated page is cleared along with any old tags on
-> it. Since clearing tag happens automatically when page is cleared on
-> sparc, clear_user_page() will need to execute additional stxa
-> instructions to set a new tag. It is doable. In a way it is done already
-> if page is being pre-colored with tag 0 always ;)
+  drivers/firmware/qcom_scm.c:469:47: error: passing argument 3 of `dma_alloc_coherent' from incompatible pointer type [-Werror=incompatible-pointer-types]
 
-Ah, good to know. On arm64 we'd have to use different instructions,
-although the same loop.
+This is fixed by
 
-> Where would the pre-defined tag be stored - as part of address stored
-> in vm_start or a new field in vm_area_struct?
+  firmware: qcom_scm: Use proper types for dma mappings
 
-I think we can discuss the details when we post the actual MTE patches.
-In our internal hack we overloaded the VM_HIGH_ARCH_* flags and selected
-CONFIG_ARCH_USES_HIGH_VMA_FLAGS (used for pkeys on x86).
+but this is not present in all relevant stable branches.
 
-For the time being, I'd rather restrict tagged addresses passed to
-mmap() until we agreed that they have any meaning. If we allowed them
-now but get ignored (though probably no-one would be doing this), I feel
-it's slightly harder to change the semantics afterwards.
+We currently have no Qualcomm hardware in the Xen Project test lab so
+we do not need this enabled.
 
-Thanks.
+CC: Julien Grall <julien.grall@arm.com
+CC: Stefano Stabellini <sstabellini@kernel.org>
+CC: linux-arm-msm@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: Stephen Boyd <swboyd@chromium.org>
+CC: Andy Gross <agross@kernel.org>
+CC: Bjorn Andersson <bjorn.andersson@linaro.org>
+CC: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Signed-off-by: Ian Jackson <ian.jackson@eu.citrix.com>
+---
+ ts-kernel-build | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/ts-kernel-build b/ts-kernel-build
+index f7d059b0..5536586f 100755
+--- a/ts-kernel-build
++++ b/ts-kernel-build
+@@ -274,6 +274,10 @@ setopt CONFIG_MDIO_THUNDER=m
+ setopt CONFIG_I2C_THUNDERX=m
+ setopt CONFIG_SPI_THUNDERX=m
+ 
++# Some Linux branches we care about, including 4.19, still lack
++# firmware: qcom_scm: Use proper types for dma mappings
++CONFIG_ARCH_QCOM=n
++
+ ####
+ 
+ END
 -- 
-Catalin
+2.11.0
+
