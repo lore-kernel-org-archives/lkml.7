@@ -2,99 +2,104 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE992C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD0BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76A025A39
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9376C25A3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r7mmQx/M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rA9bA+qW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfE3OLx (ORCPT
+        id S1726941AbfE3ONc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:11:53 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50869 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfE3OLw (ORCPT
+        Thu, 30 May 2019 10:13:32 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:42179 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfE3ONc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:11:52 -0400
-Received: by mail-it1-f196.google.com with SMTP id a186so10121648itg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:11:51 -0700 (PDT)
+        Thu, 30 May 2019 10:13:32 -0400
+Received: by mail-yb1-f195.google.com with SMTP id c7so702642ybs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:13:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3m+GACOpj4FpxTfagkQ56YHJBgCqLctr+f1GcaAlBKI=;
-        b=r7mmQx/MZFOJbicAL0UI1sOzinV94EgrU9O0u7jEhPqiptJnmddsYUSPm6on0kSrFU
-         xQp6ZR2QHiJ8kS333/mkLjOlU0owecS7mHTcI+8Q8w1Ufa0yemmz/wFyrLvCEbMdiG4g
-         awWPIkJOFlfBdmi1Y5w8qzOOaTJAe210hkBkpB46Sw/pRJwbjTL1DZdo888zGLDYbKAn
-         3zh7IGr4/NmN1B1+kmNGKVuJ/Mr8SrrOolOuPxRCZpv9/5pP6hgnFnVRiyNMinILW+3m
-         iZahnc9s3SC8bhVTKSYkb9QT0z94Z7n7JqCOn/Gqt+Du9essV5xI2CJUYj6PLn2liJUG
-         irxQ==
+        bh=FYJPRskixwn1nFPNV2wbt36LZ1ahlZ4OUxU9DsdvakQ=;
+        b=rA9bA+qWjeYMvUekVTww//KlxVzlp/lmiBQ0SfyqIX/VLdFSNCXP38de2h9355NuVD
+         ny4cdDMmCaTNXv4aonL8PkiCqH69daWrUkkJm5XRDO5GccDjB+Ds5PLeq2BMpcK6e3FZ
+         ilBB7du8Z8YVnievNdukT1liMNkKtDYx5+XnrASMQxnNmFuiEC4GQU8kPOF+EJ5eT7no
+         p2Sabns5mZbI+9LEbz2/Rhluk186KFEmcQGlwyEGjlargIb+o3xxL8hNDhjWrZmJYD/q
+         8/hVXe3tZEmERQo+Vo7v5+n1DoDopc7KEFssE6GtYrbCLVfG6qtKnNKus79azZlOBwxB
+         mzhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3m+GACOpj4FpxTfagkQ56YHJBgCqLctr+f1GcaAlBKI=;
-        b=N/j7AiZdkWxDlyoMGzxVYEPFkTQMem3vV7RRkbIbYN6UcLQeIFvl5X8b3K7Wddcmds
-         8o+UwqR+nND5T87hlj4VHieosqLLOqVztNpkvHT50wHaj2Jjyw6HZ/1Aakbf5c1RJHGo
-         Afmg/MZ7d+d6W9LT8LXG9/LRMmBWq6uukFRbFnVUUCZZVeaNkbsw4igADLIey5yfc2J7
-         ft9lrJ0Wb9fGBOtDJZ9tVaEVVdHxqSpGHGZvOqYVVBC7A5wPHYxhNFosijl1hNvWGb5Y
-         Gh2R/Z2AXpaF/8lze9m2Phw+wq0ELSZOAf9Fcy5Q6ydb+FLZHGlqfZRFE210tPrk2Pl2
-         wCMA==
-X-Gm-Message-State: APjAAAWIKwkJHlzHQspCMK55YIytmIx/3eSExNf+UpDKOAE1TekxDpGI
-        9e1qNpL7WFu/gKDU5lyzsImOXWgiEaySrOIEPiMD0g==
-X-Google-Smtp-Source: APXvYqxlk8ceqS9HRJKUfgBmZuPgL2m9fPkzhV4JV6IB5Nb7Kcw2FyUXVE+x8OcM8KUkiooPFDCXgf6wVOc9oPemd4M=
-X-Received: by 2002:a02:a494:: with SMTP id d20mr2418000jam.62.1559225511157;
- Thu, 30 May 2019 07:11:51 -0700 (PDT)
+        bh=FYJPRskixwn1nFPNV2wbt36LZ1ahlZ4OUxU9DsdvakQ=;
+        b=GcuIiztfcoIxqQkY1RXKium4g3YvI3MNBaUlBKSyIVvFz3YdN6/H8mjyTkX8bnYSHW
+         3903i1N5fCGNJ5bQ7IA831iU9xkPAW+b/IzNpP0vpEKSwWMQLdmZ4le+ZFNq0CVnRaaG
+         3PJreALfa55I0aOCgHsqRz1ccdFh9DfEV+sUMJQTBl+y6iY8wwnykCZK7euE2pEyxUmk
+         tvVcK7s3RYtnQ0TsBzzaGvdz5m6F011YDOPVMsuwSitebUpJv3xjawKf9xyYSatDGKCY
+         zOkoXqgS2CLzVjdKuBps82K2sWiQ4DGGUq0bvTzc6nIHD3qaTu3iDWaLF2x2wnjEpSss
+         niww==
+X-Gm-Message-State: APjAAAX+QSYow/aXO5qxQTv4xhF3/gFGvhaRL3Ja+krcoqqn9CuNBJeY
+        KGMjzGHh3aM8imYFD0UKWRoP1ycOBpkWLk1SxnA=
+X-Google-Smtp-Source: APXvYqyCsM/g4pEb9OIeM3Fv7ATI5xHJ5TOzuLvLBOO1HxB0g0rtYiBAKsDnN69WyJUMfi7ULBCsKNHW5D9Ad1zt6Mo=
+X-Received: by 2002:a25:1f42:: with SMTP id f63mr1589876ybf.25.1559225611715;
+ Thu, 30 May 2019 07:13:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
- <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530135800.ekcso3n2p5zkg6yv@gondor.apana.org.au>
-In-Reply-To: <20190530135800.ekcso3n2p5zkg6yv@gondor.apana.org.au>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 30 May 2019 16:11:37 +0200
-Message-ID: <CAKv+Gu-3zzN=cikd4PftCVo2fJi9t_0kqZHBQncjokYQV5wVnA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
+In-Reply-To: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Thu, 30 May 2019 07:13:20 -0700
+Message-ID: <CAMo8Bf+m-a5YEubQMxuZuF0_-hZCop2F-+nomd7ELjz8SQToXg@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 15:58, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Thu, May 30, 2019 at 01:45:47PM +0000, Iuliana Prodan wrote:
-> >
-> > On the current structure of caamalg, to work, iv needs to be copied
-> > before memcpy(iv, req->iv, ivsize), from skcipher_edesc_alloc function.
-> > For this we need edesc, but this cannot be allocated before knowing how
-> > much memory we need. So, to make it work, we'll need to modify more in CAAM.
->
-> All the copying does is:
->
->         if (ivsize)
->                 scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
->                                          ivsize, ivsize, 0);
->
-> Why do you need to allocate the edesc before doing this?
->
+Hi Guenter,
 
-Because that is where the incoming iv is currently consumed. Copying
-it out like this wipes the input IV from memory.
+On Thu, May 30, 2019 at 5:41 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
+> CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
+> mismatch errors.
+>
+> WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
+>         from the function ___pa()
+>         to the function .meminit.text:memblock_reserve()
+> WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
+>         from the function mem_reserve()
+>         to the function .meminit.text:memblock_reserve()
+> FATAL: modpost: Section mismatches detected.
+>
+> This was not seen prior to the above mentioned commit because mem_reserve()
+> was always inlined.
+>
+> Mark mem_reserve(() as __init_memblock to have it reside in the same
+> section as memblock_reserve().
+>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  arch/xtensa/kernel/setup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+Thank you for this fix! Applied to my xtensa tree.
+
+-- 
+Thanks.
+-- Max
