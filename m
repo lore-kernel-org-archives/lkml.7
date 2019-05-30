@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27424C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41B3C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F320D24B73
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C79324B71
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187397;
-	bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
+	s=default; t=1559187399;
+	bh=PXskwP5my7LYhHMGycl5qGICLGQxqOlvynyoXfbl5bE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXl6U3FA+PI6pAOYjLH2uAfk+TwPEPAIXNs+I6m6ZRIRrHeSoML3pDGDV2UHxsJMe
-	 5I9h6+AAJFcEXGjVLTNYY2k9FIcX4c6Vh6tK+MsQ1+k+xaJcaKYa14T4PNmy75/FHF
-	 eSHufBAbded7go5mPpBv8fOtrSNE0OksUrxXKU3k=
+	b=gSUUaFJWT/ZYG24EjmXvJ9/O6U+iu5cneawvywhRGqeF7a53WVv/W0m63D2v7LymD
+	 tfslgyZqGPrWw8iNHBR11arpaKl02JIpFwMz1FqcP81kPmOj0TsLwXJjui8xwwkG5L
+	 J0MM/Yh2lhtPePPBDm63WaBMnhxLLY4uO3VDe+9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732440AbfE3DZE (ORCPT
+        id S2387476AbfE3DZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbfE3DSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:20 -0400
+        id S1731504AbfE3DSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1247E24787;
-        Thu, 30 May 2019 03:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D233624787;
+        Thu, 30 May 2019 03:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186299;
-        bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
+        s=default; t=1559186297;
+        bh=PXskwP5my7LYhHMGycl5qGICLGQxqOlvynyoXfbl5bE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QV6ytdw150VcR4N0QqVeT1T88aZaAdJ00uAvMjv/loKDKPD0NrA71TozeoYQG+YP5
-         xxC4VCdrUri5FhEh2QHXKuiDtm9daP02+u4UHeAORSdGD9pBojyUPOtshT1btkcRe+
-         9lTq2BgZbbEeTE8iUAmeJTzufvS4MTHjnyhutBjo=
+        b=Rzr90JcXHuJ/wFM992llLdJ93L5Vr9B9FNi0s3tLsH/7S5F2wp59v42m15xx+AIys
+         L4TWyrX4vXt96QAh2DC7rDIK/rGWNZ1oS4SMBsXfr9QQGDJeHeq7DllbS6EZUyeCQs
+         QabcSW97Cge4AYvzEsLtHsN4McCfrPs3O+sd1XtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 262/276] media: saa7146: avoid high stack usage with clang
-Date:   Wed, 29 May 2019 20:07:00 -0700
-Message-Id: <20190530030541.589347419@linuxfoundation.org>
+Subject: [PATCH 4.19 225/276] thunderbolt: Fix to check the return value of kmemdup
+Date:   Wed, 29 May 2019 20:06:23 -0700
+Message-Id: <20190530030539.178954010@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,70 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 03aa4f191a36f33fce015387f84efa0eee94408e ]
+[ Upstream commit fd21b79e541e4666c938a344f3ad2df74b4f5120 ]
 
-Two saa7146/hexium files contain a construct that causes a warning
-when built with clang:
+uuid in add_switch is allocted via kmemdup which can fail. The patch
+logs the error and cleans up the allocated memory for switch.
 
-drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
-      [-Werror,-Wframe-larger-than=]
-static int hexium_probe(struct saa7146_dev *dev)
-           ^
-drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
-      [-Werror,-Wframe-larger-than=]
-static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
-           ^
-
-This one happens regardless of KASAN, and the problem is that a
-constructor to initialize a dynamically allocated structure leads
-to a copy of that structure on the stack, whereas gcc initializes
-it in place.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=40776
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix checkpatch warnings]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7146/hexium_gemini.c | 5 ++---
- drivers/media/pci/saa7146/hexium_orion.c  | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/thunderbolt/icm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
-index 5817d9cde4d0c..6d8e4afe9673a 100644
---- a/drivers/media/pci/saa7146/hexium_gemini.c
-+++ b/drivers/media/pci/saa7146/hexium_gemini.c
-@@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
- 	/* enable i2c-port pins */
- 	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index 28fc4ce75edb4..8490a1b6b6156 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -476,6 +476,11 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
+ 		goto out;
  
--	hexium->i2c_adapter = (struct i2c_adapter) {
--		.name = "hexium gemini",
--	};
-+	strscpy(hexium->i2c_adapter.name, "hexium gemini",
-+		sizeof(hexium->i2c_adapter.name));
- 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
- 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
- 		DEB_S("cannot register i2c-device. skipping.\n");
-diff --git a/drivers/media/pci/saa7146/hexium_orion.c b/drivers/media/pci/saa7146/hexium_orion.c
-index 0a05176c18ab6..a794f9e5f9908 100644
---- a/drivers/media/pci/saa7146/hexium_orion.c
-+++ b/drivers/media/pci/saa7146/hexium_orion.c
-@@ -231,9 +231,8 @@ static int hexium_probe(struct saa7146_dev *dev)
- 	saa7146_write(dev, DD1_STREAM_B, 0x00000000);
- 	saa7146_write(dev, MC2, (MASK_09 | MASK_25 | MASK_10 | MASK_26));
- 
--	hexium->i2c_adapter = (struct i2c_adapter) {
--		.name = "hexium orion",
--	};
-+	strscpy(hexium->i2c_adapter.name, "hexium orion",
-+		sizeof(hexium->i2c_adapter.name));
- 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
- 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
- 		DEB_S("cannot register i2c-device. skipping.\n");
+ 	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
++	if (!sw->uuid) {
++		tb_sw_warn(sw, "cannot allocate memory for switch\n");
++		tb_switch_put(sw);
++		goto out;
++	}
+ 	sw->connection_id = connection_id;
+ 	sw->connection_key = connection_key;
+ 	sw->link = link;
 -- 
 2.20.1
 
