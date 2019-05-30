@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536E0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEF7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBD824F8F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AFD24F9B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188889;
-	bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
+	s=default; t=1559188893;
+	bh=6er5g/8CYKetSS9XvwMOYRCiloLvfcJOKlkvmk3cSYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFNhIhbp08onMS7BadpkZHjjMyk5QlZKV1LK5HpTp7ohs4v+JzGZsmFQ9fg+td1+U
-	 n+SCtSoeEXXR7u3J+Cd4rfUagtFrTF36KHQxflTI7G8zlyr1f+Z3t5ClCmz9qQvJ/U
-	 2IT3mFFBb71QRT7ptKOLPzrUjyxGfLsRCcS0nvwE=
+	b=Asvj9V5CDrYNdiiqXinqPO82Z6PsHsLqZ8zbGOxzAHKkBoE1Jfcjzsor7gJpWnqui
+	 bID79IPb8ToXBjr+5O+zqgjXQzOLaCTeTPndyz14Krr7liQJENTCntJnJK9/ft8Otn
+	 eQscChvMJu8DSkMDN1MozAUgysvNh8GNWWMsy9yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfE3DSJ (ORCPT
+        id S1731449AbfE3EBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbfE3DO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:28 -0400
+        id S1731433AbfE3DSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BA524565;
-        Thu, 30 May 2019 03:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A4C324771;
+        Thu, 30 May 2019 03:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186068;
-        bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
+        s=default; t=1559186288;
+        bh=6er5g/8CYKetSS9XvwMOYRCiloLvfcJOKlkvmk3cSYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phxZyWK43yI5GQzrpxdTmILn2X//6GkoCYbQtf8m94Yaz7uhIPHmzhRDZH0foHSFF
-         Bhw3I+vuMi5TORiLLZeZ2pPWbOAxRelAF9nA3/EW9WscimFB/78NeECPxP/wrL8DXq
-         WNmDEPCJEsHaKBn4jO7N6PeCU3HqyZNrP4o7Am/I=
+        b=FAXThNxsTkrVUSUsVais8Tk2gIXlbmzduap+rvqMWbGfJIDlSyvl69Zqk9/XXzpSG
+         OSorOOzjyxHB0euanVPYkrQJCZ+vFmyTtuvTxoJ1fLEFnXpKi6r+jghFgplZBd+EKF
+         GjtFhNmtEZK5NBLSPDuDDythuP5pRF8g7LlGDwOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 179/346] PM / devfreq: Fix static checker warning in try_then_request_governor
-Date:   Wed, 29 May 2019 20:04:12 -0700
-Message-Id: <20190530030550.194295001@linuxfoundation.org>
+Subject: [PATCH 4.19 244/276] drm/amd/display: fix releasing planes when exiting odm
+Date:   Wed, 29 May 2019 20:06:42 -0700
+Message-Id: <20190530030540.397421697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,51 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
+[ Upstream commit bc2193992b00488f5734613ac95b78ef2d2803ab ]
 
-The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
-drivers are built as modules." leads to the following static checker
-warning:
+Releasing planes should not release the 2nd odm pipe right away,
+this change leaves us with 2 pipes with null planes and same stream
+when planes are released during odm.
 
-    drivers/devfreq/devfreq.c:1043 governor_store()
-    warn: 'governor' can also be NULL
-
-The reason is that the try_then_request_governor() function returns both
-error pointers and NULL. It should just return error pointers, so fix
-this by returning a ERR_PTR to the error intead of returning NULL.
-
-Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 0ae3de76833b7..839621b044f49 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -228,7 +228,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
-  * if is not found. This can happen when both drivers (the governor driver
-  * and the driver that call devfreq_add_device) are built as modules.
-  * devfreq_list_lock should be held by the caller. Returns the matched
-- * governor's pointer.
-+ * governor's pointer or an error pointer.
-  */
- static struct devfreq_governor *try_then_request_governor(const char *name)
- {
-@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 		/* Restore previous state before return */
- 		mutex_lock(&devfreq_list_lock);
- 		if (err)
--			return NULL;
-+			return ERR_PTR(err);
- 
- 		governor = find_devfreq_governor(name);
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index 87bf422f16be7..e0a96abb3c46c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -1401,10 +1401,12 @@ bool dc_remove_plane_from_context(
+ 			 * For head pipe detach surfaces from pipe for tail
+ 			 * pipe just zero it out
+ 			 */
+-			if (!pipe_ctx->top_pipe) {
++			if (!pipe_ctx->top_pipe ||
++				(!pipe_ctx->top_pipe->top_pipe &&
++					pipe_ctx->top_pipe->stream_res.opp != pipe_ctx->stream_res.opp)) {
+ 				pipe_ctx->plane_state = NULL;
+ 				pipe_ctx->bottom_pipe = NULL;
+-			} else  {
++			} else {
+ 				memset(pipe_ctx, 0, sizeof(*pipe_ctx));
+ 			}
+ 		}
 -- 
 2.20.1
 
