@@ -2,69 +2,151 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E3C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BF0C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A142054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EBD1205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IPJmI3M5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EeT8qX2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfE3AEr (ORCPT
+        id S1727207AbfE3AFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:04:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60058 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfE3AEq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oe7K7F0pG65IkqAKU9Ch52bqIbMoGlTq/PyErndd9/w=; b=IPJmI3M5EEqxfWWOneEy2WCON
-        1EWRboyUjtgShu9FvjzbUo0xAy7RsCkCe5gkqlRqef8V/pCheFYG57TdZShbM3O/19Vv6RsLXJ/7v
-        qr/JdpWLxXGepupO3S83gaZ2RkDgeS7KbEb64ZAfW+8rkAu9FHXIQH1KHv5xBLCE6VEmhl1FJwjRi
-        57LCEK5vvzeUTId2ka7faHiB7cbdqnkH5bVkQV2jeVBdXyuWSmocIO3WvLws2Qz1l+2/ouri7xqiV
-        AKDB+EH3OC/StCkNTaVM0koFSywjYhhRUPoAHBcsNpDe57v2UpwGUkDzuIIOgeUT62Oog80FlThe5
-        L27gHa4nQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hW8Yo-00023c-3a; Thu, 30 May 2019 00:04:46 +0000
-Date:   Wed, 29 May 2019 17:04:45 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     dianzhangchen0@gmail.com, linux-kernel@vger.kernel.org,
-        mhocko@kernel.org
-Subject: Re: [PATCH] mm/slab_common.c: fix possible spectre-v1 in
- kmalloc_slab()
-Message-ID: <20190530000445.GB23461@bombadil.infradead.org>
-References: <20190529203106.GA26268@avx2>
+        Wed, 29 May 2019 20:05:30 -0400
+Received: from mail-eopbgr810128.outbound.protection.outlook.com ([40.107.81.128]:28768
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726693AbfE3AFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 20:05:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=nCmieT1j29s7eQqdSou2FSo6qkqTLcQy1O/2MiR9QwpOisWbvs1IdoLSWKnGRx1p8jBpX8Vvyq7JlZ8TqqmqzBdvwP6pt0yE+EKKcWwwKEEcUWDtEjPPYdthx/NLTFRaWGyLGxcDiaBTRaAQtvdd6YxreXjcqo24P07EQHpmc9c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D77KhL2ThG/098EUK04aIGGQ3VCLkmVhzMfsbYPzKF4=;
+ b=tqBC/XUOub1Am901EawfkkGFoomZ/tHEqBvsxpRtO8ASGxiOUtOWhcGbjsKoREtS3I15dYn1WcSe5NDKZtKbOdcsq5sOI3V/HNTDzXak+nl3utyov3FHF7cnB34FUJ+tb9c47yPtHhVB6hJ4zHoKNPcjdD+7IgDvyL+VDYKCPkE=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D77KhL2ThG/098EUK04aIGGQ3VCLkmVhzMfsbYPzKF4=;
+ b=EeT8qX2j2zU7HHuM5Yp2LiMpN6GBe/0OO5zxYNn5XKD3bTjFOooT02HLxCb+vvngkj20OBT1eNwCH8GyAOGW3TjQN3fmMdV97RNDeLkXqMO2WVOf580wQ1gNbOtcl4JIrwqZrr6A2TeewF9sM+tso2Y/HM4D+dA0LFOpQXqTmpQ=
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com (2603:10b6:a03:107::12)
+ by BYAPR21MB1320.namprd21.prod.outlook.com (2603:10b6:a03:115::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.3; Thu, 30 May
+ 2019 00:05:26 +0000
+Received: from BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b]) by BYAPR21MB1221.namprd21.prod.outlook.com
+ ([fe80::d005:4de8:ffbf:ba6b%7]) with mapi id 15.20.1943.015; Thu, 30 May 2019
+ 00:05:25 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH 1/1] Drivers: hv: vmbus: Break out ISA independent parts
+ of mshyperv.h
+Thread-Topic: [PATCH 1/1] Drivers: hv: vmbus: Break out ISA independent parts
+ of mshyperv.h
+Thread-Index: AQHVFdIRA7mIiwIVVUaFxjQSrR2UTaaCPiqAgACK/FA=
+Date:   Thu, 30 May 2019 00:05:25 +0000
+Message-ID: <BYAPR21MB1221CD9AAEF9BCC6A5AF0C7AD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+References: <1559101942-4232-1-git-send-email-mikelley@microsoft.com>
+ <875zptmfp4.fsf@vitty.brq.redhat.com>
+In-Reply-To: <875zptmfp4.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-30T00:05:23.1347754Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b7d8a73e-8c49-45d0-a683-aac6ecefe01c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36b5764b-7fef-497f-cff5-08d6e4928490
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR21MB1320;
+x-ms-traffictypediagnostic: BYAPR21MB1320:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB1320740C29CC51BBD22A56E3D7180@BYAPR21MB1320.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(39860400002)(376002)(136003)(189003)(199004)(229853002)(8990500004)(7736002)(256004)(25786009)(74316002)(10090500001)(54906003)(33656002)(6116002)(14454004)(5660300002)(316002)(476003)(10290500003)(446003)(107886003)(6246003)(11346002)(22452003)(68736007)(8936002)(66066001)(53936002)(26005)(186003)(486006)(2906002)(71200400001)(71190400001)(3846002)(66556008)(66446008)(305945005)(76176011)(81166006)(4744005)(4326008)(73956011)(8676002)(81156014)(66476007)(86362001)(6436002)(64756008)(66946007)(99286004)(9686003)(6916009)(478600001)(55016002)(52536014)(102836004)(7696005)(76116006)(52396003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1320;H:BYAPR21MB1221.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z+wWC1qwlVMQO60kpvfTOQnX5OoEgVeYouafg/qaXSFFrudRn5yF3/ygxjb7v9HoyatZbhkEGUgUvM4wZMsFiVoYZHh7TaVDcNMy31mIqTNZMyztbZbhaLDTnu/rLxrY+ZVZgJzlg+VOHWeNlxklO6F9dB3MBqvbByY8D38woAFGWsopFWNvIP5NajJ8nZ2y0cuzVIbP3BHovGsT59YWWZViwCe5Vb4J6NXrR0BmH3XfwqxwByFccIsgJLwl2jdVmY39VSy0bDjNg5LY0U9E4Esict5cgc7ntkLd6XvTgRwhkiM6DL1eBNiBFml5LqpadLgSSxh2uWOUCy+xYQ5ECyllNjLEVngUMwlLkT/qlJG2Xsxm8yYyNd8vDqHb0czikd3cNU7DkZaYOP+BkTal67z4kKZ3kuRqLIkxJfgtZl8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529203106.GA26268@avx2>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36b5764b-7fef-497f-cff5-08d6e4928490
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 00:05:25.7936
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:31:06PM +0300, Alexey Dobriyan wrote:
-> > I think it makes more sense to sanitize size in size_index_elem(),
-> > don't you?
-> 
-> > -	return (bytes - 1) / 8;
-> > +	return array_index_nospec((bytes - 1) / 8, ARRAY_SIZE(size_index));
-> 
-> I think it should be fixed in poll.
-> Literally every small variable kmalloc call is going through this function.
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, May 29, 2019 =
+8:41 AM
+> >  void __init hyperv_init(void);
+>=20
+> I would actually expect to see hyperv_init() on all architectures so it
+> can probably go to 'generic' too.
+>=20
 
-We could do that too, but don't we then have to audit every ioctl and
-similar to see if there's a k(v)malloc based on a size passed from
-userspace?
+Actually not.  The declaration is not needed on all architectures.   On ARM=
+64,
+hyperv_init() and ms_hyperv_init_platform() are folded into one routine, an=
+d
+it's not externally referenced.  So the declaration isn't needed.  The hype=
+rvisor
+initialization approach is fairly different on ARM64.
+
+[....]
+>=20
+> This seems a little bit too much, in particular, I think we don't need
+>=20
+>  #include <linux/interrupt.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdesc.h>
+>=20
+> we'll need 'struct pt_regs' definition but I'd suggest we use
+>=20
+>  #include <linux/ptrace.h>
+>=20
+> or even
+>=20
+>  #include <asm/ptrace.h>
+>=20
+
+Agreed.  I'll spin a v2 with this cleaned up.
+
+Michael
