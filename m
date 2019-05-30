@@ -2,138 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2163C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E946C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915C625F45
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13D525F85
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="AWJDMB/l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AB/gDn1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfE3SWz (ORCPT
+        id S1726550AbfE3SZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:22:55 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:50084 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbfE3SWz (ORCPT
+        Thu, 30 May 2019 14:25:39 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44982 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfE3SZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:22:55 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 97543C00B0;
-        Thu, 30 May 2019 18:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559240584; bh=tXKhvVlPB83lnrd1soG4Udon/Z/gh72d6RoQk4zGMQY=;
-        h=From:Subject:To:CC:Date:From;
-        b=AWJDMB/lKPYORIWltA0gVIDA/bblb/OfrBvX4EsMpJtq5ysYbRaFFJNcKic+AmHEt
-         bFW6N58qK4VY5vpdBkf6rI3gew7gnjCfI9XQQsNoF3ZGHcX/Dsm7ZlXUQI6U7WBS4S
-         fVcTZcUQ0QX1ut8uC73HLqCcw+MZBH2C5W1RFaQgt836+zxTOmBNL5fF/mhlD5EP8N
-         x0yChiH+/zJ5prVF3ahLy3REMlahcxJZDAeFcN5vRAG0HhblkGDrTbGWyArSHw0RGU
-         lD6jt4lQhljX1J5jPd0J3PjVZMMXufV2+uY/2HFUTRkPjGPWpVuOWg0T3tEHWy6CtH
-         LGJjQckwzDhsg==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 19922A0095;
-        Thu, 30 May 2019 18:22:51 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 11:22:51 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 23:52:50 +0530
-Received: from [10.10.161.35] (10.10.161.35) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 30 May 2019 23:53:02 +0530
-X-Mozilla-News-Host: news://gmane.comp.lib.uclibc.buildroot:119
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Subject: single copy atomicity for double load/stores on 32-bit systems
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-CC:     arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Message-ID: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
-Date:   Thu, 30 May 2019 11:22:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 30 May 2019 14:25:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c9so1222592pfc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Lj5sJkyXzswdfKKQsKOyyjcnCowmI0P42DY17LEeBDI=;
+        b=AB/gDn1oV3/ItKH83SwUe0OJ7ImMOhnavPB5tK3/AgwaY4iZ8QxtKelbDYhKQbfvpp
+         QW9S6bHqK/tlh/llsKuxLiyZtF+JkAUuvKFbwe1MQGDdxXRzo4hzCvdzEWSJkb2bEdEm
+         kbRUfxuhF5fzN/n7nNX0vasy/A3f95vThuoeCO32FBXNxzlEdaxBHxfdjQu9e7G3JlTG
+         +kiEFzsf28+JqisDCE1CH5v4Lw1Jac0BNEmDSZSL+Aphn+dB6xpXtdmzodJ+bbHgOCA0
+         psdCiAPbkR4MdgEfve7lvKXXWYVZs0z9KC7x1kDrAaA5/EXCxL9iVeaV2MOqDcX0xF/u
+         e5IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Lj5sJkyXzswdfKKQsKOyyjcnCowmI0P42DY17LEeBDI=;
+        b=CrsliwwinMl2Dr2EDPPVBCZbTVonPHSBF9ZAAZcH9hCtsbcQ86FtAOJB/ukUwRdeJF
+         im4ud6f4K0U7s2EqGOR1hbrleILR0ISMlRRWLcs3iyBE4P3185NPBf0pdbcVIxpHsJJM
+         gIg/MfNaISN/XzX89UDyDAT2VUdrluFccTzILU1Q6Fx7+1rHpJYYAk7GcCGQcl+lbuyw
+         peL3LwzZX9tPmAVpuqy3itrZskf24P1TlpisBTljNxqbQMqoS89jLyewM0/Qd5NjzpSc
+         65dcCO0t+XcM4/kuP+5jXFWmNEnMU539txH1EMvbWHMC13q6Zgr66jFT/VA8ONB6eRc/
+         h9BA==
+X-Gm-Message-State: APjAAAX4ARRuDflEVfqGULMEOS/322t7weooYCBoZjHABTNy/f2PLrxP
+        1Qf8uSeS/gUYreaLoniiHRk=
+X-Google-Smtp-Source: APXvYqy2EQutgm73jGARD8ECucwV9aFaWJhYHhAIfn80iJdYlyi4qnZUJeJdj655kCVPlJIiYb639Q==
+X-Received: by 2002:a05:6a00:43:: with SMTP id i3mr5089670pfk.113.1559240738062;
+        Thu, 30 May 2019 11:25:38 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id n127sm2786600pga.57.2019.05.30.11.25.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 11:25:37 -0700 (PDT)
+Date:   Thu, 30 May 2019 23:55:32 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Huang Rui <ray.huang@amd.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Oak Zeng <Oak.Zeng@amd.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: Remove call to memset after dma_alloc_coherent
+Message-ID: <20190530182532.GA8370@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.35]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+This patch fixes below warning reported by coccicheck
 
-Had an interesting lunch time discussion with our hardware architects pertinent to
-"minimal guarantees expected of a CPU" section of memory-barriers.txt
+./drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c:63:13-31: WARNING:
+dma_alloc_coherent use in ih -> ring already zeroes out memory,  so
+memset is not needed
 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-|  (*) These guarantees apply only to properly aligned and sized scalar
-|     variables.  "Properly sized" currently means variables that are
-|     the same size as "char", "short", "int" and "long".  "Properly
-|     aligned" means the natural alignment, thus no constraints for
-|     "char", two-byte alignment for "short", four-byte alignment for
-|     "int", and either four-byte or eight-byte alignment for "long",
-|     on 32-bit and 64-bit systems, respectively.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
+index 934dfdc..d922187 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ih.c
+@@ -65,7 +65,6 @@ int amdgpu_ih_ring_init(struct amdgpu_device *adev, struct amdgpu_ih_ring *ih,
+ 		if (ih->ring == NULL)
+ 			return -ENOMEM;
+ 
+-		memset((void *)ih->ring, 0, ih->ring_size + 8);
+ 		ih->gpu_addr = dma_addr;
+ 		ih->wptr_addr = dma_addr + ih->ring_size;
+ 		ih->wptr_cpu = &ih->ring[ih->ring_size / 4];
+-- 
+2.7.4
 
-
-I'm not sure how to interpret "natural alignment" for the case of double
-load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
-alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
-
-I presume (and the question) that lkmm doesn't expect such 8 byte load/stores to
-be atomic unless 8-byte aligned
-
-ARMv7 arch ref manual seems to confirm this. Quoting
-
-| LDM, LDC, LDC2, LDRD, STM, STC, STC2, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR,
-| VSTM, and VSTR instructions are executed as a sequence of word-aligned word
-| accesses. Each 32-bit word access is guaranteed to be single-copy atomic. A
-| subsequence of two or more word accesses from the sequence might not exhibit
-| single-copy atomicity
-
-While it seems reasonable form hardware pov to not implement such atomicity by
-default it seems there's an additional burden on application writers. They could
-be happily using a lockless algorithm with just a shared flag between 2 threads
-w/o need for any explicit synchronization. But upgrade to a new compiler which
-aggressively "packs" struct rendering long long 32-bit aligned (vs. 64-bit before)
-causing the code to suddenly stop working. Is the onus on them to declare such
-memory as c11 atomic or some such.
-
-Thx,
--Vineet
