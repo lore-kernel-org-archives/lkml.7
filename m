@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B732C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D0EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C50F24F5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC19C24F6A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188853;
-	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+	s=default; t=1559188859;
+	bh=20NGHh9hI3pUhV5NSLVTioijjfVOpQ0vS7J9QaqBhV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVBx8owYgj4oRanyOBC0yHOrX9whyiEGtovK2b9b8FpmBnOmRsnPeeTTsVA8nXxi5
-	 gnnW6jowrk5ToOlH45A5vHAIUkK4IKqWBGo1RJyPYl2py7+B+RDQ4JKld/fvA7nUTN
-	 nKAYkTJ0L4EPDh683BA1Oxe3pNtJidolEs7dNf1k=
+	b=BegEFn4QFnWeIaRZofzq4/1iRAJ7gtUimDF6AwaYCkbkiI7TQl+01EraI+JXX60xX
+	 dYlWrlq3NR8IGOPNY1JzyCyTZZJW74jH/TDtO4Ad8bv+f1iwIpelcrughw1mO1gtYO
+	 av8Ur3sRsggtviUalsq4Z3RUCHW0ZYmOXsLEqQLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731479AbfE3DSP (ORCPT
+        id S1731596AbfE3EA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbfE3DO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:28 -0400
+        id S1729107AbfE3DSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5719024570;
-        Thu, 30 May 2019 03:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1423245AF;
+        Thu, 30 May 2019 03:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186068;
-        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+        s=default; t=1559186294;
+        bh=20NGHh9hI3pUhV5NSLVTioijjfVOpQ0vS7J9QaqBhV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaP+mXnJNNo3EE05xKYpKBTMRjzSzrL+RuOi6GDGw14kv+6MK6BSoMXZt4UDDmBcc
-         G3Qk4EIBflL3k+GAOC+648NNhIBAJpUsGcDr1RmuOJUO+0aG9CdGbuiT9M7WeSoYQV
-         2dKTURh39OqOMdeNTf903cmYSGAlyoPpReigMUyo=
+        b=B237X1ljmYZ6TQmfDGchEi9vk9aIQutmdC3IHa8veRiVYgfYVKmxBtyymSdNx5xyk
+         K/6h5MPLJ4J4KIN81OiOp8iiy7E/oNPRfMLO5U9YpdYLplVrrQeVzRP5PFy7G1f3G2
+         tDjdgQD+WLuXVjuqzHCMovy2nPnUGisDNTj/Q5jA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Murton Liu <murton.liu@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 180/346] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:04:13 -0700
-Message-Id: <20190530030550.241980611@linuxfoundation.org>
+Subject: [PATCH 4.19 253/276] drm/amd/display: Fix Divide by 0 in memory calculations
+Date:   Wed, 29 May 2019 20:06:51 -0700
+Message-Id: <20190530030540.954741678@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,68 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
+[ Upstream commit 59979bf8be1784ebfc44215031c6c88ca22ae65d ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+Check if we get any values equal to 0, and set to 1 if so.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Murton Liu <murton.liu@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Acked-by: Sivapiriyan Kumarasamy <Sivapiriyan.Kumarasamy@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/vt1211.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ .../drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c | 20 ++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
-index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
---- a/drivers/hwmon/vt1211.c
-+++ b/drivers/hwmon/vt1211.c
-@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
- 	outb(ldn, sio_cip + 1);
- }
- 
--static inline void superio_enter(int sio_cip)
-+static inline int superio_enter(int sio_cip)
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
+index 4a863a5dab417..321af9af95e86 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp_dscl.c
+@@ -406,15 +406,25 @@ void dpp1_dscl_calc_lb_num_partitions(
+ 		int *num_part_y,
+ 		int *num_part_c)
  {
-+	if (!request_muxed_region(sio_cip, 2, DRVNAME))
-+		return -EBUSY;
++	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a,
++	lb_bpc, memory_line_size_y, memory_line_size_c, memory_line_size_a;
 +
- 	outb(0x87, sio_cip);
- 	outb(0x87, sio_cip);
+ 	int line_size = scl_data->viewport.width < scl_data->recout.width ?
+ 			scl_data->viewport.width : scl_data->recout.width;
+ 	int line_size_c = scl_data->viewport_c.width < scl_data->recout.width ?
+ 			scl_data->viewport_c.width : scl_data->recout.width;
+-	int lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
+-	int memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
+-	int memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
+-	int memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
+-	int lb_memory_size, lb_memory_size_c, lb_memory_size_a, num_partitions_a;
 +
-+	return 0;
- }
++	if (line_size == 0)
++		line_size = 1;
++
++	if (line_size_c == 0)
++		line_size_c = 1;
++
++
++	lb_bpc = dpp1_dscl_get_lb_depth_bpc(scl_data->lb_params.depth);
++	memory_line_size_y = (line_size * lb_bpc + 71) / 72; /* +71 to ceil */
++	memory_line_size_c = (line_size_c * lb_bpc + 71) / 72; /* +71 to ceil */
++	memory_line_size_a = (line_size + 5) / 6; /* +5 to ceil */
  
- static inline void superio_exit(int sio_cip)
- {
- 	outb(0xaa, sio_cip);
-+	release_region(sio_cip, 2);
- }
- 
- /* ---------------------------------------------------------------------
-@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
- 
- static int __init vt1211_find(int sio_cip, unsigned short *address)
- {
--	int err = -ENODEV;
-+	int err;
- 	int devid;
- 
--	superio_enter(sio_cip);
-+	err = superio_enter(sio_cip);
-+	if (err)
-+		return err;
- 
-+	err = -ENODEV;
- 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
- 	if (devid != SIO_VT1211_ID)
- 		goto EXIT;
+ 	if (lb_config == LB_MEMORY_CONFIG_1) {
+ 		lb_memory_size = 816;
 -- 
 2.20.1
 
