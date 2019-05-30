@@ -2,139 +2,75 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C48BC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8381C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2375B261EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsxZY9cX"
+	by mail.kernel.org (Postfix) with ESMTP id 9ACE1261EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfE3Vxp (ORCPT
+        id S1726825AbfE3Vxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:53:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34795 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfE3Vxp (ORCPT
+        Thu, 30 May 2019 17:53:53 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60832 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfE3Vxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:53:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l17so7198425otq.1;
-        Thu, 30 May 2019 14:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=sJuZdrZ6VMk79b1ZhahuZrudd0+Kp6YlC0eBwgdHqtI=;
-        b=PsxZY9cXHZU3UHhQbhmWYsY+UJaHm8siNxxjBiful25kOQ+QKikMo6MgAVTCdgUVRf
-         HjBxf/inGy+2U2z+5S+aaxGx2eUrk6bqqatAILgaaLwR1X4LkQlo7YDmx157FhcBU5Dh
-         SKPTMz5awBl/iOy0G0otyV+PrTYLeu7JgLh7vznhqdFmuP7VyNkvH+QRBD6mjV8dj0ac
-         VsIz6MtfFh0yXHkuy6sjpNia/mdmJuFWmSloJd2uK3Gf8a3fao/2BY0tS567OpBezrz+
-         nyjzchNz30eSf80CDrDHUso4ILvcPw8/p2r5zT3iwCzx5MLu0IwOQEdUzi8g7aVFn/P6
-         dHzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=sJuZdrZ6VMk79b1ZhahuZrudd0+Kp6YlC0eBwgdHqtI=;
-        b=URjpjlp9ma0HFnGHE3B6qRf40A+ig1F/Wy/tj/0oj3SCtaQuY3a8J7tIOCU54ION1S
-         EJJUkGmFloOQFJFo5jvZ9wPJuPVVk0jevkbCVpTwuh/fOpmG7jdkpXRPeaCR4dru07k6
-         rmRBP4lt95C1QMSFljbAeJZOKP64mQ5jyS7tf9DRRb7vH+6gWK81t2XXBxk58o1lk5AI
-         bwVW5LKnkjW1rOJrZ6QJGHJ2timATdCU9Su4WOOO0Pp/U0G53RnMiEPwinslmB40FrTG
-         46MwrEuHvuyaKTH3l8XPqqy6qhUsa5lPzoomOqIbkH0F2qtt+t57xcMQGYdWQglwYpdh
-         ZkBg==
-X-Gm-Message-State: APjAAAXLne4hpfrKcTUpGqsRknbiFwWNJz0AJO/6uBKmpur38I2mLOs/
-        vQMT+2e55DgTSeNTy8+w/eFCvepA9YY=
-X-Google-Smtp-Source: APXvYqxMsojOf0egOxfGWLBhthd5R18VJ7E3zUiMlsMMhMaEmJH88aU+eNQTsegxUV9DbttxV/LJgw==
-X-Received: by 2002:a9d:1b6d:: with SMTP id l100mr4256814otl.15.1559253224151;
-        Thu, 30 May 2019 14:53:44 -0700 (PDT)
-Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
-        by smtp.gmail.com with ESMTPSA id v89sm1441749otb.14.2019.05.30.14.53.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 14:53:43 -0700 (PDT)
-Subject: [RFC PATCH 01/11] mm: Move MAX_ORDER definition closer to
- pageblock_order
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Date:   Thu, 30 May 2019 14:53:41 -0700
-Message-ID: <20190530215341.13974.19456.stgit@localhost.localdomain>
-In-Reply-To: <20190530215223.13974.22445.stgit@localhost.localdomain>
-References: <20190530215223.13974.22445.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 May 2019 17:53:50 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 257FC14DB1D91;
+        Thu, 30 May 2019 14:36:05 -0700 (PDT)
+Date:   Thu, 30 May 2019 14:36:04 -0700 (PDT)
+Message-Id: <20190530.143604.925231544360388287.davem@davemloft.net>
+To:     mcroce@redhat.com
+Cc:     linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] sctp: deduplicate identical skb_checksum_ops
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190529153941.12166-1-mcroce@redhat.com>
+References: <20190529153941.12166-1-mcroce@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 14:36:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+From: Matteo Croce <mcroce@redhat.com>
+Date: Wed, 29 May 2019 17:39:41 +0200
 
-The definition of MAX_ORDER being contained in mmzone.h is problematic when
-wanting to just get access to things like pageblock_order since
-pageblock_order is defined on some architectures as being based on
-MAX_ORDER and it isn't included in pageblock-flags.h.
+> The same skb_checksum_ops struct is defined twice in two different places,
+> leading to code duplication. Declare it as a global variable into a common
+> header instead of allocating it on the stack on each function call.
+> bloat-o-meter reports a slight code shrink.
+> 
+> add/remove: 1/1 grow/shrink: 0/10 up/down: 128/-1282 (-1154)
+> Function                                     old     new   delta
+> sctp_csum_ops                                  -     128    +128
+> crc32c_csum_ops                               16       -     -16
+> sctp_rcv                                    6616    6583     -33
+> sctp_packet_pack                            4542    4504     -38
+> nf_conntrack_sctp_packet                    4980    4926     -54
+> execute_masked_set_action                   6453    6389     -64
+> tcf_csum_sctp                                575     428    -147
+> sctp_gso_segment                            1292    1126    -166
+> sctp_csum_check                              579     412    -167
+> sctp_snat_handler                            957     772    -185
+> sctp_dnat_handler                           1321    1132    -189
+> l4proto_manip_pkt                           2536    2313    -223
+> Total: Before=359297613, After=359296459, chg -0.00%
+> 
+> Reviewed-by: Xin Long <lucien.xin@gmail.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Move the definition of MAX_ORDER into pageblock-flags.h so that it is
-defined in the same header as pageblock_order. By doing this we don't need
-to also include mmzone.h. The definition of MAX_ORDER will still be
-accessible to any file that includes mmzone.h as it includes
-pageblock-flags.h.
-
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- include/linux/mmzone.h          |    8 --------
- include/linux/pageblock-flags.h |    8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 70394cabaf4e..a6bdff538437 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -22,14 +22,6 @@
- #include <linux/page-flags.h>
- #include <asm/page.h>
- 
--/* Free memory management - zoned buddy allocator.  */
--#ifndef CONFIG_FORCE_MAX_ZONEORDER
--#define MAX_ORDER 11
--#else
--#define MAX_ORDER CONFIG_FORCE_MAX_ZONEORDER
--#endif
--#define MAX_ORDER_NR_PAGES (1 << (MAX_ORDER - 1))
--
- /*
-  * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
-  * costly to service.  That is between allocation orders which should
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index 06a66327333d..e9e8006ccae1 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -40,6 +40,14 @@ enum pageblock_bits {
- 	NR_PAGEBLOCK_BITS
- };
- 
-+/* Free memory management - zoned buddy allocator.  */
-+#ifndef CONFIG_FORCE_MAX_ZONEORDER
-+#define MAX_ORDER 11
-+#else
-+#define MAX_ORDER CONFIG_FORCE_MAX_ZONEORDER
-+#endif
-+#define MAX_ORDER_NR_PAGES (1 << (MAX_ORDER - 1))
-+
- #ifdef CONFIG_HUGETLB_PAGE
- 
- #ifdef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
-
+Applied.
