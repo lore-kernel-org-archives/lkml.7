@@ -2,157 +2,163 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90349C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F98C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6622D25CF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559230014;
-	bh=9YFtRcpaM+fv3jVE/sKkVK83x8+nXHzLXTKwctbruP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q/YSPo+nbwwPBmhmF4Kmpw/FSNEQsDnUcvSsWuOkUJK0oqSdUfZpeVc94Zi4+phQe
-	 VSoGB0OhdNixvGJXMtrMQIOqTYRStsog2ZMgvdcYVTr4hcYqGcSXUei4m3h4wDhDs9
-	 IgD+AqHC4mtkDS94eEvwspqi6/aEQtYe3k0/3jfo=
+	by mail.kernel.org (Postfix) with ESMTP id 383ED24140
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpP2jFgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfE3P0x (ORCPT
+        id S1727451AbfE3P10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:26:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55694 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfE3P0w (ORCPT
+        Thu, 30 May 2019 11:27:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46598 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfE3P1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:26:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7YOWsXfFzweIku3jD63e4rNWMo98E82Y/eEZ5KmcvTs=; b=wm9ORVQauA+udQ1bRNQoT5u7p
-        rS5Wr2PqKXLr1/4B/ISzOs+vvM7IqQCb/wyClotz15pATQKjPYMREZWHbn6xOT+dGPYkWKGjfXfU6
-        jQZmtW/tJ36f/GFpHfRiX8NRaebarpJ6xEtufg1yG6ojE3IDZT/clv83eU9iSF1fkDWwc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hWMx2-0007Ap-Nj; Thu, 30 May 2019 15:26:44 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id BC2D0440046; Thu, 30 May 2019 16:26:43 +0100 (BST)
-Date:   Thu, 30 May 2019 16:26:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, lgirdwood@gmail.com,
-        lee.jones@linaro.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
- enable flexible
-Message-ID: <20190530152643.GS2456@sirena.org.uk>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-2-dmurphy@ti.com>
- <20190523130311.GA17245@sirena.org.uk>
- <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
- <20190526124838.GH2456@sirena.org.uk>
- <2398099b-16e6-f155-5852-45ba3dbc21ef@ti.com>
- <20190529151000.GP2456@sirena.org.uk>
- <afd2e445-09a9-a07f-f020-ede6870dce6e@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l8yJEXo8J9fv7OFY"
-Content-Disposition: inline
-In-Reply-To: <afd2e445-09a9-a07f-f020-ede6870dce6e@ti.com>
-X-Cookie: The other line moves faster.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 30 May 2019 11:27:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v9so2202834pgr.13;
+        Thu, 30 May 2019 08:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/Pn5l7Gl3fvih/5a8ecI7LW5krUKtJRfsuSUzHjs23s=;
+        b=gpP2jFgtCJLEB0MnQDyz47dV/7gnyYt1BYPZpOKP9dg6hZigrNid6HaEfleX8rBhDT
+         2CMbnqRfJSPZU49ILILmeW18onoEXeSLtwwUgj14BpokFfGihmaEgN1O84ORiKN5g7AU
+         rSjVJZGa1KyvV5SoV6BMW7GQJwfsfw+f9xGQZPws4NCbe7OyU5qm2lhndbFGJAASQCJd
+         GONqeXBIkUhBF8bXKRP5HQVoPTcHAXr/Xa7pGfKov1ZrDlzKxpwMOMuNMXNOxvsebNFm
+         WXgy3x4rlvFU//rUsD8CoYwPyg0aLzvgBb5aFcfFgu6FeSFEk/6yr5SzRtXeyZgLbcVs
+         0Mpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/Pn5l7Gl3fvih/5a8ecI7LW5krUKtJRfsuSUzHjs23s=;
+        b=o41NbF4V6onCplPqdHA7MHanCVath9pVyugj2xCZyj9lW2OoFwyx8j714KBPznrE1S
+         1BDmF71mx8ewWdlqaKsmdPWYdoslUlvTkERixluO0bIiweQ6RxfZP0Mk0yCtUJg4UByG
+         NNskUjua2tuNutKKS68xw0BcMHkldoFNLVM0ac6B7WjuwcifWp88mbz0xomfrPfgroSi
+         kmI0TGR0gvR+VUtrBsp6DjKv/CRrQZp30qhE39XlUe+NUNCQud2skX9dRk28F0yl9SQa
+         jlChXxoIhV1Y+qDL1jio6CkssLoWk06a1wFm6UPOw4YLokUs2Z9hlskyQ61sRDZmuY03
+         qWww==
+X-Gm-Message-State: APjAAAW+Ezj3RJNT5ZL2eJx155F0VZGciCORxlw0WNGJ5EdH4ntomAXX
+        fWzR2cNXb9rJzGa3L7+bSdU=
+X-Google-Smtp-Source: APXvYqwJ7xSLFQLOkGndSn8SMMOb04mrm4o41TpHVluzE92VccrJo04wRYcNI3pBU0fXADZ0SYcZAw==
+X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr2443651pjj.13.1559230045287;
+        Thu, 30 May 2019 08:27:25 -0700 (PDT)
+Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id s28sm2750518pgl.88.2019.05.30.08.27.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 30 May 2019 08:27:24 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] ipv6: Prevent overrun when parsing v6 header options
+Date:   Thu, 30 May 2019 23:28:18 +0800
+Message-Id: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The fragmentation code tries to parse the header options in order
+to figure out where to insert the fragment option.  Since nexthdr points
+to an invalid option, the calculation of the size of the network header
+can made to be much larger than the linear section of the skb and data
+is read outside of it.
 
---l8yJEXo8J9fv7OFY
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This vulnerability is similar to CVE-2017-9074.
 
-On Wed, May 29, 2019 at 03:47:08PM -0500, Dan Murphy wrote:
-> On 5/29/19 10:10 AM, Mark Brown wrote:
-> > On Wed, May 29, 2019 at 06:51:32AM -0500, Dan Murphy wrote:
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ net/ipv6/mip6.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-> > > Although I don't disagree with you I don't see how the interface is f=
-ragile
-> > > with only these 3 regulators defined.
-> > > Would it not be prudent to amend this driver if/when a new regulator =
-is
-> > > needed that has a different enable bit/register combination?=A0=A0 An=
-d if that
+diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
+index 64f0f7b..30ed1c5 100644
+--- a/net/ipv6/mip6.c
++++ b/net/ipv6/mip6.c
+@@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 			       u8 **nexthdr)
+ {
+ 	u16 offset = sizeof(struct ipv6hdr);
+-	struct ipv6_opt_hdr *exthdr =
+-				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
+ 	const unsigned char *nh = skb_network_header(skb);
+ 	unsigned int packet_len = skb_tail_pointer(skb) -
+ 		skb_network_header(skb);
+@@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 
+ 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
+ 
+-	while (offset + 1 <= packet_len) {
++	while (offset <= packet_len) {
++		struct ipv6_opt_hdr *exthdr;
+ 
+ 		switch (**nexthdr) {
+ 		case NEXTHDR_HOP:
+@@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 			return offset;
+ 		}
+ 
++		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
++			return -EINVAL;
++
++		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+ 		offset += ipv6_optlen(exthdr);
+ 		*nexthdr = &exthdr->nexthdr;
+-		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+ 	}
+ 
+-	return offset;
++	return -EINVAL;
+ }
+ 
+ static int mip6_destopt_init_state(struct xfrm_state *x)
+@@ -399,8 +401,6 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 			     u8 **nexthdr)
+ {
+ 	u16 offset = sizeof(struct ipv6hdr);
+-	struct ipv6_opt_hdr *exthdr =
+-				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
+ 	const unsigned char *nh = skb_network_header(skb);
+ 	unsigned int packet_len = skb_tail_pointer(skb) -
+ 		skb_network_header(skb);
+@@ -408,7 +408,8 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 
+ 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
+ 
+-	while (offset + 1 <= packet_len) {
++	while (offset <= packet_len) {
++		struct ipv6_opt_hdr *exthdr;
+ 
+ 		switch (**nexthdr) {
+ 		case NEXTHDR_HOP:
+@@ -434,12 +435,15 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
+ 			return offset;
+ 		}
+ 
++		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
++			return -EINVAL;
++
++		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+ 		offset += ipv6_optlen(exthdr);
+ 		*nexthdr = &exthdr->nexthdr;
+-		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
+ 	}
+ 
+-	return offset;
++	return -EINVAL;
+ }
+ 
+ static int mip6_rthdr_init_state(struct xfrm_state *x)
+-- 
+2.7.4
 
-> > The fragility I'm worried about is someone forgetting to make suitable
-> > updates, especially if they don't use the feature in their own system.
-
-> If they don't define the enable GPIO in the device tree then the gpio
-> descriptor pointer is NULL and the register write does not occur.
-
-> The documentation indicates that this is only applicable for 3632 I need =
-to
-> add the LM36274.
-
-This isn't so much about people's DTs (though that's a definite concern
-as well) as it is about support for any future devices in the driver, a
-user might see that the driver supports GPIO enables, correctly set up
-their device tree and have things fall over because the driver silently
-tries to configure the registers incorrectly.
-
-> Currently I don't have a device in this family that requires this level of
-> flexibility for this pin or configuration.
-
-> So if a need should arise should we not implement that flexibility at that
-> point?
-
-This isn't about implementing support for some theoretical thing, this
-is about making the implementation of the current support more robust
-and making the driver more maintainable going forwards.
-
-> Not only this but the gpio descriptor is protected in
-> lm363x_regulator_of_get_enable_gpio due to checking of the regulator ID.=
-=A0 As
-> in patch #4 of this series if LM3632 or LM36274 check for enable definiti=
-on
-> in the DT and create the descriptor if found.=A0 If it is any other regul=
-ator
-> then don't do anything.
-
-> If the HW designer changes these bits we end up with a new part and then =
-at
-> that point we could add code to redefine the bit mask as well.
-
-That code is rather far away from the code you're changing and it's
-really not clear that this will do the right thing for new devices, it
-already appears that we're handling two devices without obvious code for
-that (the regulator IDs get reused AFAICT).  If there were a switch
-statement right there it'd be clearer.
-
-Part of this is a reviewability thing - I initially stopped on the patch
-because it looked like it was using the enable field for something other
-than the intended purpose and now there's all this chasing around to see
-if the code is OK.
-
---l8yJEXo8J9fv7OFY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzv9jAACgkQJNaLcl1U
-h9Coxwf/eJTeUUiLevK6jVmMW/DPxH+hiCsuGV40/Osbq3h1ZtqjTvKWzZKnxuxU
-3G8p1GFNL4Wfwu3eY+qtvgphGUHDvRmCqCQy7hnS7fu/8stbrKh9THxDNxVCHLPO
-JG8Ad2THpo2KK9vG2vh/rlUKSpgRL+3omZMaN+bvTIAa4VxOkpe83vyB3Z5UXghj
-qVl5E5bUtj/HbA7M9q3aBkNd58uWKzPvNCpTQqPS0JiCsCpYxwnX3YAXxzrgVdDa
-5UzL0buh6OUQMS4md18P3ktyM4lCUJ+5bARs0cY40OSoc/6LxjIWjcf0sP36BCCz
-56jXejLh8o+ZbcGM5hf3pBRpFVN+Qw==
-=ruZM
------END PGP SIGNATURE-----
-
---l8yJEXo8J9fv7OFY--
