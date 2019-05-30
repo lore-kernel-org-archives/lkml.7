@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77468C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC5FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E1124557
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C37624570
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186078;
-	bh=7bufPFfe/XwpuopAGCj8kdDolxgpksl7WmNctub1E58=;
+	s=default; t=1559186089;
+	bh=kwHtIen6EI50lBGjIP9gmunCiomDZO0K6TnGNUNHRM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9XAzw6obJNKsS870AA40TRYM4x3aC5BqzznoU/JRS1m3fqP5FpslShoGoi6FEnmV
-	 CDd8omNMHOxK3MX6t2UEuzlzflE39tYlkNB4DugOE/RvGC/4oqKMr2k9njtWflezQj
-	 gjBIJjXOSfDBB85DzxetsHQCCs+0AEGEFRWsW7VI=
+	b=Lh7th8eZZuGPArt+fUnKwuyHn3giw7r+RNn0fJ3UQcXR96tzUT5ovegKHEZwCTC9q
+	 Put2W/2UTXi3SNyvSYYfLT/ZapTUqPQywSiTTo+Nu0CfikJP+mJt8kUIkoyFKVksca
+	 oDmH6sfIjrt/ZojgGVlDqgwwNl4R76fmouSQA8Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfE3DOh (ORCPT
+        id S1730001AbfE3DOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53466 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfE3DMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:06 -0400
+        id S1728028AbfE3DMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E23D22452B;
-        Thu, 30 May 2019 03:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103C7244E8;
+        Thu, 30 May 2019 03:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185925;
-        bh=7bufPFfe/XwpuopAGCj8kdDolxgpksl7WmNctub1E58=;
+        s=default; t=1559185932;
+        bh=kwHtIen6EI50lBGjIP9gmunCiomDZO0K6TnGNUNHRM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R12iXg2oIO8xG7WPzwwymmkMYa3k7DdzfPy0Fx619MDWcN1GvPf8u82QHoLbBp+/7
-         2n83VtyZe29izmvGzIlVOcGbqGPGc3e/qo0uxDEIgVa6q49EOddBuZ8/L/tZmx6RCc
-         4JBBG2pqDdTbP0D0JGT2AG4UNBW5jrAfXGd9Pde8=
+        b=oxs/GNyFQi12ScSgWNyZEVC+NuWm5E1ZcpW0wFbDFtxfoWZuipkTxo+eB/0AZGU4a
+         47bJ5Uo/sW6KvY9UIcFPHWTZ0dI5WM1Jth24vhHi8OAW4UxjLFFgRrI4CIHp5CtL3d
+         WoY95ehkTyszeEwkzkQL90CkU8+Sp0U2zVSdsS5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 314/405] ice: Fix for adaptive interrupt moderation
-Date:   Wed, 29 May 2019 20:05:12 -0700
-Message-Id: <20190530030556.680188738@linuxfoundation.org>
+Subject: [PATCH 5.1 327/405] thunderbolt: Fix to check for kmemdup failure
+Date:   Wed, 29 May 2019 20:05:25 -0700
+Message-Id: <20190530030557.287667542@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,393 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 64a59d05a4b3ddb37eb5ad3a3be0f17148f449f5 ]
+[ Upstream commit 2cc12751cf464a722ff57b54d17d30c84553f9c0 ]
 
-commit 63f545ed1285 ("ice: Add support for adaptive interrupt moderation")
-was meant to add support for adaptive interrupt moderation but there was
-an error on my part while formatting the patch, and thus only part of the
-patch ended up being submitted.
+Memory allocated via kmemdup might fail and return a NULL pointer.
+This patch adds a check on the return value of kmemdup and passes the
+error upstream.
 
-This patch rectifies the error by adding the rest of the code.
-
-Fixes: 63f545ed1285 ("ice: Add support for adaptive interrupt moderation")
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice.h      |   1 +
- drivers/net/ethernet/intel/ice/ice_txrx.c | 292 ++++++++++++++++++++--
- drivers/net/ethernet/intel/ice/ice_txrx.h |   6 +
- 3 files changed, 275 insertions(+), 24 deletions(-)
+ drivers/thunderbolt/switch.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
-index 89440775aea12..6af5bd5883ca4 100644
---- a/drivers/net/ethernet/intel/ice/ice.h
-+++ b/drivers/net/ethernet/intel/ice/ice.h
-@@ -277,6 +277,7 @@ struct ice_q_vector {
- 	 * value to the device
- 	 */
- 	u8 intrl;
-+	u8 itr_countdown;	/* when 0 should adjust adaptive ITR */
- } ____cacheline_internodealigned_in_smp;
- 
- enum ice_pf_flags {
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.c b/drivers/net/ethernet/intel/ice/ice_txrx.c
-index c289d97f477d5..851030ad50160 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.c
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
-@@ -1048,18 +1048,257 @@ static int ice_clean_rx_irq(struct ice_ring *rx_ring, int budget)
- 	return failure ? budget : (int)total_rx_pkts;
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 32e012713dbeb..f569a2673742f 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1287,13 +1287,14 @@ int tb_switch_configure(struct tb_switch *sw)
+ 	return tb_plug_events_active(sw, true);
  }
  
-+static unsigned int ice_itr_divisor(struct ice_port_info *pi)
-+{
-+	switch (pi->phy.link_info.link_speed) {
-+	case ICE_AQ_LINK_SPEED_40GB:
-+		return ICE_ITR_ADAPTIVE_MIN_INC * 1024;
-+	case ICE_AQ_LINK_SPEED_25GB:
-+	case ICE_AQ_LINK_SPEED_20GB:
-+		return ICE_ITR_ADAPTIVE_MIN_INC * 512;
-+	case ICE_AQ_LINK_SPEED_100MB:
-+		return ICE_ITR_ADAPTIVE_MIN_INC * 32;
-+	default:
-+		return ICE_ITR_ADAPTIVE_MIN_INC * 256;
-+	}
-+}
-+
-+/**
-+ * ice_update_itr - update the adaptive ITR value based on statistics
-+ * @q_vector: structure containing interrupt and ring information
-+ * @rc: structure containing ring performance data
-+ *
-+ * Stores a new ITR value based on packets and byte
-+ * counts during the last interrupt.  The advantage of per interrupt
-+ * computation is faster updates and more accurate ITR for the current
-+ * traffic pattern.  Constants in this function were computed
-+ * based on theoretical maximum wire speed and thresholds were set based
-+ * on testing data as well as attempting to minimize response time
-+ * while increasing bulk throughput.
-+ */
-+static void
-+ice_update_itr(struct ice_q_vector *q_vector, struct ice_ring_container *rc)
-+{
-+	unsigned int avg_wire_size, packets, bytes, itr;
-+	unsigned long next_update = jiffies;
-+	bool container_is_rx;
-+
-+	if (!rc->ring || !ITR_IS_DYNAMIC(rc->itr_setting))
-+		return;
-+
-+	/* If itr_countdown is set it means we programmed an ITR within
-+	 * the last 4 interrupt cycles. This has a side effect of us
-+	 * potentially firing an early interrupt. In order to work around
-+	 * this we need to throw out any data received for a few
-+	 * interrupts following the update.
-+	 */
-+	if (q_vector->itr_countdown) {
-+		itr = rc->target_itr;
-+		goto clear_counts;
-+	}
-+
-+	container_is_rx = (&q_vector->rx == rc);
-+	/* For Rx we want to push the delay up and default to low latency.
-+	 * for Tx we want to pull the delay down and default to high latency.
-+	 */
-+	itr = container_is_rx ?
-+		ICE_ITR_ADAPTIVE_MIN_USECS | ICE_ITR_ADAPTIVE_LATENCY :
-+		ICE_ITR_ADAPTIVE_MAX_USECS | ICE_ITR_ADAPTIVE_LATENCY;
-+
-+	/* If we didn't update within up to 1 - 2 jiffies we can assume
-+	 * that either packets are coming in so slow there hasn't been
-+	 * any work, or that there is so much work that NAPI is dealing
-+	 * with interrupt moderation and we don't need to do anything.
-+	 */
-+	if (time_after(next_update, rc->next_update))
-+		goto clear_counts;
-+
-+	packets = rc->total_pkts;
-+	bytes = rc->total_bytes;
-+
-+	if (container_is_rx) {
-+		/* If Rx there are 1 to 4 packets and bytes are less than
-+		 * 9000 assume insufficient data to use bulk rate limiting
-+		 * approach unless Tx is already in bulk rate limiting. We
-+		 * are likely latency driven.
-+		 */
-+		if (packets && packets < 4 && bytes < 9000 &&
-+		    (q_vector->tx.target_itr & ICE_ITR_ADAPTIVE_LATENCY)) {
-+			itr = ICE_ITR_ADAPTIVE_LATENCY;
-+			goto adjust_by_size;
-+		}
-+	} else if (packets < 4) {
-+		/* If we have Tx and Rx ITR maxed and Tx ITR is running in
-+		 * bulk mode and we are receiving 4 or fewer packets just
-+		 * reset the ITR_ADAPTIVE_LATENCY bit for latency mode so
-+		 * that the Rx can relax.
-+		 */
-+		if (rc->target_itr == ICE_ITR_ADAPTIVE_MAX_USECS &&
-+		    (q_vector->rx.target_itr & ICE_ITR_MASK) ==
-+		    ICE_ITR_ADAPTIVE_MAX_USECS)
-+			goto clear_counts;
-+	} else if (packets > 32) {
-+		/* If we have processed over 32 packets in a single interrupt
-+		 * for Tx assume we need to switch over to "bulk" mode.
-+		 */
-+		rc->target_itr &= ~ICE_ITR_ADAPTIVE_LATENCY;
-+	}
-+
-+	/* We have no packets to actually measure against. This means
-+	 * either one of the other queues on this vector is active or
-+	 * we are a Tx queue doing TSO with too high of an interrupt rate.
-+	 *
-+	 * Between 4 and 56 we can assume that our current interrupt delay
-+	 * is only slightly too low. As such we should increase it by a small
-+	 * fixed amount.
-+	 */
-+	if (packets < 56) {
-+		itr = rc->target_itr + ICE_ITR_ADAPTIVE_MIN_INC;
-+		if ((itr & ICE_ITR_MASK) > ICE_ITR_ADAPTIVE_MAX_USECS) {
-+			itr &= ICE_ITR_ADAPTIVE_LATENCY;
-+			itr += ICE_ITR_ADAPTIVE_MAX_USECS;
-+		}
-+		goto clear_counts;
-+	}
-+
-+	if (packets <= 256) {
-+		itr = min(q_vector->tx.current_itr, q_vector->rx.current_itr);
-+		itr &= ICE_ITR_MASK;
-+
-+		/* Between 56 and 112 is our "goldilocks" zone where we are
-+		 * working out "just right". Just report that our current
-+		 * ITR is good for us.
-+		 */
-+		if (packets <= 112)
-+			goto clear_counts;
-+
-+		/* If packet count is 128 or greater we are likely looking
-+		 * at a slight overrun of the delay we want. Try halving
-+		 * our delay to see if that will cut the number of packets
-+		 * in half per interrupt.
-+		 */
-+		itr >>= 1;
-+		itr &= ICE_ITR_MASK;
-+		if (itr < ICE_ITR_ADAPTIVE_MIN_USECS)
-+			itr = ICE_ITR_ADAPTIVE_MIN_USECS;
-+
-+		goto clear_counts;
-+	}
-+
-+	/* The paths below assume we are dealing with a bulk ITR since
-+	 * number of packets is greater than 256. We are just going to have
-+	 * to compute a value and try to bring the count under control,
-+	 * though for smaller packet sizes there isn't much we can do as
-+	 * NAPI polling will likely be kicking in sooner rather than later.
-+	 */
-+	itr = ICE_ITR_ADAPTIVE_BULK;
-+
-+adjust_by_size:
-+	/* If packet counts are 256 or greater we can assume we have a gross
-+	 * overestimation of what the rate should be. Instead of trying to fine
-+	 * tune it just use the formula below to try and dial in an exact value
-+	 * gives the current packet size of the frame.
-+	 */
-+	avg_wire_size = bytes / packets;
-+
-+	/* The following is a crude approximation of:
-+	 *  wmem_default / (size + overhead) = desired_pkts_per_int
-+	 *  rate / bits_per_byte / (size + ethernet overhead) = pkt_rate
-+	 *  (desired_pkt_rate / pkt_rate) * usecs_per_sec = ITR value
-+	 *
-+	 * Assuming wmem_default is 212992 and overhead is 640 bytes per
-+	 * packet, (256 skb, 64 headroom, 320 shared info), we can reduce the
-+	 * formula down to
-+	 *
-+	 *  (170 * (size + 24)) / (size + 640) = ITR
-+	 *
-+	 * We first do some math on the packet size and then finally bitshift
-+	 * by 8 after rounding up. We also have to account for PCIe link speed
-+	 * difference as ITR scales based on this.
-+	 */
-+	if (avg_wire_size <= 60) {
-+		/* Start at 250k ints/sec */
-+		avg_wire_size = 4096;
-+	} else if (avg_wire_size <= 380) {
-+		/* 250K ints/sec to 60K ints/sec */
-+		avg_wire_size *= 40;
-+		avg_wire_size += 1696;
-+	} else if (avg_wire_size <= 1084) {
-+		/* 60K ints/sec to 36K ints/sec */
-+		avg_wire_size *= 15;
-+		avg_wire_size += 11452;
-+	} else if (avg_wire_size <= 1980) {
-+		/* 36K ints/sec to 30K ints/sec */
-+		avg_wire_size *= 5;
-+		avg_wire_size += 22420;
-+	} else {
-+		/* plateau at a limit of 30K ints/sec */
-+		avg_wire_size = 32256;
-+	}
-+
-+	/* If we are in low latency mode halve our delay which doubles the
-+	 * rate to somewhere between 100K to 16K ints/sec
-+	 */
-+	if (itr & ICE_ITR_ADAPTIVE_LATENCY)
-+		avg_wire_size >>= 1;
-+
-+	/* Resultant value is 256 times larger than it needs to be. This
-+	 * gives us room to adjust the value as needed to either increase
-+	 * or decrease the value based on link speeds of 10G, 2.5G, 1G, etc.
-+	 *
-+	 * Use addition as we have already recorded the new latency flag
-+	 * for the ITR value.
-+	 */
-+	itr += DIV_ROUND_UP(avg_wire_size,
-+			    ice_itr_divisor(q_vector->vsi->port_info)) *
-+	       ICE_ITR_ADAPTIVE_MIN_INC;
-+
-+	if ((itr & ICE_ITR_MASK) > ICE_ITR_ADAPTIVE_MAX_USECS) {
-+		itr &= ICE_ITR_ADAPTIVE_LATENCY;
-+		itr += ICE_ITR_ADAPTIVE_MAX_USECS;
-+	}
-+
-+clear_counts:
-+	/* write back value */
-+	rc->target_itr = itr;
-+
-+	/* next update should occur within next jiffy */
-+	rc->next_update = next_update + 1;
-+
-+	rc->total_bytes = 0;
-+	rc->total_pkts = 0;
-+}
-+
- /**
-  * ice_buildreg_itr - build value for writing to the GLINT_DYN_CTL register
-  * @itr_idx: interrupt throttling index
-- * @reg_itr: interrupt throttling value adjusted based on ITR granularity
-+ * @itr: interrupt throttling value in usecs
-  */
--static u32 ice_buildreg_itr(int itr_idx, u16 reg_itr)
-+static u32 ice_buildreg_itr(int itr_idx, u16 itr)
+-static void tb_switch_set_uuid(struct tb_switch *sw)
++static int tb_switch_set_uuid(struct tb_switch *sw)
  {
-+	/* The itr value is reported in microseconds, and the register value is
-+	 * recorded in 2 microsecond units. For this reason we only need to
-+	 * shift by the GLINT_DYN_CTL_INTERVAL_S - ICE_ITR_GRAN_S to apply this
-+	 * granularity as a shift instead of division. The mask makes sure the
-+	 * ITR value is never odd so we don't accidentally write into the field
-+	 * prior to the ITR field.
-+	 */
-+	itr &= ICE_ITR_MASK;
-+
- 	return GLINT_DYN_CTL_INTENA_M | GLINT_DYN_CTL_CLEARPBA_M |
- 		(itr_idx << GLINT_DYN_CTL_ITR_INDX_S) |
--		(reg_itr << GLINT_DYN_CTL_INTERVAL_S);
-+		(itr << (GLINT_DYN_CTL_INTERVAL_S - ICE_ITR_GRAN_S));
- }
+ 	u32 uuid[4];
+-	int cap;
++	int cap, ret;
  
-+/* The act of updating the ITR will cause it to immediately trigger. In order
-+ * to prevent this from throwing off adaptive update statistics we defer the
-+ * update so that it can only happen so often. So after either Tx or Rx are
-+ * updated we make the adaptive scheme wait until either the ITR completely
-+ * expires via the next_update expiration or we have been through at least
-+ * 3 interrupts.
-+ */
-+#define ITR_COUNTDOWN_START 3
-+
- /**
-  * ice_update_ena_itr - Update ITR and re-enable MSIX interrupt
-  * @vsi: the VSI associated with the q_vector
-@@ -1068,10 +1307,14 @@ static u32 ice_buildreg_itr(int itr_idx, u16 reg_itr)
- static void
- ice_update_ena_itr(struct ice_vsi *vsi, struct ice_q_vector *q_vector)
- {
--	struct ice_hw *hw = &vsi->back->hw;
--	struct ice_ring_container *rc;
-+	struct ice_ring_container *tx = &q_vector->tx;
-+	struct ice_ring_container *rx = &q_vector->rx;
- 	u32 itr_val;
++	ret = 0;
+ 	if (sw->uuid)
+-		return;
++		return ret;
  
-+	/* This will do nothing if dynamic updates are not enabled */
-+	ice_update_itr(q_vector, tx);
-+	ice_update_itr(q_vector, rx);
-+
- 	/* This block of logic allows us to get away with only updating
- 	 * one ITR value with each interrupt. The idea is to perform a
- 	 * pseudo-lazy update with the following criteria.
-@@ -1080,35 +1323,36 @@ ice_update_ena_itr(struct ice_vsi *vsi, struct ice_q_vector *q_vector)
- 	 * 2. If we must reduce an ITR that is given highest priority.
- 	 * 3. We then give priority to increasing ITR based on amount.
+ 	/*
+ 	 * The newer controllers include fused UUID as part of link
+@@ -1301,7 +1302,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
  	 */
--	if (q_vector->rx.target_itr < q_vector->rx.current_itr) {
--		rc = &q_vector->rx;
-+	if (rx->target_itr < rx->current_itr) {
- 		/* Rx ITR needs to be reduced, this is highest priority */
--		itr_val = ice_buildreg_itr(rc->itr_idx, rc->target_itr);
--		rc->current_itr = rc->target_itr;
--	} else if ((q_vector->tx.target_itr < q_vector->tx.current_itr) ||
--		   ((q_vector->rx.target_itr - q_vector->rx.current_itr) <
--		    (q_vector->tx.target_itr - q_vector->tx.current_itr))) {
--		rc = &q_vector->tx;
-+		itr_val = ice_buildreg_itr(rx->itr_idx, rx->target_itr);
-+		rx->current_itr = rx->target_itr;
-+		q_vector->itr_countdown = ITR_COUNTDOWN_START;
-+	} else if ((tx->target_itr < tx->current_itr) ||
-+		   ((rx->target_itr - rx->current_itr) <
-+		    (tx->target_itr - tx->current_itr))) {
- 		/* Tx ITR needs to be reduced, this is second priority
- 		 * Tx ITR needs to be increased more than Rx, fourth priority
- 		 */
--		itr_val = ice_buildreg_itr(rc->itr_idx, rc->target_itr);
--		rc->current_itr = rc->target_itr;
--	} else if (q_vector->rx.current_itr != q_vector->rx.target_itr) {
--		rc = &q_vector->rx;
-+		itr_val = ice_buildreg_itr(tx->itr_idx, tx->target_itr);
-+		tx->current_itr = tx->target_itr;
-+		q_vector->itr_countdown = ITR_COUNTDOWN_START;
-+	} else if (rx->current_itr != rx->target_itr) {
- 		/* Rx ITR needs to be increased, third priority */
--		itr_val = ice_buildreg_itr(rc->itr_idx, rc->target_itr);
--		rc->current_itr = rc->target_itr;
-+		itr_val = ice_buildreg_itr(rx->itr_idx, rx->target_itr);
-+		rx->current_itr = rx->target_itr;
-+		q_vector->itr_countdown = ITR_COUNTDOWN_START;
+ 	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
+ 	if (cap > 0) {
+-		tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
++		ret = tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
++		if (ret)
++			return ret;
  	} else {
- 		/* Still have to re-enable the interrupts */
- 		itr_val = ice_buildreg_itr(ICE_ITR_NONE, 0);
-+		if (q_vector->itr_countdown)
-+			q_vector->itr_countdown--;
+ 		/*
+ 		 * ICM generates UUID based on UID and fills the upper
+@@ -1316,6 +1319,9 @@ static void tb_switch_set_uuid(struct tb_switch *sw)
  	}
  
--	if (!test_bit(__ICE_DOWN, vsi->state)) {
--		int vector = vsi->hw_base_vector + q_vector->v_idx;
--
--		wr32(hw, GLINT_DYN_CTL(vector), itr_val);
--	}
-+	if (!test_bit(__ICE_DOWN, vsi->state))
-+		wr32(&vsi->back->hw,
-+		     GLINT_DYN_CTL(vsi->hw_base_vector + q_vector->v_idx),
-+		     itr_val);
+ 	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
++	if (!sw->uuid)
++		ret = -ENOMEM;
++	return ret;
  }
  
- /**
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.h b/drivers/net/ethernet/intel/ice/ice_txrx.h
-index fc358ea81816f..74a031fbd7323 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.h
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.h
-@@ -128,6 +128,12 @@ enum ice_rx_dtype {
- #define ICE_ITR_MASK		0x1FFE	/* ITR register value alignment mask */
- #define ITR_REG_ALIGN(setting)	__ALIGN_MASK(setting, ~ICE_ITR_MASK)
+ static int tb_switch_add_dma_port(struct tb_switch *sw)
+@@ -1365,7 +1371,9 @@ static int tb_switch_add_dma_port(struct tb_switch *sw)
  
-+#define ICE_ITR_ADAPTIVE_MIN_INC	0x0002
-+#define ICE_ITR_ADAPTIVE_MIN_USECS	0x0002
-+#define ICE_ITR_ADAPTIVE_MAX_USECS	0x00FA
-+#define ICE_ITR_ADAPTIVE_LATENCY	0x8000
-+#define ICE_ITR_ADAPTIVE_BULK		0x0000
-+
- #define ICE_DFLT_INTRL	0
+ 	if (status) {
+ 		tb_sw_info(sw, "switch flash authentication failed\n");
+-		tb_switch_set_uuid(sw);
++		ret = tb_switch_set_uuid(sw);
++		if (ret)
++			return ret;
+ 		nvm_set_auth_status(sw, status);
+ 	}
  
- /* Legacy or Advanced Mode Queue */
+@@ -1415,7 +1423,9 @@ int tb_switch_add(struct tb_switch *sw)
+ 		}
+ 		tb_sw_dbg(sw, "uid: %#llx\n", sw->uid);
+ 
+-		tb_switch_set_uuid(sw);
++		ret = tb_switch_set_uuid(sw);
++		if (ret)
++			return ret;
+ 
+ 		for (i = 0; i <= sw->config.max_port_number; i++) {
+ 			if (sw->ports[i].disabled) {
 -- 
 2.20.1
 
