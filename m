@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C88EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092E0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1FB257B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D689C257D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190923;
-	bh=pkrYt45KKdk5c84Ve5J+EfLCCGC9mP22vg+IvgPQH2w=;
+	s=default; t=1559190924;
+	bh=TowusqZkdbphibd65Bc4guMeYN9nvPInafHrQJQPyqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n58MMG1cx++bLYLtggd/knbfBy71COEWoRtnKXF3/dvIIwOT6KYllgKl1CTS/2wNm
-	 d8l5032jJULwgbYwgixdIHHTGWwyogUVB91H8k197wEk2Gj4fkO2VGAtN3cZ53xPNh
-	 KLSLxCH/Ha6ZcqthRTIbdlgIR2FZ1nG8BOlDDLs8=
+	b=Zbe3ZhcYFi6lk8HFyJdamw4ucTB4QXnFnyMvmpvQjU4GqlWr3K9UP6punAV/l8jne
+	 A+chhlPn7jgBqqKR4Ftid4QwYwv3EkLrJHm7FyIWI1sY3LgRnHn4QBSYpff+ri6ivV
+	 gh1uL1dMTH/baUAk27wWQlIVQwWh8T6Vgp/STYO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbfE3EfW (ORCPT
+        id S1731696AbfE3EfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:35:22 -0400
+        Thu, 30 May 2019 00:35:24 -0400
 Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbfE3DNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729370AbfE3DNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646C5244EA;
-        Thu, 30 May 2019 03:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA568244B0;
+        Thu, 30 May 2019 03:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185994;
-        bh=pkrYt45KKdk5c84Ve5J+EfLCCGC9mP22vg+IvgPQH2w=;
+        s=default; t=1559185993;
+        bh=TowusqZkdbphibd65Bc4guMeYN9nvPInafHrQJQPyqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9SpoOcnM8wc5jm9NgLSVQvZPcs0moHhUOMF1RANmY2XrCJekoo9jReL6gNBsmw7c
-         FLIRQk/PI41k4cT3H35q+Yr/o+8ETkpZIScZTJJuKTKArYQiC4B41tNH6lidG6NpAw
-         rj/dlxrHg9ceQ2qkFix8iPSZLWO6H0Xu+lkczhmk=
+        b=jPT7KKrQLRCz7xWnGkNRO5PlCNbcdt1NNo2HTrElZuPMnDlOfljKcBmQe0K9nzclU
+         /XIxHQXqmtyZokrBfU+WhO4BTO9MBlBmb/cOYEyuhCgnfncTXpOM2j/j9KemVpSbj1
+         Pn7Od1U6Fwy2+jYeYKI/IktLhKNJ3Wffvt1moJ8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Kristian Evensen <kristian.evensen@gmail.com>
-Subject: [PATCH 5.0 040/346] netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression
-Date:   Wed, 29 May 2019 20:01:53 -0700
-Message-Id: <20190530030542.881377799@linuxfoundation.org>
+        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
+        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
+        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
+        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 5.0 037/346] batman-adv: mcast: fix multicast tt/tvlv worker locking
+Date:   Wed, 29 May 2019 20:01:50 -0700
+Message-Id: <20190530030542.717727452@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,50 +65,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristian Evensen <kristian.evensen@gmail.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit f8e608982022fad035160870f5b06086d3cba54d upstream.
+commit a3c7cd0cdf1107f891aff847ad481e34df727055 upstream.
 
-Commit 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter
-on flush") introduced a user-space regression when flushing connection
-track entries. Before this commit, the nfgen_family field was not used
-by the kernel and all entries were removed. Since this commit,
-nfgen_family is used to filter out entries that should not be removed.
-One example a broken tool is conntrack. conntrack always sets
-nfgen_family to AF_INET, so after 59c08c69c278 only IPv4 entries were
-removed with the -F parameter.
+Syzbot has reported some issues with the locking assumptions made for
+the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
+batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
+While hard/not reproduceable for us so far it seems that the
+delayed_work_pending() we use might not be quite safe from reordering.
 
-Pablo Neira Ayuso suggested using nfgenmsg->version to resolve the
-regression, and this commit implements his suggestion. nfgenmsg->version
-is so far set to zero, so it is well-suited to be used as a flag for
-selecting old or new flush behavior. If version is 0, nfgen_family is
-ignored and all entries are used. If user-space sets the version to one
-(or any other value than 0), then the new behavior is used. As version
-only can have two valid values, I chose not to add a new
-NFNETLINK_VERSION-constant.
+Therefore this patch adds an explicit, new spinlock to protect the
+update of the mla_list and flags in bat_priv and then removes the
+WARN_ON(delayed_work_pending()).
 
-Fixes: 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter on flush")
-Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Tested-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
+Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
+Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
+Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_conntrack_netlink.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/main.c      |    1 +
+ net/batman-adv/multicast.c |   11 +++--------
+ net/batman-adv/types.h     |    5 +++++
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -1254,7 +1254,7 @@ static int ctnetlink_del_conntrack(struc
- 	struct nf_conntrack_tuple tuple;
- 	struct nf_conn *ct;
- 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
--	u_int8_t u3 = nfmsg->nfgen_family;
-+	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
- 	struct nf_conntrack_zone zone;
- 	int err;
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -161,6 +161,7 @@ int batadv_mesh_init(struct net_device *
+ 	spin_lock_init(&bat_priv->tt.commit_lock);
+ 	spin_lock_init(&bat_priv->gw.list_lock);
+ #ifdef CONFIG_BATMAN_ADV_MCAST
++	spin_lock_init(&bat_priv->mcast.mla_lock);
+ 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
+ #endif
+ 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
+--- a/net/batman-adv/multicast.c
++++ b/net/batman-adv/multicast.c
+@@ -325,8 +325,6 @@ static void batadv_mcast_mla_list_free(s
+  * translation table except the ones listed in the given mcast_list.
+  *
+  * If mcast_list is NULL then all are retracted.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+ 					struct hlist_head *mcast_list)
+@@ -334,8 +332,6 @@ static void batadv_mcast_mla_tt_retract(
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
+ 				  list) {
+ 		if (mcast_list &&
+@@ -359,8 +355,6 @@ static void batadv_mcast_mla_tt_retract(
+  *
+  * Adds multicast listener announcements from the given mcast_list to the
+  * translation table if they have not been added yet.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
+ 				    struct hlist_head *mcast_list)
+@@ -368,8 +362,6 @@ static void batadv_mcast_mla_tt_add(stru
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
+ 
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	if (!mcast_list)
+ 		return;
+ 
+@@ -658,7 +650,10 @@ static void batadv_mcast_mla_update(stru
+ 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
+ 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
+ 
++	spin_lock(&bat_priv->mcast.mla_lock);
+ 	__batadv_mcast_mla_update(bat_priv);
++	spin_unlock(&bat_priv->mcast.mla_lock);
++
+ 	batadv_mcast_start_timer(bat_priv);
+ }
+ 
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1224,6 +1224,11 @@ struct batadv_priv_mcast {
+ 	unsigned char bridged:1;
+ 
+ 	/**
++	 * @mla_lock: a lock protecting mla_list and mla_flags
++	 */
++	spinlock_t mla_lock;
++
++	/**
+ 	 * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP
+ 	 *  traffic
+ 	 */
 
 
