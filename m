@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22490C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEFCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBB824AF0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948FB24ACD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187028;
-	bh=9cnLBFqP/liz1+ZUjA7+63ydi1ZxnYtGSzg8LDqXNq0=;
+	s=default; t=1559187031;
+	bh=isVdUuJxKtBQUgI9I1O0cRqwWtG/45uK+TmIrw2pIXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6zZyp78Ol4HlvMy90G4BH24zYV5UuIiLlv5DbzphmnsuP4YfQPI1KeX+Jjvzu+H+
-	 bwpivukXL62pMrL6EnbsaMEQc0IsgwgI/vTAttaziroQcD80j8s6QUc5AgYzOppQDw
-	 u0gHnWTt2o3+ZGtUA2H+dwQBqUt0Y/L4wfEz/Uqk=
+	b=rOxKSa6sGScjfjl26AfVLq7wWhZNc1SqLdtRU9JSsw6+OssN++LOILsI6BLRbyJyj
+	 REBdjnSfg0eDw6VNGCFu10itLSWRDW+leUDL2RusXOAdwpNRk7a9u6qK+Z6ec71S2T
+	 Z4H2xXYZ4nFkSeF4Olz93wLjJRti3FUnFmVwo120=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388582AbfE3Da1 (ORCPT
+        id S2388619AbfE3Daa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34694 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732559AbfE3DV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:26 -0400
+        id S2388433AbfE3D3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:29:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8828F24A03;
-        Thu, 30 May 2019 03:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9546924ACD;
+        Thu, 30 May 2019 03:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186485;
-        bh=9cnLBFqP/liz1+ZUjA7+63ydi1ZxnYtGSzg8LDqXNq0=;
+        s=default; t=1559186988;
+        bh=isVdUuJxKtBQUgI9I1O0cRqwWtG/45uK+TmIrw2pIXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkJYtCgzMlIqPqqY8mmSSLJNgXgOh6RZ4eZH1J7YwS8Ml3lQmrWijPTlbrMZRp9Uh
-         dAjfJafat/mz2xWMCTrsE4pDqxJqKzcVbx+xin3H1dhZx+eyDIs6eh2idw4148QhDM
-         kGa0bW/Yv1PVSOzw+nnECuoETqTdKcrSYhRTfxXg=
+        b=Y9w+R6xNfanlv5FyYBujNhpSJxzCK4rRaj+qXu+Nh1zvrL3d9HprMg8d6HYbKvrWC
+         XJZKiwY06KinUKxLpUe5vzohO5nI9/BBC/F+57QYveklFkfCw/iG4p1rbzMZAL4ZpF
+         ZKuRtXBC+2vz6NrXQFtkGoEbwz9SG6SbPI9d0W8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 125/128] spi: rspi: Fix sequencer reset during initialization
-Date:   Wed, 29 May 2019 20:07:37 -0700
-Message-Id: <20190530030456.775197787@linuxfoundation.org>
+Subject: [PATCH 5.1 156/405] media: ov2659: make S_FMT succeed even if requested format doesnt match
+Date:   Wed, 29 May 2019 20:02:34 -0700
+Message-Id: <20190530030549.031523304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,57 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
+[ Upstream commit bccb89cf9cd07a0690d519696a00c00a973b3fe4 ]
 
-While the sequencer is reset after each SPI message since commit
-880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
-Transfers on QSPI"), it was never reset for the first message, thus
-relying on reset state or bootloader settings.
+This driver returns an error if unsupported media bus pixel code is
+requested by VIDIOC_SUBDEV_S_FMT.
 
-Fix this by initializing it explicitly during configuration.
+But according to Documentation/media/uapi/v4l/vidioc-subdev-g-fmt.rst,
 
-Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Drivers must not return an error solely because the requested format
+doesn't match the device capabilities. They must instead modify the
+format to match what the hardware can provide.
+
+So select default format code and return success in that case.
+
+This is detected by v4l2-compliance.
+
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rspi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov2659.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 093c9cf92bfd3..07612e8c58ee8 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -279,7 +279,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets parity, interrupt mask */
- 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 799acce803fe5..a1e9a980a4459 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1117,8 +1117,10 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
+ 		if (ov2659_formats[index].code == mf->code)
+ 			break;
  
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+-	if (index < 0)
+-		return -EINVAL;
++	if (index < 0) {
++		index = 0;
++		mf->code = ov2659_formats[index].code;
++	}
  
-@@ -323,7 +324,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
- 	rspi_write8(rspi, 0x00, RSPI_SSLND);
- 	rspi_write8(rspi, 0x00, RSPI_SPND);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
-@@ -374,7 +376,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets buffer to allow normal operation */
- 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
- 	/* Enables SPI function in master mode */
+ 	mf->colorspace = V4L2_COLORSPACE_SRGB;
+ 	mf->field = V4L2_FIELD_NONE;
 -- 
 2.20.1
 
