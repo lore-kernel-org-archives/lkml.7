@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8A1C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FC6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0490225B7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9191625B8E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191560;
-	bh=ASvY6a5M6iEQjWScKSfAjtQLT7Ex6G0T4yGJbVUtEaM=;
+	s=default; t=1559191565;
+	bh=k0t5KQDOFfbBweh2TDKsMquyrzON3Gj9IXtzdt7R1cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLWyaoGZp7Salg2TLgEsGt9x6z5ySTICSSwsu9+hOFbOSQ7Ut10IoymY359KImuVY
-	 fFvaboWggno3qK8iwRmIPUzX+/hmrfv6wkSsby+bQZm7O2oxiLfBXqnmBWHtP1Fyt1
-	 7C89Nohv11BwVC6VST/e2sDUjYUWnA/2Wwm0naAI=
+	b=fCpfziTqZVTPdCLF8iw+n7RV0qJM0nxZiTN8H1XqZ7jpQ9ddIJyH7coNnjdxFHQNk
+	 FAk/ts2T1scmKMf9cJDzJQMGVh31uLxkGjDuO9bNYG6kVs417N2bw8WsUURVGw/eVh
+	 i+9b2AkXvnbM6SpvbpRJ+G97xLxN8L/TjA2QZ8eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbfE3Ep6 (ORCPT
+        id S1733221AbfE3EqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfE3DLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728679AbfE3DLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4652244E8;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A22A244D1;
         Thu, 30 May 2019 03:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185907;
-        bh=ASvY6a5M6iEQjWScKSfAjtQLT7Ex6G0T4yGJbVUtEaM=;
+        bh=k0t5KQDOFfbBweh2TDKsMquyrzON3Gj9IXtzdt7R1cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVhbqK8p5yifn9Qh6CiN3kBgy5YaykUUbRq7diE9FFTYTnZR1vVANhzjnzRLIk4TC
-         RMR+W1OB+QvLSAmyEx6DXuCZ5gHqo1uhUpHTNgPenUKt4fPFfj/2COgV7RECEMqEX5
-         XJcDTrNtitDSiZTHE1NgkwKk//m1xGHd+DvF2T+Q=
+        b=vNsijWRhEklZomKs8chbNOblCvLhC+laZqvuQviy4cIQ7qjQMm4+Mwo6L4tmXVItO
+         jeL1ExmAlq7XtvvOMWkeemkmbKGNlo0Ibprh2xRxGZOLHuLhV03BK1iml6OfCwI6IT
+         ceCwEv02M9F+U6anaPSz+MkfbGSkk6TzVEXPzjS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 281/405] clk: renesas: rcar-gen3: Correct parent clock of Audio-DMAC
-Date:   Wed, 29 May 2019 20:04:39 -0700
-Message-Id: <20190530030555.106478106@linuxfoundation.org>
+        stable@vger.kernel.org, ris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 280/405] block: pass page to xen_biovec_phys_mergeable
+Date:   Wed, 29 May 2019 20:04:38 -0700
+Message-Id: <20190530030555.055576682@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,137 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b9df2ea2b8d09ad850afe4d4a0403cb23d9e0c02 ]
+[ Upstream commit 0383ad4374f7ad7edd925a2ee4753035c3f5508a ]
 
-The clock sources of the AXI-bus clock (266.66 MHz) used for Audio-DMAC
-DMA transfers are:
+xen_biovec_phys_mergeable() only needs .bv_page of the 2nd bio bvec
+for checking if the two bvecs can be merged, so pass page to
+xen_biovec_phys_mergeable() directly.
 
-    Channel        R-Car H3    R-Car M3-W    R-Car M3-N    R-Car E3
-    ---------------------------------------------------------------
-    Audio-DMAC0    S1D2        S1D2          S1D2          S1D2
-    Audio-DMAC1    S1D2        S1D2          S1D2          -
+No function change.
 
-As a result, change the parent clocks of the Audio-DMAC{0,1} module
-clocks on R-Car H3, R-Car M3-W, and R-Car M3-N to S1D2, and change the
-parent clock of the Audio-DMAC0 module on R-Car E3 to S1D2.
-
-NOTE: This information will be reflected in a future revision of the
-      R-Car Gen3 Hardware Manual.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[geert: Update R-Car D3, RZ/G2M, and RZ/G2E]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Cc: ris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a774a1-cpg-mssr.c | 4 ++--
- drivers/clk/renesas/r8a774c0-cpg-mssr.c | 2 +-
- drivers/clk/renesas/r8a7795-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a7796-cpg-mssr.c  | 4 ++--
- drivers/clk/renesas/r8a77965-cpg-mssr.c | 4 ++--
- drivers/clk/renesas/r8a77990-cpg-mssr.c | 2 +-
- drivers/clk/renesas/r8a77995-cpg-mssr.c | 2 +-
- 7 files changed, 11 insertions(+), 11 deletions(-)
+ block/blk.h            | 2 +-
+ drivers/xen/biomerge.c | 5 +++--
+ include/xen/xen.h      | 4 +++-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/renesas/r8a774a1-cpg-mssr.c b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-index 047599579c651..7a4c5957939a5 100644
---- a/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
-@@ -143,8 +143,8 @@ static const struct mssr_mod_clk r8a774a1_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A774A1_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A774A1_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A774A1_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S1D2),
- 	DEF_MOD("hscif4",		 516,	R8A774A1_CLK_S3D1),
- 	DEF_MOD("hscif3",		 517,	R8A774A1_CLK_S3D1),
- 	DEF_MOD("hscif2",		 518,	R8A774A1_CLK_S3D1),
-diff --git a/drivers/clk/renesas/r8a774c0-cpg-mssr.c b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-index 34e274f2a273a..93dacd826fd04 100644
---- a/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
-@@ -157,7 +157,7 @@ static const struct mssr_mod_clk r8a774c0_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		 407,	R8A774C0_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A774C0_CLK_S0D3),
+diff --git a/block/blk.h b/block/blk.h
+index 5d636ee416630..e27fd1512e4bb 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -75,7 +75,7 @@ static inline bool biovec_phys_mergeable(struct request_queue *q,
  
--	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S3D4),
-+	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S1D2),
- 	DEF_MOD("hscif4",		 516,	R8A774C0_CLK_S3D1C),
- 	DEF_MOD("hscif3",		 517,	R8A774C0_CLK_S3D1C),
- 	DEF_MOD("hscif2",		 518,	R8A774C0_CLK_S3D1C),
-diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-index eade38e9ed36b..0825cd0ff2866 100644
---- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-@@ -153,8 +153,8 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
- 	DEF_MOD("rwdt",			 402,	R8A7795_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A7795_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A7795_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A7795_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A7795_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A7795_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-index 654f3ea88f335..997cd956f12bc 100644
---- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A7796_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A7796_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A7796_CLK_S0D3),
--	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S0D3),
--	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S0D3),
-+	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S1D2),
-+	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A7796_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A7796_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A7796_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77965-cpg-mssr.c b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-index 13d1f88be04a5..afc9c72fa0940 100644
---- a/drivers/clk/renesas/r8a77965-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		407,	R8A77965_CLK_CP),
- 	DEF_MOD("intc-ap",		408,	R8A77965_CLK_S0D3),
+ 	if (addr1 + vec1->bv_len != addr2)
+ 		return false;
+-	if (xen_domain() && !xen_biovec_phys_mergeable(vec1, vec2))
++	if (xen_domain() && !xen_biovec_phys_mergeable(vec1, vec2->bv_page))
+ 		return false;
+ 	if ((addr1 | mask) != ((addr2 + vec2->bv_len - 1) | mask))
+ 		return false;
+diff --git a/drivers/xen/biomerge.c b/drivers/xen/biomerge.c
+index f3fbb700f5697..05a286d24f148 100644
+--- a/drivers/xen/biomerge.c
++++ b/drivers/xen/biomerge.c
+@@ -4,12 +4,13 @@
+ #include <xen/xen.h>
+ #include <xen/page.h>
  
--	DEF_MOD("audmac1",		501,	R8A77965_CLK_S0D3),
--	DEF_MOD("audmac0",		502,	R8A77965_CLK_S0D3),
-+	DEF_MOD("audmac1",		501,	R8A77965_CLK_S1D2),
-+	DEF_MOD("audmac0",		502,	R8A77965_CLK_S1D2),
- 	DEF_MOD("drif7",		508,	R8A77965_CLK_S3D2),
- 	DEF_MOD("drif6",		509,	R8A77965_CLK_S3D2),
- 	DEF_MOD("drif5",		510,	R8A77965_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-index 9a278c75c918c..03f445d47ef69 100644
---- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-@@ -152,7 +152,7 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
- 	DEF_MOD("intc-ex",		 407,	R8A77990_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A77990_CLK_S0D3),
++/* check if @page can be merged with 'vec1' */
+ bool xen_biovec_phys_mergeable(const struct bio_vec *vec1,
+-			       const struct bio_vec *vec2)
++			       const struct page *page)
+ {
+ #if XEN_PAGE_SIZE == PAGE_SIZE
+ 	unsigned long bfn1 = pfn_to_bfn(page_to_pfn(vec1->bv_page));
+-	unsigned long bfn2 = pfn_to_bfn(page_to_pfn(vec2->bv_page));
++	unsigned long bfn2 = pfn_to_bfn(page_to_pfn(page));
  
--	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S3D4),
-+	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S1D2),
- 	DEF_MOD("drif7",		 508,	R8A77990_CLK_S3D2),
- 	DEF_MOD("drif6",		 509,	R8A77990_CLK_S3D2),
- 	DEF_MOD("drif5",		 510,	R8A77990_CLK_S3D2),
-diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-index eee3874865a95..68707277b17b4 100644
---- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
-@@ -133,7 +133,7 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
- 	DEF_MOD("rwdt",			 402,	R8A77995_CLK_R),
- 	DEF_MOD("intc-ex",		 407,	R8A77995_CLK_CP),
- 	DEF_MOD("intc-ap",		 408,	R8A77995_CLK_S1D2),
--	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S3D1),
-+	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S1D2),
- 	DEF_MOD("hscif3",		 517,	R8A77995_CLK_S3D1C),
- 	DEF_MOD("hscif0",		 520,	R8A77995_CLK_S3D1C),
- 	DEF_MOD("thermal",		 522,	R8A77995_CLK_CP),
+ 	return bfn1 + PFN_DOWN(vec1->bv_offset + vec1->bv_len) == bfn2;
+ #else
+diff --git a/include/xen/xen.h b/include/xen/xen.h
+index 19d032373de5a..19a72f591e2bd 100644
+--- a/include/xen/xen.h
++++ b/include/xen/xen.h
+@@ -43,8 +43,10 @@ extern struct hvm_start_info pvh_start_info;
+ #endif	/* CONFIG_XEN_DOM0 */
+ 
+ struct bio_vec;
++struct page;
++
+ bool xen_biovec_phys_mergeable(const struct bio_vec *vec1,
+-		const struct bio_vec *vec2);
++		const struct page *page);
+ 
+ #if defined(CONFIG_MEMORY_HOTPLUG) && defined(CONFIG_XEN_BALLOON)
+ extern u64 xen_saved_max_mem_size;
 -- 
 2.20.1
 
