@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B08C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE25C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FBF24E3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC97F24E50
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188474;
-	bh=T62nimrfho7/Zd63oRzR74QHvwGRUWxmwpd5aJPNKnQ=;
+	s=default; t=1559188479;
+	bh=27AnvQp6V1UBvA8YUZr5d1qzCcobTE+49gHKQuYrNho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ckBMcw/IEGx5ot614vcmDozl13Y38o0opKx6b3Iuv+MX4BMhrC8cOFXtpvmoBPsTw
-	 vwyA4WaXn/GGBN+nt2TMa5KQtz4JgHSDzab0R51IyrlgeMBM38Rn9PmpHs2d28amkQ
-	 fGfUW5Dp95eXTcjxO+qE1vLh8v7/BhzhccGFC4Go=
+	b=RNM/eiUyZB03ozbWHsM1gkRftwAEoGhf8JedXw/xe2tIRR9mJZdjFGx7DPy95YshV
+	 TInyi1X7qaQ8ugbXA0otFxM0nDcxZFe2x5sVwUlcyK5G6vI40e27HC8E2XVKj3BLKE
+	 TyOa/YgDg74tZQx+q1pKqYTs/2zalv009iN+GTTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732349AbfE3Dyd (ORCPT
+        id S2387575AbfE3Dyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731863AbfE3DTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:20 -0400
+        id S1731857AbfE3DTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3FC2486D;
-        Thu, 30 May 2019 03:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA02424849;
+        Thu, 30 May 2019 03:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186359;
-        bh=T62nimrfho7/Zd63oRzR74QHvwGRUWxmwpd5aJPNKnQ=;
+        s=default; t=1559186357;
+        bh=27AnvQp6V1UBvA8YUZr5d1qzCcobTE+49gHKQuYrNho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=19d8Jc1nnZ7FKahioDwGql7stJlqhwcy9k3bxHaClRunQCsFtvJD5ewxLU+qebn4W
-         hlzY9htAgpbTck1hbvbAGWZS9zHALsSafEQgn9n2smPxBfxjZSVs+Vx8ncI/nB98Mn
-         3TV23kwVxINrE8Z30ShwYy+hp85SBqExruK9NNNM=
+        b=X9nqEoAGNFATa2OcGFF+HQCe+235D/PgGdtQ/CzZ8mQgUt6cLEtfo0ostAGMcLCr6
+         HBT058KCY3jG6RoKJmpRfHY2HOg8c00UeBPFgC99jXY5nuA+TkoAEY2Ps0jWN9IZDt
+         NOhQUHqiWWTr3Gt6VoJ2dNRtB88UAtjR12GH++hs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kento Kobayashi <Kento.A.Kobayashi@sony.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jacky Cao <Jacky.Cao@sony.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/193] USB: core: Dont unbind interfaces following device reset failure
-Date:   Wed, 29 May 2019 20:05:58 -0700
-Message-Id: <20190530030503.307630282@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 101/193] sched/rt: Check integer overflow at usec to nsec conversion
+Date:   Wed, 29 May 2019 20:05:55 -0700
+Message-Id: <20190530030502.959142662@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,69 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 381419fa720060ba48b7bbc483be787d5b1dca6f ]
+[ Upstream commit 1a010e29cfa00fee2888fd2fd4983f848cbafb58 ]
 
-The SCSI core does not like to have devices or hosts unregistered
-while error recovery is in progress.  Trying to do so can lead to
-self-deadlock: Part of the removal code tries to obtain a lock already
-held by the error handler.
+Example of unhandled overflows:
 
-This can cause problems for the usb-storage and uas drivers, because
-their error handler routines perform a USB reset, and if the reset
-fails then the USB core automatically goes on to unbind all drivers
-from the device's interfaces -- all while still in the context of the
-SCSI error handler.
+ # echo 18446744073709651 > cpu.rt_runtime_us
+ # cat cpu.rt_runtime_us
+ 99
 
-As it turns out, practically all the scenarios leading to a USB reset
-failure end up causing a device disconnect (the main error pathway in
-usb_reset_and_verify_device(), at the end of the routine, calls
-hub_port_logical_disconnect() before returning).  As a result, the
-hub_wq thread will soon become aware of the problem and will unbind
-all the device's drivers in its own context, not in the
-error-handler's context.
+ # echo 18446744073709900 > cpu.rt_period_us
+ # cat cpu.rt_period_us
+ 348
 
-This means that usb_reset_device() does not need to call
-usb_unbind_and_rebind_marked_interfaces() in cases where
-usb_reset_and_verify_device() has returned an error, because hub_wq
-will take care of everything anyway.
+After this patch they will fail with -EINVAL.
 
-This particular problem was observed in somewhat artificial
-circumstances, by using usbfs to tell a hub to power-down a port
-connected to a USB-3 mass storage device using the UAS protocol.  With
-the port turned off, the currently executing command timed out and the
-error handler started running.  The USB reset naturally failed,
-because the hub port was off, and the error handler deadlocked as
-described above.  Not carrying out the call to
-usb_unbind_and_rebind_marked_interfaces() fixes this issue.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Kento Kobayashi <Kento.A.Kobayashi@sony.com>
-Tested-by: Kento Kobayashi <Kento.A.Kobayashi@sony.com>
-CC: Bart Van Assche <bvanassche@acm.org>
-CC: Martin K. Petersen <martin.petersen@oracle.com>
-CC: Jacky Cao <Jacky.Cao@sony.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501739.293431.5252197504404771496.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/hub.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/sched/rt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index a9541525ea4f0..eddecaf1f0b20 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -5713,7 +5713,10 @@ int usb_reset_device(struct usb_device *udev)
- 					cintf->needs_binding = 1;
- 			}
- 		}
--		usb_unbind_and_rebind_marked_interfaces(udev);
-+
-+		/* If the reset failed, hub_wq will unbind drivers later */
-+		if (ret == 0)
-+			usb_unbind_and_rebind_marked_interfaces(udev);
- 	}
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index cb9a5b8532fa5..cc7dd1aaf08e3 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2533,6 +2533,8 @@ int sched_group_set_rt_runtime(struct task_group *tg, long rt_runtime_us)
+ 	rt_runtime = (u64)rt_runtime_us * NSEC_PER_USEC;
+ 	if (rt_runtime_us < 0)
+ 		rt_runtime = RUNTIME_INF;
++	else if ((u64)rt_runtime_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
  
- 	usb_autosuspend_device(udev);
+ 	return tg_set_rt_bandwidth(tg, rt_period, rt_runtime);
+ }
+@@ -2553,6 +2555,9 @@ int sched_group_set_rt_period(struct task_group *tg, u64 rt_period_us)
+ {
+ 	u64 rt_runtime, rt_period;
+ 
++	if (rt_period_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
++
+ 	rt_period = rt_period_us * NSEC_PER_USEC;
+ 	rt_runtime = tg->rt_bandwidth.rt_runtime;
+ 
 -- 
 2.20.1
 
