@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47DAC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89521C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932E024C0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558F524C0D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187721;
-	bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
+	s=default; t=1559187729;
+	bh=u/o9e/Zn2ubRLqes5gnJEJABVXFhgeWSjSpwDT/8djA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwBBRabMjXh/XosAcRlM2S60BpgW/5M7VMXXabxnI8P90k7TTSHCCBmOLbQmOB6yA
-	 AtRy8rrhhLZsAXpNrfTx1qQS9pul6SZWagAVTra8z7rktI4pSo9Mb0TJveq2kKVh8f
-	 2RsB64hK74Y8B90CF8UzZ1IoeUR0l8HCqwHN283w=
+	b=bNZlXYVrC9AQUR7H/cHXOJ9qKDuLbDFko8tzvPXL2BvSdw7pxvs3lsxJ2D+ZkvoI6
+	 nXhGpiDIDfDMYkv+DzuhYhY9ukKyFR0mMyrj+LrN0IvSgapXCKB/6f39NJfGoVK0y+
+	 2Uy1KPAht99Ml8R6lGF7FJsU5Kuv2ZhHfXp4zvY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732726AbfE3DmA (ORCPT
+        id S1732770AbfE3DmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732488AbfE3DVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:16 -0400
+        id S1730805AbfE3DVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8B2249EE;
-        Thu, 30 May 2019 03:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5600249DA;
+        Thu, 30 May 2019 03:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186475;
-        bh=v8jViTz1Qm/qg5OtQF+8F/At7QLvjzJgBcP9xOl6joc=;
+        s=default; t=1559186473;
+        bh=u/o9e/Zn2ubRLqes5gnJEJABVXFhgeWSjSpwDT/8djA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQSMHvTvphj6isTLrsPBJziEDIvcN0UUQZ7wJPr2AF+KFP9JnAUiBBa0mkWTMO6wx
-         bnBa13OVD0i9VJ9qiA1leuSawMgMjPvtNknLu1T48nZe06MVrDMlt1l/FApY5C5P0c
-         e7JBdAC2F+Mdv21BNHa3sKNnevwT02sZYTPmEH7Y=
+        b=C+3V/+dkr754WXFAwbboXUadkxl+yL2BfCaYDNDbw9lCGrKcGNJQfhYf3JeMmerkN
+         Dw/XkLaR+HZyaVJ3rvxl/sf+/jNE03l4F7CSPqkIqU0ToC7jOtMIFiHKT0b6lPSvlU
+         EsRTGs+EWHw0SlMO4es08Phh6H68Pnlhw0pqh930=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 108/128] cxgb3/l2t: Fix undefined behaviour
-Date:   Wed, 29 May 2019 20:07:20 -0700
-Message-Id: <20190530030453.994763760@linuxfoundation.org>
+Subject: [PATCH 4.9 104/128] chardev: add additional check for minor range overlap
+Date:   Wed, 29 May 2019 20:07:16 -0700
+Message-Id: <20190530030453.326003210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,47 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
+[ Upstream commit de36e16d1557a0b6eb328bc3516359a12ba5c25c ]
 
-The use of zero-sized array causes undefined behaviour when it is not
-the last member in a structure. As it happens to be in this case.
+Current overlap checking cannot correctly handle
+a case which is baseminor < existing baseminor &&
+baseminor + minorct > existing baseminor + minorct.
 
-Also, the current code makes use of a language extension to the C90
-standard, but the preferred mechanism to declare variable-length
-types such as this one is a flexible array member, introduced in
-C99:
-
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last. Which is beneficial
-to cultivate a high-quality code.
-
-Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/char_dev.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-index 8cffcdfd56782..38b5858c335a9 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-@@ -75,8 +75,8 @@ struct l2t_data {
- 	struct l2t_entry *rover;	/* starting point for next allocation */
- 	atomic_t nfree;		/* number of free entries */
- 	rwlock_t lock;
--	struct l2t_entry l2tab[0];
- 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-+	struct l2t_entry l2tab[];
- };
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 44a240c4bb658..a112a4745d8b3 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -134,6 +134,12 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
++
++		if (new_min < old_min && new_max > old_max) {
++			ret = -EBUSY;
++			goto out;
++		}
++
+ 	}
  
- typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
+ 	cd->next = *cp;
 -- 
 2.20.1
 
