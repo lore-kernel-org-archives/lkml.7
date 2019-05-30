@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42231C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCBD425268
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE2E25253
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189781;
-	bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+	s=default; t=1559189785;
+	bh=3lTbXb22p+OCIJA6LaKVWBJs3MVAlbaFisWWFyG4ZiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMC7JNXK6G+s6+dxj/zsaMZPFSNy94IHtZzMIyixp+gXZ+OgCz+WNyyhLPoGgD4bo
-	 m3p0vmTkoCdmQoIE2WBORGewjkeU/j9DeTo+ZulKhagoxVq5SQ8RISmOdyVSqRBe6e
-	 t8ktSvtRC0puoWkCFJGJDS/BBuT8cLd2HtZP25KM=
+	b=IwHXGrTXig+8yLJ+q9gOFff6A5Eg6T/eLQE/O52a6Ke1oc0O4RvKiNjL2bCu44d6k
+	 e70nhJNgQ5b2xdG38JvCO3wCMi1F/EAuuhjqza+ojYlkv+qJt/MgXXNjjP033T1cx5
+	 GMX02RJbu9XZcQqFz3YFDRVD93eYIS2OWgNjbM0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfE3EQV (ORCPT
+        id S1731230AbfE3EQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730502AbfE3DPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730500AbfE3DPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E63023D83;
-        Thu, 30 May 2019 03:15:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B10AA24559;
+        Thu, 30 May 2019 03:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186149;
-        bh=Wa7TcyT+ufSchs5dR12KCtbsY23wB+eK/kdXfxO7PYM=;
+        s=default; t=1559186148;
+        bh=3lTbXb22p+OCIJA6LaKVWBJs3MVAlbaFisWWFyG4ZiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQmCqiecyc1FkzBOYwRGN2b9Imq4iwMpdYcntkFYlWy3haUV0d/k7M5VtZsE2lnx/
-         utmVyhY4n9O0mynbyHrXYzSwabRFFzk9FKeg4dhoGjeXzfCTcK1IzUvrQJ5dJ8H2lt
-         PwMV1qdrOamcWcfhfL0DlJbaqeSfMeznWcGb+1Uw=
+        b=BGhjhMJYyXRB/oas9vTV3X3M/L9otjAfmZDSdX3eEB93atnPQstEErhbklV8qi41w
+         3STMfOiWreoxXTWXmqhhkrQccs0j3idnmsv9jjbfRk6gswyJVcgYtPYxSerOsQ2Eea
+         OVq/MWPA/9UIqzOrtU5SFNcLow/7P7sQ4lB0s7Bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 305/346] media: vimc: stream: fix thread state before sleep
-Date:   Wed, 29 May 2019 20:06:18 -0700
-Message-Id: <20190530030556.297911846@linuxfoundation.org>
+Subject: [PATCH 5.0 331/346] regulator: pv88080: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:44 -0700
+Message-Id: <20190530030557.530006944@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,46 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2978a505aaa981b279ef359f74ba93d25098e0a0 ]
+[ Upstream commit 1867af94cfdf37fc70fe67b3d522e78352800196 ]
 
-The state TASK_UNINTERRUPTIBLE should be set just before
-schedule_timeout() call, so it knows the sleep mode it should enter.
-There is no point in setting TASK_UNINTERRUPTIBLE at the initialization
-of the thread as schedule_timeout() will set the state back to
-TASK_RUNNING.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-This fixes a warning in __might_sleep() call, as it's expecting the
-task to be in TASK_RUNNING state just before changing the state to
-a sleeping state.
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-streamer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/pv88080-regulator.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-index fcc897fb247bc..392754c18046c 100644
---- a/drivers/media/platform/vimc/vimc-streamer.c
-+++ b/drivers/media/platform/vimc/vimc-streamer.c
-@@ -120,7 +120,6 @@ static int vimc_streamer_thread(void *data)
- 	int i;
- 
- 	set_freezable();
--	set_current_state(TASK_UNINTERRUPTIBLE);
- 
- 	for (;;) {
- 		try_to_freeze();
-@@ -137,6 +136,7 @@ static int vimc_streamer_thread(void *data)
- 				break;
+diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
+index 9a08cb2de501e..d99f1b9fa0756 100644
+--- a/drivers/regulator/pv88080-regulator.c
++++ b/drivers/regulator/pv88080-regulator.c
+@@ -384,9 +384,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88080_E_VDD_FLT) {
+ 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
+ 			if (chip->rdev[i] != NULL) {
++			        regulator_lock(chip->rdev[i]);
+ 				regulator_notifier_call_chain(chip->rdev[i],
+ 					REGULATOR_EVENT_UNDER_VOLTAGE,
+ 					NULL);
++			        regulator_unlock(chip->rdev[i]);
+ 			}
  		}
- 		//wait for 60hz
-+		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule_timeout(HZ / 60);
- 	}
+ 
+@@ -401,9 +403,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88080_E_OVER_TEMP) {
+ 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
+ 			if (chip->rdev[i] != NULL) {
++			        regulator_lock(chip->rdev[i]);
+ 				regulator_notifier_call_chain(chip->rdev[i],
+ 					REGULATOR_EVENT_OVER_TEMP,
+ 					NULL);
++			        regulator_unlock(chip->rdev[i]);
+ 			}
+ 		}
  
 -- 
 2.20.1
