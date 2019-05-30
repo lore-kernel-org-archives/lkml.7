@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C2EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E95C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5FA218DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989C32403B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191045;
-	bh=JgN37LjgXSRNCtPU8BWPOAtUz0V1fcZPJhyRBE7O2SQ=;
+	s=default; t=1559191048;
+	bh=wu2UiETOHpDMk85zi6HmzdGCjZjRP7IcwSTkCaWKgdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjHMaCN9sJU8nssNJn4pwKlZLQuckHYi731ZxAF1wX12UT85GdScGJbB0QhDxBwAY
-	 8XjccD1UuLR/CRzLjgi/x17comSFu7XFW5XQF2rtPI3QIBma68kCNxf78Qr05snxaG
-	 kv0ryVmkdn8rbd0X/0+/ozpP49MdgfD1pS9TNy9E=
+	b=T+9WaiFe5BklreRNTPHN7nqkBbwXtljon/T4pnQmHynvB8acvUnt7RlDLN3KCvoUC
+	 NgDuSyMvFjWTc7Q4J1pGgZYFS31bvcLqidbTMwLqRKNAgLA06GeR2VWze5IKJA2/PG
+	 83LfE8UP9d2zAqlOYmv0X4qD0VMJ9i4jXJa26G00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbfE3EhX (ORCPT
+        id S1729277AbfE3DMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfE3DMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:53 -0400
+        id S1728462AbfE3DLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF68244B0;
-        Thu, 30 May 2019 03:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 989A3244D6;
+        Thu, 30 May 2019 03:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185973;
-        bh=JgN37LjgXSRNCtPU8BWPOAtUz0V1fcZPJhyRBE7O2SQ=;
+        s=default; t=1559185877;
+        bh=wu2UiETOHpDMk85zi6HmzdGCjZjRP7IcwSTkCaWKgdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TkJ9GWfeHUoszPq1ID2UHLVhO7Rma9ogLWpJcDEzaph4/Bc1pbtjREQHRB2pnfZm5
-         sP3U3s3fS6VysWqYyjWscKtNZq0rl3TKm3xEB7eTnepjBlWlRqFPtJ7zCWY+wd4dxx
-         8wqE6Nl6XRKF43BDOODZQLL6CYqD9Tg4foTzvc4A=
+        b=xb1MjkWyWctclSsE5YnyTlLWciPVyX9ZQ6Kku33Dy2E2PoV23KNaessB+l2dV7Pqu
+         cuguJR/keTYc3iZdpU/2KlLPYGtrYgBU5q5WlnodJ7fKOFD2Ja0r0GrLpMCo244d44
+         2X5Cfk7oa7CyBQOc5kA45N10FURDgXgjILhT32tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 384/405] regulator: da9211: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:22 -0700
-Message-Id: <20190530030600.144343924@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 225/405] cpufreq: ppc_cbe: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:03:43 -0700
+Message-Id: <20190530030552.436666425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,52 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65378de3359d30ebce44762d8b8027f372b5b1c4 ]
+[ Upstream commit 233298032803f2802fe99892d0de4ab653bfece4 ]
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+The call to of_get_cpu_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
+Detected by coccinelle with the following warnings:
+./drivers/cpufreq/ppc_cbe_cpufreq.c:89:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 76, but without a corresponding object release within this function.
+./drivers/cpufreq/ppc_cbe_cpufreq.c:89:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 76, but without a corresponding object release within this function.
 
-Fixes: 1028a37daa14 ("regulator: da9211: new regulator driver")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/da9211-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/cpufreq/ppc_cbe_cpufreq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 109ee12d43626..4d7fe4819c1ce 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -322,8 +322,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
- 		goto error_i2c;
- 
- 	if (reg_val & DA9211_E_OV_CURR_A) {
-+	        regulator_lock(chip->rdev[0]);
- 		regulator_notifier_call_chain(chip->rdev[0],
- 			REGULATOR_EVENT_OVER_CURRENT, NULL);
-+	        regulator_unlock(chip->rdev[0]);
- 
- 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
- 			DA9211_E_OV_CURR_A);
-@@ -334,8 +336,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
+index 41a0f0be3f9ff..8414c3a4ea08c 100644
+--- a/drivers/cpufreq/ppc_cbe_cpufreq.c
++++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
+@@ -86,6 +86,7 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	if (!cbe_get_cpu_pmd_regs(policy->cpu) ||
+ 	    !cbe_get_cpu_mic_tm_regs(policy->cpu)) {
+ 		pr_info("invalid CBE regs pointers for cpufreq\n");
++		of_node_put(cpu);
+ 		return -EINVAL;
  	}
  
- 	if (reg_val & DA9211_E_OV_CURR_B) {
-+	        regulator_lock(chip->rdev[1]);
- 		regulator_notifier_call_chain(chip->rdev[1],
- 			REGULATOR_EVENT_OVER_CURRENT, NULL);
-+	        regulator_unlock(chip->rdev[1]);
- 
- 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
- 			DA9211_E_OV_CURR_B);
 -- 
 2.20.1
 
