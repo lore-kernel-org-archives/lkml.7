@@ -4,54 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD933C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B868C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9740C24DB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50FD24DB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188285;
-	bh=FA5x3kuiue+iqQvjVPE4HnFvX+ce1cZiDIa80zsU3KI=;
+	s=default; t=1559188288;
+	bh=6LftdqdCwOE0CXY9XVp3kFa+SyP6F6qzttsv7v36EZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XIOG+XjyYUNV0P1sDNONOEbA1L/DJdYEEoZ7MEAmmlMJIvu+E9dcIh8JDy4+/5urC
-	 SrtPXgmBQ/Mi9bIP+T1n2ia9aX/ZISncYlOsF6ZcRiQWrcPDu39FdxzsRAx1cE8NMW
-	 wGhwbB3qpn5CyHEjKANhDqvY2ULc26iRjEBoxG3Q=
+	b=jjNAJSN71W4vKgGrGK6MY0d1H/Rxa9iQms623WqCtMFZID45zEUWs4CEYSDOmynd0
+	 ARrSoWzDyr4taAjLvXYYxyj4sAEfYFSZrKVveRDGEbzuydkv0Tar1KSd0b5btuYwRk
+	 gS0Qlv84PfzXhTYB2hGkSyc+tL+23VthDYMANxTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbfE3DTr (ORCPT
+        id S2387495AbfE3Dv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfE3DPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:40 -0400
+        id S1732016AbfE3DTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3348224569;
-        Thu, 30 May 2019 03:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF2F248C9;
+        Thu, 30 May 2019 03:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186140;
-        bh=FA5x3kuiue+iqQvjVPE4HnFvX+ce1cZiDIa80zsU3KI=;
+        s=default; t=1559186385;
+        bh=6LftdqdCwOE0CXY9XVp3kFa+SyP6F6qzttsv7v36EZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvLqM2yK1nHwIAVmD4BPf0NXsZbQ20chmmWmlrEMmgaCUVYhCrSvVUOAKRYMTjDvJ
-         DIiW7Z+Z6UXypKle/CM4DBOCxXizTsVk0PrFTZAC0SolLA4Raox5q9zsTw06NvFGlu
-         JirlPcBF3r/MFfOLDn4jc8HvZ1m+2hEX0YHmsA7o=
+        b=huKsPXVMiemKW4g10QsrysZW49Q4Tl17KAnVS7nLb14UsEVwqsAlLb3fdHPMPHBOt
+         AvMVoBm3gF2TSzkLZyRtyQRT64cYhOAebif5D1T6qvzhmKBXaJGxXIloyDOaryFgSt
+         b/Jvk1fYw7HCoywLzTnG2IaiW4i0ejmAHsswW6Qo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 314/346] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
-Date:   Wed, 29 May 2019 20:06:27 -0700
-Message-Id: <20190530030556.739757080@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 153/193] x86/uaccess, signal: Fix AC=1 bloat
+Date:   Wed, 29 May 2019 20:06:47 -0700
+Message-Id: <20190530030509.655232817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,58 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
+[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
 
-During debug, it was seen that the driver is issuing commands specific to
-SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
-this should not be done.
+Occasionally GCC is less agressive with inlining and the following is
+observed:
 
-Revise the code to stop sending these commands on a SLI4 adapter.
+  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
+  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cure this by moving this code out of the AC=1 region, since it really
+isn't needed for the user access.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index b183b882d5067..2f01e5397a11d 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -935,7 +935,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
- 	}
- 	lpfc_destroy_vport_work_array(phba, vports);
--	/* Clean up any firmware default rpi's */
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 4cdc0b27ec82f..01741834fd6a0 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -131,16 +131,6 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		COPY_SEG_CPL3(cs);
+ 		COPY_SEG_CPL3(ss);
+ 
+-#ifdef CONFIG_X86_64
+-		/*
+-		 * Fix up SS if needed for the benefit of old DOSEMU and
+-		 * CRIU.
+-		 */
+-		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
+-			     user_64bit_mode(regs)))
+-			force_valid_ss(regs);
+-#endif
+-
+ 		get_user_ex(tmpflags, &sc->flags);
+ 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
+ 		regs->orig_ax = -1;		/* disable syscall checks */
+@@ -149,6 +139,15 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		buf = (void __user *)buf_val;
+ 	} get_user_catch(err);
+ 
++#ifdef CONFIG_X86_64
++	/*
++	 * Fix up SS if needed for the benefit of old DOSEMU and
++	 * CRIU.
++	 */
++	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
++		force_valid_ss(regs);
++#endif
 +
-+	/* Clean up any SLI3 firmware default rpi's */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		goto skip_unreg_did;
-+
- 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mb) {
- 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
-@@ -947,6 +951,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
- 		}
+ 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+ 
+ 	force_iret();
+@@ -460,6 +459,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ {
+ 	struct rt_sigframe __user *frame;
+ 	void __user *fp = NULL;
++	unsigned long uc_flags;
+ 	int err = 0;
+ 
+ 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
+@@ -472,9 +472,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 			return -EFAULT;
  	}
  
-+ skip_unreg_did:
- 	/* Setup myDID for link up if we are in pt2pt mode */
- 	if (phba->pport->fc_flag & FC_PT2PT) {
- 		mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
-@@ -4985,6 +4990,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
- 	LPFC_MBOXQ_t     *mbox;
- 	int rc;
- 
-+	/* Unreg DID is an SLI3 operation. */
-+	if (phba->sli_rev > LPFC_SLI_REV3)
-+		return;
++	uc_flags = frame_uc_flags(regs);
 +
- 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
- 	if (mbox) {
- 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 
+@@ -540,6 +542,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ {
+ #ifdef CONFIG_X86_X32_ABI
+ 	struct rt_sigframe_x32 __user *frame;
++	unsigned long uc_flags;
+ 	void __user *restorer;
+ 	int err = 0;
+ 	void __user *fpstate = NULL;
+@@ -554,9 +557,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 		put_user_ex(0, &frame->uc.uc__pad0);
 -- 
 2.20.1
 
