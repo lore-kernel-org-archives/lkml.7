@@ -2,99 +2,100 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4A3C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63568C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7329025941
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAE325937
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfE3NFA (ORCPT
+        id S1726724AbfE3NIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:05:00 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40444 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfE3NE7 (ORCPT
+        Thu, 30 May 2019 09:08:02 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46007 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfE3NIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:04:59 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hWKjq-0001o6-J4; Thu, 30 May 2019 07:04:58 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hWKjp-0006KM-2L; Thu, 30 May 2019 07:04:58 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Eric Wong <e@80x24.org>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        'Oleg Nesterov' <oleg@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm\@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd\@arndb.de" <arnd@arndb.de>,
-        "dbueso\@suse.de" <dbueso@suse.de>,
-        "axboe\@kernel.dk" <axboe@kernel.dk>,
-        "dave\@stgolabs.net" <dave@stgolabs.net>,
-        "jbaron\@akamai.com" <jbaron@akamai.com>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio\@kvack.org" <linux-aio@kvack.org>,
-        "omar.kilani\@gmail.com" <omar.kilani@gmail.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>
-        <b05cec7f9e8f457281e689576a7a360f@AcuMS.aculab.com>
-        <20190529185012.qqeqq4fsolprknrz@dcvr>
-Date:   Thu, 30 May 2019 08:04:50 -0500
-In-Reply-To: <20190529185012.qqeqq4fsolprknrz@dcvr> (Eric Wong's message of
-        "Wed, 29 May 2019 18:50:12 +0000")
-Message-ID: <87ef4grt3h.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 30 May 2019 09:08:02 -0400
+Received: by mail-lf1-f67.google.com with SMTP id m14so4935530lfp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:08:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lo8Pf5qQPzDgv3LbnRe5hAmhzj8l8zc5AuLXNn3lbXo=;
+        b=mNMv6Gri+EvzizfEAe691QdPd56yjsNcy5oimR0zmx5oiOamob63ZRxuk31d5N0YPK
+         Sc4VOo3zZOOl9HSZikZ8JTzmOmwUpgsxahrB4bUwzIXzEWa0mEQ5GsyXleeB910Y9T8L
+         miBr4OYE8hV8eG/sX8fdaaw2deNmacDI4gmrzpR6b1jpCBg/3GabLfnxvtepm8uUiu0/
+         ym/pV+nkIiBFynKy4l5Amuo23FNQ8TU2sJxt0hg0pAtAHUFH9ARN0410lkhhUaihrBUN
+         rGHLsY6T6DdGu+UWLs79ZcV8TRi9JrlIRf0/gTWvnkFfmmdXKLbgAbOn8xqK7jOeLIcW
+         X/7g==
+X-Gm-Message-State: APjAAAW3+HaC4YtAyFLz5Zl7qqwvF+gkHsKDlWe4Uy7eh4nOus6DyoIp
+        VoUgGd87vV8rbCBnDe+tVpubf19dFbWpU1sIoAjfGA==
+X-Google-Smtp-Source: APXvYqyavwnJULw4Wz7Yg0S3xURZgWHWuSrHKVYFeYqBmDka5ggDKKE/RR5194S1GfsiIfocaRV06vuTWRje8VGjYSQ=
+X-Received: by 2002:a19:ec12:: with SMTP id b18mr2020933lfa.149.1559221680444;
+ Thu, 30 May 2019 06:08:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hWKjp-0006KM-2L;;;mid=<87ef4grt3h.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+tK8wFikScRQNziP7B/XxiQEAJ+eiy2zc=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: pselect/etc semantics
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <1559212177-7072-1-git-send-email-bhsharma@redhat.com> <87v9xsnlu9.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87v9xsnlu9.fsf@concordia.ellerman.id.au>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Thu, 30 May 2019 18:37:46 +0530
+Message-ID: <CACi5LpM9v1YC_6HhA-uKghawzkEu=TTPVkomMmv2i-LGi8X7+g@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/stackprotector: powerpc supports stack protector
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        corbet@lwn.net, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Wong <e@80x24.org> writes:
-
-> Agreed...  I believe cmogstored has always had a bug in the way
-> it uses epoll_pwait because it failed to check interrupts if:
+On Thu, May 30, 2019 at 6:25 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
 >
-> a) an FD is ready + interrupt
-> b) epoll_pwait returns 0 on interrupt
+> Bhupesh Sharma <bhsharma@redhat.com> writes:
+> > powerpc architecture (both 64-bit and 32-bit) supports stack protector
+> > mechanism since some time now [see commit 06ec27aea9fc ("powerpc/64:
+> > add stack protector support")].
+> >
+> > Update stackprotector arch support documentation to reflect the same.
+> >
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  Documentation/features/debug/stackprotector/arch-support.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/features/debug/stackprotector/arch-support.txt b/Documentation/features/debug/stackprotector/arch-support.txt
+> > index 9999ea521f3e..32bbdfc64c32 100644
+> > --- a/Documentation/features/debug/stackprotector/arch-support.txt
+> > +++ b/Documentation/features/debug/stackprotector/arch-support.txt
+> > @@ -22,7 +22,7 @@
+> >      |       nios2: | TODO |
+> >      |    openrisc: | TODO |
+> >      |      parisc: | TODO |
+> > -    |     powerpc: | TODO |
+> > +    |     powerpc: |  ok  |
+> >      |       riscv: | TODO |
+> >      |        s390: | TODO |
+> >      |          sh: |  ok  |
+> > --
+> > 2.7.4
 >
-> The bug remains in userspace for a), which I will fix by adding
-> an interrupt check when an FD is ready.  The window is very
-> small for a) and difficult to trigger, and also in a rare code
-> path.
+> Thanks.
 >
-> The b) case is the kernel bug introduced in 854a6ed56839a40f
-> ("signal: Add restore_user_sigmask()").
+> This should probably go via the documentation tree?
 >
-> I don't think there's any disagreement that b) is a kernel bug.
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-See my reply to Oleg.  I think (b) is a regression that needs to be
-fixed.  I do not think that (b) is a kernel bug.  Both versions of the
-of what sigmask means posix and naive will allow (b).
+Thanks for the review Michael.
+I am ok with this going through the documentation tree as well.
 
-Because fundamentally the sigmask is restored after the rest of the
-system call happens.
-
-Eric
+Regards,
+Bhupesh
