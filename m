@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB76C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EBBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E994825270
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFF9252C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189921;
-	bh=aoxyoPCuAgGkO3SV9RXleLnENqAvFJUJWdYOT0w20ZM=;
+	s=default; t=1559189925;
+	bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kq2+c5MozduYfcLaOlipjy0T6JwCnJRnpQrKTB7HrBy4gwD9Sk6DJiHqvNQQqz+rT
-	 UQD+xlcy0AM4bYceuDmDHZeQjlG17uukf4srXApJM7eL01U05T0q8KPO0zgrFiJvB7
-	 i9ctMhPwQRIWIh5efqE3YUsLkZvxkjhH8pcw4Xns=
+	b=L/dniLQEmFE9gLL6vPeIheafNj6xPuaPd23xRWiNfT0A0T6ZH8320+M5NcT9yv3hh
+	 EfPv+C24RfEtjOiDWWyA1VMRMUPJmPQOESfS3G0lg57dU/1QjvvVwFvbQRv6QoXKVJ
+	 eLCyNbaQss0wjxpwuG4WJwNrrZpPkNZG7krenqNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731051AbfE3ESk (ORCPT
+        id S1731188AbfE3ESp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbfE3DPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:31 -0400
+        id S1730315AbfE3DPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B268924559;
-        Thu, 30 May 2019 03:15:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D91D2455E;
+        Thu, 30 May 2019 03:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186130;
-        bh=aoxyoPCuAgGkO3SV9RXleLnENqAvFJUJWdYOT0w20ZM=;
+        s=default; t=1559186129;
+        bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxxb0O5VM+AriOsgU7gCMphE3j0AWqAIHZXJfwZ+uwg8ldG67Gc7+bzKqROMUYOxB
-         McuxExcfpsgBvRHMWKcVhvPTSDN2cdpEnzhWl+QinjE5082xf2fCB9dwmNUV5cX6Gy
-         i9JN2FfRegf61h25oz2oiq0z/OOmTG5kvuBL8PJw=
+        b=x++qiUaA/9UkmeKR7ThZT+67XF7Gz7HWeqaluXoVQPwogsfwD/Jt17zv4tSzjvfN+
+         dAUGjhgrXTbq2paazQs2zCNGnDsw+PgJrrj6glVP6Y6QFh1eyJ/iXHOVUe2NdfhuD6
+         TA0IFuS3f8KD2Yg6fwu0GGcp4Jvv46RxRInrWAnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 257/346] media: video-mux: fix null pointer dereferences
-Date:   Wed, 29 May 2019 20:05:30 -0700
-Message-Id: <20190530030554.010021267@linuxfoundation.org>
+Subject: [PATCH 5.0 291/346] thunderbolt: property: Fix a NULL pointer dereference
+Date:   Wed, 29 May 2019 20:06:04 -0700
+Message-Id: <20190530030555.620140321@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,39 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aeb0d0f581e2079868e64a2e5ee346d340376eae ]
+[ Upstream commit 106204b56f60abf1bead7dceb88f2be3e34433da ]
 
-devm_kcalloc may fail and return a null pointer. The fix returns
--ENOMEM upon failures to avoid null pointer dereferences.
+In case kzalloc fails, the fix releases resources and returns
+-ENOMEM to avoid the NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/video-mux.c | 5 +++++
+ drivers/thunderbolt/property.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-index c33900e3c23ef..4135165cdabe6 100644
---- a/drivers/media/platform/video-mux.c
-+++ b/drivers/media/platform/video-mux.c
-@@ -399,9 +399,14 @@ static int video_mux_probe(struct platform_device *pdev)
- 	vmux->active = -1;
- 	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
- 				  GFP_KERNEL);
-+	if (!vmux->pads)
-+		return -ENOMEM;
-+
- 	vmux->format_mbus = devm_kcalloc(dev, num_pads,
- 					 sizeof(*vmux->format_mbus),
- 					 GFP_KERNEL);
-+	if (!vmux->format_mbus)
-+		return -ENOMEM;
+diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
+index ead18c532b53d..8c077c4f3b5b2 100644
+--- a/drivers/thunderbolt/property.c
++++ b/drivers/thunderbolt/property.c
+@@ -548,6 +548,11 @@ int tb_property_add_data(struct tb_property_dir *parent, const char *key,
  
- 	for (i = 0; i < num_pads; i++) {
- 		vmux->pads[i].flags = (i < num_pads - 1) ? MEDIA_PAD_FL_SINK
+ 	property->length = size / 4;
+ 	property->value.data = kzalloc(size, GFP_KERNEL);
++	if (!property->value.data) {
++		kfree(property);
++		return -ENOMEM;
++	}
++
+ 	memcpy(property->value.data, buf, buflen);
+ 
+ 	list_add_tail(&property->list, &parent->properties);
 -- 
 2.20.1
 
