@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45C2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EC3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7300F25808
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD07F256F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XwJSIKV6"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rKXipFQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfE3IG1 (ORCPT
+        id S1727876AbfE3IHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:06:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59231 "EHLO
+        Thu, 30 May 2019 04:07:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42325 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfE3IG1 (ORCPT
+        with ESMTP id S1726945AbfE3IHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:06:27 -0400
+        Thu, 30 May 2019 04:07:50 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U86EVe2903463
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U86w2G2903560
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:06:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U86EVe2903463
+        Thu, 30 May 2019 01:06:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U86w2G2903560
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203575;
-        bh=+FvU1uFEZulDV63/GZtu9PRRpymFz/0yNiQYk4SA3Y8=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=XwJSIKV6Uor0iygRQ22XzcDRBZIXEXLzL1iCtYoCEnEUrpW2ZqNGy18R67Z4ywPr2
-         7uTfXWM7LwHdPMdgj9gUIakSp6biNu394fuuNQwe5fYPi291IDGeF0+ukQoslVAmFT
-         +oq5sJXUNyMERfqmdEhUJCA/2ZpynkfKhxCShIMt7BBXgopmxH/N8XN1HOjLVYaOkc
-         RB9zEQwEZSkBvxu15ncgDKAzhkobNYeIyC7LXHL/wh80UYdvuNunaxeX25VHiZH4i5
-         nYQ7KARvVeKP2Ag7KeYCV5Lm4VQlh1Ly7SW/RY5N6kjWU8EIuNf6kCNg4kxkBtTJc2
-         ss9QN7kSfqG/A==
+        s=2019051801; t=1559203618;
+        bh=ZvhgDNjsbWAuBYcQoOxO0xUG5Z6dvo09/2kLCYNbkYU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=rKXipFQDaNPOjtRbagzwI4GMdO8aFnKX9xL7FEago1kc/1+T4A8+ljnWaM7mypRK3
+         9/yjTRfA0CkRBOFakeghWRTeIiKZKvlDD/jawBUb1tRFARGfpisschgO8hYFxW28nN
+         11MZe5hipotuDtlxWSb9H+lVCriSuDrLj71C9fpz90YPhCTUBiquHrEAt7lSFXrtQo
+         SFE8EFnxfn6C2WgDkQ/QVFpZetS2HaW1REKX0zo2GNSjrD5WwQ4uEK4MIXMpCR+a4y
+         Xc+oED1t4906VmPThPwLV6wo1klFkBK5cpIuGIh5gQ9uqLBpJL5KFGpJfJ1yejapef
+         ycmRY6tY3sDHA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U86DdD2903458;
-        Thu, 30 May 2019 01:06:13 -0700
-Date:   Thu, 30 May 2019 01:06:13 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U86vWv2903557;
+        Thu, 30 May 2019 01:06:57 -0700
+Date:   Thu, 30 May 2019 01:06:57 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-8tqy34xhpg8gwnaiv74xy93w@git.kernel.org>
-Cc:     acme@redhat.com, lclaudio@redhat.com, adrian.hunter@intel.com,
-        mingo@kernel.org, jolsa@kernel.org, brendan.d.gregg@gmail.com,
-        amir73il@gmail.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        namhyung@kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de
-Reply-To: acme@redhat.com, lclaudio@redhat.com, adrian.hunter@intel.com,
-          jolsa@kernel.org, mingo@kernel.org, brendan.d.gregg@gmail.com,
-          amir73il@gmail.com, hpa@zytor.com, namhyung@kernel.org,
-          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-          tglx@linutronix.de
+From:   tip-bot for Namhyung Kim <tipbot@zytor.com>
+Message-ID: <tip-a0c0a4ac021b017e385d0328541ccfebeef165fc@git.kernel.org>
+Cc:     hbathini@linux.vnet.ibm.com, kjlx@templeofstupid.com,
+        acme@redhat.com, mingo@kernel.org, namhyung@kernel.org,
+        jolsa@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
+          hbathini@linux.vnet.ibm.com, kjlx@templeofstupid.com,
+          acme@redhat.com, namhyung@kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, jolsa@redhat.com
+In-Reply-To: <20190522053250.207156-4-namhyung@kernel.org>
+References: <20190522053250.207156-4-namhyung@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Beautify 'sync_file_range' arguments
-Git-Commit-ID: a9a187a749f95dda24302aae5c9a0b6b9ee74c99
+Subject: [tip:perf/core] perf top: Add --namespaces option
+Git-Commit-ID: a0c0a4ac021b017e385d0328541ccfebeef165fc
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,178 +71,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a9a187a749f95dda24302aae5c9a0b6b9ee74c99
-Gitweb:     https://git.kernel.org/tip/a9a187a749f95dda24302aae5c9a0b6b9ee74c99
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 21 May 2019 21:47:07 -0300
+Commit-ID:  a0c0a4ac021b017e385d0328541ccfebeef165fc
+Gitweb:     https://git.kernel.org/tip/a0c0a4ac021b017e385d0328541ccfebeef165fc
+Author:     Namhyung Kim <namhyung@kernel.org>
+AuthorDate: Wed, 22 May 2019 14:32:50 +0900
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:43 -0300
 
-perf trace: Beautify 'sync_file_range' arguments
+perf top: Add --namespaces option
 
-Use existing beautifiers for the first arg, fd, assigned using the
-heuristic that looks for syscall arg names and associates SCA_FD with
-'fd' named argumes, and wire up the recently introduced sync_file_range
-flags table generator.
+Since 'perf record' already have this option, let's have it for 'perf top'
+as well.
 
-Now it should be possible to just use:
-
-   perf trace -e sync_file_range
-
-As root and see all sync_file_range syscalls with its args beautified.
-
-  Doing a syscall strace like session looking for this syscall, then run
-  postgresql's initdb command:
-
-  # perf trace -e sync_file_range
-  <SNIP>
-  initdb/1332 sync_file_range(6</var/lib/pgsql/data/global/1260_fsm>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(6</var/lib/pgsql/data/global/1260_fsm>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(7</var/lib/pgsql/data/base/1/2682>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(6</var/lib/pgsql/data/global/1260_fsm>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(7</var/lib/pgsql/data/base/1/2682>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(6</var/lib/pgsql/data/global/1260_fsm>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(5</var/lib/pgsql/data/global>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(4</var/lib/pgsql/data>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  initdb/1332 sync_file_range(4</var/lib/pgsql/data>, 0, 0, SYNC_FILE_RANGE_WRITE) = 0
-  ^C
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8tqy34xhpg8gwnaiv74xy93w@git.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
+Link: http://lkml.kernel.org/r/20190522053250.207156-4-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf                  | 12 ++++++++++--
- tools/perf/builtin-trace.c                |  2 ++
- tools/perf/trace/beauty/Build             |  1 +
- tools/perf/trace/beauty/beauty.h          |  3 +++
- tools/perf/trace/beauty/sync_file_range.c | 31 +++++++++++++++++++++++++++++++
- 5 files changed, 47 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-top.txt | 5 +++++
+ tools/perf/builtin-top.c              | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 326ca5d6a7ef..92b5236c0000 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -549,6 +549,12 @@ arch_errno_tbl := $(srctree)/tools/perf/trace/beauty/arch_errno_names.sh
- $(arch_errno_name_array): $(arch_errno_tbl)
- 	$(Q)$(SHELL) '$(arch_errno_tbl)' $(CC) $(arch_errno_hdr_dir) > $@
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 44d89fb9c788..cfea87c6f38e 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -262,6 +262,11 @@ Default is to monitor all CPUS.
+ 	The number of threads to run when synthesizing events for existing processes.
+ 	By default, the number of threads equals to the number of online CPUs.
  
-+sync_file_range_arrays := $(beauty_outdir)/sync_file_range_arrays.c
-+sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
++--namespaces::
++	Record events of type PERF_RECORD_NAMESPACES and display it with the
++	'cgroup_id' sort key.
 +
-+$(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
-+	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
 +
- all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
  
- # Create python binding output directory if not already present
-@@ -671,7 +677,8 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(usbdevfs_ioctl_array) \
- 	$(x86_arch_prctl_code_array) \
- 	$(rename_flags_array) \
--	$(arch_errno_name_array)
-+	$(arch_errno_name_array) \
-+	$(sync_file_range_arrays)
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index fbbb0da43abb..31d78d874fc7 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1208,6 +1208,9 @@ static int __cmd_top(struct perf_top *top)
  
- $(OUTPUT)%.o: %.c prepare FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
-@@ -970,7 +977,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 		$(OUTPUT)$(usbdevfs_ioctl_array) \
- 		$(OUTPUT)$(x86_arch_prctl_code_array) \
- 		$(OUTPUT)$(rename_flags_array) \
--		$(OUTPUT)$(arch_errno_name_array)
-+		$(OUTPUT)$(arch_errno_name_array) \
-+		$(OUTPUT)$(sync_file_range_arrays)
- 	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
+ 	init_process_thread(top);
  
- #
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 3a2ab68a8b85..54b2d0fd0d02 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -912,6 +912,8 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_FILENAME, /* specialfile */ }, }, },
- 	{ .name	    = "symlinkat",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
-+	{ .name	    = "sync_file_range",
-+	  .arg = { [3] = { .scnprintf = SCA_SYNC_FILE_RANGE_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "tgkill",
- 	  .arg = { [2] = { .scnprintf = SCA_SIGNUM, /* sig */ }, }, },
- 	{ .name	    = "tkill",
-diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
-index 338c61b8ed22..afa75a76f6b8 100644
---- a/tools/perf/trace/beauty/Build
-+++ b/tools/perf/trace/beauty/Build
-@@ -16,3 +16,4 @@ perf-y += renameat.o
- perf-y += sockaddr.o
- perf-y += socket.o
- perf-y += statx.o
-+perf-y += sync_file_range.o
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 9385d1cb121a..7e06605f7c76 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -201,6 +201,9 @@ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_
- size_t syscall_arg__scnprintf_statx_mask(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_STATX_MASK syscall_arg__scnprintf_statx_mask
- 
-+size_t syscall_arg__scnprintf_sync_file_range_flags(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_SYNC_FILE_RANGE_FLAGS syscall_arg__scnprintf_sync_file_range_flags
++	if (opts->record_namespaces)
++		top->tool.namespace_events = true;
 +
- size_t open__scnprintf_flags(unsigned long flags, char *bf, size_t size, bool show_prefix);
- 
- void syscall_arg__set_ret_scnprintf(struct syscall_arg *arg,
-diff --git a/tools/perf/trace/beauty/sync_file_range.c b/tools/perf/trace/beauty/sync_file_range.c
-new file mode 100644
-index 000000000000..1c425f04047d
---- /dev/null
-+++ b/tools/perf/trace/beauty/sync_file_range.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+/*
-+ * trace/beauty/sync_file_range.c
-+ *
-+ *  Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
-+ */
-+
-+#include "trace/beauty/beauty.h"
-+#include <linux/log2.h>
-+#include <uapi/linux/fs.h>
-+
-+static size_t sync_file_range__scnprintf_flags(unsigned long flags, char *bf, size_t size, bool show_prefix)
-+{
-+#include "trace/beauty/generated/sync_file_range_arrays.c"
-+       static DEFINE_STRARRAY(sync_file_range_flags, "SYNC_FILE_RANGE_");
-+       size_t printed = 0;
-+
-+       if ((flags & SYNC_FILE_RANGE_WRITE_AND_WAIT) == SYNC_FILE_RANGE_WRITE_AND_WAIT) {
-+               printed += scnprintf(bf + printed, size - printed, "%s%s", show_prefix ? "SYNC_FILE_RANGE_" : "", "WRITE_AND_WAIT");
-+	       flags &= ~SYNC_FILE_RANGE_WRITE_AND_WAIT;
-+       }
-+
-+       return printed + strarray__scnprintf_flags(&strarray__sync_file_range_flags, bf + printed, size - printed, show_prefix, flags);
-+}
-+
-+size_t syscall_arg__scnprintf_sync_file_range_flags(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	unsigned long flags = arg->val;
-+
-+	return sync_file_range__scnprintf_flags(flags, bf, size, arg->show_string_prefix);
-+}
+ 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+ 						&top->record_opts);
+@@ -1500,6 +1503,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
+ 			"number of thread to run event synthesize"),
++	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
++		    "Record namespaces events"),
+ 	OPT_END()
+ 	};
+ 	struct perf_evlist *sb_evlist = NULL;
