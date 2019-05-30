@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B1BC46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B71DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D6A25D65
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F5C25D6A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191894;
-	bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
+	s=default; t=1559191899;
+	bh=LUA98mtYbLoFF5SBGBxmbooAGm/0s25pCjeNGGv4PpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xl8WtXxvpUUJQX/5kyiMMpmEPpyuN/gviwWoZ9z1ThIRJc9mIZV69NI48KT48dxgy
-	 OaktjjZn716RgXEU+aOasWOLHjeGUgcsJJ8RWP6//iB5zrX8vCYRCnns5NCOrr+wPk
-	 1UQORsQ/l/qC3BR8Awq3RGn+H6cDQsRUyV96JukY=
+	b=xliSvGUeG9Wgw4BevgduexXSL/a15USZohmF9pclHUNNdy3HHkorkZnuooacM0Tux
+	 JSql4E6RzBYeinNAQFEUP37EhNzHnUXFf4gYQzfWxyHveWl39aLQcHMo6VCrK4HSsK
+	 vNHbw6n4LhVi82oGd/iEberJ12lBJe5lkmyREZLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbfE3Evc (ORCPT
+        id S1732918AbfE3Evh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbfE3DK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:57 -0400
+        id S1727494AbfE3DK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:56 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79DDD244E6;
-        Thu, 30 May 2019 03:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDFD424482;
+        Thu, 30 May 2019 03:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185856;
-        bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
+        s=default; t=1559185855;
+        bh=LUA98mtYbLoFF5SBGBxmbooAGm/0s25pCjeNGGv4PpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMi8XSE4CUf7Fi67W7x31oZQ44LNXTljzqyetqYtIHq19mWXSB57jiK3czPBGafMJ
-         w4y38fFnVuTT17epiJQMO7Z31kS34wdAphnPvyNW86NnlSK3M/Biwed+pHq0Zl6Yd4
-         /oRvSeR3ysmTVg4j4uugXcWvVEbVKwOHDM0j3yPI=
+        b=h4CtVDH1Wu5HNwLiD/R5u1XF7R5h0dez/K+jrxwFzkTiUIFtQSdOK2EAWjnfYJ9tL
+         kP6bDFt0kLaV8mRpnLt7zbgP4JmXtcN0OYbv7YIug5vrLLcbua61qhR86ts9La6ek6
+         RHeUGGPws4P1nn8qQ5D80w2gStz1vskbmAe5LAEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 184/405] phy: mapphone-mdm6600: add gpiolib dependency
-Date:   Wed, 29 May 2019 20:03:02 -0700
-Message-Id: <20190530030550.371521302@linuxfoundation.org>
+Subject: [PATCH 5.1 183/405] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
+Date:   Wed, 29 May 2019 20:03:01 -0700
+Message-Id: <20190530030550.331971065@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,40 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 208d3423ee463ab257908456f6bbca4024ab63f7 ]
+[ Upstream commit e6f32efb1b128344a2c7df9875bc1a1abaa1d395 ]
 
-gcc points out that when CONFIG_GPIOLIB is disabled,
-gpiod_get_array_value_cansleep() returns 0 but fails to set its output:
+On platforms where the MUSB and HCI controllers share PHY0, PHY passby
+is required when using the HCI controller with the PHY, but it must be
+disabled when the MUSB controller is used instead.
 
-drivers/phy/motorola/phy-mapphone-mdm6600.c: In function 'phy_mdm6600_status':
-drivers/phy/motorola/phy-mapphone-mdm6600.c:220:24: error: 'values[0]' is used uninitialized in this function [-Werror=uninitialized]
+Without this, PHY0 passby is always enabled, which results in broken
+peripheral mode on such platforms (e.g. H3/H5).
 
-This could be fixed more generally in gpiolib by returning a failure
-code, but for this specific case, the easier workaround is to add a
-gpiolib dependency.
+Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
 
-Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/motorola/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/motorola/Kconfig b/drivers/phy/motorola/Kconfig
-index 82651524ffb9c..718f8729701df 100644
---- a/drivers/phy/motorola/Kconfig
-+++ b/drivers/phy/motorola/Kconfig
-@@ -13,7 +13,7 @@ config PHY_CPCAP_USB
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 4bbd9ede38c83..cc5af961778d6 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -554,6 +554,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
++	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
+ 	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
  
- config PHY_MAPPHONE_MDM6600
- 	tristate "Motorola Mapphone MDM6600 modem USB PHY driver"
--	depends on OF && USB_SUPPORT
-+	depends on OF && USB_SUPPORT && GPIOLIB
- 	select GENERIC_PHY
- 	help
- 	  Enable this for MDM6600 USB modem to work on Motorola phones
+@@ -610,6 +611,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 			mutex_unlock(&phy0->mutex);
+ 		}
+ 
++		/* Enable PHY0 passby for host mode only. */
++		sun4i_usb_phy_passby(phy, !id_det);
++
+ 		/* Re-route PHY0 if necessary */
+ 		if (data->cfg->phy0_dual_route)
+ 			sun4i_usb_phy0_reroute(data, id_det);
 -- 
 2.20.1
 
