@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42727C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B1BC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194A925D6E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D6A25D65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191884;
-	bh=6dIRTKo7ssCP3K7R1QhywNBy8AjmoCkBO+6/RAJolpM=;
+	s=default; t=1559191894;
+	bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nUpFYP2nYTXKjap9U+lgA6zz+iydYiFsf0YgnNbEXz+CizPIJrHDYDYTqMM7PfkOX
-	 +uwEpa6ytKiLeHPzvzX3E0DCfTL/pvJz5ZrPKX6IRR2A7mXhmoQFUSOF705vPJR8W5
-	 3BIM2xVBSYRLal0A23DKwCybG9PDdP3ciIa37dWU=
+	b=Xl8WtXxvpUUJQX/5kyiMMpmEPpyuN/gviwWoZ9z1ThIRJc9mIZV69NI48KT48dxgy
+	 OaktjjZn716RgXEU+aOasWOLHjeGUgcsJJ8RWP6//iB5zrX8vCYRCnns5NCOrr+wPk
+	 1UQORsQ/l/qC3BR8Awq3RGn+H6cDQsRUyV96JukY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387547AbfE3EvN (ORCPT
+        id S1732056AbfE3Evc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:51:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49534 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbfE3DK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:59 -0400
+        id S1728295AbfE3DK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B60244E5;
-        Thu, 30 May 2019 03:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DDD244E6;
+        Thu, 30 May 2019 03:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185858;
-        bh=6dIRTKo7ssCP3K7R1QhywNBy8AjmoCkBO+6/RAJolpM=;
+        s=default; t=1559185856;
+        bh=35T0qHW0GoLyTvKSX60pYUseUsylkpZKu7B/BgGYgcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nrl90rneYNy4ZDBmb/xcTRvRAn0r1MYeOwc2NdYCzMYKYqsvtXeIfKfRCgUhOLBnk
-         t7ZDrzTQZXnnaOVGl3j17OTRTGWvOfrmQVnzZo/3fN5MUZ1bkNxOzw3OoAWMlN7sX6
-         CPMyiH3JMxntGZsLbhyfMdIJ1xx2SKVowY3vrV9g=
+        b=QMi8XSE4CUf7Fi67W7x31oZQ44LNXTljzqyetqYtIHq19mWXSB57jiK3czPBGafMJ
+         w4y38fFnVuTT17epiJQMO7Z31kS34wdAphnPvyNW86NnlSK3M/Biwed+pHq0Zl6Yd4
+         /oRvSeR3ysmTVg4j4uugXcWvVEbVKwOHDM0j3yPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 145/405] Bluetooth: mediatek: Fixed incorrect type in assignment
-Date:   Wed, 29 May 2019 20:02:23 -0700
-Message-Id: <20190530030548.463626535@linuxfoundation.org>
+Subject: [PATCH 5.1 184/405] phy: mapphone-mdm6600: add gpiolib dependency
+Date:   Wed, 29 May 2019 20:03:02 -0700
+Message-Id: <20190530030550.371521302@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,66 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cac63f9b163700fb70a609ad220697c61b797d6b ]
+[ Upstream commit 208d3423ee463ab257908456f6bbca4024ab63f7 ]
 
-Fixed warning: incorrect type in assignment reported by kbuild test robot.
-The detailed warning is shown as below.
+gcc points out that when CONFIG_GPIOLIB is disabled,
+gpiod_get_array_value_cansleep() returns 0 but fails to set its output:
 
-make ARCH=x86_64 allmodconfig
-make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+drivers/phy/motorola/phy-mapphone-mdm6600.c: In function 'phy_mdm6600_status':
+drivers/phy/motorola/phy-mapphone-mdm6600.c:220:24: error: 'values[0]' is used uninitialized in this function [-Werror=uninitialized]
 
-All warnings (new ones prefixed by >>):
+This could be fixed more generally in gpiolib by returning a failure
+code, but for this specific case, the easier workaround is to add a
+gpiolib dependency.
 
-btmtkuart.c:671:18: sparse:    warning: incorrect type in assignment
-			       (different base types)
-btmtkuart.c:671:18: sparse:    expected unsigned int [usertype] baudrate
-btmtkuart.c:671:18: sparse:    got restricted __le32 [usertype]
-
-sparse warnings: (new ones prefixed by >>)
-btmtkuart.c:671:18: sparse: warning: incorrect type in assignment
-			       (different base types)
-btmtkuart.c:671:18: sparse:    expected unsigned int [usertype] baudrate
-btmtkuart.c:671:18: sparse:    got restricted __le32 [usertype]
-
-vim +671 drivers/bluetooth/btmtkuart.c
-
-   659
-   660	static int btmtkuart_change_baudrate(struct hci_dev *hdev)
-   661	{
-   662		struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
-   663		struct btmtk_hci_wmt_params wmt_params;
-   664		u32 baudrate;
-   665		u8 param;
-   666		int err;
-   667
-   668		/* Indicate the device to enter the probe state the host is
-   669		 * ready to change a new baudrate.
-   670		 */
- > 671		baudrate = cpu_to_le32(bdev->desired_speed);
-   672		wmt_params.op = MTK_WMT_HIF;
-
-Fixes: 22eaf6c9946a ("Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART devices")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btmtkuart.c | 2 +-
+ drivers/phy/motorola/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
-index b0b680dd69f49..f5dbeec8e2748 100644
---- a/drivers/bluetooth/btmtkuart.c
-+++ b/drivers/bluetooth/btmtkuart.c
-@@ -661,7 +661,7 @@ static int btmtkuart_change_baudrate(struct hci_dev *hdev)
- {
- 	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
- 	struct btmtk_hci_wmt_params wmt_params;
--	u32 baudrate;
-+	__le32 baudrate;
- 	u8 param;
- 	int err;
+diff --git a/drivers/phy/motorola/Kconfig b/drivers/phy/motorola/Kconfig
+index 82651524ffb9c..718f8729701df 100644
+--- a/drivers/phy/motorola/Kconfig
++++ b/drivers/phy/motorola/Kconfig
+@@ -13,7 +13,7 @@ config PHY_CPCAP_USB
  
+ config PHY_MAPPHONE_MDM6600
+ 	tristate "Motorola Mapphone MDM6600 modem USB PHY driver"
+-	depends on OF && USB_SUPPORT
++	depends on OF && USB_SUPPORT && GPIOLIB
+ 	select GENERIC_PHY
+ 	help
+ 	  Enable this for MDM6600 USB modem to work on Motorola phones
 -- 
 2.20.1
 
