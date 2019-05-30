@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF41C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47246C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B468A24B81
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1702492D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187515;
-	bh=nS35q5ZtSkjydaFaSZdC+7DVr5rLGA87nEzC1ozr+zY=;
+	s=default; t=1559187521;
+	bh=Jreunv7bFqYQlkJmwWSbG9zeX9kycS4RnC4UXcnC4Qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgm2oIJROEIHnuNtZILrVTUncm64ZN0Bg24cjLNOcCwkRv6Bb7Skul86zN1FAOkgc
-	 4+1W4mZZt8bi+Zft8M1MpSRXCILGP3qEv6JxqSlOlnlWQM5AuQevLfk4A5llV8Y/dp
-	 LfkOAGQA+febs8pZcK+EpWiy+9n2RTVRvy/PbZ0I=
+	b=Bi8PU9v7rR61aQVg1LoGP6jAnpUS62MnngiznL+zCAp/j2kxlDBZskCyo2+KkNF/z
+	 qXCKxVmlb04BvuI0Oi82RYXRsFWsDE4a3TzlvEgeB7bzyjzORLWoZvan2L3nVFHIFv
+	 e7DSHSAd6Rzm/6ltM8H0Pe2nzK9q1W7qfBff4uTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbfE3DWu (ORCPT
+        id S1732922AbfE3DWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730916AbfE3DRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:06 -0400
+        id S1729570AbfE3DRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26DCC24645;
-        Thu, 30 May 2019 03:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C9DB24659;
+        Thu, 30 May 2019 03:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186226;
-        bh=nS35q5ZtSkjydaFaSZdC+7DVr5rLGA87nEzC1ozr+zY=;
+        s=default; t=1559186222;
+        bh=Jreunv7bFqYQlkJmwWSbG9zeX9kycS4RnC4UXcnC4Qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ysNAgWw5YNudvx5l+VNelUmXzV0tjK9IRKRtIPLSFOuJHXdoVblambZdV42BKKXPu
-         pTb9yYhwCDYByF6NA68wO1P9yN8mKx58ZrT7oTj9TYVmEH4dIM1nF6CwDv5UyDPlEF
-         gwNW9NkqKm8aPALlc0xQsAhuA6deXMZWo70EpEIQ=
+        b=yWvQf0uGxHadgqTeYyhLR8lyvRXbd2n+ma0fnQAZ1wm2yAO17OPS0iorRdVjXyGkP
+         x/XgZmzhSqNBBkS9SPlYzAslIVbSeVYxHhctL0XqEJNDS2bj6WbtaFGnhrDoBpYh4g
+         UB2iKpFyjW1Coxwl1vObGB6Se1QkljnpxRX+3rr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 122/276] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
-Date:   Wed, 29 May 2019 20:04:40 -0700
-Message-Id: <20190530030533.485905476@linuxfoundation.org>
+Subject: [PATCH 4.19 115/276] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
+Date:   Wed, 29 May 2019 20:04:33 -0700
+Message-Id: <20190530030533.121068301@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,74 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
+[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
 
-In preparation for adding asynchronous subdevice support to the driver,
-don't acquire v4l2_clk from the driver .probe() callback as that may
-fail if the clock is provided by a bridge driver which may be not yet
-initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
-which is going to be converted to v4l2_subdev_internal_ops.registered()
-callback, executed only when the bridge driver is ready.
+According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
+https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+We should use a register-access-protocol request using the short input /
+output report ids. This is necessary because 27MHz HID++ receivers have
+a max-packetsize on their HIP++ endpoint of 8, so they cannot support
+long reports. Using a feature-access-protocol request (which is always
+long or very-long) with these will cause a timeout error, followed by
+the hidpp driver treating the device as not being HID++ capable.
+
+This commit fixes this by switching to using a rap request to get the
+protocol version.
+
+Besides being tested with a (046d:c517) 27MHz receiver with various
+27MHz keyboards and mice, this has also been tested to not cause
+regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
+k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
+(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index a9264d515e546..edded869d7920 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -811,9 +811,16 @@ static int ov6650_video_probe(struct i2c_client *client)
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 8425d3548a414..edf224ad13369 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -725,13 +725,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
  
-+	priv->clk = v4l2_clk_get(&client->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
-+		return ret;
+ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ {
++	const u8 ping_byte = 0x5a;
++	u8 ping_data[3] = { 0, 0, ping_byte };
+ 	struct hidpp_report response;
+ 	int ret;
+ 
+-	ret = hidpp_send_fap_command_sync(hidpp,
++	ret = hidpp_send_rap_command_sync(hidpp,
++			REPORT_ID_HIDPP_SHORT,
+ 			HIDPP_PAGE_ROOT_IDX,
+ 			CMD_ROOT_GET_PROTOCOL_VERSION,
+-			NULL, 0, &response);
++			ping_data, sizeof(ping_data), &response);
+ 
+ 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
+ 		hidpp->protocol_major = 1;
+@@ -751,8 +754,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ 	if (ret)
+ 		return ret;
+ 
+-	hidpp->protocol_major = response.fap.params[0];
+-	hidpp->protocol_minor = response.fap.params[1];
++	if (response.rap.params[2] != ping_byte) {
++		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
++			__func__, response.rap.params[2], ping_byte);
++		return -EPROTO;
 +	}
 +
- 	ret = ov6650_s_power(&priv->subdev, 1);
- 	if (ret < 0)
--		return ret;
-+		goto eclkput;
- 
- 	msleep(20);
- 
-@@ -850,6 +857,11 @@ static int ov6650_video_probe(struct i2c_client *client)
- 
- done:
- 	ov6650_s_power(&priv->subdev, 0);
-+	if (!ret)
-+		return 0;
-+eclkput:
-+	v4l2_clk_put(priv->clk);
-+
- 	return ret;
- }
- 
-@@ -992,18 +1004,9 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
--	priv->clk = v4l2_clk_get(&client->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
--	}
--
- 	ret = ov6650_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
-+	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
--	}
++	hidpp->protocol_major = response.rap.params[0];
++	hidpp->protocol_minor = response.rap.params[1];
  
  	return ret;
  }
