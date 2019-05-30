@@ -2,88 +2,103 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB3CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607C326281
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF6626288
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6vjmWjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE3WPG (ORCPT
+        id S1726604AbfE3WSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:15:06 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39480 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3WPF (ORCPT
+        Thu, 30 May 2019 18:18:34 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34831 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:15:05 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k24so2097914otn.6;
-        Thu, 30 May 2019 15:15:05 -0700 (PDT)
+        Thu, 30 May 2019 18:18:33 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p26so11384652edr.2;
+        Thu, 30 May 2019 15:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Qzbfu0dliCkkEmJ1UFnYukQdP9RWNNavonlb+Fp2x7g=;
+        b=N6vjmWjy73gJGAwNl3ai5Uybv0PFyuyvJaAPxAibzRxqUVjyvhUg2NhHoega74+C8c
+         B1nVuyy3hJ9/oHxD9EMRLQ9Rp3o0aMiKODRU3frOrC616DVBH9SAaW6w8NX37vRyhW/O
+         L2G7hByWBQr2BCsqkm+KpOmOLAZmcS7FobnGSvlGeKWLpUriE8ZAZZ3zQeMFdS7WUH5b
+         vWS+n+5SATB6kCzCtSLQrCdtIdVYsHxiBmWZugnMX0mNrpziiDRxpy4VVfo4mUzNLCN1
+         T9DKSmHlkGChdIlLj1LoCb3UqZXMPTjyLxBtlNKx1ue7I6z8bdFeI8LyEZnTrKLt6D5i
+         lrAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=esfrFMZGksDh8a9cO+oFEVkOyToxeVgjGVajp0t5uMA=;
-        b=Y23YeQnfD1/sKRcMRK7dwclwxqaFymC4hspELPhsRKcDnjEBoo3VN2yKMrvMOKOX1k
-         WaaQj6/lWw1aLzecTdVt2kNAGd2dIGkQwLA4E0jl7LSixaXpbhL2VEoES4L99QbiaE8P
-         zKrVAuUc3rOQ2RJSRm40SKE8iSkqzHqdByAmROMzI+bmc7o3Xoc1E2Ltig6zUeFvpIfD
-         I5oSMzn1A3xOp/qTPfYu6IhXVZaIQXaP7UYcJ3+5Viw/IEJF63lZudMzybSYNp5zmHM0
-         7npv9vMs8q+gj6kL4yye7oHTKwTSgmGrkaStr7WL2cCB+aqc3JvlPAMZ41zQPnLsIJnQ
-         IJsA==
-X-Gm-Message-State: APjAAAXrG0WwjQEzqDCUN8nwnQNfvGc1ihwQ5LeFcSyNIyqC3ATj30Q+
-        MwIvpJxBRrA6gAVUATTChDHUMXkOjmw=
-X-Google-Smtp-Source: APXvYqxcssZ2P726W5gBRmhRvrYfu4C+5mgIylIxWUkzEgFEHV/bxNfuEDDuDgdEKlYEqEYy0qG5WQ==
-X-Received: by 2002:a05:6830:1d5:: with SMTP id r21mr4580794ota.155.1559254504513;
-        Thu, 30 May 2019 15:15:04 -0700 (PDT)
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com. [209.85.167.171])
-        by smtp.gmail.com with ESMTPSA id u70sm1414875oif.16.2019.05.30.15.15.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Qzbfu0dliCkkEmJ1UFnYukQdP9RWNNavonlb+Fp2x7g=;
+        b=E8VuGNGlDNTcZNq7E6zo1ocpFqCV3P3WXpwLG9M9yuz3/2yyWnukKHbxBV1CNHsXXL
+         bDMukssXSz97ZYI49PCV9e1pR32kaVaRJF6E34d7+pOTCYWRPoE46Kjpm2Ej9Zc5Gjrn
+         ogYWgOIZmqjoiIAn7JQz0/sMyJGiv/gPsgbNh3PcccGOfP4dF23jx1XMwF7cPEK3soWv
+         z95Mh0aU2dlwNkLVTmBYrmBoisDIKa3t0kzK21jSjv70aRwBZ0m3RW6zhIUD3AIT04Xu
+         ZajVTuiOr8WaBZr2bPUvjEx4NGMFAkpMqnGfLzIAClSKZyC9sGDqboltftCMdOiHj8cX
+         4o4w==
+X-Gm-Message-State: APjAAAWOEcMBuNvtUX02UGiUJhj6c0wtNZ2zbYIUq/xb6BtxdZc5E/Sg
+        RVk/IAnzAduHOrLJNiJrwkrRDMD/
+X-Google-Smtp-Source: APXvYqzRR8gKNI+QpfK/2N0R8st5YfVLx33/T/e2b+X2T7vDp5V2dfBvEgtcUFXa4rQ2gOUlOrnsNw==
+X-Received: by 2002:a17:906:3b8f:: with SMTP id u15mr5624827ejf.6.1559251284636;
+        Thu, 30 May 2019 14:21:24 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id h25sm597082ejz.10.2019.05.30.14.21.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 15:15:03 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id v25so5656745oic.9;
-        Thu, 30 May 2019 15:15:03 -0700 (PDT)
-X-Received: by 2002:aca:ea05:: with SMTP id i5mr3971031oih.51.1559254503293;
- Thu, 30 May 2019 15:15:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190530141951.6704-1-laurentiu.tudor@nxp.com> <20190530.150844.1826796344374758568.davem@davemloft.net>
-In-Reply-To: <20190530.150844.1826796344374758568.davem@davemloft.net>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Thu, 30 May 2019 17:14:51 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTn7onrpyicx_ytdaDG4q3v4t494zYetkHrT808RsOByA@mail.gmail.com>
-Message-ID: <CADRPPNTn7onrpyicx_ytdaDG4q3v4t494zYetkHrT808RsOByA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Prerequisites for NXP LS104xA SMMU enablement
-To:     David Miller <davem@davemloft.net>, arm@kernel.org
-Cc:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Netdev <netdev@vger.kernel.org>, madalin.bucur@nxp.com,
-        Roy Pledge <roy.pledge@nxp.com>, camelia.groza@nxp.com,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 May 2019 14:21:24 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH 3/3] dt: bindings: mtd: brcmand: Add brcmnand,brcmnand-v7.3 support
+Date:   Thu, 30 May 2019 17:20:37 -0400
+Message-Id: <1559251257-12383-3-git-send-email-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
+In-Reply-To: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
+References: <1559251257-12383-1-git-send-email-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 5:09 PM David Miller <davem@davemloft.net> wrote:
->
-> From: laurentiu.tudor@nxp.com
-> Date: Thu, 30 May 2019 17:19:45 +0300
->
-> > Depends on this pull request:
-> >
-> >  http://lists.infradead.org/pipermail/linux-arm-kernel/2019-May/653554.html
->
-> I'm not sure how you want me to handle this.
+Added brcm,brcmnand-v7.3 as possible compatible string to support
+brcmnand controller v7.3.
 
-One suggestion from the arm-soc maintainers is that after this pull
-request is merged by arm-soc tree.  You can also merge this pull
-request and then apply the patches.
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Leo
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 0b7c373..ad4cd30 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -28,6 +28,7 @@ Required properties:
+                          brcm,brcmnand-v7.0
+                          brcm,brcmnand-v7.1
+                          brcm,brcmnand-v7.2
++                         brcm,brcmnand-v7.3
+                          brcm,brcmnand
+ - reg              : the register start and length for NAND register region.
+                      (optional) Flash DMA register range (if present)
+-- 
+1.9.0.138.g2de3478
+
