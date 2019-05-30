@@ -2,127 +2,94 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1756C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBDC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CBF2557E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9wvPeNK"
+	by mail.kernel.org (Postfix) with ESMTP id A8D11255DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfE3JBh (ORCPT
+        id S1726897AbfE3JDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:01:37 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39619 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfE3JBh (ORCPT
+        Thu, 30 May 2019 05:03:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33889 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfE3JDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:01:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so8071766edq.6;
-        Thu, 30 May 2019 02:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hAvTxaltXYO/lyeicRERVDVuI1Ynh76x4sPUvK3WH+0=;
-        b=c9wvPeNKmf1N2IwhyWnleJp2nETmlAMOZQNzJQXiYsFpP0DPOsQhTegaIFZ3J3lUrI
-         lQTZCedqVxdZi7wxPGQmBOB4wgyutM2m1KqT08J+nWUZsXDcHixV3LawU9oSBaUB2vl6
-         CRjt1gyF29uB8exwDmzEu7Ni1PTPAVZbLOIouDLDvfWtL/CeLZ9sLqFyVA2aGVRVSuf8
-         fLXRvv1LsFDpZ0ESEAD3lDD0d5neLPOchIRGWSnJ0oYd+AOTAptV+E90jL+lSNOak3qG
-         hNw3/uXkE0JbC5RCtz0p7Jt8RqCjVrCZRzO1CcaVZ2Z04dPeKmcryYoVA1qYWM7KmNpy
-         ki6g==
+        Thu, 30 May 2019 05:03:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v18so4418770lfi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:02:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hAvTxaltXYO/lyeicRERVDVuI1Ynh76x4sPUvK3WH+0=;
-        b=eKmQeBwK6J8TE3KW2waqum5S2T0oAzPCPqP0zWXiRIcWzp905GpVd8c8rUcfBllMFs
-         o+cSIM9joTsbalGouSUvvjwPKDrkRbbX3T+I2ftmEGbLc8xwbNxfp24xZ0fuI3FC73V0
-         J9ja2ydRc4rZ24zWnZRuat/zSLHxw6t27QGZNSb7wMPdzfuT2dJOBPAgMbdaPBeTtkKz
-         kCCc16OET+ZWOOdvlRE+IOAVdbefAhDsqrDPY5QwR976zXe8xgvuiDT8FYyvvnCE49AL
-         3pN1aD74evXYg7onZFJOTcbYXM+6Cb2QWQ6x3DPrsyJCf5EG75KXHl020hrpCpUDXxb6
-         sF5w==
-X-Gm-Message-State: APjAAAVf3fE3DCzZ0znYRAz0bvYdBmSbFSeC+OgQjmJFLWL8CjoMipJi
-        9OJzICBA+Hu5lX+0vBw3sA+yV78rv5bylC8Q9dk=
-X-Google-Smtp-Source: APXvYqx8KYaMEsLueVj1BIkNrm2+mxAT1HJLHo0bQGvs+WBaD5AjevtcfVIq9CjQucuNoBSl4pBzpc5ooRBrFQYAlZ4=
-X-Received: by 2002:a17:906:5a42:: with SMTP id l2mr2370579ejs.47.1559206894995;
- Thu, 30 May 2019 02:01:34 -0700 (PDT)
+        bh=wLUaFADyhBdgaomUFG+GWwKml6E6RSzearLMmFK4+nc=;
+        b=jbDuzxLzWIDJhcdCq03363wwzMtTJarBsdxiCXrVFIaLk/5QV1o78EDw9cUGlYGMEX
+         axwEL+ZWA0F6QAkVycQN2uAccXHge31QebxEaMHUdKCVj/kfHU/B9OYUp81yZM+5TzbZ
+         xlwILMQrCpnvbNpgN9wofqeZC14XoSvnX8RwUVBiugJhQdjNCqtQz/wZ1+aBrFqYCxVZ
+         rncPCOf25Zod25PN8/m3xrB9f5VXLegJivrrYZ/wqHn1fPEr72kmZjShKXFofIMQUvNg
+         ioJ5RgSzZAVPh2mtSIn8vSBRM8iz80Aq0JCk/X9lV99mjXvuOrDu0xQ+jTLilAvWBtuy
+         BkTA==
+X-Gm-Message-State: APjAAAVpwgzY62fq86ZZ/UXENDnmfEKNw4JmHCjn4zz/RO9Njh1Lo+yP
+        H5yNrP40JiKaIQKbpYOCB37wF3eJT7l/MNfImVjjqX/RTc8=
+X-Google-Smtp-Source: APXvYqwOs6/Z7Zvsqe5zDtlUG9PheB0tKEtvnbwOQqxXzanlWfStYLSN1Znbi1tNczSSp/JsjeDxF6PKzDl6RVJgp9I=
+X-Received: by 2002:a19:e308:: with SMTP id a8mr1438340lfh.69.1559206978774;
+ Thu, 30 May 2019 02:02:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190529045207.fzvhuu6d6jf5p65t@localhost>
- <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com> <20190530034555.wv35efen3igwwzjq@localhost>
-In-Reply-To: <20190530034555.wv35efen3igwwzjq@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 30 May 2019 12:01:23 +0300
-Message-ID: <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <20190530145525.3cca17cb@canb.auug.org.au>
+In-Reply-To: <20190530145525.3cca17cb@canb.auug.org.au>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 30 May 2019 11:02:22 +0200
+Message-ID: <CAGnkfhwQY6mw--2=QD+BR1ceOWb5E1Wnzp57dO-pbiNnYwS2PA@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 06:45, Richard Cochran <richardcochran@gmail.com> wrote:
+On Thu, May 30, 2019 at 6:55 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> On Wed, May 29, 2019 at 11:41:22PM +0300, Vladimir Oltean wrote:
-> > I'm sorry, then what does this code from raw.c do?
+> Hi all,
 >
-> It is a fallback for HW that doesn't support multicast filtering.
+> After merging the akpm-current tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
 >
-> Care to look a few lines above?  If you did, you would have seen this:
+> net/tipc/sysctl.c:42:12: warning: 'one' defined but not used [-Wunused-variable]
+>  static int one = 1;
+>             ^~~
+> net/tipc/sysctl.c:41:12: warning: 'zero' defined but not used [-Wunused-variable]
+>  static int zero;
+>             ^~~~
 >
->         memset(&mreq, 0, sizeof(mreq));
->         mreq.mr_ifindex = index;
->         mreq.mr_type = PACKET_MR_MULTICAST;
->         mreq.mr_alen = MAC_LEN;
->         memcpy(mreq.mr_address, addr1, MAC_LEN);
+> Introduced by commit
 >
->         err1 = setsockopt(fd, SOL_PACKET, option, &mreq, sizeof(mreq));
+>   6a33853c5773 ("proc/sysctl: add shared variables for range check")
 >
+> --
+> Cheers,
+> Stephen Rothwell
 
-You're right.
-In fact that's why it doesn't work: because linuxptp adds ptp_dst_mac
-(01-1B-19-00-00-00) and (01-80-C2-00-00-0E) to the MAC's multicast
-filter, but the switch in its great wisdom mangles bytes
-01-1B-19-xx-xx-00 of the DMAC to place the switch id and source port
-there (a rudimentary tagging mechanism). So the frames are no longer
-accepted by this multicast MAC filter on the DSA master port unless
-it's put in ALLMULTI or PROMISC.
+Hi,
 
-> > > No.  The root cause is the time stamps delivered by the hardware or
-> > > your driver.  That needs to be addressed before going forward.
-> > >
-> >
-> > How can I check that the timestamps are valid?
->
-> Well, you can see that there is something wrong.  Perhaps you are not
-> matching the meta frames to the received packets.  That is one
-> possible explanation, but you'll have to figure out what is happening.
->
+this is due the merge of:
 
-If the meta frames weren't associated with the correct link-local
-frame, then the whole expect_meta -> SJA1105_STATE_META_ARRIVED
-mechanism would go haywire, but it doesn't.
-I was actually thinking it has something to do with the fact that I
-shouldn't apply frequency corrections on timestamps of PTP delay
-messages. Does that make any sense?
+commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f
+Author: Jie Liu <liujie165@huawei.com>
+Date:   Tue Apr 16 13:10:09 2019 +0800
+
+    tipc: set sysctl_tipc_rmem and named_timeout right range
+
+I'm making a patch to suppress the warning.
 
 Regards,
--Vladimir
-
-> Thanks,
-> Richard
+-- 
+Matteo Croce
+per aspera ad upstream
