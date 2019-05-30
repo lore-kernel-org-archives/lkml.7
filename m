@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ADBC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB6A24DB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9061324DAD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188270;
-	bh=a4/0AkKA0oRnrDl78ghkQxqWssjLU4ropbnhIJUFV90=;
+	s=default; t=1559188273;
+	bh=rPBCzzUJlptEP951D4yPK4MGsRf7+UEXKPZT7CVSj7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YuH9D/n3JHgQX9XUUAx1seHfq3vASdTLrHDvIMs7b6aN4kSyY0M5PBMrITwbTbNgs
-	 LabXo7CV9o8jIS2e4h0aAXOSa2MM+AVTEei0cFG1UjqMh3f6Y00QR6GMKU1R1mgbpq
-	 344FP1PintK3i6e0DbT38gC4PDZ+uAXQxSYf/4pU=
+	b=K3JxxEW/iW1BUiFsGDW7mcnbOoNS3w6JAiqbdR+Pen1KhaOH4c2IESU+l9nTERtGE
+	 2KzBy9rihF1uzJEDKkjDjTpsu3nak1zq4lWbosmutRGz2I50hXOQzEoGJCuFzAu9iK
+	 CyaZTW1E6owj7XmVctEbIKtUvfTbmzZqL8rnYyMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387467AbfE3DvJ (ORCPT
+        id S2387487AbfE3DvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfE3DTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:49 -0400
+        id S1732033AbfE3DTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 935FB248D6;
-        Thu, 30 May 2019 03:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32CDF248D3;
+        Thu, 30 May 2019 03:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186387;
-        bh=a4/0AkKA0oRnrDl78ghkQxqWssjLU4ropbnhIJUFV90=;
+        s=default; t=1559186388;
+        bh=rPBCzzUJlptEP951D4yPK4MGsRf7+UEXKPZT7CVSj7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WX29F56SIONv3Qja4JvA4chGS87fnoKEqu+8OSpsKCzq1rxn/rR97YTrwhpmy1RwJ
-         w5KeSuBXfFDGJuhjjSsXz285rso6Q+9bGlCfKBGRePu7ZtEeDf6500jO3o4v4VzEZD
-         gjqEKydax4/mHRBQ7CVzMHXG55TQYm+IsO5hjhS0=
+        b=Fxrq9Kzx4m8meooccA4mQomjD4B2kc+xRrKEb9NlkZqpLIdck5sGqvVXyRzBxx5DA
+         448djDsaIZvytFdPyhhcpwwwkOAJkyB5O+WqdCdxDZJeEbtaGtXwl05vvepX7hRMKk
+         7zAvQmqw0tHHcfXwgeBqoEdn5cLNm3GUOZwUueB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Terry Junge <terry.junge@poly.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 157/193] HID: core: move Usage Page concatenation to Main item
-Date:   Wed, 29 May 2019 20:06:51 -0700
-Message-Id: <20190530030510.069129196@linuxfoundation.org>
+Subject: [PATCH 4.14 122/193] drm/amdgpu: fix old fence check in amdgpu_fence_emit
+Date:   Wed, 29 May 2019 20:06:16 -0700
+Message-Id: <20190530030505.578069191@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,146 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 58e75155009cc800005629955d3482f36a1e0eec ]
+[ Upstream commit 3d2aca8c8620346abdba96c6300d2c0b90a1d0cc ]
 
-As seen on some USB wireless keyboards manufactured by Primax, the HID
-parser was using some assumptions that are not always true. In this case
-it's s the fact that, inside the scope of a main item, an Usage Page
-will always precede an Usage.
+We don't hold a reference to the old fence, so it can go away
+any time we are waiting for it to signal.
 
-The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
-is interpreted as a Usage ID and concatenated with the Usage Page".
-While 6.2.2.8 states "When the parser encounters a main item it
-concatenates the last declared Usage Page with a Usage to form a
-complete usage value." Being somewhat contradictory it was decided to
-match Window's implementation, which follows 6.2.2.8.
-
-In summary, the patch moves the Usage Page concatenation from the local
-item parsing function to the main item parsing function.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Terry Junge <terry.junge@poly.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 36 ++++++++++++++++++++++++------------
- include/linux/hid.h    |  1 +
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 24 ++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index a306493e2e970..7c8049a5bd990 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -199,13 +199,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
-  * Add a usage to the temporary parser table.
-  */
- 
--static int hid_add_usage(struct hid_parser *parser, unsigned usage)
-+static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+index 333bad7490678..415e9a384799e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+@@ -135,8 +135,9 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f)
  {
- 	if (parser->local.usage_index >= HID_MAX_USAGES) {
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
- 	parser->local.usage[parser->local.usage_index] = usage;
-+	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
- 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
-@@ -462,10 +463,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
+ 	struct amdgpu_device *adev = ring->adev;
+ 	struct amdgpu_fence *fence;
+-	struct dma_fence *old, **ptr;
++	struct dma_fence __rcu **ptr;
+ 	uint32_t seq;
++	int r;
  
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
+ 	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
+ 	if (fence == NULL)
+@@ -152,15 +153,24 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f)
+ 			       seq, AMDGPU_FENCE_FLAG_INT);
+ 
+ 	ptr = &ring->fence_drv.fences[seq & ring->fence_drv.num_fences_mask];
++	if (unlikely(rcu_dereference_protected(*ptr, 1))) {
++		struct dma_fence *old;
++
++		rcu_read_lock();
++		old = dma_fence_get_rcu_safe(ptr);
++		rcu_read_unlock();
++
++		if (old) {
++			r = dma_fence_wait(old, false);
++			dma_fence_put(old);
++			if (r)
++				return r;
++		}
++	}
++
+ 	/* This function can't be called concurrently anyway, otherwise
+ 	 * emitting the fence would mess up the hardware ring buffer.
+ 	 */
+-	old = rcu_dereference_protected(*ptr, 1);
+-	if (old && !dma_fence_is_signaled(old)) {
+-		DRM_INFO("rcu slot is busy\n");
+-		dma_fence_wait(old, false);
+-	}
 -
--		return hid_add_usage(parser, data);
-+		return hid_add_usage(parser, data, item->size);
+ 	rcu_assign_pointer(*ptr, dma_fence_get(&fence->base));
  
- 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
- 
-@@ -474,9 +472,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		parser->local.usage_minimum = data;
- 		return 0;
- 
-@@ -487,9 +482,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		count = data - parser->local.usage_minimum;
- 		if (count + parser->local.usage_index >= HID_MAX_USAGES) {
- 			/*
-@@ -509,7 +501,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 		}
- 
- 		for (n = parser->local.usage_minimum; n <= data; n++)
--			if (hid_add_usage(parser, n)) {
-+			if (hid_add_usage(parser, n, item->size)) {
- 				dbg_hid("hid_add_usage failed\n");
- 				return -1;
- 			}
-@@ -523,6 +515,22 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 	return 0;
- }
- 
-+/*
-+ * Concatenate Usage Pages into Usages where relevant:
-+ * As per specification, 6.2.2.8: "When the parser encounters a main item it
-+ * concatenates the last declared Usage Page with a Usage to form a complete
-+ * usage value."
-+ */
-+
-+static void hid_concatenate_usage_page(struct hid_parser *parser)
-+{
-+	int i;
-+
-+	for (i = 0; i < parser->local.usage_index; i++)
-+		if (parser->local.usage_size[i] <= 2)
-+			parser->local.usage[i] += parser->global.usage_page << 16;
-+}
-+
- /*
-  * Process a main item.
-  */
-@@ -532,6 +540,8 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int ret;
- 
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
- 
- 	switch (item->tag) {
-@@ -741,6 +751,8 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int i;
- 
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
- 
- 	switch (item->tag) {
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 06e6e04e6c11c..3656a04d764ba 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -398,6 +398,7 @@ struct hid_global {
- 
- struct hid_local {
- 	unsigned usage[HID_MAX_USAGES]; /* usage array */
-+	u8 usage_size[HID_MAX_USAGES]; /* usage size array */
- 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
- 	unsigned usage_index;
- 	unsigned usage_minimum;
+ 	*f = &fence->base;
 -- 
 2.20.1
 
