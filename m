@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD66C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B82C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275D624EB5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227C02402E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188661;
-	bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
+	s=default; t=1559188669;
+	bh=u8zNnoG6PqrkyKn4qilzjyDWIEhdw3ItXift4UJ8oBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2b2K+JSvZSHp83xVA76dIRXKrffG//Y/k7OKjtPBD7RnxVCdoWLGkPn0iTKgsTcfB
-	 GClaSzFQ6SKC7KHDVDREk8Qw355bJzVvy6nh1E9gMUF2+kPqYqxKfUo0XTms0SvOe2
-	 maFu3yLQknoXrXb2xlwbt0n3Gst7OjaKx0e41zRA=
+	b=Cdp7wTnpASQ5kT1KdMerIj807NxCjLfSWa9M92BMj3a+zyrI3El/QqVzRjvkAmy6D
+	 cqIa3CAVEWMUkujFLEKAUWaAe34E6AspPcnIbv3M0rUXBBaLpzMoBehT3OTpDD6np3
+	 TpiQ9kKs6Wh7iLa6ov1xnyt/1iM5YtVAvBRWe6qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfE3D5f (ORCPT
+        id S1733201AbfE3D5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731721AbfE3DSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:48 -0400
+        id S1731711AbfE3DSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB4C124713;
-        Thu, 30 May 2019 03:18:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E90982479B;
+        Thu, 30 May 2019 03:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186327;
-        bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
+        bh=u8zNnoG6PqrkyKn4qilzjyDWIEhdw3ItXift4UJ8oBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9dfjBNOdfTmq9XwiYjiizVBqIPuZRTbcGw8YOEE1xTekey5mUkhXkZuV7Ld/RDMv
-         UkQsFbgz9quehAUSPrT4KnHE36RYaH1YenWA7n5ZKqTkikYcs+6QD7ypJLxEdbaOXd
-         qkF24n7gquq0xEKmhITmp1wSScn038Pyo8+psXlQ=
+        b=IcS9lol5zSryfCvupHkLcLkv6yGxbJtj8aeydd2CVo2BcWg0wfUr9fblLSwL9HMBf
+         Y3FugSh7ieOmJGqqya0fd9MYgxFg0+IAWrr9foNnHPPEhd2PQkTKnpAoHrRxnEM+3m
+         2qPGE79RvMg/jKOVdo3JpiD3TuF6VojM61XscRKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 043/193] dmaengine: tegra210-dma: free dma controller in remove()
-Date:   Wed, 29 May 2019 20:04:57 -0700
-Message-Id: <20190530030455.560914714@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 041/193] mmc: core: Verify SD bus width
+Date:   Wed, 29 May 2019 20:04:55 -0700
+Message-Id: <20190530030455.247316698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,85 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-Following kernel panic is seen during DMA driver unload->load sequence
-==========================================================================
-Unable to handle kernel paging request at virtual address ffffff8001198880
-Internal error: Oops: 86000007 [#1] PREEMPT SMP
-CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
-Hardware name: galen (DT)
-task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
-PC is at 0xffffff8001198880
-LR is at of_dma_request_slave_channel+0xd8/0x1f8
-pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
-sp : ffffffc3d067b710
-x29: ffffffc3d067b710 x28: 000000000000002f
-x27: ffffff800949e000 x26: ffffff800949e750
-x25: ffffff800949e000 x24: ffffffbefe817d84
-x23: ffffff8009f77cb0 x22: 0000000000000028
-x21: ffffffc3ffda49c8 x20: 0000000000000029
-x19: 0000000000000001 x18: ffffffffffffffff
-x17: 0000000000000000 x16: ffffff80082b66a0
-x15: ffffff8009e78250 x14: 000000000000000a
-x13: 0000000000000038 x12: 0101010101010101
-x11: 0000000000000030 x10: 0101010101010101
-x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
-x7 : 62ff726b6b64622c x6 : 0000000000008064
-x5 : 6400000000000000 x4 : ffffffbefe817c44
-x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
-x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
-Call trace:
-[<ffffff8001198880>] 0xffffff8001198880
-[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
-[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
-[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
-[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
-[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
-[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
-[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
-[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
-[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
-[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
-[<ffffff80082485d0>] vfs_open+0x58/0x88
-[<ffffff800825bce0>] do_last+0x450/0xde0
-[<ffffff800825c718>] path_openat+0xa8/0x368
-[<ffffff800825dd84>] do_filp_open+0x8c/0x110
-[<ffffff8008248a74>] do_sys_open+0x164/0x220
-[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
-[<ffffff8008083040>] el0_svc_naked+0x34/0x38
----[ end trace 67e6d544e65b5145 ]---
-Kernel panic - not syncing: Fatal exception
-==========================================================================
+This change verifies the card has specified a bus width.
 
-In device probe(), of_dma_controller_register() registers DMA controller.
-But when driver is removed, this is not freed. During driver reload this
-results in data abort and kernel panic. Add of_dma_controller_free() in
-driver remove path to fix the issue.
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
 
-Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
+
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index b26256f23d67f..08b10274284a8 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
- 	int i;
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index eb9de21349679..fe2ef52135b6b 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -216,6 +216,14 @@ static int mmc_decode_scr(struct mmc_card *card)
  
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&tdma->dma_dev);
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
  
- 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
