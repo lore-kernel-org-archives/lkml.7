@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD231C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F363CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D60D25821
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C954325829
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190959;
-	bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+	s=default; t=1559190961;
+	bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pB69bRLtpegrfq2Dwavmh5WAcrGVPvzxR0e40eo9NtBYMTRny47WFuzYc70dqrCxG
-	 kpZJYcruEh7YbcEqHDBdeMHrKcB/bJeDSH1E+W9YWbgAjqSz3O6SGvObOHCuTg2jVE
-	 b4tjYCGx9/nDK58JfMGDNybnxdDVQ71b2BzQMcGQ=
+	b=YP0NsPMnTho2lAIn2EKuV0IuuVd2hxc2h6YVMGg+iwjaOR0kNU47bB0Qd7O616+TU
+	 kmyOP9pmNFET+nQFmszgLAy8eVySfxtNsAfRlTM3ZliX7vndbnSKY+Vak2AH+y79CK
+	 2xL1Y8U/b7al4D9bGOa8JHbL4NnpZwuIC29RuY6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbfE3Ef7 (ORCPT
+        id S2388500AbfE3EgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57370 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbfE3DNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729332AbfE3DNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A71D123D83;
-        Thu, 30 May 2019 03:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B616C24526;
+        Thu, 30 May 2019 03:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185984;
-        bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+        s=default; t=1559185983;
+        bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqbQdwPqxKb467OByKZWen6Ld9wuDEVYSq/7DXvQmWCOX9ZIH0MQFcOQxjkThNjna
-         q60PiKmfnNGI1DUpnvMr/h08sbibAJelCORxXmprMqEm2rFgtPHyhAQ1MDqFGIOo2i
-         pVW3jpFPJex81XcavxDn4V/S6EyCVwZAxY2JeXUw=
+        b=YrVwQbiTJuExAkboIpErvFXEUBkQPDK+9X//V1DcA70cNr7wnUq/7wz8PpEDSmGWd
+         2MsVts3Vspnr3HRRlUq4Pr3UDxY3iTMfybMlZL1dXPETmtwHoZmKsAniLJT0jPn2cW
+         pDlDrS0zyhxx/+ts5MWnGx9U1aHqBKJY2bOWhPxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.0 016/346] gfs2: Fix sign extension bug in gfs2_update_stats
-Date:   Wed, 29 May 2019 20:01:29 -0700
-Message-Id: <20190530030541.454357462@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 009/346] crypto: vmx - CTR: always increment IV as quadword
+Date:   Wed, 29 May 2019 20:01:22 -0700
+Message-Id: <20190530030540.980132209@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -58,49 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 5a5ec83d6ac974b12085cd99b196795f14079037 upstream.
+commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
 
-Commit 4d207133e9c3 changed the types of the statistic values in struct
-gfs2_lkstats from s64 to u64.  Because of that, what should be a signed
-value in gfs2_update_stats turned into an unsigned value.  When shifted
-right, we end up with a large positive value instead of a small negative
-value, which results in an incorrect variance estimate.
+The kernel self-tests picked up an issue with CTR mode:
+alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
 
-Fixes: 4d207133e9c3 ("gfs2: Make statistics unsigned, suitable for use with do_div()")
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
+Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
+after 3 increments it should wrap around to 0.
+
+In the aesp8-ppc code from OpenSSL, there are two paths that
+increment IVs: the bulk (8 at a time) path, and the individual
+path which is used when there are fewer than 8 AES blocks to
+process.
+
+In the bulk path, the IV is incremented with vadduqm: "Vector
+Add Unsigned Quadword Modulo", which does 128-bit addition.
+
+In the individual path, however, the IV is incremented with
+vadduwm: "Vector Add Unsigned Word Modulo", which instead
+does 4 32-bit additions. Thus the IV would instead become
+FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
+
+Use vadduqm.
+
+This was probably a typo originally, what with q and w being
+adjacent. It is a pretty narrow edge case: I am really
+impressed by the quality of the kernel self-tests!
+
+Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
+Tested-by: Nayna Jain <nayna@linux.ibm.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/lock_dlm.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/gfs2/lock_dlm.c
-+++ b/fs/gfs2/lock_dlm.c
-@@ -31,9 +31,10 @@
-  * @delta is the difference between the current rtt sample and the
-  * running average srtt. We add 1/8 of that to the srtt in order to
-  * update the current srtt estimate. The variance estimate is a bit
-- * more complicated. We subtract the abs value of the @delta from
-- * the current variance estimate and add 1/4 of that to the running
-- * total.
-+ * more complicated. We subtract the current variance estimate from
-+ * the abs value of the @delta and add 1/4 of that to the running
-+ * total.  That's equivalent to 3/4 of the current variance
-+ * estimate plus 1/4 of the abs of @delta.
-  *
-  * Note that the index points at the array entry containing the smoothed
-  * mean value, and the variance is always in the following entry
-@@ -49,7 +50,7 @@ static inline void gfs2_update_stats(str
- 	s64 delta = sample - s->stats[index];
- 	s->stats[index] += (delta >> 3);
- 	index++;
--	s->stats[index] += ((abs(delta) - s->stats[index]) >> 2);
-+	s->stats[index] += (s64)(abs(delta) - s->stats[index]) >> 2;
- }
+--- a/drivers/crypto/vmx/aesp8-ppc.pl
++++ b/drivers/crypto/vmx/aesp8-ppc.pl
+@@ -1357,7 +1357,7 @@ Loop_ctr32_enc:
+ 	addi		$idx,$idx,16
+ 	bdnz		Loop_ctr32_enc
  
- /**
+-	vadduwm		$ivec,$ivec,$one
++	vadduqm		$ivec,$ivec,$one
+ 	 vmr		$dat,$inptail
+ 	 lvx		$inptail,0,$inp
+ 	 addi		$inp,$inp,16
 
 
