@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCE0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6C6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C6824C69
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C2624C66
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187850;
-	bh=HkH4ufft1e+AwPuafmpxUftWAu+HKVxTA7Pt6dpLcFE=;
+	s=default; t=1559187854;
+	bh=DjLObwZZ+RDNqaf2WeRU/ZKKUnJDXzMdktihC5/aKoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJtNkeOXL9+W3ufTTMN8QQ7uVRZKyUWyrAj0ySYdvhWGCgma8D1GD1EPfLHf4oZjb
-	 o6MOeARLqPNP1+5xESbTt2d6eS921N1lfCS1nv1s5qAVfD1xsbSoReVUbtj+L/6pir
-	 8dYuiaphLboO3Wr4vPSxk4BAMbK6uJt15Ga3beQs=
+	b=oTwh8CKz0BdRSV7rG7iHH9402AVUMQp8SVStYcUIdIdXwdsrKo5C9maV2MMYMVS0o
+	 3l76bJT+T50SyUw9/sKX85xc+kNGjl+HX8l9Q5iT+2reZRp2zJ262EdJE6XOz4MlAE
+	 zRdIhB/yOz8oXtYA+z+o2TJUAiJRO4pPKr/olUo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732829AbfE3DoJ (ORCPT
+        id S1732490AbfE3DoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:44:09 -0400
+        Wed, 29 May 2019 23:44:08 -0400
 Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732399AbfE3DU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:59 -0400
+        id S1732403AbfE3DVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 076D2249A3;
-        Thu, 30 May 2019 03:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0321A249A6;
+        Thu, 30 May 2019 03:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186459;
-        bh=HkH4ufft1e+AwPuafmpxUftWAu+HKVxTA7Pt6dpLcFE=;
+        s=default; t=1559186460;
+        bh=DjLObwZZ+RDNqaf2WeRU/ZKKUnJDXzMdktihC5/aKoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IivxnyFWr3jCXPf3+7IEiNIu3CACVBOvr9F1n2lfcwzSIgWLpIxxxEsiyhw2Yhdxs
-         Hy1G5UKV716GJA+Mx3ZGDPT2eWeoK8bvbdnScHPYi6j21RE/IdgdFuZi7TaBvC9316
-         DI5B8xPiB5LHILQuLVhBhxXEk0G+iEJ7bhpDm+9A=
+        b=Eqt77iyIb0Z458qo1BHDxxRfJsjqDlNW4+IDt/1jZeEAvouM/z9HL0HVt/cSkvC4B
+         UjZ7qf2WmHBHjHiG5G8hwvl6tYkPKJuIUg0MfUf7TaUvMQxBksYLkHHE3ft/luM8+W
+         fYan79ZJ/Pal55D5ZHTGevkVPGlv1VNsK01vd9Bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mariusz Bialonczyk <manio@skyboo.net>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/128] w1: fix the resume command API
-Date:   Wed, 29 May 2019 20:06:11 -0700
-Message-Id: <20190530030441.183162785@linuxfoundation.org>
+Subject: [PATCH 4.9 076/128] hwmon: (f71805f) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:06:48 -0700
+Message-Id: <20190530030448.301170316@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,49 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
+[ Upstream commit 73e6ff71a7ea924fb7121d576a2d41e3be3fc6b5 ]
 
->From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
+Unable to handle kernel paging request at virtual address ffffffbffee0002e
+pgd = ffffffc1d68d4000
+[ffffffbffee0002e] *pgd=0000000000000000, *pud=0000000000000000
+Internal error: Oops: 94000046 [#1] PREEMPT SMP
+Modules linked in: f71805f(+) hwmon
+CPU: 3 PID: 1659 Comm: insmod Not tainted 4.5.0+ #88
+Hardware name: linux,dummy-virt (DT)
+task: ffffffc1f6665400 ti: ffffffc1d6418000 task.ti: ffffffc1d6418000
+PC is at f71805f_find+0x6c/0x358 [f71805f]
 
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple
+drivers is synchronized.
 
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e53004e20a58e ("hwmon: New f71805f driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/hwmon/f71805f.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index f4bc8c100a01b..a3ac582420ec4 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -437,8 +437,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
- 
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
+diff --git a/drivers/hwmon/f71805f.c b/drivers/hwmon/f71805f.c
+index facd05cda26da..e8c0898864277 100644
+--- a/drivers/hwmon/f71805f.c
++++ b/drivers/hwmon/f71805f.c
+@@ -96,17 +96,23 @@ superio_select(int base, int ld)
+ 	outb(ld, base + 1);
  }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
+ 
+-static inline void
++static inline int
+ superio_enter(int base)
+ {
++	if (!request_muxed_region(base, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, base);
+ 	outb(0x87, base);
++
++	return 0;
+ }
+ 
+ static inline void
+ superio_exit(int base)
+ {
+ 	outb(0xaa, base);
++	release_region(base, 2);
+ }
+ 
+ /*
+@@ -1561,7 +1567,7 @@ static int __init f71805f_device_add(unsigned short address,
+ static int __init f71805f_find(int sioaddr, unsigned short *address,
+ 			       struct f71805f_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 devid;
+ 
+ 	static const char * const names[] = {
+@@ -1569,8 +1575,11 @@ static int __init f71805f_find(int sioaddr, unsigned short *address,
+ 		"F71872F/FG or F71806F/FG",
+ 	};
+ 
+-	superio_enter(sioaddr);
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = superio_inw(sioaddr, SIO_REG_MANID);
+ 	if (devid != SIO_FINTEK_ID)
+ 		goto exit;
 -- 
 2.20.1
 
