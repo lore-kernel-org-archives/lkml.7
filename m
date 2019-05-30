@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377A5C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01628C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03155248A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D302490A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186419;
-	bh=gDHdvDkafqAjVZxlcSG0qGXr84eRI64nedGqdiQ8DtY=;
+	s=default; t=1559186426;
+	bh=Abh9yq3u4rDNWsfi/7nQqad8KR6xGjgWlEyf7rT3IYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWMALk0vLBljwH8bXwzEv1PH5mWUkASuFyZc0YUHhQE26YkJQruSlYOSzjTJMOq18
-	 YHRBmZ7aihCBTU/SPI9sfIRPMoo2Tbj0PSWWijiEv0RKGU7tLteuje/2+mjPGMIpnq
-	 ketgz2rf0xB9NwicdTbOn6ypkWqBlIuTBCcjWd3c=
+	b=2l0gvy/UhuwzfzMJ5A4xS3gf6EKeP0o28HprkFav3yOrdEW0sJPpZakIEiA7o4X1N
+	 WoIqMbzj404umPIVMvzHykQgHs3C1vypLvabnqSjzArME2hoUSxU4V0YLvNmo/i0WL
+	 ysraYXMd0h5YYwtGrMyJ4oYW+fkjXx7JPFEfRjBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfE3DUS (ORCPT
+        id S1729141AbfE3DUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:18 -0400
+        Wed, 29 May 2019 23:20:25 -0400
 Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbfE3DPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:51 -0400
+        id S1728162AbfE3DPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2BD245A7;
-        Thu, 30 May 2019 03:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B75F724590;
+        Thu, 30 May 2019 03:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186150;
-        bh=gDHdvDkafqAjVZxlcSG0qGXr84eRI64nedGqdiQ8DtY=;
+        s=default; t=1559186152;
+        bh=Abh9yq3u4rDNWsfi/7nQqad8KR6xGjgWlEyf7rT3IYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VorBiiywQc03xue+wSeXKOvBQ/DpqhIEGNqrE9JnDFx3yPtz0J239eG43v7MiHV86
-         DHnCdhz34eQQDwgJB06stXZ3NTQtflVnd/JqfyeqIz/Mw0oLM2+gpHVJcisGPP9pQ0
-         2LLmcOrS6Y9gnxgUb1JvB95ESvGlf7nCdmOGl+6s=
+        b=CpYYQhKGbGz8LjRzEZGajP+zRpLN+2kl3LPE8VWXPYYrXHmVAHcMLhmGUVO+3AS5F
+         spEojtN/WPSkGhN/Fo4soFjrJ/r6JETAE0HdCytyvgs5SL+K56QpD6zcy85mdk325A
+         TIp1nVeEbcyzdx9C1Wm9e2Xd1PBpCYTts3FNs7tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 333/346] regulator: pv88090: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:46 -0700
-Message-Id: <20190530030557.624289109@linuxfoundation.org>
+Subject: [PATCH 5.0 337/346] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+Date:   Wed, 29 May 2019 20:06:50 -0700
+Message-Id: <20190530030557.809253714@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,54 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 275513b7695a61b75b2546406ecd0f8e3d9fc8be ]
+[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+Building with clang shows a variable that is only used by the
+suspend/resume functions but defined outside of their #ifdef block:
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
+sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
 
-Fixes: c90456e36d9c ("regulator: pv88090: new regulator driver")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+We commonly fix these by marking the PM functions as __maybe_unused,
+but here that would grow the davinci_mcasp structure, so instead
+add another #ifdef here.
+
+Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88090-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/ti/davinci-mcasp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/pv88090-regulator.c b/drivers/regulator/pv88090-regulator.c
-index 7a0c15957bd0b..b4ff646608f54 100644
---- a/drivers/regulator/pv88090-regulator.c
-+++ b/drivers/regulator/pv88090-regulator.c
-@@ -274,9 +274,11 @@ static irqreturn_t pv88090_irq_handler(int irq, void *data)
- 	if (reg_val & PV88090_E_VDD_FLT) {
- 		for (i = 0; i < PV88090_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a10fcb5963c67..570d435e3e8be 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -44,6 +44,7 @@
  
-@@ -291,9 +293,11 @@ static irqreturn_t pv88090_irq_handler(int irq, void *data)
- 	if (reg_val & PV88090_E_OVER_TEMP) {
- 		for (i = 0; i < PV88090_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+ #define MCASP_MAX_AFIFO_DEPTH	64
  
++#ifdef CONFIG_PM
+ static u32 context_regs[] = {
+ 	DAVINCI_MCASP_TXFMCTL_REG,
+ 	DAVINCI_MCASP_RXFMCTL_REG,
+@@ -66,6 +67,7 @@ struct davinci_mcasp_context {
+ 	u32	*xrsr_regs; /* for serializer configuration */
+ 	bool	pm_state;
+ };
++#endif
+ 
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
 -- 
 2.20.1
 
