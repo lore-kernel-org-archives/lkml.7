@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C469C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2386BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4646F24A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E460924A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186661;
-	bh=k8XCWb3nVGyoshzNZpVRJe/i8quHXBLiNB8Xg/6kpDo=;
+	s=default; t=1559186663;
+	bh=x5VhJwigPDOHBAwqUH1tDZvuT045Kx3Kovey9QFR+7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BbpSmAjvTtDNOxqliV7TF3xI3+kbEyRdHTI83uqS+F6vq7G7b/DxjKmTB2OYYmAYB
-	 l3M6AjynSkXPMNyipUq+EyC0eqaVQcs2mFRbmT3quA37e8fk8EAEYuT14iMTAg3aVv
-	 tMccthRHMEOAHwUE1OuJ3KhNduNVAOrcRcZ+XxHg=
+	b=il3tMsO3cXtu/15haCPriOrdVw4YNjo4dSYdTtBvk9keGvNlB8BUhz9cUbSsRo+Lh
+	 owBszFLcLW88Kyn0TszFAnrlhYGmz4KLs8NtRQdo/aQUOG8hTL+k0SqO8fJERed0N0
+	 T7Gm6P8MvIjS6c2Rcy6IUrSF2+Hz9rq+i0JG6VbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbfE3DYU (ORCPT
+        id S1733262AbfE3DYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49448 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730488AbfE3DR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:59 -0400
+        id S1731378AbfE3DSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ED942474C;
-        Thu, 30 May 2019 03:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1E224755;
+        Thu, 30 May 2019 03:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186278;
-        bh=k8XCWb3nVGyoshzNZpVRJe/i8quHXBLiNB8Xg/6kpDo=;
+        s=default; t=1559186280;
+        bh=x5VhJwigPDOHBAwqUH1tDZvuT045Kx3Kovey9QFR+7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veU8EiFA6prP/BzDTrW4Ot1c7HdIXeM3LWllA5ob/k6xYZE6PUOQf1W6KETcLYvna
-         A/2B2/4qRywBioVzNBaCaijj8XUbXeQW1VfLB3cRkvQ85/5i16pg+7Ar9ZEk1KtG5v
-         BaXMwd5ugzPFekJm7XmjK84EJu5IuKMm0lCti9sw=
+        b=llvlxvi/v//2D8pdZBnnewDyEZLebObjT5BZvthCqZXH7aVHMeepshsZKnQov7yfZ
+         l1Kif3Vz1O4cSMMjeVwH8/STe5NBAjSm2lJoG/8A5oaimN4Zx1CuFBjwqWiHrQh8sd
+         6EYSc7RzC5Wn1b3ALYmQGZcY1FP+ERV+FxggA3LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/276] cpufreq: pmac32: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:05:39 -0700
-Message-Id: <20190530030536.601129220@linuxfoundation.org>
+Subject: [PATCH 4.19 222/276] media: gspca: Kill URBs on USB device disconnect
+Date:   Wed, 29 May 2019 20:06:20 -0700
+Message-Id: <20190530030538.990409984@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -65,51 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8d10dc28a9ea6e8c02e825dab28699f3c72b02d9 ]
+[ Upstream commit 9b9ea7c2b57a0c9c3341fc6db039d1f7971a432e ]
 
-The call to of_find_node_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+In order to prevent ISOC URBs from being infinitely resubmitted,
+the driver's USB disconnect handler must kill all the in-flight URBs.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pmac32-cpufreq.c:557:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:569:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:598:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 587, but without a corresponding object release within this function.
+While here, change the URB packet status message to a debug level,
+to avoid spamming the console too much.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-pm@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+This commit fixes a lockup caused by an interrupt storm coming
+from the URB completion handler.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pmac32-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/gspca/gspca.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/pmac32-cpufreq.c b/drivers/cpufreq/pmac32-cpufreq.c
-index 61ae06ca008e7..e225edb5c3593 100644
---- a/drivers/cpufreq/pmac32-cpufreq.c
-+++ b/drivers/cpufreq/pmac32-cpufreq.c
-@@ -552,6 +552,7 @@ static int pmac_cpufreq_init_7447A(struct device_node *cpunode)
- 	volt_gpio_np = of_find_node_by_name(NULL, "cpu-vcore-select");
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
-+	of_node_put(volt_gpio_np);
- 	if (!voltage_gpio){
- 		pr_err("missing cpu-vcore-select gpio\n");
- 		return 1;
-@@ -588,6 +589,7 @@ static int pmac_cpufreq_init_750FX(struct device_node *cpunode)
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
+diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
+index 405a6a76d820f..fd4a1456b6ca2 100644
+--- a/drivers/media/usb/gspca/gspca.c
++++ b/drivers/media/usb/gspca/gspca.c
+@@ -294,7 +294,7 @@ static void fill_frame(struct gspca_dev *gspca_dev,
+ 		/* check the packet status and length */
+ 		st = urb->iso_frame_desc[i].status;
+ 		if (st) {
+-			pr_err("ISOC data error: [%d] len=%d, status=%d\n",
++			gspca_dbg(gspca_dev, D_PACK, "ISOC data error: [%d] len=%d, status=%d\n",
+ 			       i, len, st);
+ 			gspca_dev->last_packet_type = DISCARD_PACKET;
+ 			continue;
+@@ -1630,6 +1630,8 @@ void gspca_disconnect(struct usb_interface *intf)
  
-+	of_node_put(volt_gpio_np);
- 	pvr = mfspr(SPRN_PVR);
- 	has_cpu_l2lve = !((pvr & 0xf00) == 0x100);
+ 	mutex_lock(&gspca_dev->usb_lock);
+ 	gspca_dev->present = false;
++	destroy_urbs(gspca_dev);
++	gspca_input_destroy_urb(gspca_dev);
+ 
+ 	vb2_queue_error(&gspca_dev->queue);
  
 -- 
 2.20.1
