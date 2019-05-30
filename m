@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6ECC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D492DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589E623E29
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AE423DE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185955;
-	bh=KZyKSxQ5KrdEIWBcqojCwCgX/h/V1zXxE97Z7mqPKlE=;
+	s=default; t=1559185965;
+	bh=wpFLMUdKh6awHahOy9KGYWpTkPUbg8nLPGHSCdP0rJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+sc12mQktT3kREWtbfZaIDAc+A4c89pVwl+uTcCwaNO2ZiQaESbbOCocLmc5LX9H
-	 cUdbheuZUqqXScxYfjTHKstfylQl6Br12drs/ktr7LAVxTM1U2TkqEM0duEXdHpS9T
-	 8FPUcaer4jszpB6xhm6JK0BYpPJXP35cWGm76Vgs=
+	b=QUD5ZYXYlqV8ysXHr24ym/nzEpX5lVcKyVNUtt99ejr1v0h4PHbZ7x7KtlxwFMmUE
+	 jbIO4WXXXyNdwGut6WrSKTje8USdvCYfMj3qWm9HkwcqpjEpy0n8iGp6ZmFdASiR58
+	 eJVvWyQqF7lZCfUFFWqRuK6ent57PlnWimjVKKGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfE3DMe (ORCPT
+        id S1729201AbfE3DMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49808 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbfE3DLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:05 -0400
+        id S1728412AbfE3DLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755B1244E5;
-        Thu, 30 May 2019 03:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AE1A244A0;
+        Thu, 30 May 2019 03:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185864;
-        bh=KZyKSxQ5KrdEIWBcqojCwCgX/h/V1zXxE97Z7mqPKlE=;
+        s=default; t=1559185871;
+        bh=wpFLMUdKh6awHahOy9KGYWpTkPUbg8nLPGHSCdP0rJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SAe+sMjadhayEmeVXo3KSixE6crZbIMjkf9VxKB/kuyJqPjibNIY84fUe/P8IBDvg
-         foCCBtcDkV6VGyHxqOZm9ud+CwLySANgZAmHRSHzxa9FR8YL/D3GjD8jEboGf4/3/s
-         ik4WziL/gnqoFJNOz11/Vc/K7B5PY+29kJ1SqlAM=
+        b=RS0kFXL5vKThCo0yphQ4gjUoIwLGcEo5pXnCM1A9yakqqITBoFg5hymkThLBiDGRM
+         JdubVHwuMw0KDGJF74jsmRcP2U96nmqI4ieynH1hjpQwAurH9kZ8ljGCuLz6VpXCQX
+         PvCd5mnMBPiQoJPpwFfO2j6SsS1ZNJuxHkR+qSzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 202/405] scsi: libsas: Do discovery on empty PHY to update PHY info
-Date:   Wed, 29 May 2019 20:03:20 -0700
-Message-Id: <20190530030551.392430763@linuxfoundation.org>
+Subject: [PATCH 5.1 213/405] clk: rockchip: Make rkpwm a critical clock on rk3288
+Date:   Wed, 29 May 2019 20:03:31 -0700
+Message-Id: <20190530030551.876695901@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,53 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8649fc1c5e40e691d589ed825998c36a947491c ]
+[ Upstream commit dfe7fb21cd9e730230d55a79bc72cf2ece67cdd5 ]
 
-When we discover the PHY is empty in sas_rediscover_dev(), the PHY
-information (like negotiated linkrate) is not updated.
+Most rk3288-based boards are derived from the EVB and thus use a PWM
+regulator for the logic rail.  However, most rk3288-based boards don't
+specify the PWM regulator in their device tree.  We'll deal with that
+by making it critical.
 
-As such, for a user examining sysfs for that PHY, they would see
-incorrect values:
+NOTE: it's important to make it critical and not just IGNORE_UNUSED
+because all PWMs in the system share the same clock.  We don't want
+another PWM user to turn the clock on and off and kill the logic rail.
 
-root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
-root@(none)$ echo 0 > enable
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
+This change is in preparation for actually having the PWMs in the
+rk3288 device tree actually point to the proper PWM clock.  Up until
+now they've all pointed to the clock for the old IP block and they've
+all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
+clock rates for both clocks were the same.
 
-So fix this, simply discover the PHY again, even though we know it's empty;
-in the above example, this gives us:
-
-root@(none)$ more negotiated_linkrate
-Phy disabled
-
-We must do this after unregistering the device associated with the PHY
-(in sas_unregister_devs_sas_addr()).
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/rockchip/clk-rk3288.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 17b45a0c7bc38..3611a4ef0d150 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2052,6 +2052,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
- 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
- 		phy->phy_state = PHY_EMPTY;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
-+		/*
-+		 * Even though the PHY is empty, for convenience we discover
-+		 * the PHY to update the PHY info, like negotiated linkrate.
-+		 */
-+		sas_ex_phy_discover(dev, phy_id);
- 		return res;
- 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
- 		   dev_type_flutter(type, phy->attached_dev_type)) {
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 623c5f684987c..355d6a3611dbf 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -697,7 +697,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
+ 	GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
+ 	GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
+-	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
++	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
+ 
+ 	/* ddrctrl [DDR Controller PHY clock] gates */
+ 	GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
+@@ -838,6 +838,8 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+ 	"pmu_hclk_otg0",
++	/* pwm-regulators on some boards, so handoff-critical later */
++	"pclk_rkpwm",
+ };
+ 
+ static void __iomem *rk3288_cru_base;
 -- 
 2.20.1
 
