@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3097C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E00C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5A225B8F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB1125BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191608;
-	bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
+	s=default; t=1559191615;
+	bh=pegDi5gcAt2itKaulnEPA9b3IfsIsZpoclWPbRF2Cks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7v/WiPHsGyRkLpgsqER1usK/I/66V/OLH6d2l7HCEvZy2VafDkOycqWOXEQjr5dB
-	 exRyHsORGMMWDbBZJQZye6D1TlETfZ3gYHGaNq/dRGgqc+oT/7it/8MWhBz9gZx6RY
-	 uZ00R0n/62lbZOum06tHq2omSjsI7Dck8++ZCHV8=
+	b=afvp68hn2B7BEXna/m7TiVqaB+ZpDgJAKYGH8VYpt1SHp1SkkiNLmdMo1/yTYS1fP
+	 YK6qyjxRJ/VL6udvdU9EQBI0b5BS1xfp124oBdw9cJ4AkCEH8a+sNJSLDiHn/Ig9xp
+	 vwEhs+MBjujvkZ6gvXIGKhNY9/zwRDWxKvfLnrEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfE3Eqo (ORCPT
+        id S2388731AbfE3Eqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbfE3DLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:41 -0400
+        id S1728631AbfE3DLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:38 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D8424508;
-        Thu, 30 May 2019 03:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C677244A6;
+        Thu, 30 May 2019 03:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185901;
-        bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
+        s=default; t=1559185898;
+        bh=pegDi5gcAt2itKaulnEPA9b3IfsIsZpoclWPbRF2Cks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yj9v8sioykoumAB+eSIOXR/Mlu8jgSMGcv5NiHMLBL+LgQkMzJxA6j2FasGCFm96m
-         EnQQ8Ul8pYqBp/7NfOjyN5++C9K46iJ56+y2xJKIYiF4aqezNXrP3lqHdUrkX6qDkH
-         /O5um5iHm1JxzD4Psp9k2/hlor8IvSq93203AXmY=
+        b=n+gN0+l2O0ea1JByB/dtzjCTkVksnZyrQcSQGiB4/jk+2lQEqAL9PgqhvG+D8XuDE
+         skO6EIwvdcZ9GhTuvZ1A5fqYqhaZxUqTBiYUbR39rWOF8LE8QzFqprUVa4STND9/HR
+         AFpoTLbb/PLLgwU/mE1UIWVE1iflJBUlTVlBtxfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 269/405] x86/uaccess: Fix up the fixup
-Date:   Wed, 29 May 2019 20:04:27 -0700
-Message-Id: <20190530030554.526258149@linuxfoundation.org>
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 238/405] ASoC: core: remove link components before cleaning up card resources
+Date:   Wed, 29 May 2019 20:03:56 -0700
+Message-Id: <20190530030553.048558415@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,51 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b69656fa7ea2f75e47d7bd5b9430359fa46488af ]
+[ Upstream commit f96fb7d198ca624fe33c4145a004eb5a3d0eddec ]
 
-New tooling got confused about this:
+When the card is registered by the machine driver,
+dai link components are probed after the snd_card is
+created. This is done in snd_soc_bind_card() which calls
+snd_soc_instantiate_card() to first create the snd_card
+and then probes the link components by calling
+soc_probe_link_components(). The snd_card is used by the
+component driver to add the kcontrols associated
+with dapm widgets to the card.
 
-  arch/x86/lib/memcpy_64.o: warning: objtool: .fixup+0x7: return with UACCESS enabled
+When the machine driver is unregistered, the snd_card
+is freed when the card resources are cleaned up.
+But the snd_card needs to be valid while unloading the
+topology dapm widgets in order to remove the kcontrols
+from the card.
 
-While the code isn't wrong, it is tedious (if at all possible) to
-figure out what function a particular chunk of .fixup belongs to.
+Since, unloading topology is done when the component
+driver is removed, the link components should be removed
+in snd_soc_unbind_card(). This will ensure that the kcontrols
+are removed before the card resources are cleaned up and
+the snd_card itself is freed.
 
-This then confuses the objtool uaccess validation. Instead of
-returning directly from the .fixup, jump back into the right function.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/memcpy_64.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/soc-core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
-index 3b24dc05251c7..9d05572370edc 100644
---- a/arch/x86/lib/memcpy_64.S
-+++ b/arch/x86/lib/memcpy_64.S
-@@ -257,6 +257,7 @@ ENTRY(__memcpy_mcsafe)
- 	/* Copy successful. Return zero */
- .L_done_memcpy_trap:
- 	xorl %eax, %eax
-+.L_done:
- 	ret
- ENDPROC(__memcpy_mcsafe)
- EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
-@@ -273,7 +274,7 @@ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
- 	addl	%edx, %ecx
- .E_trailing_bytes:
- 	mov	%ecx, %eax
--	ret
-+	jmp	.L_done
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 46e3ab0fced47..fe99b02bbf171 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2828,10 +2828,21 @@ EXPORT_SYMBOL_GPL(snd_soc_register_card);
  
- 	/*
- 	 * For write fault handling, given the destination is unaligned,
+ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
+ {
++	struct snd_soc_pcm_runtime *rtd;
++	int order;
++
+ 	if (card->instantiated) {
+ 		card->instantiated = false;
+ 		snd_soc_dapm_shutdown(card);
+ 		snd_soc_flush_all_delayed_work(card);
++
++		/* remove all components used by DAI links on this card */
++		for_each_comp_order(order) {
++			for_each_card_rtds(card, rtd) {
++				soc_remove_link_components(card, rtd, order);
++			}
++		}
++
+ 		soc_cleanup_card_resources(card);
+ 		if (!unregister)
+ 			list_add(&card->list, &unbind_card_list);
 -- 
 2.20.1
 
