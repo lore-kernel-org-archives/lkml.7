@@ -2,52 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B79C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98083C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EC324639
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C248245AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186209;
-	bh=PDQKFwTZ+4tb8UFV3uA4gFWymgWjmywDPoUt7qwHpMU=;
+	s=default; t=1559186213;
+	bh=N/pF3K1NFhyQSZDSqQuVhgWuqwwXPTxyp50grt/9H4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DaEFIYZ/enfaJri+v79ijxRk+Qltm6ZW/+uVosmei3rzdeXR8dhkXlFvL3YiJ8Ipp
-	 OE+SMH0Le+bVEc9bkpnKZ8jB+EAEg2TEbQ3nafeuerBG7/O4wHMqXOdNBotTCyDr/f
-	 hjoEaUelSYq1wmxPa6AL3J14hUXp0vuwuWMY56Nk=
+	b=QvOAFDBr035/R1pMPdzMCnculTJFryHKvvOOAdqagiOHTtqboyc0j3M7EunNKXMMj
+	 HdoVwWKJ6vFntI+5xW+yn3ADFg/Teeb+FbgAedAv6gBY4TJgiM1pYxELM8naDtpWF6
+	 82VXNWmer8DozQBOqdAny2cXx0XtFt6t140YmR+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbfE3DQs (ORCPT
+        id S1730843AbfE3DQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbfE3DNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:32 -0400
+        id S1729526AbfE3DNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D9E24546;
-        Thu, 30 May 2019 03:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD742454E;
+        Thu, 30 May 2019 03:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186012;
-        bh=PDQKFwTZ+4tb8UFV3uA4gFWymgWjmywDPoUt7qwHpMU=;
+        s=default; t=1559186016;
+        bh=N/pF3K1NFhyQSZDSqQuVhgWuqwwXPTxyp50grt/9H4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ksBItEBctIUhCgxxIfcEYjxchdeLD/GAVlMVVF0ZOjDtEt8R8a3pLu4WFDvrptIV
-         VJxsHfbM/bZimbysRYF5yEreWeUcDnJkhqI1UtRJO+0q6cE1YwHPld3ouCa0utY1Mp
-         eC07eUTX0sdsoZPSFn7dmgRSF96+XvH4DLXqSgjo=
+        b=xRSbL17P3UpGSkrvJc6k2s1nVHn02ChU3CUD8zYxFNHuhnnt/begX7umkGzP3IMfE
+         UzJDF46Kncuuh9+1SSnw7vP6YOFdBFQVoZhv/Xi+cbV1VT6ESqUZM/H2ZKmnFTtrgL
+         t0Phb7TfGe8Z71+PPXpW55GbzghWJfwSINUu8FMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 075/346] drm/nouveau/bar/nv50: ensure BAR is mapped
-Date:   Wed, 29 May 2019 20:02:28 -0700
-Message-Id: <20190530030544.892889046@linuxfoundation.org>
+Subject: [PATCH 5.0 064/346] usb: dwc3: move synchronize_irq() out of the spinlock protected block
+Date:   Wed, 29 May 2019 20:02:17 -0700
+Message-Id: <20190530030544.308581434@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,56 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
+[ Upstream commit 41a91c606e7d2b74358a944525267cc451c271e8 ]
 
-If the BAR is zero size, it indicates it was never successfully mapped.
-Ensure that the BAR is valid during initialization before attempting to
-use it.
+dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context
+calling synchronize_irq() is not allowed. Move the problematic call out
+of the protected block to fix the following kernel BUG during system
+suspend:
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+BUG: sleeping function called from invalid context at kernel/irq/manage.c:112
+in_atomic(): 1, irqs_disabled(): 128, pid: 1601, name: rtcwake
+6 locks held by rtcwake/1601:
+ #0: f70ac2a2 (sb_writers#7){.+.+}, at: vfs_write+0x130/0x16c
+ #1: b5fe1270 (&of->mutex){+.+.}, at: kernfs_fop_write+0xc0/0x1e4
+ #2: 7e597705 (kn->count#60){.+.+}, at: kernfs_fop_write+0xc8/0x1e4
+ #3: 8b3527d0 (system_transition_mutex){+.+.}, at: pm_suspend+0xc4/0xc04
+ #4: fc7f1c42 (&dev->mutex){....}, at: __device_suspend+0xd8/0x74c
+ #5: 4b36507e (&(&dwc->lock)->rlock){....}, at: dwc3_gadget_suspend+0x24/0x3c
+irq event stamp: 11252
+hardirqs last  enabled at (11251): [<c09c54a4>] _raw_spin_unlock_irqrestore+0x6c/0x74
+hardirqs last disabled at (11252): [<c09c4d44>] _raw_spin_lock_irqsave+0x1c/0x5c
+softirqs last  enabled at (9744): [<c0102564>] __do_softirq+0x3a4/0x66c
+softirqs last disabled at (9737): [<c0128528>] irq_exit+0x140/0x168
+Preemption disabled at:
+[<00000000>]   (null)
+CPU: 7 PID: 1601 Comm: rtcwake Not tainted
+5.0.0-rc3-next-20190122-00039-ga3f4ee4f8a52 #5252
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[<c01110f0>] (unwind_backtrace) from [<c010d120>] (show_stack+0x10/0x14)
+[<c010d120>] (show_stack) from [<c09a4d04>] (dump_stack+0x90/0xc8)
+[<c09a4d04>] (dump_stack) from [<c014c700>] (___might_sleep+0x22c/0x2c8)
+[<c014c700>] (___might_sleep) from [<c0189d68>] (synchronize_irq+0x28/0x84)
+[<c0189d68>] (synchronize_irq) from [<c05cbbf8>] (dwc3_gadget_suspend+0x34/0x3c)
+[<c05cbbf8>] (dwc3_gadget_suspend) from [<c05bd020>] (dwc3_suspend_common+0x154/0x410)
+[<c05bd020>] (dwc3_suspend_common) from [<c05bd34c>] (dwc3_suspend+0x14/0x2c)
+[<c05bd34c>] (dwc3_suspend) from [<c051c730>] (platform_pm_suspend+0x2c/0x54)
+[<c051c730>] (platform_pm_suspend) from [<c05285d4>] (dpm_run_callback+0xa4/0x3dc)
+[<c05285d4>] (dpm_run_callback) from [<c0528a40>] (__device_suspend+0x134/0x74c)
+[<c0528a40>] (__device_suspend) from [<c052c508>] (dpm_suspend+0x174/0x588)
+[<c052c508>] (dpm_suspend) from [<c0182134>] (suspend_devices_and_enter+0xc0/0xe74)
+[<c0182134>] (suspend_devices_and_enter) from [<c0183658>] (pm_suspend+0x770/0xc04)
+[<c0183658>] (pm_suspend) from [<c0180ddc>] (state_store+0x6c/0xcc)
+[<c0180ddc>] (state_store) from [<c09a9a70>] (kobj_attr_store+0x14/0x20)
+[<c09a9a70>] (kobj_attr_store) from [<c02d6800>] (sysfs_kf_write+0x4c/0x50)
+[<c02d6800>] (sysfs_kf_write) from [<c02d594c>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02d594c>] (kernfs_fop_write) from [<c02593d8>] (__vfs_write+0x2c/0x160)
+[<c02593d8>] (__vfs_write) from [<c0259694>] (vfs_write+0xa4/0x16c)
+[<c0259694>] (vfs_write) from [<c0259870>] (ksys_write+0x40/0x8c)
+[<c0259870>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xed55ffa8 to 0xed55fff0)
+...
+
+Fixes: 01c10880d242 ("usb: dwc3: gadget: synchronize_irq dwc irq in suspend")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/core.c   | 2 ++
+ drivers/usb/dwc3/gadget.c | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-index 157b076a12723..38c9c086754b6 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 	struct nvkm_device *device = bar->base.subdev.device;
- 	static struct lock_class_key bar1_lock;
- 	static struct lock_class_key bar2_lock;
--	u64 start, limit;
-+	u64 start, limit, size;
- 	int ret;
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index f944cea4056bc..72110a8c49d68 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1600,6 +1600,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 		spin_lock_irqsave(&dwc->lock, flags);
+ 		dwc3_gadget_suspend(dwc);
+ 		spin_unlock_irqrestore(&dwc->lock, flags);
++		synchronize_irq(dwc->irq_gadget);
+ 		dwc3_core_exit(dwc);
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+@@ -1632,6 +1633,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 			spin_lock_irqsave(&dwc->lock, flags);
+ 			dwc3_gadget_suspend(dwc);
+ 			spin_unlock_irqrestore(&dwc->lock, flags);
++			synchronize_irq(dwc->irq_gadget);
+ 		}
  
- 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
-@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 		dwc3_otg_exit(dwc);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 9f941cdb0691d..1227e8f5a5c87 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3385,8 +3385,6 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	dwc3_disconnect_gadget(dwc);
+ 	__dwc3_gadget_stop(dwc);
  
- 	/* BAR2 */
- 	start = 0x0100000000ULL;
--	limit = start + device->func->resource_size(device, 3);
-+	size = device->func->resource_size(device, 3);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
+-	synchronize_irq(dwc->irq_gadget);
+-
+ 	return 0;
+ }
  
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar2_lock, "bar2", &bar->bar2_vmm);
-@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 
- 	/* BAR1 */
- 	start = 0x0000000000ULL;
--	limit = start + device->func->resource_size(device, 1);
-+	size = device->func->resource_size(device, 1);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
- 
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar1_lock, "bar1", &bar->bar1_vmm);
 -- 
 2.20.1
 
