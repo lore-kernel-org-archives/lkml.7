@@ -2,92 +2,119 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C682C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A47FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474D325FB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2572C25FC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYvgxBsy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fortuneproleads-com.20150623.gappssmtp.com header.i=@fortuneproleads-com.20150623.gappssmtp.com header.b="pwDPh8XV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfE3Sfw (ORCPT
+        id S1726483AbfE3Shm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:35:52 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32826 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Sfw (ORCPT
+        Thu, 30 May 2019 14:37:42 -0400
+Received: from mail-pl1-f180.google.com ([209.85.214.180]:43708 "EHLO
+        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfE3Shl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:35:52 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h17so2522435pgv.0;
-        Thu, 30 May 2019 11:35:51 -0700 (PDT)
+        Thu, 30 May 2019 14:37:41 -0400
+Received: by mail-pl1-f180.google.com with SMTP id gn7so2895637plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:37:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HfvY90edLevEkYjerC5bKK1r0svYqEJjxT1hRYqn0HQ=;
-        b=DYvgxBsyf12dWrWqbIJXHMU7QfhApHKcsSdbrZt+HDjYdLgWleRzHi9Vk/ASIWQR4N
-         7IIOJMplrAK4WFU8OF3j9QOdxz9PdeBf9cqN1bX2w6x8GLdUdZDvEVDH6JyQsxMhUwjI
-         0O0cKebhGm6jOdD24IdUMPb3NwXxuaBZ6pvvH4ny3vryNjj7EhP4yPf9CrnRRQ8K4so/
-         n+qhmbdCby7J+BO2FgDMap2u4h6FiBxfiCQOdVUwAogTyn11i8njEdeEjYMohpVIueMh
-         EnpCmPpo4OcHBp6C7NPvCQY8KpAek1YtYoXY7Ort/GTzuDS5tltx9T86Mcs757LlItKg
-         b7Fw==
+        d=fortuneproleads-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:references:in-reply-to:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language
+         :disposition-notification-to;
+        bh=iHgOO7wAVyp0W63tHKXS1MOmAH/SiT9nrVEE2zyJsZ0=;
+        b=pwDPh8XV/gfEXumXNmnEYwnQtlGrLs3mmM0CPFtXDq97OfVVChVK7wEudloJbkxLNR
+         c2c2WTbjGl2AVeGapeFkmkWtiyD4OLT5adBfLEqc1c/K+8crz81UvP+GO4a6T+ukXDZ+
+         Vyfs5Tvliudi4bdu6MdbApfnZ2KXQV29gKaod/z4Eky8El5Emd0X6U4/ITkdJRlqGOv/
+         ZfomsIwRHM4oMh4LSvloIlJWRob1b7HuYzci8QkcKLsNHw+LX6dii1ilrQcQF216F3be
+         VcNaVij24plLyGI1vnccipKlw9gdPIIdtkkSVkoph6pJY+r5fk+W9EEImPmOCE7O3Z8x
+         HV0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HfvY90edLevEkYjerC5bKK1r0svYqEJjxT1hRYqn0HQ=;
-        b=Ngfzjo6yzg0S+OCn9f5yhaF0RZF69Hrpjl5DOoq3xo0yaqYPEVR/uQtrGzy4ouhL92
-         ul/VT23QjAR30ygtu9bOLTn3x+22IOmf032kR/m0XQv6ons15kFLH2n5hpH3E6y5mJo5
-         6OU5hudyEEGpTXn4lr6hWwQXgaRnBuVe5uJMPMNIlycnGyNNoJfmjwqZcD7AfuynDV+Q
-         vJz0ymZ09uPrP58XLkSNxDbH947Jo87PJ8ZfVDAjw5hfnodqgueyksODytl0Gqtz+rcc
-         hO5XAJmGC3QfxF9DqoAAu3e9H4wK9ls19y5JbUvxbO2a/dBgctBwJWqALVER8hiHzYFk
-         i4Yg==
-X-Gm-Message-State: APjAAAU7bgIbDkoYjg2UGezeo4MXEdBX+WxFBEEl6t1yl8ijKUgdlIQr
-        L0V/bCTBj9Ysr38bje5TdvA=
-X-Google-Smtp-Source: APXvYqyZqmkoix3NOJxupw0lYKJbKv5ZCpoNuvG4jKjd2REp25Tgvb6XsT5Ry4/wkdFxna2NX1BL1Q==
-X-Received: by 2002:a63:520a:: with SMTP id g10mr4915717pgb.136.1559241351375;
-        Thu, 30 May 2019 11:35:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k190sm7368243pgk.28.2019.05.30.11.35.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:35:50 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:35:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/405] 5.1.6-stable review
-Message-ID: <20190530183550.GB9720@roeck-us.net>
-References: <20190530030540.291644921@linuxfoundation.org>
+        h=x-gm-message-state:from:to:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language:disposition-notification-to;
+        bh=iHgOO7wAVyp0W63tHKXS1MOmAH/SiT9nrVEE2zyJsZ0=;
+        b=UY8Ax1P2CfCoL6f151WCKSwvPtDVjXRsS3p67erb6Ks+xKeGKeHkUFNmhJTNQhhJwc
+         2eLmisQMGOwcW0Twp0ElslXWZ7P9+/5lCmNo2/5/uA4MeTQWWh2Dlx21wR1f5VbLbYRY
+         YYuHif160F2soGqa7MXlyupMTNehUEQAycRLHz7gV622wDVUQZS316VuwjCJjqx+0GQq
+         8ZTqOSmVeokG5V+yl1PHx2xvjh6h9Y0sYyBgJ1IngSnB4D/2zga4JF9OU7H3OZbcsED8
+         mpAteUc8wDiRkokCJxNjENTLAvvg17Oceu2rExg8w11VoYrh8H8VG5j+3BgLLn8eOxIw
+         JH2w==
+X-Gm-Message-State: APjAAAVS+WIY/cMO52lo/W1VaTeKU2xQjN/gdEYoR+a3FhdKe6ni1RjP
+        mALk4FSUNDptONvhJK/kuiUDxA1ndNQ=
+X-Google-Smtp-Source: APXvYqy1QLra5JMoDqpTbcLskysjyj7rmukYrjPHOjMnG4oEr1hsXtMX0kuLCPsEokD3j4/+zr1XTw==
+X-Received: by 2002:a17:902:e48d:: with SMTP id cj13mr5089716plb.156.1559241460677;
+        Thu, 30 May 2019 11:37:40 -0700 (PDT)
+Received: from adminPC ([27.7.15.150])
+        by smtp.gmail.com with ESMTPSA id l43sm3592559pjb.7.2019.05.30.11.37.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 30 May 2019 11:37:40 -0700 (PDT)
+From:   Cynthia Higgins <cynthia.higgins@fortuneproleads.com>
+X-Google-Original-From: "Cynthia Higgins" <Cynthia.Higgins@fortuneproleads.com>
+To:     <linux-kernel@vger.kernel.org>
+References: 
+In-Reply-To: 
+Subject: RE: Attendees Data Base of IMS 2019
+Date:   Thu, 30 May 2019 13:37:15 -0500
+Message-ID: <!&!AAAAAAAAAAAYAAAAAAAAAPLrA/fFBKxKlekVRQYDRGnCgAAAEAAAAOp5Cvg983ZMuPe2kBJpOWUBAAAAAA==@fortuneproleads.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AdUSXlKMgtmIiwvARiu5ZTpveQo4VQAASirgAAAAFaAAAAAEQAAAAARwAAAABKAAAAAD0AAAAARAAAAABGAAAAADoAAAAAUAAAAAAzAAAAAEYAAAAATQAAAAAwAAAAAFYAAAAAOQAAAABSAAAAAEkAAAAEDQAAAAFGAAAAAE0AAAAAQwAAAABJAAAAAEAAAAAARgAAAABMAAAAAFIAAAAASQAAAABSAAAAAEkAAAAAQgAAAABYAAAAAE8AEtst5w
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 07:59:58PM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.6 release.
-> There are 405 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 01 Jun 2019 03:01:59 AM UTC.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 349 pass: 349 fail: 0
 
-Guenter
+Hi,
+
+I'm writing to thank you for your time and to find out how you'd like to
+move on my previous email.
+
+If you're still interested, please suggest a next step. 
+
+I would highly appreciate if you would share your thoughts, so that we can
+assist you best solution along with affordable cost.
+
+I await your response
+Cynthia 
+
+
+_____________________________________________
+From: Cynthia Higgins [mailto:Cynthia.Higgins@fortuneproleads.com] 
+Sent: Friday, May 24, 2019 2:36 PM
+To: 'linux-kernel@vger.kernel.org'
+Subject: Attendees Data Base of IMS 2019
+
+
+Hi,
+I am following up to check if you are interested in acquiring IEEE MTT-S
+International Microwave Symposium  Conference 2019
+Let me know if you would like to acquire Attendees Data Base?
+
+Attendees List:  Senior Managemen, Engineering Management, Engineers,
+Industry Leaders, Government/Military And Many More...
+Each record in the data base contains: - Contact Name, Job Title,
+Company/Business Name, Email, Tel Number, Website/URL etc.
+If you are interested, please let me know your thoughts, so that I can send
+you the no of contacts available and the pricing for it.
+Awaiting Your Reply
+Thanks & Regards,
+Cynthia Higgins
+Marketing Executive
+
+
