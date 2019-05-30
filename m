@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C7CC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61D0C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6485F248F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0052490F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186396;
-	bh=PYS5Datf5pZZIG36tQdTDk0Mop6H0RA4WAcw/qUerck=;
+	s=default; t=1559186401;
+	bh=sQSWaWrbGBLv9muTNQfRr4rpK+DViyENGQjtd2P1mug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XgyciZxlJkTaFm+TkkO2Fbpd31tUDFjGrzFbr0bmisOfQmrE8AyqCnmVN5ce13jZc
-	 i2SndfVBuSDjrwEaZlBrfP49Ung1WI552v9C43aUQPbfeXrMEtGs+8Veagi9na+Qfp
-	 1eN4iGGup6YNCEkODRRMFM9jh1n9DrovY8peJTVw=
+	b=PPo4n0pI1dvlctqEh05AnPc5m3t7askJbV5LrckYoMewVmbOMGejklhb0IOxYbHBh
+	 7Zk8Vm2AqcqWkl8wg1mH/kmgEPjOy8GCMTbzHgf6799iN5iqfY8pbpW2K0wYWrjglz
+	 CIyiDQmjjkANbkZV5G/rZgLLdckqhyzSfe7UkVuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732073AbfE3DTy (ORCPT
+        id S1732110AbfE3DUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfE3DPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:43 -0400
+        id S1730463AbfE3DPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 944AA24598;
-        Thu, 30 May 2019 03:15:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA462459C;
+        Thu, 30 May 2019 03:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186142;
-        bh=PYS5Datf5pZZIG36tQdTDk0Mop6H0RA4WAcw/qUerck=;
+        s=default; t=1559186144;
+        bh=sQSWaWrbGBLv9muTNQfRr4rpK+DViyENGQjtd2P1mug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2p0qPCZvBb2vMwauJquyIg7QwZkk6omrPelOiNiZk4XNi2de4ZfYiU1J2qSSFWML
-         kF3Iw26BmCyZrcVJ3h7zKIK1xjGVz4kWgByZYwD/cLk4zsE7MHAz86OellSQfKPNfk
-         Q61JYa0PGA0RAkR2W8G1jdctuA5EQO8Q7Y9UHOSo=
+        b=2vhUFAZgZ5O1QrHAeW3+ZnqVTDzqsclcqGWOK+7mvtT1o0NRUUUHsk0EkINaBEChr
+         Kp9dk/7ki5XH/v7pnx+L0L6y+p3g5jYcpqzlv3uvfdRcyF64Nn8qzV70nl8Xp9/wMH
+         oABAGWpLPJBEFn7mt9CCtulDa+Bm4RcYCfnmeC/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 319/346] drm/omap: dsi: Fix PM for display blank with paired dss_pll calls
-Date:   Wed, 29 May 2019 20:06:32 -0700
-Message-Id: <20190530030556.960466235@linuxfoundation.org>
+Subject: [PATCH 5.0 304/346] scsi: ufs: fix a missing check of devm_reset_control_get
+Date:   Wed, 29 May 2019 20:06:17 -0700
+Message-Id: <20190530030556.240149492@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,165 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe4ed1b457943113ee1138c939fbdeede4af6cf3 ]
+[ Upstream commit 63a06181d7ce169d09843645c50fea1901bc9f0a ]
 
-Currently dsi_display_init_dsi() calls dss_pll_enable() but it is not
-paired with dss_pll_disable() in dsi_display_uninit_dsi(). This leaves
-the DSS clocks enabled when the display is blanked wasting about extra
-5mW of power while idle.
+devm_reset_control_get could fail, so the fix checks its return value and
+passes the error code upstream in case it fails.
 
-The clock that is left on by not calling dss_pll_disable() is
-DSS_CLKCTRL bit 10 OPTFCLKEN_SYS_CLK that is the source clock for
-DSI PLL.
-
-We can fix this issue by by making the current dsi_pll_uninit() into
-dsi_pll_disable(). This way we can just call dss_pll_disable() from
-dsi_display_uninit_dsi() and the code becomes a bit easier to follow.
-
-However, we need to also consider that DSI PLL can be muxed for DVI too
-as pointed out by Tomi Valkeinen <tomi.valkeinen@ti.com>. In the DVI
-case, we want to unconditionally disable the clocks. To get around this
-issue, we separate out the DSI lane handling from dsi_pll_enable() and
-dsi_pll_disable() as suggested by Tomi in an earlier experimental patch.
-
-So we must only toggle the DSI regulator based on the vdds_dsi_enabled
-flag from dsi_display_init_dsi() and dsi_display_uninit_dsi().
-
-We need to make these two changes together to avoid breaking things
-for DVI when fixing the DSI clock handling. And this all causes a
-slight renumbering of the error path for dsi_display_init_dsi().
-
-Suggested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dsi.c | 60 ++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 29 deletions(-)
+ drivers/scsi/ufs/ufs-hisi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
-index 64fb788b66474..f0fe975ed46c7 100644
---- a/drivers/gpu/drm/omapdrm/dss/dsi.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
-@@ -1342,12 +1342,9 @@ static int dsi_pll_enable(struct dss_pll *pll)
- 	 */
- 	dsi_enable_scp_clk(dsi);
+diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+index 452e19f8fb470..c2cee73a8560d 100644
+--- a/drivers/scsi/ufs/ufs-hisi.c
++++ b/drivers/scsi/ufs/ufs-hisi.c
+@@ -544,6 +544,10 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
+ 	ufshcd_set_variant(hba, host);
  
--	if (!dsi->vdds_dsi_enabled) {
--		r = regulator_enable(dsi->vdds_dsi_reg);
--		if (r)
--			goto err0;
--		dsi->vdds_dsi_enabled = true;
--	}
-+	r = regulator_enable(dsi->vdds_dsi_reg);
-+	if (r)
-+		goto err0;
- 
- 	/* XXX PLL does not come out of reset without this... */
- 	dispc_pck_free_enable(dsi->dss->dispc, 1);
-@@ -1372,36 +1369,25 @@ static int dsi_pll_enable(struct dss_pll *pll)
- 
- 	return 0;
- err1:
--	if (dsi->vdds_dsi_enabled) {
--		regulator_disable(dsi->vdds_dsi_reg);
--		dsi->vdds_dsi_enabled = false;
--	}
-+	regulator_disable(dsi->vdds_dsi_reg);
- err0:
- 	dsi_disable_scp_clk(dsi);
- 	dsi_runtime_put(dsi);
- 	return r;
- }
- 
--static void dsi_pll_uninit(struct dsi_data *dsi, bool disconnect_lanes)
-+static void dsi_pll_disable(struct dss_pll *pll)
- {
-+	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
-+
- 	dsi_pll_power(dsi, DSI_PLL_POWER_OFF);
--	if (disconnect_lanes) {
--		WARN_ON(!dsi->vdds_dsi_enabled);
--		regulator_disable(dsi->vdds_dsi_reg);
--		dsi->vdds_dsi_enabled = false;
--	}
-+
-+	regulator_disable(dsi->vdds_dsi_reg);
- 
- 	dsi_disable_scp_clk(dsi);
- 	dsi_runtime_put(dsi);
- 
--	DSSDBG("PLL uninit done\n");
--}
--
--static void dsi_pll_disable(struct dss_pll *pll)
--{
--	struct dsi_data *dsi = container_of(pll, struct dsi_data, pll);
--
--	dsi_pll_uninit(dsi, true);
-+	DSSDBG("PLL disable done\n");
- }
- 
- static int dsi_dump_dsi_clocks(struct seq_file *s, void *p)
-@@ -4096,11 +4082,11 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- 
- 	r = dss_pll_enable(&dsi->pll);
- 	if (r)
--		goto err0;
-+		return r;
- 
- 	r = dsi_configure_dsi_clocks(dsi);
- 	if (r)
--		goto err1;
-+		goto err0;
- 
- 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id,
- 				  dsi->module_id == 0 ?
-@@ -4108,6 +4094,14 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- 
- 	DSSDBG("PLL OK\n");
- 
-+	if (!dsi->vdds_dsi_enabled) {
-+		r = regulator_enable(dsi->vdds_dsi_reg);
-+		if (r)
-+			goto err1;
-+
-+		dsi->vdds_dsi_enabled = true;
+ 	host->rst  = devm_reset_control_get(dev, "rst");
++	if (IS_ERR(host->rst)) {
++		dev_err(dev, "%s: failed to get reset control\n", __func__);
++		return PTR_ERR(host->rst);
 +	}
-+
- 	r = dsi_cio_init(dsi);
- 	if (r)
- 		goto err2;
-@@ -4136,10 +4130,13 @@ static int dsi_display_init_dsi(struct dsi_data *dsi)
- err3:
- 	dsi_cio_uninit(dsi);
- err2:
--	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
-+	regulator_disable(dsi->vdds_dsi_reg);
-+	dsi->vdds_dsi_enabled = false;
- err1:
--	dss_pll_disable(&dsi->pll);
-+	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
- err0:
-+	dss_pll_disable(&dsi->pll);
-+
- 	return r;
- }
  
-@@ -4158,7 +4155,12 @@ static void dsi_display_uninit_dsi(struct dsi_data *dsi, bool disconnect_lanes,
+ 	ufs_hisi_set_pm_lvl(hba);
  
- 	dss_select_dsi_clk_source(dsi->dss, dsi->module_id, DSS_CLK_SRC_FCK);
- 	dsi_cio_uninit(dsi);
--	dsi_pll_uninit(dsi, disconnect_lanes);
-+	dss_pll_disable(&dsi->pll);
-+
-+	if (disconnect_lanes) {
-+		regulator_disable(dsi->vdds_dsi_reg);
-+		dsi->vdds_dsi_enabled = false;
-+	}
- }
- 
- static int dsi_display_enable(struct omap_dss_device *dssdev)
 -- 
 2.20.1
 
