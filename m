@@ -2,105 +2,110 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D63C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F40C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5878D260B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192475;
-	bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSdRa5sCNfkcWMMOFaaq7TUX8Zbh5+jk+hw8zoZB7iEzyQPTn01JMdh0ikvIkGxTE
-	 7/7UW2Ou2EKUyaxU0LBSjAsmRDCAP1g6YvdnMIELPuw1vVdz72EDlcxAPPOPgoqXl5
-	 EvWbkOQxRtJm4Dm7RuIxo/AhTCTo98GcWmMFucjg=
+	by mail.kernel.org (Postfix) with ESMTP id 6237725F8C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RI7EzQb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfE3FBO (ORCPT
+        id S1727572AbfE3FGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfE3DJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:25 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE8FD24472;
-        Thu, 30 May 2019 03:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185764;
-        bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AncUOUExMHa/FZdDL7bY3yQ81jSDRy3Jz+FckllVbmGkjU79EudM4Qz3LQERe0Rxe
-         b8EtvCo9FvJZ9H0ohFmEMGz/v9FWjrmTXk8rV3n1a7u1/rPyHGZOxZi1LftODAjQ21
-         zBta5rFYS9O1YzGTWY/2144+aZywJ/kBfFkgElD0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 011/405] mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix HS50 data hold time problem
-Date:   Wed, 29 May 2019 20:00:09 -0700
-Message-Id: <20190530030540.997387425@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 30 May 2019 01:06:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39285 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfE3FGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 01:06:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so3148438pfe.6
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 22:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=471RtXe1UXBWmO9V0tHQdL3qmf1+11dEHQ7BpybB+PE=;
+        b=RI7EzQb/M/CcAHTc8S4WrXUzCm+WIGyI3SftLZJJnbXwcZhXORjprHP60+53pX00Ey
+         rcnOE74/AAiNr3M3419C6MljaHWFaEriztx1L+8vNrMDfrLJwz6yRWbFvK0Sx2ZI6QzW
+         2/KfLiMzKdxmhWoepoiZrWSyFnJgeaFSaRnyA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=471RtXe1UXBWmO9V0tHQdL3qmf1+11dEHQ7BpybB+PE=;
+        b=MIR0u65/xLzXX+2OZKzwFInJIafil7ib4ue3R/2WSFD+twZ33e+AGkrdFAKoameUgi
+         qyX5Jy0rvi007ycgjOsaLpOzp79qPZCyAbVRUux29NiQ6zvoEGOBrFjbZ62Coo21d8Ge
+         Fuz9UJCjX530wjeaq5G1O2CHgU3LZE0AgS76PoV5wRnY03ebuWeGRwhVJGOKMATFasN+
+         fbppcVMsnU1cdDRv3ImQHz3IzmnnKFmK8vxfO8OL9PZ6XWvKahkm+512+0GXB9O2SwUR
+         b0glr9mxibscQiZXsQ7ePga379xf3PJMmt5op3MCidiKsgt3nOlB0FuK/VGWhbiPHcv2
+         p+xQ==
+X-Gm-Message-State: APjAAAVJUXIILrVWdtSpHVidc3BTX8x/9ScmTxJabzr34dZJbXpqtXXE
+        cJszns/UVLp/drw/T1tD1UbDmG7IHqk=
+X-Google-Smtp-Source: APXvYqwX7bem3flmwMHVAUUo8QOnTzGP+RQylHxKnMa94V6FQv9HForlf84NLP6f2VgM4WxUoPrKyA==
+X-Received: by 2002:a62:b40a:: with SMTP id h10mr1908195pfn.216.1559192772734;
+        Wed, 29 May 2019 22:06:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h7sm1428273pfo.108.2019.05.29.22.06.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 29 May 2019 22:06:11 -0700 (PDT)
+Date:   Wed, 29 May 2019 22:06:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/kconfig: Fix neighboring typos
+Message-ID: <201905292203.CD000546EB@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trac Hoang <trac.hoang@broadcom.com>
+This fixes a couple typos I noticed in the slab Kconfig:
 
-commit b7dfa695afc40d5396ed84b9f25aa3754de23e39 upstream.
+	sacrifies -> sacrifices
+	accellerate -> accelerate
 
-The iproc host eMMC/SD controller hold time does not meet the
-specification in the HS50 mode. This problem can be mitigated
-by disabling the HISPD bit; thus forcing the controller output
-data to be driven on the falling clock edges rather than the
-rising clock edges.
+Seeing as no other instances of these typos are found elsewhere in the
+kernel and that I originally added one of the two, I can only assume
+working on slab must have caused damage to the spelling centers of
+my brain.
 
-This change applies only to the Cygnus platform.
-
-Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
-the change does not produce merge conflicts backporting to older kernel
-versions. In reality, the timing bug existed since the driver was first
-introduced but there is no need for this driver to be supported in kernel
-versions that old.
-
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/mmc/host/sdhci-iproc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ init/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci-iproc.c
-+++ b/drivers/mmc/host/sdhci-iproc.c
-@@ -196,7 +196,8 @@ static const struct sdhci_ops sdhci_ipro
- };
+diff --git a/init/Kconfig b/init/Kconfig
+index 4592bf7997c0..2dfb3d7f8079 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1750,7 +1750,7 @@ config SLAB_FREELIST_HARDENED
+ 	help
+ 	  Many kernel heap attacks try to target slab cache metadata and
+ 	  other infrastructure. This options makes minor performance
+-	  sacrifies to harden the kernel slab allocator against common
++	  sacrifices to harden the kernel slab allocator against common
+ 	  freelist exploit methods.
  
- static const struct sdhci_pltfm_data sdhci_iproc_cygnus_pltfm_data = {
--	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-+	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
-+		  SDHCI_QUIRK_NO_HISPD_BIT,
- 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN | SDHCI_QUIRK2_HOST_OFF_CARD_ON,
- 	.ops = &sdhci_iproc_32only_ops,
- };
+ config SLUB_CPU_PARTIAL
+@@ -1758,7 +1758,7 @@ config SLUB_CPU_PARTIAL
+ 	depends on SLUB && SMP
+ 	bool "SLUB per cpu partial cache"
+ 	help
+-	  Per cpu partial caches accellerate objects allocation and freeing
++	  Per cpu partial caches accelerate objects allocation and freeing
+ 	  that is local to a processor at the price of more indeterminism
+ 	  in the latency of the free. On overflow these caches will be cleared
+ 	  which requires the taking of locks that may cause latency spikes.
+-- 
+2.17.1
 
 
+-- 
+Kees Cook
