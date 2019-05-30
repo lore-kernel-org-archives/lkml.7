@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1E1C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D038925429
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1BD2545B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190356;
-	bh=uhUTGgs0Qbrk39i5znOTzYXW2P3rC5XQlxdAYOie0qQ=;
+	s=default; t=1559190359;
+	bh=P7R1x1pGi94AC5SEkeFz6aQimoGWCT8T1THq+81y3mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ml0Ejq7M0FonvfpnYDoKDVb2MEXiHqcscoRoR/EnUQxUDu5HUAjsRkMfayioHWgul
-	 hkmtPdfMPeiS7IL4lohjAZo/ZYnGyAc+3dENORK39z+ZRsrs90hquhI3adVDjE6YN1
-	 CCnXGlQYUdcYu/O5CTPjp44MY9avJSnpqtoLVTy4=
+	b=aOQQ6b6Po37/UvQnhrgKkYG4EAoT5od/JWpyfrpJvyxla7/hYGcf8LRVJrC+GkVpa
+	 L9ImO0TIaJPvK9Cl2+jdRd6enaAB7K5BSEfWOOohuimOp3wrAmDF+egIkINB085GTv
+	 OmLnyCmEJ6XUsjbJoMDujglk/L7hNRRoPSgGBQ3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731573AbfE3EZz (ORCPT
+        id S1730235AbfE3EZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35454 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbfE3DOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:41 -0400
+        id S1729932AbfE3DOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A7B223D83;
-        Thu, 30 May 2019 03:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A93124502;
+        Thu, 30 May 2019 03:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186080;
-        bh=uhUTGgs0Qbrk39i5znOTzYXW2P3rC5XQlxdAYOie0qQ=;
+        s=default; t=1559186079;
+        bh=P7R1x1pGi94AC5SEkeFz6aQimoGWCT8T1THq+81y3mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQP0exsI1gWtQ7pIRxsaEYjEilQqCcOAsEk9g24XZxrmI/mWRhHBRAyCQkVy3CBxK
-         y3OKuLnH3TkGYvhcARb0G71CoYEcbSuXjBXQ+AmDdLs6uitiMP9E5RgqsbDIV6frv4
-         F7bWVTwbqxzJdcG8cM2VYvMiRUAv+0T6zlZ10F7o=
+        b=KFXtL2GvJ+FRdmjDE8JlP1dNO5Bva3kP2kv0CWYO3ahq/oTp2PRyY8M5v2vBuu18h
+         GWRLf/HJM/1ijeJ6+dQtlj+suz7KgiyV/kJD8NkiMtTuHhCdTZQAZ1EtQ9Dcp162qE
+         QFLK5EEqat4XVsQ3fZTNsg6Is4wp1L0Go61aAZKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 199/346] x86/microcode: Fix the ancient deprecated microcode loading method
-Date:   Wed, 29 May 2019 20:04:32 -0700
-Message-Id: <20190530030551.315782824@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 198/346] s390: zcrypt: initialize variables before_use
+Date:   Wed, 29 May 2019 20:04:31 -0700
+Message-Id: <20190530030551.273654785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,43 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 24613a04ad1c0588c10f4b5403ca60a73d164051 ]
+[ Upstream commit 913140e221567b3ecd21b4242257a7e3fa279026 ]
 
-Commit
+The 'func_code' variable gets printed in debug statements without
+a prior initialization in multiple functions, as reported when building
+with clang:
 
-  2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+drivers/s390/crypto/zcrypt_api.c:659:6: warning: variable 'func_code' is used uninitialized whenever 'if' condition is true
+      [-Wsometimes-uninitialized]
+        if (mex->outputdatalength < mex->inputdatalength) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/s390/crypto/zcrypt_api.c:725:29: note: uninitialized use occurs here
+        trace_s390_zcrypt_rep(mex, func_code, rc,
+                                   ^~~~~~~~~
+drivers/s390/crypto/zcrypt_api.c:659:2: note: remove the 'if' if its condition is always false
+        if (mex->outputdatalength < mex->inputdatalength) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/s390/crypto/zcrypt_api.c:654:24: note: initialize the variable 'func_code' to silence this warning
+        unsigned int func_code;
+                              ^
 
-added the new define UCODE_NEW to denote that an update should happen
-only when newer microcode (than installed on the system) has been found.
+Add initializations to all affected code paths to shut up the warning
+and make the warning output consistent.
 
-But it missed adjusting that for the old /dev/cpu/microcode loading
-interface. Fix it.
-
-Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Link: https://lkml.kernel.org/r/20190405133010.24249-3-bp@alien8.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/s390/crypto/zcrypt_api.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 97f9ada9cedaf..fc70d39b804f0 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -418,8 +418,9 @@ static int do_microcode_update(const void __user *buf, size_t size)
- 		if (ustate == UCODE_ERROR) {
- 			error = -1;
- 			break;
--		} else if (ustate == UCODE_OK)
-+		} else if (ustate == UCODE_NEW) {
- 			apply_microcode_on_target(cpu);
-+		}
- 	}
+diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
+index eb93c2d27d0ad..df1e847dd36e7 100644
+--- a/drivers/s390/crypto/zcrypt_api.c
++++ b/drivers/s390/crypto/zcrypt_api.c
+@@ -657,6 +657,7 @@ static long zcrypt_rsa_modexpo(struct ap_perms *perms,
+ 	trace_s390_zcrypt_req(mex, TP_ICARSAMODEXPO);
  
- 	return error;
+ 	if (mex->outputdatalength < mex->inputdatalength) {
++		func_code = 0;
+ 		rc = -EINVAL;
+ 		goto out;
+ 	}
+@@ -739,6 +740,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
+ 	trace_s390_zcrypt_req(crt, TP_ICARSACRT);
+ 
+ 	if (crt->outputdatalength < crt->inputdatalength) {
++		func_code = 0;
+ 		rc = -EINVAL;
+ 		goto out;
+ 	}
+@@ -946,6 +948,7 @@ static long zcrypt_send_ep11_cprb(struct ap_perms *perms,
+ 
+ 		targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
+ 		if (!targets) {
++			func_code = 0;
+ 			rc = -ENOMEM;
+ 			goto out;
+ 		}
+@@ -953,6 +956,7 @@ static long zcrypt_send_ep11_cprb(struct ap_perms *perms,
+ 		uptr = (struct ep11_target_dev __force __user *) xcrb->targets;
+ 		if (copy_from_user(targets, uptr,
+ 				   target_num * sizeof(*targets))) {
++			func_code = 0;
+ 			rc = -EFAULT;
+ 			goto out_free;
+ 		}
 -- 
 2.20.1
 
