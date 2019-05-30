@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1C7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7931624B04
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B8B24AF2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187034;
-	bh=isVdUuJxKtBQUgI9I1O0cRqwWtG/45uK+TmIrw2pIXQ=;
+	s=default; t=1559187036;
+	bh=ak71Aucl9FyBhLKERAW+kEL4RcM/O7VdZR2gd6LUDIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uuBoqesYUtHLYbi/zLuLvepC45532/nx3X5yRGW2gHR2kaKX1/kzciL3bMltez62C
-	 le+GUh2XL/T4RUmRmIukE4I2V/680b/j3v4D1CY3+ajZrnFbn4L7pM3zOasRHCSPSt
-	 y9LkvAemRFFnnPAk26QN2FuGN96eqlcxkHGZGYNY=
+	b=gUfSpzVbIzsUAoGHWZ5I8JSeYSp4C2ElfD1XrMxC/7QQ1blOHI43lCmfzHroJON60
+	 1I6gGrVtgxyvQ7zBPooovKkOi+dOY0RJV5LO0blQ5CYhnuWTucuip9a+XV3GNyPYvj
+	 3fT305+/NE7HyvJzIfJm0W/VvSFLEkMsv3xleh+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388632AbfE3Dad (ORCPT
+        id S2388642AbfE3Daf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388433AbfE3Dac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:30:32 -0400
+        id S2388631AbfE3Dad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:30:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9AD24AE5;
-        Thu, 30 May 2019 03:30:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F40A24AFC;
+        Thu, 30 May 2019 03:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559187031;
-        bh=isVdUuJxKtBQUgI9I1O0cRqwWtG/45uK+TmIrw2pIXQ=;
+        s=default; t=1559187033;
+        bh=ak71Aucl9FyBhLKERAW+kEL4RcM/O7VdZR2gd6LUDIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yza782x1LlE/LI1HJ5jB1IEG5KYek5WRWTyCEwO+7OIQbBzPc1YY+J8Qqz4GFb38Z
-         XMJnn266OfeONJBVV/TSrgA12YHiHTEAchKiHq2Fb8HWfvtYZEe+M9UoLeDVk2u3uK
-         4gxKUjR19dJ8DcvS9CS9T1fhMk8Q1acikChCbav0=
+        b=nMwLBQPFPZXor6vGER+iKokikuiCPyfXzE9a1v0Xu3KPQMcKM3Q7BLFk5GV9Sm4+F
+         JgYxhVqwDci2xp14rK8oyERQcbP+NgHwtF7cyUFxeQbplfaSsOKyiCK3dQlL6updre
+         f+ZGVmrjErYzr63MdEUfrUM4lL3NV5jehR/kgmCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,12 +48,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 141/346] media: ov2659: make S_FMT succeed even if requested format doesnt match
-Date:   Wed, 29 May 2019 20:03:34 -0700
-Message-Id: <20190530030548.271476272@linuxfoundation.org>
+Subject: [PATCH 4.14 091/193] media: ov2659: make S_FMT succeed even if requested format doesnt match
+Date:   Wed, 29 May 2019 20:05:45 -0700
+Message-Id: <20190530030501.728903646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -89,7 +89,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 799acce803fe5..a1e9a980a4459 100644
+index 122dd6c5eb389..ce23f436e130d 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
 @@ -1117,8 +1117,10 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
