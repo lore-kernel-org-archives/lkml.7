@@ -2,105 +2,182 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEF4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CA5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E1425501
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11AB2556B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJIRhFYa"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="SqciTApf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfE3IzQ (ORCPT
+        id S1726998AbfE3I67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:55:16 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44648 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfE3IzN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:55:13 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c5so2274871pll.11;
-        Thu, 30 May 2019 01:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KvjM4bsTfrcq2cHYj0Oc8PDr1CJFW5mpcAz8/WiY3E0=;
-        b=PJIRhFYa2F4McFzf+xGE3gUTho75opN9ktQ1NXCUdCcGydnK/sgVU70hxfve2x1Om4
-         y7lXw5PIyHReB38bZ9+AUHhktIyjgnChQ1AXedGWj9Iwsd4CH+wIcTPLIovd3faUjsFP
-         1/NFvpt8TeW6wPHTiPHSQftQHiNxAGSVvR0mn2DfIEfNNIc5LcWfkblavemxfWL+ETP+
-         mT7HFpTnW3wrY5Re/8uPNraDblHqA3cuWX1OYHHYuH7ferAoRnqP7p3DhZjOVoy7eu3R
-         qjwSINqsn2QOGRvm48tJuDzLp18JlNJja60GkZ5u3oe8eyI6/jP2dnLtGMuypw8YhldW
-         ITMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KvjM4bsTfrcq2cHYj0Oc8PDr1CJFW5mpcAz8/WiY3E0=;
-        b=mFuPBaZ8Bvl/S7hzfUnehpx6k667wUS6GWFsx4H5ouyUEB+lTEZYeL9+TCP1m7FO5g
-         xRvdGsJepV1hhCs3dz/J3VRoEc4wDj2LpKbN075XbsQbUZ7ylHoGlbZ01ZwL7mPcwAnf
-         CQJH4R1ExeFnZby+T7HWq075czI9ElY1xCcSzxa4qaAxmY2kvdC7lHpjz1bO75esSkl0
-         eJA6WkwSb5HmsL+HZ8V4qWUuP3IeS7lFHM+LqzicwUMwlNArhi9RhNxnMsX9rEzEGwUu
-         yUDvB/iEOBhUYG4TcHohiDyDz50SFT7I9P2ORC9IOZ5HQ76M8OTD8eoWfQ5G1K3c/qDm
-         BnbQ==
-X-Gm-Message-State: APjAAAWTk9j5tVC1j/ZMIV1UwjwhY0b7S3yyBFM/OppUzLevj0OzQYu2
-        zZGmmmvjLZs4j5dd08sXy8M=
-X-Google-Smtp-Source: APXvYqyXQwgtIekLk3xQBUwVq8/Hu5IaSkI+omKRnrbiDa6+jwZFpuFkY3MoIYdDQJrZpNi5kKmOkg==
-X-Received: by 2002:a17:902:324:: with SMTP id 33mr2735283pld.284.1559206513206;
-        Thu, 30 May 2019 01:55:13 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id o15sm921189pfh.53.2019.05.30.01.54.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 01:55:12 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:54:38 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, ccross@android.com,
-        selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH v2] hooks: fix a missing-check bug in selinux_add_mnt_opt()
-Message-ID: <20190530085438.GA2862@zhanggen-UX430UQ>
-References: <20190530080602.GA3600@zhanggen-UX430UQ>
- <CAFqZXNtX1R1VDFxm7Jco3BZ=pVnNiHU3-C=d8MhCVV1XSUQ8bw@mail.gmail.com>
+        Thu, 30 May 2019 04:58:59 -0400
+Received: from mail-eopbgr50083.outbound.protection.outlook.com ([40.107.5.83]:3406
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726442AbfE3I66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 04:58:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w5v8tFLnqMyXICxDdVIkWXhQnGXr3zFo1jHvIDv/WNY=;
+ b=SqciTApf4KF76TpTRKp5ln2wqAN1/nAF9iXs1Hy6798Tl1Ziv0WbMCV7DVqjTxsmUjw0FbGiqMVIxYoFhDdpXieSOGW1A+sz2L3+0rEkNMxlM3UwXNsHRm/VhT+KZ7jL/qx+LwZm2qz3RtNHgekjPAtb0p+5D2Sscr/QSRk5cmk=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
+ VI1PR0501MB2784.eurprd05.prod.outlook.com (10.172.12.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Thu, 30 May 2019 08:58:54 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0a7:7e01:762e:58e0%6]) with mapi id 15.20.1922.021; Thu, 30 May 2019
+ 08:58:54 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: RE: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Topic: [PATCHv4 3/3] vfio/mdev: Synchronize device create/remove with
+ parent removal
+Thread-Index: AQHVEjiyuDv6ObZt1k6QmGEdbbkCeKaCOPeAgAEtoOA=
+Date:   Thu, 30 May 2019 08:58:54 +0000
+Message-ID: <VI1PR0501MB22713FD54711E482C8627614D1180@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190524135738.54862-1-parav@mellanox.com>
+        <20190524135738.54862-4-parav@mellanox.com> <20190529085633.7fcdf7d2@x1.home>
+In-Reply-To: <20190529085633.7fcdf7d2@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [122.179.25.149]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ac645ef-82c3-4ac8-bac1-08d6e4dd0afc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2784;
+x-ms-traffictypediagnostic: VI1PR0501MB2784:
+x-microsoft-antispam-prvs: <VI1PR0501MB2784BCDD2CBB6B5F07589F1FD1180@VI1PR0501MB2784.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(366004)(136003)(376002)(13464003)(199004)(189003)(6506007)(316002)(81166006)(66446008)(66476007)(33656002)(2906002)(14444005)(73956011)(8936002)(7696005)(86362001)(76116006)(76176011)(5660300002)(4326008)(81156014)(53936002)(25786009)(99286004)(102836004)(6246003)(54906003)(64756008)(66946007)(66556008)(8676002)(6116002)(68736007)(26005)(478600001)(71200400001)(66066001)(71190400001)(14454004)(256004)(11346002)(55016002)(446003)(74316002)(229853002)(186003)(6436002)(9686003)(3846002)(305945005)(6916009)(476003)(52536014)(7736002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2784;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lukaKy0BHjZ5osDal/MVZ+9HCtoKvHRTk+pCQmMaEJmab0BNOS5FqQAbnT0lyyX+dRcxumnGfyLaWQdIk+YWINLAnYWiEdX0qt6HEsJGi/kfCMWA5Jszc5gdrhvEiSeI63Gl5LDDao6LuU2QcQ0lZ4t8PiXI7zlh6WfIBOxEb2Q/yO4A+7o2ADB6/RojLSA5GP2nvu5ZNl/9TvexMZHR1bVPqqZYdm1ZibdhoANjAruWFJOyAo+qFBm3wsrxqIn52JI3YmtlA7W3upheqsHLR/SaywluFuljbVjORHY4ncuynnlsSoyuBs9vsB+49Ntg//NLAHcNkE15UgUdk9rdLbPvl1EWoE8dmnK+LNFV2PzRbrmIzIuXr87KVG7b6bwrIFwZLU374mZoolVlqgXAD8KAQQ0NGlG+TCQd/S3swO4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFqZXNtX1R1VDFxm7Jco3BZ=pVnNiHU3-C=d8MhCVV1XSUQ8bw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ac645ef-82c3-4ac8-bac1-08d6e4dd0afc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 08:58:54.1263
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2784
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In selinux_add_mnt_opt(), 'val' is allcoted by kmemdup_nul(). It returns
-NULL when fails. So 'val' should be checked.
+Hi Alex,
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
----
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec702c..4797c63 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1052,8 +1052,11 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
- 	if (token == Opt_error)
- 		return -EINVAL;
- 
--	if (token != Opt_seclabel)
--		val = kmemdup_nul(val, len, GFP_KERNEL);
-+	if (token != Opt_seclabel) {
-+			val = kmemdup_nul(val, len, GFP_KERNEL);
-+			if (!val)
-+				return -ENOMEM;
-+	}
- 	rc = selinux_add_opt(token, val, mnt_opts);
- 	if (unlikely(rc)) {
- 		kfree(val);
+> -----Original Message-----
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Wednesday, May 29, 2019 8:27 PM
+
+[..]
+> >
+> > diff --git a/drivers/vfio/mdev/mdev_core.c
+> > b/drivers/vfio/mdev/mdev_core.c index 0bef0cae1d4b..c5401a8c6843
+> > 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -102,11 +102,36 @@ static void mdev_put_parent(struct mdev_parent
+> *parent)
+> >  		kref_put(&parent->ref, mdev_release_parent);  }
+> >
+>=20
+> Some sort of locking semantics comment would be useful here, ex:
+>=20
+> /* Caller holds parent unreg_sem read or write lock */
+>=20
+Added.
+
+> > +
+> >  static int mdev_device_remove_cb(struct device *dev, void *data)  {
+> > -	if (dev_is_mdev(dev))
+> > -		mdev_device_remove(dev);
+> > +	struct mdev_parent *parent;
+> > +	struct mdev_device *mdev;
+> >
+> > +	if (!dev_is_mdev(dev))
+> > +		return 0;
+> > +
+> > +	mdev =3D to_mdev_device(dev);
+> > +	parent =3D mdev->parent;
+> > +	mdev_device_remove_common(mdev);
+>=20
+> 'parent' is unused here and we only use mdev once, so we probably don't n=
+eed
+> to put it in a local variable.
+>=20
+Right left out from previous code.
+Removed and refactored the code now.
+
+> >  	return 0;
+> >  }
+> >
+> > @@ -148,6 +173,7 @@ int mdev_register_device(struct device *dev, const
+> struct mdev_parent_ops *ops)
+> >  	}
+> >
+> >  	kref_init(&parent->ref);
+> > +	init_rwsem(&parent->unreg_sem);
+> >
+> >  	parent->dev =3D dev;
+> >  	parent->ops =3D ops;
+> > @@ -206,13 +232,17 @@ void mdev_unregister_device(struct device *dev)
+> >  	dev_info(dev, "MDEV: Unregistering\n");
+> >
+> >  	list_del(&parent->next);
+> > +	mutex_unlock(&parent_list_lock);
+> > +
+> > +	down_write(&parent->unreg_sem);
+> > +
+> >  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+> >
+> >  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+> >
+> >  	parent_remove_sysfs_files(parent);
+> > +	up_write(&parent->unreg_sem);
+> >
+> > -	mutex_unlock(&parent_list_lock);
+> >  	mdev_put_parent(parent);
+> >  }
+> >  EXPORT_SYMBOL(mdev_unregister_device);
+> > @@ -265,6 +295,12 @@ int mdev_device_create(struct kobject *kobj,
+> >
+> >  	mdev->parent =3D parent;
+> >
+> > +	ret =3D down_read_trylock(&parent->unreg_sem);
+> > +	if (!ret) {
+> > +		ret =3D -ENODEV;
+>=20
+> I would have expected -EAGAIN or -EBUSY here, but I guess that since we
+> consider the lock-out to deterministically be the parent going away that =
+-
+> ENODEV makes sense.  Ok.
+>=20
+Yeah, I agree that ENODEV is more accurate error code as we don't want to t=
+ell user to retry so EAGAIN is less appropriate.
+Sending v5.
