@@ -2,102 +2,107 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3ACC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04FDC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF602490D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B613A249CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="DFy2fpqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfE3HCf (ORCPT
+        id S1727591AbfE3HJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:02:35 -0400
-Received: from muru.com ([72.249.23.125]:51880 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfE3HCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:02:34 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7128D803A;
-        Thu, 30 May 2019 07:02:53 +0000 (UTC)
-Date:   Thu, 30 May 2019 00:02:30 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
-Message-ID: <20190530070230.GR5447@atomide.com>
-References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
- <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
- <20190527112122.GJ5447@atomide.com>
- <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
- <20190528093952.GM5447@atomide.com>
- <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
- <20190528101847.GN5447@atomide.com>
- <ac487765-01a3-2c82-d86e-db00451563a9@ti.com>
- <20190529081038.GP5447@atomide.com>
- <20190530054640.GQ5447@atomide.com>
+        Thu, 30 May 2019 03:09:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37211 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfE3HJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 03:09:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so3077592wmo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 00:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=ypF/KA9Dic146WE/lXlqQwn2IzYwEkhGA3zkwEb1X2U=;
+        b=DFy2fpqwoTUFgW2qOg07bSC2ixFFoft5m4+BSbp/H87lv4iICgp+a96NCg3OGa8QQs
+         1CoYS/ZIA22TtxOAmmjsj0JzBeWu4hZzn2L5GWcPsYy3DHivE4mxrh47xif5Pvna0Z5e
+         NbQSZWOo/5qrj9nQCamsZwicmicpNqiAt6K1+F/t9LmuhRxpbCbr/27YexJpPmipe7qB
+         eTlqt+XgCU9diss+sfDfLEnsa7FbRopKm5FzdNFob11w7sCxBn4yVRGKZqD53QqseumC
+         AZXCKkYZOw6w1k7e5vnExL3bdlNBPQDk+NMIuwCtxiW+/cMDZKh6zfAdyCYp1mGARKI1
+         4CSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=ypF/KA9Dic146WE/lXlqQwn2IzYwEkhGA3zkwEb1X2U=;
+        b=fTXLoApDt//wpFKi5QtqUalIDmyPtv1P95FUOIeE6198OrqpHP/9wV6u+2IiPg2H6S
+         5LPbl1m9jhlBjFWiyWAPZQZ3fvvoKYrz7PfgaGzSEDcyfh1OE0v8x1LBA1GCpo7oJws/
+         QM0Q6ObIaguqAzMuHwOrMwT2Yz7nNABCruRJkI7mNa/Eysid5G/QwAn+VWrLuPkTNuu/
+         u6/gO0bvOEYSZGaqj6fcsk1lFsZAbNbh6YcoIEKzqEyJlyPZSQEgmss/3q2O4FIos4uX
+         OB3mdyf8VNrYObf3Y6jwDwyFFteD5Jt2hwqTlzb9F9bT3KzvHS3qg8ngR78TyiB+cCbj
+         x5ig==
+X-Gm-Message-State: APjAAAWZwLr5hYP+Wrii+n/e/uAaZB3/bdigrmoyPPu1hLvk2Ne4v9Nt
+        iE2aKo7wHAREOyDA8/pTKmcgzMpkArAKXQ==
+X-Google-Smtp-Source: APXvYqzzodbAAWfuewNL4CI+ghqNeMlF5k6WfDSCQe7720gxF8AVmauVoOtvs2XZU9/QVbZwnnq8AA==
+X-Received: by 2002:a1c:1947:: with SMTP id 68mr1194431wmz.171.1559200145818;
+        Thu, 30 May 2019 00:09:05 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id q11sm1439616wmc.15.2019.05.30.00.09.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 00:09:05 -0700 (PDT)
+Message-ID: <5cef8191.1c69fb81.72200.711f@mx.google.com>
+Date:   Thu, 30 May 2019 00:09:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530054640.GQ5447@atomide.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-5.1.y
+X-Kernelci-Kernel: v5.1.5-406-ge151dd0525b9
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
+Subject: Re: [PATCH 5.1 000/405] 5.1.6-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [190530 05:47]:
-> * Tony Lindgren <tony@atomide.com> [190529 08:11]:
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [190529 07:06]:
-> > > On 28/05/2019 13:18, Tony Lindgren wrote:
-> > > 
-> > > > > My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
-> > > > > config.
-> > > > 
-> > > > Strange that this is not affecting other x15? I think timer12 would
-> > > > be blocked on HS devices though?
-> > > 
-> > > Seems that the kernel config affects. omap2plus_defconfig boots ok.
-> > 
-> > OK, this line in your oops:
-> > 
-> > Unable to handle kernel paging request at virtual address 5a5a5a5a
-> > 
-> > Probably means we hit some slab poison with DEBUG_SLAB set.
-> > Looks like your config boots fine with DEBUG_SLAB disabled
-> > for me.
-> > 
-> > As this only happens for timer12, I wonder if we're again
-> > hitting some uncompress issue with corrupted dtb. Changing
-> > u-boot ftdaddr higher up might possibly make it go away.
-> > Or else there's a bug elsewhere :)
-> 
-> Oh but CM_WKUPAON_TIMER12_CLKCTRL has no CLKSEL option unlike
-> CM_WKUPAON_TIMER1_CLKCTRL. Below is one part of the fix, but
-> it seems like we're missing handling somewhere as trying to
-> get a non-existing clock should just produce -ENODEV type error.
-> 
-> And the clksel should be just handled with assigned-clocks
-> in general, but I think we still need it there until we
-> have drivers/clocksource/ timer drivers updated to boot
-> using early_platform_device.
+stable-rc/linux-5.1.y boot: 125 boots: 1 failed, 122 passed with 2 untried/=
+unknown (v5.1.5-406-ge151dd0525b9)
 
-OK found it, we have the clkctrl clock potentially return
-uninitialized data. I posted two fixes for the issue:
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.1.y/kernel/v5.1.5-406-ge151dd0525b9/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
+/kernel/v5.1.5-406-ge151dd0525b9/
 
-[PATCH] clk: ti: clkctrl: Fix returning uninitialized data
-[PATCH] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
+Tree: stable-rc
+Branch: linux-5.1.y
+Git Describe: v5.1.5-406-ge151dd0525b9
+Git Commit: e151dd0525b9aaeac84987d2790c30d8a89ae274
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 69 unique boards, 22 SoC families, 14 builds out of 209
 
-Regards,
+Boot Failure Detected:
 
-Tony
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm4708-smartrg-sr400ac: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
