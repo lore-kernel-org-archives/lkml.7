@@ -2,95 +2,109 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D26C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69369C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B1E261AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BEA261AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559250351;
-	bh=aX4nWpK3YPagRgr8m+/PDxPcJhmavRTwT1hAhpBBjhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TDmtaUL6nZ3tF/YdEMCOsTovFIF1wICj3CEoEhdQRFlPnnAzPjnRMcsWRqsPUoTLn
-	 sOh794PAYo4mqY+hBGVBk2/oXDzpaZ1NRcR37j0uEVk1ChrYUC2CPu9vr8TYrnt1bO
-	 IC5pbJzkTpEEbeqtU+JHz3d3Dh/bFRmWhCf6GGcI=
+	s=default; t=1559250360;
+	bh=1jssNiTMn7lNEzbP5Eo+hcP+KrAgvO9UNgar+fFKl1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A/JSyJfi8fwHgJnrtGuaLwgRD9QFBX1UcrTAeWkY6UUT9p3DiMHLMY4t7tFVvZL4/
+	 Uw5pdFTDCo0QRioLNhqhvXKWvlqNzuQS96W6P7XVjCBqV5QdR+6Nu7IgWDB3hPwEwc
+	 tp+FqgLx23Au0a/QyC3ouZw8BimcN+7XkD8RQpfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfE3VFu (ORCPT
+        id S1726558AbfE3VF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40724 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 17:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfE3VFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:05:50 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726079AbfE3VF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 17:05:59 -0400
+Received: from localhost (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C10B261B9
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 21:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A19A261AF;
+        Thu, 30 May 2019 21:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559250349;
-        bh=aX4nWpK3YPagRgr8m+/PDxPcJhmavRTwT1hAhpBBjhc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P8feyAZTdY6tYSIMaxhOd9VKwkYsoguGLmVosrWiC6G8IzzXHAPvMUXiOuApTaLTM
-         vn7at6FJJUNb67uHqqWFkG3bo9gg2ymv/3ZBs+kAIvkhkxOlSkbcPNS8+jublJyGpF
-         SatAbgSICW1YmddRGQpjDj5hH0cWmtOnq2EKRZ8E=
-Received: by mail-wm1-f48.google.com with SMTP id 15so4611371wmg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 14:05:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAXgdxjnmBNXC/Mxp7MUXgCTi95fAzvaMwIqvX5UvOKTDbIcuMKl
-        J+ZzaPhdbCIHd16MzOPRpgDZIiJLyZIPBzNOLS85ZQ==
-X-Google-Smtp-Source: APXvYqzXUTbDrA3vUqBAbcXhZxg9NZts1vRUB+Qvc7Dbln+5et7YUa8U6E6+YShFvjBZK6B0hkZLvoV1ryQMwDGFYew=
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr3048203wmi.0.1559250347748;
- Thu, 30 May 2019 14:05:47 -0700 (PDT)
+        s=default; t=1559250358;
+        bh=1jssNiTMn7lNEzbP5Eo+hcP+KrAgvO9UNgar+fFKl1w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sPUAftLsz5QMfZ97r9mPjyFUIRceHZm24vJXkWY3otFPwFSJtYqTa0HnANNz3NZGd
+         ofykHcjVEyVUCWZlTDd0F1TlhxHOKPfIS9cUf/f6V6SgOlD8MfCqiSeX1bvfqZlYVo
+         5YilSbOD+z8OPFQGoKTI8AchyPSV1+PaRE5dcRrg=
+Date:   Thu, 30 May 2019 14:05:58 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] staging: kpc2000: add spaces around operators in
+ core.c
+Message-ID: <20190530210558.GA21455@kroah.com>
+References: <20190524110802.2953-1-simon@nikanor.nu>
+ <20190524110802.2953-2-simon@nikanor.nu>
 MIME-Version: 1.0
-References: <1558742162-73402-1-git-send-email-fenghua.yu@intel.com> <1558742162-73402-3-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1558742162-73402-3-git-send-email-fenghua.yu@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 30 May 2019 14:05:36 -0700
-X-Gmail-Original-Message-ID: <CALCETrUiVVNMmVCuZgZi4UWGpWd+K=+8Mx3+DhcjzmQ55MxGbA@mail.gmail.com>
-Message-ID: <CALCETrUiVVNMmVCuZgZi4UWGpWd+K=+8Mx3+DhcjzmQ55MxGbA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] x86/umwait: Initialize umwait control values
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190524110802.2953-2-simon@nikanor.nu>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 5:05 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
->
-> umwait or tpause allows processor to enter a light-weight
-> power/performance optimized state (C0.1 state) or an improved
-> power/performance optimized state (C0.2 state) for a period
-> specified by the instruction or until the system time limit or until
-> a store to the monitored address range in umwait.
->
-> IA32_UMWAIT_CONTROL MSR register allows kernel to enable/disable C0.2
-> on the processor and set maximum time the processor can reside in
-> C0.1 or C0.2.
->
-> By default C0.2 is enabled so the user wait instructions can enter the
-> C0.2 state to save more power with slower wakeup time.
->
-> Default maximum umwait time is 100000 cycles. A later patch provides
-> a sysfs interface to adjust this value.
+On Fri, May 24, 2019 at 01:07:59PM +0200, Simon Sandström wrote:
+> Fixes checkpatch.pl check "spaces preferred around that <op>".
+> 
+> Signed-off-by: Simon Sandström <simon@nikanor.nu>
+> ---
+>  drivers/staging/kpc2000/kpc2000/core.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+> index 4110032d0cbb..b464973d12ad 100644
+> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> @@ -276,18 +276,18 @@ static ssize_t kp2000_cdev_read(struct file *filp, char __user *buf,
+>  	if (WARN(NULL == buf, "kp2000_cdev_read: buf is a NULL pointer!\n"))
+>  		return -EINVAL;
+>  
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Card ID                 : 0x%08x\n", pcard->card_id);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Build Version           : 0x%08x\n", pcard->build_version);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Build Date              : 0x%08x\n", pcard->build_datestamp);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Build Time              : 0x%08x\n", pcard->build_timestamp);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Core Table Offset       : 0x%08x\n", pcard->core_table_offset);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Core Table Length       : 0x%08x\n", pcard->core_table_length);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "Hardware Revision       : 0x%08x\n", pcard->hardware_revision);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "SSID                    : 0x%016llx\n", pcard->ssid);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "DDNA                    : 0x%016llx\n", pcard->ddna);
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "IRQ Mask                : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_INTERRUPT_MASK));
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "IRQ Active              : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_INTERRUPT_ACTIVE));
+> -	cnt += scnprintf(buff+cnt, BUFF_CNT-cnt, "CPLD                    : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG));
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Card ID                 : 0x%08x\n", pcard->card_id);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Build Version           : 0x%08x\n", pcard->build_version);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Build Date              : 0x%08x\n", pcard->build_datestamp);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Build Time              : 0x%08x\n", pcard->build_timestamp);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Core Table Offset       : 0x%08x\n", pcard->core_table_offset);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Core Table Length       : 0x%08x\n", pcard->core_table_length);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "Hardware Revision       : 0x%08x\n", pcard->hardware_revision);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "SSID                    : 0x%016llx\n", pcard->ssid);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "DDNA                    : 0x%016llx\n", pcard->ddna);
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "IRQ Mask                : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_INTERRUPT_MASK));
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "IRQ Active              : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_INTERRUPT_ACTIVE));
+> +	cnt += scnprintf(buff + cnt, BUFF_CNT - cnt, "CPLD                    : 0x%016llx\n", readq(pcard->sysinfo_regs_base + REG_CPLD_CONFIG));
+>  
+>  	if (*f_pos >= cnt)
+>  		return 0;
 
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
+This whole function just needs to be deleted, it's a horrible hack.
 
-with the caveat that we should really clean up our CPU init code to
-have a function like cpu_prepare_for_user_code() that is called on all
-CPUs after every boot, resume, etc before running user code.  This
-would subsume syscall_init().
+thanks,
 
---Andy
+greg k-h
