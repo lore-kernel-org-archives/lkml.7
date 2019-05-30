@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF1BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395EBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15B424BE0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1326B24BE9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187661;
-	bh=Fp+7aUbF1D0lC5iS9T91xccEwGSLKcrbLj5HiBvAS/M=;
+	s=default; t=1559187665;
+	bh=WZ2amSC0Wh8PX9tKxg7juenTTG5QF70nnrLErRhweA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4Ae+WfPK7ciMzsPQReoiS9xbjoaaTsPZ/32I68C+zbx3CNcL2SxmVTI5sM3RTG0k
-	 WwdQ8U+DXNT5xG2WHVWJ36mtx2TRx4zqa0JyzNboe4BzdwTCsKilbOIGMrJahX57cx
-	 zVDaE5Y+VjlvpUf/4WFTd5RB8Hfi1UKd7e/HIiL0=
+	b=NFRgB7LKps7rzKBrEJ7Ul8yARjFjmqC41OEPO1K++fZBaMSTADUcpGCJqZT5dNrHH
+	 CduVC50ugaho1XvNPiqfqmKtu0IaOPOGFOrsbFy60lQis8Kz77HZLjN4iukrzmShTv
+	 kaH58DqTLmMNMCvEG/M8ttVriNRvXnFLbi+r1op8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbfE3DVX (ORCPT
+        id S1732518AbfE3DlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729638AbfE3DQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:21 -0400
+        id S1732547AbfE3DVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC472449A;
-        Thu, 30 May 2019 03:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2472924A0B;
+        Thu, 30 May 2019 03:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186180;
-        bh=Fp+7aUbF1D0lC5iS9T91xccEwGSLKcrbLj5HiBvAS/M=;
+        s=default; t=1559186484;
+        bh=WZ2amSC0Wh8PX9tKxg7juenTTG5QF70nnrLErRhweA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQqw7nmoC0IXFxCxrD51zZNIY1Z0bY6lX8ZGJWvRcaiC1wW0JFoub5u8ciB9RgTcO
-         AqAc9BSadOYQc9ldylNyfVtKsKs+diL+LJPm6wCgLHkXDelPXcPDHzMX0q3FPiSTiE
-         cZZpuFbwL/8BzBHy8E/stCDTfLUP8X2BFcogHHoU=
+        b=Nm6OF7BO0iG2W1xMXe66qBWOlbM7rLYa8LmQ0A5cnjl4X9KFQclEb4oJPkzz7ioJR
+         GrCiuJlzS8dHTOGOADM3ler+mkqyVT1x75vvNeDa1HJh1lZmimJOivAsHgox5cmjiJ
+         CLhygcYfpNIrkCJRLIm+9uvleF4ujeqOLcmdp/5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/276] gfs2: Fix lru_count going negative
-Date:   Wed, 29 May 2019 20:03:22 -0700
-Message-Id: <20190530030527.354324148@linuxfoundation.org>
+Subject: [PATCH 4.9 122/128] media: saa7146: avoid high stack usage with clang
+Date:   Wed, 29 May 2019 20:07:34 -0700
+Message-Id: <20190530030456.369529231@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,109 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit 03aa4f191a36f33fce015387f84efa0eee94408e ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+Two saa7146/hexium files contain a construct that causes a warning
+when built with clang:
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_probe(struct saa7146_dev *dev)
+           ^
+drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
+           ^
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
+This one happens regardless of KASAN, and the problem is that a
+constructor to initialize a dynamically allocated structure leads
+to a copy of that structure on the stack, whereas gcc initializes
+it in place.
 
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
+Link: https://bugs.llvm.org/show_bug.cgi?id=40776
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix checkpatch warnings]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 5 ++---
+ drivers/media/pci/saa7146/hexium_orion.c  | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 9d566e62684c2..775256141e9fb 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index c889ec9f8a5a0..f5fc8bcbd14b1 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	/* enable i2c-port pins */
+ 	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
  
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
- {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
-+
- 	spin_lock(&lru_lock);
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium gemini",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium gemini",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
+diff --git a/drivers/media/pci/saa7146/hexium_orion.c b/drivers/media/pci/saa7146/hexium_orion.c
+index c306a92e89095..dc07ca37ebd06 100644
+--- a/drivers/media/pci/saa7146/hexium_orion.c
++++ b/drivers/media/pci/saa7146/hexium_orion.c
+@@ -232,9 +232,8 @@ static int hexium_probe(struct saa7146_dev *dev)
+ 	saa7146_write(dev, DD1_STREAM_B, 0x00000000);
+ 	saa7146_write(dev, MC2, (MASK_09 | MASK_25 | MASK_10 | MASK_26));
  
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
-+	}
- 
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
- 
-@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- 		return;
- 
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1158,8 +1162,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1455,6 +1458,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1462,7 +1466,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1497,6 +1500,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium orion",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium orion",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
 -- 
 2.20.1
 
