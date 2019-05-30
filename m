@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A511EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D0CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBEB24D68
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E6A24D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188216;
-	bh=x7qia1jhqz5bWHt53VbOeUuoqSMIK9Yfam18C8pdwQc=;
+	s=default; t=1559188220;
+	bh=v5+OdRiroJNePL+EMSWqYBpZD6+2xfylolszboFxqXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=koJ9TL/uCyNa8O0JIfi++nnSq8uI9fGA0zkgMlsfxUxud4INvcGM1PPsR8st2eeMM
-	 dhVem817exXefiKcabOvOra/vZfkGhByoW8nyC6JdmB4kB3v6Vjo+plRLmcnn19XX0
-	 h4jMFzsZWwZJN7+LPsjV9DCs7oXUvmFAYMyjCXr4=
+	b=MKy9dGulm6fB2x2tnvlv0rq1AluPLL7UYw7CMfYRO2S0KY0b6J+4aa5c1H56WPFG5
+	 Vy2pqv79b5mjO38pQ4v/U3zIAuHi/FZfUYcfvGhWFtLMYAGpSQFzuJsyL/ZKRFPd6d
+	 8TbrTLpqNyP53k46jqiqrK657Y9JPcnT0/9L6ggY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732089AbfE3DT6 (ORCPT
+        id S1733129AbfE3DuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728112AbfE3DPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:44 -0400
+        id S1732080AbfE3DT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7475B24559;
-        Thu, 30 May 2019 03:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6852248DE;
+        Thu, 30 May 2019 03:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186143;
-        bh=x7qia1jhqz5bWHt53VbOeUuoqSMIK9Yfam18C8pdwQc=;
+        s=default; t=1559186396;
+        bh=v5+OdRiroJNePL+EMSWqYBpZD6+2xfylolszboFxqXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rgRD7yzKfyxyqXxVIgQsiVNkEovUa2/TCdTyUfnh1L79BtJdUK3uP7/wy4oxB/2Fu
-         glMIM3ocZBms7xe4u04xhYnKpxY7dYKJsF8AnzP8mg7UrjVugYkX64nH8NkavQ7Yt5
-         xvfts6ScAE5qSpuxs9QYDnM5ZLBqN8G7JFZ5FIAU=
+        b=INF/nDx4m0r56DicK5CZZ1aAvgGd2O2iS30QUmV9S5/5pje0moxpvUm68hyGii+4R
+         1sUzxghSjXBKlcN3cDHQmcWNhArvRzpmZ45ECIJsfvGKUAu02zC144Ume4SwLiWwtq
+         WxuaoliIQ15WDzxarSZQ2XCaitCw/2JcwzRYe9+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 321/346] spi: rspi: Fix sequencer reset during initialization
-Date:   Wed, 29 May 2019 20:06:34 -0700
-Message-Id: <20190530030557.046711876@linuxfoundation.org>
+Subject: [PATCH 4.14 168/193] tty: ipwireless: fix missing checks for ioremap
+Date:   Wed, 29 May 2019 20:07:02 -0700
+Message-Id: <20190530030511.425589404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,57 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
+[ Upstream commit 1bbb1c318cd8a3a39e8c3e2e83d5e90542d6c3e3 ]
 
-While the sequencer is reset after each SPI message since commit
-880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
-Transfers on QSPI"), it was never reset for the first message, thus
-relying on reset state or bootloader settings.
+ipw->attr_memory and ipw->common_memory are assigned with the
+return value of ioremap. ioremap may fail, but no checks
+are enforced. The fix inserts the checks to avoid potential
+NULL pointer dereferences.
 
-Fix this by initializing it explicitly during configuration.
-
-Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rspi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/tty/ipwireless/main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index a4ef641b52272..b0824df3e04ba 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -271,7 +271,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets parity, interrupt mask */
- 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
+diff --git a/drivers/tty/ipwireless/main.c b/drivers/tty/ipwireless/main.c
+index 655c7948261c7..2fa4f91234693 100644
+--- a/drivers/tty/ipwireless/main.c
++++ b/drivers/tty/ipwireless/main.c
+@@ -113,6 +113,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
  
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 	ipw->common_memory = ioremap(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]));
++	if (!ipw->common_memory) {
++		ret = -ENOMEM;
++		goto exit1;
++	}
+ 	if (!request_mem_region(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]),
+ 				IPWIRELESS_PCCARD_NAME)) {
+@@ -133,6 +137,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
  
-@@ -315,7 +316,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
- 	rspi_write8(rspi, 0x00, RSPI_SSLND);
- 	rspi_write8(rspi, 0x00, RSPI_SPND);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
-@@ -366,7 +368,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets buffer to allow normal operation */
- 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
- 	/* Sets RSPI mode */
+ 	ipw->attr_memory = ioremap(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]));
++	if (!ipw->attr_memory) {
++		ret = -ENOMEM;
++		goto exit3;
++	}
+ 	if (!request_mem_region(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]),
+ 				IPWIRELESS_PCCARD_NAME)) {
 -- 
 2.20.1
 
