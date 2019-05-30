@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96103C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209AEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B921249C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D56249EE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186530;
-	bh=MjXQS3y9/+u+lZla8UU9/IM/aiALE+hEOkl2pgRuKEE=;
+	s=default; t=1559186542;
+	bh=PXyNiBVDngqp8kmfxOJ/7Q+LgxW2Mff6MtqJg3Du+ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qlhgk7vaNKokpDiZGGsfafapsIkfdopB9VmmQgRVhvrCEdHe4KYQ0zy99DPhiZot6
-	 N2H/iOY8/6iw8C9r+3wry5LPUrl7GU5nqE9BcXs/TULkWgSctb/mTbQU7g7fVvmlwp
-	 oa8mBgk9owgNfrDPXzYClItwD99BsT7FiUbGuCXg=
+	b=qgp40/6dil9u8mr+IlzhqVYrlqD1csN2b9WluBWc08JOzWBnk+j2h/2Pgeo4y0QOm
+	 6ibbTasS/9WYZntb07y49s1iNa9meI6LytiIOdyXUb6N9TmJe/3zjrfmYpOyGqbIEL
+	 +n9Fo8I2nq60DzW7soHcolrCMD4L6ZD8a75IU6FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732699AbfE3DWJ (ORCPT
+        id S1732801AbfE3DWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729838AbfE3DQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:35 -0400
+        id S1730779AbfE3DQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:43 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3130924590;
-        Thu, 30 May 2019 03:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366AA24624;
+        Thu, 30 May 2019 03:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186195;
-        bh=MjXQS3y9/+u+lZla8UU9/IM/aiALE+hEOkl2pgRuKEE=;
+        s=default; t=1559186203;
+        bh=PXyNiBVDngqp8kmfxOJ/7Q+LgxW2Mff6MtqJg3Du+ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkBah5nto+xUvFqXSCf9r78g1AutI0aH59mHonuEiHwDh5NtMTT5YFCtEukfV5nj5
-         kDBITOJZEeFScgeDVWjoY3qFYTLP7j3gsGtF41jedTxrvDS9m7uNezlYHPMhWMXIi3
-         d+YEJ+CFISqJKRkSesPvCmSoxGMNWfVOqVbZhQHc=
+        b=LNCeYOX5UZfail6Wbsl0gw3dslm7PInh2+xnLckNoujoQ7OwaZiIu3Dgk1Nd8pqM1
+         mjRKfWH9OMk0CNyqX8keHYAhGZwzyDtM0TLmEHGaGpcYVhIlN/h4C0LPgGRmEJeLPO
+         Z1TMCpjynESecksrCXwcxCqUUqaktN+h6xyDBy+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/276] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Wed, 29 May 2019 20:03:46 -0700
-Message-Id: <20190530030530.373484267@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/276] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
+Date:   Wed, 29 May 2019 20:04:06 -0700
+Message-Id: <20190530030531.755189018@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,53 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
+[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+The NOHZ idle balancer runs on the lowest idle CPU. This can
+interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+housekeeping CPUs.
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
+HK_FLAG_SCHED is not used for this because it is not set anywhere
+at the moment. This could be folded into HK_FLAG_SCHED once that
+option is fixed.
 
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
+The problem was observed with increased jitter on an application
+running on CPU0, caused by NOHZ idle load balancing being run on
+CPU1 (an SMT sibling).
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/sched/fair.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 693cf05b0cc44..288673cff85ea 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -975,6 +975,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d31916366d39c..7a1e9db617f76 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9083,22 +9083,26 @@ static inline int on_null_domain(struct rq *rq)
+  * - When one of the busy CPUs notice that there may be an idle rebalancing
+  *   needed, they will kick the idle load balancer, which then does idle
+  *   load balancing for all the idle CPUs.
++ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
++ *   anywhere yet.
+  */
  
-+		/*
-+		 * We can have a combination of device and data nodes, e.g. with
-+		 * hierarchical _DSD properties. Make sure the adev pointer is
-+		 * restored before going through data nodes, otherwise we will
-+		 * be looking for data_nodes below the last device found instead
-+		 * of the common fwnode shared by device_nodes and data_nodes.
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+ static inline int find_new_ilb(void)
+ {
+-	int ilb = cpumask_first(nohz.idle_cpus_mask);
++	int ilb;
+ 
+-	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+-		return ilb;
++	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
++			      housekeeping_cpumask(HK_FLAG_MISC)) {
++		if (idle_cpu(ilb))
++			return ilb;
++	}
+ 
+ 	return nr_cpu_ids;
+ }
+ 
+ /*
+- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+- * CPU (if there is one).
++ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
++ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+  */
+ static void kick_ilb(unsigned int flags)
+ {
 -- 
 2.20.1
 
