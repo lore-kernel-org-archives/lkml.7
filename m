@@ -1,154 +1,155 @@
 Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5E8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C50C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1B4243B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559177116;
-	bh=Q/jZBlUt+/OQ2kjUr3oKQoJFOrN5c234c4Y06NnRpmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qlmKS3aSre3egWEAI/CMTLVfhca0tT9nYjdvUbjLMWobMTw0bUVwRYd5iZLtkr+kr
-	 /ETIZEwpcgHr6lP9qfaaaJrlSQutIKEXmJ8Isaj8YeLtpFp6ynwj7BpHZeEBlOStbJ
-	 JYxWeh6ZRK8Mwdym6lYvQd+tp5kB3WCqgKHcvzH8=
+	by mail.kernel.org (Postfix) with ESMTP id EEA39243B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfE3ApP (ORCPT
+        id S1727201AbfE3AqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:45:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44384 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3ApP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:45:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so886093pgp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3pQf3oE9pe7ut38GOYF86CTbPhCE2HZHC16fikq5yN4=;
-        b=b0rhC0GnaksDvk0NWeuH1qv7fPieZq9dXKXYRobup/o0JNscbNlpDJOYzfHN03PATj
-         OHKJ0xZuwZZH2F+3URlVPUKBZOH+aTinvwRWog8zP7uTflJ6QdFQVbpKZHqJfi1IFeu8
-         khW1oqaMCyj+NK+HU/0/smU4pi1IZ9amJI+fxmBOHfWKxlazKHZ5PHpryv2cISCV2/V+
-         zyO0l1aRDazryxC70o7JgzWp7qZksuVAyeUdewD0qiRIoEziuBzQVolw7TXKpLD6KXOs
-         ORsa6C3gaQ3krpOaXj9O7Hra3MD77Z6IQCs/0/7PLPI6MquEgy5BPIGmI658rVdhHTv1
-         Pplw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3pQf3oE9pe7ut38GOYF86CTbPhCE2HZHC16fikq5yN4=;
-        b=o+vlRQFxfKep5aAVP5i613TbCfDJWrtcnALvpzGymCVoLryLZYlRUIYrX2KQY5iZ7S
-         6ci+AhIzBSBw2WV3S29vGDkPF1P25IU9j63CSiMT7XWJw33WeX6DE5a4lkJxqZuuSXfJ
-         BDDMNKMrrm2GBtM4+wJDgPxRYn/XuYx8m5c7/+Ue9cIcE6JOn8lcdEla8BxwI9SnaZf7
-         vX4syM+Rl1Un84v/N9FdrEFZzHpymaeR4Wi/4ffMccKlcgh8E5ROYZQvEFa1kv83rHSN
-         INtG3ocK9YQbHGu7idmnOtdn085yzeyjgRfOVO2E8+Gv698OifIhercloLSmQOlORxO7
-         xrxQ==
-X-Gm-Message-State: APjAAAWAYBnodi7WgMZN5tX4eeM/t9/4kLV0jEbNpZyF/IWq7Ibv/ZZG
-        0f9Tp0WT+acmrkQubmHJQ54=
-X-Google-Smtp-Source: APXvYqwt7gk7vehNu9cqSQXx8VB/7JE6vGRiMLtFRxLfQ3oXlqzDjKH+/HuhFg127Ccfn86BHVjTDw==
-X-Received: by 2002:a63:f509:: with SMTP id w9mr978848pgh.134.1559177114886;
-        Wed, 29 May 2019 17:45:14 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id t5sm476354pgh.46.2019.05.29.17.45.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 29 May 2019 17:45:13 -0700 (PDT)
-Date:   Thu, 30 May 2019 09:45:07 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 3/7] mm: introduce MADV_COLD
-Message-ID: <20190530004507.GC229459@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-4-minchan@kernel.org>
+        Wed, 29 May 2019 20:46:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41436 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfE3AqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 20:46:11 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3847281F12;
+        Thu, 30 May 2019 00:46:10 +0000 (UTC)
+Received: from localhost (ovpn-12-25.pek2.redhat.com [10.72.12.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93290617BE;
+        Thu, 30 May 2019 00:46:09 +0000 (UTC)
+Date:   Thu, 30 May 2019 08:46:01 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, bp@alien8.de, stable@vger.kernel.org
+Subject: Re: [PATCH v5] x86/mm/KASLR: Fix the size of vmemmap section
+Message-ID: <20190530004601.GT3805@MiWiFi-R3L-srv>
+References: <20190523025744.3756-1-bhe@redhat.com>
+ <20190529131454.9818321019@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-4-minchan@kernel.org>
+In-Reply-To: <20190529131454.9818321019@mail.kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 30 May 2019 00:46:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 10:54:32PM +0800, Hillf Danton wrote:
-> 
-> On Mon, 20 May 2019 12:52:50 +0900 Minchan Kim wrote:
-> > +unsigned long reclaim_pages(struct list_head *page_list)
-> > +{
-> > +	int nid = -1;
-> > +	unsigned long nr_isolated[2] = {0, };
-> > +	unsigned long nr_reclaimed = 0;
-> > +	LIST_HEAD(node_page_list);
-> > +	struct reclaim_stat dummy_stat;
-> > +	struct scan_control sc = {
-> > +		.gfp_mask = GFP_KERNEL,
-> > +		.priority = DEF_PRIORITY,
-> > +		.may_writepage = 1,
-> > +		.may_unmap = 1,
-> > +		.may_swap = 1,
-> > +	};
-> > +
-> > +	while (!list_empty(page_list)) {
-> > +		struct page *page;
-> > +
-> > +		page = lru_to_page(page_list);
-> > +		list_del(&page->lru);
-> > +
-> > +		if (nid == -1) {
-> > +			nid = page_to_nid(page);
-> > +			INIT_LIST_HEAD(&node_page_list);
-> > +			nr_isolated[0] = nr_isolated[1] = 0;
-> > +		}
-> > +
-> > +		if (nid == page_to_nid(page)) {
-> > +			list_add(&page->lru, &node_page_list);
-> > +			nr_isolated[!!page_is_file_cache(page)] +=
-> > +						hpage_nr_pages(page);
-> > +			continue;
-> > +		}
-> > +
-> Now, page's node != nid and any page on the node_page_list has
-> node == nid. 
-> > +		nid = page_to_nid(page);
-> 
-> After updating nid, we get the node id of the isolated pages lost.
-> 
-> > +
-> > +		mod_node_page_state(NODE_DATA(nid), NR_ISOLATED_ANON,
-> > +					nr_isolated[0]);
-> > +		mod_node_page_state(NODE_DATA(nid), NR_ISOLATED_FILE,
-> > +					nr_isolated[1]);
-> > +		nr_reclaimed += shrink_page_list(&node_page_list,
-> > +				NODE_DATA(nid), &sc, TTU_IGNORE_ACCESS,
-> 
-> And nid no longer matches the node of the pages to be shrunk.
-> 
-> > +				&dummy_stat, true);
-> > +		while (!list_empty(&node_page_list)) {
-> > +			struct page *page = lru_to_page(page_list);
-> 
-> Non-empty node_page_list will never become empty if pages are deleted
-> only from the page_list.
+Hi,
 
-Sure.
-They were last minute change. I will fix it.
+On 05/29/19 at 01:14pm, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.1.4, v5.0.18, v4.19.45, v4.14.121, v4.9.178, v4.4.180, v3.18.140.
 
-Thanks for the review!
+I marked below commit with 'Fixes' tag.
+Fiexes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
+
+[bhe@ linux]$ git describe --contains eedb92abb9bb
+v4.17-rc1~171^2~51
+
+You can see that it was added in kernel 4.17-rc1, as above. Can we just
+apply this patch to stable trees after 4.17?
+
+> 
+> v5.1.4: Build OK!
+> v5.0.18: Build OK!
+> v4.19.45: Build OK!
+
+We just apply it to above three trees which are after 4.17, and the build
+for them is OK. Can we?
+
+Thanks
+Baoquan
+
+> v4.14.121: Failed to apply! Possible dependencies:
+>     4c2b4058ab325 ("x86/mm: Initialize 'pgtable_l5_enabled' at boot-time")
+>     4fa5662b6b496 ("x86/mm: Initialize 'page_offset_base' at boot-time")
+>     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
+>     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
+>     b16e770bfa534 ("x86/mm: Initialize 'pgdir_shift' and 'ptrs_per_p4d' at boot-time")
+>     c65e774fb3f6a ("x86/mm: Make PGDIR_SHIFT and PTRS_PER_P4D variable")
+>     e626e6bb0dfac ("x86/mm: Introduce 'pgtable_l5_enabled'")
+>     eedb92abb9bb0 ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
+> 
+> v4.9.178: Failed to apply! Possible dependencies:
+>     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
+>     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
+>     69218e47994da ("x86: Remap GDT tables in the fixmap section")
+>     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
+>     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
+>     aaeed3aeb39c1 ("x86/entry/gdt: Put per-CPU GDT remaps in ascending order")
+>     b23adb7d3f7d1 ("x86/xen/gdt: Use X86_FEATURE_XENPV instead of globals for the GDT fixup")
+>     b7ffc44d5b2ea ("x86/kvm/vmx: Defer TR reload after VM exit")
+>     b9b1a9c363ff7 ("x86/boot/smp/32: Fix initial idle stack location on 32-bit kernels")
+>     ed1bbc40a0d10 ("x86/cpu_entry_area: Move it to a separate unit")
+>     ef8813ab28050 ("x86/mm/fixmap: Generalize the GDT fixmap mechanism, introduce struct cpu_entry_area")
+> 
+> v4.4.180: Failed to apply! Possible dependencies:
+>     021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory regions")
+>     0483e1fa6e09d ("x86/mm: Implement ASLR for kernel memory regions")
+>     071a74930e60d ("x86/KASLR: Add virtual address choosing function")
+>     206f25a8319b3 ("x86/KASLR: Remove unneeded boot_params argument")
+>     2bc1cd39fa9f6 ("x86/boot: Clean up pointer casting")
+>     3a94707d7a7bb ("x86/KASLR: Build identity mappings on demand")
+>     4252db10559fc ("x86/KASLR: Update description for decompressor worst case size")
+>     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
+>     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
+>     6655e0aaf768c ("x86/boot: Rename "real_mode" to "boot_params"")
+>     7de828dfe6070 ("x86/KASLR: Clarify purpose of kaslr.c")
+>     8665e6ff21072 ("x86/boot: Clean up indenting for asm/boot.h")
+>     9016875df408f ("x86/KASLR: Rename "random" to "random_addr"")
+>     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
+>     9b238748cb6e9 ("x86/KASLR: Rename aslr.c to kaslr.c")
+>     9dc1969c24eff ("x86/KASLR: Consolidate mem_avoid[] entries")
+>     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
+>     d2d3462f9f08d ("x86/KASLR: Clarify purpose of each get_random_long()")
+>     d899a7d146a2e ("x86/mm: Refactor KASLR entropy functions")
+>     ed09acde44e30 ("x86/KASLR: Improve comments around the mem_avoid[] logic")
+> 
+> v3.18.140: Failed to apply! Possible dependencies:
+>     021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory regions")
+>     0b24becc810dc ("kasan: add kernel address sanitizer infrastructure")
+>     2aa79af642631 ("locking/qspinlock: Revert to test-and-set on hypervisors")
+>     3a94707d7a7bb ("x86/KASLR: Build identity mappings on demand")
+>     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
+>     4ea1636b04dbd ("x86/asm/tsc: Rename native_read_tsc() to rdtsc()")
+>     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
+>     87be28aaf1458 ("x86/asm/tsc: Replace rdtscll() with native_read_tsc()")
+>     9261e050b686c ("x86/asm/tsc, x86/paravirt: Remove read_tsc() and read_tscp() paravirt hooks")
+>     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
+>     9b238748cb6e9 ("x86/KASLR: Rename aslr.c to kaslr.c")
+>     a33fda35e3a76 ("locking/qspinlock: Introduce a simple generic 4-byte queued spinlock")
+>     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
+>     c6e5ca35c4685 ("x86/asm/tsc: Inline native_read_tsc() and remove __native_read_tsc()")
+>     cf991de2f614f ("x86/asm/msr: Make wrmsrl_safe() a function")
+>     d6f2d75a7ae06 ("x86/kasan: Move KASAN_SHADOW_OFFSET to the arch Kconfig")
+>     d73a33973f16a ("locking/qspinlock, x86: Enable x86-64 to use queued spinlocks")
+>     d84b6728c54dc ("locking/mcs: Better differentiate between MCS variants")
+>     ef7f0d6a6ca8c ("x86_64: add KASan support")
+>     f233f7f1581e7 ("locking/pvqspinlock, x86: Implement the paravirt qspinlock call patching")
+> 
+> 
+> How should we proceed with this patch?
+> 
+> --
+> Thanks,
+> Sasha
