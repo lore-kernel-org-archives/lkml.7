@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC577C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBBAC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EB5252E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9398A25302
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190022;
-	bh=6UtnZmZDRPIFFWnnzeD6y6Zq1E3Ghsj/Yw4UQV/JS48=;
+	s=default; t=1559190026;
+	bh=NuMQBpqVXNdaQqVW/JGiNtTugJE81l8CNlrtaF5OaI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIQy+2/dfSZ0kq/42VgLKWSE+z+5+Ma6sF5wuJBTL7t5svNOhWCp2pjoDqCg6+aef
-	 SeWfF+Eu3gmhCURMpHvSuTJSGG6JfEQPoMA9pZyx4C5kVRPzgpIpE1mc/ZBKK9EqDi
-	 3EkTxis8xiBCQzNbF0T4A1JozzQfE52CkIl5dBJs=
+	b=C+5FB41IqRyCbMbkTxaSTATTLzPNPhpr96UsoRWQ5zkNduoy/sypd+E6TKg+uQuyw
+	 qrNVrFhVII3/FwZ/+KGi6ktDg7V8fpQpdooLQpAxFQ7ZkbXQuqfSeKvR4M6am9yeg2
+	 HORtLCOOdokjDWYnaQNzTqd28AU9+5RrNkgpsMb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfE3DPV (ORCPT
+        id S1731377AbfE3EU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:20:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729202AbfE3DMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:45 -0400
+        id S1730228AbfE3DPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D621721BE2;
-        Thu, 30 May 2019 03:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9B2324580;
+        Thu, 30 May 2019 03:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185964;
-        bh=6UtnZmZDRPIFFWnnzeD6y6Zq1E3Ghsj/Yw4UQV/JS48=;
+        s=default; t=1559186119;
+        bh=NuMQBpqVXNdaQqVW/JGiNtTugJE81l8CNlrtaF5OaI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8DTziGX1y2ai0MFARK5sMOm4SpRovgJU6Fw3qp0OZq6BZ62HNALlHmbP+JYCuJEn
-         fQd8DKz2d6Y0P6G2/6f52A2fwp7XyTRqQMhlMnFHcEepVbwi4B8nFT+rHa9Mue7fkq
-         0i+1bQgzAZvp6S5VgDTFxk0wKv+EeJVpNUiy6HR4=
+        b=qwm0Q6ntXV7wGnHxondDh150nu9N2+qIssbEYRM6X5oYiCZ8TRjIOmTDnUYVjlPtB
+         iEW8V8I7YTS6qS+133raMtI8jAqb2fDHGxpZpJ7YD2z6D7GpeNwFzst2m9Ja8/j11N
+         KcuTCC53FDptsJQc9lfScW28e/D37sTsj3pzrmKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 391/405] spi: Fix zero length xfer bug
-Date:   Wed, 29 May 2019 20:06:29 -0700
-Message-Id: <20190530030600.410751588@linuxfoundation.org>
+Subject: [PATCH 5.0 274/346] rcu: Do a single rhp->func read in rcu_head_after_call_rcu()
+Date:   Wed, 29 May 2019 20:05:47 -0700
+Message-Id: <20190530030554.834052845@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
+[ Upstream commit b699cce1604e828f19c39845252626eb78cdf38a ]
 
-This fixes a bug for messages containing both zero length and
-unidirectional xfers.
+The rcu_head_after_call_rcu() function reads the rhp->func pointer twice,
+which can result in a false-positive WARN_ON_ONCE() if the callback
+were passed to call_rcu() between the two reads.  Although racing
+rcu_head_after_call_rcu() with call_rcu() is to be a dubious use case
+(the return value is not reliable in that case), intermittent and
+irreproducible warnings are also quite dubious.  This commit therefore
+uses a single READ_ONCE() to pick up the value of rhp->func once, then
+tests that value twice, thus guaranteeing consistent processing within
+rcu_head_after_call_rcu()().
 
-The function spi_map_msg will allocate dummy tx and/or rx buffers
-for use with unidirectional transfers when the hardware can only do
-a bidirectional transfer.  That dummy buffer will be used in place
-of a NULL buffer even when the xfer length is 0.
+Neverthless, racing rcu_head_after_call_rcu() with call_rcu() is still
+a dubious use case.
 
-Then in the function __spi_map_msg, if he hardware can dma,
-the zero length xfer will have spi_map_buf called on the dummy
-buffer.
-
-Eventually, __sg_alloc_table is called and returns -EINVAL
-because nents == 0.
-
-This fix prevents the error by not using the dummy buffer when
-the xfer length is zero.
-
-Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+[ paulmck: Add blank line after declaration per checkpatch.pl. ]
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/rcupdate.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 6cb72287eac82..a83fcddf1dadc 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1041,6 +1041,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
- 		if (max_tx || max_rx) {
- 			list_for_each_entry(xfer, &msg->transfers,
- 					    transfer_list) {
-+				if (!xfer->len)
-+					continue;
- 				if (!xfer->tx_buf)
- 					xfer->tx_buf = ctlr->dummy_tx;
- 				if (!xfer->rx_buf)
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 4db8bcacc51ae..991d97cf395a7 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -890,9 +890,11 @@ static inline void rcu_head_init(struct rcu_head *rhp)
+ static inline bool
+ rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
+ {
+-	if (READ_ONCE(rhp->func) == f)
++	rcu_callback_t func = READ_ONCE(rhp->func);
++
++	if (func == f)
+ 		return true;
+-	WARN_ON_ONCE(READ_ONCE(rhp->func) != (rcu_callback_t)~0L);
++	WARN_ON_ONCE(func != (rcu_callback_t)~0L);
+ 	return false;
+ }
+ 
 -- 
 2.20.1
 
