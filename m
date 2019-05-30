@@ -2,76 +2,107 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0487C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F7225D5D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LBdgmbDm"
+	by mail.kernel.org (Postfix) with ESMTP id 9E37625D5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfE3QKQ (ORCPT
+        id S1727692AbfE3QKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:10:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58756 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfE3QKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:10:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CrDu0jNDhXvLN4tPiGa4OQrHQRQplcvYatA+4dyJNJs=; b=LBdgmbDmnRQFt8dUf3faOrVca
-        ucEy2IUhF24KVguCRl7mUYGX1eZ5/oThD2LXwkEyMVjHqaD5BGBmQxJE4qyLTwounhCGwEU0EkzeE
-        RG+w/GvIYMML70+Vq8lppAH+U+fHVK6VH4wQVszq8nmsBGdTgihjf9tHI306ysdWNCrgI32sLrSpc
-        LUZ4nLIRI+lWTD4yE99IofjHZQbT1wbU1p/lBFbbpnjje+b3NHQtjwtga8khcyhK88ysbmGqX+Ao5
-        SkAtBNEvd9puM2i4+lVzATCUznOgTX6Vs/xod2XEsuMVE+LLyr7SwZ2Xygfqv4+3I6jzNjnUtdNlH
-        k2zkRAUGw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWNd7-0007rn-NI; Thu, 30 May 2019 16:10:13 +0000
-Subject: Re: linux-next: Tree for May 30 (firmware_loader)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-References: <20190530162132.6081d246@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <28716a14-772d-bc82-5111-34cd38cfda54@infradead.org>
-Date:   Thu, 30 May 2019 09:10:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 12:10:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:39198 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfE3QKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:10:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B902B341;
+        Thu, 30 May 2019 09:10:36 -0700 (PDT)
+Received: from eglon.cambridge.arm.com (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 849913F5AF;
+        Thu, 30 May 2019 09:10:35 -0700 (PDT)
+From:   James Morse <james.morse@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        james.morse@arm.com
+Subject: [PATCH] drivers: base: cacheinfo: Ensure cpu hotplug work is done before Intel RDT
+Date:   Thu, 30 May 2019 17:10:24 +0100
+Message-Id: <20190530161024.85637-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190530162132.6081d246@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 11:21 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190529:
-> 
+The cacheinfo structures are alloced/freed by cpu online/offline
+callbacks. Originally these were only used by sysfs to expose the
+cache topology to user space. Without any in-kernel dependencies
+CPUHP_AP_ONLINE_DYN was an appropriate choice.
 
-on i386 or x86_64:
-when CONFIG_PROC_SYSCTL is not set/enabled:
+resctrl has started using these structures to identify CPUs that
+share a cache. It updates its 'domain' structures from cpu
+online/offline callbacks. These depend on the cacheinfo structures
+(resctrl_online_cpu()->domain_add_cpu()->get_cache_id()->
+ get_cpu_cacheinfo()).
+These also run as CPUHP_AP_ONLINE_DYN.
 
-ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x1c): undefined reference to `sysctl_vals'
-ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x20): undefined reference to `sysctl_vals'
-ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x40): undefined reference to `sysctl_vals'
-ld: drivers/base/firmware_loader/fallback_table.o:(.data+0x44): undefined reference to `sysctl_vals'
+Now that there is an in-kernel dependency, move the cacheinfo
+work earlier so we know its done before resctrl's CPUHP_AP_ONLINE_DYN
+work runs.
 
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+---
+I haven't seen any problems because of this. If someone thinks it should
+go to stable:
+Cc: <stable@vger.kernel.org> #4.10.x
 
+The particular patch that added RDT is:
+Fixes: 2264d9c74dda1 ("x86/intel_rdt: Build structures for each resource based on cache topology")
+
+But as this touches a different set of files, I'm not sure how appropriate
+a fixes tag is.
+
+ drivers/base/cacheinfo.c   | 3 ++-
+ include/linux/cpuhotplug.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+index a7359535caf5..b444f89a2041 100644
+--- a/drivers/base/cacheinfo.c
++++ b/drivers/base/cacheinfo.c
+@@ -655,7 +655,8 @@ static int cacheinfo_cpu_pre_down(unsigned int cpu)
+ 
+ static int __init cacheinfo_sysfs_init(void)
+ {
+-	return cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "base/cacheinfo:online",
++	return cpuhp_setup_state(CPUHP_AP_BASE_CACHEINFO_ONLINE,
++				 "base/cacheinfo:online",
+ 				 cacheinfo_cpu_online, cacheinfo_cpu_pre_down);
+ }
+ device_initcall(cacheinfo_sysfs_init);
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 6a381594608c..50c893f03c21 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -175,6 +175,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_WATCHDOG_ONLINE,
+ 	CPUHP_AP_WORKQUEUE_ONLINE,
+ 	CPUHP_AP_RCUTREE_ONLINE,
++	CPUHP_AP_BASE_CACHEINFO_ONLINE,
+ 	CPUHP_AP_ONLINE_DYN,
+ 	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
+ 	CPUHP_AP_X86_HPET_ONLINE,
 -- 
-~Randy
+2.20.1
+
