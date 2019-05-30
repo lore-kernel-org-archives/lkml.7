@@ -2,53 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD555C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5013C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784D425B39
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD5125B19
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191529;
-	bh=J1NbJloJvfKvA5uLonwiNChOz54nsgGxJRLELe14tdI=;
+	s=default; t=1559191533;
+	bh=s+z/gJhxjmW8lIyD8i5GL4QfR4bwz6CzFMZNJTSF6Yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMzyJNgpU3fYZY42hAKEocYbZMF3hsefR9Y8neOSPJx9MnOffXoPXvU227T8FJn8b
-	 wOOCoxZ8vpW8IpaXiCqYvjGEuvXIKOThWRC5CyM7oBCpEiRg5QTeiRcNMZqBXLAsEQ
-	 E7jZ+X74862D7ibWLVuU/2BcrQb/5SDm7laqVIkI=
+	b=eavdpqbC1gfxcT4upDaqUjFjzpFLUuAgx8EvlVU/jE6qwhUQskCJPWuHcNxQPpga1
+	 zpAVdACBMUSgquZ+SlBQRUgEBmM07KFz9VucNtn0UDEyTE3WFBEix0xCmvACstTozE
+	 sJraWexriMb31oax6bblC5G9mAJyM/uPGLhAtlic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbfE3DLv (ORCPT
+        id S1732969AbfE3Epd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfE3DKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:34 -0400
+        id S1728711AbfE3DLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D8C24476;
-        Thu, 30 May 2019 03:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C0124510;
+        Thu, 30 May 2019 03:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185833;
-        bh=J1NbJloJvfKvA5uLonwiNChOz54nsgGxJRLELe14tdI=;
+        s=default; t=1559185911;
+        bh=s+z/gJhxjmW8lIyD8i5GL4QfR4bwz6CzFMZNJTSF6Yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPDN25brYeQiKbWwA35M4/xY4cdL2OSLQA6fNBH65uD5JqSEtU3SykMyyD6xXmzzR
-         nS3EKwtNYeayVrBlS+gc5hM0XunFVyhPmQe7suun/LsBpqUvSXgMZXEQvRKO+JJK9D
-         opdP9zPCfJN050fSoguvo8F+kH6dmEsArSIHlBz8=
+        b=x+jxB+ueRhFPopJ/bjzzCmLu6Ap/BCnmLilPKXjQ8XKNxQf3h853Q4lfiRRndWidH
+         liDclYt/SpWL2hdx6Hh5BQCtIZX5mhdPGWIvgJdJIPU0bhpox3OBF2zU8qN4wD3XnC
+         ITAVyc+NzgjyStNsr0K4RnCbnzs6CA5IIOHDuu9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 097/405] btrfs: fix panic during relocation after ENOSPC before writeback happens
-Date:   Wed, 29 May 2019 20:01:35 -0700
-Message-Id: <20190530030545.926776244@linuxfoundation.org>
+Subject: [PATCH 5.1 235/405] x86/build: Keep local relocations with ld.lld
+Date:   Wed, 29 May 2019 20:03:53 -0700
+Message-Id: <20190530030552.901324962@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,118 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
+[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
 
-We've been seeing the following sporadically throughout our fleet
+The LLVM linker (ld.lld) defaults to removing local relocations, which
+causes KASLR boot failures. ld.bfd and ld.gold already handle this
+correctly. This adds the explicit instruction "--discard-none" during
+the link phase. There is no change in output for ld.bfd and ld.gold,
+but ld.lld now produces an image with all the needed relocations.
 
-panic: kernel BUG at fs/btrfs/relocation.c:4584!
-netversion: 5.0-0
-Backtrace:
- #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
- #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
- #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
- #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
- #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
- #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
- #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
-    [exception RIP: btrfs_reloc_cow_block+692]
-    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
-    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
-    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
-    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
-    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
-    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
- #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
- #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
-
-The way relocation moves data extents is by creating a reloc inode and
-preallocating extents in this inode and then copying the data into these
-preallocated extents.  Once we've done this for all of our extents,
-we'll write out these dirty pages, which marks the extent written, and
-goes into btrfs_reloc_cow_block().  From here we get our current
-reloc_control, which _should_ match the reloc_control for the current
-block group we're relocating.
-
-However if we get an ENOSPC in this path at some point we'll bail out,
-never initiating writeback on this inode.  Not a huge deal, unless we
-happen to be doing relocation on a different block group, and this block
-group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
-btrfs_reloc_cow_block(), because we expect to be done modifying the data
-inode.  We are in fact done modifying the metadata for the data inode
-we're currently using, but not the one from the failed block group, and
-thus we BUG_ON().
-
-(This happens when writeback finishes for extents from the previous
-group, when we are at btrfs_finish_ordered_io() which updates the data
-reloc tree (inode item, drops/adds extent items, etc).)
-
-Fix this by writing out the reloc data inode always, and then breaking
-out of the loop after that point to keep from tripping this BUG_ON()
-later.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ add note from Filipe ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: clang-built-linux@googlegroups.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
+Link: https://github.com/ClangBuiltLinux/linux/issues/404
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ arch/x86/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 351fa506dc9bf..1d82ee4883eb3 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4330,27 +4330,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
- 		mutex_lock(&fs_info->cleaner_mutex);
- 		ret = relocate_block_group(rc);
- 		mutex_unlock(&fs_info->cleaner_mutex);
--		if (ret < 0) {
-+		if (ret < 0)
- 			err = ret;
--			goto out;
--		}
--
--		if (rc->extents_found == 0)
--			break;
--
--		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index a587805c6687f..56e748a7679f4 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
+ export BITS
  
-+		/*
-+		 * We may have gotten ENOSPC after we already dirtied some
-+		 * extents.  If writeout happens while we're relocating a
-+		 * different block group we could end up hitting the
-+		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
-+		 * btrfs_reloc_cow_block.  Make sure we write everything out
-+		 * properly so we don't trip over this problem, and then break
-+		 * out of the loop if we hit an error.
-+		 */
- 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
- 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
- 						       (u64)-1);
--			if (ret) {
-+			if (ret)
- 				err = ret;
--				goto out;
--			}
- 			invalidate_mapping_pages(rc->data_inode->i_mapping,
- 						 0, -1);
- 			rc->stage = UPDATE_DATA_PTRS;
- 		}
-+
-+		if (err < 0)
-+			goto out;
-+
-+		if (rc->extents_found == 0)
-+			break;
-+
-+		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
-+
- 	}
+ ifdef CONFIG_X86_NEED_RELOCS
+-        LDFLAGS_vmlinux := --emit-relocs
++        LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
  
- 	WARN_ON(rc->block_group->pinned > 0);
+ #
 -- 
 2.20.1
 
