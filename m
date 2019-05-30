@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC0AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5714DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5A525467
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A8825442
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190368;
-	bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
+	s=default; t=1559190379;
+	bh=25pFTBoD6N4oU3ZGvpFp9ZGtLP/CfMK1rvuyWPEpq8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M8f+G3cwBJdznYISJYLX9XpnupZyTl3ribGPFE0Doj8TovxJKv72hF9p6AGhbqiGk
-	 CEIZi63fsi9KsL1Xxt6fUDJ+Sg9/TJttMChqsk5YbjHqjhVuqmXYUZNTiImGppHhTY
-	 xokWSLUawn6AZwUlZo6LhHytZkKvqtB9Bt0hMYUQ=
+	b=M7/t479q6vMmcG4k/iUsY+7qpYwKgVDuuym0CfbITg/Us88SirmGymIE3I/m8wIfG
+	 sIDFb9rlp2NtrZlrN2Xi66yfPVErM/ZVA+dcUR7WHRHObqHCUCq2ucvDbEdXOSYk1s
+	 xXIZDtpKpVQYxMialwA74PKQNJ0/SQiC9TVUzmXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387496AbfE3E0H (ORCPT
+        id S2387553AbfE3E0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:26:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfE3DOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:38 -0400
+        id S1729136AbfE3DOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 503FA2449A;
-        Thu, 30 May 2019 03:14:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D259624587;
+        Thu, 30 May 2019 03:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186078;
-        bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
+        s=default; t=1559186073;
+        bh=25pFTBoD6N4oU3ZGvpFp9ZGtLP/CfMK1rvuyWPEpq8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGQaY9sIS5Bl+HfGSDOf/MLDn35BQ83BL2zX5x+GpIV7YSMvrVkIRu39f1B9KACR1
-         cC/EyN4P7yuzgOprKhFGi2t5rJRCT1x1g6JQ1Lb8IH9djDKtCogabnrTZvpNi0e3Li
-         zsI8h+AyyPPygkwyADLk9Sxv61QUPyQNJatfXpKY=
+        b=ryESb2AAWn+LxkhRvUzMsJmA8tS1b4wdes+8VSENkCvt/axFm4QYpcU94MsYKwNe9
+         Nfg7ecEbatFepy3XzxMgjUVhdf4rUIjfas6ZJYWtXQRPKoZnBjb6T8PNwdPxz5ntp5
+         qkFczVppsvWFYbbW+LkdsxSCvFrQYdW4s7a070YU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 161/346] irq_work: Do not raise an IPI when queueing work on the local CPU
-Date:   Wed, 29 May 2019 20:03:54 -0700
-Message-Id: <20190530030549.330167307@linuxfoundation.org>
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 189/346] mmc: sdhci-of-esdhc: add erratum A-009204 support
+Date:   Wed, 29 May 2019 20:04:22 -0700
+Message-Id: <20190530030550.649914916@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -68,142 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 471ba0e686cb13752bc1ff3216c54b69a2d250ea ]
+[ Upstream commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c ]
 
-The QEMU PowerPC/PSeries machine model was not expecting a self-IPI,
-and it may be a bit surprising thing to do, so have irq_work_queue_on
-do local queueing when target is the current CPU.
+In the event of that any data error (like, IRQSTAT[DCE]) occurs
+during an eSDHC data transaction where DMA is used for data
+transfer to/from the system memory, setting the SYSCTL[RSTD]
+register may cause a system hang. If software sets the register
+SYSCTL[RSTD] to 1 for error recovery while DMA transferring is
+not complete, eSDHC may hang the system bus. This happens because
+the software register SYSCTL[RSTD] resets the DMA engine without
+waiting for the completion of pending system transactions. This
+erratum is to fix this issue.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190409093403.20994-1-npiggin@gmail.com
-[ Simplified the preprocessor comments.
-  Fixed unbalanced curly brackets pointed out by Thomas. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq_work.c | 75 ++++++++++++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 33 deletions(-)
+ drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 6b7cdf17ccf89..73288914ed5e7 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -56,61 +56,70 @@ void __weak arch_irq_work_raise(void)
- 	 */
- }
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index 9da53e548691b..4fc4d2c7643c5 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -694,6 +694,9 @@ static void esdhc_reset(struct sdhci_host *host, u8 mask)
+ 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
  
--/*
-- * Enqueue the irq_work @work on @cpu unless it's already pending
-- * somewhere.
-- *
-- * Can be re-enqueued while the callback is still in progress.
-- */
--bool irq_work_queue_on(struct irq_work *work, int cpu)
-+/* Enqueue on current CPU, work must already be claimed and preempt disabled */
-+static void __irq_work_queue_local(struct irq_work *work)
- {
--	/* All work should have been flushed before going offline */
--	WARN_ON_ONCE(cpu_is_offline(cpu));
--
--#ifdef CONFIG_SMP
--
--	/* Arch remote IPI send/receive backend aren't NMI safe */
--	WARN_ON_ONCE(in_nmi());
-+	/* If the work is "lazy", handle it from next tick if any */
-+	if (work->flags & IRQ_WORK_LAZY) {
-+		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
-+		    tick_nohz_tick_stopped())
-+			arch_irq_work_raise();
-+	} else {
-+		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
-+			arch_irq_work_raise();
-+	}
-+}
- 
-+/* Enqueue the irq work @work on the current CPU */
-+bool irq_work_queue(struct irq_work *work)
-+{
- 	/* Only queue if not already pending */
- 	if (!irq_work_claim(work))
- 		return false;
- 
--	if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
--		arch_send_call_function_single_ipi(cpu);
--
--#else /* #ifdef CONFIG_SMP */
--	irq_work_queue(work);
--#endif /* #else #ifdef CONFIG_SMP */
-+	/* Queue the entry and raise the IPI if needed. */
-+	preempt_disable();
-+	__irq_work_queue_local(work);
-+	preempt_enable();
- 
- 	return true;
- }
-+EXPORT_SYMBOL_GPL(irq_work_queue);
- 
--/* Enqueue the irq work @work on the current CPU */
--bool irq_work_queue(struct irq_work *work)
-+/*
-+ * Enqueue the irq_work @work on @cpu unless it's already pending
-+ * somewhere.
-+ *
-+ * Can be re-enqueued while the callback is still in progress.
-+ */
-+bool irq_work_queue_on(struct irq_work *work, int cpu)
- {
-+#ifndef CONFIG_SMP
-+	return irq_work_queue(work);
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++		mdelay(5);
 +
-+#else /* CONFIG_SMP: */
-+	/* All work should have been flushed before going offline */
-+	WARN_ON_ONCE(cpu_is_offline(cpu));
-+
- 	/* Only queue if not already pending */
- 	if (!irq_work_claim(work))
- 		return false;
- 
--	/* Queue the entry and raise the IPI if needed. */
- 	preempt_disable();
--
--	/* If the work is "lazy", handle it from next tick if any */
--	if (work->flags & IRQ_WORK_LAZY) {
--		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
--		    tick_nohz_tick_stopped())
--			arch_irq_work_raise();
-+	if (cpu != smp_processor_id()) {
-+		/* Arch remote IPI send/receive backend aren't NMI safe */
-+		WARN_ON_ONCE(in_nmi());
-+		if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
-+			arch_send_call_function_single_ipi(cpu);
- 	} else {
--		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
--			arch_irq_work_raise();
-+		__irq_work_queue_local(work);
- 	}
--
- 	preempt_enable();
- 
- 	return true;
-+#endif /* CONFIG_SMP */
- }
--EXPORT_SYMBOL_GPL(irq_work_queue);
-+
- 
- bool irq_work_needs_cpu(void)
- {
+ 	if (mask & SDHCI_RESET_ALL) {
+ 		val = sdhci_readl(host, ESDHC_TBCTL);
+ 		val &= ~ESDHC_TB_EN;
 -- 
 2.20.1
 
