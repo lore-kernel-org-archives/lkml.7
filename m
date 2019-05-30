@@ -2,95 +2,89 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A00C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F33C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED63259CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TeMX9NEY"
+	by mail.kernel.org (Postfix) with ESMTP id E98AF25A34
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfE3G1z (ORCPT
+        id S1727368AbfE3GdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 02:27:55 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35400 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfE3G1z (ORCPT
+        Thu, 30 May 2019 02:33:05 -0400
+Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:33611 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727196AbfE3GdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 02:27:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w1so5667582qts.2
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 23:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EDB9NEzcrpM7vrzDugTKwabI3NuPP3IyLOyki6rb9uw=;
-        b=TeMX9NEYaD2Qb/D8oQumCOS5CTT5UUG3au1rn0yH9MGA8q2jHPcpr5bZd7JUPdwRha
-         m5ZvqEa54g94x1DtzRPQXWKXAZdSvFoMgS4B1EAeBL+A2iVZ3Rdip21Yh6WWJhg1s3dc
-         r2HUIPMkLO6PQjVZQzMZFNnBB2IZuUatc64XY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EDB9NEzcrpM7vrzDugTKwabI3NuPP3IyLOyki6rb9uw=;
-        b=qR1TZN/lKs5R+m1axs8LFe+thuON9pLzDD3BibZkn4o12CPF4ZLA1+T2yrEPTv2T1A
-         XQ+DE+wOgwYGyiAd4GI8DJRzCeGBF/wRilVrDrCARobkNNaQarB5aBZcEeJwsme86QRN
-         V/Zo/bO4gngFvKH87LV/V+sIAkNgnzWT33LRcBqlpihKy1LZDeyr1ycYn7vlzbnCRLsM
-         09I+QDksfiEqJd7EUu+oDz8d6jlNoXPS9UmE7niZQOmv2jHuz9iJ/Tf3B5OA4ulv0Bjy
-         06yuDxzijVrdnq4SMtk00YDF2ryfoau9D8XwvFc4HyNRz8Lv5YnHt8VYj9uQIidzzCXM
-         FyUg==
-X-Gm-Message-State: APjAAAXzj9Uke3AwCDIIoB0tO7v8KQbJv8npGF0SD/GK96mDdi6MDeyu
-        ORScp0aQ5uErpCzorRP1qRsGxt0s1jgKM+P8eN8ukw==
-X-Google-Smtp-Source: APXvYqzHDlQemfhL+uQX+PxIu9PwWEguqnHq/qbjiPCrDdlMTXx+BXHgxPzV/YR2FBce1yN3dYhDwycDzH8cXlXCGsc=
-X-Received: by 2002:ac8:ecc:: with SMTP id w12mr1935044qti.344.1559197674339;
- Wed, 29 May 2019 23:27:54 -0700 (PDT)
+        Thu, 30 May 2019 02:33:04 -0400
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id x4U6QvwC058344;
+        Thu, 30 May 2019 14:26:57 +0800 (GMT-8)
+        (envelope-from nickhu@andestech.com)
+Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Thu, 30 May 2019
+ 14:32:31 +0800
+Date:   Thu, 30 May 2019 14:32:32 +0800
+From:   Nick Hu <nickhu@andestech.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "green.hu@gmail.com" <green.hu@gmail.com>,
+        Greentime Ying-Han =?utf-8?B?SHUo6IOh6Iux5ryiKQ==?= 
+        <greentime@andestech.com>
+Subject: Re: [PATCH] riscv: Fix udelay in RV32.
+Message-ID: <20190530063232.GA17102@andestech.com>
+References: <381ee6950c84b868ca6a3c676eb981a1980889a3.1559035050.git.nickhu@andestech.com>
+ <20190530055258.GA7170@infradead.org>
 MIME-Version: 1.0
-References: <1557494826-6044-1-git-send-email-michael.kao@mediatek.com> <1557494826-6044-2-git-send-email-michael.kao@mediatek.com>
-In-Reply-To: <1557494826-6044-2-git-send-email-michael.kao@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 30 May 2019 14:27:28 +0800
-Message-ID: <CAJMQK-giJTeERnqjxoSMjF-JXxW9SPmeARWf3f9ZyRgBsYN5fg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] arm64: dts: mt8183: add thermal zone node
-To:     "michael.kao" <michael.kao@mediatek.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190530055258.GA7170@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com x4U6QvwC058344
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 9:27 PM michael.kao <michael.kao@mediatek.com> wrote:
+On Thu, May 30, 2019 at 01:52:58PM +0800, Christoph Hellwig wrote:
+> On Tue, May 28, 2019 at 05:26:49PM +0800, Nick Hu wrote:
+> > In RV32, udelay would delay the wrong cycle.
+> > When it shifts right "UDELAY_SHITFT" bits, it
+> > either delays 0 cycle or 1 cycle. It only works
+> > correctly in RV64. Because the 'ucycles' always
+> > needs to be 64 bits variable.
+> 
+> Please use up all your ~72 chars per line in the commit log.
+>
 
-> +
-> +                       tzts1: tzts1 {
-> +                               polling-delay-passive = <0>;
-> +                               polling-delay = <0>;
-> +                               thermal-sensors = <&thermal 1>;
-> +                               sustainable-power = <0>;
-> +                               trips {};
-> +                               cooling-maps {};
-> +                       };
-> +
-Is 0 a valid initial sustainable-power setting? Since we'll still get
-warning[1] about this, though it might not be harmful.
+OK, Thanks! 
 
-If 0 is a valid setting, maybe we should consider showing the warning
-of not setting this property in [2]?
+> > diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
+> > index dce8ae24c6d3..da847f49fb74 100644
+> > --- a/arch/riscv/lib/delay.c
+> > +++ b/arch/riscv/lib/delay.c
+> > @@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
+> >  
+> >  void udelay(unsigned long usecs)
+> >  {
+> > -	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
+> > +	unsigned long long ucycles = (unsigned long long)usecs * lpj_fine * UDELAY_MULT;
+> 
+> And this creates a way too long line.  Pleaase use u64 instead of
+> unsigned long long to clarify the intention while also fixing the long
+> lines.
+>
 
-[1] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/power_allocator.c#L570
-[2] https://elixir.bootlin.com/linux/latest/source/drivers/thermal/of-thermal.c#L1049
+Sure, I will fix it and send another patch. Thanks.
+
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
