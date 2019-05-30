@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE4AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB337C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F04253BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43D8253E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190290;
-	bh=Cdd8ZuPR7dL03IVKm9Fx91+2UqBDbrqTk3hy+I1JM8c=;
+	s=default; t=1559190297;
+	bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrk9jgaxVsY/s8k+BmRU/VCiH+qlc/6GqaHA/qhXan8IdZs5W+IA3CPc59u0DdAnS
-	 XVXJK0chbpgl4tRfkpXcboE0FarvYiejRrcQUuIkJU9bxcoAufujTWDvmaZMifqpl0
-	 0IVKNMtH2RRM5MyMGnZ85SxeT6o06+tvfU8axKKQ=
+	b=iB/bew6RXnWpumga4TxHnoFitqV2JFqdhCxZnPUvvgcMtSywc8hHwOkAlAjzdasVo
+	 FTbmdg/MdciDOxNSuBAH0HM/Sny1HxKxVR/UCB6c/s2cEPTuKN7MAhXt44u1SagPzP
+	 bEatI5gXYlpKn4NjY0cW3HIuvD3b4lRK0F/b2i18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732795AbfE3EYt (ORCPT
+        id S1732909AbfE3EY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbfE3DOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:50 -0400
+        id S1730003AbfE3DOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FE024563;
-        Thu, 30 May 2019 03:14:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9599F2456F;
+        Thu, 30 May 2019 03:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186090;
-        bh=Cdd8ZuPR7dL03IVKm9Fx91+2UqBDbrqTk3hy+I1JM8c=;
+        s=default; t=1559186088;
+        bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/dQcZ/I7PFePBMyna6K/u9/06Kn/h0VmpGCUZktvuzKifkcOiliSbYZxuYh3jidy
-         PlnCsXOiZK4pwU39XcACdP4ou99ZUNPkWaGXcQ5w9cxP+HwUUrGpH7AaNlfxRVMRVs
-         YxnLMzdiTPfrgHm+UHmLipUw5fRtqlL3lLOuMS7s=
+        b=g6S9ltkkNjR9rNuY3tcQTdfl2o6ivqDXbBPxJKtyGWqvneXbwuoMzBDZEt66ZNQX4
+         1Sw4+JdCacirc9Ulg81WP3gj1hMQ8gjwiAYz7M5kV5kvJhUmAyPWDdnOKW2nGrN602
+         U05YHWN7KddBuyBOeu7sRL2DjU8olcxGdXQhHAXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 220/346] net: hns3: check resetting status in hns3_get_stats()
-Date:   Wed, 29 May 2019 20:04:53 -0700
-Message-Id: <20190530030552.233467630@linuxfoundation.org>
+Subject: [PATCH 5.0 217/346] iio: hmc5843: fix potential NULL pointer dereferences
+Date:   Wed, 29 May 2019 20:04:50 -0700
+Message-Id: <20190530030552.089778323@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,37 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c4e401e5a934bb0798ebbba98e08dab129695eff ]
+[ Upstream commit 536cc27deade8f1ec3c1beefa60d5fbe0f6fcb28 ]
 
-hns3_get_stats() should check the resetting status firstly,
-since the device will be reinitialized when resetting. If the
-reset has not completed, the hns3_get_stats() may access
-invalid memory.
+devm_regmap_init_i2c may fail and return NULL. The fix returns
+the error when it fails.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
+ drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index e678b6939da39..36b35c58304b5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -482,6 +482,11 @@ static void hns3_get_stats(struct net_device *netdev,
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 	u64 *p = data;
- 
-+	if (hns3_nic_resetting(netdev)) {
-+		netdev_err(netdev, "dev resetting, could not get stats\n");
-+		return;
-+	}
+diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
+index 3de7f4426ac40..86abba5827a25 100644
+--- a/drivers/iio/magnetometer/hmc5843_i2c.c
++++ b/drivers/iio/magnetometer/hmc5843_i2c.c
+@@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
+ static int hmc5843_i2c_probe(struct i2c_client *cli,
+ 			     const struct i2c_device_id *id)
+ {
++	struct regmap *regmap = devm_regmap_init_i2c(cli,
++			&hmc5843_i2c_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
 +
- 	if (!h->ae_algo->ops->get_stats || !h->ae_algo->ops->update_stats) {
- 		netdev_err(netdev, "could not get any statistics\n");
- 		return;
+ 	return hmc5843_common_probe(&cli->dev,
+-			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
++			regmap,
+ 			id->driver_data, id->name);
+ }
+ 
+diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
+index 535f03a70d630..79b2b707f90e7 100644
+--- a/drivers/iio/magnetometer/hmc5843_spi.c
++++ b/drivers/iio/magnetometer/hmc5843_spi.c
+@@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
+ static int hmc5843_spi_probe(struct spi_device *spi)
+ {
+ 	int ret;
++	struct regmap *regmap;
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+ 
+ 	spi->mode = SPI_MODE_3;
+@@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
++	regmap = devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
+ 	return hmc5843_common_probe(&spi->dev,
+-			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
++			regmap,
+ 			id->driver_data, id->name);
+ }
+ 
 -- 
 2.20.1
 
