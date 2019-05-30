@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED76C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F483C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E9124B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7497224B7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187373;
-	bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
+	s=default; t=1559187376;
+	bh=U7oWFLa6HNlYuQfr8/qAu4JkFtkS0PlMnRCeytKEJq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u5MnOTHlmzZcnEYmdCXkxyh1GhpRsXy4IMMjeetNn4np9XJ7L6tgIrsdTQzyTXBnR
-	 YQTfgOOUYVZi88B8Z8aqvxdg+7/1mqLRFdzaLcd2b7Z4HZbj/wAN5CdPEu6wsOvNwY
-	 OUGuJBr70tqSHdncxTgBQGHenhDonpCAIIDiFqpU=
+	b=yMQQPa3pW3rBgVUunjTITVtFxtm6NlDg3Bv8CMnJoJ9yDyiyRTPcby8wRDnn3qAVd
+	 unNp11yfvDi1LN0Mq6gDKK5KofCdrG0RKCbXUhIiP4kvvOKSDbLJoYUvLL8AiClr+w
+	 QvVzvkU7ASFZn6Cppng8hGE+CwkJMtREDKjMQqQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfE3DZa (ORCPT
+        id S1729558AbfE3DZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731563AbfE3DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:29 -0400
+        id S1731562AbfE3DS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17B5247C2;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A73A247CF;
         Thu, 30 May 2019 03:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186308;
-        bh=j5IrkmXoqipm6SS+hShpCMelEn2qPU/FEDpbZVsmWNM=;
+        bh=U7oWFLa6HNlYuQfr8/qAu4JkFtkS0PlMnRCeytKEJq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1q/y9UscHsksiRgcXiGnGVYABFNhjtslU4z0Mrqn/gjRm2pi48EPojA9WcYT/DIM
-         0E9tKI6GaW+Upf+YucljD7aXzxmP5n/rmsiNe+sHOeMarZQDtCtvVli5dAavETbQdV
-         wKTjxGHcaLrMHosqv0vJgW0D+53oUnZ5AD+cqC44=
+        b=BkcHYf2f0I2/f27i9Do4XHZA2qdW98aDDpPxwGVy+EhVXwcWahs3zWES4pJnOIhpR
+         1SiT1kWl3qxaAiyHc/BKJw3gmknch1Jre59LSec8k8lY3c1ZPYzbE/nz27nqIgcSdO
+         5ZruABRyzlAWHvwuiBfMCr4o2I3P/4m+wHI/QGA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 275/276] drm/sun4i: dsi: Enforce boundaries on the start delay
-Date:   Wed, 29 May 2019 20:07:13 -0700
-Message-Id: <20190530030542.392185247@linuxfoundation.org>
+Subject: [PATCH 4.19 274/276] vfio-ccw: Prevent quiesce function going into an infinite loop
+Date:   Wed, 29 May 2019 20:07:12 -0700
+Message-Id: <20190530030542.325522714@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,40 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit efa31801203ac2f5c6a82a28cb991c7163ee0f1d ]
+[ Upstream commit d1ffa760d22aa1d8190478e5ef555c59a771db27 ]
 
-The Allwinner BSP makes sure that we don't end up with a null start delay
-or with a delay larger than vtotal.
+The quiesce function calls cio_cancel_halt_clear() and if we
+get an -EBUSY we go into a loop where we:
+	- wait for any interrupts
+	- flush all I/O in the workqueue
+	- retry cio_cancel_halt_clear
 
-The former condition is likely to happen now with the reworked start delay,
-so make sure we enforce the same boundaries.
+During the period where we are waiting for interrupts or
+flushing all I/O, the channel subsystem could have completed
+a halt/clear action and turned off the corresponding activity
+control bits in the subchannel status word. This means the next
+time we call cio_cancel_halt_clear(), we will again start by
+calling cancel subchannel and so we can be stuck between calling
+cancel and halt forever.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/c9889cf5f7a3d101ef380905900b45a182596f56.1549896081.git-series.maxime.ripard@bootlin.com
+Rather than calling cio_cancel_halt_clear() immediately after
+waiting, let's try to disable the subchannel. If we succeed in
+disabling the subchannel then we know nothing else can happen
+with the device.
+
+Suggested-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Message-Id: <4d5a4b98ab1b41ac6131b5c36de18b76c5d66898.1555449329.git.alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Acked-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 3de41de43127b..97a0573cc5145 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -358,8 +358,12 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
- {
- 	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
-+	u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 0e0a743aeaf69..7a06cdff6572d 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -40,26 +40,30 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+ 	if (ret != -EBUSY)
+ 		goto out_unlock;
  
--	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
-+	if (delay > mode->vtotal)
-+		delay = delay % mode->vtotal;
++	iretry = 255;
+ 	do {
+-		iretry = 255;
+ 
+ 		ret = cio_cancel_halt_clear(sch, &iretry);
+-		while (ret == -EBUSY) {
+-			/*
+-			 * Flush all I/O and wait for
+-			 * cancel/halt/clear completion.
+-			 */
+-			private->completion = &completion;
+-			spin_unlock_irq(sch->lock);
+ 
+-			wait_for_completion_timeout(&completion, 3*HZ);
++		if (ret == -EIO) {
++			pr_err("vfio_ccw: could not quiesce subchannel 0.%x.%04x!\n",
++			       sch->schid.ssid, sch->schid.sch_no);
++			break;
++		}
 +
-+	return max_t(u16, delay, 1);
- }
++		/*
++		 * Flush all I/O and wait for
++		 * cancel/halt/clear completion.
++		 */
++		private->completion = &completion;
++		spin_unlock_irq(sch->lock);
  
- static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+-			private->completion = NULL;
+-			flush_workqueue(vfio_ccw_work_q);
+-			spin_lock_irq(sch->lock);
+-			ret = cio_cancel_halt_clear(sch, &iretry);
+-		};
++		if (ret == -EBUSY)
++			wait_for_completion_timeout(&completion, 3*HZ);
+ 
++		private->completion = NULL;
++		flush_workqueue(vfio_ccw_work_q);
++		spin_lock_irq(sch->lock);
+ 		ret = cio_disable_subchannel(sch);
+ 	} while (ret == -EBUSY);
+ out_unlock:
 -- 
 2.20.1
 
