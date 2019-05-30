@@ -2,173 +2,127 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A67DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAC72589C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A922589C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfE3MAn (ORCPT
+        id S1727191AbfE3MBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:00:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35208 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727015AbfE3MAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:00:42 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UBv8I7145477
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:00:41 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stcebqjcj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:00:41 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 30 May 2019 13:00:37 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 13:00:34 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UC0Yn961341902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 12:00:34 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C9EE52071;
-        Thu, 30 May 2019 12:00:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.109])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E8D9952050;
-        Thu, 30 May 2019 12:00:31 +0000 (GMT)
-Subject: Re: [PATCH v2 2/3] ima: don't ignore INTEGRITY_UNKNOWN EVM status
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        dmitry.kasatkin@huawei.com, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Thu, 30 May 2019 08:00:21 -0400
-In-Reply-To: <20190529133035.28724-3-roberto.sassu@huawei.com>
-References: <20190529133035.28724-1-roberto.sassu@huawei.com>
-         <20190529133035.28724-3-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19053012-0020-0000-0000-00000341F4A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053012-0021-0000-0000-00002194F9B8
-Message-Id: <1559217621.4008.7.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300091
+        Thu, 30 May 2019 08:01:11 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34990 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727001AbfE3MBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:01:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3F10374;
+        Thu, 30 May 2019 05:01:09 -0700 (PDT)
+Received: from [10.162.40.143] (p8cg001049571a15.blr.arm.com [10.162.40.143])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2F953F5AF;
+        Thu, 30 May 2019 05:01:02 -0700 (PDT)
+Subject: Re: [RFC] mm: Generalize notify_page_fault()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>
+References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
+ <20190530110639.GC23461@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
+Date:   Thu, 30 May 2019 17:31:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190530110639.GC23461@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-29 at 15:30 +0200, Roberto Sassu wrote:
-> Currently, ima_appraise_measurement() ignores the EVM status when
-> evm_verifyxattr() returns INTEGRITY_UNKNOWN. If a file has a valid
-> security.ima xattr with type IMA_XATTR_DIGEST or IMA_XATTR_DIGEST_NG,
-> ima_appraise_measurement() returns INTEGRITY_PASS regardless of the EVM
-> status. The problem is that the EVM status is overwritten with the
-> > appraisal statu
 
-Roberto, your framing of this problem is harsh and misleading.  IMA
-and EVM are intentionally independent of each other and can be
-configured independently of each other.  The intersection of the two
-is the call to evm_verifyxattr().  INTEGRITY_UNKNOWN is returned for a
-number of reasons - when EVM is not configured, the EVM hmac key has
-not yet been loaded, the protected security attribute is unknown, or
-the file is not in policy.
 
-This patch does not differentiate between any of the above cases,
-requiring mutable files to always be protected by EVM, when specified
-as an "ima_appraise=" option on the boot command line.
+On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
+> On Thu, May 30, 2019 at 11:25:13AM +0530, Anshuman Khandual wrote:
+>> Similar notify_page_fault() definitions are being used by architectures
+>> duplicating much of the same code. This attempts to unify them into a
+>> single implementation, generalize it and then move it to a common place.
+>> kprobes_built_in() can detect CONFIG_KPROBES, hence notify_page_fault()
+>> must not be wrapped again within CONFIG_KPROBES. Trap number argument can
+> 
+> This is a funny quirk of the English language.  "must not" means "is not
+> allowed to be", not "does not have to be".
 
-IMA could be extended to require EVM on a per IMA policy rule basis.  
-Instead of framing allowing IMA file hashes without EVM as a bug that
-has existed from the very beginning, now that IMA/EVM have matured and
-is being used, you could frame it as extending IMA or hardening.
+You are right. Noted for future. Thanks !
 
 > 
-> This patch mitigates the issue by selecting signature verification as the
-> only method allowed for appraisal when EVM is not initialized. Since the
-> new behavior might break user space, it must be turned on by adding the
-> '-evm' suffix to the value of the ima_appraise= kernel option.
+>> @@ -141,6 +142,19 @@ static int __init init_zero_pfn(void)
+>>  core_initcall(init_zero_pfn);
+>>  
+>>  
+>> +int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (kprobes_built_in() && !user_mode(regs)) {
+>> +		preempt_disable();
+>> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+>> +			ret = 1;
+>> +		preempt_enable();
+>> +	}
+>> +	return ret;
+>> +}
+>> +
+>>  #if defined(SPLIT_RSS_COUNTING)
 > 
-> Fixes: 2fe5d6def1672 ("ima: integrity appraisal extension")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Cc: stable@vger.kernel.org
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 3 ++-
->  security/integrity/ima/ima_appraise.c           | 8 ++++++++
->  2 files changed, 10 insertions(+), 1 deletion(-)
+> Comparing this to the canonical implementation (ie x86), it looks similar.
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 138f6664b2e2..d84a2e612b93 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1585,7 +1585,8 @@
->  			Set number of hash buckets for inode cache.
->  
->  	ima_appraise=	[IMA] appraise integrity measurements
-> -			Format: { "off" | "enforce" | "fix" | "log" }
-> +			Format: { "off" | "enforce" | "fix" | "log" |
-> +				  "enforce-evm" | "log-evm" } 
+> static nokprobe_inline int kprobes_fault(struct pt_regs *regs)
+> {
+>         if (!kprobes_built_in())
+>                 return 0;
+>         if (user_mode(regs))
+>                 return 0;
+>         /*
+>          * To be potentially processing a kprobe fault and to be allowed to call
+>          * kprobe_running(), we have to be non-preemptible.
+>          */
+>         if (preemptible())
+>                 return 0;
+>         if (!kprobe_running())
+>                 return 0;
+>         return kprobe_fault_handler(regs, X86_TRAP_PF);
+> }
+> 
+> The two handle preemption differently.  Why is x86 wrong and this one
+> correct?
 
-Is it necessary to define both "enforce-evm" and "log-evm"?  Perhaps
-defining "require-evm" is sufficient.
-
-Mimi
-
->  			default: "enforce"
->  
->  	ima_appraise_tcb [IMA] Deprecated.  Use ima_policy= instead.
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index 5fb7127bbe68..afef06e10fb9 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -18,6 +18,7 @@
->  
->  #include "ima.h"
->  
-> +static bool ima_appraise_req_evm __ro_after_init;
->  static int __init default_appraise_setup(char *str)
->  {
->  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-> @@ -28,6 +29,9 @@ static int __init default_appraise_setup(char *str)
->  	else if (strncmp(str, "fix", 3) == 0)
->  		ima_appraise = IMA_APPRAISE_FIX;
->  #endif
-> +	if (strcmp(str, "enforce-evm") == 0 ||
-> +	    strcmp(str, "log-evm") == 0)
-> +		ima_appraise_req_evm = true;
->  	return 1;
->  }
->  
-> @@ -245,7 +249,11 @@ int ima_appraise_measurement(enum ima_hooks func,
->  	switch (status) {
->  	case INTEGRITY_PASS:
->  	case INTEGRITY_PASS_IMMUTABLE:
-> +		break;
->  	case INTEGRITY_UNKNOWN:
-> +		if (ima_appraise_req_evm &&
-> +		    xattr_value->type != EVM_IMA_XATTR_DIGSIG)
-> +			goto out;
->  		break;
->  	case INTEGRITY_NOXATTRS:	/* No EVM protected xattrs. */
->  	case INTEGRITY_NOLABEL:		/* No security.evm xattr. */
-
+Here it expects context to be already non-preemptible where as the proposed
+generic function makes it non-preemptible with a preempt_[disable|enable]()
+pair for the required code section, irrespective of it's present state. Is
+not this better ?
