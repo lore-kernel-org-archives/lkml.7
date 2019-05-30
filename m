@@ -2,278 +2,162 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F78C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC8FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1848D24443
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C4025626
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 06:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rEchka1B"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CqKYhcED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfE3GOT (ORCPT
+        id S1727312AbfE3GRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 02:14:19 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16560 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3GOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 02:14:19 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cef74b80000>; Wed, 29 May 2019 23:14:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 29 May 2019 23:14:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 29 May 2019 23:14:16 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
- 2019 06:14:15 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 30 May 2019 06:14:16 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cef74b50006>; Wed, 29 May 2019 23:14:16 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-Date:   Wed, 29 May 2019 23:14:10 -0700
-Message-ID: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Thu, 30 May 2019 02:17:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:34843 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3GRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 02:17:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Dy6s62jBz9s3l;
+        Thu, 30 May 2019 16:17:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559197061;
+        bh=OCObPAGDOqe5J9uUB/cN8ChrjS6LDCWjOrri0lf75ME=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CqKYhcEDPiiCQ6d+0/PnbuCT2kymIEH0pr0JtG3F2eIrHFKpwQf3ebiWbMr1Bz4x6
+         1kFRW5sl56b2vTcczgPbMd9auNyBIOll5w/FAkXtJ5qbQBMRVmi0fFl+l20RqU9Zih
+         gL7mxKzTAjAMGz5fWmHj3srjClzzjp0STTDW8kjyPeL1OEKQVEkoSV8inNJHTPf2bw
+         DcgFyD6sAcuPu7Z2MxWfrM8vAZDDGPVfTkCEmCOC8p80rOwicz13vriYspD+DHp280
+         2PBQ3DzlZ3uUMgl5n1ysGbpBNUI+LWWH8MFC0Dl0FXXbJe4+Q8WI8rQg1FkWWRErHR
+         uSdO/iu0erK1A==
+Date:   Thu, 30 May 2019 16:17:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: linux-next: boot failure after merge of the akpm tree
+Message-ID: <20190530161741.0b4c3e92@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559196856; bh=lhZEYcWs+bX9dWmaxHmu6mA/ZD+CoOjYsNApVFCLG/I=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=rEchka1BT4iP8W4vjrsueifYFOERYdGmZeCJdsZMlko39rsFEj/OEhc4OOlpBj4GV
-         rk2+Q1gxhs31QGVPeu3zJMPRphAwiI0g20wohtB5FRLMzsH6EnPPF/o+pwh2OASNzp
-         tZO1QITHqG71Wuu7Hs4HpkBWYHD93bqKOvfkXfeDVcgqA5EuwDG13TFn4Oe3h+6yl9
-         cja7LhpGLY6oeUB0Ur7sBQnIZc3l5D0U2fuXD2qjNICSa9LoPlzSebbDFKsNwJmML2
-         kq5Ycn82fWKQDdO73t2C/CwFZ1yitOuCpX3UukS/BClHbK0K8K0XTvzXtRsuLFGdG/
-         v2HWQ/so4L3dA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/6pdqTYdH8k+n5bjKA4iyhh8"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
-except for BUG/BUG_ON checks
+--Sig_/6pdqTYdH8k+n5bjKA4iyhh8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 54 +++++++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+Hi all,
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index ebaa78d..59f19d3 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -112,7 +112,7 @@
- #define I2C_CLKEN_OVERRIDE			0x090
- #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
- 
--#define I2C_CONFIG_LOAD_TIMEOUT			1000000
-+#define I2C_CONFIG_LOAD_TMOUT			1000000
- 
- #define I2C_MST_FIFO_CONTROL			0x0b4
- #define I2C_MST_FIFO_CONTROL_RX_FLUSH		BIT(0)
-@@ -280,6 +280,7 @@ struct tegra_i2c_dev {
- 	u32 bus_clk_rate;
- 	u16 clk_divisor_non_hs_mode;
- 	bool is_multimaster_mode;
-+	/* xfer_lock: lock to serialize transfer submission and processing */
- 	spinlock_t xfer_lock;
- 	struct dma_chan *tx_dma_chan;
- 	struct dma_chan *rx_dma_chan;
-@@ -306,7 +307,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
-  * to the I2C block inside the DVC block
-  */
- static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
--	unsigned long reg)
-+					unsigned long reg)
- {
- 	if (i2c_dev->is_dvc)
- 		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
-@@ -314,7 +315,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
- }
- 
- static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
--	unsigned long reg)
-+		       unsigned long reg)
- {
- 	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
- 
-@@ -329,13 +330,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
- }
- 
- static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+			unsigned long reg, int len)
- {
- 	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
- 
- static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+		       unsigned long reg, int len)
- {
- 	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
-@@ -486,7 +487,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
- 			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
- 			return -ETIMEDOUT;
- 		}
--		msleep(1);
-+		usleep_range(1000, 2000);
- 	}
- 	return 0;
- }
-@@ -680,10 +681,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
- 		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
- 		if (in_interrupt())
- 			err = readl_poll_timeout_atomic(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+							1000,
-+							I2C_CONFIG_LOAD_TMOUT);
- 		else
--			err = readl_poll_timeout(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+			err = readl_poll_timeout(addr, val, val == 0, 1000,
-+						 I2C_CONFIG_LOAD_TMOUT);
- 
- 		if (err) {
- 			dev_warn(i2c_dev->dev,
-@@ -863,11 +865,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
--				tegra_i2c_fill_tx_fifo(i2c_dev);
--			else
-+			if (i2c_dev->msg_buf_remaining) {
-+				if (tegra_i2c_fill_tx_fifo(i2c_dev))
-+					goto err;
-+			} else {
- 				tegra_i2c_mask_irq(i2c_dev,
- 						   I2C_INT_TX_FIFO_DATA_REQ);
-+			}
- 		}
- 	}
- 
-@@ -1024,7 +1028,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- }
- 
- static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
--	struct i2c_msg *msg, enum msg_end_type end_state)
-+			      struct i2c_msg *msg, enum msg_end_type end_state)
- {
- 	u32 packet_header;
- 	u32 int_mask;
-@@ -1034,7 +1038,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	u32 *buffer = NULL;
- 	int err = 0;
- 	bool dma;
--	u16 xfer_time = 100;
-+	u16 xfer_tm = 100;
- 
- 	tegra_i2c_flush_fifos(i2c_dev);
- 
-@@ -1058,7 +1062,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	 * Transfer time in mSec = Total bits / transfer rate
- 	 * Total bits = 9 bits per byte (including ACK bit) + Start & stop bits
- 	 */
--	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
-+	xfer_tm += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
- 					i2c_dev->bus_clk_rate);
- 	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
- 
-@@ -1137,7 +1141,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 				goto unlock;
- 			}
- 		} else {
--			tegra_i2c_fill_tx_fifo(i2c_dev);
-+			if (tegra_i2c_fill_tx_fifo(i2c_dev))
-+				goto unlock;
- 		}
- 	}
- 
-@@ -1161,9 +1166,9 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		if (err)
- 			return err;
- 
--		time_left = wait_for_completion_timeout(
--						&i2c_dev->dma_complete,
--						msecs_to_jiffies(xfer_time));
-+		time_left =
-+			wait_for_completion_timeout(&i2c_dev->dma_complete,
-+						    msecs_to_jiffies(xfer_tm));
- 		if (time_left == 0) {
- 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
- 			dmaengine_terminate_sync(i2c_dev->msg_read ?
-@@ -1189,7 +1194,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	}
- 
- 	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
--						msecs_to_jiffies(xfer_time));
-+						msecs_to_jiffies(xfer_tm));
- 	tegra_i2c_mask_irq(i2c_dev, int_mask);
- 
- 	if (time_left == 0) {
-@@ -1225,7 +1230,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- }
- 
- static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
--	int num)
-+			  int num)
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
- 	int i;
-@@ -1273,12 +1278,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
- 	int ret;
- 
- 	ret = of_property_read_u32(np, "clock-frequency",
--			&i2c_dev->bus_clk_rate);
-+				   &i2c_dev->bus_clk_rate);
- 	if (ret)
- 		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
- 
- 	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
--			"multi-master");
-+							     "multi-master");
- }
- 
- static const struct i2c_algorithm tegra_i2c_algo = {
-@@ -1622,7 +1627,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
--			tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
-+			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
- 		goto release_dma;
-@@ -1691,6 +1696,7 @@ static const struct dev_pm_ops tegra_i2c_pm = {
- 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
- 			   NULL)
- };
-+
- #define TEGRA_I2C_PM	(&tegra_i2c_pm)
- #else
- #define TEGRA_I2C_PM	NULL
--- 
-2.7.4
+My qemu boot (PowerPC le guest on PowerPC le host, with and without kvm,
+using a kernel built with powerpc_pseries_le_defconfig) oopses during boot
+like this:
 
+---------------------------------------------------------------------------=
+--
+numa: Node 0 CPUs: 0
+Using standard scheduler topology
+devtmpfs: initialized
+clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:=
+ 19112604462750000 ns
+futex hash table entries: 256 (order: -1, 32768 bytes)
+------------[ cut here ]------------
+kernel BUG at mm/vmalloc.c:472!
+Oops: Exception in kernel mode, sig: 5 [#1]
+LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSeries
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc2 #2
+NIP:  c000000000369b18 LR: c000000000369c74 CTR: c000000000176e30
+REGS: c00000007e6636e0 TRAP: 0700   Not tainted  (5.2.0-rc2)
+MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24024882  XER: 20000=
+000
+CFAR: c000000000369c78 IRQMASK: 0=20
+GPR00: c000000000369c74 c00000007e663970 c00000000119c100 0000000000000001=
+=20
+GPR04: 000000007ec20000 00000001f4fe19cb 00000001f5398c84 c000000001380000=
+=20
+GPR08: 0000000000000000 0000000000000001 0000000000000001 00000000000002b2=
+=20
+GPR12: 0000000000004000 c000000001380000 c000000000010fc0 0000000000000001=
+=20
+GPR16: 0000000000010000 800000000000018e c000000000df9988 0000000000000000=
+=20
+GPR20: 0000000000010000 0000000000002dc2 0000000000000dc0 0000000000000022=
+=20
+GPR24: c00000007e2204c0 0000000000000dc2 0000000000010000 c00a000000000000=
+=20
+GPR28: c008000000000000 0000000000010000 ffffffffffffffff 0000000000000dc0=
+=20
+NIP [c000000000369b18] __vmalloc_node_range+0x1f8/0x410
+LR [c000000000369c74] __vmalloc_node_range+0x354/0x410
+Call Trace:
+[c00000007e663970] [c000000000369c74] __vmalloc_node_range+0x354/0x410 (unr=
+eliable)
+[c00000007e663a70] [c000000000369d80] __vmalloc+0x50/0x60
+[c00000007e663ae0] [c000000000299a98] bpf_prog_alloc_no_stats+0x58/0x120
+[c00000007e663b20] [c000000000299b90] bpf_prog_alloc+0x30/0xe0
+[c00000007e663b60] [c000000000a49dd8] bpf_prog_create+0x68/0x100
+[c00000007e663ba0] [c000000000f4f2a8] ptp_classifier_init+0x4c/0x80
+[c00000007e663be0] [c000000000f4b9e8] sock_init+0xe0/0x100
+[c00000007e663c10] [c000000000010b60] do_one_initcall+0x60/0x2c0
+[c00000007e663ce0] [c000000000ee45b0] kernel_init_freeable+0x37c/0x478
+[c00000007e663db0] [c000000000010fe4] kernel_init+0x2c/0x148
+[c00000007e663e20] [c00000000000c0cc] ret_from_kernel_thread+0x5c/0x70
+Instruction dump:
+60000000 2c230000 418200dc e9580020 79e91f24 7c6a492a 40920170 8138002c=20
+394f0001 794f0020 7f895040 419dffbc <0fe00000> 60000000 3f400001 4bfffedc=20
+---[ end trace 49ed8f97d467e164 ]---
+
+Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x00000005
+---------------------------------------------------------------------------=
+--
+
+The BUG is:
+
+	BUG_ON(page_shift !=3D PAGE_SIZE);
+
+in the !CONFIG_HAVE_ARCH_HUGE_VMAP version of vmap_hpages_range().
+
+I am guessing this is something to do with the vmalloc changes in Andrew's
+patches (or it could be the fixup I did to Nick's patch).
+
+I have reverted
+
+  c353e2997976 ("mm/vmalloc: hugepage vmalloc mappings")
+  a826492f28d9 ("mm: move ioremap page table mapping function to mm/")
+
+(and my fix up) for today and things seem to work (if only because the
+BUG() has been removed :-)).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6pdqTYdH8k+n5bjKA4iyhh8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzvdYUACgkQAVBC80lX
+0GznKgf/RI7jH+P8Wg1r1AaD+se1axfiO4De0tq/6YZ9gLZ0cx+/mjLzIIXOv595
+JgRfo2MUklDoI1E/T2cubSKi5bXQDAw8nHcXYyTokKYb1z2M8VmT5MTmndpDDMzN
+ZlQspHGMSOupcfWiTB9E5n54KEus2K8oJqw8dwNKzeLutyY3dFb+9nHiPdvTZYnw
+MB0faFrzzSq1OUXnVepUm0NnRjZ8+ptyjfY57Qtib4nLjGITrzlWDrfWIW4UUwmM
+jqHe3j3/GWwD0bJOfVOkt8bwhrbisVCjcWcf95Y5VX5AlXy6RqwbaOnmT6Mi3dnz
+j9TAEPU6IX62fwm0IPE1lypmtC8lmA==
+=yEg0
+-----END PGP SIGNATURE-----
+
+--Sig_/6pdqTYdH8k+n5bjKA4iyhh8--
