@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC02C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536E0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E017224F8F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBD824F8F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188883;
-	bh=B1REWhhUT/QzQkBeseofxK6UAlJ9OwSyGnb7velQKW4=;
+	s=default; t=1559188889;
+	bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V43uWdkSOYEFsdUlbxVOuJC2T3NMzFQLx5aVtwc9JdgC2sKHeZ1A/KqSFslPg7Bim
-	 PE0xE+DKUhXdt4P+dCLogm4vpU58+/VUqZzpmOpRjy1dtujbnYAAH4LYxpTQ5wZ14k
-	 PSyoHkmiJj9EbRunKiL/aGZbeORExohfR5SnRE98=
+	b=cFNhIhbp08onMS7BadpkZHjjMyk5QlZKV1LK5HpTp7ohs4v+JzGZsmFQ9fg+td1+U
+	 n+SCtSoeEXXR7u3J+Cd4rfUagtFrTF36KHQxflTI7G8zlyr1f+Z3t5ClCmz9qQvJ/U
+	 2IT3mFFBb71QRT7ptKOLPzrUjyxGfLsRCcS0nvwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732165AbfE3EBQ (ORCPT
+        id S1731444AbfE3DSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731455AbfE3DSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:11 -0400
+        id S1729868AbfE3DO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B66F824764;
-        Thu, 30 May 2019 03:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4BA524565;
+        Thu, 30 May 2019 03:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186290;
-        bh=B1REWhhUT/QzQkBeseofxK6UAlJ9OwSyGnb7velQKW4=;
+        s=default; t=1559186068;
+        bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q5mFBGMzsD0+zA06tiLivczBXL7At07Y1/EfAFnwrWBE86Y5mgNNrMY/zoqPlDb2m
-         B5Q5I90oyBg8UMFMIvICbzIe9adZSWrM9J/rn41R/iQP0QA82RYygJfSoJPoL5fN4E
-         jYr41BzFPYsFzcebb9CvJRai33yFpBTR6yKLM7WM=
+        b=phxZyWK43yI5GQzrpxdTmILn2X//6GkoCYbQtf8m94Yaz7uhIPHmzhRDZH0foHSFF
+         Bhw3I+vuMi5TORiLLZeZ2pPWbOAxRelAF9nA3/EW9WscimFB/78NeECPxP/wrL8DXq
+         WNmDEPCJEsHaKBn4jO7N6PeCU3HqyZNrP4o7Am/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 248/276] igb: Exclude device from suspend direct complete optimization
-Date:   Wed, 29 May 2019 20:06:46 -0700
-Message-Id: <20190530030540.657718120@linuxfoundation.org>
+Subject: [PATCH 5.0 179/346] PM / devfreq: Fix static checker warning in try_then_request_governor
+Date:   Wed, 29 May 2019 20:04:12 -0700
+Message-Id: <20190530030550.194295001@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,40 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b6e13216be29ced7350d9c354a1af8fe0ad9a3e ]
+[ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
 
-igb sets different WoL settings in system suspend callback and runtime
-suspend callback.
+The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
+drivers are built as modules." leads to the following static checker
+warning:
 
-The suspend direct complete optimization leaves igb in runtime suspended
-state with wrong WoL setting during system suspend.
+    drivers/devfreq/devfreq.c:1043 governor_store()
+    warn: 'governor' can also be NULL
 
-To fix this, we need to disable suspend direct complete optimization to
-let igb always use suspend callback to set correct WoL during system
-suspend.
+The reason is that the try_then_request_governor() function returns both
+error pointers and NULL. It should just return error pointers, so fix
+this by returning a ERR_PTR to the error intead of returning NULL.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/devfreq/devfreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index aa39a068858e9..5aa083d9a6c9a 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -3468,6 +3468,9 @@ static int igb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 			break;
- 		}
- 	}
-+
-+	dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_NEVER_SKIP);
-+
- 	pm_runtime_put_noidle(&pdev->dev);
- 	return 0;
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 0ae3de76833b7..839621b044f49 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -228,7 +228,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
+  * if is not found. This can happen when both drivers (the governor driver
+  * and the driver that call devfreq_add_device) are built as modules.
+  * devfreq_list_lock should be held by the caller. Returns the matched
+- * governor's pointer.
++ * governor's pointer or an error pointer.
+  */
+ static struct devfreq_governor *try_then_request_governor(const char *name)
+ {
+@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+ 		/* Restore previous state before return */
+ 		mutex_lock(&devfreq_list_lock);
+ 		if (err)
+-			return NULL;
++			return ERR_PTR(err);
  
+ 		governor = find_devfreq_governor(name);
+ 	}
 -- 
 2.20.1
 
