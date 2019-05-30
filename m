@@ -2,55 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD70C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E989C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFF425C05
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F6925C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfE3O7u (ORCPT
+        id S1726973AbfE3PAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:59:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44584 "EHLO
+        Thu, 30 May 2019 11:00:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52742 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726065AbfE3O7u (ORCPT
+        by vger.kernel.org with ESMTP id S1725934AbfE3PAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:59:50 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEpsWV128942
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:59:48 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfb3pr23-1
+        Thu, 30 May 2019 11:00:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEqAta130964
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:00:23 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stgm12gdd-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:59:48 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:00:22 -0400
 Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 15:59:47 +0100
+        Thu, 30 May 2019 16:00:21 +0100
 Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 15:59:41 +0100
+        Thu, 30 May 2019 16:00:16 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UExeCt32440696
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UF0FQ739911758
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 14:59:40 GMT
+        Thu, 30 May 2019 15:00:15 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 664DFB2066;
-        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 24E77B2074;
+        Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 483A5B205F;
-        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0F3F8B2084;
+        Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+        Thu, 30 May 2019 15:00:15 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 0E65716C09D5; Thu, 30 May 2019 07:59:42 -0700 (PDT)
-Date:   Thu, 30 May 2019 07:59:42 -0700
+        id CE50916C5D7E; Thu, 30 May 2019 08:00:16 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -58,73 +57,66 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/9] Miscellaneous fixes for v5.3
-Reply-To: paulmck@linux.ibm.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH tip/core/rcu 2/9] rcu: Correctly unlock root node in rcu_check_gp_start_stall()
+Date:   Thu, 30 May 2019 08:00:08 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190530145942.GA30318@linux.ibm.com>
+References: <20190530145942.GA30318@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053014-0052-0000-0000-000003C9136A
+x-cbid: 19053015-0064-0000-0000-000003E70E32
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210785; UDB=6.00636158; IPR=6.00991819;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:59:45
+ PH=3.00000004; SC=3.00000286; SDB=6.01210786; UDB=6.00636158; IPR=6.00991820;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 15:00:21
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053014-0053-0000-0000-0000611A13F7
-Message-Id: <20190530145942.GA30318@linux.ibm.com>
+x-cbparentid: 19053015-0065-0000-0000-00003DAB9C0D
+Message-Id: <20190530150015.30995-2-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=718 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905300106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-This series provides miscellaneous fixes:
+On systems whose rcu_node tree has only one node, the
+rcu_check_gp_start_stall() function's values of rnp and rnp_root will
+be identical.  In this case, it clearly does not make sense to release
+both rnp->lock and rnp_root->lock, but that is exactly what this function
+does in the last early exit.  This commit therefore unlocks only rnp->lock
+when rnp and rnp_root are equal.
 
-1.	Dump specified number of blocked tasks rather than rely on
-	serendipity, courtesy of Neeraj Upadhyay.
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/rcu/tree_stall.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-2.	Correctly unlock root node in rcu_check_gp_start_stall(),
-	courtesy of Neeraj Upadhyay.
-
-3.	Make kfree_rcu() ignore NULL pointers.
-
-4.	Set a maximum limit for back-to-back callback invocation.
-
-5.	Remove ".vnet" from paulmck email addresses.
-
-6.	Upgrade sync_exp_work_done() to smp_mb().
-
-7.	Fix irritating whitespace error in rcu_assign_pointer().
-
-8.	Force inlining of rcu_read_lock(), courtesy of Waiman Long.
-
-9.	Don't return a value from rcu_assign_pointer(), courtesy of
-	Andrea Parri.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/RCU/whatisRCU.txt                      |    8 +++----
- Documentation/core-api/circular-buffers.rst          |    2 -
- Documentation/memory-barriers.txt                    |    2 -
- Documentation/translations/ko_KR/memory-barriers.txt |    2 -
- include/linux/rcupdate.h                             |   21 ++++++++++---------
- kernel/rcu/tree.c                                    |    7 +++---
- kernel/rcu/tree_exp.h                                |    3 --
- kernel/rcu/tree_plugin.h                             |    2 -
- kernel/rcu/tree_stall.h                              |    4 ++-
- tools/include/linux/rcu.h                            |    4 +--
- tools/testing/radix-tree/linux/rcupdate.h            |    2 -
- 11 files changed, 31 insertions(+), 26 deletions(-)
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index f65a73a97323..065183391f75 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -630,7 +630,9 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
+ 	    time_before(j, rcu_state.gp_req_activity + gpssdelay) ||
+ 	    time_before(j, rcu_state.gp_activity + gpssdelay) ||
+ 	    atomic_xchg(&warned, 1)) {
+-		raw_spin_unlock_rcu_node(rnp_root); /* irqs remain disabled. */
++		if (rnp_root != rnp)
++			/* irqs remain disabled. */
++			raw_spin_unlock_rcu_node(rnp_root);
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 		return;
+ 	}
+-- 
+2.17.1
 
