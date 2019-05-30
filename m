@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C49C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC3EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDF925C72
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63C225CBF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191747;
-	bh=qRHnp9nqTswN4JVSMHBDW2hFGYgk1GdYEVio7lq2UaM=;
+	s=default; t=1559191751;
+	bh=DGwI68EpuJ6zAp05syVes+pWzZQjOwsZ0B9Eg/W2hJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPoZ3LO6Xe/tU+0jOew0WvU+Y19TOV4x2Ru8ihX4gXDe/nTUkjLzUQIEDaP7vT/Uv
-	 jYrmSetum5r/pTJD5L/x9QIF05BTdRanyMKoW198YooCC4jBG7nrFeenPLk1kbh42o
-	 htNOWl/gLoG9LV0p0w3NC4mCVOwu3hmb6GAxwT0Y=
+	b=ASgbzPWLqPjjheNXfYIZLv+2cPpilHBKTNCpEqZDULIgxi1H+T7FD6rNDSPP7aYW5
+	 eVY+9UaMi0DB1vVyTvAVpPfjFe3Qxy43j08gPocK9M91f8EmjMi+yldXSICiDJQVpb
+	 rgk4AhtHTBubBbeH3P/mOVdsoXFeA87jqlpttaMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388892AbfE3Es5 (ORCPT
+        id S1728435AbfE3DLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:11:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbfE3DLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:15 -0400
+        id S1728058AbfE3DKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDC9244D2;
-        Thu, 30 May 2019 03:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BF42448B;
+        Thu, 30 May 2019 03:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185875;
-        bh=qRHnp9nqTswN4JVSMHBDW2hFGYgk1GdYEVio7lq2UaM=;
+        s=default; t=1559185822;
+        bh=DGwI68EpuJ6zAp05syVes+pWzZQjOwsZ0B9Eg/W2hJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RgIoub8s0oGZxe/BOFPjFgraqrdLMsq0tWC3YzLk+7P1Jf7mhMNGYbxyCUY2RwAi9
-         SrltfJpSuIXEXETsZIXAbf7dRx3vDkPGFFyEuxnSSjTHNBT+kp291iXO5z0/VFWNVz
-         hSM93ffKWWanJUdw04F6EUBM9v7uMX6pbsXVOfJQ=
+        b=XyQ3UFAGru8po4+ghMFzrNtWmZ1Mg0H7YFoJWbYyY+eOanY3+GWF9PFvlWGd7nGw+
+         NRz4Jp9kqY/XqO+eb1jJSFJgKV3Xpxf0Luu+PZjOFLlvnCiDg3z7okWeey9LDPmImS
+         RJk6ag1xswmH0ESYPB2Y7vSslVYqygS5U1Bu16kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenjing Liu <Wenjing.Liu@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 220/405] drm/amd/display: use proper formula to calculate bandwidth from timing
-Date:   Wed, 29 May 2019 20:03:38 -0700
-Message-Id: <20190530030552.200039222@linuxfoundation.org>
+Subject: [PATCH 5.1 120/405] ASoC: fsl_sai: Update is_slave_mode with correct value
+Date:   Wed, 29 May 2019 20:01:58 -0700
+Message-Id: <20190530030547.072208511@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,177 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e49f69363adf8920883fff7e8ffecb802d897c6b ]
+[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
 
-[why]
-The existing calculation uses a wrong formula to
-calculate bandwidth from timing.
+is_slave_mode defaults to false because sai structure
+that contains it is kzalloc'ed.
 
-[how]
-Expose the existing proper function that calculates the bandwidth,
-so dc_link can use it to calculate timing bandwidth correctly.
+Anyhow, if we decide to set the following configuration
+SAI slave -> SAI master, is_slave_mode will remain set on true
+although SAI being master it should be set to false.
 
-Signed-off-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix this by updating is_slave_mode for each call of
+fsl_sai_set_dai_fmt.
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 48 ++++++++++++++++-
- .../gpu/drm/amd/display/dc/core/dc_link_dp.c  | 51 +------------------
- drivers/gpu/drm/amd/display/dc/dc_link.h      |  2 +
- 3 files changed, 51 insertions(+), 50 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index ea18e9c2d8cea..ea2f271e234bd 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2316,7 +2316,7 @@ static struct fixed31_32 get_pbn_from_timing(struct pipe_ctx *pipe_ctx)
- 	uint32_t denominator;
- 
- 	bpc = get_color_depth(pipe_ctx->stream_res.pix_clk_params.color_depth);
--	kbps = pipe_ctx->stream_res.pix_clk_params.requested_pix_clk_100hz / 10 * bpc * 3;
-+	kbps = dc_bandwidth_in_kbps_from_timing(&pipe_ctx->stream->timing);
- 
- 	/*
- 	 * margin 5300ppm + 300ppm ~ 0.6% as per spec, factor is 1.006
-@@ -2736,3 +2736,49 @@ void dc_link_enable_hpd_filter(struct dc_link *link, bool enable)
- 	}
- }
- 
-+uint32_t dc_bandwidth_in_kbps_from_timing(
-+	const struct dc_crtc_timing *timing)
-+{
-+	uint32_t bits_per_channel = 0;
-+	uint32_t kbps;
-+
-+	switch (timing->display_color_depth) {
-+	case COLOR_DEPTH_666:
-+		bits_per_channel = 6;
-+		break;
-+	case COLOR_DEPTH_888:
-+		bits_per_channel = 8;
-+		break;
-+	case COLOR_DEPTH_101010:
-+		bits_per_channel = 10;
-+		break;
-+	case COLOR_DEPTH_121212:
-+		bits_per_channel = 12;
-+		break;
-+	case COLOR_DEPTH_141414:
-+		bits_per_channel = 14;
-+		break;
-+	case COLOR_DEPTH_161616:
-+		bits_per_channel = 16;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	ASSERT(bits_per_channel != 0);
-+
-+	kbps = timing->pix_clk_100hz / 10;
-+	kbps *= bits_per_channel;
-+
-+	if (timing->flags.Y_ONLY != 1) {
-+		/*Only YOnly make reduce bandwidth by 1/3 compares to RGB*/
-+		kbps *= 3;
-+		if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR420)
-+			kbps /= 2;
-+		else if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
-+			kbps = kbps * 2 / 3;
-+	}
-+
-+	return kbps;
-+
-+}
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 09d3012160763..6809932e80bec 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -1520,53 +1520,6 @@ static bool decide_fallback_link_setting(
- 	return true;
- }
- 
--static uint32_t bandwidth_in_kbps_from_timing(
--	const struct dc_crtc_timing *timing)
--{
--	uint32_t bits_per_channel = 0;
--	uint32_t kbps;
--
--	switch (timing->display_color_depth) {
--	case COLOR_DEPTH_666:
--		bits_per_channel = 6;
--		break;
--	case COLOR_DEPTH_888:
--		bits_per_channel = 8;
--		break;
--	case COLOR_DEPTH_101010:
--		bits_per_channel = 10;
--		break;
--	case COLOR_DEPTH_121212:
--		bits_per_channel = 12;
--		break;
--	case COLOR_DEPTH_141414:
--		bits_per_channel = 14;
--		break;
--	case COLOR_DEPTH_161616:
--		bits_per_channel = 16;
--		break;
--	default:
--		break;
--	}
--
--	ASSERT(bits_per_channel != 0);
--
--	kbps = timing->pix_clk_100hz / 10;
--	kbps *= bits_per_channel;
--
--	if (timing->flags.Y_ONLY != 1) {
--		/*Only YOnly make reduce bandwidth by 1/3 compares to RGB*/
--		kbps *= 3;
--		if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR420)
--			kbps /= 2;
--		else if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
--			kbps = kbps * 2 / 3;
--	}
--
--	return kbps;
--
--}
--
- static uint32_t bandwidth_in_kbps_from_link_settings(
- 	const struct dc_link_settings *link_setting)
- {
-@@ -1607,7 +1560,7 @@ bool dp_validate_mode_timing(
- 		link_setting = &link->verified_link_cap;
- 	*/
- 
--	req_bw = bandwidth_in_kbps_from_timing(timing);
-+	req_bw = dc_bandwidth_in_kbps_from_timing(timing);
- 	max_bw = bandwidth_in_kbps_from_link_settings(link_setting);
- 
- 	if (req_bw <= max_bw) {
-@@ -1641,7 +1594,7 @@ void decide_link_settings(struct dc_stream_state *stream,
- 	uint32_t req_bw;
- 	uint32_t link_bw;
- 
--	req_bw = bandwidth_in_kbps_from_timing(&stream->timing);
-+	req_bw = dc_bandwidth_in_kbps_from_timing(&stream->timing);
- 
- 	link = stream->link;
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dc_link.h b/drivers/gpu/drm/amd/display/dc/dc_link.h
-index 8fc223defed4a..a83e1c60f9db2 100644
---- a/drivers/gpu/drm/amd/display/dc/dc_link.h
-+++ b/drivers/gpu/drm/amd/display/dc/dc_link.h
-@@ -252,4 +252,6 @@ bool dc_submit_i2c(
- 		uint32_t link_index,
- 		struct i2c_command *cmd);
- 
-+uint32_t dc_bandwidth_in_kbps_from_timing(
-+	const struct dc_crtc_timing *timing);
- #endif /* DC_LINK_H_ */
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index db9e0872f73db..7549b74e464e9 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -268,12 +268,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+ 		sai->is_slave_mode = true;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
 -- 
 2.20.1
 
