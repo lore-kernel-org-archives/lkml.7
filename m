@@ -2,114 +2,106 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8AFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2A6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E95624430
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540422442D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DN0EW6+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfE3CST (ORCPT
+        id S1727327AbfE3CWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 22:18:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3869 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726311AbfE3CSS (ORCPT
+        Wed, 29 May 2019 22:22:13 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44832 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfE3CWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 22:18:18 -0400
-X-UUID: a31b93e34ffa48d98dd6601f83dabafe-20190530
-X-UUID: a31b93e34ffa48d98dd6601f83dabafe-20190530
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 108718663; Thu, 30 May 2019 10:17:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 30 May 2019 10:17:58 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 10:17:58 +0800
-Message-ID: <1559182678.6868.1.camel@mtksdaap41>
-Subject: Re: [PATCH v2 2/4] drm: mediatek: unbind components in
- mtk_drm_unbind()
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 30 May 2019 10:17:58 +0800
-In-Reply-To: <20190529102555.251579-3-hsinyi@chromium.org>
-References: <20190529102555.251579-1-hsinyi@chromium.org>
-         <20190529102555.251579-3-hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 29 May 2019 22:22:13 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2J1Ob011938;
+        Thu, 30 May 2019 02:22:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=TydgSuxW1pWzusJHeoqCWsVAH6tbpZAvDeYoJkM1QCE=;
+ b=DN0EW6+yE67YzXIIGLcT8zY0A3ArvRNJgHEEc1nX9jqcxgu09y7cz+SCbbZdkryTtqGP
+ OlKCnkNvaO49METNTM00WTPg9KJnFWI3KIqf11ODo8jT/oPlIGpdgaXBxXSyjvx1FclQ
+ k1DccYH7Dz0YvRCpbKazQqGC/WoWkOxfYmbMEIMam3KcjxGCBMVYBJYormGYV7jeG8Hm
+ jllX+mfpZYaT//uzSv0c9qU4uOCulP5Md2x+pL22GAZ800r/vI17hjjENdxFTNOaXABg
+ wnzn758hJm7dKcHUAU/7a1K37uz/uK4I9BWKdeJicUH3/gtxVEPH5IqiDxoXuxnONtJG lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2spu7dnkfy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:22:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2KZ1I034535;
+        Thu, 30 May 2019 02:22:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2sqh7421vk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:22:07 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U2M6PH029860;
+        Thu, 30 May 2019 02:22:06 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 May 2019 19:22:05 -0700
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     sathya.prakash@broadcom.com, chaitra.basappa@broadcom.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        suganath-prabu.subramani@broadcom.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mpt3sas_ctl: fix double-fetch bug in _ctl_ioctl_main()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190530011030.GA6314@zhanggen-UX430UQ>
+Date:   Wed, 29 May 2019 22:22:03 -0400
+In-Reply-To: <20190530011030.GA6314@zhanggen-UX430UQ> (Gen Zhang's message of
+        "Thu, 30 May 2019 09:10:30 +0800")
+Message-ID: <yq1ef4gy94k.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=992
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Hsin-Yi:
 
-On Wed, 2019-05-29 at 18:25 +0800, Hsin-Yi Wang wrote:
-> Unbinding components (i.e. mtk_dsi and mtk_disp_ovl/rdma/color) will
-> trigger master(mtk_drm)'s .unbind(), and currently mtk_drm's unbind
-> won't actually unbind components. During the next bind,
-> mtk_drm_kms_init() is called, and the components are added back.
-> 
-> .unbind() should call mtk_drm_kms_deinit() to unbind components.
-> 
-> And since component_master_del() in .remove() will trigger .unbind(),
-> which will also unregister device, it's fine to remove original functions
-> called here.
+Gen,
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> In _ctl_ioctl_main(), 'ioctl_header' is fetched the first time from 
+> userspace. 'ioctl_header.ioc_number' is then checked. The legal result 
+> is saved to 'ioc'. Then, in condition MPT3COMMAND, the whole struct is
+> fetched again from the userspace. Then _ctl_do_mpt_command() is called,
+> 'ioc' and 'karg' as inputs.
+>
+> However, a malicious user can change the 'ioc_number' between the two 
+> fetches, which will cause a potential security issues.  Moreover, a 
+> malicious user can provide a valid 'ioc_number' to pass the check in 
+> first fetch, and then modify it in the second fetch.
+>
+> To fix this, we need to recheck the 'ioc_number' in the second fetch.
 
-> 
-> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> change log v1->v2:
-> * separate another 2 fixes to other patches.
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 57ce4708ef1b..e7362bdafa82 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -397,6 +397,7 @@ static void mtk_drm_unbind(struct device *dev)
->  	struct mtk_drm_private *private = dev_get_drvdata(dev);
->  
->  	drm_dev_unregister(private->drm);
-> +	mtk_drm_kms_deinit(private->drm);
->  	drm_dev_put(private->drm);
->  	private->drm = NULL;
->  }
-> @@ -568,13 +569,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  static int mtk_drm_remove(struct platform_device *pdev)
->  {
->  	struct mtk_drm_private *private = platform_get_drvdata(pdev);
-> -	struct drm_device *drm = private->drm;
->  	int i;
->  
-> -	drm_dev_unregister(drm);
-> -	mtk_drm_kms_deinit(drm);
-> -	drm_dev_put(drm);
-> -
->  	component_master_del(&pdev->dev, &mtk_drm_ops);
->  	pm_runtime_disable(&pdev->dev);
->  	of_node_put(private->mutex_node);
+Applied to 5.3/scsi-queue, thanks.
 
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
