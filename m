@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED72BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2E7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C777424590
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299D82470E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186255;
-	bh=YVSsXPhSV/AB32E936YZFOqFqKBy8o2/bd5r9JlQOZ4=;
+	s=default; t=1559186263;
+	bh=8LbZlu4aAZcQS7+yzBAlGBKmeC07lrdmWYrukn3OSSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhcVVMlx3D+rXTajEz9FwR/KBdoKWX1Zkg6AHCbrR9EEwzrrT0O0+4Pvuc2FuNp0A
-	 5WKWEFaDD4J3/oqqh0tBcCaXby1I+X+EnLmlWmramuqzMI1VhYB6MeFPQEm2xq+HdT
-	 Hh8fMgPzedDIGYatKtMb+QM2pemWRZYj4Nna653I=
+	b=0DEYGxonwEs3jH/1o9CtArkXQLPfHksBLqKZ+up0Xdad8WC0peVWGmKaUupMTfoYN
+	 PL5eLdq/jUZR/iqZdyA/MzKqIEZwwzpT5PlHmgvMIJGADwT9szlWFCkyd1l4oU1cdq
+	 PLuC33nHz6KwsKNGb9s57dyEJUVw9pmgW9ql2hqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfE3DRf (ORCPT
+        id S1731221AbfE3DRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32884 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729691AbfE3DOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:03 -0400
+        id S1729720AbfE3DOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801C62449A;
-        Thu, 30 May 2019 03:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7515C24547;
+        Thu, 30 May 2019 03:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186042;
-        bh=YVSsXPhSV/AB32E936YZFOqFqKBy8o2/bd5r9JlQOZ4=;
+        s=default; t=1559186046;
+        bh=8LbZlu4aAZcQS7+yzBAlGBKmeC07lrdmWYrukn3OSSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZu4CFms2Rlc+mK6RdRFt4tPJvipIn5+IlRyD7QcaixUYE9xyJW69w+1LsTGB5xgR
-         DTACyKy1XYphHXsJZHeSwbwREWVeuWQ9fK4jGrbB482Gks+2q7bblVyvlazVb5Nyb+
-         CxlHzX79SqaCRxWhzY2sWy7W1iGxV+Cz9PEsBHEo=
+        b=bOlAoHXIAnc3f3l0gVUGfc4+4MAVhhWzkhSo/dB/quVP14swIjgc7xfbtVeYofNzH
+         0vy5g0kMa3Oq2H631omr1y1Q3IpMYDr86gcYN2J7Qc+Qs5WckfjFcvqmL39y8Ol2Of
+         sj6/B1sLq1m6jxrBzDH7S7dvPzDOx/Eyr1+OJ/7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 133/346] pinctrl: st: fix leaked of_node references
-Date:   Wed, 29 May 2019 20:03:26 -0700
-Message-Id: <20190530030547.853652402@linuxfoundation.org>
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 139/346] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
+Date:   Wed, 29 May 2019 20:03:32 -0700
+Message-Id: <20190530030548.177486458@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,79 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 483d70d73beaecab55882fcd2a357af72674e24c ]
+[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+In preparation for adding asynchronous subdevice support to the driver,
+don't acquire v4l2_clk from the driver .probe() callback as that may
+fail if the clock is provided by a bridge driver which may be not yet
+initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
+which is going to be converted to v4l2_subdev_internal_ops.registered()
+callback, executed only when the bridge driver is ready.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Patrice Chotard <patrice.chotard@st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org (open list)
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-st.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/media/i2c/ov6650.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index e66af93f2cbf8..195b442a23434 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -1170,7 +1170,7 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 	struct property *pp;
- 	struct st_pinconf *conf;
- 	struct device_node *pins;
--	int i = 0, npins = 0, nr_props;
-+	int i = 0, npins = 0, nr_props, ret = 0;
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 2d3f7e00b129c..ba54ceb0b7266 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -810,9 +810,16 @@ static int ov6650_video_probe(struct i2c_client *client)
+ 	u8		pidh, pidl, midh, midl;
+ 	int		ret;
  
- 	pins = of_get_child_by_name(np, "st,pins");
- 	if (!pins)
-@@ -1185,7 +1185,8 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 			npins++;
- 		} else {
- 			pr_warn("Invalid st,pins in %pOFn node\n", np);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out_put_node;
- 		}
- 	}
- 
-@@ -1195,8 +1196,10 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 	grp->pin_conf = devm_kcalloc(info->dev,
- 					npins, sizeof(*conf), GFP_KERNEL);
- 
--	if (!grp->pins || !grp->pin_conf)
--		return -ENOMEM;
-+	if (!grp->pins || !grp->pin_conf) {
-+		ret = -ENOMEM;
-+		goto out_put_node;
++	priv->clk = v4l2_clk_get(&client->dev, NULL);
++	if (IS_ERR(priv->clk)) {
++		ret = PTR_ERR(priv->clk);
++		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
++		return ret;
 +	}
- 
- 	/* <bank offset mux direction rt_type rt_delay rt_clk> */
- 	for_each_property_of_node(pins, pp) {
-@@ -1229,9 +1232,11 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 		}
- 		i++;
- 	}
 +
-+out_put_node:
- 	of_node_put(pins);
+ 	ret = ov6650_s_power(&priv->subdev, 1);
+ 	if (ret < 0)
+-		return ret;
++		goto eclkput;
  
--	return 0;
-+	return ret;
+ 	msleep(20);
+ 
+@@ -849,6 +856,11 @@ static int ov6650_video_probe(struct i2c_client *client)
+ 
+ done:
+ 	ov6650_s_power(&priv->subdev, 0);
++	if (!ret)
++		return 0;
++eclkput:
++	v4l2_clk_put(priv->clk);
++
+ 	return ret;
  }
  
- static int st_pctl_parse_functions(struct device_node *np,
+@@ -991,18 +1003,9 @@ static int ov6650_probe(struct i2c_client *client,
+ 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
+ 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
+ 
+-	priv->clk = v4l2_clk_get(&client->dev, NULL);
+-	if (IS_ERR(priv->clk)) {
+-		ret = PTR_ERR(priv->clk);
+-		goto eclkget;
+-	}
+-
+ 	ret = ov6650_video_probe(client);
+-	if (ret) {
+-		v4l2_clk_put(priv->clk);
+-eclkget:
++	if (ret)
+ 		v4l2_ctrl_handler_free(&priv->hdl);
+-	}
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
