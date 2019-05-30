@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841B0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B9AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB3625BB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A00A25BB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191598;
-	bh=rnCGcQRRiEsV+Wvp2kATdZa1Pv/LFRaa3WEypRNUCL0=;
+	s=default; t=1559191601;
+	bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEV3kzIvkeJYsy1ilGDou4M5SydwpojWt8MgkZA8dCQDRrU41tq0MYgy6oQ0Ljdc3
-	 e7XxWxUOw0QYamLDtSDr5yR0IQ9AK4r6Fbx+BKPv7b+hNOnkibrkum7e1ew3Fsan2D
-	 6ibOP4QVZ6UnOFZ91lifaMP1qhRzzrTr9XcR5mzI=
+	b=Fk9KOTnFVvOZ4rsBrFtr2KpsvAkWmUfuT1kkzjK5Wx3j9XG0ON1+4P2Kfoor49Edw
+	 7IFachVIGph6SR00TuyNHhCiEdycetqGXLNsudeLp4EgbNtp9IVvCrsmz2THs5NnN/
+	 583J3jQGa7Fnq3b1jMcZb0ftHnpBBFxlwr2Y4mI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbfE3Eqe (ORCPT
+        id S2388621AbfE3Eqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfE3DLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728643AbfE3DLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90D1B24481;
-        Thu, 30 May 2019 03:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 003AB244D1;
+        Thu, 30 May 2019 03:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185900;
-        bh=rnCGcQRRiEsV+Wvp2kATdZa1Pv/LFRaa3WEypRNUCL0=;
+        bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ogeo9XHILo7Pybbx8RSCj03h1hhrEUrkHqTCamI933BGUeYOZWSOe8CtfDOw1YNyU
-         WI4Qlzbo57+doe6BdOGL1vpg+lIbCqLwF5l6CY1j3KbP0sT/4ZQWwL2BxFXjjL4u2H
-         FJaaWlXO9pomKd0EmDMwpDhKPciFTReI7FM1AMvA=
+        b=xAcnF5zdV1UmvwkSFIS07+sP07Q9UHcEdwuF88CWDGIl/VmzCtKAP6DtwPOgblYX0
+         ZCwhNGRGyoBG520Pw+A/u0Q/OKLTUVMWKRbHnNIi8GlcRdYTcaHBO4MWe1unuuavmd
+         7NcibVTCKfC/pSCWOeg0yIhKnorbaijgCCBwUQtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 268/405] x86/ia32: Fix ia32_restore_sigcontext() AC leak
-Date:   Wed, 29 May 2019 20:04:26 -0700
-Message-Id: <20190530030554.476838421@linuxfoundation.org>
+Subject: [PATCH 5.1 267/405] x86/uaccess, signal: Fix AC=1 bloat
+Date:   Wed, 29 May 2019 20:04:25 -0700
+Message-Id: <20190530030554.434153719@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,12 +65,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 67a0514afdbb8b2fc70b771b8c77661a9cb9d3a9 ]
+[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
 
-Objtool spotted that we call native_load_gs_index() with AC set.
-Re-arrange the code to avoid that.
+Occasionally GCC is less agressive with inlining and the following is
+observed:
+
+  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
+  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
+
+Cure this by moving this code out of the AC=1 region, since it really
+isn't needed for the user access.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
@@ -78,71 +86,88 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/ia32/ia32_signal.c | 29 +++++++++++++++++------------
+ arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
  1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index 321fe5f5d0e96..4d5fcd47ab75a 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -61,9 +61,8 @@
- } while (0)
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 08dfd4c1a4f95..c8aa58a2bab97 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -132,16 +132,6 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		COPY_SEG_CPL3(cs);
+ 		COPY_SEG_CPL3(ss);
  
- #define RELOAD_SEG(seg)		{		\
--	unsigned int pre = GET_SEG(seg);	\
-+	unsigned int pre = (seg) | 3;		\
- 	unsigned int cur = get_user_seg(seg);	\
--	pre |= 3;				\
- 	if (pre != cur)				\
- 		set_user_seg(seg, pre);		\
- }
-@@ -72,6 +71,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 				   struct sigcontext_32 __user *sc)
- {
- 	unsigned int tmpflags, err = 0;
-+	u16 gs, fs, es, ds;
- 	void __user *buf;
- 	u32 tmp;
- 
-@@ -79,16 +79,10 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 	current->restart_block.fn = do_no_restart_syscall;
- 
- 	get_user_try {
+-#ifdef CONFIG_X86_64
 -		/*
--		 * Reload fs and gs if they have changed in the signal
--		 * handler.  This does not handle long fs/gs base changes in
--		 * the handler, but does not clobber them at least in the
--		 * normal case.
+-		 * Fix up SS if needed for the benefit of old DOSEMU and
+-		 * CRIU.
 -		 */
--		RELOAD_SEG(gs);
--		RELOAD_SEG(fs);
--		RELOAD_SEG(ds);
--		RELOAD_SEG(es);
-+		gs = GET_SEG(gs);
-+		fs = GET_SEG(fs);
-+		ds = GET_SEG(ds);
-+		es = GET_SEG(es);
- 
- 		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
- 		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
-@@ -106,6 +100,17 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 		buf = compat_ptr(tmp);
+-		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
+-			     user_64bit_mode(regs)))
+-			force_valid_ss(regs);
+-#endif
+-
+ 		get_user_ex(tmpflags, &sc->flags);
+ 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
+ 		regs->orig_ax = -1;		/* disable syscall checks */
+@@ -150,6 +140,15 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		buf = (void __user *)buf_val;
  	} get_user_catch(err);
  
++#ifdef CONFIG_X86_64
 +	/*
-+	 * Reload fs and gs if they have changed in the signal
-+	 * handler.  This does not handle long fs/gs base changes in
-+	 * the handler, but does not clobber them at least in the
-+	 * normal case.
++	 * Fix up SS if needed for the benefit of old DOSEMU and
++	 * CRIU.
 +	 */
-+	RELOAD_SEG(gs);
-+	RELOAD_SEG(fs);
-+	RELOAD_SEG(ds);
-+	RELOAD_SEG(es);
++	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
++		force_valid_ss(regs);
++#endif
 +
- 	err |= fpu__restore_sig(buf, 1);
+ 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
  
  	force_iret();
+@@ -461,6 +460,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ {
+ 	struct rt_sigframe __user *frame;
+ 	void __user *fp = NULL;
++	unsigned long uc_flags;
+ 	int err = 0;
+ 
+ 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
+@@ -473,9 +473,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 
+@@ -541,6 +543,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ {
+ #ifdef CONFIG_X86_X32_ABI
+ 	struct rt_sigframe_x32 __user *frame;
++	unsigned long uc_flags;
+ 	void __user *restorer;
+ 	int err = 0;
+ 	void __user *fpstate = NULL;
+@@ -555,9 +558,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 		put_user_ex(0, &frame->uc.uc__pad0);
 -- 
 2.20.1
 
