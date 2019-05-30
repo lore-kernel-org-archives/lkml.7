@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D84C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3132DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D857B24C47
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAFA24C47
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187801;
-	bh=ee9eDab6zbIDJ0+JeCxbHQiGoNKeXIPi9XsN+fuz58M=;
+	s=default; t=1559187805;
+	bh=XGmnVclwZXZkmuOEHu1RgQWExfuWhKj/ZVh8jChX7aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U6jy8tggzlTy9d8OAhSrly+D5G6VtF6E5w6H7SEE1QYruNXp23TGYNAEhof5OgTrh
-	 uW+X2NLbS4zz0YcKKtealLHmNPdjfgAB6WF59VxlKNYLJdmHcP+Ezkfe+7htQ2dgeo
-	 gIIkrW8uWQEbE8SwKe/1PIcv68kVgxmTZaQCnri8=
+	b=Meee3ra4HlnykWwo7O6PfFJSGqGK4HU4VL8bcIm8TM/vmnJ9Erl6h0c4mjchFlxCf
+	 u9ZKvlFKRcMExpyPymjEVO7oDiWVs75W6ed/BIFwaYpy438VRRUkx/oyTXanO56cmb
+	 1vdmnoioBMJYMgJYnjifg+5Zz4s6SsJ2a8W6Ubbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732780AbfE3DnT (ORCPT
+        id S1732792AbfE3DnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732423AbfE3DVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:03 -0400
+        id S1727489AbfE3DVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E687324987;
-        Thu, 30 May 2019 03:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB0E249D4;
+        Thu, 30 May 2019 03:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186463;
-        bh=ee9eDab6zbIDJ0+JeCxbHQiGoNKeXIPi9XsN+fuz58M=;
+        s=default; t=1559186471;
+        bh=XGmnVclwZXZkmuOEHu1RgQWExfuWhKj/ZVh8jChX7aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zd/z4PZY9evqTiDowp7UA434PHC8lVeUV1rxKt3ZecRfTzn4H61XYGxYYqs/rhJOL
-         +ScRzFm9NarGjdTaLWQOslICpvuuZrsRpG0gbvkJcoQntXXkX+tGpUyCiOdGhqLqHv
-         8BpNiKP6cUih4dGfqhWKPlXxJji2Xy2MQ8VNsfYg=
+        b=F9oTs/8JJ2T4AjweCIEEZ1CDADZWgZ9t0WoImMysg5p70AJOxo/u65ywyrpuN8xp3
+         y51zDVO1JKhzvv5XPW7npwBhQN7yGwsg/jcfguD9wwahfNjQGodl3+H6NmrJ7eokgG
+         y6vdU1NArdEgQCdEwxcq0YNCJ1Z7/I7LUtnaUm3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/128] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
-Date:   Wed, 29 May 2019 20:06:53 -0700
-Message-Id: <20190530030449.224188224@linuxfoundation.org>
+Subject: [PATCH 4.9 101/128] arm64: cpu_ops: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:07:13 -0700
+Message-Id: <20190530030452.805037561@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,45 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
+[ Upstream commit 92606ec9285fb84cd9b5943df23f07d741384bfc ]
 
-eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
-reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
-and 0xC(2^25 SD clock). The data timeout counter can count from
-2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
-counter counts for only 2^13 SD clocks.
-A-008358: The data timeout counter value loaded into the timeout
-counter is less than expected and can result into early timeout
-error in case of eSDHC data transactions. The table below shows
-the expected vs actual timeout period for different values of
-SYSCTL[DTOCV]:
-these two erratum has the same quirk to control it, and set
-SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Detected by coccinelle with the following warnings:
+  ./arch/arm64/kernel/cpu_ops.c:102:1-7: ERROR: missing of_node_put;
+  acquired a node pointer with refcount incremented on line 69, but
+  without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/cpu_ops.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index 4db2769ea20c1..6f11cd95bb5fb 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -636,8 +636,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
- 
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
- 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-+	}
- 
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
+index e137ceaf5016b..82b465207ed0a 100644
+--- a/arch/arm64/kernel/cpu_ops.c
++++ b/arch/arm64/kernel/cpu_ops.c
+@@ -85,6 +85,7 @@ static const char *__init cpu_read_enable_method(int cpu)
+ 				pr_err("%s: missing enable-method property\n",
+ 					dn->full_name);
+ 		}
++		of_node_put(dn);
+ 	} else {
+ 		enable_method = acpi_get_enable_method(cpu);
+ 		if (!enable_method) {
 -- 
 2.20.1
 
