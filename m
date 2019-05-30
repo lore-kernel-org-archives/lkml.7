@@ -2,92 +2,66 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15F8C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9438C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD47A25F91
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbSnuErK"
+	by mail.kernel.org (Postfix) with ESMTP id C809F25F9D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfE3S1v (ORCPT
+        id S1726857AbfE3S2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:27:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34028 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfE3S1u (ORCPT
+        Thu, 30 May 2019 14:28:01 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56756 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfE3S2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:27:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c14so2077404pfi.1;
-        Thu, 30 May 2019 11:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Uzm65HhSNN1fcmtt/Wa7yU7SbppJINSbRm2BJyTrW0A=;
-        b=sbSnuErKWDWIZt2mopN4EdYZQM3stYUcIVPMv1WlxRUnQ1+utWW/t9SQ/+xdZNoRE/
-         z4rrtFtWTV8AoL4Fw2ZVqKRpAZal+YAgGS+iE8ZcmObpeOdpu2AraB7nK66IODU/QUt+
-         p36zqrfW/03F09bwF7ANH5PgD2umX1wAniB2kDVoUGlj+KHaDjPdTrzs6LARVzqpJHwr
-         6jm4VFdrJBsejmbqF0EIrsPMt6MYPJn2whD9sEk76DBXljDONt0TQBFL2Wr+H8oM1XsZ
-         8w+1kFaRgkVwWVxCDJlo02CycZgNP28ygF2zU6M9bmMz42QPrxy918fnUuIqJewgSTLT
-         nOpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uzm65HhSNN1fcmtt/Wa7yU7SbppJINSbRm2BJyTrW0A=;
-        b=aJcEq0W4C60oHIupJgOK9VmtJ4keImzFYOupB1dN955BaYPAYtpg3T3En/3rfATk+f
-         l+5bU7WMiZTVi+U3gew1KjXrlLpJuks9jy8ywWwJlgu18YxqwCC3YwGtA2NxyzjB9/nL
-         f1b4NqJtJT2ykuFiihP7Nu8Zq+/bJy6NFbTZAY0AMjzne87UiRS8LwCwA7Z8GR3CSG2x
-         0NbARk0aZ9SirfUgLU9131IG+W8J/02L5Mq9vlmfsq0e6aDhXCjlPlXMIe6YvS0n6bjv
-         4SoHgNwmFupmBdGYH01z6kikKuBGwBFYgzuu2RVs7T7d07gyLUikrQBUTGs6PtEWAAlW
-         U/uw==
-X-Gm-Message-State: APjAAAW4JmhWuPtK1Qz1c4UOHNT1na3Fp+73WZpiTIhzR8Eb/bcnTM6c
-        3c4X2UikcnTNmeD1onXGERI=
-X-Google-Smtp-Source: APXvYqzdplx15olZulXztvbcPMjAW8y3Q0IQ6Xo6P5SFLiKz+/5oTDn5Vy4bUMmmscwsvXtDgfPhDQ==
-X-Received: by 2002:a63:fc08:: with SMTP id j8mr4772350pgi.432.1559240870190;
-        Thu, 30 May 2019 11:27:50 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z18sm3630452pfa.101.2019.05.30.11.27.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:27:49 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:27:47 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/128] 4.9.180-stable review
-Message-ID: <20190530182747.GA22970@roeck-us.net>
-References: <20190530030432.977908967@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 30 May 2019 14:28:00 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF1B314D92C6E;
+        Thu, 30 May 2019 11:27:59 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:27:59 -0700 (PDT)
+Message-Id: <20190530.112759.2023290429676344968.davem@davemloft.net>
+To:     ruslan@babayev.com
+Cc:     mika.westerberg@linux.intel.com, wsa@the-dreams.de,
+        linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [net-next,v4 0/2] Enable SFP on ACPI based systems
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190528230233.26772-1-ruslan@babayev.com>
+References: <20190528230233.26772-1-ruslan@babayev.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 11:28:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 08:05:32PM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.180 release.
-> There are 128 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 01 Jun 2019 03:02:06 AM UTC.
-> Anything received after that time might be too late.
-> 
+From: Ruslan Babayev <ruslan@babayev.com>
+Date: Tue, 28 May 2019 16:02:31 -0700
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 320 pass: 320 fail: 0
+> Changes:
+> v2:
+> 	- more descriptive commit body
+> v3:
+> 	- made 'i2c_acpi_find_adapter_by_handle' static inline
+> v4:
+> 	- don't initialize i2c_adapter to NULL. Instead see below...
+> 	- handle the case of neither DT nor ACPI present as invalid.
+> 	- alphabetical includes.
+> 	- use has_acpi_companion().
+> 	- use the same argument name in i2c_acpi_find_adapter_by_handle()
+> 	  in both stubbed and non-stubbed cases.
 
-Guenter
+Series applied.
