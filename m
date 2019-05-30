@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FF3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433F0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E87C259DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE5B259D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191272;
-	bh=R+1SEPBkQ9tLiLcev28eLtWcpov6GKMZtJNoicwTjOo=;
+	s=default; t=1559191279;
+	bh=bDXiMGFvmldpxTxfhq4JdbAQvsgjlZNGG0/Vu9YG5q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8X9PdsqoVlsPCUB0RzeVTnLNx5cik4WgYBwrCjz89VQWqJquruEFaCscuNRlwbnh
-	 oWmHQUrpt3nCB+YVU08alENVmUzhkAzWJ9T/heydHsFL3P+5mHDsAnEMXx4tMsh4ui
-	 Cm63RV+5x9D8WMFyyy6Ka9KLH6eCY/GbYbFbwPsM=
+	b=c0cMZn5MwKnE3qLeF4RD9smaUJlB27/R6h1ousjCcBRm1NgosXe7YJEcteZ7R/7FI
+	 9ez58bQos4h3YY9LowJWYJNuhzEKto4lPpgx5MNRuR6RUQfUybmqDmklXdjwOiZIm9
+	 WIFb+Gq9PN5HrDknlB1lKjtQnsT8jr2zIZKF9G0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfE3ElL (ORCPT
+        id S2388691AbfE3ElS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55126 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbfE3DM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729027AbfE3DM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129FA23CCB;
+        by mail.kernel.org (Postfix) with ESMTPSA id B01A023D14;
         Thu, 30 May 2019 03:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185946;
-        bh=R+1SEPBkQ9tLiLcev28eLtWcpov6GKMZtJNoicwTjOo=;
+        bh=bDXiMGFvmldpxTxfhq4JdbAQvsgjlZNGG0/Vu9YG5q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Y4mU5bvmXpYV9OOhF/flQhwNUojUgPvZ7FC3I7tg6VPdPK0iOIbnFW7AOv6rDkn1
-         NrtxCEsB+vjoLDFDRuVmTWjaY8PexGBQcmA5TNX7/c6lvf0+jyva/496lz4LdAAHWF
-         LBrbe9elui9EOcdgdTNfF+WJN3BsSuFTTaMpEV+Y=
+        b=ZIoNFO3ryFs69HAOlbX04+bv2TLBfwHgPFCNuSwONJBh/QzNfkJI58fHq6HtB0v3C
+         BjuC5B8mTwcN+KYdl1Jdu+04GOM1RBNcg4xyvWEPmV+ZuhFSJKXOBinp86BSJyLhRA
+         v5iAJA/K2ZF5Tf5TPXOQaXooqeOl6svWO7LmhXJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 355/405] media: vicodec: avoid clang frame size warning
-Date:   Wed, 29 May 2019 20:05:53 -0700
-Message-Id: <20190530030558.602845501@linuxfoundation.org>
+Subject: [PATCH 5.1 356/405] media: go7007: avoid clang frame overflow warning with KASAN
+Date:   Wed, 29 May 2019 20:05:54 -0700
+Message-Id: <20190530030558.645730883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,103 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e855165f3dae6f71da859a5f00b85d5368641d61 ]
+[ Upstream commit ed713a4a1367aca5c0f2f329579465db00c17995 ]
 
-Clang-9 makes some different inlining decisions compared to gcc, which
-leads to a warning about a possible stack overflow problem when building
-with CONFIG_KASAN, including when setting asan-stack=0, which avoids
-most other frame overflow warnings:
+clang-8 warns about one function here when KASAN is enabled, even
+without the 'asan-stack' option:
 
-drivers/media/platform/vicodec/codec-fwht.c:673:12: error: stack frame size of 2224 bytes in function 'encode_plane'
+drivers/media/usb/go7007/go7007-fw.c:1551:5: warning: stack frame size of 2656 bytes in function
 
-Manually adding noinline_for_stack annotations in those functions
-called by encode_plane() or decode_plane() that require a significant
-amount of kernel stack makes this impossible to happen with any
-compiler.
+I have reported this issue in the llvm bugzilla, but to make
+it work with the clang-8 release, a small annotation is still
+needed.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=38809
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix checkpatch warning]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vicodec/codec-fwht.c | 29 +++++++++++++--------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/media/usb/go7007/go7007-fw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/vicodec/codec-fwht.c b/drivers/media/platform/vicodec/codec-fwht.c
-index d1d6085da9f1d..cf469a1191aa7 100644
---- a/drivers/media/platform/vicodec/codec-fwht.c
-+++ b/drivers/media/platform/vicodec/codec-fwht.c
-@@ -46,8 +46,12 @@ static const uint8_t zigzag[64] = {
- 	63,
- };
- 
--
--static int rlc(const s16 *in, __be16 *output, int blocktype)
-+/*
-+ * noinline_for_stack to work around
-+ * https://bugs.llvm.org/show_bug.cgi?id=38809
-+ */
-+static int noinline_for_stack
-+rlc(const s16 *in, __be16 *output, int blocktype)
- {
- 	s16 block[8 * 8];
- 	s16 *wp = block;
-@@ -106,8 +110,8 @@ static int rlc(const s16 *in, __be16 *output, int blocktype)
-  * This function will worst-case increase rlc_in by 65*2 bytes:
-  * one s16 value for the header and 8 * 8 coefficients of type s16.
-  */
--static u16 derlc(const __be16 **rlc_in, s16 *dwht_out,
--		 const __be16 *end_of_input)
-+static noinline_for_stack u16
-+derlc(const __be16 **rlc_in, s16 *dwht_out, const __be16 *end_of_input)
- {
- 	/* header */
- 	const __be16 *input = *rlc_in;
-@@ -240,8 +244,9 @@ static void dequantize_inter(s16 *coeff)
- 			*coeff <<= *quant;
+diff --git a/drivers/media/usb/go7007/go7007-fw.c b/drivers/media/usb/go7007/go7007-fw.c
+index 24f5b615dc7af..dfa9f899d0c25 100644
+--- a/drivers/media/usb/go7007/go7007-fw.c
++++ b/drivers/media/usb/go7007/go7007-fw.c
+@@ -1499,8 +1499,8 @@ static int modet_to_package(struct go7007 *go, __le16 *code, int space)
+ 	return cnt;
  }
  
--static void fwht(const u8 *block, s16 *output_block, unsigned int stride,
--		 unsigned int input_step, bool intra)
-+static void noinline_for_stack fwht(const u8 *block, s16 *output_block,
-+				    unsigned int stride,
-+				    unsigned int input_step, bool intra)
+-static int do_special(struct go7007 *go, u16 type, __le16 *code, int space,
+-			int *framelen)
++static noinline_for_stack int do_special(struct go7007 *go, u16 type,
++					 __le16 *code, int space, int *framelen)
  {
- 	/* we'll need more than 8 bits for the transformed coefficients */
- 	s32 workspace1[8], workspace2[8];
-@@ -373,7 +378,8 @@ static void fwht(const u8 *block, s16 *output_block, unsigned int stride,
-  * Furthermore values can be negative... This is just a version that
-  * works with 16 signed data
-  */
--static void fwht16(const s16 *block, s16 *output_block, int stride, int intra)
-+static void noinline_for_stack
-+fwht16(const s16 *block, s16 *output_block, int stride, int intra)
- {
- 	/* we'll need more than 8 bits for the transformed coefficients */
- 	s32 workspace1[8], workspace2[8];
-@@ -456,7 +462,8 @@ static void fwht16(const s16 *block, s16 *output_block, int stride, int intra)
- 	}
- }
- 
--static void ifwht(const s16 *block, s16 *output_block, int intra)
-+static noinline_for_stack void
-+ifwht(const s16 *block, s16 *output_block, int intra)
- {
- 	/*
- 	 * we'll need more than 8 bits for the transformed coefficients
-@@ -604,9 +611,9 @@ static int var_inter(const s16 *old, const s16 *new)
- 	return ret;
- }
- 
--static int decide_blocktype(const u8 *cur, const u8 *reference,
--			    s16 *deltablock, unsigned int stride,
--			    unsigned int input_step)
-+static noinline_for_stack int
-+decide_blocktype(const u8 *cur, const u8 *reference, s16 *deltablock,
-+		 unsigned int stride, unsigned int input_step)
- {
- 	s16 tmp[64];
- 	s16 old[64];
+ 	switch (type) {
+ 	case SPECIAL_FRM_HEAD:
 -- 
 2.20.1
 
