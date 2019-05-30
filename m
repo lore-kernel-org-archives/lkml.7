@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3C4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8554524E52
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF02924E59
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188482;
-	bh=Udqoyn03xR71fL5XiDPWv5x+FeOrtCnyp8Wqxzu3yJY=;
+	s=default; t=1559188490;
+	bh=rA9Hj3TBXRwB8sHqTiFbh7EgIX0uttYicRL5gPqMXVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NApk7rkVT1KFdm4Yhc4hQ4duH7Brn0MKkefBc6vvnRnjp108tIJ+lYth88DcnMd7m
-	 03ZfHFStzXmmspHh7VKjL86rExrEWGSH1fhwXYMS3LrfND5gKL22Uz2viquW2xzEFT
-	 +JXhKVNg7wP7t2nEsea43dCO4gKx15LQPnyyqplE=
+	b=vVuJmBuKUAhlkcbU4+g5ZaEkKqdAm4M+9Ng0LB6sgvxbXPZFrv+oiGEfLIhZ3Z+vf
+	 YGOFokcAOxmHpy/mDoUNWkx+/Eg6B3l7wr+ml/EhTHy3rTAqg/5qNFiu0q6bo383LW
+	 RA6HUml2tD4YO3GPft6uZtn9TeRUKo3HgkQIV0aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbfE3Dyk (ORCPT
+        id S2387518AbfE3Dyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731854AbfE3DTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730507AbfE3DTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CDA24865;
-        Thu, 30 May 2019 03:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC2624858;
+        Thu, 30 May 2019 03:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186357;
-        bh=Udqoyn03xR71fL5XiDPWv5x+FeOrtCnyp8Wqxzu3yJY=;
+        s=default; t=1559186356;
+        bh=rA9Hj3TBXRwB8sHqTiFbh7EgIX0uttYicRL5gPqMXVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=laV57B8xkRpdpN+aEPqrWv6FDNX9WMB8qDC671737xpFh6sAFFA2En9elnUcOmozt
-         dsWE5rdMjaUy79ER/FNfieLAPc6U6xouJgKrARff5nXn8YsTK7Dc7KAeGtPwuoHjKY
-         gvTj17cfaspcDePbRlo0NKkrIgHeRaQ7b0xEOQT8=
+        b=UigX2tISzjOUG/4SW8gpfQLRpJ+mfbIaEmdJoyfc9qwB43IU5qwcEDjZL6X31TK0F
+         kwN+v9slj1JXe1pH1hnur6/wVWH43nHY6+0NkAwruD/DDUgy38mPZMCpZuVA/yf7Sa
+         YgCN6v1XXx3xRDGK7zHMMb8HOy0soSbzMlkUvYSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/193] sched/core: Check quota and period overflow at usec to nsec conversion
-Date:   Wed, 29 May 2019 20:05:54 -0700
-Message-Id: <20190530030502.850842444@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 099/193] cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
+Date:   Wed, 29 May 2019 20:05:53 -0700
+Message-Id: <20190530030502.750499610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -64,57 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a8b4540db732ca16c9e43ac7c08b1b8f0b252d8 ]
+[ Upstream commit 4dcabece4c3a9f9522127be12cc12cc120399b2f ]
 
-Large values could overflow u64 and pass following sanity checks.
+The number of descendant cgroups and the number of dying
+descendant cgroups are currently synchronized using the cgroup_mutex.
 
- # echo 18446744073750000 > cpu.cfs_period_us
- # cat cpu.cfs_period_us
- 40448
+The number of descendant cgroups will be required by the cgroup v2
+freezer, which will use it to determine if a cgroup is frozen
+(depending on total number of descendants and number of frozen
+descendants). It's not always acceptable to grab the cgroup_mutex,
+especially from quite hot paths (e.g. exit()).
 
- # echo 18446744073750000 > cpu.cfs_quota_us
- # cat cpu.cfs_quota_us
- 40448
+To avoid this, let's additionally synchronize these counters using
+the css_set_lock.
 
-After this patch they will fail with -EINVAL.
+So, it's safe to read these counters with either cgroup_mutex or
+css_set_lock locked, and for changing both locks should be acquired.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/155125502079.293431.3947497929372138600.stgit@buzz
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: kernel-team@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/cgroup-defs.h | 5 +++++
+ kernel/cgroup/cgroup.c      | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0552ddbb25e2a..2464a242d6c9d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6482,8 +6482,10 @@ int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
- 	period = ktime_to_ns(tg->cfs_bandwidth.period);
- 	if (cfs_quota_us < 0)
- 		quota = RUNTIME_INF;
--	else
-+	else if ((u64)cfs_quota_us <= U64_MAX / NSEC_PER_USEC)
- 		quota = (u64)cfs_quota_us * NSEC_PER_USEC;
-+	else
-+		return -EINVAL;
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 93a2469a9130c..eb396f71285f7 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -287,6 +287,11 @@ struct cgroup {
+ 	 * Dying cgroups are cgroups which were deleted by a user,
+ 	 * but are still existing because someone else is holding a reference.
+ 	 * max_descendants is a maximum allowed number of descent cgroups.
++	 *
++	 * nr_descendants and nr_dying_descendants are protected
++	 * by cgroup_mutex and css_set_lock. It's fine to read them holding
++	 * any of cgroup_mutex and css_set_lock; for writing both locks
++	 * should be held.
+ 	 */
+ 	int nr_descendants;
+ 	int nr_dying_descendants;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 694b1cc8d144e..d30a51da94e2f 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4546,9 +4546,11 @@ static void css_release_work_fn(struct work_struct *work)
+ 		/* cgroup release path */
+ 		trace_cgroup_release(cgrp);
  
- 	return tg_set_cfs_bandwidth(tg, period, quota);
- }
-@@ -6505,6 +6507,9 @@ int tg_set_cfs_period(struct task_group *tg, long cfs_period_us)
- {
- 	u64 quota, period;
++		spin_lock_irq(&css_set_lock);
+ 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
+ 		     tcgrp = cgroup_parent(tcgrp))
+ 			tcgrp->nr_dying_descendants--;
++		spin_unlock_irq(&css_set_lock);
  
-+	if ((u64)cfs_period_us > U64_MAX / NSEC_PER_USEC)
-+		return -EINVAL;
-+
- 	period = (u64)cfs_period_us * NSEC_PER_USEC;
- 	quota = tg->cfs_bandwidth.quota;
+ 		cgroup_idr_remove(&cgrp->root->cgroup_idr, cgrp->id);
+ 		cgrp->id = -1;
+@@ -4745,12 +4747,14 @@ static struct cgroup *cgroup_create(struct cgroup *parent)
+ 	cgrp->root = root;
+ 	cgrp->level = level;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		cgrp->ancestor_ids[tcgrp->level] = tcgrp->id;
+ 
+ 		if (tcgrp != cgrp)
+ 			tcgrp->nr_descendants++;
+ 	}
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	if (notify_on_release(parent))
+ 		set_bit(CGRP_NOTIFY_ON_RELEASE, &cgrp->flags);
+@@ -5033,10 +5037,12 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 	if (parent && cgroup_is_threaded(cgrp))
+ 		parent->nr_threaded_children--;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		tcgrp->nr_descendants--;
+ 		tcgrp->nr_dying_descendants++;
+ 	}
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	cgroup1_check_for_release(parent);
  
 -- 
 2.20.1
