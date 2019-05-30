@@ -2,228 +2,210 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0253BC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31267C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D096E25EEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB10E25F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFusgsTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfE3SBO (ORCPT
+        id S1726748AbfE3SEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:01:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6657 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbfE3SBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:01:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:01:11 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 30 May 2019 11:01:10 -0700
-Date:   Thu, 30 May 2019 11:01:10 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190530180110.GB23930@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F654E965F@ORSMSX116.amr.corp.intel.com>
- <CALCETrXXVMutX8eZk6nnkOAeS+Tj0sQd0FkW+wk6Rx8hQxCe6w@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E9824@ORSMSX116.amr.corp.intel.com>
- <20190528202407.GB13158@linux.intel.com>
- <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
- <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
- <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
+        Thu, 30 May 2019 14:04:35 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37574 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbfE3SEe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:04:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so8124992qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5cJTRc1EI6T/boEycvbBtY55OS1pcz7kmj1lFB3RxPQ=;
+        b=BFusgsTO1cyqHb5tBqkcxEDr5ynRMLbsmdlsPR2PtMeQKw+DOTBW315eQi2yG2Z1x2
+         a2hHif6dvhFOBGFFoigALRQ4qc272qYQse6ifskVp7swkRyU+fPQY004DYt+lKM9wzqz
+         7vv25jEcHdIqhokfGvAdnyewIBApS92myKQg07WDptSCscVYuH4UVBqBc/cRFQj9JiVy
+         IfovOaozTqGIOnk2QwK5aVPeOjkVVn9ynpJ9vUB1kwNvORjM6adOOTSQMKFnHz9Xw4Oh
+         9Dyc+szfhpB4VnneF7zsPTlfzzagLHOqcVK1qskyTR/NCNv9tSsxxsQ6BIyTK7fq5Kzn
+         GAGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5cJTRc1EI6T/boEycvbBtY55OS1pcz7kmj1lFB3RxPQ=;
+        b=IhNwNZO+rwQTJTRS72Ds41jcn9rwSA7jv+MlUQefltT6VYHhJ3RZHu5CQaSlbZIv/f
+         jKocRENRf6LojqeaGkBQ1z8bpnADJlJx984djExve+TID2hpXsVt4bQlRiIy9XjFMVvt
+         QyTPdQ7LkH3xB4Fw7KwADw5UL8tVMk95jJ1dR3HQqlDGkkUGBRsAMKk6AtA/eRhNhLa/
+         PJoj/bBbl0lvxzw4uHxEJ4/qsyhxV2hfWJMrO06dI/gk00Mw0nOzRTLsQlkwjUmHSoQb
+         KpmEFrvbwJRWZRr+I5hiqqY6AT9Qi7rPVv+UI7gIMXYJxw5Rif8ZCdu6jkU+qdLpuh5d
+         MCtw==
+X-Gm-Message-State: APjAAAX4Ppzgv3dc0vuj/XQz4Fbrf9LnQ6c/E3Ulc1q7BNdTeq0GytW3
+        BWCs5GDLjWrLg/oD0eLJb0+ktdEB
+X-Google-Smtp-Source: APXvYqzHLJ8UtIi5d6cGKfKlOe8txqg4YjYbh8WPxviaVx/dvDpMrKkpymd+WZBN2EBlDYlfuh+RXw==
+X-Received: by 2002:ac8:16ac:: with SMTP id r41mr4920297qtj.346.1559239473028;
+        Thu, 30 May 2019 11:04:33 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id m18sm1803916qki.21.2019.05.30.11.04.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 11:04:30 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 53D6941149; Thu, 30 May 2019 15:04:28 -0300 (-03)
+Date:   Thu, 30 May 2019 15:04:28 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] perf record: collect user registers set jointly with
+ dwarf stacks
+Message-ID: <20190530180428.GA3711@kernel.org>
+References: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
+ <20190529192506.GB5553@kernel.org>
+ <378b81a7-b7db-c60f-134d-0c0f7cd6c0a1@linux.intel.com>
+ <20190530131337.GB21962@kernel.org>
+ <dd70a760-aab5-cc65-5e6a-3a0340a4466f@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <dd70a760-aab5-cc65-5e6a-3a0340a4466f@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 09:14:10AM -0700, Andy Lutomirski wrote:
-> On Thu, May 30, 2019 at 8:04 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
-> >
-> > On 5/30/19 10:31 AM, Andy Lutomirski wrote:
-> > > Hi all-
-> > >
-> > > After an offline discussion with Sean yesterday, here are some updates
-> > > to the user API parts of my proposal.
-> > >
-> > > Unfortunately, Sean convinced me that MAXPERM doesn't work the way I
-> > > described it because, for SGX2, the enclave loader won't know at load
-> > > time whether a given EAUG-ed page will ever be executed.  So here's an
-> > > update.
-> > >
-> > > First, here are the requrements as I see them, where EXECUTE, EXECMOD,
-> > > and EXECMEM could be substituted with other rules at the LSM's
-> > > discretion:
-> > >
-> > >   - You can create a WX or RWX mapping if and only if you have EXECMEM.
-> > >
-> > >   - To create an X mapping of an enclave page that has ever been W, you
-> > > need EXECMOD.
-> >
-> > EXECMOD to what file? The enclave file from which the page's content
-> > originated, the sigstruct file, or /dev/sgx/enclave?
+Em Thu, May 30, 2019 at 07:24:57PM +0300, Alexey Budankov escreveu:
 > 
-> I leave that decision to you :)  The user should need permission to do
-> an execmod thing on an enclave, however that wants to be encoded.
-
-But that decision dictates how the SGX API handles sigstruct.  If LSMs
-want to associate EXECMOD with sigstruct, then SGX needs to take sigstruct
-early and hold a reference to the file for the lifetime of the enclave.
-And if we're going to do that, the whole approach of inheriting
-permissions from source VMAs becomes unnecessary complexity.
-
-> >
-> > >   - To create an X mapping of an enclave page that came from EADD, you
-> > > need EXECUTE on the source file.  Optionally, we could also permit
-> > > this if you have EXECMOD.
-> >
-> > What is the "source file" i.e. the target of the check?  Enclave file,
-> > sigstruct file, or /dev/sgx/enclave?
+> On 30.05.2019 16:13, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, May 30, 2019 at 11:24:49AM +0300, Alexey Budankov escreveu:
+> >> On 29.05.2019 22:25, Arnaldo Carvalho de Melo wrote:
+> >>> Em Wed, May 29, 2019 at 05:30:49PM +0300, Alexey Budankov escreveu:
+> >> <SNIP>
+> >>>> +++ b/tools/perf/util/evsel.c
+> >>>> +#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
+> >>>> +			 (1ULL << PERF_REG_SP))
+> >>>> +
+> >>>>  static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+> >>>>  					   struct record_opts *opts,
+> >>>>  					   struct callchain_param *param)
+> >>>> @@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+> >>>>  		if (!function) {
+> >>>>  			perf_evsel__set_sample_bit(evsel, REGS_USER);
+> >>>>  			perf_evsel__set_sample_bit(evsel, STACK_USER);
+> >>>> -			attr->sample_regs_user |= PERF_REGS_MASK;
+> >>>> +			if (opts->sample_user_regs) {
+> >>>
+> >>> Where are you checking that opts->sample_user_regs doesn't have either
+> >>> IP or SP?
+> >>
+> >> Sure. The the intention was to avoid such a complication, merge two 
+> >> masks and provide explicit warning that the resulting mask is extended.
+> > 
+> > s/is/may be/g
+> >  
+> >> If you still see the checking and auto detection of the exact mask 
+> >> extension as essential it can be implemented.
+> > 
+> > perf, tracing, systems internals, etc are super complicated, full of
+> > details, the more precise we can make the messages, the better.
+> >  
+> >>> So, __perf_evsel__config_callchain its the routine that sets up the
+> >>> attr->sample_regs_user when callchains are asked for, and what was it
+> >>> doing? Asking for _all_ user regs, right?
+> >>>
+> >>> I.e. what you're saying is that when --callgraph-dwarf is asked for,
+> >>> then only IP and BP are needed, and we should stop doing that, so that
+> >>> would be a first patch, if that is the case. I.e. a patch that doesn't
+> >>> even mention opts->sample_user_regs.
+> >>>
+> >>> Then, a second patch would fix the opt->sample_user_regs request clash
+> >>> with --callgraph dwarf, i.e. it would do something like:
+> >>>
+> >>> 	      if ((opts->sample_regs_user & DWARF_REGS_MASK) != DWARF_REGS_MASK) {
+> >>> 	      		char * ip = (opts->sample_regs_user & (1ULL << PERF_REG_IP)) ? NULL : "IP",
+> >>> 	      		     * sp = (opts->sample_regs_user & (1ULL << PERF_REG_SP)) ? NULL : "SP",
+> >>> 			     * all = (!ip && !sp) ?  "s" : "";
+> >>>
+> >>> 			pr_warning("WARNING: specified --user-regs register set doesn't include register%s "
+> >>> 				   "needed by also specified --call-graph=dwarf, auto adding %s%s%s register%s.\n",
+> >>> 				   all, ip, all : ", " : "", sp, all);
+> >>> 		}
+> >>>
+> >>> This if and only if all the registers that are needed to do DWARF
+> >>> unwinding are just IP and BP, which doesn't look like its true, since
+> >>> when no --user_regs is set (i.e. opts->user_regs is not set) then we
+> >>> continue asking for PERF_REGS_MASK...
+> >>>
+> >>> Can you check where I'm missing something?
+> >>
+> >> 1.  -g call-graph dwarf,K                         full_regs
+> >> 2.  --user-regs=user_regs                         user_regs
+> >> 3.  -g call-graph dwarf,K --user-regs=user_regs	  user_regs + dwarf_regs
+> >>
+> >> The default behavior stays the same for cases 1, 2 above.
+> >> For case 3 register set becomes the one asked using --user_regs option.
+> >> If the option value misses IP or SP or the both then they are explicitly
+> >> added to the option value and a warning message mentioning the exact 
+> >> added registers is provided.
+> >  
+> >>> Jiri DWARF unwind uses just IP and SP? Looking at
+> >>> tools/perf/util/unwind-libunwind-local.c's access_reg() I don't think
+> >>> so, right?
+> >  
+> >> If you ask me, AFAIK, DWARF unwind rules sometimes can refer additional 
+> >> general purpose registers for frames boundaries calculation.
+> > 
+> > :-) So that DWARF_REGS is misleading, should be something like
+> > DWARF_MINIMAL_REGS, as we may need other registers, so the original code
+> > was correct, right?
 > 
-> Enclave file -- that is, the file backing the vma from which the data is loaded.
+> Right. Actually came to the same conclusion with the same naming for IP,SP mask :)
+> 
+> > 
+> > After all if the user asks for both --call-graph dwarf and --user-regs,
+> > then probably we should require --force? I.e. the message then would be:
+> > 
+> > "
+> > WARNING: The use of --call-graph=dwarf may require all the user
+> > registers, specifying a subset with --user-regs may render DWARF
+> > unwinding unreliable, please use --force if you're sure that the subset
+> > specified via --user-regs is enough for your specific use case.
+> > "
+> > 
+> > And then plain refuse, if the user _really_ wants it, then we have
+> > --force/-f for those cases.
+> > 
+> > Does this sound better?
+> 
+> If --user-regs is specified jointly with --call-graph dwarf option then
+> --user-regs already serves as the --force and, IMHO, a warning does the best.
+ 
+> The ideal solution, I could imagine, is to also dynamically calculate regs 
+> set extension and provide it in the warning, but it is only for two registers.
+> 
+> So, if --call-graph dwarf --user-regs=A,B,C are specified jointly then
+> "
+> WARNING: The use of --call-graph=dwarf may require all the user registers, 
+> specifying a subset with --user-regs may render DWARF unwinding unreliable,
+> so the minimal registers set (IP, SP) is explicitly forced.
+> "
 
-It wasn't explicitly called out in Andy's proposal(s), but the idea is
-that the SGX driver would effectively inherit permissions from the source
-VMA (EADD needs a source for the initial value of the encave page).
+I think with this wording and the renaming of DWARF_REGS to
+DWARF_MINIMAL_REGS it should be enough.
 
-I have two gripes with that approach:
-
-  - Requires enclave builder to mark enclave pages executable in the
-    non-enclave VMAs, which may unnecessarily require EXECMOD on the
-    source file, or even worse, EXECMEM, and potentially increases the
-    attack surface since the file must be executable.
-
-  - Is completely unnecessary if the enclave holds a reference to the
-    sigstruct file, as LSMs can easily apply labels to the sigstruct,
-    e.g. EXECUTE on the sigstruct instead of EXECUTE on the source file.
-
-
-After the bajillion mails we've generated, AIUI we've come up with two
-concepts that are viable: inheriting permissions from the source VMA
-vs. using sigstruct as a proxy for the enclave.  Andy's proposals rely on
-the inheritance concept.  The proposal below is based on the sigstruct
-proxy concept.
-
-For those not familiar with SGX details, sigstruct can be used as a proxy
-because hardware enforces that the measurement stored in the sigstruct
-exactly matches the measurement generated by the enclave build process,
-e.g. adding a page as RX instead of R will change the measurement.
-
-Core Concepts:
-  - FILE_{READ,WRITE,EXEC} on /dev/sgx/enclave effectively gates access to
-    EPC.  All real world enclaves will need all three permissions.
-  - sigstruct is the proxy for enclave from an LSM perspective, e.g.
-    SELinux can define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD and apply
-    them to the sigstruct file.
-  - Take sigstruct at ECREATE so that ADD_REGION immediately followed by
-    mprotect() works as expected (because SGX.mprotect() needs sigstruct
-    to pass to security_enclave_mprotect(), see below).
-  - SGX driver takes a reference to the backing sigstruct file if it
-    exists so that the file can be provided to LSMs during mprotect().
-  - Optional: SGX driver *requires* sigstruct to be backed by file, purely
-    to enforce userspace infrastructure is in place for LSM support.
-
-W^X handling:
-  - mmap() to /dev/sgx/enclave only allowed with PROT_NONE, i.e. force
-    userspace through mprotect() to simplify the kernel implementation.
-  - Add vm_ops mprotect() ops hook (I'll refer to SGX's implementation
-    as SGX.mprotect())
-  - Take explicit ALLOW_WRITE at ADD_REGION, a.k.a. EADD
-  - ADD_REGION also used to describe EAUG region (tentatively for SGX2).
-  - Track "can be written at some point in time (past or future)" as
-    ALLOW_WRITE (to avoid confusiong with MAY_WRITE).  A priori knowledge
-    of writability avoids having to track/coordinate PROT_WRITE across
-    VMAs and MMs.
-  - SGX.mprotect() returns -EPERM if PROT_WRITE && !ALLOW_WRITE.
-  - Add security_enclave_mprotect() LSM hook, called by SGX.mprotect(),
-    e.g. int security_enclave_mprotect(struct file *sigstruct,
-                                       unsigned long prot,
-                                       bool allow_write)
-  - Intention is that EXECMOD is required if PROT_EXEC and ALLOW_WRITE.
-
-Enclave {white,black}listing:
-  - Optional/Future: add security_enclave_create(), invoked during
-    SGX ECREATE ioctl(), e.g.
-       int security_enclave_create(struct vm_area_struct *sigstruct)
-
-  - If this LSM hook is implemented, having sigstruct at ECREATE
-    allows LSMs to determine whether or not the enclave is allowed to
-    execute before allocating EPC for the enclave, e.g. unwanted enclaves
-    can't DoS wanted enclaves.
-
-LSM implementation possibilities:
-
-  - Define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD, require them on the
-    process.  Does not require sigstruct to be backed by file, but cannot
-    achieve per-enclave granularity.  
-
-  - Define ENCLAVE__EXECUTE and ENCLAVE__EXECMOD, require them on the
-    sigstruct, i.e. force sigstruct to reside in filesystem.  Allows
-    per-enclave granularity.
-
-  - Reuse FILE__EXECUTE and FILE__EXECMOD on sigstruct.  Likely has
-    implications that may or may not be concerning, e.g. the sigstruct
-    file itself is weirdly executable.
-
-  - Adding ENCLAVE__EXECUTE and ENCLAVE__EXECMOD means the sigstruct,
-    which may be emdedded in the same file as the enclave, does *not*
-    require FILE__EXECUTE or FILE__EXECMOD, e.g. can be read-only.
-
-  - LSMs can (will?) require ENCLAVE__EXECUTE and ENCLAVE__EXECMOD to
-    effectively map an enclave, even if the process acquired the enclave
-    via SCM_RIGHTS (enclaves are tracked by fds).  This is good or bad
-    depending on your perspective.
-
-Userspace changes:
-
-  - EADD ioctl adds flags param to take ALLOW_WRITE
-
-  - ECREATE ioctl takes sigstruct instead of EINIT
-
-  - Initial mmap() must be PROT_NONE.
-
-  - sigstruct likely needs to reside in a file (this may not affect
-    some userspace implementations).
+- Arnaldo
