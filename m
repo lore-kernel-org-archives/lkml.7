@@ -2,140 +2,106 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41092C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B664AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1557625982
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aV3a3Qtp"
+	by mail.kernel.org (Postfix) with ESMTP id 889C4259CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfE3Nxr (ORCPT
+        id S1726879AbfE3NyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:53:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45355 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfE3Nxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:53:46 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so5082957ioc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o1cBK1xetXKqPQsIIl75xlp+mHn3/szubtAs7P5Ucrg=;
-        b=aV3a3QtpMLNViDLENhBHXiInGoHjqzPYoqVjaHiako1F0ud6Zv8vgIPbnzMFJf6oRU
-         Tu/eQUXbTUUrKaA3CfD0sYTQhYGA+YvZ7or472tod4QzEQVq1/uX0qCm0ixiKXRQ59JY
-         +9yhmdudR0wefvU88p3HkWSGJpRXAUmBoRtwrpXN/eonDDUasHf3zt76jqNJIKNCWLef
-         WzO5/mRt2LLTszN1YyFdnXoKlqkaM6AZ9DHPKz5xIm1Vzo1aVei2Q8ruz8r098ec1Nyb
-         CiFJ9DYnI04MYcLr0XTiplqRxa3ypbYB7DeiKb/DFrbTROK1pRnhSmsUdPkt7NNraiLE
-         Ku4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o1cBK1xetXKqPQsIIl75xlp+mHn3/szubtAs7P5Ucrg=;
-        b=fkXZUHVCm9TDPTIV0An7tNgABi3gDpIhSw17vQzX3t30KDaDXf1oT386dEwQqYBTSt
-         v/VmwVlCq8uia6Andm5HaCEw7HT21PUOOJ7nqt01FkL2hMd5ohf5WHDpecLWK59X8iDT
-         TFOLv9rLOs3pYAg8Pnif5oyBWfrPSA8miDjEJyoSSFl6pLsX+8FKe4CKq1NyftYZfdgI
-         cMoDyP++hgN7xd08ie6YiNt7Rd+bdTx+qViG5cWHEL/NCa7RV/8xSsi12Yc59taXlAE6
-         /UmgAf4J9nZIBOLaFMy6klWfjlEMNhilxY7dElHX6oeH5Z5HUOlUQ04o5C9GmfF0xwuv
-         7VSw==
-X-Gm-Message-State: APjAAAUP83Vtxq9169vRhTCo8BI032HcAT+s5xL0/PlZ2JadNJK+2Ejj
-        LxNXEKT6NSAnim1hmgsAa191kvAkJpMTBzmZvm83Og==
-X-Google-Smtp-Source: APXvYqxaz4GV5Y25t4/1krn0WhJBfKXcPRD9UUG155gKE/opIPm5E72E9h3/aLPqygECtWX9Ke/4tfms6QNF36/k2gM=
-X-Received: by 2002:a5d:968e:: with SMTP id m14mr2702733ion.49.1559224426119;
- Thu, 30 May 2019 06:53:46 -0700 (PDT)
+        Thu, 30 May 2019 09:54:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40772 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfE3NyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:54:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F04F9ADD9;
+        Thu, 30 May 2019 13:54:15 +0000 (UTC)
+Date:   Thu, 30 May 2019 15:54:14 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] livepatch: Fix ftrace module text permissions race
+Message-ID: <20190530135414.taftuprranwtowry@pathway.suse.cz>
+References: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <1559149856-7938-1-git-send-email-iuliana.prodan@nxp.com>
- <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 30 May 2019 15:53:32 +0200
-Message-ID: <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 15:45, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
->
-> On 5/30/2019 4:34 PM, Herbert Xu wrote:
-> > On Thu, May 30, 2019 at 01:29:41PM +0000, Iuliana Prodan wrote:
-> >>
-> >> I've tried coping the IV before the extended descriptor allocation, but
-> >> is not working and to make it work will need to make more changes in
-> >> CAAM. We need the original iv, and if we move it before
-> >> skcipher_edesc_alloc we lose it.
-> >> The fix exclusively in CAAM drv, to copy iv before DMA map, is more complex.
-> >
-> > Why doesn't it work (apart from the fact that this only makes sense
-> > for CBC and yet you're doing it for everything including CTR)?
-> >
-> > Cheers,
-> >
->
-> On the current structure of caamalg, to work, iv needs to be copied
-> before memcpy(iv, req->iv, ivsize), from skcipher_edesc_alloc function.
-> For this we need edesc, but this cannot be allocated before knowing how
-> much memory we need. So, to make it work, we'll need to modify more in CAAM.
->
+On Wed 2019-05-29 14:02:24, Josh Poimboeuf wrote:
+> The above panic occurs when loading two modules at the same time with
+> ftrace enabled, where at least one of the modules is a livepatch module:
+> 
+> CPU0					CPU1
+> klp_enable_patch()
+>   klp_init_object_loaded()
+>     module_disable_ro()
+>     					ftrace_module_enable()
+> 					  ftrace_arch_code_modify_post_process()
+> 				    	    set_all_modules_text_ro()
+>       klp_write_object_relocations()
+>         apply_relocate_add()
+> 	  *patches read-only code* - BOOM
 
-Would this work?
+This patch looks fine and fixes the race:
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index c0ece44f303b..2ef2f76a3cb8 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1832,22 +1832,25 @@ static int skcipher_decrypt(struct
-skcipher_request *req)
-        struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-        int ivsize = crypto_skcipher_ivsize(skcipher);
-        struct device *jrdev = ctx->jrdev;
-+       u8 out_iv[AES_BLOCK_SIZE];
-        u32 *desc;
-        int ret = 0;
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
--       /* allocate extended descriptor */
--       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
--       if (IS_ERR(edesc))
--               return PTR_ERR(edesc);
--
-        /*
-         * The crypto API expects us to set the IV (req->iv) to the last
-         * ciphertext block.
-         */
-        if (ivsize)
--               scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
-+               scatterwalk_map_and_copy(out_iv, req->src, req->cryptlen -
-                                         ivsize, ivsize, 0);
 
-+       /* allocate extended descriptor */
-+       edesc = skcipher_edesc_alloc(req, DESC_JOB_IO_LEN * CAAM_CMD_SZ);
-+       if (IS_ERR(edesc))
-+               return PTR_ERR(edesc);
-+
-+       memcpy(req->iv, out_iv, ivsize);
-+
-        /* Create and submit job descriptor*/
-        init_skcipher_job(req, edesc, false);
-        desc = edesc->hw_desc;
+That said, the semantic of text_mutex is a bit unclear:
+
+   + It serializes RO/RW setting but not NX
+
+   + Nothing prevents manipulation of the access rights
+     by external code before the module is ready-enough.
+     I mean before the sections are set RO by the module
+     loader itself.
+
+     Most sections are ready in MODULE_STATE_COMMING state.
+     Only ro_after_init sections need to stay RW longer,
+     see my question below.
+
+
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 6e6712b3aaf5..3c056b56aefa 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3519,7 +3534,7 @@ static noinline int do_init_module(struct module *mod)
+>  	/* Switch to core kallsyms now init is done: kallsyms may be walking! */
+>  	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
+>  #endif
+> -	module_enable_ro(mod, true);
+> +	__module_enable_ro(mod, true);
+
+The "true" parameter causes that also ro_after_init section is
+set read only. What is the purpose of this section, please?
+
+I ask because module_enable_ro(mod, true) can be called
+earlier from klp_init_object_loaded() from do_one_initcall().
+
+For example, it could some MODULE_STATE_LIVE notifier
+when it requires write access to ro_after_init section.
+
+Anyway, the above is a separate problem. This patch looks
+fine for the original problem.
+
+Best Regards,
+Petr
