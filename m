@@ -2,54 +2,50 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4819CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B2BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5EC251E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC55251F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189622;
-	bh=GsArPxxXUNMTSolPrYNzpqOWlGbn7QMpvOKGuFK/054=;
+	s=default; t=1559189625;
+	bh=SsyLdrVu3g1kfXDJ3CVlT1l7yvhaQ2LxfJLp6ZCpiok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuPU0VCBmTFTCJ60qwiysqwIBV4ywvVgBZMKCT7wnbea9mTIewq0bYToMGQupIYyY
-	 f3KXtxcgSjzcO9z0eD1b62M308V0p3Jcqc1XQuhUnGdpVmvFd9CRW+NxFVu+uey14z
-	 WBZuFUw1Mui6QW+e9jeRkkOGk7iK6i3C9DdrQDHE=
+	b=y+02Hdl8K1WSkgicvtA7gKHGXAkhlp6HqQk2qBnxRLhUl1kBJWCh5mBei38ZDzeu1
+	 2dUCMFsmG2dOso5VsntOB3EyaV7C68Rq3OTP9M4W/JeAkhL/CTK0nmPvGa7CcXChPy
+	 en+PpqusNoDjuftqhLFlb+S6avP5dy3e3i25vh7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfE3ENl (ORCPT
+        id S1728217AbfE3ENo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfE3DQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:21 -0400
+        id S1730653AbfE3DQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9B6245CA;
-        Thu, 30 May 2019 03:16:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C23BF245D8;
+        Thu, 30 May 2019 03:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186181;
-        bh=GsArPxxXUNMTSolPrYNzpqOWlGbn7QMpvOKGuFK/054=;
+        s=default; t=1559186179;
+        bh=SsyLdrVu3g1kfXDJ3CVlT1l7yvhaQ2LxfJLp6ZCpiok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNvtgElKhoM31BCVv1/ZWs1awmmFGU9aD3D0dlf+F4KGf9Lx8HW6Ih0Lj69XPiyLO
-         eLivoWJsULYwZP64+MLGlJ1HsHrF698zBGg8TSuh68/Qi0zVuuYKgDqcRLWDtwBGls
-         xnHQQsKqFUbz5QlZqbqmc/90LbM7TPCJ/QCLgy5c=
+        b=is+vb4n++RIssMOO6CEMXfM2+vmnmjbZDKIS7NjF2c/Yg1JG0O6xgwOzGNw7mp3ne
+         6AKaSDPM3GfYAF+zjbk8wGRklNayJYR/bQpWG7sICKlURNz4C/8wFgPxXWPX+j+5g/
+         zDWxxdyZtBSALJjoH/QirNu+uK6cXFa9VYrOloAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/276] NFS: make nfs_match_client killable
-Date:   Wed, 29 May 2019 20:03:24 -0700
-Message-Id: <20190530030527.549336028@linuxfoundation.org>
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 043/276] Revert "btrfs: Honour FITRIM range constraints during free space trim"
+Date:   Wed, 29 May 2019 20:03:21 -0700
+Message-Id: <20190530030527.261513597@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,59 +58,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
+From: David Sterba <dsterba@suse.com>
 
-    Actually we don't do anything with return value from
-    nfs_wait_client_init_complete in nfs_match_client, as a
-    consequence if we get a fatal signal and client is not
-    fully initialised, we'll loop to "again" label
+This reverts commit 8b13bb911f0c0c77d41e5ddc41ad3c127c356b8a.
 
-    This has been proven to cause soft lockups on some scenarios
-    (no-carrier but configured network interfaces)
+There is currently no corresponding patch in master due to additional
+changes that would be significantly different from plain revert in the
+respective stable branch.
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The range argument was not handled correctly and could cause trim to
+overlap allocated areas or reach beyond the end of the device. The
+address space that fitrim normally operates on is in logical
+coordinates, while the discards are done on the physical device extents.
+This distinction cannot be made with the current ioctl interface and
+caused the confusion.
+
+The bug depends on the layout of block groups and does not always
+happen. The whole-fs trim (run by default by the fstrim tool) is not
+affected.
+
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/client.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |   25 ++++++-------------------
+ 1 file changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 751ca65da8a35..846d45cb1a3c8 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -290,6 +290,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 	struct nfs_client *clp;
- 	const struct sockaddr *sap = data->addr;
- 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
-+	int error;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10788,9 +10788,9 @@ int btrfs_error_unpin_extent_range(struc
+  * held back allocations.
+  */
+ static int btrfs_trim_free_extents(struct btrfs_device *device,
+-				   struct fstrim_range *range, u64 *trimmed)
++				   u64 minlen, u64 *trimmed)
+ {
+-	u64 start = range->start, len = 0;
++	u64 start = 0, len = 0;
+ 	int ret;
  
- again:
- 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
-@@ -302,8 +303,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 		if (clp->cl_cons_state > NFS_CS_READY) {
- 			refcount_inc(&clp->cl_count);
- 			spin_unlock(&nn->nfs_client_lock);
--			nfs_wait_client_init_complete(clp);
-+			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			if (error < 0)
-+				return ERR_PTR(error);
- 			spin_lock(&nn->nfs_client_lock);
- 			goto again;
+ 	*trimmed = 0;
+@@ -10833,8 +10833,8 @@ static int btrfs_trim_free_extents(struc
+ 		if (!trans)
+ 			up_read(&fs_info->commit_root_sem);
+ 
+-		ret = find_free_dev_extent_start(trans, device, range->minlen,
+-						 start, &start, &len);
++		ret = find_free_dev_extent_start(trans, device, minlen, start,
++						 &start, &len);
+ 		if (trans) {
+ 			up_read(&fs_info->commit_root_sem);
+ 			btrfs_put_transaction(trans);
+@@ -10847,16 +10847,6 @@ static int btrfs_trim_free_extents(struc
+ 			break;
  		}
-@@ -413,6 +416,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
- 		clp = nfs_match_client(cl_init);
- 		if (clp) {
- 			spin_unlock(&nn->nfs_client_lock);
-+			if (IS_ERR(clp))
-+				return clp;
- 			if (new)
- 				new->rpc_ops->free_client(new);
- 			return nfs_found_client(cl_init, clp);
--- 
-2.20.1
-
+ 
+-		/* If we are out of the passed range break */
+-		if (start > range->start + range->len - 1) {
+-			mutex_unlock(&fs_info->chunk_mutex);
+-			ret = 0;
+-			break;
+-		}
+-
+-		start = max(range->start, start);
+-		len = min(range->len, len);
+-
+ 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
+ 		mutex_unlock(&fs_info->chunk_mutex);
+ 
+@@ -10866,10 +10856,6 @@ static int btrfs_trim_free_extents(struc
+ 		start += len;
+ 		*trimmed += bytes;
+ 
+-		/* We've trimmed enough */
+-		if (*trimmed >= range->len)
+-			break;
+-
+ 		if (fatal_signal_pending(current)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+@@ -10953,7 +10939,8 @@ int btrfs_trim_fs(struct btrfs_fs_info *
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	devices = &fs_info->fs_devices->devices;
+ 	list_for_each_entry(device, devices, dev_list) {
+-		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
++		ret = btrfs_trim_free_extents(device, range->minlen,
++					      &group_trimmed);
+ 		if (ret) {
+ 			dev_failed++;
+ 			dev_ret = ret;
 
 
