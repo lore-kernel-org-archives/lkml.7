@@ -2,57 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C430EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400FCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB2E24F3C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA3924F42
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188796;
-	bh=m7mleQE6RR3bBkxcDg1SSBGWVQ95hMKFP/PrqYHWZSs=;
+	s=default; t=1559188804;
+	bh=q4GEWxI8zFJV+i2pxijjdsUKmJrEI9Khc/QMjifhyWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KmaAx/6YPC0DfAsZegj5IKAqx2NUuB6gbL2c02ufKcZDNYlwZx/ydNXHRJButQRXH
-	 d/5Gf6ZexdQfhZtm21EeV0glJyic52CJES0B0q1CaipA8JRrZZt3ryN6QG+8ZbAtFa
-	 YT88sj99/5D9OrIkFm9kC6+6MKGS5HjJkKf0xA5Y=
+	b=DDEZGMHJJFYmdx5lmuDJk4k/ARxZkfBSTQU82XcH7S4f+oXqaAgWaWVODct7RNMWe
+	 XUK8/DCKZLtwgbBV7FvX4XjemqnzELJc2T49FJkB+rfFdIPLE/YzpX64TmompzhTNF
+	 JPyo4g+rXl8Bbzdu/zK35f7gy+mGqxB1wAjJCxLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfE3D7r (ORCPT
+        id S1726171AbfE3EAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51694 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731581AbfE3DSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:32 -0400
+        id S1727838AbfE3DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEDB9247D8;
-        Thu, 30 May 2019 03:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D272474D;
+        Thu, 30 May 2019 03:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186311;
-        bh=m7mleQE6RR3bBkxcDg1SSBGWVQ95hMKFP/PrqYHWZSs=;
+        s=default; t=1559186309;
+        bh=q4GEWxI8zFJV+i2pxijjdsUKmJrEI9Khc/QMjifhyWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=werwtqaKHZRd0s/ZzhfvRgbJEhO0jSBgP7I2UzFzxPwGssUux4mQw2nfzRI9+zkwL
-         ZjLC8zaAGUitvYn2llXbJe+SH+B++P8WXUV3LGumukfdaFQexXEuoiHm/EEO4S/OhD
-         hRU2mMm2za0NqSCkCHbSO7Xcg+CPFNcOc4NWFhU0=
+        b=nexOqOp1JoiymgRlfP8mtw+7Kibcaa7XhNr76WG+PYY1LqGW5aoJ3OP9uiKtTfoMg
+         FDPWCCtzAsUcn0ZUpE1jnYDTlIpsVZ0GZm993CtrDpQSLMjHdH48jiD4W4AWkf2Jjq
+         laUCtc6E5+FGM/iG4UM7jQYIYOwHLHD4Sj+21Vh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jane Chu <jane.chu@oracle.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Erwin Tsaur <erwin.tsaur@oracle.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 4.14 013/193] libnvdimm/namespace: Fix label tracking error
-Date:   Wed, 29 May 2019 20:04:27 -0700
-Message-Id: <20190530030449.694671104@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 276/276] NFS: Fix a double unlock from nfs_match,get_client
+Date:   Wed, 29 May 2019 20:07:14 -0700
+Message-Id: <20190530030542.445869259@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,159 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
 
-commit c4703ce11c23423d4b46e3d59aef7979814fd608 upstream.
+Now that nfs_match_client drops the nfs_client_lock, we should be
+careful
+to always return it in the same condition: locked.
 
-Users have reported intermittent occurrences of DIMM initialization
-failures due to duplicate allocations of address capacity detected in
-the labels, or errors of the form below, both have the same root cause.
-
-    nd namespace1.4: failed to track label: 0
-    WARNING: CPU: 17 PID: 1381 at drivers/nvdimm/label.c:863
-
-    RIP: 0010:__pmem_label_update+0x56c/0x590 [libnvdimm]
-    Call Trace:
-     ? nd_pmem_namespace_label_update+0xd6/0x160 [libnvdimm]
-     nd_pmem_namespace_label_update+0xd6/0x160 [libnvdimm]
-     uuid_store+0x17e/0x190 [libnvdimm]
-     kernfs_fop_write+0xf0/0x1a0
-     vfs_write+0xb7/0x1b0
-     ksys_write+0x57/0xd0
-     do_syscall_64+0x60/0x210
-
-Unfortunately those reports were typically with a busy parallel
-namespace creation / destruction loop making it difficult to see the
-components of the bug. However, Jane provided a simple reproducer using
-the work-in-progress sub-section implementation.
-
-When ndctl is reconfiguring a namespace it may take an existing defunct
-/ disabled namespace and reconfigure it with a new uuid and other
-parameters. Critically namespace_update_uuid() takes existing address
-resources and renames them for the new namespace to use / reconfigure as
-it sees fit. The bug is that this rename only happens in the resource
-tracking tree. Existing labels with the old uuid are not reaped leading
-to a scenario where multiple active labels reference the same span of
-address range.
-
-Teach namespace_update_uuid() to flag any references to the old uuid for
-reaping at the next label update attempt.
-
-Cc: <stable@vger.kernel.org>
-Fixes: bf9bccc14c05 ("libnvdimm: pmem label sets and namespace instantiation")
-Link: https://github.com/pmem/ndctl/issues/91
-Reported-by: Jane Chu <jane.chu@oracle.com>
-Reported-by: Jeff Moyer <jmoyer@redhat.com>
-Reported-by: Erwin Tsaur <erwin.tsaur@oracle.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
+Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/label.c          |   29 ++++++++++++++++-------------
- drivers/nvdimm/namespace_devs.c |   15 +++++++++++++++
- drivers/nvdimm/nd.h             |    4 ++++
- 3 files changed, 35 insertions(+), 13 deletions(-)
+ fs/nfs/client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -614,6 +614,17 @@ static const guid_t *to_abstraction_guid
- 		return &guid_null;
- }
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 846d45cb1a3c8..c092661147b30 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -305,9 +305,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 			spin_unlock(&nn->nfs_client_lock);
+ 			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			spin_lock(&nn->nfs_client_lock);
+ 			if (error < 0)
+ 				return ERR_PTR(error);
+-			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
  
-+static void reap_victim(struct nd_mapping *nd_mapping,
-+		struct nd_label_ent *victim)
-+{
-+	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-+	u32 slot = to_slot(ndd, victim->label);
-+
-+	dev_dbg(ndd->dev, "free: %d\n", slot);
-+	nd_label_free_slot(ndd, slot);
-+	victim->label = NULL;
-+}
-+
- static int __pmem_label_update(struct nd_region *nd_region,
- 		struct nd_mapping *nd_mapping, struct nd_namespace_pmem *nspm,
- 		int pos, unsigned long flags)
-@@ -621,9 +632,9 @@ static int __pmem_label_update(struct nd
- 	struct nd_namespace_common *ndns = &nspm->nsio.common;
- 	struct nd_interleave_set *nd_set = nd_region->nd_set;
- 	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
--	struct nd_label_ent *label_ent, *victim = NULL;
- 	struct nd_namespace_label *nd_label;
- 	struct nd_namespace_index *nsindex;
-+	struct nd_label_ent *label_ent;
- 	struct nd_label_id label_id;
- 	struct resource *res;
- 	unsigned long *free;
-@@ -692,18 +703,10 @@ static int __pmem_label_update(struct nd
- 	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
- 		if (!label_ent->label)
- 			continue;
--		if (memcmp(nspm->uuid, label_ent->label->uuid,
--					NSLABEL_UUID_LEN) != 0)
--			continue;
--		victim = label_ent;
--		list_move_tail(&victim->list, &nd_mapping->labels);
--		break;
--	}
--	if (victim) {
--		dev_dbg(ndd->dev, "%s: free: %d\n", __func__, slot);
--		slot = to_slot(ndd, victim->label);
--		nd_label_free_slot(ndd, slot);
--		victim->label = NULL;
-+		if (test_and_clear_bit(ND_LABEL_REAP, &label_ent->flags)
-+				|| memcmp(nspm->uuid, label_ent->label->uuid,
-+					NSLABEL_UUID_LEN) == 0)
-+			reap_victim(nd_mapping, label_ent);
- 	}
- 
- 	/* update index */
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -1229,12 +1229,27 @@ static int namespace_update_uuid(struct
- 	for (i = 0; i < nd_region->ndr_mappings; i++) {
- 		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
- 		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
-+		struct nd_label_ent *label_ent;
- 		struct resource *res;
- 
- 		for_each_dpa_resource(ndd, res)
- 			if (strcmp(res->name, old_label_id.id) == 0)
- 				sprintf((void *) res->name, "%s",
- 						new_label_id.id);
-+
-+		mutex_lock(&nd_mapping->lock);
-+		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
-+			struct nd_namespace_label *nd_label = label_ent->label;
-+			struct nd_label_id label_id;
-+
-+			if (!nd_label)
-+				continue;
-+			nd_label_gen_id(&label_id, nd_label->uuid,
-+					__le32_to_cpu(nd_label->flags));
-+			if (strcmp(old_label_id.id, label_id.id) == 0)
-+				set_bit(ND_LABEL_REAP, &label_ent->flags);
-+		}
-+		mutex_unlock(&nd_mapping->lock);
- 	}
- 	kfree(*old_uuid);
-  out:
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -120,8 +120,12 @@ struct nd_percpu_lane {
- 	spinlock_t lock;
- };
- 
-+enum nd_label_flags {
-+	ND_LABEL_REAP,
-+};
- struct nd_label_ent {
- 	struct list_head list;
-+	unsigned long flags;
- 	struct nd_namespace_label *label;
- };
- 
+-- 
+2.20.1
+
 
 
