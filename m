@@ -2,54 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96944C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB54C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5EF251D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A030251CF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189612;
-	bh=uIbglvcgcCD288qkSn4ygSDW/GSXl/64XOYxAqgcNZM=;
+	s=default; t=1559189615;
+	bh=qhycpso+IZXbfcRj7SNcCkbbQIkpdKDQtAqUnRwjlu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kU+YLwo/kNAieA+S/zTYb/IQI2YpUKIPXsmhmJ5tJ8uUf0xL4guoRpDASx9I5S/1f
-	 SkM/LTML3BNrzs/Uh9L4AOZD83IcCR7HkmbzcmOBh2psPfZ6V+6KmNHiUEdhGQyJO/
-	 t1URHk8w9YlNoQuFVdT1tRfxD1frWt0Zo30NeKfc=
+	b=IsvZuJCJm9kU7oQ+vMaECl70aPa3fKWukLHUQxUVU0/Jde92YuPEqopqJRjm4cgsQ
+	 G9BZGQH10lHYK6Q1H+VN7b8wQUqIkqixXpRRNpSjwLc7oZgVD+IUNGqRNWH3ZbAfoz
+	 tKw4qSLxrZ6gfNd2zvph33lOY9uVhKr/XcDG7OB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfE3ENW (ORCPT
+        id S1730861AbfE3ENK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbfE3DQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:41 -0400
+        id S1729728AbfE3DQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3C0245F8;
-        Thu, 30 May 2019 03:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470FF245BB;
+        Thu, 30 May 2019 03:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186201;
-        bh=uIbglvcgcCD288qkSn4ygSDW/GSXl/64XOYxAqgcNZM=;
+        s=default; t=1559186184;
+        bh=qhycpso+IZXbfcRj7SNcCkbbQIkpdKDQtAqUnRwjlu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrTDqrGaKmIld68UrRx2K7JQsxVFjxwKYFAkf4gcR7Ao0Ro2P84eCtaF+R1Bkdmac
-         5yu1xxoxvqTLJke62yr6Av1EdG3Ybjs0OI49WFmJ1KF0Q2CMnTPKCQfBO6u69QGy+t
-         PDs+vidcky6rPr3xleMuLjOo+KpYBjrz7GTdPBQQ=
+        b=clFHIPr3Xe5Jfu6iRf0AvVpDt2PqQI/4MmcDYIsfE768zZ0nNY+WQtO/9rRlOKyd7
+         oYkNaXsKwAxznDeqUiTZwNM/R5n10pfj7lw84V6OpBlmoAtOcTd3sZYldkKy3qlu+i
+         q8Ex+Ry5RbUHvPk0Vb2vJua/ajqWSjFNG0t9d4pI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 036/276] media: vb2: add waiting_in_dqbuf flag
-Date:   Wed, 29 May 2019 20:03:14 -0700
-Message-Id: <20190530030526.499360569@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/276] tools/bpf: fix perf build error with uClibc (seen on ARC)
+Date:   Wed, 29 May 2019 20:03:28 -0700
+Message-Id: <20190530030528.063355706@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,113 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+[ Upstream commit ca31ca8247e2d3807ff5fa1d1760616a2292001c ]
 
-commit d65842f7126aa1a87fb44b7c9980c12630ed4f33 upstream.
+When build perf for ARC recently, there was a build failure due to lack
+of __NR_bpf.
 
-Calling VIDIOC_DQBUF can release the core serialization lock pointed to
-by vb2_queue->lock if it has to wait for a new buffer to arrive.
+| Auto-detecting system features:
+|
+| ...                     get_cpuid: [ OFF ]
+| ...                           bpf: [ on  ]
+|
+| #  error __NR_bpf not defined. libbpf does not support your arch.
+    ^~~~~
+| bpf.c: In function 'sys_bpf':
+| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
+|  return syscall(__NR_bpf, cmd, attr, size);
+|                 ^~~~~~~~
+|                 sys_bpf
 
-However, if userspace dup()ped the video device filehandle, then it is
-possible to read or call DQBUF from two filehandles at the same time.
-
-It is also possible to call REQBUFS from one filehandle while the other
-is waiting for a buffer. This will remove all the buffers and reallocate
-new ones. Removing all the buffers isn't the problem here (that's already
-handled correctly by DQBUF), but the reallocating part is: DQBUF isn't
-aware that the buffers have changed.
-
-This is fixed by setting a flag whenever the lock is released while waiting
-for a buffer to arrive. And checking the flag where needed so we can return
--EBUSY.
-
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Reported-by: Syzbot <syzbot+4180ff9ca6810b06c1e9@syzkaller.appspotmail.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/common/videobuf2/videobuf2-core.c |   22 ++++++++++++++++++++++
- include/media/videobuf2-core.h                  |    1 +
- 2 files changed, 23 insertions(+)
+ tools/lib/bpf/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -668,6 +668,11 @@ int vb2_core_reqbufs(struct vb2_queue *q
- 		return -EBUSY;
- 	}
- 
-+	if (q->waiting_in_dqbuf && *count) {
-+		dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+		return -EBUSY;
-+	}
-+
- 	if (*count == 0 || q->num_buffers != 0 ||
- 	    (q->memory != VB2_MEMORY_UNKNOWN && q->memory != memory)) {
- 		/*
-@@ -797,6 +802,10 @@ int vb2_core_create_bufs(struct vb2_queu
- 	}
- 
- 	if (!q->num_buffers) {
-+		if (q->waiting_in_dqbuf && *count) {
-+			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+			return -EBUSY;
-+		}
- 		memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
- 		q->memory = memory;
- 		q->waiting_for_buffers = !q->is_output;
-@@ -1466,6 +1475,11 @@ static int __vb2_wait_for_done_vb(struct
- 	for (;;) {
- 		int ret;
- 
-+		if (q->waiting_in_dqbuf) {
-+			dprintk(1, "another dup()ped fd is waiting for a buffer\n");
-+			return -EBUSY;
-+		}
-+
- 		if (!q->streaming) {
- 			dprintk(1, "streaming off, will not wait for buffers\n");
- 			return -EINVAL;
-@@ -1493,6 +1507,7 @@ static int __vb2_wait_for_done_vb(struct
- 			return -EAGAIN;
- 		}
- 
-+		q->waiting_in_dqbuf = 1;
- 		/*
- 		 * We are streaming and blocking, wait for another buffer to
- 		 * become ready or for streamoff. Driver's lock is released to
-@@ -1513,6 +1528,7 @@ static int __vb2_wait_for_done_vb(struct
- 		 * the locks or return an error if one occurred.
- 		 */
- 		call_void_qop(q, wait_finish, q);
-+		q->waiting_in_dqbuf = 0;
- 		if (ret) {
- 			dprintk(1, "sleep was interrupted\n");
- 			return ret;
-@@ -2361,6 +2377,12 @@ static size_t __vb2_perform_fileio(struc
- 	if (!data)
- 		return -EINVAL;
- 
-+	if (q->waiting_in_dqbuf) {
-+		dprintk(3, "another dup()ped fd is %s\n",
-+			read ? "reading" : "writing");
-+		return -EBUSY;
-+	}
-+
- 	/*
- 	 * Initialize emulator on first call.
- 	 */
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -551,6 +551,7 @@ struct vb2_queue {
- 	unsigned int			start_streaming_called:1;
- 	unsigned int			error:1;
- 	unsigned int			waiting_for_buffers:1;
-+	unsigned int			waiting_in_dqbuf:1;
- 	unsigned int			is_multiplanar:1;
- 	unsigned int			is_output:1;
- 	unsigned int			copy_timestamp:1;
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 7a0014794bff7..dd0b68d1f4be0 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -53,6 +53,8 @@
+ #  define __NR_bpf 349
+ # elif defined(__s390__)
+ #  define __NR_bpf 351
++# elif defined(__arc__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+-- 
+2.20.1
+
 
 
