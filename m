@@ -2,123 +2,107 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257B1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAB6243DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E501243E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqyttgTd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUVyJwmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfE3BKC (ORCPT
+        id S1727281AbfE3BKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:10:02 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38239 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3BKB (ORCPT
+        Wed, 29 May 2019 21:10:55 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43482 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3BKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:10:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 18so2888461oij.5;
-        Wed, 29 May 2019 18:10:01 -0700 (PDT)
+        Wed, 29 May 2019 21:10:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so922419pgv.10;
+        Wed, 29 May 2019 18:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/QWOK7mvM11aBaoeWXjkLlMbPoa5BTdf7AzqNiYer/E=;
-        b=QqyttgTda14aWjZEGL+vqbJe+Gqk+CrytZgAWK7eMyvrA/Fw9Exa0E7jAnMXzMIS7z
-         nG21x87aCzYhdPyXoRG4SzqztHrpBojU5kBhe1ifDRAHrk+WSJR8HZbA4ITrBBARyJ9Z
-         uJVvy+8o3hakeiiV2GyriQscVFvw30D+e3oTuk6SxPWdZDUcQMBuG9Yhlk836xQgaGkt
-         mQkpjLOYyp+dYa6ZpdaFSOVTOuDlD1e49snQKH0EhOnZvHjiHactytiptNCNrE3ASs4o
-         YotJe4wePJrBfhKDlR2N1l9FXC+XTRS7cdhIXHedVrvejYdksvWIjtjMYyTf1HUk9MOF
-         Ch8Q==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=9q3n6/Atan/BZx1c7DELwhCkfQhZCdsRzVyU+FH+w8E=;
+        b=kUVyJwmSi9HfWvdvfbVdt5vH1mMxcA8Sio6yz3d2YqSTPgJCoxRQVYWakSZsk8/bnx
+         klALrwxz3k9VRfeqFpqkdInMF3aI7iS4DATYpm3v1Aw0q1JQuw1jBcWfPXavpDDhVx7a
+         GNq45ww6ueUZbKHuA071AMYqZsDCZ9XN7pttbpnTvOoiCQbKVME/DuOeCw9xqQPjLKpw
+         rKtOICQFiygbSrO4z2qPaTwZH1bCIXpDjM0CyDo7qs9v3wqNODnQVjTRzTr+EqRZmAmZ
+         UccWq2bDhqHydbAQrJ2b9RvTDuUQT3/z9F6xHMlj6gcKQUf0RYPxmQwhisf7xTMv4mEn
+         fGwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/QWOK7mvM11aBaoeWXjkLlMbPoa5BTdf7AzqNiYer/E=;
-        b=WKQ2poLCrSA7x2//WbSjNFt0rX77mB2KWPCfmGRlen+beIgAHpTFJt5OpCvK5Lz8N+
-         shHzCxdR6b1Znf/SaQLR+kA1wkYD2xoMCAuah7CwPwbb7eU2UuO7UOjCAHhriCZT93c6
-         ycxYawWNCpSDNvx086/ODfllWaRL5KH6SCw4SLCPjS5FwF0MB5GEm6XWzbdPocgtepBG
-         GfFjyDpN7Dl9vkNCNxH6+61wo1LloyUezQc/24zTGPkdikMqJTh/GoXrah2e49xSI+3L
-         QtWys/bFXFFqYWIPAnQw4GcsHd2G2CMT3CIiQNz7fSf6eQtPG1P+4yjccD7PKRFUKcLf
-         CeNg==
-X-Gm-Message-State: APjAAAWWn1RCimyd7xWolplfP/E90JbsGTiRE9R1KpIRo1yElCA+pyZL
-        m6oJYHEN92h4wrxUorJMecxvUGwbYHFuHwf3WT4=
-X-Google-Smtp-Source: APXvYqxCkJSeNEhIZqehOdT0ggm5DxLVr7eFQV74uVDL2C73BkBr5yTXL43P98cFkuzwgRNI0rbpXynnIghxR55zcpQ=
-X-Received: by 2002:aca:3305:: with SMTP id z5mr762027oiz.141.1559178601213;
- Wed, 29 May 2019 18:10:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=9q3n6/Atan/BZx1c7DELwhCkfQhZCdsRzVyU+FH+w8E=;
+        b=cnH+WXRO+z1OIdKkwYTL1NHderVm92lfZMuoEJyevjyGSPwcUcxAZ0Hu1frzDI4Gre
+         9c8Yn4xJfRna0uk8zCuXcwTYt4pBrmgm0xCI6smlTAe56WcDsby5SL/2HSToiEy382Cz
+         x2yuk+lEc1xLKnheb3aNrkkOcMxcL4C+Rw1V2g/sR0HUeiuvMEnPiAyB1ks9N0mh7FIf
+         Q5I6wJi4iQc1PdnAPhq6iXoAeXqBHeBQvnq4GNj9+GkrNxdrQDsRF+ck4UdD0ttiUSza
+         DwVxO2NSuT+7Lg+z4mJswrYKWcPmKLm93va6lz/bRXge2p6reHbjwgNU1PSmqqlaVO4X
+         ayWw==
+X-Gm-Message-State: APjAAAX8BSHRJCPT9TYBwJvRyloFxnDQoLJbyVcio/88Kap90z7i/gVv
+        wgo1zwyPkbnwtvujDUC5s1Q=
+X-Google-Smtp-Source: APXvYqxt86dxGzN3ZWm9yu9CjEHxpW6lyXo6EdYMJskIILsFaDt25aud9T1smPRolla3NA18/q5zhw==
+X-Received: by 2002:a65:6382:: with SMTP id h2mr990283pgv.355.1559178654745;
+        Wed, 29 May 2019 18:10:54 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id l8sm510250pgb.76.2019.05.29.18.10.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 18:10:53 -0700 (PDT)
+Date:   Thu, 30 May 2019 09:10:30 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     sathya.prakash@broadcom.com, chaitra.basappa@broadcom.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     suganath-prabu.subramani@broadcom.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mpt3sas_ctl: fix double-fetch bug in _ctl_ioctl_main()
+Message-ID: <20190530011030.GA6314@zhanggen-UX430UQ>
 MIME-Version: 1.0
-References: <1559004795-19927-1-git-send-email-wanpengli@tencent.com>
- <1559004795-19927-3-git-send-email-wanpengli@tencent.com> <D119BC9B-3097-4453-BC17-5AE532EDB995@oracle.com>
-In-Reply-To: <D119BC9B-3097-4453-BC17-5AE532EDB995@oracle.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 30 May 2019 09:09:52 +0800
-Message-ID: <CANRm+Cx4egTwvbwwrS0Mi23QmesFDY+DkBAgVsC67o4ea3tYTg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] KVM: X86: Implement PV sched yield hypercall
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 May 2019 at 20:28, Liran Alon <liran.alon@oracle.com> wrote:
->
->
->
-> > On 28 May 2019, at 3:53, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > The target vCPUs are in runnable state after vcpu_kick and suitable
-> > as a yield target. This patch implements the sched yield hypercall.
-> >
-> > 17% performace increase of ebizzy benchmark can be observed in an
-> > over-subscribe environment. (w/ kvm-pv-tlb disabled, testing TLB flush
-> > call-function IPI-many since call-function is not easy to be trigged
-> > by userspace workload).
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > arch/x86/kvm/x86.c | 24 ++++++++++++++++++++++++
-> > 1 file changed, 24 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index e7e57de..2ceef51 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -7172,6 +7172,26 @@ void kvm_vcpu_deactivate_apicv(struct kvm_vcpu *=
-vcpu)
-> >       kvm_x86_ops->refresh_apicv_exec_ctrl(vcpu);
-> > }
-> >
-> > +void kvm_sched_yield(struct kvm *kvm, u64 dest_id)
-> > +{
-> > +     struct kvm_vcpu *target;
-> > +     struct kvm_apic_map *map;
-> > +
-> > +     rcu_read_lock();
-> > +     map =3D rcu_dereference(kvm->arch.apic_map);
-> > +
-> > +     if (unlikely(!map))
-> > +             goto out;
-> > +
->
-> We should have a bounds-check here on =E2=80=9Cdest_id=E2=80=9D.
+In _ctl_ioctl_main(), 'ioctl_header' is fetched the first time from 
+userspace. 'ioctl_header.ioc_number' is then checked. The legal result 
+is saved to 'ioc'. Then, in condition MPT3COMMAND, the whole struct is
+fetched again from the userspace. Then _ctl_do_mpt_command() is called,
+'ioc' and 'karg' as inputs.
 
-Yeah, fix it in v3.
+However, a malicious user can change the 'ioc_number' between the two 
+fetches, which will cause a potential security issues.  Moreover, a 
+malicious user can provide a valid 'ioc_number' to pass the check in 
+first fetch, and then modify it in the second fetch.
 
-Regards,
-Wanpeng Li
+To fix this, we need to recheck the 'ioc_number' in the second fetch.
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Ack-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+---
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index b2bb47c..5181c03 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -2319,6 +2319,10 @@ _ctl_ioctl_main(struct file *file, unsigned int cmd, void __user *arg,
+ 			break;
+ 		}
+ 
++		if (karg.hdr.ioc_number != ioctl_header.ioc_number) {
++			ret = -EINVAL;
++			break;
++		}
+ 		if (_IOC_SIZE(cmd) == sizeof(struct mpt3_ioctl_command)) {
+ 			uarg = arg;
+ 			ret = _ctl_do_mpt_command(ioc, karg, &uarg->mf);
