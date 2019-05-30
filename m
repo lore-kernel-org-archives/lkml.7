@@ -2,106 +2,84 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E176BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F90C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA13624D8D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188247;
-	bh=7gEsUW+smFInOdwsEf1s8wZG5Cnp9Q1luH1uXAhA+10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CrQVKeUFZAs/PyODpdemTfmQ1sg+wXqe051MsldTodlA9iqbhxORJLRfv6UXYaGJL
-	 fPt73BpIFuM5+wNbf/VFhsvf9zTjVnPsiFSX2LjdUuQpzPT1wb3X8SHvqEWULnhEBK
-	 i9mix8Br1JNmFmV21vFh0KSrDAG9CzagXba9zTVc=
+	by mail.kernel.org (Postfix) with ESMTP id D495124D86
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbfE3Duq (ORCPT
+        id S2387424AbfE3Duu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732068AbfE3DTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:54 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE8BB248C9;
-        Thu, 30 May 2019 03:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186394;
-        bh=7gEsUW+smFInOdwsEf1s8wZG5Cnp9Q1luH1uXAhA+10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUM0tvqRdWeufPJRwTRbkYdpIMuKDi/BJ2kj6Bwcvqutk8J1I7L94mhkmlvwBru9g
-         jUz8TziFasu9TbENFHcrq1ti8lLxZa2A6hIATGMN4i3SpKoy8aypGDWLCiqHhb0yUS
-         /xNOznvirg+13dFTL4QizMKVwzlvzc7+Sec2VK50=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/193] PM / core: Propagate dev->power.wakeup_path when no callbacks
-Date:   Wed, 29 May 2019 20:06:17 -0700
-Message-Id: <20190530030505.637068652@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 29 May 2019 23:50:50 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:10209 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728419AbfE3Dus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:50:48 -0400
+Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 30 May
+ 2019 11:50:39 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
+ (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 30 May
+ 2019 11:50:39 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Thu, 30 May 2019 11:50:39 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tipbot@zytor.com" <tipbot@zytor.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>
+CC:     "bp@suse.de" <bp@suse.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        David Wang <DavidWang@zhaoxin.com>
+Subject: Re: [tip:x86/urgent] x86/mce: Ensure offline CPUs don' t participate
+ in rendezvous process
+Thread-Topic: Re: [tip:x86/urgent] x86/mce: Ensure offline CPUs don' t
+ participate in rendezvous process
+Thread-Index: AdUWlGl+Ivql5y3zT0ybuVHbqcI6gA==
+Date:   Thu, 30 May 2019 03:50:39 +0000
+Message-ID: <036f5f6f2d8a4a768309b61540857393@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.23]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
+Hi Ashok,
+I have two questions about this patch, could you help to check:
 
-The dev->power.direct_complete flag may become set in device_prepare() in
-case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-set). This leads to a broken behaviour, when there is child having wakeup
-enabled and relies on its parent to be used in the wakeup path.
+1, for broadcast #MC exceptions, this patch seems require #MC exception errors
+set MCG_STATUS_RIPV = 1. 
+But for Intel CPU, some #MC exception errors set MCG_STATUS_RIPV = 0 
+(like "Recoverable-not-continuable SRAR Type" Errors), for these errors
+the patch doesn't seem to work, is that okay?
 
-More precisely, when the direct complete path becomes selected for the
-child in __device_suspend(), the propagation of the dev->power.wakeup_path
-becomes skipped as well.
+2, for LMCE exceptions, this patch seems require #MC exception errors
+set MCG_STATUS_RIPV = 0 to make sure LMCE be handled normally even
+on offline CPU. 
+For LMCE errors set MCG_STAUS_RIPV = 1, the patch prevents offline CPU
+handle these LMCE errors, is that okay?
 
-Let's address this problem, by checking if the device is a part the wakeup
-path or has wakeup enabled, then prevent the direct complete path from
-being used.
-
-Reported-by: Loic Pallardy <loic.pallardy@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-[ rjw: Comment cleanup ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/base/power/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index d16b40cd26cc9..a30ff97632a54 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1485,6 +1485,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
- 	if (dev->power.syscore)
- 		goto Complete;
- 
-+	/* Avoid direct_complete to let wakeup_path propagate. */
-+	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-+		dev->power.direct_complete = false;
-+
- 	if (dev->power.direct_complete) {
- 		if (pm_runtime_status_suspended(dev)) {
- 			pm_runtime_disable(dev);
--- 
-2.20.1
-
-
-
+Thanks
+Tony W Wang-oc
