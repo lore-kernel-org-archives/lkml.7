@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDDEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64304C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA5524D3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3893B24D44
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188147;
-	bh=+djWcGgy2No/+yoPtO7vIEh47nbEQRqJVwaSz8tf3Vc=;
+	s=default; t=1559188152;
+	bh=qFJB82RvWiimfGDlAECHzDLXCltM3UAZiZ/moEzcAxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kj2JrQzmeopW/BCq2Bc1hpocMy9SfGfEmv1IGhRmS2UCmccwZgLb2RXgBuimRHpWx
-	 gAmOVmqmEvaYrEjIdxGyUiNvob+NH8KX04lSQh6ZGSM7faqWOSlLdeaya6EbaNrEBB
-	 SjRbwvMr5q3WhVdLLJfPiMbD5NGO/LFXyRUfjy8o=
+	b=YQrLm9wC8x33UcWLadLwxPxDDcjvjZg21DsYgWNc99WdrXRbU5XE2rg/buCFTvkKq
+	 tqDc3vxJNTuf56q4LAMuxX1zFqBcWL8bedYhme6gVtQfv892vpJJZugIXKDmOrChjl
+	 7NJ3erSgLsFSqa5aP6xjEE4SWI7BKkRKeS6vBtlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387587AbfE3DtG (ORCPT
+        id S1732127AbfE3DUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbfE3DUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:16 -0400
+        id S1730481AbfE3DPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2659248AB;
-        Thu, 30 May 2019 03:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43A2024559;
+        Thu, 30 May 2019 03:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186415;
-        bh=+djWcGgy2No/+yoPtO7vIEh47nbEQRqJVwaSz8tf3Vc=;
+        s=default; t=1559186146;
+        bh=qFJB82RvWiimfGDlAECHzDLXCltM3UAZiZ/moEzcAxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/gFYsFbBpiBV4ir/Kxc/okcAzOLwt2xBIdGQgRkQsrIXjfVX7rre1qAE+N8iFbfU
-         iZNsuYhYI07E+ExrlA+iCGMQEMkkNHtqxQ499idG8c/BVFr++lzRKNH3sYzAX53CTH
-         9bsVO5TyCbQAdlDKURUju1+97AuEOssD58dh/RI0=
+        b=CCWA0poF3QIrl6JSFfDnx3N3G17JSWfn+ManarfsPdkf/mC+Pz5ka6sxNcEA+P6/H
+         vYWRShx90sKOJzF57yUObf6wko6sSSIoPM6MDqDywk6YPnwctNh+8jZ1l9ga0FQ2aK
+         QKTc23CdXNxCjSby/jjlVNvICUsWX0Xp8ug+w86U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        stable@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 188/193] spi: Fix zero length xfer bug
-Date:   Wed, 29 May 2019 20:07:22 -0700
-Message-Id: <20190530030513.151403941@linuxfoundation.org>
+Subject: [PATCH 5.0 326/346] regulator: pv88060: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:39 -0700
+Message-Id: <20190530030557.300172612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
+[ Upstream commit f58213637206e190453e3bd91f98f535566290a3 ]
 
-This fixes a bug for messages containing both zero length and
-unidirectional xfers.
+The mutex for the regulator_dev must be controlled by the caller of
+the regulator_notifier_call_chain(), as described in the comment
+for that function.
 
-The function spi_map_msg will allocate dummy tx and/or rx buffers
-for use with unidirectional transfers when the hardware can only do
-a bidirectional transfer.  That dummy buffer will be used in place
-of a NULL buffer even when the xfer length is 0.
+Failure to mutex lock and unlock surrounding the notifier call results
+in a kernel WARN_ON_ONCE() which will dump a backtrace for the
+regulator_notifier_call_chain() when that function call is first made.
+The mutex can be controlled using the regulator_lock/unlock() API.
 
-Then in the function __spi_map_msg, if he hardware can dma,
-the zero length xfer will have spi_map_buf called on the dummy
-buffer.
-
-Eventually, __sg_alloc_table is called and returns -EINVAL
-because nents == 0.
-
-This fix prevents the error by not using the dummy buffer when
-the xfer length is zero.
-
-Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
+Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/pv88060-regulator.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 670dbb7a8500a..56035637d8f6c 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -991,6 +991,8 @@ static int spi_map_msg(struct spi_controller *ctlr, struct spi_message *msg)
- 		if (max_tx || max_rx) {
- 			list_for_each_entry(xfer, &msg->transfers,
- 					    transfer_list) {
-+				if (!xfer->len)
-+					continue;
- 				if (!xfer->tx_buf)
- 					xfer->tx_buf = ctlr->dummy_tx;
- 				if (!xfer->rx_buf)
+diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
+index a9446056435f9..000c34914fe39 100644
+--- a/drivers/regulator/pv88060-regulator.c
++++ b/drivers/regulator/pv88060-regulator.c
+@@ -276,9 +276,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88060_E_VDD_FLT) {
+ 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
+ 			if (chip->rdev[i] != NULL) {
++				regulator_lock(chip->rdev[i]);
+ 				regulator_notifier_call_chain(chip->rdev[i],
+ 					REGULATOR_EVENT_UNDER_VOLTAGE,
+ 					NULL);
++				regulator_unlock(chip->rdev[i]);
+ 			}
+ 		}
+ 
+@@ -293,9 +295,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
+ 	if (reg_val & PV88060_E_OVER_TEMP) {
+ 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
+ 			if (chip->rdev[i] != NULL) {
++				regulator_lock(chip->rdev[i]);
+ 				regulator_notifier_call_chain(chip->rdev[i],
+ 					REGULATOR_EVENT_OVER_TEMP,
+ 					NULL);
++				regulator_unlock(chip->rdev[i]);
+ 			}
+ 		}
+ 
 -- 
 2.20.1
 
