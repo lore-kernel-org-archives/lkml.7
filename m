@@ -2,80 +2,137 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDF3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57CFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC5A24B81
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB83124C0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ViocBpNv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dtfcl42/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfE3FxA (ORCPT
+        id S1727093AbfE3Fz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:53:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37416 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Fw7 (ORCPT
+        Thu, 30 May 2019 01:55:27 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15712 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Fz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 01:52:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oHqVEIhqCwMex8GKlVQDi4KtDcsBFBMe3TYDNP4SewE=; b=ViocBpNvOg+Novr+owM9IAtqL
-        mxbnKycuk76UKiKY6BtJbNuFG50XpOQ1P37OqQgdiTBUMuiMEHvHRfYRyfGrj3aGD6js3FV6dFkUl
-        f6N9V1KXtGVAHiydLyhDrKNf5C0qB6cyHE0Q19ozUBT1lHYD9xSdq0JUszRtyynjiGEFYgeWdEUqX
-        gdkPRik7oOTm+LbhV2kXM/2bF7nNRjHcTomKMX6TJIZzHnFWRKgOPOLCWJ5BFOciGFBpx5H/OVwNB
-        EEumZRHqRHxurSmaxBNu3VEedlPsCDfV/dzoGjABVbmKtBPW0qZCqXFtdR50umTuzzd2TAz6t3cEX
-        SAcNGPQxg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWDzm-0003GK-GA; Thu, 30 May 2019 05:52:58 +0000
-Date:   Wed, 29 May 2019 22:52:58 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nick Hu <nickhu@andestech.com>
-Cc:     greentime@andestech.com, palmer@sifive.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        green.hu@gmail.com
-Subject: Re: [PATCH] riscv: Fix udelay in RV32.
-Message-ID: <20190530055258.GA7170@infradead.org>
-References: <381ee6950c84b868ca6a3c676eb981a1980889a3.1559035050.git.nickhu@andestech.com>
+        Thu, 30 May 2019 01:55:26 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cef704c0000>; Wed, 29 May 2019 22:55:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 29 May 2019 22:55:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 29 May 2019 22:55:25 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
+ 2019 05:55:25 +0000
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
+ 2019 05:55:24 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 30 May 2019 05:55:24 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cef704a0001>; Wed, 29 May 2019 22:55:24 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        "Bitan Biswas" <bbiswas@nvidia.com>
+Subject: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+Date:   Wed, 29 May 2019 22:55:18 -0700
+Message-ID: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <381ee6950c84b868ca6a3c676eb981a1980889a3.1559035050.git.nickhu@andestech.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559195725; bh=EPpj67COYGBhlkWdKr0QIR/atWxow2EbLdfTiuxH0u4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=dtfcl42/jEs/OXvHlq4hBtfPuB3IDVKkqtZfI4Ftr9JxH50H7V46TkhmITkqasE+E
+         pMufthNmo6PssZsCRY5rvx/8QcH9rcpJ/epYtgsDMj0doWmg6AAsCUBsRlBCDFmplG
+         5fXvPLY9I/+cBh6tIp3EGJk58ZXMJExWnnrLKL6uEcCQaeCWmF7jA6PJCJHvjIywTA
+         QIrbwOzpguAeDvEWbnCXvZp2oPjrCwUytpZPHkQ5bJgSO1pCMGZ70vLOm7E3ZR7bHr
+         mu96qnxP/IP0iVYnk4iS2DC9WhpnEQJuHydfF+SAWOPMDbLk2O2tJYe5GdMYBZcvwn
+         w6xC3/2wOx7hw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 05:26:49PM +0800, Nick Hu wrote:
-> In RV32, udelay would delay the wrong cycle.
-> When it shifts right "UDELAY_SHITFT" bits, it
-> either delays 0 cycle or 1 cycle. It only works
-> correctly in RV64. Because the 'ucycles' always
-> needs to be 64 bits variable.
+Post suspend I2C registers have power on reset values. Before any
+transfer initialize I2C registers to prevent I2C transfer timeout
+and implement suspend and resume callbacks needed. Fix below errors
+post suspend:
 
-Please use up all your ~72 chars per line in the commit log.
+1) Tegra I2C transfer timeout during jetson tx2 resume:
 
-> diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
-> index dce8ae24c6d3..da847f49fb74 100644
-> --- a/arch/riscv/lib/delay.c
-> +++ b/arch/riscv/lib/delay.c
-> @@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
->  
->  void udelay(unsigned long usecs)
->  {
-> -	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
-> +	unsigned long long ucycles = (unsigned long long)usecs * lpj_fine * UDELAY_MULT;
+[   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
+[   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+[   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+[   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+[   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
+[   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
+[   27.666194] PM: Device 1-0074 failed to resume: error -110
 
-And this creates a way too long line.  Pleaase use u64 instead of
-unsigned long long to clarify the intention while also fixing the long
-lines.
+2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index ebaa78d..f6a377f 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static int tegra_i2c_suspend(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++
++	i2c_mark_adapter_suspended(&i2c_dev->adapter);
++
++	return 0;
++}
++
++static int tegra_i2c_resume(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++	int ret;
++
++	i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
++	ret = tegra_i2c_init(i2c_dev, false);
++	i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
++	if (!ret)
++		i2c_mark_adapter_resumed(&i2c_dev->adapter);
++
++       return ret;
++}
++
+ static const struct dev_pm_ops tegra_i2c_pm = {
+ 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+ 			   NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+ };
+ #define TEGRA_I2C_PM	(&tegra_i2c_pm)
+ #else
+-- 
+2.7.4
+
