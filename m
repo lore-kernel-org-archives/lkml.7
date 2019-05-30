@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D1C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA41C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726C525A94
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99C225AB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191424;
-	bh=k/DFDhT28fNL96xS6/KX2l6JDpDseEomSmkyL5TdaSo=;
+	s=default; t=1559191428;
+	bh=HKU+6LKeZKnv9AwHRolGx+Az8Xhii/B67PSHNqRrb64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/v/xmTE5xuyRUmH7SSiECKX8C+838IIAETj9ahHSrLLJl8EVlHGTPxVPSH/Q6g5l
-	 BPOXtgHQMBehZFjMGryk7ZrEpGCfSFjDmTJKP9o3jOk7JNUb7j3ORMdaBByYVGI8pm
-	 z10JWqmMhKPp1F+eHLKphuNWvPsWQVurIaJoJeUI=
+	b=rtix+5kYUI/lmFH3lImygoblTm/qSTR9GosevyiMNtnoFvObQrwIqHTz9UhI8FohH
+	 iyJjOmfk5DnV4d21IHUImTRocg2JKCyYdI0amdRtQEDkwQExmuNIb+5HgWd9fbKR8S
+	 TtXBgJDalm8Uy1yCzT2LCjmQAEaDKh4Jiy7aaYRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388753AbfE3Enn (ORCPT
+        id S2388759AbfE3Enq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfE3DMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:09 -0400
+        id S1728197AbfE3DMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C871A24481;
+        by mail.kernel.org (Postfix) with ESMTPSA id 524AA2446F;
         Thu, 30 May 2019 03:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185928;
-        bh=k/DFDhT28fNL96xS6/KX2l6JDpDseEomSmkyL5TdaSo=;
+        bh=HKU+6LKeZKnv9AwHRolGx+Az8Xhii/B67PSHNqRrb64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvZ0p0ZwZ6WXO3nqGmsgf9+pZzXXYqbh8giMiOXzhj0FZFNeH0We40r9Ci5+VwsPK
-         79WByEqLcz2nLMFCwwbmApSt6ce2IaD3UKYEo7ejciG8/6QVW/TrXLr8tUaMZ/9R1D
-         Ws6wrRbKlRiS3QnjPY5NfriW/u36xqnmcjQ690ZA=
+        b=gjbfB778Eh016NxUBO7ewtDcqTvyJWHHckzU4mOTWOXoTlKDG/MRqAA8Yu9HoJPWF
+         qa0H9IwYbr/JUnW/1ZlFECLZxDKrKQN+oP+JeEkHh6ZAwkpctm90F4ZpFsu3qDibRX
+         EMV2GF4quhBWWUj6dZ5h1BKTagQgNa1ZLV6qsIH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohan Kumar D <mkumard@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 321/405] dmaengine: tegra210-adma: use devm_clk_*() helpers
-Date:   Wed, 29 May 2019 20:05:19 -0700
-Message-Id: <20190530030556.994716092@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 320/405] batman-adv: allow updating DAT entry timeouts on incoming ARP Replies
+Date:   Wed, 29 May 2019 20:05:18 -0700
+Message-Id: <20190530030556.948474067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,108 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6ed6491d565c336a360471e0c29228e34f4380e ]
+[ Upstream commit 099e6cc1582dc2903fecb898bbeae8f7cf4262c7 ]
 
-adma driver is using pm_clk_*() interface for managing clock resources.
-With this it is observed that clocks remain ON always. This happens on
-Tegra devices which use BPMP co-processor to manage clock resources,
-where clocks are enabled during prepare phase. This is necessary because
-clocks to BPMP are always blocking. When pm_clk_*() interface is used on
-such Tegra devices, clock prepare count is not balanced till remove call
-happens for the driver and hence clocks are seen ON always. Thus this
-patch replaces pm_clk_*() with devm_clk_*() framework.
+Currently incoming ARP Replies, for example via a DHT-PUT message, do
+not update the timeout for an already existing DAT entry. These ARP
+Replies are dropped instead.
 
-Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
-Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This however defeats the purpose of the DHCPACK snooping, for instance.
+Right now, a DAT entry in the DHT will be purged every five minutes,
+likely leading to a mesh-wide ARP Request broadcast after this timeout.
+Which then recreates the entry. The idea of the DHCPACK snooping is to
+be able to update an entry before a timeout happens, to avoid ARP Request
+flooding.
+
+This patch fixes this issue by updating a DAT entry on incoming
+ARP Replies even if a matching DAT entry already exists. While still
+filtering the ARP Reply towards the soft-interface, to avoid duplicate
+messages on the client device side.
+
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ net/batman-adv/distributed-arp-table.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 9aa35a7f13692..1477cce33dbe5 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -22,7 +22,6 @@
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
- #include <linux/of_irq.h>
--#include <linux/pm_clock.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
+diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
+index 310a4f353008d..8d290da0d5967 100644
+--- a/net/batman-adv/distributed-arp-table.c
++++ b/net/batman-adv/distributed-arp-table.c
+@@ -1444,7 +1444,6 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
+ 			   hw_src, &ip_src, hw_dst, &ip_dst,
+ 			   dat_entry->mac_addr,	&dat_entry->ip);
+ 		dropped = true;
+-		goto out;
+ 	}
  
-@@ -141,6 +140,7 @@ struct tegra_adma {
- 	struct dma_device		dma_dev;
- 	struct device			*dev;
- 	void __iomem			*base_addr;
-+	struct clk			*ahub_clk;
- 	unsigned int			nr_channels;
- 	unsigned long			rx_requests_reserved;
- 	unsigned long			tx_requests_reserved;
-@@ -637,8 +637,9 @@ static int tegra_adma_runtime_suspend(struct device *dev)
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
+ 	/* Update our internal cache with both the IP addresses the node got
+@@ -1453,6 +1452,9 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
+ 	batadv_dat_entry_add(bat_priv, ip_src, hw_src, vid);
+ 	batadv_dat_entry_add(bat_priv, ip_dst, hw_dst, vid);
  
- 	tdma->global_cmd = tdma_read(tdma, ADMA_GLOBAL_CMD);
-+	clk_disable_unprepare(tdma->ahub_clk);
- 
--	return pm_clk_suspend(dev);
-+	return 0;
- }
- 
- static int tegra_adma_runtime_resume(struct device *dev)
-@@ -646,10 +647,11 @@ static int tegra_adma_runtime_resume(struct device *dev)
- 	struct tegra_adma *tdma = dev_get_drvdata(dev);
- 	int ret;
- 
--	ret = pm_clk_resume(dev);
--	if (ret)
-+	ret = clk_prepare_enable(tdma->ahub_clk);
-+	if (ret) {
-+		dev_err(dev, "ahub clk_enable failed: %d\n", ret);
- 		return ret;
--
-+	}
- 	tdma_write(tdma, ADMA_GLOBAL_CMD, tdma->global_cmd);
- 
- 	return 0;
-@@ -693,13 +695,11 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	if (IS_ERR(tdma->base_addr))
- 		return PTR_ERR(tdma->base_addr);
- 
--	ret = pm_clk_create(&pdev->dev);
--	if (ret)
--		return ret;
--
--	ret = of_pm_clk_add_clk(&pdev->dev, "d_audio");
--	if (ret)
--		goto clk_destroy;
-+	tdma->ahub_clk = devm_clk_get(&pdev->dev, "d_audio");
-+	if (IS_ERR(tdma->ahub_clk)) {
-+		dev_err(&pdev->dev, "Error: Missing ahub controller clock\n");
-+		return PTR_ERR(tdma->ahub_clk);
-+	}
- 
- 	pm_runtime_enable(&pdev->dev);
- 
-@@ -776,8 +776,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
--clk_destroy:
--	pm_clk_destroy(&pdev->dev);
- 
- 	return ret;
- }
-@@ -795,7 +793,6 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	pm_clk_destroy(&pdev->dev);
- 
- 	return 0;
- }
++	if (dropped)
++		goto out;
++
+ 	/* If BLA is enabled, only forward ARP replies if we have claimed the
+ 	 * source of the ARP reply or if no one else of the same backbone has
+ 	 * already claimed that client. This prevents that different gateways
 -- 
 2.20.1
 
