@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B34FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E533C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FF625919
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2415925919
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191138;
-	bh=GwjazmCCMDLs4UDj2hm2Q+Zgfm4SPh7LP4nDmQvjz5M=;
+	s=default; t=1559191144;
+	bh=eh6h31HQ7VhWfJe/YCSWiRRtJiJ7KBMSnVVSP8weWXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GXjO6gME+YDzhSWgNahwkkGw5ph6VaAL4eAYD/auDjNIEO9Q/82F6OYeb0I+agiLv
-	 Ykwu2afgISqLrm9+q8VQzubNWEn9miZH2JH5r7ajVDLT6rGxrdvAzaUbqliSIRNltc
-	 JLlPfYHlFKQnzPT+91PELgpQ1ijfnpQzjVlIs86s=
+	b=rHOV+qNqYuqkf/xYpuTzMVCyBOsFHemTxrHcUZkoUhptgvjyKfV41I0+af+GlWBai
+	 8StlfuKENxTQh9c6sNO1pqlwLk9sg4dupyw6bnB40788/zDbgekfRhZcLmL/jrVZYL
+	 8SOdRo9RDIWNHCn4ihRInnS0ed1/ljgKjIog503E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388624AbfE3Ei5 (ORCPT
+        id S1729163AbfE3DMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbfE3DMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728374AbfE3DLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCB323F4C;
-        Thu, 30 May 2019 03:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0523124476;
+        Thu, 30 May 2019 03:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185961;
-        bh=GwjazmCCMDLs4UDj2hm2Q+Zgfm4SPh7LP4nDmQvjz5M=;
+        s=default; t=1559185867;
+        bh=eh6h31HQ7VhWfJe/YCSWiRRtJiJ7KBMSnVVSP8weWXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jqlFhrNMi5TYTJWhShZ18XB35tqbrIt/RH6e5j5nr6Nii2ziPS+iYSu1hQQmWXY2r
-         I61ZfFVeD+zBvsc7j5S3ik3o1ioWEcmD+EYeTwMt+3Vgxm6zsRjuyDYZWVAUzw7Qal
-         1T1S2mN5nHX6dD+9EjSGM0Sh4u4WXHyZYYNaQcO0=
+        b=0yigU2cyWm8G/da5ZtkJNlYHXMmtqQuRt7BoW8bAGPMzXGiSJgEZfOMAgmFoeV0rW
+         YP4AJRg9rXXb5ixgA9h2HHhm3dyVX8u/apCyyGOKYsxrvP1/T/96OeXPptDvtdzlmg
+         QbHdVvRdTKKTpzgX8dQvBtfsrjuZ0j6/e0W/6s8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 337/405] media: staging/intel-ipu3: mark PM function as __maybe_unused
-Date:   Wed, 29 May 2019 20:05:35 -0700
-Message-Id: <20190530030557.752739722@linuxfoundation.org>
+Subject: [PATCH 5.1 189/405] ACPI/IORT: Reject platform device creation on NUMA node mapping failure
+Date:   Wed, 29 May 2019 20:03:07 -0700
+Message-Id: <20190530030550.586483052@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,40 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 948dff7cfa1d7653e7828e7b905863bd24ca5c02 ]
+[ Upstream commit 36a2ba07757df790b4a874efb1a105b9330a9ae7 ]
 
-The imgu_rpm_dummy_cb() looks like an API misuse that is explained
-in the comment above it. Aside from that, it also causes a warning
-when power management support is disabled:
+In a system where, through IORT firmware mappings, the SMMU device is
+mapped to a NUMA node that is not online, the kernel bootstrap results
+in the following crash:
 
-drivers/staging/media/ipu3/ipu3.c:794:12: error: 'imgu_rpm_dummy_cb' defined but not used [-Werror=unused-function]
+  Unable to handle kernel paging request at virtual address 0000000000001388
+  Mem abort info:
+    ESR = 0x96000004
+    Exception class = DABT (current EL), IL = 32 bits
+    SET = 0, FnV = 0
+    EA = 0, S1PTW = 0
+  Data abort info:
+    ISV = 0, ISS = 0x00000004
+    CM = 0, WnR = 0
+  [0000000000001388] user address but active_mm is swapper
+  Internal error: Oops: 96000004 [#1] SMP
+  Modules linked in:
+  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0 #15
+  pstate: 80c00009 (Nzcv daif +PAN +UAO)
+  pc : __alloc_pages_nodemask+0x13c/0x1068
+  lr : __alloc_pages_nodemask+0xdc/0x1068
+  ...
+  Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
+  Call trace:
+   __alloc_pages_nodemask+0x13c/0x1068
+   new_slab+0xec/0x570
+   ___slab_alloc+0x3e0/0x4f8
+   __slab_alloc+0x60/0x80
+   __kmalloc_node_track_caller+0x10c/0x478
+   devm_kmalloc+0x44/0xb0
+   pinctrl_bind_pins+0x4c/0x188
+   really_probe+0x78/0x2b8
+   driver_probe_device+0x64/0x110
+   device_driver_attach+0x74/0x98
+   __driver_attach+0x9c/0xe8
+   bus_for_each_dev+0x84/0xd8
+   driver_attach+0x30/0x40
+   bus_add_driver+0x170/0x218
+   driver_register+0x64/0x118
+   __platform_driver_register+0x54/0x60
+   arm_smmu_driver_init+0x24/0x2c
+   do_one_initcall+0xbc/0x328
+   kernel_init_freeable+0x304/0x3ac
+   kernel_init+0x18/0x110
+   ret_from_fork+0x10/0x1c
+  Code: f90013b5 b9410fa1 1a9f0694 b50014c2 (b9400804)
+  ---[ end trace dfeaed4c373a32da ]--
 
-The warning is at least easy to fix by marking the function as
-__maybe_unused.
+Change the dev_set_proximity() hook prototype so that it returns a
+value and make it return failure if the PXM->NUMA-node mapping
+corresponds to an offline node, fixing the crash.
 
-Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Link: https://lore.kernel.org/linux-arm-kernel/20190315021940.86905-1-wangkefeng.wang@huawei.com/
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/ipu3/ipu3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/arm64/iort.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
-index d575ac78c8f0b..d00d26264c37d 100644
---- a/drivers/staging/media/ipu3/ipu3.c
-+++ b/drivers/staging/media/ipu3/ipu3.c
-@@ -791,7 +791,7 @@ static int __maybe_unused imgu_resume(struct device *dev)
-  * PCI rpm framework checks the existence of driver rpm callbacks.
-  * Place a dummy callback here to avoid rpm going into error state.
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index e48894e002ba8..a46c2c162c03e 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -1232,18 +1232,24 @@ static bool __init arm_smmu_v3_is_coherent(struct acpi_iort_node *node)
+ /*
+  * set numa proximity domain for smmuv3 device
   */
--static int imgu_rpm_dummy_cb(struct device *dev)
-+static __maybe_unused int imgu_rpm_dummy_cb(struct device *dev)
+-static void  __init arm_smmu_v3_set_proximity(struct device *dev,
++static int  __init arm_smmu_v3_set_proximity(struct device *dev,
+ 					      struct acpi_iort_node *node)
  {
- 	return 0;
+ 	struct acpi_iort_smmu_v3 *smmu;
+ 
+ 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
+ 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
+-		set_dev_node(dev, acpi_map_pxm_to_node(smmu->pxm));
++		int node = acpi_map_pxm_to_node(smmu->pxm);
++
++		if (node != NUMA_NO_NODE && !node_online(node))
++			return -EINVAL;
++
++		set_dev_node(dev, node);
+ 		pr_info("SMMU-v3[%llx] Mapped to Proximity domain %d\n",
+ 			smmu->base_address,
+ 			smmu->pxm);
+ 	}
++	return 0;
  }
+ #else
+ #define arm_smmu_v3_set_proximity NULL
+@@ -1318,7 +1324,7 @@ struct iort_dev_config {
+ 	int (*dev_count_resources)(struct acpi_iort_node *node);
+ 	void (*dev_init_resources)(struct resource *res,
+ 				     struct acpi_iort_node *node);
+-	void (*dev_set_proximity)(struct device *dev,
++	int (*dev_set_proximity)(struct device *dev,
+ 				    struct acpi_iort_node *node);
+ };
+ 
+@@ -1369,8 +1375,11 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
+ 	if (!pdev)
+ 		return -ENOMEM;
+ 
+-	if (ops->dev_set_proximity)
+-		ops->dev_set_proximity(&pdev->dev, node);
++	if (ops->dev_set_proximity) {
++		ret = ops->dev_set_proximity(&pdev->dev, node);
++		if (ret)
++			goto dev_put;
++	}
+ 
+ 	count = ops->dev_count_resources(node);
+ 
 -- 
 2.20.1
 
