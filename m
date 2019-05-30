@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89521C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5D5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558F524C0D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CC524C11
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187729;
-	bh=u/o9e/Zn2ubRLqes5gnJEJABVXFhgeWSjSpwDT/8djA=;
+	s=default; t=1559187732;
+	bh=acZXoBPoKiXvlqIJzBAzO0pMqsa6VZtkUPUMJfKHWvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNZlXYVrC9AQUR7H/cHXOJ9qKDuLbDFko8tzvPXL2BvSdw7pxvs3lsxJ2D+ZkvoI6
-	 nXhGpiDIDfDMYkv+DzuhYhY9ukKyFR0mMyrj+LrN0IvSgapXCKB/6f39NJfGoVK0y+
-	 2Uy1KPAht99Ml8R6lGF7FJsU5Kuv2ZhHfXp4zvY0=
+	b=e2cmOALyvAV9wDQ7mWl315hYlnI8NtjMr9nEouhjMnPG/TsMsuivQKxzZgMF/iuR4
+	 1hJsEfcXUrlooa8OirJm+u714/OpUZpNTgXINX6f9UfBztjDWBTG2c7uTI1VIAYpxb
+	 Et6a1W4PNQ20mX055/PejmHMCJJalMfAp3asHvyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732770AbfE3DmI (ORCPT
+        id S1732758AbfE3DmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33432 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbfE3DVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:14 -0400
+        id S1732495AbfE3DVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5600249DA;
-        Thu, 30 May 2019 03:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72776249CE;
+        Thu, 30 May 2019 03:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186473;
-        bh=u/o9e/Zn2ubRLqes5gnJEJABVXFhgeWSjSpwDT/8djA=;
+        s=default; t=1559186474;
+        bh=acZXoBPoKiXvlqIJzBAzO0pMqsa6VZtkUPUMJfKHWvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+3V/+dkr754WXFAwbboXUadkxl+yL2BfCaYDNDbw9lCGrKcGNJQfhYf3JeMmerkN
-         Dw/XkLaR+HZyaVJ3rvxl/sf+/jNE03l4F7CSPqkIqU0ToC7jOtMIFiHKT0b6lPSvlU
-         EsRTGs+EWHw0SlMO4es08Phh6H68Pnlhw0pqh930=
+        b=cpbNbX1BoDOwBHIrboBVEy+M5Og63KPYnmBR3j9vWxOcdRKRYZb4EIwofWvTCzSPI
+         9jU005mOt7vDd3NgcAz076yiluyf1KjOddnv2jmLHKwoVPdpfjCPv1EoMcySX83IUA
+         onTIHA2vmz8qPc+zQnHqme0mhwOCkE+s//efmWJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmx.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 104/128] chardev: add additional check for minor range overlap
-Date:   Wed, 29 May 2019 20:07:16 -0700
-Message-Id: <20190530030453.326003210@linuxfoundation.org>
+Subject: [PATCH 4.9 106/128] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:07:18 -0700
+Message-Id: <20190530030453.759325192@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -59,36 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de36e16d1557a0b6eb328bc3516359a12ba5c25c ]
+[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
 
-Current overlap checking cannot correctly handle
-a case which is baseminor < existing baseminor &&
-baseminor + minorct > existing baseminor + minorct.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/char_dev.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/fsl/eukrea-tlv320.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/char_dev.c b/fs/char_dev.c
-index 44a240c4bb658..a112a4745d8b3 100644
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -134,6 +134,12 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
- 			ret = -EBUSY;
- 			goto out;
+diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
+index 883087f2b092b..38132143b7d5e 100644
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -119,13 +119,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-int-port node missing or invalid.\n");
+-			return ret;
++			goto err;
  		}
-+
-+		if (new_min < old_min && new_max > old_max) {
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+
- 	}
+ 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-ext-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
  
- 	cd->next = *cp;
+ 		/*
 -- 
 2.20.1
 
