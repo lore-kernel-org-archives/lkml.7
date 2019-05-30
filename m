@@ -2,139 +2,191 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD51C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A9AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8931725630
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dmyIRlMR"
+	by mail.kernel.org (Postfix) with ESMTP id 3D75025637
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfE3Jda (ORCPT
+        id S1727504AbfE3JeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:33:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40003 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfE3Jd3 (ORCPT
+        Thu, 30 May 2019 05:34:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:6637 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726454AbfE3JeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:33:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t4so3713019wrx.7
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=6m1gjqr7LLo5czWaTNxbcS9O7G75X5W+OVxVsjgwdOk=;
-        b=dmyIRlMRlkjOTvPMU8h28OONRBSGMbu5OSkC56ceQtI82uyy9wZSUWnAAFvv4qeefD
-         1uH+WS2sxeXVRW2DNdtQA1dDIEw6uVypGKzciRZoT6bctV3lMYh+jNP1ZR36djmDCLjw
-         VKLc53Cg59P21NX3oLbIHnVwGGcPUG1neQP65J7MTFocgNYwh20lwAGvv3Ngi8M2C82+
-         0fvLmrK0jdeSOBNSEQdAbiJWsx3fUupQM0n/aD6hJWbVcLzf+l4XVtOED3rcZchEf3ut
-         bVwX3gW/aTaj4Dm6vSGvA5Jlw9ng9ZXieYne8XtFL5y7PF4Y3iBDODeM8v5OEF8Ttnc3
-         biHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6m1gjqr7LLo5czWaTNxbcS9O7G75X5W+OVxVsjgwdOk=;
-        b=WA0S2xEjN8+W17Raq5xIssaDg+G6lOCQESlZ636DcO7cQkhpETTZmf9CjBhTyp1KI7
-         Ngcp4K/eY1760q9IGykRnNu+rZhVUL5UoS/r1EEs+Stn/FH0yY1x0CZQxg6K0+My9FNs
-         Yzl3czVMV7uqSpzxrrHtCDLeuN7E5ISwzWcMUoT3RLcFGrsu+Pj5vRQHDhiJDDGWhNzh
-         S+y9L60ScoXyQvdFw3ZlncNOc/WLZ+YdZDJZbNiSlABRRMAehExGcFEDlfJkCEnJV8Zp
-         0eZv9JP2yLPFl7EzI7fB4Yc9GhlaDzx3vhXvchaWzV+Kf6+CvlGXIeqFY7pLmnbP8afq
-         K9ww==
-X-Gm-Message-State: APjAAAUDMrsZvf3RL2LFY2m8zkObc/PhOPP14SdouBJSLHttcly8ogN6
-        wVwJ8U/0yQ/ZVPjfjw5XiQv4Lw==
-X-Google-Smtp-Source: APXvYqxEASlLnIkp5PQbSa4BfrTxFJ6g24r6qZiMp+C9TsnMS8uQxuD/y1DzZGzNDx7DhMVpHGITmg==
-X-Received: by 2002:adf:c982:: with SMTP id f2mr1940460wrh.235.1559208808019;
-        Thu, 30 May 2019 02:33:28 -0700 (PDT)
-Received: from localhost.localdomain ([37.157.136.206])
-        by smtp.gmail.com with ESMTPSA id a124sm2863900wmh.3.2019.05.30.02.33.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 02:33:26 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v3] media/doc: Allow sizeimage to be set by v4l clients
-Date:   Thu, 30 May 2019 12:33:12 +0300
-Message-Id: <20190530093312.27562-1-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 May 2019 05:34:25 -0400
+X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
+X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 189638788; Thu, 30 May 2019 17:34:21 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n2.mediatek.inc
+ (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 30 May
+ 2019 17:34:17 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 30 May 2019 17:34:16 +0800
+Message-ID: <1559208856.14150.35.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <Long.cheng@mediatek.com>,
+        "Changqi Hu" <changqi.hu@mediatek.com>
+Date:   Thu, 30 May 2019 17:34:16 +0800
+In-Reply-To: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
+References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
+         <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: B27139AB2F1BB9957CAE9332638E0C210155CD5265085DED026FD2DB4FE943502000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
-field description to allow v4l clients to set bigger image size
-in case of variable length compressed data.
+On Thu, 2019-05-23 at 15:35 +0800, Long Cheng wrote:
 
-Presently s5p-mfc and mtk-vcodec codec drivers use that. Lets
-make it obvious in the documentation.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
-Changes since v2:
-Addressed review comments from Mauro.
+Hi Greg,
 
- .../media/uapi/v4l/pixfmt-v4l2-mplane.rst         | 15 ++++++++++++++-
- Documentation/media/uapi/v4l/pixfmt-v4l2.rst      | 13 ++++++++++++-
- 2 files changed, 26 insertions(+), 2 deletions(-)
+Just a gentle ping!
 
-diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-index 5688c816e334..db43dda5aafb 100644
---- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-+++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-@@ -31,7 +31,20 @@ describing all planes of that format.
- 
-     * - __u32
-       - ``sizeimage``
--      - Maximum size in bytes required for image data in this plane.
-+      - Maximum size in bytes required for image data in this plane,
-+	set by the driver. When the image consists of variable length
-+	compressed data this is the number of bytes required by the
-+	codec to support the worst-case compression scenario.
-+
-+	The driver will set the value for uncompressed images.
-+
-+	Clients are allowed to set the sizeimage field for variable length
-+	compressed data flagged with ``V4L2_FMT_FLAG_COMPRESSED`` at
-+	:ref:`VIDIOC_ENUM_FMT`, but the driver may ignore it and set the
-+	value itself, or it may modify the provided value based on
-+	alignment requirements or minimum/maximum size requirements.
-+	If the client wants to leave this to the driver, then it should
-+	set sizeimage to 0.
-     * - __u32
-       - ``bytesperline``
-       - Distance in bytes between the leftmost pixels in two adjacent
-diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-index 71eebfc6d853..da6da2ef139a 100644
---- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-+++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-@@ -89,7 +89,18 @@ Single-planar format structure
-       - Size in bytes of the buffer to hold a complete image, set by the
- 	driver. Usually this is ``bytesperline`` times ``height``. When
- 	the image consists of variable length compressed data this is the
--	maximum number of bytes required to hold an image.
-+	number of bytes required by the codec to support the worst-case
-+	compression scenario.
-+
-+	The driver will set the value for uncompressed images.
-+
-+	Clients are allowed to set the sizeimage field for variable length
-+	compressed data flagged with ``V4L2_FMT_FLAG_COMPRESSED`` at
-+	:ref:`VIDIOC_ENUM_FMT`, but the driver may ignore it and set the
-+	value itself, or it may modify the provided value based on
-+	alignment requirements or minimum/maximum size requirements.
-+	If the client wants to leave this to the driver, then it should
-+	set sizeimage to 0.
-     * - __u32
-       - ``colorspace``
-       - Image colorspace, from enum :c:type:`v4l2_colorspace`.
--- 
-2.17.1
+thanks.
+
+> Modify uart rx and complete for DMA
+> 
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> ---
+>  drivers/tty/serial/8250/8250_mtk.c |   49 +++++++++++++++---------------------
+>  1 file changed, 20 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> index 417c7c8..f470ded 100644
+> --- a/drivers/tty/serial/8250/8250_mtk.c
+> +++ b/drivers/tty/serial/8250/8250_mtk.c
+> @@ -47,7 +47,6 @@
+>  #define MTK_UART_DMA_EN_RX	0x5
+>  
+>  #define MTK_UART_ESCAPE_CHAR	0x77	/* Escape char added under sw fc */
+> -#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
+>  #define MTK_UART_RX_SIZE	0x8000
+>  #define MTK_UART_TX_TRIGGER	1
+>  #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
+> @@ -89,28 +88,30 @@ static void mtk8250_dma_rx_complete(void *param)
+>  	struct mtk8250_data *data = up->port.private_data;
+>  	struct tty_port *tty_port = &up->port.state->port;
+>  	struct dma_tx_state state;
+> +	int copied, total, cnt;
+>  	unsigned char *ptr;
+> -	int copied;
+>  
+> -	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+> -				dma->rx_size, DMA_FROM_DEVICE);
+> +	if (data->rx_status == DMA_RX_SHUTDOWN)
+> +		return;
+>  
+>  	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> +	total = dma->rx_size - state.residue;
+> +	cnt = total;
+>  
+> -	if (data->rx_status == DMA_RX_SHUTDOWN)
+> -		return;
+> +	if ((data->rx_pos + cnt) > dma->rx_size)
+> +		cnt = dma->rx_size - data->rx_pos;
+>  
+> -	if ((data->rx_pos + state.residue) <= dma->rx_size) {
+> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> -		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+> -	} else {
+> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> -		copied = tty_insert_flip_string(tty_port, ptr,
+> -						dma->rx_size - data->rx_pos);
+> +	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> +	copied = tty_insert_flip_string(tty_port, ptr, cnt);
+> +	data->rx_pos += cnt;
+> +
+> +	if (total > cnt) {
+>  		ptr = (unsigned char *)(dma->rx_buf);
+> -		copied += tty_insert_flip_string(tty_port, ptr,
+> -				data->rx_pos + state.residue - dma->rx_size);
+> +		cnt = total - cnt;
+> +		copied += tty_insert_flip_string(tty_port, ptr, cnt);
+> +		data->rx_pos = cnt;
+>  	}
+> +
+>  	up->port.icount.rx += copied;
+>  
+>  	tty_flip_buffer_push(tty_port);
+> @@ -121,9 +122,7 @@ static void mtk8250_dma_rx_complete(void *param)
+>  static void mtk8250_rx_dma(struct uart_8250_port *up)
+>  {
+>  	struct uart_8250_dma *dma = up->dma;
+> -	struct mtk8250_data *data = up->port.private_data;
+>  	struct dma_async_tx_descriptor	*desc;
+> -	struct dma_tx_state	 state;
+>  
+>  	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+>  					   dma->rx_size, DMA_DEV_TO_MEM,
+> @@ -138,12 +137,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+>  
+>  	dma->rx_cookie = dmaengine_submit(desc);
+>  
+> -	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> -	data->rx_pos = state.residue;
+> -
+> -	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+> -				   dma->rx_size, DMA_FROM_DEVICE);
+> -
+>  	dma_async_issue_pending(dma->rxchan);
+>  }
+>  
+> @@ -156,13 +149,11 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+>  	if (data->rx_status != DMA_RX_START)
+>  		return;
+>  
+> -	dma->rxconf.direction		= DMA_DEV_TO_MEM;
+> -	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
+> -	dma->rxconf.src_addr		= dma->rx_addr;
+> +	dma->rxconf.src_port_window_size	= dma->rx_size;
+> +	dma->rxconf.src_addr				= dma->rx_addr;
+>  
+> -	dma->txconf.direction		= DMA_MEM_TO_DEV;
+> -	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
+> -	dma->txconf.dst_addr		= dma->tx_addr;
+> +	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
+> +	dma->txconf.dst_addr				= dma->tx_addr;
+>  
+>  	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+>  		UART_FCR_CLEAR_XMIT);
+
 
