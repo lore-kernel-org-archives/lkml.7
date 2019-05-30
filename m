@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47D5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1BD2545B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DDB25464
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190359;
-	bh=P7R1x1pGi94AC5SEkeFz6aQimoGWCT8T1THq+81y3mw=;
+	s=default; t=1559190365;
+	bh=9mXslimkPMmlanAaQNdynl1vDE9sPKhg5fOEZZEViIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOQQ6b6Po37/UvQnhrgKkYG4EAoT5od/JWpyfrpJvyxla7/hYGcf8LRVJrC+GkVpa
-	 L9ImO0TIaJPvK9Cl2+jdRd6enaAB7K5BSEfWOOohuimOp3wrAmDF+egIkINB085GTv
-	 OmLnyCmEJ6XUsjbJoMDujglk/L7hNRRoPSgGBQ3c=
+	b=fMy/aJte0RrGoypXkHJgZUBsX6PDQlCAgTlbOLtWIzaHPQrAEEAcYEnd0OW/ckLwv
+	 NgLEHSSBODSGW+pYGxss/8v0R10/IGNjYRZh3vJelTtfQvdG2rq7hfulIh5vgrd70g
+	 l4h5MTMUG2oewxr0YGyJhoVpUa3G0L3HhpGEDZ6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfE3EZ6 (ORCPT
+        id S1733267AbfE3E0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbfE3DOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:40 -0400
+        id S1729150AbfE3DOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A93124502;
-        Thu, 30 May 2019 03:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0062455C;
+        Thu, 30 May 2019 03:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186079;
-        bh=P7R1x1pGi94AC5SEkeFz6aQimoGWCT8T1THq+81y3mw=;
+        bh=9mXslimkPMmlanAaQNdynl1vDE9sPKhg5fOEZZEViIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFXtL2GvJ+FRdmjDE8JlP1dNO5Bva3kP2kv0CWYO3ahq/oTp2PRyY8M5v2vBuu18h
-         GWRLf/HJM/1ijeJ6+dQtlj+suz7KgiyV/kJD8NkiMtTuHhCdTZQAZ1EtQ9Dcp162qE
-         QFLK5EEqat4XVsQ3fZTNsg6Is4wp1L0Go61aAZKc=
+        b=X3+bvubkGrnjXYcCGadaz1y4bur+YTBMe14+fjmwt6FrSWLiXt+0mZ6GMgazgZzxN
+         ha3Fm9TIZAPWiJuesCZhVmBt92ohsd4RMD7N+jP7Tfr356d0GeyqZB8yAAnkOOaEGB
+         AAqXsIH1bKpl0uSc5VrQDRHTdgwWsD5x5di0xc6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 198/346] s390: zcrypt: initialize variables before_use
-Date:   Wed, 29 May 2019 20:04:31 -0700
-Message-Id: <20190530030551.273654785@linuxfoundation.org>
+Subject: [PATCH 5.0 197/346] clk: zynqmp: fix check for fractional clock
+Date:   Wed, 29 May 2019 20:04:30 -0700
+Message-Id: <20190530030551.237135170@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,72 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 913140e221567b3ecd21b4242257a7e3fa279026 ]
+[ Upstream commit c06e64407e031e71c67f45f07981510ca4c880a1 ]
 
-The 'func_code' variable gets printed in debug statements without
-a prior initialization in multiple functions, as reported when building
-with clang:
+The firmware sets BIT(13) in clkflag to mark a divider as fractional
+divider. The clock driver copies the clkflag straight to the flags of
+the common clock framework. In the common clk framework flags, BIT(13)
+is defined as CLK_DUTY_CYCLE_PARENT.
 
-drivers/s390/crypto/zcrypt_api.c:659:6: warning: variable 'func_code' is used uninitialized whenever 'if' condition is true
-      [-Wsometimes-uninitialized]
-        if (mex->outputdatalength < mex->inputdatalength) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:725:29: note: uninitialized use occurs here
-        trace_s390_zcrypt_rep(mex, func_code, rc,
-                                   ^~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:659:2: note: remove the 'if' if its condition is always false
-        if (mex->outputdatalength < mex->inputdatalength) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/zcrypt_api.c:654:24: note: initialize the variable 'func_code' to silence this warning
-        unsigned int func_code;
-                              ^
+Add a new field to the zynqmp_clk_divider to specify if a divider is a
+fractional devider. Set this field based on the clkflag when registering
+a divider.
 
-Add initializations to all affected code paths to shut up the warning
-and make the warning output consistent.
+At the same time, unset BIT(13) from clkflag when copying the flags to
+the common clk framework flags.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/zcrypt_api.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/zynqmp/divider.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index eb93c2d27d0ad..df1e847dd36e7 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -657,6 +657,7 @@ static long zcrypt_rsa_modexpo(struct ap_perms *perms,
- 	trace_s390_zcrypt_req(mex, TP_ICARSAMODEXPO);
+diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+index a371c66e72ef6..bd9b5fbc443b3 100644
+--- a/drivers/clk/zynqmp/divider.c
++++ b/drivers/clk/zynqmp/divider.c
+@@ -31,12 +31,14 @@
+  * struct zynqmp_clk_divider - adjustable divider clock
+  * @hw:		handle between common and hardware-specific interfaces
+  * @flags:	Hardware specific flags
++ * @is_frac:	The divider is a fractional divider
+  * @clk_id:	Id of clock
+  * @div_type:	divisor type (TYPE_DIV1 or TYPE_DIV2)
+  */
+ struct zynqmp_clk_divider {
+ 	struct clk_hw hw;
+ 	u8 flags;
++	bool is_frac;
+ 	u32 clk_id;
+ 	u32 div_type;
+ };
+@@ -116,8 +118,7 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
  
- 	if (mex->outputdatalength < mex->inputdatalength) {
-+		func_code = 0;
- 		rc = -EINVAL;
- 		goto out;
- 	}
-@@ -739,6 +740,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
- 	trace_s390_zcrypt_req(crt, TP_ICARSACRT);
+ 	bestdiv = zynqmp_divider_get_val(*prate, rate);
  
- 	if (crt->outputdatalength < crt->inputdatalength) {
-+		func_code = 0;
- 		rc = -EINVAL;
- 		goto out;
- 	}
-@@ -946,6 +948,7 @@ static long zcrypt_send_ep11_cprb(struct ap_perms *perms,
+-	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) &&
+-	    (divider->flags & CLK_FRAC))
++	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+ 		bestdiv = rate % *prate ? 1 : bestdiv;
+ 	*prate = rate * bestdiv;
  
- 		targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
- 		if (!targets) {
-+			func_code = 0;
- 			rc = -ENOMEM;
- 			goto out;
- 		}
-@@ -953,6 +956,7 @@ static long zcrypt_send_ep11_cprb(struct ap_perms *perms,
- 		uptr = (struct ep11_target_dev __force __user *) xcrb->targets;
- 		if (copy_from_user(targets, uptr,
- 				   target_num * sizeof(*targets))) {
-+			func_code = 0;
- 			rc = -EFAULT;
- 			goto out_free;
- 		}
+@@ -195,11 +196,13 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+ 
+ 	init.name = name;
+ 	init.ops = &zynqmp_clk_divider_ops;
+-	init.flags = nodes->flag;
++	/* CLK_FRAC is not defined in the common clk framework */
++	init.flags = nodes->flag & ~CLK_FRAC;
+ 	init.parent_names = parents;
+ 	init.num_parents = 1;
+ 
+ 	/* struct clk_divider assignments */
++	div->is_frac = !!(nodes->flag & CLK_FRAC);
+ 	div->flags = nodes->type_flag;
+ 	div->hw.init = &init;
+ 	div->clk_id = clk_id;
 -- 
 2.20.1
 
