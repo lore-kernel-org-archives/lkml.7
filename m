@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83DEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F1AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB1C24B53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADFF24B53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187270;
-	bh=WIW7TRRR60WvoppCDT/V9I9oaUVjM2Daff/dvhwr9FE=;
+	s=default; t=1559187275;
+	bh=slVuyKV+KlKo7Zs7N/nUpeypBEk7xTvR2V2HDd9lqPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K515z7EcGkfbSOsTr96pXBAItRkSsgpccvo30E6mnLwRKJFx79iX+d5Dcy+91Eg8A
-	 E8fC0untZgP6yhXhCmb+FWzJZf9MdicqgKflzotbbhqQUJ881F9wCtD1BvrV0KVR/t
-	 FsfX9IjQemdBBTwRioxSJIXgfJRwfaLW4bxxLKC4=
+	b=DAAFp/TXlfLbTLo0Y2WhNiy/n89QC1MPEjtERkuEdabkR+u3gZixEz+/wduxIxRPY
+	 tuZdmV2RpKjdIMCKJ5M/CULhhBbKhL2EjdDY1caaiVXgJJJ4cQshuI2EgQ+z9NU1Ie
+	 USyW9ZExA2mWcf2Ko5gEvnMGHKHVp+s1hRrRLK7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387963AbfE3D1P (ORCPT
+        id S2387939AbfE3D1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 29 May 2019 23:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731865AbfE3DTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:21 -0400
+        id S1731860AbfE3DTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66BA924725;
-        Thu, 30 May 2019 03:19:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D4E24831;
+        Thu, 30 May 2019 03:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186360;
-        bh=WIW7TRRR60WvoppCDT/V9I9oaUVjM2Daff/dvhwr9FE=;
+        s=default; t=1559186358;
+        bh=slVuyKV+KlKo7Zs7N/nUpeypBEk7xTvR2V2HDd9lqPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAUP/Q0vL0twBF8Jv3N6kr9edxNN6QGPmXSxYG39g7iXJu2rNCI4yELqsW3Ded9ux
-         S7fZrhQ6lNtPO1qb/6SbhZIPvpt3oe8tsSlp8uls5dA4adoJA0Y0c1um2KdU0+zBIr
-         ExOom+Myjd9VQKhf68/fvIwfVcikwpE6Vn7HetCE=
+        b=W5oBbjwxfkQfTFxlZhhBX5tcqabf7EaS/HYXjxMSpjfbsCzWzri3m8oNv4mwWEZm+
+         dQfmR+gibdoONSyI1/+8gpHbo/+yWC4tcvgHNQ1RTGrGKfwKz+Uj9YPW+yUwI0HrR1
+         BlE/HQ0XsYqKfh5kRf3okShxah6ydYgl8O99O69g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 106/193] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
-Date:   Wed, 29 May 2019 20:06:00 -0700
-Message-Id: <20190530030503.576175153@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 102/193] sched/core: Handle overflow in cpu_shares_write_u64
+Date:   Wed, 29 May 2019 20:05:56 -0700
+Message-Id: <20190530030503.072210829@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,46 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6f32efb1b128344a2c7df9875bc1a1abaa1d395 ]
+[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
 
-On platforms where the MUSB and HCI controllers share PHY0, PHY passby
-is required when using the HCI controller with the PHY, but it must be
-disabled when the MUSB controller is used instead.
+Bit shift in scale_load() could overflow shares. This patch saturates
+it to MAX_SHARES like following sched_group_set_shares().
 
-Without this, PHY0 passby is always enabled, which results in broken
-peripheral mode on such platforms (e.g. H3/H5).
+Example:
 
-Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
+ # echo 9223372036854776832 > cpu.shares
+ # cat cpu.shares
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Before patch: 1024
+After pattch: 262144
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 4d34dfb64998f..46d60a3bf2608 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -549,6 +549,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	struct sun4i_usb_phy_data *data =
- 		container_of(work, struct sun4i_usb_phy_data, detect.work);
- 	struct phy *phy0 = data->phys[0].phy;
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
- 	bool force_session_end, id_notify = false, vbus_notify = false;
- 	int id_det, vbus_det;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2464a242d6c9d..b3ff73d6a4c23 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6380,6 +6380,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+ static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
+ 				struct cftype *cftype, u64 shareval)
+ {
++	if (shareval > scale_load_down(ULONG_MAX))
++		shareval = MAX_SHARES;
+ 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
+ }
  
-@@ -605,6 +606,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 			mutex_unlock(&phy0->mutex);
- 		}
- 
-+		/* Enable PHY0 passby for host mode only. */
-+		sun4i_usb_phy_passby(phy, !id_det);
-+
- 		/* Re-route PHY0 if necessary */
- 		if (data->cfg->phy0_dual_route)
- 			sun4i_usb_phy0_reroute(data, id_det);
 -- 
 2.20.1
 
