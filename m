@@ -2,152 +2,93 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A88C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567D3C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4122054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C348218A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WjcNOIJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfE3CcW convert rfc822-to-8bit (ORCPT
+        id S1727445AbfE3Cdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 22:32:22 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:37548 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfE3CcV (ORCPT
+        Wed, 29 May 2019 22:33:46 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:53446 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfE3Cdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 22:32:21 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x4U2W8mC004450, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcas12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x4U2W8mC004450
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 30 May 2019 10:32:08 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 30 May
- 2019 10:32:08 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: RE: [PATCH] rtw88: Remove set but not used variable 'ip_sel' and 'orig'
-Thread-Topic: [PATCH] rtw88: Remove set but not used variable 'ip_sel' and
- 'orig'
-Thread-Index: AQHVFi7tVKme6Dla+EywC8esuGtTIaaC8s0g
-Date:   Thu, 30 May 2019 02:32:08 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D17FABE0@RTITMBSVM04.realtek.com.tw>
-References: <20190529145740.22804-1-yuehaibing@huawei.com>
-In-Reply-To: <20190529145740.22804-1-yuehaibing@huawei.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 29 May 2019 22:33:46 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2StPf018593;
+        Thu, 30 May 2019 02:33:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=dGCIafp7VDqohybWxtkIDVZ9hz1ctA/NYycXfmXMbg0=;
+ b=WjcNOIJIaxMn+aujvfKz3xjZIAjdX3GDKmXpkVIjpjsmWwqHL7snqmM+4SZGTrgjNaEn
+ 41cwt5yo3XLsLiQAw44JDykMlvNYiqQXmU7ZpsKMk0XMX8an9u5OJpPU2F3We/uJLs3d
+ 3Cdwa2EU6A3kNTZ5TOOaWRMKo5wqyPmy5yRlhdAca3GbRvvxiPrTHkLPNi2OwaLi7MrB
+ Ix8tgXWDGLbLX1sp690LxjbuXRpse/7iRff1VYFl/HTiVBoyCOCY1Ybjdm/2QMhHDfeb
+ wo4o6ZTXk7/dWNrUJsHVgRMvm/K1YocntfG2WWEY4591njJLPKZ7IH2VfeYSM1aAuwDB 9A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2spu7dnmah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:33:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2XWqO026510;
+        Thu, 30 May 2019 02:33:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2srbdxqxys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:33:40 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U2Xdfp002077;
+        Thu, 30 May 2019 02:33:39 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 May 2019 19:33:39 -0700
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     sathya.prakash@broadcom.com, suganath-prabu.subramani@broadcom.com,
+        joe@perches.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] message/fusion/mptbase.c: Use kmemdup instead of memcpy and kmalloc
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190522160149.GA19160@bharath12345-Inspiron-5559>
+Date:   Wed, 29 May 2019 22:33:36 -0400
+In-Reply-To: <20190522160149.GA19160@bharath12345-Inspiron-5559> (Bharath
+        Vedartham's message of "Wed, 22 May 2019 21:31:49 +0530")
+Message-ID: <yq1tvdcwu0v.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=725
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=779 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Bharath,
 
-> -----Original Message-----
-> From: YueHaibing [mailto:yuehaibing@huawei.com]
-> Sent: Wednesday, May 29, 2019 10:58 PM
-> To: Tony Chuang; kvalo@codeaurora.org; davem@davemloft.net
-> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
-> linux-wireless@vger.kernel.org; YueHaibing
-> Subject: [PATCH] rtw88: Remove set but not used variable 'ip_sel' and 'orig'
-> 
-> Fixes gcc '-Wunused-but-set-variable' warnings:
-> 
-> drivers/net/wireless/realtek/rtw88/pci.c: In function rtw_pci_phy_cfg:
-> drivers/net/wireless/realtek/rtw88/pci.c:978:6: warning: variable ip_sel set
-> but not used [-Wunused-but-set-variable]
-> drivers/net/wireless/realtek/rtw88/phy.c: In function
-> phy_tx_power_limit_config:
-> drivers/net/wireless/realtek/rtw88/phy.c:1607:11: warning: variable orig set
-> but not used [-Wunused-but-set-variable]
-> 
-> They are never used, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/pci.c | 3 ---
->  drivers/net/wireless/realtek/rtw88/phy.c | 3 +--
->  2 files changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> b/drivers/net/wireless/realtek/rtw88/pci.c
-> index 353871c27779..8329f4e447b7 100644
-> --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> @@ -977,7 +977,6 @@ static void rtw_pci_phy_cfg(struct rtw_dev *rtwdev)
->  	u16 cut;
->  	u16 value;
->  	u16 offset;
-> -	u16 ip_sel;
->  	int i;
-> 
->  	cut = BIT(0) << rtwdev->hal.cut_version;
-> @@ -990,7 +989,6 @@ static void rtw_pci_phy_cfg(struct rtw_dev *rtwdev)
->  			break;
->  		offset = para->offset;
->  		value = para->value;
-> -		ip_sel = para->ip_sel;
->  		if (para->ip_sel == RTW_IP_SEL_PHY)
->  			rtw_mdio_write(rtwdev, offset, value, true);
->  		else
-> @@ -1005,7 +1003,6 @@ static void rtw_pci_phy_cfg(struct rtw_dev
-> *rtwdev)
->  			break;
->  		offset = para->offset;
->  		value = para->value;
-> -		ip_sel = para->ip_sel;
->  		if (para->ip_sel == RTW_IP_SEL_PHY)
->  			rtw_mdio_write(rtwdev, offset, value, false);
->  		else
-> diff --git a/drivers/net/wireless/realtek/rtw88/phy.c
-> b/drivers/net/wireless/realtek/rtw88/phy.c
-> index 404d89432c96..c3e75ffe27b5 100644
-> --- a/drivers/net/wireless/realtek/rtw88/phy.c
-> +++ b/drivers/net/wireless/realtek/rtw88/phy.c
-> @@ -1604,12 +1604,11 @@ void rtw_phy_tx_power_by_rate_config(struct
-> rtw_hal *hal)
->  static void
->  phy_tx_power_limit_config(struct rtw_hal *hal, u8 regd, u8 bw, u8 rs)
->  {
-> -	s8 base, orig;
-> +	s8 base;
->  	u8 ch;
-> 
->  	for (ch = 0; ch < RTW_MAX_CHANNEL_NUM_2G; ch++) {
->  		base = hal->tx_pwr_by_rate_base_2g[0][rs];
-> -		orig = hal->tx_pwr_limit_2g[regd][bw][rs][ch];
->  		hal->tx_pwr_limit_2g[regd][bw][rs][ch] -= base;
->  	}
-> 
+> Replace kmalloc + memcpy with kmemdup.
 
+Applied to 5.3/scsi-queue. Thanks.
 
-Hi Haibing
-
-I have submitted a patch fix the unused variable in phy.c
-Which is,
-
-> drivers/net/wireless/realtek/rtw88/phy.c: In function
-> phy_tx_power_limit_config:
-> drivers/net/wireless/realtek/rtw88/phy.c:1607:11: warning: variable orig set
-> but not used [-Wunused-but-set-variable]
-
-Can you drop the changes in phy.c and remain the changes in pci.c?
-Thanks.
-
-Yan-Hsuan
+-- 
+Martin K. Petersen	Oracle Linux Engineering
