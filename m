@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0AEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B8EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645D324E5D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C74E24E61
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188497;
-	bh=wCQprKQ6UlTQ2cMR+4SA6hv03cc2sg5r/xo00vPGyiQ=;
+	s=default; t=1559188506;
+	bh=sevjn0uJTkyUM8L3gYJ3qfobXRLbjawz5SjfuXaYRhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qA7ttOV11qIZ53/YXDI8CdrrL6jNu1kz0fMf5UX3IMx1nxk8U/jO1qPtDxInoke46
-	 sEEYu63RmqnddLxrv4DarhU7USKHpRWKtoMfmMrxla4w/bkLNJaDfRbmLwNohWUSwp
-	 qAyvRM8SmyefmQtTtCW7vBd+ZycqCzvV3ZiFozZ8=
+	b=CrKDT/ZGYPIKWEoklQ9TQTtYnnGXDgKcmwya/v8f+BC4y0LRfcwgej1Z9i5qe9yeR
+	 +ww9QoPteHvkQyYp3ldYec9503jdcZ42WR5w0oIeQ88LuTL1Dkahd2oMTooX62PA/N
+	 EQsGjwj5ryp7orT53YIbPydtQE3qGKegWQb3jvFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387895AbfE3Dyw (ORCPT
+        id S2387644AbfE3DzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbfE3DTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:17 -0400
+        id S1731841AbfE3DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE7124863;
-        Thu, 30 May 2019 03:19:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C485724833;
+        Thu, 30 May 2019 03:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186356;
-        bh=wCQprKQ6UlTQ2cMR+4SA6hv03cc2sg5r/xo00vPGyiQ=;
+        s=default; t=1559186353;
+        bh=sevjn0uJTkyUM8L3gYJ3qfobXRLbjawz5SjfuXaYRhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v9mrd4F91lUCCZlApRqZ87fB7xNHtvhIBWxGUCPeV0gHDoySK1q+GYpVB/iKGoyk9
-         bh/2KJEAjVndc5bmllLUHG4rnn1uAc8jH3AxcJtQ1+4MK7zC8l+th4KwSfFuoI1OkM
-         80QfzltEPNo8ak0mo7fz6bt9TFzJLZr6P2K52xEQ=
+        b=A07QAtIOVgqqfupOh/82FuTWdU2rLI9zOjhL12U/+21ZpHwXQmOUehsVFh23wj+Ux
+         EsQaadCBmdhGkdB2NQrzFXrV/SnY0xeDTz9yUt5SvwP8uLWUGUl+VmJrNtn1GWWYmk
+         quBvtPvQAVWiVdyFWlH6u6IznMR99jTE0Bvxe6q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 073/193] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 29 May 2019 20:05:27 -0700
-Message-Id: <20190530030459.393007741@linuxfoundation.org>
+Subject: [PATCH 4.14 095/193] media: pvrusb2: Prevent a buffer overflow
+Date:   Wed, 29 May 2019 20:05:49 -0700
+Message-Id: <20190530030502.245045781@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,50 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit c1ced46c7b49ad7bc064e68d966e0ad303f917fb ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+The ctrl_check_input() function is called from pvr2_ctrl_range_check().
+It's supposed to validate user supplied input and return true or false
+depending on whether the input is valid or not.  The problem is that
+negative shifts or shifts greater than 31 are undefined in C.  In
+practice with GCC they result in shift wrapping so this function returns
+true for some inputs which are not valid and this could result in a
+buffer overflow:
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+    drivers/media/usb/pvrusb2/pvrusb2-ctrl.c:205 pvr2_ctrl_get_valname()
+    warn: uncapped user index 'names[val]'
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The cptr->hdw->input_allowed_mask mask is configured in pvr2_hdw_create()
+and the highest valid bit is BIT(4).
+
+Fixes: 7fb20fa38caa ("V4L/DVB (7299): pvrusb2: Improve logic which handles input choice availability")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 2 ++
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index c02394c3181f7..cd8a82655e647 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -323,9 +323,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+index 44975061b9536..ddededc4ced45 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+@@ -666,6 +666,8 @@ static int ctrl_get_input(struct pvr2_ctrl *cptr,int *vp)
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
+ static int ctrl_check_input(struct pvr2_ctrl *cptr,int v)
+ {
++	if (v < 0 || v > PVR2_CVAL_INPUT_MAX)
++		return 0;
+ 	return ((1 << v) & cptr->hdw->input_allowed_mask) != 0;
+ }
  
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
+index 25648add77e58..bd2b7a67b7322 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.h
+@@ -50,6 +50,7 @@
+ #define PVR2_CVAL_INPUT_COMPOSITE 2
+ #define PVR2_CVAL_INPUT_SVIDEO 3
+ #define PVR2_CVAL_INPUT_RADIO 4
++#define PVR2_CVAL_INPUT_MAX PVR2_CVAL_INPUT_RADIO
+ 
+ enum pvr2_config {
+ 	pvr2_config_empty,    /* No configuration */
 -- 
 2.20.1
 
