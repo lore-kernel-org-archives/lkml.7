@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C92C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F12C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497B825EBD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC0B25E9B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192091;
-	bh=3RCxgWEyXcSUgOh3L8bO5IkpkOryQ3Q4vhOf9zYAuZA=;
+	s=default; t=1559192098;
+	bh=WDK5eOGnzlU+rY7LHnbKwB3mxhm5pC32ymVzPXusi+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjTXf98O2yjO/K6+lGMq/9acrzXjadJZSh8RbLfysfWImT1XIqYueezj1lYDomoud
-	 zaG442e+WLqOn3NCCdLWaqFqJktoaGf0Yta5BisCHqTEcAegDZ6WYMwqzRrq+oyPTA
-	 F/t0x0ndBymFt9DDDNMznJjvwV+qQ/QYlygSINoQ=
+	b=ALe7afURyJ4Q8dKR2+yj+vd/dGg+5ygHYoosRrG3nAzpAW4gTvgPGL5JOegh6DX8M
+	 AusscMQf/Z9pQYdkXiqPgS/BVaOiu0UPBi5AYYmK8c6r6+5GlDIqx1NC4wuHNDKqol
+	 KrC8tVMh4xEAXrexJevOh2Tz/wwpXjfVk14xQOsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389129AbfE3Eyp (ORCPT
+        id S2389141AbfE3Ey5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:54:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728042AbfE3DKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:21 -0400
+        id S1728031AbfE3DKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:19 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 258EB24493;
-        Thu, 30 May 2019 03:10:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9D6E244BF;
+        Thu, 30 May 2019 03:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185820;
-        bh=3RCxgWEyXcSUgOh3L8bO5IkpkOryQ3Q4vhOf9zYAuZA=;
+        s=default; t=1559185818;
+        bh=WDK5eOGnzlU+rY7LHnbKwB3mxhm5pC32ymVzPXusi+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWUiY/8Eg1WJPe/knam2yaEdyJ3MmDatUps7OnuYwpZ9bHk4HQWBFJGdfhpMw4cBc
-         mk5Oo2tt8WLxTqre0jZ0xsQaJyfhuKWz0dw1i1S+HadNYCnyC6IjLYIwvzkd+My9gd
-         lpEKn/PezjRQBRjmEueDyvCiE3EbmyE8mfOOK5+I=
+        b=eN4xqeZeJpofABdgjmKUA+nHvY9WJAxXkotEelUNL/zVuvETZ5qEd1XBFT/+YKJ7g
+         BixykcjFCV3bD2BQGSHPXIP0fUPqLP9kzrCBTM1+YumUWQMP+PDmUnqX5NELvtLfFE
+         pEhrA4Zl0e3S+HtP1vjM2zH1mB/rQGllE22VjEXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 116/405] drm: prefix header search paths with $(srctree)/
-Date:   Wed, 29 May 2019 20:01:54 -0700
-Message-Id: <20190530030546.869328633@linuxfoundation.org>
+Subject: [PATCH 5.1 113/405] net: hns3: use atomic_t replace u32 for arqs count
+Date:   Wed, 29 May 2019 20:01:51 -0700
+Message-Id: <20190530030546.721646057@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,106 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 43068cb7ba1f6ceb1523e947c84002b2a61fd6d4 ]
+[ Upstream commit 30780a8b1677e7409b32ae52a9a84f7d41ae6b43 ]
 
-Currently, the Kbuild core manipulates header search paths in a crazy
-way [1].
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
-To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-the search paths in the srctree. Some Makefiles are already written in
-that way, but not all. The goal of this work is to make the notation
-consistent, and finally get rid of the gross hacks.
-
-Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-("kbuild: do not drop -I without parameter").
-
-[1]: https://patchwork.kernel.org/patch/9632347/
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1553859161-2628-1-git-send-email-yamada.masahiro@socionext.com
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/Makefile         | 2 +-
- drivers/gpu/drm/arm/display/komeda/Makefile | 4 ++--
- drivers/gpu/drm/i915/gvt/Makefile           | 2 +-
- drivers/gpu/drm/msm/Makefile                | 6 +++---
- drivers/gpu/drm/nouveau/Kbuild              | 8 ++++----
- 5 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
-index 466da5954a682..62bf9da25e4b3 100644
---- a/drivers/gpu/drm/amd/amdgpu/Makefile
-+++ b/drivers/gpu/drm/amd/amdgpu/Makefile
-@@ -23,7 +23,7 @@
- # Makefile for the drm device driver.  This driver provides support for the
- # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 299b277bc7ae9..589b7ee32bff8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -107,7 +107,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
  
--FULL_AMD_PATH=$(src)/..
-+FULL_AMD_PATH=$(srctree)/$(src)/..
- DISPLAY_FOLDER_NAME=display
- FULL_AMD_DISPLAY_PATH = $(FULL_AMD_PATH)/$(DISPLAY_FOLDER_NAME)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 9441b453d38df..9a0a501908aec 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -327,7 +327,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 7dc3c9f79169f..4f2c77283cb43 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -208,7 +208,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -220,7 +221,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
  
-diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
-index 1b875e5dc0f6f..a72e30c0e03d3 100644
---- a/drivers/gpu/drm/arm/display/komeda/Makefile
-+++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
+ 			hclgevf_mbx_task_schedule(hdev);
  
- ccflags-y := \
--	-I$(src)/../include \
--	-I$(src)
-+	-I $(srctree)/$(src)/../include \
-+	-I $(srctree)/$(src)
+@@ -308,7 +309,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
  
- komeda-y := \
- 	komeda_drv.o \
-diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt/Makefile
-index 271fb46d4dd0d..ea8324abc784a 100644
---- a/drivers/gpu/drm/i915/gvt/Makefile
-+++ b/drivers/gpu/drm/i915/gvt/Makefile
-@@ -5,5 +5,5 @@ GVT_SOURCE := gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o firmware.o \
- 	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debugfs.o \
- 	fb_decoder.o dmabuf.o page_track.o
- 
--ccflags-y				+= -I$(src) -I$(src)/$(GVT_DIR)
-+ccflags-y				+= -I $(srctree)/$(src) -I $(srctree)/$(src)/$(GVT_DIR)/
- i915-y					+= $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-index 56a70c74af4ed..b7b1ebdc81902 100644
---- a/drivers/gpu/drm/msm/Makefile
-+++ b/drivers/gpu/drm/msm/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
--ccflags-y := -Idrivers/gpu/drm/msm
--ccflags-y += -Idrivers/gpu/drm/msm/disp/dpu1
--ccflags-$(CONFIG_DRM_MSM_DSI) += -Idrivers/gpu/drm/msm/dsi
-+ccflags-y := -I $(srctree)/$(src)
-+ccflags-y += -I $(srctree)/$(src)/disp/dpu1
-+ccflags-$(CONFIG_DRM_MSM_DSI) += -I $(srctree)/$(src)/dsi
- 
- msm-y := \
- 	adreno/adreno_device.o \
-diff --git a/drivers/gpu/drm/nouveau/Kbuild b/drivers/gpu/drm/nouveau/Kbuild
-index 581404e6544d4..378c5dd692b0b 100644
---- a/drivers/gpu/drm/nouveau/Kbuild
-+++ b/drivers/gpu/drm/nouveau/Kbuild
-@@ -1,7 +1,7 @@
--ccflags-y += -I$(src)/include
--ccflags-y += -I$(src)/include/nvkm
--ccflags-y += -I$(src)/nvkm
--ccflags-y += -I$(src)
-+ccflags-y += -I $(srctree)/$(src)/include
-+ccflags-y += -I $(srctree)/$(src)/include/nvkm
-+ccflags-y += -I $(srctree)/$(src)/nvkm
-+ccflags-y += -I $(srctree)/$(src)
- 
- # NVKM - HW resource manager
- #- code also used by various userspace tools/tests
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
+ 	}
+ }
 -- 
 2.20.1
 
