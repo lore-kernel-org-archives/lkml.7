@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE88C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5C424A01
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2087224A0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186576;
-	bh=i1Vi4hGrEFyWzIxeGsWxePBBNB1HBqFssvmMcgk/xcg=;
+	s=default; t=1559186579;
+	bh=fbaCxHUnRLz4AuJFa+gdAKEqN7yf3n1DQ2EtkJEuU4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evO3jHFawIo7H7artv0p1Dj+R84M0828C5XeDf8cvIip/bMkaCeZhbYiC6iYgxcKG
-	 LNWiB0TeAJyzEje3mJQHZSeOKPhvpp+puugAtKxfHtoH2r0veCzfobiDEu/Idn6vAk
-	 n08VX9ygSPTaRWYwwh809fx6rmhzBIHezDoPNfHE=
+	b=wVT4kmmEtXULm9M9qrWns63PC4ehsJTyVihmzAxSqwwVGN80SKz8zNzmevy6MWvl3
+	 mu8ynM5q09OA4sZwWBxrPlKszGuiX8sMDq/6fGXJ4fTRv/+2qok1PYS6VizaRAwv9B
+	 5xvdIdEvcm5cSKhnS+5EgOQIjoSTKurf5mVoWZ1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbfE3DWz (ORCPT
+        id S1732988AbfE3DW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45222 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbfE3DRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:09 -0400
+        id S1730945AbfE3DRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF1124673;
-        Thu, 30 May 2019 03:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB5CD24675;
+        Thu, 30 May 2019 03:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186228;
-        bh=i1Vi4hGrEFyWzIxeGsWxePBBNB1HBqFssvmMcgk/xcg=;
+        s=default; t=1559186230;
+        bh=fbaCxHUnRLz4AuJFa+gdAKEqN7yf3n1DQ2EtkJEuU4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X4mw2Yr14/g2jm1YKPtjxoJtYfXjAwfwyKkvHNkqI0bNLCG+moKIFlQq7xnFn62Z1
-         zHHybq7fDWxUKAQEzRpplr4g0RhxKJ95FRA2WpP5PCbts/DArgw9J7IetwxITb4T9h
-         MWdWQJdpuB7y44Yq1zz8Ei9O5RS4dg7ZkQmjgmoI=
+        b=qNPkUt4mbT6OG5QmfjaKakF8FTqBg33gkglX9cVIVNMQumUMkUeo19iwyGu8X6D4u
+         g9z+wdR/OMcAt5YGhpAl356day+nSspHTdDdP81R9i6zVgFKAyl01hxJE8u+qkUBva
+         4q3ENvcSkvTcUMVGreSQgc4N1giGAx43+BqxaPdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 084/276] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 29 May 2019 20:04:02 -0700
-Message-Id: <20190530030531.555933764@linuxfoundation.org>
+Subject: [PATCH 4.19 126/276] media: stm32-dcmi: fix crash when subdev do not expose any formats
+Date:   Wed, 29 May 2019 20:04:44 -0700
+Message-Id: <20190530030533.698018133@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,42 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit 33dfeb62e23c31619d2197850f7e8b50e8cc5466 ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+Do not access sd_formats[] if num_of_sd_formats is zero, ie
+subdev sensor didn't expose any formats.
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
-
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
-
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 01ffc0ef8033f..fbcf13bbbd8d1 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 100a5922d75fd..d386822658922 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -808,6 +808,9 @@ static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
  
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
+ 	}
+@@ -986,6 +989,9 @@ static int dcmi_set_sensor_format(struct stm32_dcmi *dcmi,
+ 
+ 	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
+ 	if (!sd_fmt) {
++		if (!dcmi->num_of_sd_formats)
++			return -ENODATA;
++
+ 		sd_fmt = dcmi->sd_formats[dcmi->num_of_sd_formats - 1];
+ 		pix->pixelformat = sd_fmt->fourcc;
+ 	}
 -- 
 2.20.1
 
