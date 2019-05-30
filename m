@@ -2,54 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15BFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F6C46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D2E25F4F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93A425F8E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192214;
-	bh=jzMXrEHL3GmFGNv3iYH5F/5yAMqxYJ3Up4Mpsq9ctAY=;
+	s=default; t=1559192223;
+	bh=UsFW2WMeKH4TU8vVUZkJTsBG0FvfjkCzrrPteFtjy3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eEWX3/Cu/lZx+cRTBgdJNH1ZxW/c+6MmdLT8Bp70I7CUpdH3jTxt9vdD0L3qIoa/s
-	 rGv3+UlVc0cukwcAeBn00oVZ5o6oKQnOO6AwpDagzAhFpmUrL7R7WiFBCXSlFzN7ou
-	 TFmxTBt8kCRJuZ0k9saRDCmMrZa0gH+GnArT3QVM=
+	b=B8Vv2pBD1ALsa5WaKwNIsyETC46xGCGjDr9hQkyoisRMZP5crtEgCEvXx+cZs/HAI
+	 1tvPP3kSf3fIXLkzaTfdvjDwvRp24mbJ7xbONbVwEl1MV2EhaFc2IyE+pN7DkwuQs5
+	 HKPHqGsLopV20XzpABgr3oUUDVI0VGRKxBsxEaj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389238AbfE3E4x (ORCPT
+        id S1727883AbfE3DKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfE3DKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727714AbfE3DJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175A424492;
-        Thu, 30 May 2019 03:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA9E92449D;
+        Thu, 30 May 2019 03:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185800;
-        bh=jzMXrEHL3GmFGNv3iYH5F/5yAMqxYJ3Up4Mpsq9ctAY=;
+        s=default; t=1559185781;
+        bh=UsFW2WMeKH4TU8vVUZkJTsBG0FvfjkCzrrPteFtjy3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHkWg366FKO++RUe3gn50kAr5joXxkMxYQbYyX1rknZHs8DQeM1JnchHSOkQm7u3o
-         huwncKPmaDDf2oxIscezIaIyZ8SZcWvUvYxBFtypp+MCypDCaZ4Ej4OdfOnshplQhi
-         tf1EQI0O14SGborLQQLdSAw6Ojlvaj3LJDAvhlAo=
+        b=L4CQgZM6mDjEfNx3jWu3pK9Ia4HDYqlhT0pZJdqpZkyeavvcEeqehWJDb3R1obUIa
+         zo6cYjc/FnVTkUMlRtb7CyNMerbgH4JH6X/QnrTOu8dizgc8mMpwVzhCVmH6jurGpL
+         njEvFceFiGksj0RwycGIVDtIexDA3VEcyelNFFO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 077/405] spi: atmel-quadspi: fix crash while suspending
-Date:   Wed, 29 May 2019 20:01:15 -0700
-Message-Id: <20190530030544.860142338@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.1 042/405] acct_on(): dont mess with freeze protection
+Date:   Wed, 29 May 2019 20:00:40 -0700
+Message-Id: <20190530030542.908792698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,47 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e5c27498a0403b270620b1a8a0a66e3efc222fb6 ]
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-atmel_qspi objects are kept in spi_controller objects, so, first get
-pointer to spi_controller object and then get atmel_qspi object from
-spi_controller object.
+commit 9419a3191dcb27f24478d288abaab697228d28e6 upstream.
 
-Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+What happens there is that we are replacing file->path.mnt of
+a file we'd just opened with a clone and we need the write
+count contribution to be transferred from original mount to
+new one.  That's it.  We do *NOT* want any kind of freeze
+protection for the duration of switchover.
+
+IOW, we should just use __mnt_{want,drop}_write() for that
+switchover; no need to bother with mnt_{want,drop}_write()
+there.
+
+Tested-by: Amir Goldstein <amir73il@gmail.com>
+Reported-by: syzbot+2a73a6ea9507b7112141@syzkaller.appspotmail.com
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/atmel-quadspi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/internal.h         |    2 --
+ include/linux/mount.h |    2 ++
+ kernel/acct.c         |    4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index fffc21cd5f793..b3173ebddaded 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -570,7 +570,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -89,9 +89,7 @@ extern int sb_prepare_remount_readonly(s
  
- static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ extern void __init mnt_init(void);
  
- 	clk_disable_unprepare(aq->qspick);
- 	clk_disable_unprepare(aq->pclk);
-@@ -580,7 +581,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+-extern int __mnt_want_write(struct vfsmount *);
+ extern int __mnt_want_write_file(struct file *);
+-extern void __mnt_drop_write(struct vfsmount *);
+ extern void __mnt_drop_write_file(struct file *);
  
- static int __maybe_unused atmel_qspi_resume(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ /*
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -87,6 +87,8 @@ extern bool mnt_may_suid(struct vfsmount
  
- 	clk_prepare_enable(aq->pclk);
- 	clk_prepare_enable(aq->qspick);
--- 
-2.20.1
-
+ struct path;
+ extern struct vfsmount *clone_private_mount(const struct path *path);
++extern int __mnt_want_write(struct vfsmount *);
++extern void __mnt_drop_write(struct vfsmount *);
+ 
+ struct file_system_type;
+ extern struct vfsmount *fc_mount(struct fs_context *fc);
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -227,7 +227,7 @@ static int acct_on(struct filename *path
+ 		filp_close(file, NULL);
+ 		return PTR_ERR(internal);
+ 	}
+-	err = mnt_want_write(internal);
++	err = __mnt_want_write(internal);
+ 	if (err) {
+ 		mntput(internal);
+ 		kfree(acct);
+@@ -252,7 +252,7 @@ static int acct_on(struct filename *path
+ 	old = xchg(&ns->bacct, &acct->pin);
+ 	mutex_unlock(&acct->lock);
+ 	pin_kill(old);
+-	mnt_drop_write(mnt);
++	__mnt_drop_write(mnt);
+ 	mntput(mnt);
+ 	return 0;
+ }
 
 
