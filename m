@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4D2C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFD0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0461625302
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0236B25314
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190044;
-	bh=P0OgvO6kvj4Bw0/nhCGmIl7BjnU0aqdrFCMdjycaGWI=;
+	s=default; t=1559190046;
+	bh=G4hVXeq2ByHVmP4mBWsFS8NLtjwe5l/gnn3w99tu5ZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9TRnibclehEYxPU5VsKek2NmLwXn7nkM7H9NtWvECU8efyR+oafGVgsV0gNvmfJw
-	 poXmDi24kWfs6SyIIpzMDYd9sm0WY+RqN89nTLhKzgBsjptM++lHekYTCSxE0poWmz
-	 xNt/27s+0VL1ws/6j1iL++MbfaWVZ+1Za7INRbNw=
+	b=ECajr9znpljo4mRWSHNV0/NqYi3tTEwR7hn9SbHGSxbX2p4d4dM6TyLY/AKnhBhc2
+	 JUQIvczJBX3JiCF1qhP2qi0QHS/9Cr8Ut3KPjbOMu5QBmHs4mx56zK6SUsIuXrF22f
+	 XlQ05CMYBcqgsoqPEtbZPpoTKDNWvzaiwRs8T/G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbfE3EUn (ORCPT
+        id S1731481AbfE3EUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbfE3DPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728814AbfE3DPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBE52456F;
+        by mail.kernel.org (Postfix) with ESMTPSA id C0960245AF;
         Thu, 30 May 2019 03:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186117;
-        bh=P0OgvO6kvj4Bw0/nhCGmIl7BjnU0aqdrFCMdjycaGWI=;
+        bh=G4hVXeq2ByHVmP4mBWsFS8NLtjwe5l/gnn3w99tu5ZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EIAAKGy1jFJv/4efnHjmhlTzvY7Tbyd85LmsE7egw1qazkGz4IwAC16m8GueS3YGV
-         s/PomG3KhlDOtskSCQpeOVJDKAjNUTK3x6/QL0Xyfcmxl8bYVZCFXdhjYJDc86ecgz
-         eWtGolizMRJkcL/NCUoziLNd2tElJ+bokawB17M8=
+        b=0mjsWtASOCUaq4uqBcb20r8XUNtHHRXTfdw4b2UfBEcYw1DhaamkgKsV5APcbNXWP
+         Td6B1eF5nBnM/iajNIOemqgj43oMEChP2GY6KHIkliI/S+mgQ+6zpnbypTY4G6kXRv
+         z2pwujXE6Fx1G0DWzYixamw0p8p+WmhYEqNmMZvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 270/346] x86/mce: Fix machine_check_poll() tests for error types
-Date:   Wed, 29 May 2019 20:05:43 -0700
-Message-Id: <20190530030554.641092514@linuxfoundation.org>
+Subject: [PATCH 5.0 271/346] rcutorture: Fix cleanup path for invalid torture_type strings
+Date:   Wed, 29 May 2019 20:05:44 -0700
+Message-Id: <20190530030554.692352966@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -64,104 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f19501aa07f18268ab14f458b51c1c6b7f72a134 ]
+[ Upstream commit b813afae7ab6a5e91b4e16cc567331d9c2ae1f04 ]
 
-There has been a lurking "TBD" in the machine check poll routine ever
-since it was first split out from the machine check handler. The
-potential issue is that the poll routine may have just begun a read from
-the STATUS register in a machine check bank when the hardware logs an
-error in that bank and signals a machine check.
+If the specified rcutorture.torture_type is not in the rcu_torture_init()
+function's torture_ops[] array, rcutorture prints some console messages
+and then invokes rcu_torture_cleanup() to set state so that a future
+torture test can run.  However, rcu_torture_cleanup() also attempts to
+end the test that didn't actually start, and in doing so relies on the
+value of cur_ops, a value that is not particularly relevant in this case.
+This can result in confusing output or even follow-on failures due to
+attempts to use facilities that have not been properly initialized.
 
-That race used to be pretty small back when machine checks were
-broadcast, but the addition of local machine check means that the poll
-code could continue running and clear the error from the bank before the
-local machine check handler on another CPU gets around to reading it.
+This commit therefore sets the value of cur_ops to NULL in this case
+and inserts a check near the beginning of rcu_torture_cleanup(),
+thus avoiding relying on an irrelevant cur_ops value.
 
-Fix the code to be sure to only process errors that need to be processed
-in the poll code, leaving other logged errors alone for the machine
-check handler to find and process.
-
- [ bp: Massage a bit and flip the "== 0" check to the usual !(..) test. ]
-
-Fixes: b79109c3bbcf ("x86, mce: separate correct machine check poller and fatal exception handler")
-Fixes: ed7290d0ee8f ("x86, mce: implement new status bits")
-Reported-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20190312170938.GA23035@agluck-desk
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mce/core.c | 44 ++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 7 deletions(-)
+ kernel/rcu/rcutorture.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 1a7084ba9a3b6..0d47306cec7ae 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -712,19 +712,49 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index f6e85faa4ff4b..584b0d1da0a3b 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -2092,6 +2092,10 @@ rcu_torture_cleanup(void)
+ 			cur_ops->cb_barrier();
+ 		return;
+ 	}
++	if (!cur_ops) {
++		torture_cleanup_end();
++		return;
++	}
  
- 		barrier();
- 		m.status = mce_rdmsrl(msr_ops.status(i));
-+
-+		/* If this entry is not valid, ignore it */
- 		if (!(m.status & MCI_STATUS_VAL))
- 			continue;
- 
- 		/*
--		 * Uncorrected or signalled events are handled by the exception
--		 * handler when it is enabled, so don't process those here.
--		 *
--		 * TBD do the same check for MCI_STATUS_EN here?
-+		 * If we are logging everything (at CPU online) or this
-+		 * is a corrected error, then we must log it.
- 		 */
--		if (!(flags & MCP_UC) &&
--		    (m.status & (mca_cfg.ser ? MCI_STATUS_S : MCI_STATUS_UC)))
--			continue;
-+		if ((flags & MCP_UC) || !(m.status & MCI_STATUS_UC))
-+			goto log_it;
-+
-+		/*
-+		 * Newer Intel systems that support software error
-+		 * recovery need to make additional checks. Other
-+		 * CPUs should skip over uncorrected errors, but log
-+		 * everything else.
-+		 */
-+		if (!mca_cfg.ser) {
-+			if (m.status & MCI_STATUS_UC)
-+				continue;
-+			goto log_it;
-+		}
-+
-+		/* Log "not enabled" (speculative) errors */
-+		if (!(m.status & MCI_STATUS_EN))
-+			goto log_it;
-+
-+		/*
-+		 * Log UCNA (SDM: 15.6.3 "UCR Error Classification")
-+		 * UC == 1 && PCC == 0 && S == 0
-+		 */
-+		if (!(m.status & MCI_STATUS_PCC) && !(m.status & MCI_STATUS_S))
-+			goto log_it;
-+
-+		/*
-+		 * Skip anything else. Presumption is that our read of this
-+		 * bank is racing with a machine check. Leave the log alone
-+		 * for do_machine_check() to deal with it.
-+		 */
-+		continue;
- 
-+log_it:
- 		error_seen = true;
- 
- 		mce_read_aux(&m, i);
+ 	rcu_torture_barrier_cleanup();
+ 	torture_stop_kthread(rcu_torture_fwd_prog, fwd_prog_task);
+@@ -2257,6 +2261,7 @@ rcu_torture_init(void)
+ 		pr_cont("\n");
+ 		WARN_ON(!IS_MODULE(CONFIG_RCU_TORTURE_TEST));
+ 		firsterr = -EINVAL;
++		cur_ops = NULL;
+ 		goto unwind;
+ 	}
+ 	if (cur_ops->fqs == NULL && fqs_duration != 0) {
 -- 
 2.20.1
 
