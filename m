@@ -7,54 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4C6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4F8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E48025778
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8448B257A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KSESlhYv"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rqs1FBmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfE3IOW (ORCPT
+        id S1727072AbfE3IOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:14:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43325 "EHLO
+        Thu, 30 May 2019 04:14:47 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40187 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfE3IOW (ORCPT
+        with ESMTP id S1726127AbfE3IOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:14:22 -0400
+        Thu, 30 May 2019 04:14:46 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8E4512904717
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U8DM9r2904672
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:14:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8E4512904717
+        Thu, 30 May 2019 01:13:22 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U8DM9r2904672
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559204045;
-        bh=YocNR03LztEIRwgfs2gHJqyMB8B1v6MAyp624O+VnD4=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=KSESlhYvCJZCQwpDtsiRjusrRE2dtP2bDnhzNci9UGr1M10zOTNN2EGr/2j5VtdoD
-         +HbO3A8DdaT7/AVt7y9xJfy5BvdbfGvdfQXOfZgbA8LshxH8TspKF+cTQb2/gSh0BM
-         KJT1EuOljOd5MaEVV1Xt3+78duetBJ6xI6mYqB9ASK9iVNB46LLUkE1YWoyzGdlIUr
-         /jasnH2hq5SH0LfGwj7TL5JiUpVrRavqLyMzGrQSnryuJoDYQFBMKSzWAApZC3PlQB
-         QoCn4UKLcn/RJCs+x2rk/A8EEcGrhFXfPEmoBwE4taYz+QjQRZHYcaRJX5dLCM+hJm
-         1Y1z+sriHPPAw==
+        s=2019051801; t=1559204003;
+        bh=/ioW6yGJRyHtX0+Z4Qkx6d7146EF2dtM1ImJ/o2v1xU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=rqs1FBmkpkw2YJmuejtryIc9QfWh2ifyKvrjD0n8B4RsH1spSq2+S72t44D/AVijs
+         0N18Fp2cfcN7S4LokH3Mz37PKOg40SgQXxufUZrqkMwEcknZ/WX/BySehdWWky8UnZ
+         6HHUIa1+bqYjWg+onDkwmivwOUhCPrKuDs0HfKqJH37hO5IDm0AtkGpRhaUySDWUnm
+         tKwvmVCuCL73/ZSGP7jtKkwU/TS2PNjTIeWtk0aPAMjCv2g2jBbEWV4zvoNfEetm2y
+         BWyAcqVmiMvh10F42G1vQ3ebfH9X0xPKlKDwcDwgzkoVdLZ3iQvR2OUUA5M0ow//30
+         riL/ehScbv/Dw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8E4F62904714;
-        Thu, 30 May 2019 01:14:04 -0700
-Date:   Thu, 30 May 2019 01:14:04 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U8DMfE2904669;
+        Thu, 30 May 2019 01:13:22 -0700
+Date:   Thu, 30 May 2019 01:13:22 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org>
-Cc:     mingo@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
-        acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, namhyung@kernel.org
-Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, namhyung@kernel.org,
-          adrian.hunter@intel.com, mingo@kernel.org, jolsa@kernel.org,
-          acme@redhat.com, tglx@linutronix.de
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-8201787cbb723a20bf262ecb41b74962ad27e659@git.kernel.org>
+Cc:     peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, ak@linux.intel.com, acme@redhat.com,
+        mingo@kernel.org, songliubraving@fb.com, tglx@linutronix.de,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org, sdf@google.com,
+        hpa@zytor.com, adrian.hunter@intel.com
+Reply-To: peterz@infradead.org, acme@redhat.com,
+          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+          ak@linux.intel.com, mingo@kernel.org, tglx@linutronix.de,
+          songliubraving@fb.com, jolsa@kernel.org, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, sdf@google.com
+In-Reply-To: <20190508132010.14512-12-jolsa@kernel.org>
+References: <20190508132010.14512-12-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf version: Append 12 git SHA chars to the
- version string
-Git-Commit-ID: 80ec26d110c5c5a81b60c444db851e5734dee09a
+Subject: [tip:perf/core] perf script: Remove superfluous BPF event titles
+Git-Commit-ID: 8201787cbb723a20bf262ecb41b74962ad27e659
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -68,49 +73,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  80ec26d110c5c5a81b60c444db851e5734dee09a
-Gitweb:     https://git.kernel.org/tip/80ec26d110c5c5a81b60c444db851e5734dee09a
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 24 May 2019 15:50:18 -0300
+Commit-ID:  8201787cbb723a20bf262ecb41b74962ad27e659
+Gitweb:     https://git.kernel.org/tip/8201787cbb723a20bf262ecb41b74962ad27e659
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Wed, 8 May 2019 15:20:09 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-perf version: Append 12 git SHA chars to the version string
+perf script: Remove superfluous BPF event titles
 
-Bumping it from just 4:
+There's no need to display "ksymbol event with" text for the
+PERF_RECORD_KSYMBOL event and "bpf event with" test for the
+PERF_RECORD_BPF_EVENT event.
+
+Remove it so it also goes along with other side-band events display.
 
 Before:
 
-  $ perf -v
-  perf version 5.2.rc1.g80978f
-  $
+  # perf script --show-bpf-events
+  ...
+  swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL ksymbol event with addr ffffffffc0ef971d len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+  swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT bpf event with type 1, flags 0, id 36
 
 After:
 
-  $ perf -v
-  perf version 5.2.rc1.g80978fc864c5
-  $
+  # perf script --show-bpf-events
+  ...
+  swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL addr ffffffffc0ef971d len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+  swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT type 1, flags 0, id 36
 
-Requested-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Link: http://lkml.kernel.org/r/20190508132010.14512-12-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/PERF-VERSION-GEN | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/event.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
-index 3802cee5e188..59241ff342be 100755
---- a/tools/perf/util/PERF-VERSION-GEN
-+++ b/tools/perf/util/PERF-VERSION-GEN
-@@ -19,7 +19,7 @@ TAG=
- if test -d ../../.git -o -f ../../.git
- then
- 	TAG=$(git describe --abbrev=0 --match "v[0-9].[0-9]*" 2>/dev/null )
--	CID=$(git log -1 --abbrev=4 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
-+	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
- elif test -f ../../PERF-VERSION-FILE
- then
- 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index d1ad6c419724..c9c6857360e4 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1486,7 +1486,7 @@ static size_t perf_event__fprintf_lost(union perf_event *event, FILE *fp)
+ 
+ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp)
+ {
+-	return fprintf(fp, " ksymbol event with addr %" PRIx64 " len %u type %u flags 0x%x name %s\n",
++	return fprintf(fp, " addr %" PRIx64 " len %u type %u flags 0x%x name %s\n",
+ 		       event->ksymbol_event.addr, event->ksymbol_event.len,
+ 		       event->ksymbol_event.ksym_type,
+ 		       event->ksymbol_event.flags, event->ksymbol_event.name);
+@@ -1494,7 +1494,7 @@ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp)
+ 
+ size_t perf_event__fprintf_bpf_event(union perf_event *event, FILE *fp)
+ {
+-	return fprintf(fp, " bpf event with type %u, flags %u, id %u\n",
++	return fprintf(fp, " type %u, flags %u, id %u\n",
+ 		       event->bpf_event.type, event->bpf_event.flags,
+ 		       event->bpf_event.id);
+ }
