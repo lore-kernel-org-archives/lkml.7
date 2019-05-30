@@ -4,63 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B16CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1536025706
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D767257B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="X6gOyY60"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LB7XEjAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfE3IIv (ORCPT
+        id S1728116AbfE3IJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:08:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56423 "EHLO
+        Thu, 30 May 2019 04:09:25 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36775 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbfE3IIu (ORCPT
+        with ESMTP id S1727403AbfE3IJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:08:50 -0400
+        Thu, 30 May 2019 04:09:24 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U88Na72903745
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4U897Nq2904031
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 30 May 2019 01:08:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U88Na72903745
+        Thu, 30 May 2019 01:09:07 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4U897Nq2904031
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559203704;
-        bh=QW8/f4d3cLkTpwgLPVjEsGLmjMBqUMMP9MYJKTbMTIw=;
+        s=2019051801; t=1559203748;
+        bh=Alf6jg6h+dfedKR7HcB98amyAjzZPc7CUtF0++zjjws=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=X6gOyY60kxMfoyjTJVwfmAADMG5vNoNcjjUBdE4g8ZlZmpSy4nVLyiE8L5thoQtSo
-         SeuPjcK4Uz4xUE+VD/UMhOP0q/jsrpQsmKIIQTykH0N5mlMcsabILoUQbo54kulp5w
-         DleBtNnpIJy3pqDP5hXR+p+1uYE1NAeZRjkxZ8PZ5iU5cAtVoVgDQtBQCxxagW7Znl
-         z+TdxrGL7sIp8kKg9/Ci6Z9pQe9Fs7fMzwHzW7DwBR2OFWXOuFlvoCW+0DcaHXkFnA
-         eCQ3NIiaNw8wIT4lwAQHt5wXqJDX8lpzaQBplAIOcIzySQ+kHsA7ehC1wfUYCZJaHZ
-         aiZdiYyCstCHg==
+        b=LB7XEjAVdz/DqIDbqWnlYE4hYygLF/G5Tx9x3jj9q28DgV6F8ZUDlsuv+l+8nbgQX
+         YqPDhgPlwDFVcmQKWwvRCT2b5T9xBXRleuVv04mBmT03KLrkST0Z0CDi9EwBUiuXfH
+         6F8X2wjxm9uLyCbsGbCZnpU+p5q61B6XIp4Un5XqC76z7p2cxVeypwm52o3pP3QrSN
+         kcXe4lTyJBe3BkZN0aU6ELT9LFbgBBUPMmKLNDyDDG1JTKwfKEIxTXus1wkx/CuPcd
+         PB2D/IUF276NrEfj0JtUzc4FpN1a8dEZGftbLAHrsEDOLSirpubp9m3U8jHTuDt2hW
+         lMqv/fAZXwZEg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U88N8Y2903742;
-        Thu, 30 May 2019 01:08:23 -0700
-Date:   Thu, 30 May 2019 01:08:23 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4U897AB2904028;
+        Thu, 30 May 2019 01:09:07 -0700
+Date:   Thu, 30 May 2019 01:09:07 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-5523769ee15f27a1bc2009346736b22cb907bff8@git.kernel.org>
-Cc:     sdf@google.com, acme@redhat.com, adrian.hunter@intel.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        ak@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@kernel.org
-Reply-To: sdf@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-          songliubraving@fb.com, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, acme@redhat.com, jolsa@kernel.org,
-          ak@linux.intel.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, namhyung@kernel.org, hpa@zytor.com
-In-Reply-To: <20190508132010.14512-2-jolsa@kernel.org>
-References: <20190508132010.14512-2-jolsa@kernel.org>
+Message-ID: <tip-ea5db1bd5a04b865bc86bb8e3267c27939dfb5ee@git.kernel.org>
+Cc:     mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+        adrian.hunter@intel.com, acme@redhat.com, songliubraving@fb.com,
+        ak@linux.intel.com, sdf@google.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          peterz@infradead.org, sdf@google.com, adrian.hunter@intel.com,
+          alexander.shishkin@linux.intel.com, acme@redhat.com,
+          songliubraving@fb.com, ak@linux.intel.com, jolsa@kernel.org,
+          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190508132010.14512-3-jolsa@kernel.org>
+References: <20190508132010.14512-3-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf dso: Separate generic code in
- dso__data_file_size()
-Git-Commit-ID: 5523769ee15f27a1bc2009346736b22cb907bff8
+Subject: [tip:perf/core] perf dso: Separate generic code in dso_cache__read
+Git-Commit-ID: ea5db1bd5a04b865bc86bb8e3267c27939dfb5ee
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,17 +73,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5523769ee15f27a1bc2009346736b22cb907bff8
-Gitweb:     https://git.kernel.org/tip/5523769ee15f27a1bc2009346736b22cb907bff8
+Commit-ID:  ea5db1bd5a04b865bc86bb8e3267c27939dfb5ee
+Gitweb:     https://git.kernel.org/tip/ea5db1bd5a04b865bc86bb8e3267c27939dfb5ee
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Wed, 8 May 2019 15:19:59 +0200
+AuthorDate: Wed, 8 May 2019 15:20:00 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 28 May 2019 18:37:43 -0300
+CommitDate: Tue, 28 May 2019 18:37:44 -0300
 
-perf dso: Separate generic code in dso__data_file_size()
+perf dso: Separate generic code in dso_cache__read
 
-Moving file specific code in dso__data_file_size function into separate
-file_size function. I'll add bpf specific code in following patches.
+Move the file specific code in the dso_cache__read function to a
+separate file_read function. I'll add BPF specific code in the following
+patches.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Song Liu <songliubraving@fb.com>
@@ -94,51 +94,85 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190508132010.14512-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ tools/perf/util/dso.c | 48 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index e059976d9d93..cb6199c1390a 100644
+index cb6199c1390a..7734f50a6912 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -898,18 +898,12 @@ static ssize_t cached_read(struct dso *dso, struct machine *machine,
- 	return r;
+@@ -794,6 +794,31 @@ dso_cache__memcpy(struct dso_cache *cache, u64 offset,
+ 	return cache_size;
  }
  
--int dso__data_file_size(struct dso *dso, struct machine *machine)
-+static int file_size(struct dso *dso, struct machine *machine)
- {
- 	int ret = 0;
- 	struct stat st;
- 	char sbuf[STRERR_BUFSIZE];
- 
--	if (dso->data.file_size)
--		return 0;
--
--	if (dso->data.status == DSO_DATA_STATUS_ERROR)
--		return -1;
--
- 	pthread_mutex_lock(&dso__data_open_lock);
- 
- 	/*
-@@ -938,6 +932,17 @@ out:
- 	return ret;
- }
- 
-+int dso__data_file_size(struct dso *dso, struct machine *machine)
++static ssize_t file_read(struct dso *dso, struct machine *machine,
++			 u64 offset, char *data)
 +{
-+	if (dso->data.file_size)
-+		return 0;
++	ssize_t ret;
 +
-+	if (dso->data.status == DSO_DATA_STATUS_ERROR)
-+		return -1;
++	pthread_mutex_lock(&dso__data_open_lock);
 +
-+	return file_size(dso, machine);
++	/*
++	 * dso->data.fd might be closed if other thread opened another
++	 * file (dso) due to open file limit (RLIMIT_NOFILE).
++	 */
++	try_to_open_dso(dso, machine);
++
++	if (dso->data.fd < 0) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		ret = -errno;
++		goto out;
++	}
++
++	ret = pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset);
++out:
++	pthread_mutex_unlock(&dso__data_open_lock);
++	return ret;
 +}
 +
- /**
-  * dso__data_size - Return dso data size
-  * @dso: dso object
+ static ssize_t
+ dso_cache__read(struct dso *dso, struct machine *machine,
+ 		u64 offset, u8 *data, ssize_t size)
+@@ -803,37 +828,18 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	ssize_t ret;
+ 
+ 	do {
+-		u64 cache_offset;
++		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
+ 
+ 		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
+ 		if (!cache)
+ 			return -ENOMEM;
+ 
+-		pthread_mutex_lock(&dso__data_open_lock);
+-
+-		/*
+-		 * dso->data.fd might be closed if other thread opened another
+-		 * file (dso) due to open file limit (RLIMIT_NOFILE).
+-		 */
+-		try_to_open_dso(dso, machine);
+-
+-		if (dso->data.fd < 0) {
+-			ret = -errno;
+-			dso->data.status = DSO_DATA_STATUS_ERROR;
+-			break;
+-		}
+-
+-		cache_offset = offset & DSO__DATA_CACHE_MASK;
+-
+-		ret = pread(dso->data.fd, cache->data, DSO__DATA_CACHE_SIZE, cache_offset);
+-		if (ret <= 0)
+-			break;
++		ret = file_read(dso, machine, cache_offset, cache->data);
+ 
+ 		cache->offset = cache_offset;
+ 		cache->size   = ret;
+ 	} while (0);
+ 
+-	pthread_mutex_unlock(&dso__data_open_lock);
+ 
+ 	if (ret > 0) {
+ 		old = dso_cache__insert(dso, cache);
