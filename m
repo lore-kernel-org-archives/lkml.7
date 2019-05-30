@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EE0C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCD324B65
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B270724B5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187336;
-	bh=KO6BJUEUgAHcSzMpfRl6MW1sFnXtvFX6QuolLCueGL0=;
+	s=default; t=1559187340;
+	bh=ZSBRYXs6BLV95DKMWtK0RFqtoKDqjum16PCiFGF5YyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRY07JyTsLCKHnmsMiSpMf/QZcZicAscSwzK74hbM10rKal0NghGaOyddsJiG+3vA
-	 b2AE+YYmltqBOfJkquvencWjbYhrVWNxUDbTRto2RN8ukkmC23sETSyctGPoR3frAq
-	 lLbeqJCgO88Pwy88C3Ky6WFpk8OupeXH8GtBmm/c=
+	b=Yb448ftFDNzXBaLlR5qzZwfG8/bCWq19BACkBg94s5JF5l2Gx1EXK7ae/3R26rT3w
+	 d13WXZfXSK4ECyT3C20hqUb9GumiXGl6bCH8z7+zKplBc+FAkCoAtEYSjDpg/IwC5V
+	 GLbgAGrGwus5Arx49alrfaSQsaANFNnXN0oOV1EM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbfE3D03 (ORCPT
+        id S2387682AbfE3D0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53046 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730778AbfE3DSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:54 -0400
+        id S1728903AbfE3DSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21F02474D;
-        Thu, 30 May 2019 03:18:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7879247F3;
+        Thu, 30 May 2019 03:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186334;
-        bh=KO6BJUEUgAHcSzMpfRl6MW1sFnXtvFX6QuolLCueGL0=;
+        s=default; t=1559186329;
+        bh=ZSBRYXs6BLV95DKMWtK0RFqtoKDqjum16PCiFGF5YyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFqYfphe6ppLyfI9ggHkHZHxkSBJIAdC5D4TPKmM1SRZspzfShdfhoUwNMAKDWnlX
-         ZJWi47AEr/h9nbZ7nfwuRn7bezdZAxmSPFryRKkzE7iS6aIlKpNe77iAXF/7Ves06i
-         JrC1G2Ot+ZMtC7CXUI7g9FoyW/EcI8ky1wZ7Qtf8=
+        b=qwFVLsMiOOSY4asLsCT9H2gJ9PSp3vHbbFy0fQ+nfIPAtEQcbMnmbFeXepCDapbuz
+         EfaBq3lTU2uDNPiZ826gFCiTKEBxKaT4IUW6M59E/54MDbxwU318IBAEgt1DsakO4E
+         IKR+EUqAlDhyZXNxdAMcRXyViS1e9dE5Jxc2ENw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/193] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
-Date:   Wed, 29 May 2019 20:05:08 -0700
-Message-Id: <20190530030457.053363382@linuxfoundation.org>
+Subject: [PATCH 4.14 047/193] powerpc/perf: Return accordingly on invalid chip-id in
+Date:   Wed, 29 May 2019 20:05:01 -0700
+Message-Id: <20190530030456.199610028@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,59 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
+[ Upstream commit a913e5e8b43be1d3897a141ce61c1ec071cad89c ]
 
-When building with -Wunused-but-set-variable, the compiler shouts about
-a number of pte_unmap() users, since this expands to an empty macro on
-arm64:
+Nest hardware counter memory resides in a per-chip reserve-memory.
+During nest_imc_event_init(), chip-id of the event-cpu is considered to
+calculate the base memory addresss for that cpu. Return, proper error
+condition if the chip_id calculated is invalid.
 
-  | mm/gup.c: In function 'gup_pte_range':
-  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/gup.c: At top level:
-  | mm/memory.c: In function 'copy_pte_range':
-  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/swap_state.c: In function 'swap_ra_info':
-  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/madvise.c: In function 'madvise_free_pte_range':
-  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
-
-Rewrite pte_unmap() as a static inline function, which silences the
-warnings.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/perf/imc-pmu.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index aafea648a30ff..ee77556b01243 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -420,6 +420,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 	return pmd_val(pmd) & PHYS_MASK & (s32)PAGE_MASK;
- }
- 
-+static inline void pte_unmap(pte_t *pte) { }
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index b73961b95c345..994e4392cac5c 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -481,6 +481,11 @@ static int nest_imc_event_init(struct perf_event *event)
+ 	 * Get the base memory addresss for this cpu.
+ 	 */
+ 	chip_id = cpu_to_chip_id(event->cpu);
 +
- /* Find an entry in the third-level page table. */
- #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
- 
-@@ -428,7 +430,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 
- #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
- #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
--#define pte_unmap(pte)			do { } while (0)
- #define pte_unmap_nested(pte)		do { } while (0)
- 
- #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
++	/* Return, if chip_id is not valid */
++	if (chip_id < 0)
++		return -ENODEV;
++
+ 	pcni = pmu->mem_info;
+ 	do {
+ 		if (pcni->id == chip_id) {
 -- 
 2.20.1
 
