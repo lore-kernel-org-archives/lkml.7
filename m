@@ -2,57 +2,67 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C265AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9291FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961DD25FDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D9325FDE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfE3SpS (ORCPT
+        id S1726674AbfE3SqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:45:18 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56986 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfE3SpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:45:18 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CE53314D99A83;
-        Thu, 30 May 2019 11:45:17 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:45:17 -0700 (PDT)
-Message-Id: <20190530.114517.2038537000773947362.davem@davemloft.net>
-To:     92siuyang@gmail.com
-Cc:     ecree@solarflare.com, mhabets@solarflare.com, fw@strlen.de,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] falcon: pass valid pointer from ef4_enqueue_unwind.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1559096139-25698-1-git-send-email-92siuyang@gmail.com>
-References: <1559096139-25698-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 11:45:18 -0700 (PDT)
+        Thu, 30 May 2019 14:46:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20607 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfE3SqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:46:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:46:02 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga001.jf.intel.com with ESMTP; 30 May 2019 11:46:02 -0700
+Date:   Thu, 30 May 2019 11:46:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
+Subject: Re: [PATCH] KVM: LAPIC: Do not mask the local interrupts when LAPIC
+ is sw disabled
+Message-ID: <20190530184602.GD23930@linux.intel.com>
+References: <1558435455-233679-1-git-send-email-luwei.kang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558435455-233679-1-git-send-email-luwei.kang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
-Date: Wed, 29 May 2019 10:15:39 +0800
+On Tue, May 21, 2019 at 06:44:15PM +0800, Luwei Kang wrote:
+> The current code will mask all the local interrupts in the local
+> vector table when the LAPIC is disabled by SVR (Spurious-Interrupt
+> Vector Register) "APIC Software Enable/Disable" flag (bit8).
+> This may block local interrupt be delivered to target vCPU
+> even if LAPIC is enabled by set SVR (bit8 == 1) after.
 
-> The bytes_compl and pkts_compl pointers passed to ef4_dequeue_buffers
-> cannot be NULL. Add a paranoid warning to check this condition and fix
-> the one case where they were NULL.
-> 
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+The current code aligns with the SDM, which states:
 
-EF4_TX_BUF_SKB will be clear in this situation, so your patch is not
-necessary.
+  Local APIC State After It Has Been Software Disabled
+
+  When the APIC software enable/disable flag in the spurious interrupt
+  vector register has been explicitly cleared (as opposed to being cleared
+  during a power up or reset), the local APIC is temporarily disabled.
+  The operation and response of a local APIC while in this software-
+  disabled state is as follows:
+
+    - The mask bits for all the LVT entries are set. Attempts to reset
+      these bits will be ignored.
