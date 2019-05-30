@@ -2,107 +2,165 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0CDC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F32FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F2025C12
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7566124BCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1VgT/UK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X6a4HpSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfE3PBv (ORCPT
+        id S1727341AbfE3PCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:01:51 -0400
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:38036 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfE3PBu (ORCPT
+        Thu, 30 May 2019 11:02:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37174 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfE3PCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:01:50 -0400
-Received: by mail-pf1-f180.google.com with SMTP id a186so3439361pfa.5;
-        Thu, 30 May 2019 08:01:50 -0700 (PDT)
+        Thu, 30 May 2019 11:02:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so4022765wmo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bXVTnzNn3OxqQjLNbsEEP+BrmVnoXEVTBRZDLOj4oHM=;
-        b=G1VgT/UKdoz05v6wch8nRGcrrAV+f/3iU8QVjpfS42vxcl1vp0ILPmBbFfAseVs/X/
-         TgrES4P78oNrJkkLYoWfitx0IpQ8vvgD//hea0R69UkQTh6rjtkTly0OtkGvSsWVj6FF
-         ZlaNNJfFThBZEbnhJfC68eJEqYaQ55ODIghMyd7I/mIz3cy/nfOV5pyBpYaRgf4SFUn9
-         q/Yp7Iud0KqDzvnvBRuM6ooGp4SF2QbQHWzvehM14dS209vikfPEiAjKrA6OGeLR5RJB
-         AGgvvvCbkNlK3FvfqaVjTd0Sd3O1lboGY1MKgj4oYrx8wS8TR2cd+nLeeVvhs4PuH7wr
-         XJUA==
+        d=linaro.org; s=google;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=FyK/HVjw1X5e7+ipMBji4f35395lF2dqmlsAt+ZUqkA=;
+        b=X6a4HpSOl8/DZLGvgVDGuBaAgYbHEi9VDDZZ5/u0g3BI2qmLemjCL/B+yp+oz+iP12
+         51afR6cp/1xmWGGhADwjydUCwGtaR0R7ual8oNTRFBZh+hBXFywCbcymdQjTMmIXfq80
+         dJf9auIhB3zsQkG68VqRKrVAcLjSntfkLQgLAcjkfRGj8TEDq4egggz8Fv7yHtot2EaF
+         e4C068DkBtWwK0xFB48p3lxTy2vCOSRcHFRCqD+l0bOUVzNf77VYvoigP+FR8V1fA7dz
+         JViqdb4VGc5UcIL2IsRGFaFW6OmzywEyJ0rzZ+X6aRqLnT3M3wqTA/9BY35QYZ0kMMHC
+         cVCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bXVTnzNn3OxqQjLNbsEEP+BrmVnoXEVTBRZDLOj4oHM=;
-        b=UbZ79anT6f+BUXXwjSq1I851fvRAXIOTjCwUlhf38cB1awCB/56YPWIdXoJMTtoQXZ
-         +43R1WWcMc9x/L4HwHb1W98Qe4NcRqWcuGHKx+Go6QSDDvCDhoIvWVAxl28AsOkYQiOC
-         2440tuSnrSTFbuG4wA1pQfPci55bt/N+dJ8Au2vJSA19BM3W6CFG1P52HGn+q4toskWo
-         yVgvbdLan/P0xeyylVMAADqjlIDqXISRlz5j/FEetQD9rhgmDPOWDfuDVrw5jcPMjpwB
-         LnTi6IUH2fu6qT3LPXDbcSH+nTAbbI4mkbA9mL4FXPl9z1WHVpBOMrs/i0VRPhgjU2B3
-         4Ylw==
-X-Gm-Message-State: APjAAAXiroE9r4XHQ4vdtyn59fGLFEakoI+zU44HcAqYjwMhGEXn4HYA
-        ubSomEhuH8iPEFRj3T+kwtQ=
-X-Google-Smtp-Source: APXvYqwV0TP2oFy7+ywo2/3FPXHDNDA3z9y3edHq3PfZrDdxNEABb5YEa5aizPl2O3sY89ROYEFtMg==
-X-Received: by 2002:a63:5024:: with SMTP id e36mr4249736pgb.220.1559228510204;
-        Thu, 30 May 2019 08:01:50 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id q3sm2546792pgv.21.2019.05.30.08.01.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 08:01:49 -0700 (PDT)
-Date:   Thu, 30 May 2019 08:01:47 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/5] net: dsa: mv88e6xxx: Let taggers specify a
- can_timestamp function
-Message-ID: <20190530150147.kyokyfu462bhtvnf@localhost>
-References: <20190528235627.1315-1-olteanv@gmail.com>
- <20190528235627.1315-4-olteanv@gmail.com>
- <20190529044912.cyg44rqvdo73oeiu@localhost>
- <CA+h21hoNrhcpAONTvJra5Ekk+yJ6xP0VAaPSygaLOw31qsGPTg@mail.gmail.com>
- <20190530035112.qbn3nnoxrgum7anz@localhost>
- <CA+h21hqko57LB0BB2TSGSr4p9_czPM-g9krO+wnU7PgvaMdSDA@mail.gmail.com>
- <20190530142356.vxkhsjalxfytvx2c@localhost>
- <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hqqO2RYv_zG3gW17c_NBJR80ag8PSVVan66douQN+MQpw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=FyK/HVjw1X5e7+ipMBji4f35395lF2dqmlsAt+ZUqkA=;
+        b=EABqaSl2NhpmQqNKyH+ascVUc74p2aaZyMnKMhJCOr1MkobO5f+CLDBv3h1awAoEDq
+         fSdOwX9K/n6Vb8m1fzRvH7SOTRz3CfdPcisba+Ro1sMPgWwW44bVCh0HTfh3KIQQCjfb
+         jZIgrSnNfncrH6l07bJgc/LkzSN2P/KKGoe1ljjQcRV0mMmifMzxi0ZQbaVZ8EvT3Wxf
+         YuXntDLH8bvndJ+L3xAGb06g7NFHX68/CVpxmy4EItOCYcJgX3VwPnLjkVQLJqAZQ3LS
+         YI+DJVXMNYhuzNxlP8x0SR9IEfLc9doJnf95b4xrMLHz1pzqGWsCgJizgc7WccqsfQVO
+         dEdw==
+X-Gm-Message-State: APjAAAVf93eAqiNnGirH0dASG4iMtG43r4rtC1RnRbUFtJlZze3+sZ1p
+        Bomhw/4aLEsTluNJ5Z+JRy9bsQ==
+X-Google-Smtp-Source: APXvYqyRnWpI624JuZqTMBmg35vVEOvOl19aeavkacCybn6CNim4IaRjG1UX+EuKlBOOkiXM/rFpfw==
+X-Received: by 2002:a1c:f205:: with SMTP id s5mr2696361wmc.14.1559228548013;
+        Thu, 30 May 2019 08:02:28 -0700 (PDT)
+Received: from [192.168.0.101] (88-147-74-24.dyn.eolo.it. [88.147.74.24])
+        by smtp.gmail.com with ESMTPSA id m8sm1819441wrn.12.2019.05.30.08.02.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 08:02:27 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <406CC451-A318-4EC5-942D-4CCFABFBC402@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_0A0ED018-47B3-4501-BF94-C2C77CE3E17E";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 0/2] block, bfq: add weight symlink to the bfq.weight
+ cgroup parameter
+Date:   Thu, 30 May 2019 17:02:25 +0200
+In-Reply-To: <20190521080155.36178-1-paolo.valente@linaro.org>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        noreply-spamdigest via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+References: <20190521080155.36178-1-paolo.valente@linaro.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 05:47:55PM +0300, Vladimir Oltean wrote:
-> Yes, they don't identify the original frame.
-> The hardware's line of thinking seems to be "The meta frame is sent
-> immediately after the trapped frame that triggered the action." (quote
-> from https://www.nxp.com/docs/en/user-guide/UM10944.pdf).
 
-Hm.
+--Apple-Mail=_0A0ED018-47B3-4501-BF94-C2C77CE3E17E
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> If there was any other way to retrieve RX timestamps I would have done
-> it already.
+Hi Jens,
+have you had time to look into this?
 
-So it cannot even possibly work.
- 
-Sorry,
-Richard
+Thanks,
+Paolo
 
+> Il giorno 21 mag 2019, alle ore 10:01, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+> Many userspace tools and services use the proportional-share policy of
+> the blkio/io cgroups controller. The CFQ I/O scheduler implemented
+> this policy for the legacy block layer. To modify the weight of a
+> group in case CFQ was in charge, the 'weight' parameter of the group
+> must be modified. On the other hand, the BFQ I/O scheduler implements
+> the same policy in blk-mq, but, with BFQ, the parameter to modify has
+> a different name: bfq.weight (forced choice until legacy block was
+> present, because two different policies cannot share a common =
+parameter
+> in cgroups).
+>=20
+> Due to CFQ legacy, most if not all userspace configurations still use
+> the parameter 'weight', and for the moment do not seem likely to be
+> changed. But, when CFQ went away with legacy block, such a parameter
+> ceased to exist.
+>=20
+> So, a simple workaround has been proposed by Johannes [1] to make all
+> configurations work: add a symlink, named weight, to bfq.weight. This
+> pair of patches adds:
+> 1) the possibility to create a symlink to a cgroup file;
+> 2) the above 'weight' symlink.
+>=20
+> Thanks,
+> Paolo
+>=20
+> [1] https://lkml.org/lkml/2019/4/8/555
+>=20
+> Angelo Ruocco (2):
+>  cgroup: let a symlink too be created with a cftype file
+>  block, bfq: add weight symlink to the bfq.weight cgroup parameter
+>=20
+> block/bfq-cgroup.c          |  6 ++++--
+> include/linux/cgroup-defs.h |  3 +++
+> kernel/cgroup/cgroup.c      | 33 +++++++++++++++++++++++++++++----
+> 3 files changed, 36 insertions(+), 6 deletions(-)
+>=20
+> --
+> 2.20.1
+
+
+--Apple-Mail=_0A0ED018-47B3-4501-BF94-C2C77CE3E17E
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzv8IEACgkQOAkCLQGo
+9oPbeg//bjA9YtGMRt5whQ3aCQke6yuOS6cLXKdGEGOy6Mw2OC03I4wRDUjRZA+L
+DGHOipvDtans0+xVYd+m8UCeq3ZklbaZA7qeasP2rwv3sb0pC60p1luy24nWjkoP
+OlfesidSq98l7zQL30ZjfOvP0X0DskTVkNSPih7U0TbkwQ6jl6/o+inbGjNKzP4p
+4cQuLfHPG4ipL0ds/BiNRd+ihIzuIrtftwAwEaklhA7XOfnmZtGkA5hrIN+U4NNx
+xHceCTjv7+X2+Uk0aFGTE4ch5fVHQvAbM7b1wr/ERgZd/ProT07gqG0PzwGfPI9q
+MC4MhXsWgmymuMcn+6CFCRgSBJWxNSa+2uf66T8j26osYMgQ6RBZkgp2NLKIFhvX
+eKBtS/p6NtLYTTYOHUlLzeHf6tIbkKf6DvaTQZ4WfmDFbaRBFsqobfjmyJtr9GZp
+erIwdWEhqlSBgv0pseSDF0nePD5egshMmM3Vhfbbgisq99yUQBUKEcWM52A5E+Eg
+qZfn5lbrxY6GlnhMSzEbZg5Dkwyb2WnIAXh94Br35FA49D/FlJIZbzppbOOBzSEP
+gQ65irL0W2X3rRvIYWYCcGAbvH+NEjFE1LQY0zwansnOxv2UbZgg23RY+quEWuny
+XigI9gpCnhe9aLkjggRRRiAKf6lNHrGXIbwA2ACAZ6WtYX/B3uA=
+=tEiY
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_0A0ED018-47B3-4501-BF94-C2C77CE3E17E--
