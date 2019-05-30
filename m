@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BBAC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D89EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5D1253F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0816F2541E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190333;
-	bh=F4j3C1I/AmJOenPzkhvKt4FZZQjBeRUG9aGZTrUFB04=;
+	s=default; t=1559190337;
+	bh=KcYU3017Pfj0zJ3/1ozBROPqeL6TleTPQN8FGt/U3Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iDWOZs0gyzCvMMg3ec/dXtIXvOrQF0f9QJW8AgcndsC0KQ81IREemRjhzfW34wEaY
-	 nVhKYhbhPtBIcuH+9mihkoGgNDjOBEyZHXdudDUo57LupJoKc274VkHuG5DIyGeyYm
-	 AZe+kklKyyBhkxPp1p23mb1CUX5zgtc8I1YB86SE=
+	b=u1wMYZncl9NwxgeZu8tkNEXHqcgGweW/5ZCSD1TyxXO+ZY4vPEA09KT699ybNGLvd
+	 GMu5bCIBXe0jshc9lTusCLJQyhouKx+szuqUic9bFH+UGq0XxeCJJamCtR2hzwxSQU
+	 NNHsVHBjPfXuX6Fz202XxIlU9NubmmicFVomZABg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfE3EZb (ORCPT
+        id S1729954AbfE3DOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729958AbfE3DOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:44 -0400
+        id S1728835AbfE3DMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492A624557;
-        Thu, 30 May 2019 03:14:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D13124481;
+        Thu, 30 May 2019 03:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186083;
-        bh=F4j3C1I/AmJOenPzkhvKt4FZZQjBeRUG9aGZTrUFB04=;
+        s=default; t=1559185927;
+        bh=KcYU3017Pfj0zJ3/1ozBROPqeL6TleTPQN8FGt/U3Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1yd4ccXLIXJ9e1t5t+2dVgKdTAfjGyG2YZmwImcqYkjmNyyPtPhsrPXMOneWle8N
-         c/iZwuNHBPFK788CrO4QgxLc5XFFpNsxVfsTqZ/nvyXAhvxUMvTNQvc1BJ/CXmfs6p
-         6925eIMKwYweJRvzyxh1hIShN7x8NxgoV59E94y4=
+        b=tsVRsgXZH+j+yn2XEcnyoZPGSEQK3u8xLJF5lBqWvJ4Gk0icNu+RZwBwO4ayIp19d
+         1XmIkyJ7QkKDA7vGA3SnUNAUBaMGl1HRq7bwEdk0ylg7GykSKV36YgS6k2dlvzStX5
+         hxxsY5erfIrnz7iDjrG1fiuWJhQc9wRZp51FnJdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 162/346] thunderbolt: Take domain lock in switch sysfs attribute callbacks
-Date:   Wed, 29 May 2019 20:03:55 -0700
-Message-Id: <20190530030549.377881868@linuxfoundation.org>
+Subject: [PATCH 5.1 318/405] ice: Prevent unintended multiple chain resets
+Date:   Wed, 29 May 2019 20:05:16 -0700
+Message-Id: <20190530030556.862559289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,242 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 09f11b6c99feaf86a26444bca85dc693b3f58f8b ]
+[ Upstream commit 2ebd4428d93a2f6ce0c813b10a1a43b6a8241fe5 ]
 
-switch_lock was introduced because it allowed serialization of device
-authorization requests from userspace without need to take the big
-domain lock (tb->lock). This was fine because device authorization with
-ICM is just one command that is sent to the firmware. Now that we start
-to handle all tunneling in the driver switch_lock is not enough because
-we need to walk over the topology to establish paths.
+In the current implementation of ice_reset_subtask, if multiple reset
+types are set in the pf->state, the most intrusive one is meant to be
+performed only, but the bits requesting the other types are not being
+cleared. This would lead to another reset being performed the next time
+the service task is scheduled.
 
-For this reason drop switch_lock from the driver completely in favour of
-big domain lock.
+Change the flow of ice_reset_subtask so that all reset request bits in
+pf->state are cleared, and we still perform the most intrusive of the
+resets requested.
 
-There is one complication, though. If userspace is waiting for the lock
-in tb_switch_set_authorized(), it keeps the device_del() from removing
-the sysfs attribute because it waits for active users to release the
-attribute first which leads into following splat:
-
-    INFO: task kworker/u8:3:73 blocked for more than 61 seconds.
-          Tainted: G        W         5.1.0-rc1+ #244
-    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-    kworker/u8:3    D12976    73      2 0x80000000
-    Workqueue: thunderbolt0 tb_handle_hotplug [thunderbolt]
-    Call Trace:
-     ? __schedule+0x2e5/0x740
-     ? _raw_spin_lock_irqsave+0x12/0x40
-     ? prepare_to_wait_event+0xc5/0x160
-     schedule+0x2d/0x80
-     __kernfs_remove.part.17+0x183/0x1f0
-     ? finish_wait+0x80/0x80
-     kernfs_remove_by_name_ns+0x4a/0x90
-     remove_files.isra.1+0x2b/0x60
-     sysfs_remove_group+0x38/0x80
-     sysfs_remove_groups+0x24/0x40
-     device_remove_attrs+0x3d/0x70
-     device_del+0x14c/0x360
-     device_unregister+0x15/0x50
-     tb_switch_remove+0x9e/0x1d0 [thunderbolt]
-     tb_handle_hotplug+0x119/0x5a0 [thunderbolt]
-     ? process_one_work+0x1b7/0x420
-     process_one_work+0x1b7/0x420
-     worker_thread+0x37/0x380
-     ? _raw_spin_unlock_irqrestore+0xf/0x30
-     ? process_one_work+0x420/0x420
-     kthread+0x118/0x130
-     ? kthread_create_on_node+0x60/0x60
-     ret_from_fork+0x35/0x40
-
-We deal this by following what network stack did for some of their
-attributes and use mutex_trylock() with restart_syscall(). This makes
-userspace release the attribute allowing sysfs attribute removal to
-progress before the write is restarted and eventually fail when the
-attribute is removed.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Dave Ertman <david.m.ertman@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/switch.c | 45 +++++++++++++++---------------------
- drivers/thunderbolt/tb.h     |  3 +--
- 2 files changed, 20 insertions(+), 28 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index cd96994dc0947..32e012713dbeb 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -10,15 +10,13 @@
- #include <linux/idr.h>
- #include <linux/nvmem-provider.h>
- #include <linux/pm_runtime.h>
-+#include <linux/sched/signal.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index ac30288720f71..ba9f88cd138de 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -416,8 +416,14 @@ static void ice_reset_subtask(struct ice_pf *pf)
+ 	 * for the reset now), poll for reset done, rebuild and return.
+ 	 */
+ 	if (test_bit(__ICE_RESET_OICR_RECV, pf->state)) {
+-		clear_bit(__ICE_GLOBR_RECV, pf->state);
+-		clear_bit(__ICE_CORER_RECV, pf->state);
++		/* Perform the largest reset requested */
++		if (test_and_clear_bit(__ICE_CORER_RECV, pf->state))
++			reset_type = ICE_RESET_CORER;
++		if (test_and_clear_bit(__ICE_GLOBR_RECV, pf->state))
++			reset_type = ICE_RESET_GLOBR;
++		/* return if no valid reset type requested */
++		if (reset_type == ICE_RESET_INVAL)
++			return;
+ 		if (!test_bit(__ICE_PREPARED_FOR_RESET, pf->state))
+ 			ice_prepare_for_reset(pf);
  
- #include "tb.h"
- 
--/* Switch authorization from userspace is serialized by this lock */
--static DEFINE_MUTEX(switch_lock);
--
- /* Switch NVM support */
- 
- #define NVM_DEVID		0x05
-@@ -254,8 +252,8 @@ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
- 	struct tb_switch *sw = priv;
- 	int ret = 0;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	/*
- 	 * Since writing the NVM image might require some special steps,
-@@ -275,7 +273,7 @@ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
- 	memcpy(sw->nvm->buf + offset, val, bytes);
- 
- unlock:
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 
- 	return ret;
- }
-@@ -364,10 +362,7 @@ static int tb_switch_nvm_add(struct tb_switch *sw)
- 	}
- 	nvm->non_active = nvm_dev;
- 
--	mutex_lock(&switch_lock);
- 	sw->nvm = nvm;
--	mutex_unlock(&switch_lock);
--
- 	return 0;
- 
- err_nvm_active:
-@@ -384,10 +379,8 @@ static void tb_switch_nvm_remove(struct tb_switch *sw)
- {
- 	struct tb_switch_nvm *nvm;
- 
--	mutex_lock(&switch_lock);
- 	nvm = sw->nvm;
- 	sw->nvm = NULL;
--	mutex_unlock(&switch_lock);
- 
- 	if (!nvm)
- 		return;
-@@ -716,8 +709,8 @@ static int tb_switch_set_authorized(struct tb_switch *sw, unsigned int val)
- {
- 	int ret = -EINVAL;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	if (sw->authorized)
- 		goto unlock;
-@@ -760,7 +753,7 @@ static int tb_switch_set_authorized(struct tb_switch *sw, unsigned int val)
- 	}
- 
- unlock:
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 	return ret;
- }
- 
-@@ -817,15 +810,15 @@ static ssize_t key_show(struct device *dev, struct device_attribute *attr,
- 	struct tb_switch *sw = tb_to_switch(dev);
- 	ssize_t ret;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	if (sw->key)
- 		ret = sprintf(buf, "%*phN\n", TB_SWITCH_KEY_SIZE, sw->key);
- 	else
- 		ret = sprintf(buf, "\n");
- 
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 	return ret;
- }
- 
-@@ -842,8 +835,8 @@ static ssize_t key_store(struct device *dev, struct device_attribute *attr,
- 	else if (hex2bin(key, buf, sizeof(key)))
- 		return -EINVAL;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	if (sw->authorized) {
- 		ret = -EBUSY;
-@@ -858,7 +851,7 @@ static ssize_t key_store(struct device *dev, struct device_attribute *attr,
- 		}
- 	}
- 
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 	return ret;
- }
- static DEVICE_ATTR(key, 0600, key_show, key_store);
-@@ -904,8 +897,8 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 	bool val;
- 	int ret;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	/* If NVMem devices are not yet added */
- 	if (!sw->nvm) {
-@@ -953,7 +946,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
- 	}
- 
- exit_unlock:
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 
- 	if (ret)
- 		return ret;
-@@ -967,8 +960,8 @@ static ssize_t nvm_version_show(struct device *dev,
- 	struct tb_switch *sw = tb_to_switch(dev);
- 	int ret;
- 
--	if (mutex_lock_interruptible(&switch_lock))
--		return -ERESTARTSYS;
-+	if (!mutex_trylock(&sw->tb->lock))
-+		return restart_syscall();
- 
- 	if (sw->safe_mode)
- 		ret = -ENODATA;
-@@ -977,7 +970,7 @@ static ssize_t nvm_version_show(struct device *dev,
- 	else
- 		ret = sprintf(buf, "%x.%x\n", sw->nvm->major, sw->nvm->minor);
- 
--	mutex_unlock(&switch_lock);
-+	mutex_unlock(&sw->tb->lock);
- 
- 	return ret;
- }
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 52584c4003e3a..f5e0282225d1c 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -80,8 +80,7 @@ struct tb_switch_nvm {
-  * @depth: Depth in the chain this switch is connected (ICM only)
-  *
-  * When the switch is being added or removed to the domain (other
-- * switches) you need to have domain lock held. For switch authorization
-- * internal switch_lock is enough.
-+ * switches) you need to have domain lock held.
-  */
- struct tb_switch {
- 	struct device dev;
 -- 
 2.20.1
 
