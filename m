@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8A6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928ACC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AE624999
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694B824DD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191057;
-	bh=pgrKVLsh0b+AWDDmrQVRBK0DwAU3bC6pO8ssl/MfGN8=;
+	s=default; t=1559191060;
+	bh=g7WW4hCAqoz9YrVrGwYWvImdBx87C0/YOTv7ftVL5F0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvIAzYfVLpfWNlDQosn7qz7i6989yyn3zHhKC1zgzIZ/axGnHCzIP8MDyNI8eX9He
-	 Y7QrnsUhmbf2L8J+JMiQw8yrJ3XI3oEXIMbVQe+krn1QLnzRWIn5W56j60bB0aAG4R
-	 xvz72rBAe/TQU/v/S/1wWpnDqX8GKk+62EwI1E9I=
+	b=z0b8PCWz3ktlU1HPitaeUzfrDnJeckh08my/5PoTPpynfYORdL8e9CwJ8n9ewu8qo
+	 3YfI0XZsElpWqb596d1hRuy36bnkwOsktYmePs5ft/gbpfSchXOs6fGVgoo3zscw2K
+	 E0GcUXpq82SbSpNshxNdbllNKcjPJSCxFm9Mgbzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfE3DMu (ORCPT
+        id S2388305AbfE3Ehj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbfE3DLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:17 -0400
+        id S1729253AbfE3DMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B242B244D2;
-        Thu, 30 May 2019 03:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA35244EF;
+        Thu, 30 May 2019 03:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185876;
-        bh=pgrKVLsh0b+AWDDmrQVRBK0DwAU3bC6pO8ssl/MfGN8=;
+        s=default; t=1559185970;
+        bh=g7WW4hCAqoz9YrVrGwYWvImdBx87C0/YOTv7ftVL5F0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CP184KtfsPCU3VlXyWnLVFOMWbRgB9Feb4+yy1TMO3FsHEnLFFVDrCALa5GFCI4vQ
-         QYNXItGEDOj5dhmkUQVzRXTMf6ou36IdWc8r84cPoKu+rttXBuFFOn6e+SQy7+/HnK
-         MFBfLAIog5QnneXsGQ3aRTk8aBtCca9HOgx/3Pjw=
+        b=PoApe9wLDahdxgP5Sq5nBDDDhVp78t/H/KHs/iKxsnVqje5WSiRil/vUCSrWskG+r
+         fZFqd8MCSngzFKb9VXiUQZLsvUtdtL/qYDFOwia5z6radbgnntG4DQZ0FS0GK4KY2r
+         rHNB+zPrjGPfnRVkEXUce23JINmNUPab7n7KVxv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 223/405] qmi_wwan: Add quirk for Quectel dynamic config
-Date:   Wed, 29 May 2019 20:03:41 -0700
-Message-Id: <20190530030552.337782239@linuxfoundation.org>
+Subject: [PATCH 5.1 401/405] vfio-ccw: Prevent quiesce function going into an infinite loop
+Date:   Wed, 29 May 2019 20:06:39 -0700
+Message-Id: <20190530030600.840046316@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,163 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e4bf63482c309287ca84d91770ffa7dcc18e37eb ]
+[ Upstream commit d1ffa760d22aa1d8190478e5ef555c59a771db27 ]
 
-Most, if not all, Quectel devices use dynamic interface numbers, and
-users are able to change the USB configuration at will. Matching on for
-example interface number is therefore not possible.
+The quiesce function calls cio_cancel_halt_clear() and if we
+get an -EBUSY we go into a loop where we:
+	- wait for any interrupts
+	- flush all I/O in the workqueue
+	- retry cio_cancel_halt_clear
 
-Instead, the QMI device can be identified by looking at the interface
-class, subclass and protocol (all 0xff), as well as the number of
-endpoints. The reason we need to look at the number of endpoints, is
-that the diagnostic port interface has the same class, subclass and
-protocol as QMI. However, the diagnostic port only has two endpoints,
-while QMI has three.
+During the period where we are waiting for interrupts or
+flushing all I/O, the channel subsystem could have completed
+a halt/clear action and turned off the corresponding activity
+control bits in the subchannel status word. This means the next
+time we call cio_cancel_halt_clear(), we will again start by
+calling cancel subchannel and so we can be stuck between calling
+cancel and halt forever.
 
-Until now, we have identified the QMI device by combining a match on
-class, subclass and protocol, with a call to the function
-quectel_diag_detect(). In quectel_diag_detect(), we check if the number
-of endpoints matches for known Quectel vendor/product ids.
+Rather than calling cio_cancel_halt_clear() immediately after
+waiting, let's try to disable the subchannel. If we succeed in
+disabling the subchannel then we know nothing else can happen
+with the device.
 
-Adding new vendor/product ids to quectel_diag_detect() is not a good
-long-term solution. This commit replaces the function with a quirk, and
-applies the quirk to affected Quectel devices that I have been able to
-test the change with (EP06, EM12 and EC25). If the quirk is set and the
-number of endpoints equal two, we return from qmi_wwan_probe() with
--ENODEV.
-
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Suggested-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Message-Id: <4d5a4b98ab1b41ac6131b5c36de18b76c5d66898.1555449329.git.alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Acked-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 65 ++++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 366217263d704..d9a6699abe592 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -63,6 +63,7 @@ enum qmi_wwan_flags {
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 64bb121ba5987..9e84d8a971ad9 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -40,26 +40,30 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+ 	if (ret != -EBUSY)
+ 		goto out_unlock;
  
- enum qmi_wwan_quirks {
- 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
-+	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
- };
++	iretry = 255;
+ 	do {
+-		iretry = 255;
  
- struct qmimux_hdr {
-@@ -845,6 +846,16 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- 	.data           = QMI_WWAN_QUIRK_DTR,
- };
+ 		ret = cio_cancel_halt_clear(sch, &iretry);
+-		while (ret == -EBUSY) {
+-			/*
+-			 * Flush all I/O and wait for
+-			 * cancel/halt/clear completion.
+-			 */
+-			private->completion = &completion;
+-			spin_unlock_irq(sch->lock);
  
-+static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
-+	.description	= "WWAN/QMI device",
-+	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
-+	.bind		= qmi_wwan_bind,
-+	.unbind		= qmi_wwan_unbind,
-+	.manage_power	= qmi_wwan_manage_power,
-+	.rx_fixup       = qmi_wwan_rx_fixup,
-+	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
-+};
+-			wait_for_completion_timeout(&completion, 3*HZ);
++		if (ret == -EIO) {
++			pr_err("vfio_ccw: could not quiesce subchannel 0.%x.%04x!\n",
++			       sch->schid.ssid, sch->schid.sch_no);
++			break;
++		}
 +
- #define HUAWEI_VENDOR_ID	0x12D1
++		/*
++		 * Flush all I/O and wait for
++		 * cancel/halt/clear completion.
++		 */
++		private->completion = &completion;
++		spin_unlock_irq(sch->lock);
  
- /* map QMI/wwan function by a fixed interface number */
-@@ -865,6 +876,15 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- #define QMI_GOBI_DEVICE(vend, prod) \
- 	QMI_FIXED_INTF(vend, prod, 0)
+-			private->completion = NULL;
+-			flush_workqueue(vfio_ccw_work_q);
+-			spin_lock_irq(sch->lock);
+-			ret = cio_cancel_halt_clear(sch, &iretry);
+-		};
++		if (ret == -EBUSY)
++			wait_for_completion_timeout(&completion, 3*HZ);
  
-+/* Quectel does not use fixed interface numbers on at least some of their
-+ * devices. We need to check the number of endpoints to ensure that we bind to
-+ * the correct interface.
-+ */
-+#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
-+	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
-+				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
-+	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
-+
- static const struct usb_device_id products[] = {
- 	/* 1. CDC ECM like devices match on the control interface */
- 	{	/* Huawei E392, E398 and possibly others sharing both device id and more... */
-@@ -969,20 +989,9 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
- 		.driver_info = (unsigned long)&qmi_wwan_info,
- 	},
--	{	/* Quectel EP06/EG06/EM06 */
--		USB_DEVICE_AND_INTERFACE_INFO(0x2c7c, 0x0306,
--					      USB_CLASS_VENDOR_SPEC,
--					      USB_SUBCLASS_VENDOR_SPEC,
--					      0xff),
--		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
--	},
--	{	/* Quectel EG12/EM12 */
--		USB_DEVICE_AND_INTERFACE_INFO(0x2c7c, 0x0512,
--					      USB_CLASS_VENDOR_SPEC,
--					      USB_SUBCLASS_VENDOR_SPEC,
--					      0xff),
--		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
--	},
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
- 
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
-@@ -1283,7 +1292,6 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
- 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
- 	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E ++ */
--	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0125, 4)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
-@@ -1363,27 +1371,12 @@ static bool quectel_ec20_detected(struct usb_interface *intf)
- 	return false;
- }
- 
--static bool quectel_diag_detected(struct usb_interface *intf)
--{
--	struct usb_device *dev = interface_to_usbdev(intf);
--	struct usb_interface_descriptor intf_desc = intf->cur_altsetting->desc;
--	u16 id_vendor = le16_to_cpu(dev->descriptor.idVendor);
--	u16 id_product = le16_to_cpu(dev->descriptor.idProduct);
--
--	if (id_vendor != 0x2c7c || intf_desc.bNumEndpoints != 2)
--		return false;
--
--	if (id_product == 0x0306 || id_product == 0x0512)
--		return true;
--	else
--		return false;
--}
--
- static int qmi_wwan_probe(struct usb_interface *intf,
- 			  const struct usb_device_id *prod)
- {
- 	struct usb_device_id *id = (struct usb_device_id *)prod;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
-+	const struct driver_info *info;
- 
- 	/* Workaround to enable dynamic IDs.  This disables usbnet
- 	 * blacklisting functionality.  Which, if required, can be
-@@ -1417,10 +1410,14 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * we need to match on class/subclass/protocol. These values are
- 	 * identical for the diagnostic- and QMI-interface, but bNumEndpoints is
- 	 * different. Ignore the current interface if the number of endpoints
--	 * the number for the diag interface (two).
-+	 * equals the number for the diag interface (two).
- 	 */
--	if (quectel_diag_detected(intf))
--		return -ENODEV;
-+	info = (void *)&id->driver_info;
-+
-+	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
-+		if (desc->bNumEndpoints == 2)
-+			return -ENODEV;
-+	}
- 
- 	return usbnet_probe(intf, id);
- }
++		private->completion = NULL;
++		flush_workqueue(vfio_ccw_work_q);
++		spin_lock_irq(sch->lock);
+ 		ret = cio_disable_subchannel(sch);
+ 	} while (ret == -EBUSY);
+ out_unlock:
 -- 
 2.20.1
 
