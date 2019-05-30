@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BC4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BFFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3287B25D27
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D90925D2E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191816;
-	bh=KP7lvIFijuAn26mjaA5TFZqQkhkHwDao4ZgML5cbYZg=;
+	s=default; t=1559191819;
+	bh=pkrYt45KKdk5c84Ve5J+EfLCCGC9mP22vg+IvgPQH2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRpDlYhr2asu4wLXOokxJ87v3vgRetQ9Vd2Ligt2qov8PewWBGqRZVNGUclAdBRSq
-	 PxT6qMJIKJvmU2J/gUXC61TBcmz0/GSzqOFj7NapIUXhCML94ESqwnoFpav9S2qlrE
-	 wj/fwFkQU1SXLHw1ZxVAAg16aVvpu3YHRMpEQiO0=
+	b=iz0Uq1JrjNa56WIRad/CN/GVAhvODb9GbEz/WONwGe/3x4XbOf+FWRniidUM++xPm
+	 M8rJQAsPWut0O2sVlOQ/Ep1ot7o3SbIVq4u55vSjiLbUOucgyDZhd9F9ev9esV6odJ
+	 n4SYTw1a4UB+3lB1QNBnyP1uqqlPRL2o9VG4Rnl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfE3EuK (ORCPT
+        id S1728339AbfE3DLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49786 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbfE3DLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:04 -0400
+        id S1727976AbfE3DKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE87D244DF;
-        Thu, 30 May 2019 03:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73DDB24485;
+        Thu, 30 May 2019 03:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185864;
-        bh=KP7lvIFijuAn26mjaA5TFZqQkhkHwDao4ZgML5cbYZg=;
+        s=default; t=1559185810;
+        bh=pkrYt45KKdk5c84Ve5J+EfLCCGC9mP22vg+IvgPQH2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DbQYhxtCcKgQQjBjN2RWfmzUGwP6PJPe4XXXlsewtDVKDUJK7v83DwCmorWtCPQ6
-         IS7rwI5i6wwqPUMyHVppFCMekKhZ/AcxXaPXIN9+hEFR2ahN8PCo2oZkA1sBBfp0lM
-         KrcbYKeZziWyU+6AD+Io3ZAT3WxrAgaFE/T17SM4=
+        b=gfJerBaVmR8mXu5ZpfIJblEIlGBWknyrBpveIq9oi3Oa6KFZRGaxk/1fUJdeJMG41
+         g2qtL++iDDboLhrHcC4JDPTH7rgsvr5cwZv8ocnGYix87L/b78RVpd1sxf4os0QC1r
+         dSAYj2U1sCAZQBq2upHsOmZqq9YHAsKO0MoIiig8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 201/405] hwmon: (f71805f) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:03:19 -0700
-Message-Id: <20190530030551.351933096@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Kristian Evensen <kristian.evensen@gmail.com>
+Subject: [PATCH 5.1 043/405] netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression
+Date:   Wed, 29 May 2019 20:00:41 -0700
+Message-Id: <20190530030542.968623617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,91 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 73e6ff71a7ea924fb7121d576a2d41e3be3fc6b5 ]
+From: Kristian Evensen <kristian.evensen@gmail.com>
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+commit f8e608982022fad035160870f5b06086d3cba54d upstream.
 
-Unable to handle kernel paging request at virtual address ffffffbffee0002e
-pgd = ffffffc1d68d4000
-[ffffffbffee0002e] *pgd=0000000000000000, *pud=0000000000000000
-Internal error: Oops: 94000046 [#1] PREEMPT SMP
-Modules linked in: f71805f(+) hwmon
-CPU: 3 PID: 1659 Comm: insmod Not tainted 4.5.0+ #88
-Hardware name: linux,dummy-virt (DT)
-task: ffffffc1f6665400 ti: ffffffc1d6418000 task.ti: ffffffc1d6418000
-PC is at f71805f_find+0x6c/0x358 [f71805f]
+Commit 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter
+on flush") introduced a user-space regression when flushing connection
+track entries. Before this commit, the nfgen_family field was not used
+by the kernel and all entries were removed. Since this commit,
+nfgen_family is used to filter out entries that should not be removed.
+One example a broken tool is conntrack. conntrack always sets
+nfgen_family to AF_INET, so after 59c08c69c278 only IPv4 entries were
+removed with the -F parameter.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
+Pablo Neira Ayuso suggested using nfgenmsg->version to resolve the
+regression, and this commit implements his suggestion. nfgenmsg->version
+is so far set to zero, so it is well-suited to be used as a flag for
+selecting old or new flush behavior. If version is 0, nfgen_family is
+ignored and all entries are used. If user-space sets the version to one
+(or any other value than 0), then the new behavior is used. As version
+only can have two valid values, I chose not to add a new
+NFNETLINK_VERSION-constant.
 
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple
-drivers is synchronized.
+Fixes: 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter on flush")
+Reported-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
+Tested-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: e53004e20a58e ("hwmon: New f71805f driver")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/f71805f.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ net/netfilter/nf_conntrack_netlink.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/f71805f.c b/drivers/hwmon/f71805f.c
-index 73c681162653b..623736d2a7c1d 100644
---- a/drivers/hwmon/f71805f.c
-+++ b/drivers/hwmon/f71805f.c
-@@ -96,17 +96,23 @@ superio_select(int base, int ld)
- 	outb(ld, base + 1);
- }
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -1254,7 +1254,7 @@ static int ctnetlink_del_conntrack(struc
+ 	struct nf_conntrack_tuple tuple;
+ 	struct nf_conn *ct;
+ 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
+-	u_int8_t u3 = nfmsg->nfgen_family;
++	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
+ 	struct nf_conntrack_zone zone;
+ 	int err;
  
--static inline void
-+static inline int
- superio_enter(int base)
- {
-+	if (!request_muxed_region(base, 2, DRVNAME))
-+		return -EBUSY;
-+
- 	outb(0x87, base);
- 	outb(0x87, base);
-+
-+	return 0;
- }
- 
- static inline void
- superio_exit(int base)
- {
- 	outb(0xaa, base);
-+	release_region(base, 2);
- }
- 
- /*
-@@ -1561,7 +1567,7 @@ static int __init f71805f_device_add(unsigned short address,
- static int __init f71805f_find(int sioaddr, unsigned short *address,
- 			       struct f71805f_sio_data *sio_data)
- {
--	int err = -ENODEV;
-+	int err;
- 	u16 devid;
- 
- 	static const char * const names[] = {
-@@ -1569,8 +1575,11 @@ static int __init f71805f_find(int sioaddr, unsigned short *address,
- 		"F71872F/FG or F71806F/FG",
- 	};
- 
--	superio_enter(sioaddr);
-+	err = superio_enter(sioaddr);
-+	if (err)
-+		return err;
- 
-+	err = -ENODEV;
- 	devid = superio_inw(sioaddr, SIO_REG_MANID);
- 	if (devid != SIO_FINTEK_ID)
- 		goto exit;
--- 
-2.20.1
-
 
 
