@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A085C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D423CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D500D247B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B4325031
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190753;
-	bh=5swxMja5Nw/UI7DIPlC+uLffq4UKDWG1SuSP92uN7T8=;
+	s=default; t=1559190756;
+	bh=g9GXAV1aYrM2IeSdlcdt9+gSGt7PsEwDcONjUrPnz7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LE70594wim7aDvLgHygZ2uK7LBChx8ZwJgLLkhkuGuS386G+HtzKqB2HkIMJnXZSg
-	 lVIacJZlXLwaOeWHNPwzCGHLCOIncu6kvuDV2OSKfmD6H4ij0+F+ccTYETGaNRkYQU
-	 1gF7HVSj5I533KDxs+Q/tzSdVrYgdYz29nhyPQgc=
+	b=AYVDhil7dvlZP3eeg1XNbPoOp95GnnoYeUVU+S7ojpTxYmFtiLl6T3zPNH+k8qXZt
+	 rG6bE8Hzd/YpyZh4gtbfRlhyAmLKjFsMKsU99p86EOpg2mwpl+99SKF9QuYMu+RXCB
+	 Y/NkDSAwz48A5Fta48ijy+mOWMgW+QcGloEfhAfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388290AbfE3Ecd (ORCPT
+        id S1730483AbfE3Ecb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:32:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfE3DNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726736AbfE3DNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEBE724534;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4150F2454B;
         Thu, 30 May 2019 03:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186015;
-        bh=5swxMja5Nw/UI7DIPlC+uLffq4UKDWG1SuSP92uN7T8=;
+        bh=g9GXAV1aYrM2IeSdlcdt9+gSGt7PsEwDcONjUrPnz7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQ5P3qJyneKQyBplDXX7DYwyPNpTq9LZdkLeMcoPjjjgTDRACaZVW4raaqD0ce0ab
-         1P+i2jn3WH8YKFBVS6p8uC7NoovqQFUB73JIV5Z+y9Orye9c7ffpVEthfh18mzrlDM
-         /YFThDlS7eZKobqZBRqAeZYLIb6wqcr8Sb0oEGcs=
+        b=FEMS6jUiCkAlcAvGzfQNB2m2Yeh5VFVGdtnmaWZofUztXPK+K/E1DpFCJ7ZyQA+W6
+         ddP+RGlx2rEEPhpAUucXqEeHBj0yEZ0lxJBo3O6aa3XYai1cB+09d3IwpuxszEdtcu
+         X/+gCLA/F0JWn6IMKyExNM294CtaqFnnnvgAO64Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 081/346] sched/cpufreq: Fix kobject memleak
-Date:   Wed, 29 May 2019 20:02:34 -0700
-Message-Id: <20190530030545.240930828@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Ravikumar Bangoria <ravi.bangoria@in.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 080/346] powerpc/watchdog: Use hrtimers for per-CPU heartbeat
+Date:   Wed, 29 May 2019 20:02:33 -0700
+Message-Id: <20190530030545.186237471@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -65,57 +64,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
+[ Upstream commit 7ae3f6e130e8dc6188b59e3b4ebc2f16e9c8d053 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+Using a jiffies timer creates a dependency on the tick_do_timer_cpu
+incrementing jiffies. If that CPU has locked up and jiffies is not
+incrementing, the watchdog heartbeat timer for all CPUs stops and
+creates false positives and confusing warnings on local CPUs, and
+also causes the SMP detector to stop, so the root cause is never
+detected.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+Fix this by using hrtimer based timers for the watchdog heartbeat,
+like the generic kernel hardlockup detector.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tobin C. Harding <tobin@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Reported-by: Ravikumar Bangoria <ravi.bangoria@in.ibm.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c          | 1 +
- drivers/cpufreq/cpufreq_governor.c | 2 ++
- 2 files changed, 3 insertions(+)
+ arch/powerpc/kernel/watchdog.c | 81 +++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index ef0e33e21b988..97b094963253d 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1103,6 +1103,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 				   cpufreq_global_kobject, "policy%u", cpu);
- 	if (ret) {
- 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
-+		kobject_put(&policy->kobj);
- 		goto err_free_real_cpus;
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index 3c6ab22a0c4e3..af3c15a1d41eb 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -77,7 +77,7 @@ static u64 wd_smp_panic_timeout_tb __read_mostly; /* panic other CPUs */
+ 
+ static u64 wd_timer_period_ms __read_mostly;  /* interval between heartbeat */
+ 
+-static DEFINE_PER_CPU(struct timer_list, wd_timer);
++static DEFINE_PER_CPU(struct hrtimer, wd_hrtimer);
+ static DEFINE_PER_CPU(u64, wd_timer_tb);
+ 
+ /* SMP checker bits */
+@@ -293,21 +293,21 @@ void soft_nmi_interrupt(struct pt_regs *regs)
+ 	nmi_exit();
+ }
+ 
+-static void wd_timer_reset(unsigned int cpu, struct timer_list *t)
+-{
+-	t->expires = jiffies + msecs_to_jiffies(wd_timer_period_ms);
+-	if (wd_timer_period_ms > 1000)
+-		t->expires = __round_jiffies_up(t->expires, cpu);
+-	add_timer_on(t, cpu);
+-}
+-
+-static void wd_timer_fn(struct timer_list *t)
++static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ {
+ 	int cpu = smp_processor_id();
+ 
++	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
++		return HRTIMER_NORESTART;
++
++	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
++		return HRTIMER_NORESTART;
++
+ 	watchdog_timer_interrupt(cpu);
+ 
+-	wd_timer_reset(cpu, t);
++	hrtimer_forward_now(hrtimer, ms_to_ktime(wd_timer_period_ms));
++
++	return HRTIMER_RESTART;
+ }
+ 
+ void arch_touch_nmi_watchdog(void)
+@@ -323,37 +323,22 @@ void arch_touch_nmi_watchdog(void)
+ }
+ EXPORT_SYMBOL(arch_touch_nmi_watchdog);
+ 
+-static void start_watchdog_timer_on(unsigned int cpu)
+-{
+-	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
+-
+-	per_cpu(wd_timer_tb, cpu) = get_tb();
+-
+-	timer_setup(t, wd_timer_fn, TIMER_PINNED);
+-	wd_timer_reset(cpu, t);
+-}
+-
+-static void stop_watchdog_timer_on(unsigned int cpu)
+-{
+-	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
+-
+-	del_timer_sync(t);
+-}
+-
+-static int start_wd_on_cpu(unsigned int cpu)
++static void start_watchdog(void *arg)
+ {
++	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
++	int cpu = smp_processor_id();
+ 	unsigned long flags;
+ 
+ 	if (cpumask_test_cpu(cpu, &wd_cpus_enabled)) {
+ 		WARN_ON(1);
+-		return 0;
++		return;
  	}
  
-diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-index ffa9adeaba31b..9d1d9bf02710b 100644
---- a/drivers/cpufreq/cpufreq_governor.c
-+++ b/drivers/cpufreq/cpufreq_governor.c
-@@ -459,6 +459,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
- 	/* Failure, so roll back. */
- 	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
+ 	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
+-		return 0;
++		return;
  
-+	kobject_put(&dbs_data->attr_set.kobj);
+ 	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
+-		return 0;
++		return;
+ 
+ 	wd_smp_lock(&flags);
+ 	cpumask_set_cpu(cpu, &wd_cpus_enabled);
+@@ -363,27 +348,40 @@ static int start_wd_on_cpu(unsigned int cpu)
+ 	}
+ 	wd_smp_unlock(&flags);
+ 
+-	start_watchdog_timer_on(cpu);
++	*this_cpu_ptr(&wd_timer_tb) = get_tb();
+ 
+-	return 0;
++	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer->function = watchdog_timer_fn;
++	hrtimer_start(hrtimer, ms_to_ktime(wd_timer_period_ms),
++		      HRTIMER_MODE_REL_PINNED);
+ }
+ 
+-static int stop_wd_on_cpu(unsigned int cpu)
++static int start_watchdog_on_cpu(unsigned int cpu)
+ {
++	return smp_call_function_single(cpu, start_watchdog, NULL, true);
++}
 +
- 	policy->governor_data = NULL;
++static void stop_watchdog(void *arg)
++{
++	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
++	int cpu = smp_processor_id();
+ 	unsigned long flags;
  
- 	if (!have_governor_per_policy())
+ 	if (!cpumask_test_cpu(cpu, &wd_cpus_enabled))
+-		return 0; /* Can happen in CPU unplug case */
++		return; /* Can happen in CPU unplug case */
+ 
+-	stop_watchdog_timer_on(cpu);
++	hrtimer_cancel(hrtimer);
+ 
+ 	wd_smp_lock(&flags);
+ 	cpumask_clear_cpu(cpu, &wd_cpus_enabled);
+ 	wd_smp_unlock(&flags);
+ 
+ 	wd_smp_clear_cpu_pending(cpu, get_tb());
++}
+ 
+-	return 0;
++static int stop_watchdog_on_cpu(unsigned int cpu)
++{
++	return smp_call_function_single(cpu, stop_watchdog, NULL, true);
+ }
+ 
+ static void watchdog_calc_timeouts(void)
+@@ -402,7 +400,7 @@ void watchdog_nmi_stop(void)
+ 	int cpu;
+ 
+ 	for_each_cpu(cpu, &wd_cpus_enabled)
+-		stop_wd_on_cpu(cpu);
++		stop_watchdog_on_cpu(cpu);
+ }
+ 
+ void watchdog_nmi_start(void)
+@@ -411,7 +409,7 @@ void watchdog_nmi_start(void)
+ 
+ 	watchdog_calc_timeouts();
+ 	for_each_cpu_and(cpu, cpu_online_mask, &watchdog_cpumask)
+-		start_wd_on_cpu(cpu);
++		start_watchdog_on_cpu(cpu);
+ }
+ 
+ /*
+@@ -423,7 +421,8 @@ int __init watchdog_nmi_probe(void)
+ 
+ 	err = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+ 					"powerpc/watchdog:online",
+-					start_wd_on_cpu, stop_wd_on_cpu);
++					start_watchdog_on_cpu,
++					stop_watchdog_on_cpu);
+ 	if (err < 0) {
+ 		pr_warn("could not be initialized");
+ 		return err;
 -- 
 2.20.1
 
