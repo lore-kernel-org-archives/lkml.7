@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEA9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0943C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B9A25C3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EC723B16
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191676;
-	bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
+	s=default; t=1559191679;
+	bh=txZnHUUZKA7lDIWQ6dBQTE9mALY24OiRElwexgm7qwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjI3lJFGD9yzGO+EOV4drGG4t8/BdwOHKiW76UCXTVBVUR31PwHKh88+aEO54q9mI
-	 Yzw5emOncsdpeAqPVgkIXJlwumJFyCI/em4aoaV5hKJUHMO8ZiM/p69hun+qQJDs2V
-	 mCIWXbtCkp+rhGdMVfmzHYYWEU/V6dk+/ZWRmFdE=
+	b=Od7i9X8WcMy5eCdzXI12jr7oFSOgcZw7qE+Z4jAN19EW/GTIrpAc0nQbmAK4H6Aki
+	 EUEDoK0B/jpzE1073JOXg8Splb9ZCGXAjmjQT6khl5Oq0pRxOrqFiKn31HQw63zoR9
+	 /IMoDqTbPWJPu6f5QoBteWcyZlOpTGR5dgTSaPp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388746AbfE3Erz (ORCPT
+        id S2388833AbfE3Er6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:47:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:47:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbfE3DL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728550AbfE3DL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E42F24482;
+        by mail.kernel.org (Postfix) with ESMTPSA id F0439244EA;
         Thu, 30 May 2019 03:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185885;
-        bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
+        s=default; t=1559185886;
+        bh=txZnHUUZKA7lDIWQ6dBQTE9mALY24OiRElwexgm7qwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGMtPZX9LdSvmOoUoXgKD7gSYpotlYmB9xDaepx22Ifg16Dl6IP0OCCghSEBzU0GS
-         WczEfK3dPg7oe/pkeqtGySN2mKrlOpWmB35rGnZdhon+8sLyuDlN1kflMTAfRk2WWq
-         ztbEmBKQothkTcHFrJ+7ffiQST530gdjEv+PvXSM=
+        b=J+XXGj+00qDkXro586LQnKe06vhKTScF3yuT7jDj4eWwE0isQzPc9lH6vgjWd3pq7
+         eqQcbn8S1wnrtICMpCkW20+Pigiy9MuDSI6qL0sp/cG5yuxY3MJ0K80ZpVqff4BSq0
+         ndaAVmK1uBCkY5orNu5W/t3PjMC4+f+v5uhS1DXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        stable@vger.kernel.org,
+        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 196/405] PM / devfreq: Fix static checker warning in try_then_request_governor
-Date:   Wed, 29 May 2019 20:03:14 -0700
-Message-Id: <20190530030550.927772449@linuxfoundation.org>
+Subject: [PATCH 5.1 187/405] i40e: Able to add up to 16 MAC filters on an untrusted VF
+Date:   Wed, 29 May 2019 20:03:05 -0700
+Message-Id: <20190530030550.501083174@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,51 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
+[ Upstream commit 06b6e2a2333eb3581567a7ac43ca465ef45f4daa ]
 
-The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
-drivers are built as modules." leads to the following static checker
-warning:
+This patch fixes the problem with the driver being able to add only 7
+multicast MAC address filters instead of 16. The problem is fixed by
+changing the maximum number of MAC address filters to 16+1+1 (two extra
+are needed because the driver uses 1 for unicast MAC address and 1 for
+broadcast).
 
-    drivers/devfreq/devfreq.c:1043 governor_store()
-    warn: 'governor' can also be NULL
-
-The reason is that the try_then_request_governor() function returns both
-error pointers and NULL. It should just return error pointers, so fix
-this by returning a ERR_PTR to the error intead of returning NULL.
-
-Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 0ae3de76833b7..839621b044f49 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -228,7 +228,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
-  * if is not found. This can happen when both drivers (the governor driver
-  * and the driver that call devfreq_add_device) are built as modules.
-  * devfreq_list_lock should be held by the caller. Returns the matched
-- * governor's pointer.
-+ * governor's pointer or an error pointer.
-  */
- static struct devfreq_governor *try_then_request_governor(const char *name)
- {
-@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 		/* Restore previous state before return */
- 		mutex_lock(&devfreq_list_lock);
- 		if (err)
--			return NULL;
-+			return ERR_PTR(err);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 0b5b867c9fbcb..2b0362c827e98 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2454,8 +2454,10 @@ static int i40e_vc_get_stats_msg(struct i40e_vf *vf, u8 *msg)
+ 				      (u8 *)&stats, sizeof(stats));
+ }
  
- 		governor = find_devfreq_governor(name);
- 	}
+-/* If the VF is not trusted restrict the number of MAC/VLAN it can program */
+-#define I40E_VC_MAX_MAC_ADDR_PER_VF 12
++/* If the VF is not trusted restrict the number of MAC/VLAN it can program
++ * MAC filters: 16 for multicast, 1 for MAC, 1 for broadcast
++ */
++#define I40E_VC_MAX_MAC_ADDR_PER_VF (16 + 1 + 1)
+ #define I40E_VC_MAX_VLAN_PER_VF 8
+ 
+ /**
 -- 
 2.20.1
 
