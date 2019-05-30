@@ -2,193 +2,104 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6169CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F2D25457
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2004D2613E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMAWSKCn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DsivkJw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfE3T60 (ORCPT
+        id S1726483AbfE3UDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 15:58:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44996 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfE3T6Z (ORCPT
+        Thu, 30 May 2019 16:03:01 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41234 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfE3UDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 15:58:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e13so7242909ljl.11;
-        Thu, 30 May 2019 12:58:23 -0700 (PDT)
+        Thu, 30 May 2019 16:03:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s24so2857645plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gbG0dcEiRmqzN9/hOTcBM5kfsYXv777iQ1mRuKOqyJY=;
-        b=kMAWSKCnpNfYB3h9MoyGvd53twCSULqKHbeFbQ8idKnaDM0e9tXTS1+sXw35ePUxA6
-         MokTUJkJNMT7T5i5dXD5jM/OVKHZJekOjs5v7SqoTAaUpJa27Sor3eCF1kKfbegwt+s9
-         RAwHKGVWqfscD8ORjJgDahWvQjhQfOgq7u5zRiFb9t2AbiUozocOna2WWXvyP0W41C8e
-         TWAWqRTY1Xl6KdsHOBjEu3aDrPtsnGdaip2gBImm14n6mcYdftUEL6DdIuzvjclAZlMZ
-         KDf6Frw55tlCPQ2A+d56NICe1an98G6ABHqawEMQU41HBf/RBbctywqbwbDZPy6EnkoN
-         PVLQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2lPLzJqwQdUonah81Fn0G8uV1MZBo0Fm5r4V6VKVMeI=;
+        b=DsivkJw4Es6HQ8KD0K6NSaNjC7uhT1ySFBNA95Y6sB2TL5kg2RvKja64s9ElqBf9v9
+         VVfUBo9J8jeG1+swJxmkGuYj30DGUAWJxzzSe8TLw8asAFPkKkZxffmpht2HOV77jxDt
+         XQ5rT8divYDsU8knMwFWp/nFWYqAy8JqGN6C84pV5b48/vdxCAADvumuvUQpSUnNI951
+         mVxXLZPilvpLT68Gbv6gm7dcs2SYLGyNz87YatKrPS9hSlp0jOpxTGJ4wmUa27O6HnLt
+         FbnerE9PgmUixmUHG6v2ISrnpz8CQLNsigd78n0J/YYzS3cF8LM7DtDbLPgH+C60sExP
+         71IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gbG0dcEiRmqzN9/hOTcBM5kfsYXv777iQ1mRuKOqyJY=;
-        b=ost5HSJcV5IKuniZb6b0owOazGK34G3ibFM8aKxBMXnT9fPyHXuGiqBDiRzn60bpJ/
-         R8HZlaae1Wvy3bSeTefqF1UDAFW6gBAE/uBXeXxJZkX9rero3kaluwWKDImoOyI2SzI6
-         flsywCNk7XpijMSeTAM9Eq/mRh2XSFq6iZPM9oCVIZBW9LPdV/P40tiid0EbQEbU2L8Y
-         BN17tRTuZdqFY+cyBj5OSlPo+DBVrzSInkxqllEvciX41Ob/liafTyjp9TPRzetypz1y
-         oc/WqTZgU59/rQjIsEwyRq9fA5fi6ibs/3W6KeXJgLV3dpX3pHJV/sDONs51L9co2i9X
-         O2Yw==
-X-Gm-Message-State: APjAAAWuapru+o2luSF11Ufk7weTkPZQJXg3bNy3zdXF5LUNo1P9EhZn
-        JubEBaA+urbWB8JblHAIbxOY381P
-X-Google-Smtp-Source: APXvYqyygqtVXZFrJdcj0fLwDOT1FSZ9EmkBgevHCDoMn1bcVBB3GWHduqEr3q54mDaReX9rveOaDA==
-X-Received: by 2002:a2e:9ed6:: with SMTP id h22mr3362292ljk.29.1559246302728;
-        Thu, 30 May 2019 12:58:22 -0700 (PDT)
-Received: from [192.168.1.17] (cop108.neoplus.adsl.tpnet.pl. [83.31.195.108])
-        by smtp.gmail.com with ESMTPSA id y4sm683970lje.24.2019.05.30.12.58.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 12:58:21 -0700 (PDT)
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
- driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
- <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
- <89a80aa8-66ee-d0ec-fa54-c55ca8de06af@gmail.com> <20190529135821.GK4574@dell>
- <afff7c24-bb68-e9dc-295e-4449f9729cc9@gmail.com> <20190530073827.GL4574@dell>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <c75025f5-a984-78fa-2737-d10027e5741c@gmail.com>
-Date:   Thu, 30 May 2019 21:58:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2lPLzJqwQdUonah81Fn0G8uV1MZBo0Fm5r4V6VKVMeI=;
+        b=HnFoGprHbVimBr3vXjgWTBSfRhs+IOYN/5txDm1SGU9OLW/UVRV+R2NQxtbIKy/UtW
+         kQmwlBcUGsyercTFxjuvjRpM0RPdVpqHXuIfC8KRVeyM3UVNkXY5+qQZDFI8KWpbYeLe
+         R337v3mOr0iZ96Z3ZzxLQmGOmByeRlZNYtxvaiPof3GiaHV5br06Sbyx0jb9gFoLZi9J
+         iAXGDBygBFs6zVgQnY2KA6y8sFyq7OevvTqtlxRPeJKF/TzHwO+OYOyJah6rzsFzb1Xq
+         34rhstMzSEkGDIUPBqwuLQIRxjgR9RE+LcW9O2fKfTSwUbD1tOMeFvSjooCLIFC7j1hd
+         RZ+g==
+X-Gm-Message-State: APjAAAXAwMNmoEeEdX7dvLGQaolEyeAlah8uJHKpL2LlsYi+M/WXoDmP
+        xOBHDegGDnttcWtjoj0H7O9PIsiMlz/KQXqdIhv6QA==
+X-Google-Smtp-Source: APXvYqxSJo2SxIYJJUhtNH89Bhxn6pFLZCQcs8teWV7dX2XsDdeokVaG8wMWOWSWrhw2oHDNkWQNsKqpflGfHxu+LcY=
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr4486763pls.179.1559246579947;
+ Thu, 30 May 2019 13:02:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190530073827.GL4574@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <c0ca465daa7c7663c19b0bcb848c70e8da22baff.1558996564.git.stefan@agner.ch>
+ <5ead0fe96f7e5729e4a82f432022b16cb84458a6.1558996564.git.stefan@agner.ch>
+In-Reply-To: <5ead0fe96f7e5729e4a82f432022b16cb84458a6.1558996564.git.stefan@agner.ch>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 30 May 2019 13:02:48 -0700
+Message-ID: <CAKwvOdmsHxyPU2O1vZ-Mah-E5vTtEWKHStp2EQCiE4A55D8xDQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: OMAP2: drop explicit assembler architecture
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>, nico@fluxnic.net,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
+        krzk@kernel.org, Rob Herring <robh@kernel.org>,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        tony@atomide.com, Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        mans@mansr.com, Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 9:38 AM, Lee Jones wrote:
-> On Wed, 29 May 2019, Jacek Anaszewski wrote:
-> 
->> On 5/29/19 3:58 PM, Lee Jones wrote:
->>> On Fri, 24 May 2019, Jacek Anaszewski wrote:
->>>
->>>> Hi,
->>>>
->>>> On 5/23/19 9:09 PM, Dan Murphy wrote:
->>>>> Pavel
->>>>>
->>>>> Thanks for the review
->>>>>
->>>>> On 5/23/19 7:50 AM, Pavel Machek wrote:
->>>>>> Hi!
->>>>>>
->>>>>>> +++ b/drivers/leds/leds-lm36274.c
->>>>>>
->>>>>>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->>>>>>> +{
->>>>>>> +	struct fwnode_handle *child = NULL;
->>>>>>> +	char label[LED_MAX_NAME_SIZE];
->>>>>>> +	struct device *dev = &lm36274_data->pdev->dev;
->>>>>>> +	const char *name;
->>>>>>> +	int child_cnt;
->>>>>>> +	int ret = -EINVAL;
->>>>>>> +
->>>>>>> +	/* There should only be 1 node */
->>>>>>> +	child_cnt = device_get_child_node_count(dev);
->>>>>>> +	if (child_cnt != 1)
->>>>>>> +		return ret;
->>>>>>
->>>>>> I'd do explicit "return -EINVAL" here.
->>>>>>
->>>>>
->>>>> ACK
->>>>>
->>>>>>> +static int lm36274_probe(struct platform_device *pdev)
->>>>>>> +{
->>>>>>> +	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
->>>>>>> +	struct lm36274 *lm36274_data;
->>>>>>> +	int ret;
->>>>>>> +
->>>>>>> +	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
->>>>>>> +				    GFP_KERNEL);
->>>>>>> +	if (!lm36274_data) {
->>>>>>> +		ret = -ENOMEM;
->>>>>>> +		return ret;
->>>>>>> +	}
->>>>>>
->>>>>> And certainly do "return -ENOMEM" explicitly here.
->>>>>>
->>>>>
->>>>> ACK
->>>>>
->>>>>> Acked-by: Pavel Machek <pavel@ucw.cz>
->>>>
->>>> I've done all amendments requested by Pavel and updated branch
->>>> ib-leds-mfd-regulator on linux-leds.git, but in the same time
->>>
->>> What do you mean by updated?  You cannot update an 'ib' (immutable
->>> branch).  Immutable means that it cannot change, by definition.
->>
->> We have already talked about that. Nobody has pulled so the branch
->> could have been safely updated.
-> 
-> You have no sure way to know that.  And since I have no way to know,
-> or faith that you won't update it again, pulling it now/at all would
-> seem like a foolish thing to do.
+On Mon, May 27, 2019 at 3:41 PM Stefan Agner <stefan@agner.ch> wrote:
+>
+> OMAP2 depends on ARCH_MULTI_V6, which makes sure that the kernel is
+> compiled with -march=armv6. The compiler frontend will pass the
+> architecture to the assembler. There is no explicit architecture
+> specification necessary.
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> ---
+> Changes since v2:
+> - New patch
+>
+> Changes since v3:
+> - Rebase on top of v5.2-rc2
 
-Sorry, but you are simply unjust. You're pretending to portray the
-situation as if I have been notoriously causing merge conflicts in
-linux-next which did not take place.
+Hi Stefan, looks like both patches are ack'd.  Are you waiting for an
+explicit reviewed by tag to submit to
+https://www.armlinux.org.uk/developer/patches/?
 
-Just to recap what this discussion is about:
-
-On 7 Apr 2019:
-
-1. I sent pull request [0].
-2. 45 minutes later I updated it after discovering one omission [1].
-    It was rather small chance for it to be pulled as quickly as that.
-    And even if it happened it wouldn't have been much harmful - we
-    wouldn't have lost e.g. weeks of testing in linux-next due to that
-    fact.
-
-On 21 May 2019:
-
-3. I sent another pull request [2] to you and REGULATOR maintainers.
-    After it turned out that lack of feedback from REGULATOR maintainers
-    was caused by failing to send them the exact copies of patches to
-    review, I informed you about possible need for updating the branch.
-    Afterwards I received a reply from you saying that you hadn't pulled
-    the branch anyway. At that point I was sure that neither MFD nor
-    REGULATOR tree contains the patches. And only after that I updated
-    the branch.
-
-> Until you can provide me with an assurance that you will not keep
-> updating/changing the supposedly immutable pull-requests you send out,
-> I won't be pulling any more in.
-
-I can just uphold the assurance which is implicitly assumed for anyone
-who has never broken acclaimed rules. As justified above.
-
-[0] https://lore.kernel.org/patchwork/patch/1059075/
-[1] https://lore.kernel.org/patchwork/patch/1059080/
-[2] https://lore.kernel.org/patchwork/patch/1077066/
 -- 
-Best regards,
-Jacek Anaszewski
+Thanks,
+~Nick Desaulniers
