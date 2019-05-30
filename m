@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905A8C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F8AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6D9248BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFCD248DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186385;
-	bh=nee2vrOmQ4okfHpD3mzELlBwcqL/4NjdOs0zA3n8Yhc=;
+	s=default; t=1559186391;
+	bh=PjcI6j3JVgIlgjdTsXLDxlehs3jes36s+UDL4rG7FDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LXoJ+hs2rZ+7o5/63gCMPzJeEvM4bMKWkSYydijWqXTB2cs2FKa/sl5+Q9M6ozm/j
-	 t2KIyUaHjhUsQ6+3DYfWIu8BMa7VDhNvBqEWl1YKDjG6+7s7xDsWmal/9wh2M+M419
-	 e7BZ6LTnnmLiTsm4TA3nfisSnBLA8rBcDlU8byTo=
+	b=j3x6vwopVYM2rrsp33HAeLBfQQsQGGkwu7bs8AaYOOZj7QZl9XwwVt41GjWP2A4Hb
+	 1GPNwOo9Y7x05dR6qgXk6kXeOPzT2N3prZrKe13ZiI40AwdoJGI9m8SxuMf0PcOU4e
+	 kPypyY4PXjqIPKGrHa14/KKnUKiGOyT5A7fL1j6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbfE3DTo (ORCPT
+        id S1732044AbfE3DTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:44 -0400
+        Wed, 29 May 2019 23:19:49 -0400
 Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730397AbfE3DPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:37 -0400
+        id S1730430AbfE3DPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ED69245A7;
-        Thu, 30 May 2019 03:15:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06AA524595;
+        Thu, 30 May 2019 03:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186137;
-        bh=nee2vrOmQ4okfHpD3mzELlBwcqL/4NjdOs0zA3n8Yhc=;
+        s=default; t=1559186141;
+        bh=PjcI6j3JVgIlgjdTsXLDxlehs3jes36s+UDL4rG7FDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WLnjZAIc5gutyWgK/uUVQexZ2IJymBSuomMw2OKndpNr+Xf+X5a5gH5ZvnQdceEgV
-         7nS9q7/rYsolAnaPSK+aD5XANHxDcS7GCBDj4gamHKUyTM5O5VwHTjGSUkNWES+5Wl
-         vxz0F5iOD3p/shQBQUp5WYAFhY8R0a3KptITbxeU=
+        b=GAlyNgeLuzNUTn3JiynS+VHmPYCMXjZeK18i/Sh+LqfXAK2R5tqWlinCLmZZJS7DJ
+         M9IYpIqmLxcxg0vkM/ph1DgC9+3H8QtYb19MbOgDXGxPzXqQtZAMI20AjP0WDRhM/o
+         UIoIbqyWDM+HKxJnUwLAPw6w/qnZsVNr8I5Ahwvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 261/346] thunderbolt: property: Fix a missing check of kzalloc
-Date:   Wed, 29 May 2019 20:05:34 -0700
-Message-Id: <20190530030554.195072630@linuxfoundation.org>
+Subject: [PATCH 5.0 316/346] audit: fix a memleak caused by auditing load module
+Date:   Wed, 29 May 2019 20:06:29 -0700
+Message-Id: <20190530030556.823676683@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,39 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6183d5a51866f3acdeeb66b75e87d44025b01a55 ]
+[ Upstream commit 95e0b46fcebd7dbf6850dee96046e4c4ddc7f69c ]
 
-No check is enforced for the return value of kzalloc,
-which may lead to NULL-pointer dereference.
+module.name will be allocated unconditionally when auditing load
+module, and audit_log_start() can fail with other reasons, or
+audit_log_exit maybe not called, caused module.name is not freed
 
-The patch fixes this issue.
+so free module.name in audit_free_context and __audit_syscall_exit
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+unreferenced object 0xffff88af90837d20 (size 8):
+  comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
+  hex dump (first 8 bytes):
+    69 78 67 62 65 00 ff ff                          ixgbe...
+  backtrace:
+    [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
+    [<00000000c1491e61>] load_module+0x64f/0x3850
+    [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
+    [<0000000000d4a478>] do_syscall_64+0x117/0x400
+    [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<000000007dc331dd>] 0xffffffffffffffff
+
+Fixes: ca86cad7380e3 ("audit: log module name on init_module")
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+[PM: manual merge fixup in __audit_syscall_exit()]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/property.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/auditsc.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
-index b2f0d6386ceea..ead18c532b53d 100644
---- a/drivers/thunderbolt/property.c
-+++ b/drivers/thunderbolt/property.c
-@@ -578,7 +578,12 @@ int tb_property_add_text(struct tb_property_dir *parent, const char *key,
- 		return -ENOMEM;
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index b585ceb2f7a2c..71e7377746110 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -837,6 +837,13 @@ static inline void audit_proctitle_free(struct audit_context *context)
+ 	context->proctitle.len = 0;
+ }
  
- 	property->length = size / 4;
--	property->value.data = kzalloc(size, GFP_KERNEL);
-+	property->value.text = kzalloc(size, GFP_KERNEL);
-+	if (!property->value.text) {
-+		kfree(property);
-+		return -ENOMEM;
++static inline void audit_free_module(struct audit_context *context)
++{
++	if (context->type == AUDIT_KERN_MODULE) {
++		kfree(context->module.name);
++		context->module.name = NULL;
 +	}
-+
- 	strcpy(property->value.text, text);
++}
+ static inline void audit_free_names(struct audit_context *context)
+ {
+ 	struct audit_names *n, *next;
+@@ -920,6 +927,7 @@ int audit_alloc(struct task_struct *tsk)
  
- 	list_add_tail(&property->list, &parent->properties);
+ static inline void audit_free_context(struct audit_context *context)
+ {
++	audit_free_module(context);
+ 	audit_free_names(context);
+ 	unroll_tree_refs(context, NULL, 0);
+ 	free_tree_refs(context);
+@@ -1237,7 +1245,6 @@ static void show_special(struct audit_context *context, int *call_panic)
+ 		audit_log_format(ab, "name=");
+ 		if (context->module.name) {
+ 			audit_log_untrustedstring(ab, context->module.name);
+-			kfree(context->module.name);
+ 		} else
+ 			audit_log_format(ab, "(null)");
+ 
+@@ -1574,6 +1581,7 @@ void __audit_syscall_exit(int success, long return_code)
+ 	context->in_syscall = 0;
+ 	context->prio = context->state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+ 
++	audit_free_module(context);
+ 	audit_free_names(context);
+ 	unroll_tree_refs(context, NULL, 0);
+ 	audit_free_aux(context);
 -- 
 2.20.1
 
