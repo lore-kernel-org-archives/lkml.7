@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109F824AD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF1B24ADE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187024;
-	bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
+	s=default; t=1559187026;
+	bh=mNbr7MsLDgrWDf0+1xT+7lC+VqUi9svLOgvVlOU+1bU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggdFIH2gK+dxIk/ENWQa8oNCKkSnsuMkeNxCMZaRdAcgT6dFevNSi0bBEqv6EQAtP
-	 jWeVmqMEH5iwCvc+X6gPt8F9zlqK1b082nj3kEUVYwEjzlqpKMGQC6Um1HrSPKRIex
-	 x3YpwmCZCG8yJ1GWffYEvMAFpjMRYYdQgDIJViLQ=
+	b=0byEe6uqHqyOgiXXwJq9AhHapNZpzIUs0uGrXY6XfhBlOY/6hPh8XI9tM46VjUMU0
+	 25fxCb4srSHTEiezQqvfV2Kuop5jKORm+Ck5C3DTUYeqC9ghwfqIKeg+FmQmwHgAId
+	 Sxp+slXgywPhOMjdfoBtkkTbk5y2T8HEzEanILCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbfE3DaX (ORCPT
+        id S2388574AbfE3DaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732546AbfE3DVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:24 -0400
+        id S1732548AbfE3DVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45D224A0A;
-        Thu, 30 May 2019 03:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC68624A06;
+        Thu, 30 May 2019 03:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186483;
-        bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
+        s=default; t=1559186484;
+        bh=mNbr7MsLDgrWDf0+1xT+7lC+VqUi9svLOgvVlOU+1bU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bv8ImWOx9MIMAzmur6E1+rIVM+SiAtwDL6ZJscR09QjJ/Vou9YhSaMbCPw8Ymz2QC
-         5db6DVVDtUNM1eaWVte8GQNnYAnjKVm9pc7FQJ/OYyOy+Z7dp8GNSA5nWRcSLq2hwN
-         QXDGUzB5SNAeNawsrkWEED7EcUI9q3AAv84DAbTM=
+        b=P6YpQzVhc0poCue7bHZtpTqjf3lr1Rv1cG8VnFjUmie8q90lLvR73FhiLSbhi71Nt
+         F/fgBZwxSDfDuh6cPiardz7SZWKc9/uy3nsfv2Vy0pp4iHNUXH5o3QsfNfpd+J2FB9
+         NTLFfOXeVH6wNlTI2Fu+Ec7cbRe7ExsWy1kE1lak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 086/128] cpufreq/pasemi: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:06:58 -0700
-Message-Id: <20190530030450.275356015@linuxfoundation.org>
+Subject: [PATCH 4.9 123/128] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
+Date:   Wed, 29 May 2019 20:07:35 -0700
+Message-Id: <20190530030456.536345216@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -62,40 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9acc26b75f652f697e02a9febe2ab0da648a571 ]
+[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
 
-The call to of_get_cpu_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+During debug, it was seen that the driver is issuing commands specific to
+SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
+this should not be done.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pasemi-cpufreq.c:212:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
-./drivers/cpufreq/pasemi-cpufreq.c:220:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
+Revise the code to stop sending these commands on a SLI4 adapter.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pasemi-cpufreq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 35dd4d7ffee08..58c933f483004 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -146,6 +146,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 81736457328a1..9cca5ddbc50cc 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -901,7 +901,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 			lpfc_linkdown_port(vports[i]);
+ 		}
+ 	lpfc_destroy_vport_work_array(phba, vports);
+-	/* Clean up any firmware default rpi's */
++
++	/* Clean up any SLI3 firmware default rpi's */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		goto skip_unreg_did;
++
+ 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mb) {
+ 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
+@@ -913,6 +917,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
+ 	}
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
++ skip_unreg_did:
+ 	/* Setup myDID for link up if we are in pt2pt mode */
+ 	if (phba->pport->fc_flag & FC_PT2PT) {
+ 		phba->pport->fc_myDID = 0;
+@@ -4654,6 +4659,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
+ 	LPFC_MBOXQ_t     *mbox;
+ 	int rc;
  
-+	of_node_put(cpu);
- 	if (!cpu)
- 		goto out;
- 
++	/* Unreg DID is an SLI3 operation. */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		return;
++
+ 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mbox) {
+ 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
 -- 
 2.20.1
 
