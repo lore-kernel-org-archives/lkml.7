@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2A1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C9B24741
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6592474A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186274;
-	bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
+	s=default; t=1559186276;
+	bh=u1s5sbbe8SbdEzD6ad36pwC7gu2d/mbwywkYgxHnK8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2H7/v8Ek4nWUsIoc52cOyHRS+djSFDm52QhhFdYwOD7JPcoeRAhGuN/z38V9TTpqy
-	 wt6FHS8hdinsoYQ5BFKQ7imKzsprFmwLBIRyiwO7wq0HRu3kPTVe8IUN5xZFQLTYSQ
-	 Dx014kplNXtXSBHndYum9LYZGBfJtLKSj+hdo3vk=
+	b=RUSCiw52j2xf8i6r5y4E0GTecHDx6n7+VEwpGnoLozIo0++J2VIGtJsbldwnywsWJ
+	 SMfxxyS5Bm3nuCDGtrf6zJ6i8qTMhh3jS3e/43HfRu7OQ8I6WEh9XC6VGvtKvk/q5J
+	 xuKb1IhuoEipqrY8q8eqwb8JnRcmFYYn4BWa8Fho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbfE3DRy (ORCPT
+        id S1731341AbfE3DRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfE3DON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:13 -0400
+        id S1729788AbfE3DOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D74C24555;
-        Thu, 30 May 2019 03:14:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F5DA2455A;
+        Thu, 30 May 2019 03:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186053;
-        bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
+        s=default; t=1559186055;
+        bh=u1s5sbbe8SbdEzD6ad36pwC7gu2d/mbwywkYgxHnK8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LoaYVJrMyBRiX0D8TBu/f2KO8ugvWb9xGUeFoMBesnqSvHI3XSfbcFvvb7+bHTBnr
-         6YvvJA16Xqe/ISFkuz0yF/8qKj9SHd6ywNvS25PYsm+LvcaqHPQDaBCfC1kjhDeRQ6
-         m0jUIVle/V3P0DqVOselsQGFGwxSszZIeMCxlQWA=
+        b=iOiRXo3GIyHgDNA8i6oa2IcOv5D3yelwW8Ex7Y6TOFdxAQsPMfwnsWV50Ui+lcptV
+         vXUDgFfe9jNva8qTQpqVflD0uFqWFPfiTnGFTXrOSNUbMFijv/Alb6I4H6E2P8EvDF
+         JrRm9PZTyGaFuJ1koUeAHkErF5RD5K2cGnOMrK9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon DeVree <nuxi@vault24.org>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 150/346] random: fix CRNG initialization when random.trust_cpu=1
-Date:   Wed, 29 May 2019 20:03:43 -0700
-Message-Id: <20190530030548.777607649@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 154/346] sched/rt: Check integer overflow at usec to nsec conversion
+Date:   Wed, 29 May 2019 20:03:47 -0700
+Message-Id: <20190530030548.982293722@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,63 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe6f1a6a8eedc1aa538fee0baa612b6a59639cf8 ]
+[ Upstream commit 1a010e29cfa00fee2888fd2fd4983f848cbafb58 ]
 
-When the system boots with random.trust_cpu=1 it doesn't initialize the
-per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
-means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
-for silly userspace programs") is not used when random.trust_cpu=1.
+Example of unhandled overflows:
 
-crash> dmesg | grep random:
-[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-[    0.314029] random: crng done (trusting CPU's manufacturer)
-crash> print crng_node_pool
-$6 = (struct crng_state **) 0x0
+ # echo 18446744073709651 > cpu.rt_runtime_us
+ # cat cpu.rt_runtime_us
+ 99
 
-After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
-initialized again:
+ # echo 18446744073709900 > cpu.rt_period_us
+ # cat cpu.rt_period_us
+ 348
 
-crash> dmesg | grep random:
-[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-[    0.314031] random: crng done (trusting CPU's manufacturer)
-crash> print crng_node_pool
-$1 = (struct crng_state **) 0xffff9a915f4014a0
+After this patch they will fail with -EINVAL.
 
-The call to invalidate_batched_entropy() was also missing. This is
-important for architectures like PPC and S390 which only have the
-arch_get_random_seed_* functions.
-
-Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
-Signed-off-by: Jon DeVree <nuxi@vault24.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501739.293431.5252197504404771496.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/random.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/sched/rt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38c6d1af6d1c0..d4d45ccfeefc0 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -777,6 +777,7 @@ static struct crng_state **crng_node_pool __read_mostly;
- #endif
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e4f398ad9e73b..aa7ee3a0bf906 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -2555,6 +2555,8 @@ int sched_group_set_rt_runtime(struct task_group *tg, long rt_runtime_us)
+ 	rt_runtime = (u64)rt_runtime_us * NSEC_PER_USEC;
+ 	if (rt_runtime_us < 0)
+ 		rt_runtime = RUNTIME_INF;
++	else if ((u64)rt_runtime_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
  
- static void invalidate_batched_entropy(void);
-+static void numa_crng_init(void);
+ 	return tg_set_rt_bandwidth(tg, rt_period, rt_runtime);
+ }
+@@ -2575,6 +2577,9 @@ int sched_group_set_rt_period(struct task_group *tg, u64 rt_period_us)
+ {
+ 	u64 rt_runtime, rt_period;
  
- static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
- static int __init parse_trust_cpu(char *arg)
-@@ -805,7 +806,9 @@ static void crng_initialize(struct crng_state *crng)
- 		}
- 		crng->state[i] ^= rv;
- 	}
--	if (trust_cpu && arch_init) {
-+	if (trust_cpu && arch_init && crng == &primary_crng) {
-+		invalidate_batched_entropy();
-+		numa_crng_init();
- 		crng_init = 2;
- 		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
- 	}
++	if (rt_period_us > U64_MAX / NSEC_PER_USEC)
++		return -EINVAL;
++
+ 	rt_period = rt_period_us * NSEC_PER_USEC;
+ 	rt_runtime = tg->rt_bandwidth.rt_runtime;
+ 
 -- 
 2.20.1
 
