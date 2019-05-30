@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CABEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA0523C5A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BD323CCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187197;
-	bh=y0k9iqj8A4GuHqMLHdiiRWKOxCV0ojJjvEX1tuxDsY0=;
+	s=default; t=1559187199;
+	bh=CPMl6SYE1pkraUwSH7rr43h7gr7o0/BsdLlmPYqkMRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VNJnLRHsKmx8J+EiHWmx0pnwJZsd49GUz6KIYqu6RKjOrillQrSKejjPrtTrfVWYh
-	 MQqaVudWDfOM8OGn2XyQ+hdNiKW1fTH0cqbgz+ZwJB4NkNdN6rptOP2vbe1/Y294cD
-	 ocC91PfB6C2vx1vge5UYSsdWlz97bGRTJpo30I5E=
+	b=c9uFqRGuARCoYCa+cLo3eCT+FHHHuhp1GsDbT9MAx1oFai3A+eq48GcW11t7V/4wl
+	 B1DO3cGvJOvjftNKFYo8igM/6FCR5oJHCnSPAHu3uRi+4lXaBkMydpirOn6Dvw24Uh
+	 rU57yTVi8lYqZovK1Jl/Q4bhYQEK2/ysi35o+hD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387584AbfE3D2r (ORCPT
+        id S2388224AbfE3D2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbfE3DUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:15 -0400
+        id S1731135AbfE3DUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1898524820;
-        Thu, 30 May 2019 03:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B0DD2490E;
+        Thu, 30 May 2019 03:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186415;
-        bh=y0k9iqj8A4GuHqMLHdiiRWKOxCV0ojJjvEX1tuxDsY0=;
+        s=default; t=1559186401;
+        bh=CPMl6SYE1pkraUwSH7rr43h7gr7o0/BsdLlmPYqkMRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QA3bGEqFgJl1radU1T9Bp5g1VpMD1kBTxN2kPWof++iURiZM48mFdoklyG8YXy5Cg
-         mBGC6nEjL0MWdieeZF3i5qvCFA4gK4hN3ctgW82m/BV4CfDe5rQHQaBvWjQ9I8KWD7
-         BzPwXi175/02J9QLlJgE76n9Sz1OAn+XEgIZJ5tQ=
+        b=xgEqAtV/vi/RMDhKl6dhh8yWbQmRG0BJ3ll6UiqwPp3dmEzeiFF2OFt+K7a7gvxlt
+         uIFQhAOh9FPYfei2FnCgEjb4tImPHf6oTvLX4A2ubp1hRDgZAzqWrHD5NzrNTHQSWV
+         zAU5x5A1w9+OLqbs2N9PHI3vGUOpfAIkfizo3yTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 187/193] spi: rspi: Fix sequencer reset during initialization
-Date:   Wed, 29 May 2019 20:07:21 -0700
-Message-Id: <20190530030513.089499756@linuxfoundation.org>
+Subject: [PATCH 4.14 185/193] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
+Date:   Wed, 29 May 2019 20:07:19 -0700
+Message-Id: <20190530030512.974272487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,57 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
+[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
 
-While the sequencer is reset after each SPI message since commit
-880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
-Transfers on QSPI"), it was never reset for the first message, thus
-relying on reset state or bootloader settings.
+During debug, it was seen that the driver is issuing commands specific to
+SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
+this should not be done.
 
-Fix this by initializing it explicitly during configuration.
+Revise the code to stop sending these commands on a SLI4 adapter.
 
-Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rspi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 20981e08ee975..f4a797a9d76e9 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -279,7 +279,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets parity, interrupt mask */
- 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 4962d665b4d21..b970933a218d5 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -924,7 +924,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
+ 	}
+ 	lpfc_destroy_vport_work_array(phba, vports);
+-	/* Clean up any firmware default rpi's */
++
++	/* Clean up any SLI3 firmware default rpi's */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		goto skip_unreg_did;
++
+ 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mb) {
+ 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
+@@ -936,6 +940,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
+ 	}
  
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
++ skip_unreg_did:
+ 	/* Setup myDID for link up if we are in pt2pt mode */
+ 	if (phba->pport->fc_flag & FC_PT2PT) {
+ 		mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+@@ -4853,6 +4858,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
+ 	LPFC_MBOXQ_t     *mbox;
+ 	int rc;
  
-@@ -323,7 +324,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
- 	rspi_write8(rspi, 0x00, RSPI_SSLND);
- 	rspi_write8(rspi, 0x00, RSPI_SPND);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
-@@ -374,7 +376,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
- 	/* Sets buffer to allow normal operation */
- 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
- 
--	/* Sets SPCMD */
-+	/* Resets sequencer */
-+	rspi_write8(rspi, 0, RSPI_SPSCR);
- 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
- 
- 	/* Enables SPI function in master mode */
++	/* Unreg DID is an SLI3 operation. */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		return;
++
+ 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mbox) {
+ 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
 -- 
 2.20.1
 
