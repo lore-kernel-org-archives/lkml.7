@@ -2,184 +2,155 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470BEC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5CE25E65
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257DE218B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:27:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RxGK/uFy";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="eDBovvm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfE3R02 (ORCPT
+        id S1726610AbfE3R1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:26:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60360 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbfE3R02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:26:28 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7FBB7305D799;
-        Thu, 30 May 2019 17:26:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 452387E304;
-        Thu, 30 May 2019 17:26:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 10/10] keys: Add capability-checking keyctl function [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ebiggers@kernel.org
-Date:   Thu, 30 May 2019 18:26:25 +0100
-Message-ID: <155923718546.949.13039266815245271686.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155923711088.949.14909672457214372214.stgit@warthog.procyon.org.uk>
-References: <155923711088.949.14909672457214372214.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 30 May 2019 13:27:37 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:46496 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726423AbfE3R1g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:27:36 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UHNH4H005940;
+        Thu, 30 May 2019 10:27:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=9U3qrZ3RryzWGHqSkFT9H2WatAYQxpSDV8ga1mgvl8c=;
+ b=RxGK/uFyepKW2OcaM88QZjGOteO2TwGkKbUBcscndBF+gJjgqe2zHBqckpXAC0xHwAxz
+ SEJKdWlF6/e05nRkgEMN3VwLDQdK/5xLWgGqdQH61q2iZHUJOKuG87AssGVr/cmZOXDw
+ giFrG83h3hPmRN0x+ojy5tTn7yD+uV3VbMg= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2stj9w8adh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 30 May 2019 10:27:01 -0700
+Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
+ ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 May 2019 10:26:57 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 30 May 2019 10:26:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9U3qrZ3RryzWGHqSkFT9H2WatAYQxpSDV8ga1mgvl8c=;
+ b=eDBovvm1UNpINdHG75i95BFebOLVcIGUHKHpQZMWiWvJwgyxqmCXylBzfUSos18XBqPjHTQWeAdqz557qQjONxeG21HwKk18olJTO05F/AynWV+bVPpKp4tAQoULVz/qU0Hf0PUkzwxsYYlBlYqS7Yx+Q0C7Q1OmRrxtJ9dPiuo=
+Received: from BN6PR15MB1154.namprd15.prod.outlook.com (10.172.208.137) by
+ BN6PR15MB1857.namprd15.prod.outlook.com (10.174.113.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.17; Thu, 30 May 2019 17:26:38 +0000
+Received: from BN6PR15MB1154.namprd15.prod.outlook.com
+ ([fe80::adc0:9bbf:9292:27bd]) by BN6PR15MB1154.namprd15.prod.outlook.com
+ ([fe80::adc0:9bbf:9292:27bd%2]) with mapi id 15.20.1922.021; Thu, 30 May 2019
+ 17:26:38 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "chad.mynhier@oracle.com" <chad.mynhier@oracle.com>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>
+Subject: Re: [PATCH uprobe, thp 4/4] uprobe: collapse THP pmd after removing
+ all uprobes
+Thread-Topic: [PATCH uprobe, thp 4/4] uprobe: collapse THP pmd after removing
+ all uprobes
+Thread-Index: AQHVFmai8W5Yq1+OvE6IJWAoNhoGxKaDl3SAgABVaoA=
+Date:   Thu, 30 May 2019 17:26:38 +0000
+Message-ID: <4E8A7A5E-D425-40EC-B40A-7DA21BA1866F@fb.com>
+References: <20190529212049.2413886-1-songliubraving@fb.com>
+ <20190529212049.2413886-5-songliubraving@fb.com>
+ <20190530122055.xzlbo3wfpqtmo2fw@box>
+In-Reply-To: <20190530122055.xzlbo3wfpqtmo2fw@box>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::3:bc80]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87e47887-e2ce-48d5-6d68-08d6e523f91f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR15MB1857;
+x-ms-traffictypediagnostic: BN6PR15MB1857:
+x-microsoft-antispam-prvs: <BN6PR15MB185740D059C650658FB05523B3180@BN6PR15MB1857.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(39860400002)(376002)(366004)(189003)(199004)(64756008)(50226002)(46003)(81166006)(66446008)(4744005)(316002)(6506007)(53936002)(6246003)(14454004)(6512007)(8676002)(478600001)(4326008)(2906002)(91956017)(73956011)(66476007)(76116006)(66556008)(5660300002)(305945005)(7736002)(6116002)(25786009)(66946007)(14444005)(476003)(68736007)(71190400001)(54906003)(86362001)(99286004)(71200400001)(83716004)(229853002)(446003)(2616005)(53546011)(11346002)(256004)(6916009)(8936002)(486006)(102836004)(76176011)(33656002)(36756003)(57306001)(6486002)(81156014)(186003)(6436002)(7416002)(82746002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR15MB1857;H:BN6PR15MB1154.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cg38ktuGDSdnLQFnRRwOCu9VhGBUi85YIRwrbqiVzceEdEX+l+3ZTiWgOFb4Z2uyN5snafUqSPH0LzJIOj+rhttcHeobAYED0k+AqOqpM4oADMZSclCZvCSuFHJiaEzxH4TJLC3jdJEWZB5996OslEDQUYEy4vbKM9DHzUrGwUTOZX9oRiywyLHkQGkFVrkN0wZgvKHsYVxePRyHu9gLFmAv2MdA9ieJrLJZyS4ruHTk25nt1tmjeoL/mDcP7jLv6GgVAvlN8ej4pLQFAST0DdCNnBfn1Qi0ptdu0RskSmUzGZDG54cAFEaMFdoFFsWpT/tyZ1L8CQq1dhlD4xWHwJFHxu4mOgnUXK05a70DJrdgE7L5BcoKArWYVnAM6lVgxigCkaPuXuKIpX27j2+2RSZFk4Es7ulatm/rIfgWah0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <717A3B52E0DEBB468BE5462786ACC0C7@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 30 May 2019 17:26:27 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87e47887-e2ce-48d5-6d68-08d6e523f91f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 17:26:38.2213
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR15MB1857
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=659 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300122
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a keyctl function that requests a set of capability bits to find out
-what features are supported.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
 
- include/uapi/linux/keyctl.h |   14 ++++++++++++++
- security/keys/compat.c      |    3 +++
- security/keys/internal.h    |    2 ++
- security/keys/keyctl.c      |   37 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 56 insertions(+)
+> On May 30, 2019, at 5:20 AM, Kirill A. Shutemov <kirill@shutemov.name> wr=
+ote:
+>=20
+> On Wed, May 29, 2019 at 02:20:49PM -0700, Song Liu wrote:
+>> After all uprobes are removed from the huge page (with PTE pgtable), it
+>> is possible to collapse the pmd and benefit from THP again. This patch
+>> does the collapse.
+>=20
+> I don't think it's right way to go. We should deferred it to khugepaged.
+> We need to teach khugepaged to deal with PTE-mapped compound page.
+> And uprobe should only kick khugepaged for a VMA. Maybe synchronously.
+>=20
 
-diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
-index fd9fb11b312b..aa4972163442 100644
---- a/include/uapi/linux/keyctl.h
-+++ b/include/uapi/linux/keyctl.h
-@@ -68,6 +68,7 @@
- #define KEYCTL_PKEY_VERIFY		28	/* Verify a public key signature */
- #define KEYCTL_RESTRICT_KEYRING		29	/* Restrict keys allowed to link to a keyring */
- #define KEYCTL_MOVE			30	/* Move keys between keyrings */
-+#define KEYCTL_CAPABILITIES		31	/* Find capabilities of keyrings subsystem */
- 
- /* keyctl structures */
- struct keyctl_dh_params {
-@@ -115,4 +116,17 @@ struct keyctl_pkey_params {
- 
- #define KEYCTL_MOVE_EXCL	0x00000001 /* Do not displace from the to-keyring */
- 
-+/*
-+ * Capabilities flags.  The capabilities list is an array of 32-bit integers;
-+ * each integer can carry up to 32 flags.
-+ */
-+#define KEYCTL_CAPS0_CAPABILITIES	0x00000001 /* KEYCTL_CAPABILITIES supported */
-+#define KEYCTL_CAPS0_PERSISTENT_KEYRINGS 0x00000002 /* Persistent keyrings enabled */
-+#define KEYCTL_CAPS0_DIFFIE_HELLMAN	0x00000004 /* Diffie-Hellman computation enabled */
-+#define KEYCTL_CAPS0_PUBLIC_KEY		0x00000008 /* Public key ops enabled */
-+#define KEYCTL_CAPS0_BIG_KEY		0x00000010 /* big_key-type enabled */
-+#define KEYCTL_CAPS0_INVALIDATE		0x00000020 /* KEYCTL_INVALIDATE supported */
-+#define KEYCTL_CAPS0_RESTRICT_KEYRING	0x00000040 /* KEYCTL_RESTRICT_KEYRING supported */
-+#define KEYCTL_CAPS0_MOVE		0x00000080 /* KEYCTL_MOVE supported */
-+
- #endif /*  _LINUX_KEYCTL_H */
-diff --git a/security/keys/compat.c b/security/keys/compat.c
-index b326bc4f84d7..a53e30da20c5 100644
---- a/security/keys/compat.c
-+++ b/security/keys/compat.c
-@@ -162,6 +162,9 @@ COMPAT_SYSCALL_DEFINE5(keyctl, u32, option,
- 	case KEYCTL_MOVE:
- 		return keyctl_keyring_move(arg2, arg3, arg4, arg5);
- 
-+	case KEYCTL_CAPABILITIES:
-+		return keyctl_capabilities(compat_ptr(arg2), arg3);
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index b54a58c025ae..884fd796f668 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -329,6 +329,8 @@ static inline long keyctl_pkey_e_d_s(int op,
- }
- #endif
- 
-+extern long keyctl_capabilities(unsigned int __user *_buffer, size_t buflen);
-+
- /*
-  * Debugging key validation
-  */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index bbfe7d92d41c..b3db363e0b25 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -30,6 +30,18 @@
- 
- #define KEY_MAX_DESC_SIZE 4096
- 
-+static const u32 keyrings_capabilities[1] = {
-+	[0] = (KEYCTL_CAPS0_CAPABILITIES |
-+	       (IS_ENABLED(CONFIG_PERSISTENT_KEYRINGS)	? KEYCTL_CAPS0_PERSISTENT_KEYRINGS : 0) |
-+	       (IS_ENABLED(CONFIG_KEY_DH_OPERATIONS)	? KEYCTL_CAPS0_DIFFIE_HELLMAN : 0) |
-+	       (IS_ENABLED(CONFIG_ASYMMETRIC_KEY_TYPE)	? KEYCTL_CAPS0_PUBLIC_KEY : 0) |
-+	       (IS_ENABLED(CONFIG_BIG_KEYS)		? KEYCTL_CAPS0_BIG_KEY : 0) |
-+	       KEYCTL_CAPS0_INVALIDATE |
-+	       KEYCTL_CAPS0_RESTRICT_KEYRING |
-+	       KEYCTL_CAPS0_MOVE
-+	       ),
-+};
-+
- static int key_get_type_from_user(char *type,
- 				  const char __user *_type,
- 				  unsigned len)
-@@ -1678,6 +1690,28 @@ long keyctl_restrict_keyring(key_serial_t id, const char __user *_type,
- 	return ret;
- }
- 
-+/*
-+ * Get keyrings subsystem capabilities.
-+ */
-+long keyctl_capabilities(unsigned int __user *_buffer, size_t buflen)
-+{
-+	size_t size = buflen;
-+
-+	if (size == 0)
-+		return sizeof(keyrings_capabilities);
-+	if (size & 3)
-+		return -EINVAL;
-+	if (size > sizeof(keyrings_capabilities))
-+		size = sizeof(keyrings_capabilities);
-+	if (copy_to_user(_buffer, keyrings_capabilities, size) != 0)
-+		return -EFAULT;
-+	if (size < buflen &&
-+	    clear_user(_buffer + size, buflen - size) != 0)
-+		return -EFAULT;
-+
-+	return sizeof(keyrings_capabilities);
-+}
-+
- /*
-  * The key control system call
-  */
-@@ -1824,6 +1858,9 @@ SYSCALL_DEFINE5(keyctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 					   (key_serial_t)arg4,
- 					   (unsigned int)arg5);
- 
-+	case KEYCTL_CAPABILITIES:
-+		return keyctl_capabilities((unsigned int __user *)arg2, (size_t)arg3);
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
+I guess that would be the same logic, but run in khugepaged? It doesn't
+have to be done synchronously.=20
+
+Let me try that
+
+Thanks,
+Song
+
+
+> --=20
+> Kirill A. Shutemov
 
