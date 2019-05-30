@@ -2,260 +2,334 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D63C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0CB25D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD4C25D84
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iLQl/tzl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S4QhmiZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfE3QPx (ORCPT
+        id S1727697AbfE3QQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:15:53 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39543 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbfE3QPw (ORCPT
+        Thu, 30 May 2019 12:16:50 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58102 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbfE3QQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:15:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so4268823pfe.6
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QdCnbVnvU3JKpvLwtQ0RZP1XXmjXKTawTWYBTDGInu4=;
-        b=iLQl/tzlA9IoLss9iCFQI/uNGICbYiY4oejGcOmvASeKUe1o9NBlHzZdiKIU2xU58Y
-         3pKqXYhhLPDvcUMN7eyQqGRC4IryxuvQMWpUXEv8jnvIzDG7kZZg9PxBjkDzEFxg+RQf
-         IVDhR19utfM7z+cRwAL4kdXgETyC+JmOUaA4KHKVd+GagQ+bXc+lAzNsMdpe3bzXPDPx
-         KDOv/heXOJc5v7KdT7sv1ibco32xt7Ynm8VHLcvCtns9QqQ/Lj7JCkgVMV9pp/OkoWPD
-         Zcc+T3tyl96dUAbeOBndyhsXipIkP4D9akQIpA985eo1aayznx92rFD0B7fd/9tZaa6C
-         VapA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QdCnbVnvU3JKpvLwtQ0RZP1XXmjXKTawTWYBTDGInu4=;
-        b=QTTjYXMwuwXfm4zE4i8bo+1wsrrVOWsgPJzR71MXMqrX2IV2KbQFJ5fgsX5mfQKxbR
-         oxPjkPoPe8pm0qDHDCVynO1a5fpDeFvrfI6Li32h9AKHVrNxz/XximrsKlpGe848v5Xh
-         uMWx1FQ2a6Ip0u0HaLf2xMB3Pl0/7pnKHgfzR+QCOeKSj4fXQd/nudqxa00yv+vAMB0I
-         abypmwwP5g9m/U57a0pLnOH8txlXapx9Ft0uFguILWpB0q7vO5fVpnh8OJ+aQaS5NKN3
-         BkVqqMTUXvQHe+DBhq0CsXVZc0npNVFkqMxNm5QUZe008J//gm6yslJ/12966KIafVBD
-         nnJQ==
-X-Gm-Message-State: APjAAAWsjQ3ZQ3X2WSBe438O+QWeWCW0z6Xuh0VbP95wBYnvsaIHVARJ
-        Ib1HOOrpkFfCRzIlkp8/SkQmWg==
-X-Google-Smtp-Source: APXvYqzdneacRJ3jMe8/a4aYeOWI8YILi6WoYZXJpCLl8ovLvQkhojhfLpNV90VPB11YoHs72pAphw==
-X-Received: by 2002:a17:90a:240c:: with SMTP id h12mr4366079pje.12.1559232951269;
-        Thu, 30 May 2019 09:15:51 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::7ef9])
-        by smtp.gmail.com with ESMTPSA id s42sm7645186pjc.5.2019.05.30.09.15.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 09:15:50 -0700 (PDT)
-Date:   Thu, 30 May 2019 12:15:48 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: fix page cache convergence regression
-Message-ID: <20190530161548.GA8415@cmpxchg.org>
-References: <20190524153148.18481-1-hannes@cmpxchg.org>
- <20190524160417.GB1075@bombadil.infradead.org>
- <20190524173900.GA11702@cmpxchg.org>
+        Thu, 30 May 2019 12:16:49 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UGDiS5076973;
+        Thu, 30 May 2019 16:15:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=iHS7ndNvviyNhe/9xLnFYqUmNJoidOdk0Rk9WZjZMCE=;
+ b=S4QhmiZel3YX/DNZKXYTg5n7LGkwMBEe7zhliF4Pf4Scn9d046EBBxvIh5GRKOfLZSR4
+ yMEHE0mi2zi+V2VRlCZ4uODSMMQkGAVhWSGjoHnWcyknXQ/mu3rCnDj0m315p+BQ6b/j
+ ioeWWxrgaEKLqLbI63rB8n7tfkjd2YhEE/I3GdNQeGX1PPuVg3HBYWTI7u3C8fHWnnm2
+ bgCgDKj/TBDHdKTjhCkHMN7/B6NCXz0IbOY71MPA1/hnr32gFBHQNU5Hpwc0irHf/59h
+ LYkkP/QMQlzrE2p9F9eM5iX5lVLDcGuad0JaHE+a/tOXG/IRtEBDS3BCdy4LmZue8RTO Jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2spxbqh38a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 16:15:49 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4UGEQAZ022629;
+        Thu, 30 May 2019 16:15:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2sqh74dm3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 May 2019 16:15:48 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4UGFmU4026533;
+        Thu, 30 May 2019 16:15:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2sqh74dm3c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 16:15:48 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4UGFkmK000821;
+        Thu, 30 May 2019 16:15:46 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 30 May 2019 09:15:46 -0700
+Date:   Thu, 30 May 2019 12:15:43 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190530161543.GA1835@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com>
+ <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190524173900.GA11702@cmpxchg.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Are there any objections or feedback on the proposed fix below? This
-is kind of a serious regression.
+On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
+> On Thu, May 23, 2019 at 01:16:08AM -0400, Kris Van Hees wrote:
+> > On Wed, May 22, 2019 at 01:16:25PM -0700, Alexei Starovoitov wrote:
+> > > On Wed, May 22, 2019 at 12:12:53AM -0400, Kris Van Hees wrote:
+> > > > 
+> > > > Could you elaborate on why you believe my patches are not adding generic
+> > > > features?  I can certainly agree that the DTrace-specific portions are less
+> > > > generic (although they are certainly available for anyone to use), but I
+> > > > don't quite understand why the new features are deemed non-generic and why
+> > > > you believe no one else can use this?
+> > > 
+> > > And once again your statement above contradicts your own patches.
+> > > The patch 2 adds new prog type BPF_PROG_TYPE_DTRACE and the rest of the patches
+> > > are tying everything to it.
+> > > This approach contradicts bpf philosophy of being generic execution engine
+> > > and not favoriting one program type vs another.
+> > 
+> > I am not sure I understand where you see a contradiction.  What I posted is
+> > a generic feature, and sample code that demonstrates how it can be used based
+> > on the use-case that I am currently working on.  So yes, the sample code is
+> > very specific but it does not restrict the use of the cross-prog-type tail-call
+> > feature.  That feature is designed to be generic.
+> > 
+> > Probes come in different types (kprobe, tracepoint, perf event, ...) and they
+> > each have their own very specific data associated with them.  I agree 100%
+> > with you on that.  And sometimes tracing makes use of those specifics.  But
+> > even from looking at the implementation of the various probe related prog
+> > types (and e.g. the list of helpers they each support) it shows that there is
+> > a lot of commonality as well.  That common functionality is common to all the
+> > probe program types, and that is where I suggest introducing a program type
+> > that captures the common concept of a probe, so perhaps a better name would
+> > be BPF_PROG_TYPE_PROBE.
+> > 
+> > The principle remains the same though...  I am proposing adding support for
+> > program types that provide common functionality so that programs for various
+> > program types can make use of the more generic programs stored in prog arrays.
+> 
+> Except that prog array is indirect call based and got awfully slow due
+> to retpoline and we're trying to redesign the whole tail_call approach.
+> So more extensions to tail_call facility is the opposite of that direction.
 
-On Fri, May 24, 2019 at 01:39:00PM -0400, Johannes Weiner wrote:
-> From 63a0dbc571ff38f7c072c62d6bc28192debe37ac Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Fri, 24 May 2019 10:12:46 -0400
-> Subject: [PATCH] mm: fix page cache convergence regression
+OK, I see the point of retpoline having slowed down tail_call.  Do you have
+any suggestions in how to accomplish the concept that I am proposing in a
+different way?  I believe that the discussion that has been going on in other
+emails has shown that while introducing a program type that provides a
+generic (abstracted) context is a different approach from what has been done
+so far, it is a new use case that provides for additional ways in which BPF
+can be used.
+
+> > > I have nothing against dtrace language and dtrace scripts.
+> > > Go ahead and compile them into bpf.
+> > > All patches to improve bpf infrastructure are very welcomed.
+> > > 
+> > > In particular you brought up a good point that there is a use case
+> > > for sharing a piece of bpf program between kprobe and tracepoint events.
+> > > The better way to do that is via bpf2bpf call.
+> > > Example:
+> > > void bpf_subprog(arbitrary args)
+> > > {
+> > > }
+> > > 
+> > > SEC("kprobe/__set_task_comm")
+> > > int bpf_prog_kprobe(struct pt_regs *ctx)
+> > > {
+> > >   bpf_subprog(...);
+> > > }
+> > > 
+> > > SEC("tracepoint/sched/sched_switch")
+> > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> > > {
+> > >   bpf_subprog(...);
+> > > }
+> > > 
+> > > Such configuration is not supported by the verifier yet.
+> > > We've been discussing it for some time, but no work has started,
+> > > since there was no concrete use case.
+> > > If you can work on adding support for it everyone will benefit.
+> > > 
+> > > Could you please consider doing that as a step forward?
+> > 
+> > This definitely looks to be an interesting addition and I am happy to look into
+> > that further.  I have a few questions that I hope you can shed light on...
+> > 
+> > 1. What context would bpf_subprog execute with?  If it can be called from
+> >    multiple different prog types, would it see whichever context the caller
+> >    is executing with?  Or would you envision bpf_subprog to not be allowed to
+> >    access the execution context because it cannot know which one is in use?
 > 
-> Since a28334862993 ("page cache: Finish XArray conversion"), on most
-> major Linux distributions, the page cache doesn't correctly transition
-> when the hot data set is changing, and leaves the new pages thrashing
-> indefinitely instead of kicking out the cold ones.
+> bpf_subprog() won't be able to access 'ctx' pointer _if_ it's ambiguous.
+> The verifier already smart enough to track all the data flow, so it's fine to
+> pass 'struct pt_regs *ctx' as long as it's accessed safely.
+> For example:
+> void bpf_subprog(int kind, struct pt_regs *ctx1, struct sched_switch_args *ctx2)
+> {
+>   if (kind == 1)
+>      bpf_printk("%d", ctx1->pc);
+>   if (kind == 2)
+>      bpf_printk("%d", ctx2->next_pid);
+> }
 > 
-> On a freshly booted, freshly ssh'd into virtual machine with 1G RAM
-> running stock Arch Linux:
+> SEC("kprobe/__set_task_comm")
+> int bpf_prog_kprobe(struct pt_regs *ctx)
+> {
+>   bpf_subprog(1, ctx, NULL);
+> }
 > 
-> [root@ham ~]# ./reclaimtest.sh
-> + dd of=workingset-a bs=1M count=0 seek=600
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + ./mincore workingset-a
-> 153600/153600 workingset-a
-> + dd of=workingset-b bs=1M count=0 seek=600
-> + cat workingset-b
-> + cat workingset-b
-> + cat workingset-b
-> + cat workingset-b
-> + ./mincore workingset-a workingset-b
-> 104029/153600 workingset-a
-> 120086/153600 workingset-b
-> + cat workingset-b
-> + cat workingset-b
-> + cat workingset-b
-> + cat workingset-b
-> + ./mincore workingset-a workingset-b
-> 104029/153600 workingset-a
-> 120268/153600 workingset-b
+> SEC("tracepoint/sched/sched_switch")
+> int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> {
+>   bpf_subprog(2, NULL, ctx);
+> }
 > 
-> workingset-b is a 600M file on a 1G host that is otherwise entirely
-> idle. No matter how often it's being accessed, it won't get cached.
+> The verifier should be able to prove that the above is correct.
+> It can do so already if s/ctx1/map_value1/, s/ctx2/map_value2/
+> What's missing is an ability to have more than one 'starting' or 'root caller'
+> program.
 > 
-> While investigating, I noticed that the non-resident information gets
-> aggressively reclaimed - /proc/vmstat::workingset_nodereclaim. This is
-> a problem because a workingset transition like this relies on the
-> non-resident information tracked in the page cache tree of evicted
-> file ranges: when the cache faults are refaults of recently evicted
-> cache, we challenge the existing active set, and that allows a new
-> workingset to establish itself.
+> Now replace SEC("tracepoint/sched/sched_switch") with SEC("cgroup/ingress")
+> and it's becoming clear that BPF_PROG_TYPE_PROBE approach is not good enough, right?
+
+Yes and no.  It depends on what you are trying to do with the BPF program that
+is attached to the different events.  From a tracing perspective, providing a
+single BPF program with an abstract context would make sense in your example
+when you are collecting the same kind of information about the task and system
+state at the time the event happens.
+
+In the tracing model that provides the use cases I am concerned with, a probe
+or event triggering execution is equivalent to making a function call like
+(in pseudo-code):
+
+    process_probe(probe_id, args, ...)
+
+where the probe_id identifies the actual probe that fired (and can be used to
+access meta data about the probe, etc) and args captures the parameters that
+are provided by the probe.
+
+In this model kprobe/ksys_write and tracepoint/syscalls/sys_enter_write are
+equivalent for most tracing purposes (because we provide function arguments
+as args in the first one, and we provide the tracepoint parameters as args
+in the second one).  When you are tracing the use of writes, it doesn't really
+matter which of these two you attach the program to.
+
+> Folks are already sharing the bpf progs between kprobe and networking.
+> Currently it's done via code duplication and actual sharing happens via maps.
+> That's not ideal, hence we've been discussing 'shared library' approach for
+> quite some time. We need a way to support common bpf functions that can be called
+> from networking and from tracing programs.
+
+I agree with what you are saying but I am presenting an additional use case
+that goes beyond providing providing a library of functions (though I
+definitely have a use for that also).  I am hoping you have some suggestions
+on how to accomplish that in view of your comment that tail_call isn't the way
+to go. 
+
+> > 2. Given that BPF programs are loaded with a specification of the prog type, 
+> >    how would one load a code construct as the one you outline above?  How can
+> >    you load a BPF function and have it be used as subprog from programs that
+> >    are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
+> >    as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
+> >    referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
+> >    loaded separately?
 > 
-> Tracing the shrinker that maintains this memory revealed that all page
-> cache tree nodes were allocated to the root cgroup. This is a problem,
-> because 1) the shrinker sizes the amount of non-resident information
-> it keeps to the size of the cgroup's other memory and 2) on most major
-> Linux distributions, only kernel threads live in the root cgroup and
-> everything else gets put into services or session groups:
+> The api to support shared libraries was discussed, but not yet implemented.
+> We've discussed 'FD + name' approach.
+> FD identifies a loaded program (which is root program + a set of subprogs)
+> and other programs can be loaded at any time later. The BPF_CALL instructions
+> in such later program would refer to older subprogs via FD + name.
+> Note that both tracing and networking progs can be part of single elf file.
+> libbpf has to be smart to load progs into kernel step by step
+> and reusing subprogs that are already loaded.
+
+OK.
+
+> Note that libbpf work for such feature can begin _without_ kernel changes.
+> libbpf can pass bpf_prog_kprobe+bpf_subprog as a single program first,
+> then pass bpf_prog_tracepoint+bpf_subprog second (as a separate program).
+> The bpf_subprog will be duplicated and JITed twice, but sharing will happen
+> because data structures (maps, global and static data) will be shared.
+> This way the support for 'pseudo shared libraries' can begin.
+> (later accompanied by FD+name kernel support)
+
+Makes sense.
+
+> There are other things we discsused. Ideally the body of bpf_subprog()
+> wouldn't need to be kept around for future verification when this bpf
+> function is called by a different program. The idea was to
+> use BTF and similar mechanism to ongoing 'bounded loop' work.
+> So the verifier can analyze bpf_subprog() once and reuse that knowledge
+> for dynamic linking with progs that will be loaded later.
+> This is more long term work.
+
+Hm, yes.  You should be able to get away with just storing the access
+constraints of pointer (ctx, map_value) arguments passed to the functions,
+and verify whether they are compatible with the information obtained while
+running the verifier on the caller.  For loop detection you're likely to
+need more information as well though.  Definitely longer term work.
+
+> A simple short term would be to verify the full call chain every time
+> the subprog (bpf function) is reused.
 > 
-> [root@ham ~]# cat /proc/self/cgroup
-> 0::/user.slice/user-0.slice/session-c1.scope
-> 
-> As a result, we basically maintain no non-resident information for the
-> workloads running on the system, thus breaking the caching algorithm.
-> 
-> Looking through the code, I found the culprit in the above-mentioned
-> patch: when switching from the radix tree to xarray, it dropped the
-> __GFP_ACCOUNT flag from the tree node allocations - the flag that
-> makes sure the allocated memory gets charged to and tracked by the
-> cgroup of the calling process - in this case, the one doing the fault.
-> 
-> To fix this, allow xarray users to specify per-tree flag that makes
-> xarray allocate nodes using __GFP_ACCOUNT. Then restore the page cache
-> tree annotation to request such cgroup tracking for the cache nodes.
-> 
-> With this patch applied, the page cache correctly converges on new
-> workingsets again after just a few iterations:
-> 
-> [root@ham ~]# ./reclaimtest.sh
-> + dd of=workingset-a bs=1M count=0 seek=600
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + cat workingset-a
-> + ./mincore workingset-a
-> 153600/153600 workingset-a
-> + dd of=workingset-b bs=1M count=0 seek=600
-> + cat workingset-b
-> + ./mincore workingset-a workingset-b
-> 124607/153600 workingset-a
-> 87876/153600 workingset-b
-> + cat workingset-b
-> + ./mincore workingset-a workingset-b
-> 81313/153600 workingset-a
-> 133321/153600 workingset-b
-> + cat workingset-b
-> + ./mincore workingset-a workingset-b
-> 63036/153600 workingset-a
-> 153600/153600 workingset-b
-> 
-> Cc: stable@vger.kernel.org # 4.20+
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  fs/inode.c             |  2 +-
->  include/linux/xarray.h |  1 +
->  lib/xarray.c           | 12 ++++++++++--
->  3 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index e9d18b2c3f91..cd67859dbaf1 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -361,7 +361,7 @@ EXPORT_SYMBOL(inc_nlink);
->  
->  static void __address_space_init_once(struct address_space *mapping)
->  {
-> -	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ);
-> +	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ | XA_FLAGS_ACCOUNT);
->  	init_rwsem(&mapping->i_mmap_rwsem);
->  	INIT_LIST_HEAD(&mapping->private_list);
->  	spin_lock_init(&mapping->private_lock);
-> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-> index 0e01e6129145..5921599b6dc4 100644
-> --- a/include/linux/xarray.h
-> +++ b/include/linux/xarray.h
-> @@ -265,6 +265,7 @@ enum xa_lock_type {
->  #define XA_FLAGS_TRACK_FREE	((__force gfp_t)4U)
->  #define XA_FLAGS_ZERO_BUSY	((__force gfp_t)8U)
->  #define XA_FLAGS_ALLOC_WRAPPED	((__force gfp_t)16U)
-> +#define XA_FLAGS_ACCOUNT	((__force gfp_t)32U)
->  #define XA_FLAGS_MARK(mark)	((__force gfp_t)((1U << __GFP_BITS_SHIFT) << \
->  						(__force unsigned)(mark)))
->  
-> diff --git a/lib/xarray.c b/lib/xarray.c
-> index 6be3acbb861f..446b956c9188 100644
-> --- a/lib/xarray.c
-> +++ b/lib/xarray.c
-> @@ -298,6 +298,8 @@ bool xas_nomem(struct xa_state *xas, gfp_t gfp)
->  		xas_destroy(xas);
->  		return false;
->  	}
-> +	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
-> +		gfp |= __GFP_ACCOUNT;
->  	xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
->  	if (!xas->xa_alloc)
->  		return false;
-> @@ -325,6 +327,8 @@ static bool __xas_nomem(struct xa_state *xas, gfp_t gfp)
->  		xas_destroy(xas);
->  		return false;
->  	}
-> +	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
-> +		gfp |= __GFP_ACCOUNT;
->  	if (gfpflags_allow_blocking(gfp)) {
->  		xas_unlock_type(xas, lock_type);
->  		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-> @@ -358,8 +362,12 @@ static void *xas_alloc(struct xa_state *xas, unsigned int shift)
->  	if (node) {
->  		xas->xa_alloc = NULL;
->  	} else {
-> -		node = kmem_cache_alloc(radix_tree_node_cachep,
-> -					GFP_NOWAIT | __GFP_NOWARN);
-> +		gfp_t gfp = GFP_NOWAIT | __GFP_NOWARN;
-> +
-> +		if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
-> +			gfp |= __GFP_ACCOUNT;
-> +
-> +		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
->  		if (!node) {
->  			xas_set_err(xas, -ENOMEM);
->  			return NULL;
-> -- 
-> 2.21.0
-> 
+> All that aside the kernel support for shared libraries is an awesome
+> feature to have and a bunch of folks want to see it happen, but
+> it's not a blocker for 'dtrace to bpf' user space work.
+> libbpf can be taught to do this 'pseudo shared library' feature
+> while 'dtrace to bpf' side doesn't need to do anything special.
+> It can generate normal elf file with bpf functions calling each other
+> and have tracing, kprobes, etc in one .c file.
+> Or don't generate .c file if you don't want to use clang/llvm.
+> If you think "dtrace to bpf" can generate bpf directly then go for that.
+> All such decisions are in user space and there is a freedom to course
+> correct when direct bpf generation will turn out to be underperforming
+> comparing to llvm generated code.
+
+So you are basically saying that I should redesign DTrace?  The ability to
+use shared functions is not sufficient for this use case.  It is also putting
+a burden on the users where a single piece of script code may have to be
+compiled into different BPF code because it is going to be attached to two
+different probe types.
+
+In my example earlier in this email, a simple script that would collect the
+3 arguments to a write would (right now) require very different BPF code to
+get to those arguments (let's assume we're on x86):
+
+  kprobe: get them from the pt_regs structure and possibly the stack
+  tracepoint: get them from the parameters stored in the context
+
+If something breaks, you suddenly put the burden on the user to try to debug
+two (or more) generated BPF programs, despite the fact that they came from
+the same source code.  And on top of that the problem may turn out to be that
+the tracepoint changed in the kernel, and the code generation wasn't updated
+yet.
+
+As you said before...  userspace shouldn't block kernel changes.  In addition,
+I think that isolating kernel changes from userspace changes is a benefit to
+both camps.  That's why the bpf syscall is a great benefit because you can
+change how things are done at the kernel level, and userspace often doesn't
+need to know you changed the implementation of e.g. attaching programs.
