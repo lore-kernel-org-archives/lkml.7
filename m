@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68323C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4640C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5E424AC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6DF24AC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187004;
-	bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
+	s=default; t=1559187010;
+	bh=e3s4UrEv6xMX5GRkiPYXSaV+FTPoCSQU4s8SkeHOC9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHNNQTXBgzOqgsgN+BrDd/CasWcMpn/VDfkDtAjtROO/3l3Z1rMcrySwtHwT7XUGP
-	 l8QwLLm700T1mk9qemZpf5F6QtZ/3K+lgjzynpMvZ0eJMBjZWmWcNNS197hrNzhh9L
-	 N5Ia13JbQX9/GAR+K11ugu36QES6BgkDcq4LxFW8=
+	b=MkJqLf/T1PvykE/uqth4Lx2mXKFQ6uass7GQRrFK64Kw14CW34gc3eXm2YRTUzA9h
+	 OO1v/kOm8Xq+QgF821mxgA+/IIxxsaZ95JT91jYT7o++WR1ZMJnXeCUhkUptVZEJfX
+	 6xii0GuecU2lqXFiwjxzXCUFBgZiEo95v3KEh5Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbfE3DaD (ORCPT
+        id S2388511AbfE3DaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732475AbfE3DVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:10 -0400
+        id S1731822AbfE3DVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A2B249C2;
-        Thu, 30 May 2019 03:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDD68249BA;
+        Thu, 30 May 2019 03:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186469;
-        bh=dFVTRMQShWSKyV+DNlr1H0V44BM6jzEICjqpG4UeNmU=;
+        s=default; t=1559186472;
+        bh=e3s4UrEv6xMX5GRkiPYXSaV+FTPoCSQU4s8SkeHOC9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sb3FusQ9EiQfb+8ljlP4ZfbI5bRXrplpDi2OgL7M+MF8qJFJjfTVZ41MDm+x3fG5W
-         rWTCx1HaG2ltpTNgulSo0fp9zC5PgXVMHf1JIfct7wqBplPeoX/eyu27lQZhz03UdN
-         Uf15IjYb19eXG8fopU5L06Ik7yzrrOMAvWHmJcXo=
+        b=q3GmCmTAxHhcLV1OPfLeAILfmRY6g30aDSBqL9zDOvMdwI9gcjpUugZPJfmoymQvl
+         rve2bB64yfn5ADg+3GaZp+naE8po7kDVwICG6JfdUIjeDKpdVV4BWCyxbz8Ar8iUv3
+         u5DrazS8Ii7VXkcDArJxt6o95f9yfuEYBEhIolSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 095/128] b43: shut up clang -Wuninitialized variable warning
-Date:   Wed, 29 May 2019 20:07:07 -0700
-Message-Id: <20190530030451.719097680@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 102/128] x86/uaccess, signal: Fix AC=1 bloat
+Date:   Wed, 29 May 2019 20:07:14 -0700
+Message-Id: <20190530030452.954507391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -62,67 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d825db346270dbceef83b7b750dbc29f1d7dcc0e ]
+[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
 
-Clang warns about what is clearly a case of passing an uninitalized
-variable into a static function:
+Occasionally GCC is less agressive with inlining and the following is
+observed:
 
-drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                lpphy_papd_cal(dev, gains, 0, 1, 30);
-                                    ^~~~~
-drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
-        struct lpphy_tx_gains gains, oldgains;
-        ^
-1 error generated.
+  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
+  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
 
-However, this function is empty, and its arguments are never evaluated,
-so gcc in contrast does not warn here. Both compilers behave in a
-reasonable way as far as I can tell, so we should change the code
-to avoid the warning everywhere.
+Cure this by moving this code out of the AC=1 region, since it really
+isn't needed for the user access.
 
-We could just eliminate the lpphy_papd_cal() function entirely,
-given that it has had the TODO comment in it for 10 years now
-and is rather unlikely to ever get done. I'm doing a simpler
-change here, and just pass the 'oldgains' variable in that has
-been initialized, based on the guess that this is what was
-originally meant.
-
-Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43/phy_lp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/b43/phy_lp.c b/drivers/net/wireless/broadcom/b43/phy_lp.c
-index 6922cbb99a044..5a0699fb4b9ab 100644
---- a/drivers/net/wireless/broadcom/b43/phy_lp.c
-+++ b/drivers/net/wireless/broadcom/b43/phy_lp.c
-@@ -1834,7 +1834,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
- static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index b1a5d252d482a..ca010dfb9682b 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -129,16 +129,6 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		COPY_SEG_CPL3(cs);
+ 		COPY_SEG_CPL3(ss);
+ 
+-#ifdef CONFIG_X86_64
+-		/*
+-		 * Fix up SS if needed for the benefit of old DOSEMU and
+-		 * CRIU.
+-		 */
+-		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
+-			     user_64bit_mode(regs)))
+-			force_valid_ss(regs);
+-#endif
+-
+ 		get_user_ex(tmpflags, &sc->flags);
+ 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
+ 		regs->orig_ax = -1;		/* disable syscall checks */
+@@ -147,6 +137,15 @@ static int restore_sigcontext(struct pt_regs *regs,
+ 		buf = (void __user *)buf_val;
+ 	} get_user_catch(err);
+ 
++#ifdef CONFIG_X86_64
++	/*
++	 * Fix up SS if needed for the benefit of old DOSEMU and
++	 * CRIU.
++	 */
++	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
++		force_valid_ss(regs);
++#endif
++
+ 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+ 
+ 	force_iret();
+@@ -458,6 +457,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
  {
- 	struct b43_phy_lp *lpphy = dev->phy.lp;
--	struct lpphy_tx_gains gains, oldgains;
-+	struct lpphy_tx_gains oldgains;
- 	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
+ 	struct rt_sigframe __user *frame;
+ 	void __user *fp = NULL;
++	unsigned long uc_flags;
+ 	int err = 0;
  
- 	lpphy_read_tx_pctl_mode_from_hardware(dev);
-@@ -1848,9 +1848,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
- 	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
+ 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
+@@ -470,9 +470,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
  
- 	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
--		lpphy_papd_cal(dev, gains, 0, 1, 30);
-+		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
- 	else
--		lpphy_papd_cal(dev, gains, 0, 1, 65);
-+		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
  
- 	if (old_afe_ovr)
- 		lpphy_set_tx_gains(dev, oldgains);
+@@ -538,6 +540,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ {
+ #ifdef CONFIG_X86_X32_ABI
+ 	struct rt_sigframe_x32 __user *frame;
++	unsigned long uc_flags;
+ 	void __user *restorer;
+ 	int err = 0;
+ 	void __user *fpstate = NULL;
+@@ -552,9 +555,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			return -EFAULT;
+ 	}
+ 
++	uc_flags = frame_uc_flags(regs);
++
+ 	put_user_try {
+ 		/* Create the ucontext.  */
+-		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
++		put_user_ex(uc_flags, &frame->uc.uc_flags);
+ 		put_user_ex(0, &frame->uc.uc_link);
+ 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
+ 		put_user_ex(0, &frame->uc.uc__pad0);
 -- 
 2.20.1
 
