@@ -2,164 +2,152 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8689C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A429C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E43B25250
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XTIIueYD"
+	by mail.kernel.org (Postfix) with ESMTP id F194E25AFB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfE3Ocl (ORCPT
+        id S1726583AbfE3Odm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:32:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33103 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbfE3Oci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:32:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y17so5225965lfe.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 07:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vPRuBME96qBkv2+pdKHmfYwrxMsHLYg2XjuDskufNdA=;
-        b=XTIIueYDuIgusp3aH/O/Ki3sag5Wo0nfFBfQ5a1MquEch+jZpd5CxLU9S/Vcl1vcBP
-         +e/cbimawwKO5T7z6axW+B8doqpZbxx+w4JqnZ1W4X0pNfaJsiS6UNFI9ppHs0yLg8jA
-         MJZ1u1tJuNQZIt4PnlrR7EOBDumvSxEOcENCwrOeR4qPt82fOdeBPxdvUPRN3VzBm2zs
-         5jc3A6uBDJ0mhFfHdcm3oAtkX645YiV0lWSAfOFzGSySLJV6dm/2IM67xOOsUGKcQE4F
-         uUDgJNZPQukOMWkZfVyK5chCylXVcH6Ovs78CXXT6oZrsvd2YVkdsa1SS8uvVOuJDPIW
-         Q3Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vPRuBME96qBkv2+pdKHmfYwrxMsHLYg2XjuDskufNdA=;
-        b=hx5gnnhTawbO8gL7CVcpYrBVpo2atqjhjNaU65EZSYApTPMsFMFtztKznPIuRg9sO1
-         LaSeU+GFJGao0yZyY/e5KsSvTkep8I6ExS7SPXEGeK0LrIONqpOefOm1eNVp0bsP0UpQ
-         K0QX7vLVSIuieCMM68l1/Pw+RuAWqAFXQA6CROoiiG+jf6pBLRwQNAOao164Ak0migZB
-         fec/V9Y7AqMorcjUWd7noGe846zIs6QQ5e2sjadGuxB5ehgr7G2QUEu00MBUDbnpRkYH
-         5VacTC3nC0oT3ElOOkOrolId1xb7mWWz4E9myl3akAiSR28Ct+xdusiFbKxzmlCMm1RW
-         Rd/w==
-X-Gm-Message-State: APjAAAXoy4a3FyL4GGA7xOOqwcrVhHFzOo6OWKLYS5qmCdCFM/hjiKYG
-        D7BGQXfPX+ji/BHVp7L2czrmVYPoRwG55RO5EbVj
-X-Google-Smtp-Source: APXvYqwqhEkdksMPTeb2g5KCjCxj8n1bQStwL7p4+8Wc9za8dt2GnyEk0aqQIiknzks4C0Ggoh9fezHY+u9LtZClqqc=
-X-Received: by 2002:ac2:4358:: with SMTP id o24mr2301162lfl.13.1559226755674;
- Thu, 30 May 2019 07:32:35 -0700 (PDT)
+        Thu, 30 May 2019 10:33:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48496 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfE3Odl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:33:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DBEB7EBAE;
+        Thu, 30 May 2019 14:33:41 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E90310027B6;
+        Thu, 30 May 2019 14:33:36 +0000 (UTC)
+Date:   Thu, 30 May 2019 08:33:35 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
+        laine@redhat.com
+Subject: Re: [PATCH] PCI: Return error if cannot probe VF
+Message-ID: <20190530083335.4f16a9bc@x1.home>
+In-Reply-To: <20190530134727.GM28250@google.com>
+References: <155672991496.20698.4279330795743262888.stgit@gimli.home>
+        <20190530134727.GM28250@google.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <423ed5e5c5e4ed7c3e26ac7d2bd7c267aaae777c.1554732921.git.rgb@redhat.com>
- <CAHC9VhQ9t-mvJGNCzArjg+MTGNXcZbVrWV4=RUD5ML_bHqua1Q@mail.gmail.com> <20190530141555.qqcbasvyp7eokwjz@madcap2.tricolour.ca>
-In-Reply-To: <20190530141555.qqcbasvyp7eokwjz@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 30 May 2019 10:32:24 -0400
-Message-ID: <CAHC9VhQ0miKFDegG-FTF6_y1nfOPpf69L8ONd3xgCZZxRrmo1w@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 09/10] audit: add support for containerid to
- network namespaces
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 30 May 2019 14:33:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 10:16 AM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> On 2019-05-29 18:17, Paul Moore wrote:
-> > On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > Audit events could happen in a network namespace outside of a task
-> > > context due to packets received from the net that trigger an auditing
-> > > rule prior to being associated with a running task.  The network
-> > > namespace could be in use by multiple containers by association to the
-> > > tasks in that network namespace.  We still want a way to attribute
-> > > these events to any potential containers.  Keep a list per network
-> > > namespace to track these audit container identifiiers.
-> > >
-> > > Add/increment the audit container identifier on:
-> > > - initial setting of the audit container identifier via /proc
-> > > - clone/fork call that inherits an audit container identifier
-> > > - unshare call that inherits an audit container identifier
-> > > - setns call that inherits an audit container identifier
-> > > Delete/decrement the audit container identifier on:
-> > > - an inherited audit container identifier dropped when child set
-> > > - process exit
-> > > - unshare call that drops a net namespace
-> > > - setns call that drops a net namespace
-> > >
-> > > Please see the github audit kernel issue for contid net support:
-> > >   https://github.com/linux-audit/audit-kernel/issues/92
-> > > Please see the github audit testsuiite issue for the test case:
-> > >   https://github.com/linux-audit/audit-testsuite/issues/64
-> > > Please see the github audit wiki for the feature overview:
-> > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> > > ---
-> > >  include/linux/audit.h | 19 +++++++++++
-> > >  kernel/audit.c        | 88 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > >  kernel/nsproxy.c      |  4 +++
-> > >  3 files changed, 108 insertions(+), 3 deletions(-)
-> >
-> > ...
-> >
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index 6c742da66b32..996213591617 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
-> > > @@ -376,6 +384,75 @@ static struct sock *audit_get_sk(const struct net *net)
-> > >         return aunet->sk;
-> > >  }
-> > >
-> > > +void audit_netns_contid_add(struct net *net, u64 contid)
-> > > +{
-> > > +       struct audit_net *aunet;
-> > > +       struct list_head *contid_list;
-> > > +       struct audit_contid *cont;
-> > > +
-> > > +       if (!net)
-> > > +               return;
-> > > +       if (!audit_contid_valid(contid))
-> > > +               return;
-> > > +       aunet = net_generic(net, audit_net_id);
-> > > +       if (!aunet)
-> > > +               return;
-> > > +       contid_list = &aunet->contid_list;
-> > > +       spin_lock(&aunet->contid_list_lock);
-> > > +       list_for_each_entry_rcu(cont, contid_list, list)
-> > > +               if (cont->id == contid) {
-> > > +                       refcount_inc(&cont->refcount);
-> > > +                       goto out;
-> > > +               }
-> > > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
-> > > +       if (cont) {
-> > > +               INIT_LIST_HEAD(&cont->list);
-> >
-> > I thought you were going to get rid of this INIT_LIST_HEAD() call?
->
-> I was intending to, and then Neil weighed in with this opinion:
->
->         https://www.redhat.com/archives/linux-audit/2019-April/msg00014.html
->
-> If you feel that isn't important, please remove it.
+On Thu, 30 May 2019 08:47:27 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Okay, I missed/forgot that, it seems like the right thing to do is to
-leave it as-is.
+> On Wed, May 01, 2019 at 11:00:16AM -0600, Alex Williamson wrote:
+> > Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+> > VF driver binding") allows the user to specify that drivers for VFs of
+> > a PF should not be probed, but it actually causes pci_device_probe() to
+> > return success back to the driver core in this case.  Therefore by all
+> > sysfs appearances the device is bound to a driver, the driver link from
+> > the device exists as does the device link back from the driver, yet the
+> > driver's probe function is never called on the device.  We also fail to
+> > do any sort of cleanup when we're prohibited from probing the device,
+> > the irq setup remains in place and we even hold a device reference.
+> > 
+> > Instead, abort with errno before any setup or references are taken when
+> > pci_device_can_probe() prevents us from trying to probe the device.
+> > 
+> > Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>  
+> 
+> Applied to pci/enumeration for v5.3, thanks!
+> 
+> The scenario you describe, Laine, indeed sounds cumbersome.  If you
+> want to propose an alternate or additional patch to address that, or
+> if you think Alex's patch will make it harder to clean up that
+> scenario, I'm all ears.  But it seems like Alex's patch is an
+> improvement even if it leaves some problems unsolved.
 
--- 
-paul moore
-www.paul-moore.com
+Hi Bjorn,
+
+It's probably deeper in your queue, but I've posted:
+
+https://patchwork.kernel.org/patch/10937577/
+
+which allows devices with a driver_override to always probe.  I think
+it gives us the more desirable usage model.  Thanks,
+
+Alex
+
+
+> > ---
+> > 
+> > This issue is easily tested by disabling sriov_drivers_autoprobe and
+> > creating VFs:
+> > 
+> > # echo 0 > sriov_drivers_autoprobe
+> > # echo 3 > sriov_numvfs
+> > # readlink -f virtfn*/driver
+> > /sys/bus/pci/drivers/iavf
+> > /sys/bus/pci/drivers/iavf
+> > /sys/bus/pci/drivers/iavf
+> > (yet no netdevs exist for these VFs)
+> > 
+> > The semantics of this autoprobe disabling are a bit strange for the
+> > user as well, I suppose it works if we force a bind through a driver's
+> > bind attribute, but tools like libvirt and driverctl expect to bind
+> > devices by setting the driver_override and then pushing the device
+> > through driver_probe on the bus.  Is the intention of disabling
+> > "autoprobe" that a driver_override should still work?  Otherwise the
+> > user needs to set the driver_override for each VF, re-enable
+> > sriov_drivers_autoprobe on the PF, and then probe the VFs.  Thus maybe
+> > pci_device_can_probe() should allow probes of the driver_override
+> > driver?  Thanks,
+> > 
+> > Alex
+> > 
+> >  drivers/pci/pci-driver.c |   13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 71853befd435..da7b82e56c83 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
+> >  	struct pci_dev *pci_dev = to_pci_dev(dev);
+> >  	struct pci_driver *drv = to_pci_driver(dev->driver);
+> >  
+> > +	if (!pci_device_can_probe(pci_dev))
+> > +		return -ENODEV;
+> > +
+> >  	pci_assign_irq(pci_dev);
+> >  
+> >  	error = pcibios_alloc_irq(pci_dev);
+> > @@ -421,12 +424,10 @@ static int pci_device_probe(struct device *dev)
+> >  		return error;
+> >  
+> >  	pci_dev_get(pci_dev);
+> > -	if (pci_device_can_probe(pci_dev)) {
+> > -		error = __pci_device_probe(drv, pci_dev);
+> > -		if (error) {
+> > -			pcibios_free_irq(pci_dev);
+> > -			pci_dev_put(pci_dev);
+> > -		}
+> > +	error = __pci_device_probe(drv, pci_dev);
+> > +	if (error) {
+> > +		pcibios_free_irq(pci_dev);
+> > +		pci_dev_put(pci_dev);
+> >  	}
+> >  
+> >  	return error;
+> >   
+
