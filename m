@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8A6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AB02506E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F102507C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189193;
-	bh=NVvAzGOIg97qKyAva+g4y1yXfLiTQHg1ERmm+Zug250=;
+	s=default; t=1559189203;
+	bh=VlALxv8za7zVD5ocOij2gNebnaZB8CTrJQnYlpH9y0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WkmrYyQSKw8MPXjUrxsaSJ8eIJbq/csy1s/t492MUkOASyR6sSvQp9QM4wDHBuKQs
-	 Mf7OeCM1rgTdeog5V1wVB41zqNsxswq4i6g0ELv0IyfBmYvj6TO2mJ2WHPmVU2gxqs
-	 Q+l8tk7eOqWR+NToMNrxMwk19XZHH5Iu2O7cQ9xI=
+	b=UbVaxJqoxayKBHB+ixdlxp62CsUGZtp7P8ezUImcK4Nwym/QF92kRdXtJnul5SW//
+	 octS6urpF57PSW3ib6YJac4StRhmyF8vJ9fVvwmh3qr71p6vr5qSESnxnFn5Pn/kmj
+	 Z7GHP/F0978XphzhIytGeBmoOqoHqno4TsVpQsBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfE3EGc (ORCPT
+        id S1726748AbfE3EGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731169AbfE3DRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:35 -0400
+        id S1731163AbfE3DRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9544A246BB;
-        Thu, 30 May 2019 03:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF70C2464B;
+        Thu, 30 May 2019 03:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186254;
-        bh=NVvAzGOIg97qKyAva+g4y1yXfLiTQHg1ERmm+Zug250=;
+        s=default; t=1559186253;
+        bh=VlALxv8za7zVD5ocOij2gNebnaZB8CTrJQnYlpH9y0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATaeByppsrPo4o3JKwpRYydMSOClOnM2SCg8109Ra+r/DtrHetn7aupF3C95JRVSi
-         ZzD8tc51zpSahUSc784MsYF0Y2mTd8BAfl+iDB3MCK+7Vlxh1LmKFw7A1prqkAiKzy
-         MnKZkXoNmiihuumWQH3bqe8rw/0fJhvB2wxjT1VQ=
+        b=KFDJ+qdBFmZabf7qJ0PcyjMCgxbeIaYj8scyTyhSSiyiG91C5FjKCAnnzRu173XsK
+         YeY2T6vjdHwNG4FgQQnrFyoXpRth0MnNs57qaA0lUyM7ymRpdZ8Kwx47TShoe3wdG9
+         IAo8XGxFRSwZSDiDIaiiS/jg/R4a3D+XCYpl3DMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/276] audit: fix a memory leak bug
-Date:   Wed, 29 May 2019 20:04:43 -0700
-Message-Id: <20190530030533.643045833@linuxfoundation.org>
+        stable@vger.kernel.org, Jon DeVree <nuxi@vault24.org>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 133/276] random: fix CRNG initialization when random.trust_cpu=1
+Date:   Wed, 29 May 2019 20:04:51 -0700
+Message-Id: <20190530030534.073451785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,64 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 70c4cf17e445264453bc5323db3e50aa0ac9e81f ]
+[ Upstream commit fe6f1a6a8eedc1aa538fee0baa612b6a59639cf8 ]
 
-In audit_rule_change(), audit_data_to_entry() is firstly invoked to
-translate the payload data to the kernel's rule representation. In
-audit_data_to_entry(), depending on the audit field type, an audit tree may
-be created in audit_make_tree(), which eventually invokes kmalloc() to
-allocate the tree.  Since this tree is a temporary tree, it will be then
-freed in the following execution, e.g., audit_add_rule() if the message
-type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
-AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
-AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
-temporary tree is not freed.
+When the system boots with random.trust_cpu=1 it doesn't initialize the
+per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
+means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
+for silly userspace programs") is not used when random.trust_cpu=1.
 
-To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
-or AUDIT_DEL_RULE.
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314029] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$6 = (struct crng_state **) 0x0
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
+initialized again:
+
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314031] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$1 = (struct crng_state **) 0xffff9a915f4014a0
+
+The call to invalidate_batched_entropy() was also missing. This is
+important for architectures like PPC and S390 which only have the
+arch_get_random_seed_* functions.
+
+Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
+Signed-off-by: Jon DeVree <nuxi@vault24.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditfilter.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/char/random.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index bf309f2592c46..425c67e4f5681 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -1114,22 +1114,24 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
- 	int err = 0;
- 	struct audit_entry *entry;
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index c75b6cdf00533..a4515703cfcdd 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -778,6 +778,7 @@ static struct crng_state **crng_node_pool __read_mostly;
+ #endif
  
--	entry = audit_data_to_entry(data, datasz);
--	if (IS_ERR(entry))
--		return PTR_ERR(entry);
--
- 	switch (type) {
- 	case AUDIT_ADD_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
- 		err = audit_add_rule(entry);
- 		audit_log_rule_change("add_rule", &entry->rule, !err);
- 		break;
- 	case AUDIT_DEL_RULE:
-+		entry = audit_data_to_entry(data, datasz);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
- 		err = audit_del_rule(entry);
- 		audit_log_rule_change("remove_rule", &entry->rule, !err);
- 		break;
- 	default:
--		err = -EINVAL;
- 		WARN_ON(1);
-+		return -EINVAL;
+ static void invalidate_batched_entropy(void);
++static void numa_crng_init(void);
+ 
+ static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
+ static int __init parse_trust_cpu(char *arg)
+@@ -806,7 +807,9 @@ static void crng_initialize(struct crng_state *crng)
+ 		}
+ 		crng->state[i] ^= rv;
  	}
- 
- 	if (err || type == AUDIT_DEL_RULE) {
+-	if (trust_cpu && arch_init) {
++	if (trust_cpu && arch_init && crng == &primary_crng) {
++		invalidate_batched_entropy();
++		numa_crng_init();
+ 		crng_init = 2;
+ 		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
+ 	}
 -- 
 2.20.1
 
