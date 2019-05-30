@@ -2,82 +2,120 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CE9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68751C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BB525DE6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EC325DE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfE3Q5F (ORCPT
+        id S1727845AbfE3Q53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:57:05 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51575 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Q5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:57:05 -0400
-Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 166932c14ea010ad; Thu, 30 May 2019 18:57:03 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jon Masters <jcm@redhat.com>,
+        Thu, 30 May 2019 12:57:29 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39898 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3Q51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:57:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B60E3341;
+        Thu, 30 May 2019 09:57:26 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E133F5AF;
+        Thu, 30 May 2019 09:57:20 -0700 (PDT)
+Date:   Thu, 30 May 2019 17:57:18 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [PATCH 01/22] ABI: sysfs-devices-system-cpu: point to the right docs
-Date:   Thu, 30 May 2019 18:57:02 +0200
-Message-ID: <2094851.6rFF3BcFrm@kreacher>
-In-Reply-To: <557b33a4ed53fb1cd5da927c533e7fe283629869.1559171394.git.mchehab+samsung@kernel.org>
-References: <cover.1559171394.git.mchehab+samsung@kernel.org> <557b33a4ed53fb1cd5da927c533e7fe283629869.1559171394.git.mchehab+samsung@kernel.org>
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190530165717.GC35418@arrakis.emea.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190527143719.GA59948@MBP.local>
+ <20190528145411.GA709@e119886-lin.cambridge.arm.com>
+ <20190528154057.GD32006@arrakis.emea.arm.com>
+ <11193998209cc6ff34e7d704f081206b8787b174.camel@oracle.com>
+ <20190529142008.5quqv3wskmpwdfbu@mbp>
+ <b2753e81-7b57-481f-0095-3c6fecb1a74c@oracle.com>
+ <20190530151105.GA35418@arrakis.emea.arm.com>
+ <f79336b5-46b4-39c0-b754-23366207e32d@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f79336b5-46b4-39c0-b754-23366207e32d@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, May 30, 2019 1:23:32 AM CEST Mauro Carvalho Chehab wrote:
-> The cpuidle doc was split on two, one at the admin guide
-> and another one at the driver API guide. Instead of pointing
-> to a non-existent file, point to both (admin guide being
-> the first one).
+On Thu, May 30, 2019 at 10:05:55AM -0600, Khalid Aziz wrote:
+> On 5/30/19 9:11 AM, Catalin Marinas wrote:
+> > So if a database program is doing an anonymous mmap(PROT_TBI) of 100GB,
+> > IIUC for sparc the faulted-in pages will have random colours (on 64-byte
+> > granularity). Ignoring the information leak from prior uses of such
+> > pages, it would be the responsibility of the db program to issue the
+> > stxa. On arm64, since we also want to do this via malloc(), any large
+> > allocation would require all pages to be faulted in so that malloc() can
+> > set the write colour before being handed over to the user. That's what
+> > we want to avoid and the user is free to repaint the memory as it likes.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> On sparc, any newly allocated page is cleared along with any old tags on
+> it. Since clearing tag happens automatically when page is cleared on
+> sparc, clear_user_page() will need to execute additional stxa
+> instructions to set a new tag. It is doable. In a way it is done already
+> if page is being pre-colored with tag 0 always ;)
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Ah, good to know. On arm64 we'd have to use different instructions,
+although the same loop.
 
-> ---
->  Documentation/ABI/testing/sysfs-devices-system-cpu | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> index 1528239f69b2..87478ac6c2af 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> @@ -137,7 +137,8 @@ Description:	Discover cpuidle policy and mechanism
->  		current_governor: (RW) displays current idle policy. Users can
->  		switch the governor at runtime by writing to this file.
->  
-> -		See files in Documentation/cpuidle/ for more information.
-> +		See Documentation/admin-guide/pm/cpuidle.rst and
-> +		Documentation/driver-api/pm/cpuidle.rst for more information.
->  
->  
->  What:		/sys/devices/system/cpu/cpuX/cpuidle/stateN/name
-> 
+> Where would the pre-defined tag be stored - as part of address stored
+> in vm_start or a new field in vm_area_struct?
 
+I think we can discuss the details when we post the actual MTE patches.
+In our internal hack we overloaded the VM_HIGH_ARCH_* flags and selected
+CONFIG_ARCH_USES_HIGH_VMA_FLAGS (used for pkeys on x86).
 
+For the time being, I'd rather restrict tagged addresses passed to
+mmap() until we agreed that they have any meaning. If we allowed them
+now but get ignored (though probably no-one would be doing this), I feel
+it's slightly harder to change the semantics afterwards.
 
+Thanks.
 
+-- 
+Catalin
