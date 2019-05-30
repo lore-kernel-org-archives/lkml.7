@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE2CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D2C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3D124EB5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9855624EA0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188610;
-	bh=fuReYihqI40wcgxccUAXgZINCndo5zrH+xsXMz5n6vg=;
+	s=default; t=1559188613;
+	bh=jCWnGsAAbuluNuNPeEC/tiHdJn5qmn0z9MOTxt9bhV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNphPA+AsP2LavZy/0pW1P3AIwQF/6kQRBButVYNKLSHdtaLTxrfDidU59ptg2sLF
-	 kjQJh9L/lrkMIB9LNDyoygVQj2DPnOK4p1khmeIGCixUcgmQt4Qg2Y+VBTmHiTz13M
-	 vPFJWQvRqT0ioWJCTj8REWbH1cdn0ShFAaTOzMs0=
+	b=fNAF3u4mdDqqOpPMRanCTo6/xhYJQbm/2cEVuugMngSdQR77uRxZsV8v1EiKfzEkm
+	 3sq+3b5ZHlj+xxbFiBDvwtFT5E9OqUfnUynZOWa7y3t8MR5stqStRBZW8y184uhP7T
+	 iQMizMmizAD0rkj23Ta/KZ8OIqfI6gTKXD69p1Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbfE3D4t (ORCPT
+        id S1731751AbfE3DS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53108 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731750AbfE3DS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:57 -0400
+        id S1728325AbfE3DO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB7B24811;
-        Thu, 30 May 2019 03:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F672456F;
+        Thu, 30 May 2019 03:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186336;
-        bh=fuReYihqI40wcgxccUAXgZINCndo5zrH+xsXMz5n6vg=;
+        s=default; t=1559186098;
+        bh=jCWnGsAAbuluNuNPeEC/tiHdJn5qmn0z9MOTxt9bhV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noE1JDoXudMXKepkI74PxOLIjNyMtHKZtBYKBkydyKxCLyNIYNg0srz21vFCKFQr6
-         OPtufCVQL59+6UFKH2w36hPOQCkFEEzllrXmSrBnOtSma2LP45l+jhwZ12EfYhD876
-         VmF3k+y0bnqKKiFbpw3a/i6749hbjpqreKpYPuTg=
+        b=i2xFpfKQd2mdFacyPqSm933rgrXe15IHyreTj4KBXYoTKQUanQJG7ZS4CJYUW1NhO
+         j78UB1/x/qvmgrztBjwiW/6C0V+j5h1MB2bdEkZOmIUV4j/SAzH+6BTwaIh0puOSsJ
+         Wvn0SrlRscO7DLoXPJzgAeBOF31a4IZTNwC9Q0GU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 058/193] scsi: qla2xxx: Avoid that lockdep complains about unsafe locking in tcm_qla2xxx_close_session()
-Date:   Wed, 29 May 2019 20:05:12 -0700
-Message-Id: <20190530030457.607000503@linuxfoundation.org>
+Subject: [PATCH 5.0 233/346] scsi: ufs: Fix regulator load and icc-level configuration
+Date:   Wed, 29 May 2019 20:05:06 -0700
+Message-Id: <20190530030552.848943898@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,258 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4023db71108375e4194e92730ba0d32d7f07813 ]
+[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
 
-This patch avoids that lockdep reports the following warning:
+Currently if a regulator has "<name>-fixed-regulator" property in device
+tree, it will skip current limit initialization.  This lead to a zero
+"max_uA" value in struct ufs_vreg.
 
-=====================================================
-WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
-5.1.0-rc1-dbg+ #11 Tainted: G        W
------------------------------------------------------
-rmdir/1478 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-00000000e7ac4607 (&(&k->k_lock)->rlock){+.+.}, at: klist_next+0x43/0x1d0
+However, "regulator_set_load" operation shall be required on regulators
+which have valid current limits, otherwise a zero "max_uA" set by
+"regulator_set_load" may cause unexpected behavior when this regulator is
+enabled or set as high power mode.
 
-and this task is already holding:
-00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-which would create a new lock dependency:
- (&(&ha->tgt.sess_lock)->rlock){-...} -> (&(&k->k_lock)->rlock){+.+.}
+Similarly, in device's icc_level configuration flow, the target icc_level
+shall be updated if regulator also has valid current limit, otherwise a
+wrong icc_level will be calculated by zero "max_uA" and thus causes
+unexpected results after it is written to device.
 
-but this new dependency connects a HARDIRQ-irq-safe lock:
- (&(&ha->tgt.sess_lock)->rlock){-...}
-
-... which became HARDIRQ-irq-safe at:
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock_irqsave+0x3d/0x60
-  qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-  qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-  qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-  qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-  __handle_irq_event_percpu+0x79/0x3c0
-  handle_irq_event_percpu+0x70/0xf0
-  handle_irq_event+0x5a/0x8b
-  handle_edge_irq+0x12c/0x310
-  handle_irq+0x192/0x20a
-  do_IRQ+0x73/0x160
-  ret_from_intr+0x0/0x1d
-  default_idle+0x23/0x1f0
-  arch_cpu_idle+0x15/0x20
-  default_idle_call+0x35/0x40
-  do_idle+0x2bb/0x2e0
-  cpu_startup_entry+0x1d/0x20
-  start_secondary+0x24d/0x2d0
-  secondary_startup_64+0xa4/0xb0
-
-to a HARDIRQ-irq-unsafe lock:
- (&(&k->k_lock)->rlock){+.+.}
-
-... which became HARDIRQ-irq-unsafe at:
-...
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock+0x32/0x50
-  klist_add_tail+0x33/0xb0
-  device_add+0x7f4/0xb60
-  device_create_groups_vargs+0x11c/0x150
-  device_create_with_groups+0x89/0xb0
-  vtconsole_class_init+0xb2/0x124
-  do_one_initcall+0xc5/0x3ce
-  kernel_init_freeable+0x295/0x32e
-  kernel_init+0x11/0x11b
-  ret_from_fork+0x3a/0x50
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&k->k_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&ha->tgt.sess_lock)->rlock);
-                               lock(&(&k->k_lock)->rlock);
-  <Interrupt>
-    lock(&(&ha->tgt.sess_lock)->rlock);
-
- *** DEADLOCK ***
-
-4 locks held by rmdir/1478:
- #0: 000000002c7f1ba4 (sb_writers#10){.+.+}, at: mnt_want_write+0x32/0x70
- #1: 00000000c85eb147 (&default_group_class[depth - 1]#2/1){+.+.}, at: do_rmdir+0x217/0x2d0
- #2: 000000002b164d6f (&sb->s_type->i_mutex_key#13){++++}, at: vfs_rmdir+0x7e/0x1d0
- #3: 00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-
-the dependencies between HARDIRQ-irq-safe lock and the holding lock:
--> (&(&ha->tgt.sess_lock)->rlock){-...} ops: 127 {
-   IN-HARDIRQ-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock_irqsave+0x3d/0x60
-                    qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-                    qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-                    qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-                    qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-                    __handle_irq_event_percpu+0x79/0x3c0
-                    handle_irq_event_percpu+0x70/0xf0
-                    handle_irq_event+0x5a/0x8b
-                    handle_edge_irq+0x12c/0x310
-                    handle_irq+0x192/0x20a
-                    do_IRQ+0x73/0x160
-                    ret_from_intr+0x0/0x1d
-                    default_idle+0x23/0x1f0
-                    arch_cpu_idle+0x15/0x20
-                    default_idle_call+0x35/0x40
-                    do_idle+0x2bb/0x2e0
-                    cpu_startup_entry+0x1d/0x20
-                    start_secondary+0x24d/0x2d0
-                    secondary_startup_64+0xa4/0xb0
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock_irqsave+0x3d/0x60
-                   qla2x00_loop_resync+0xb3d/0x2690 [qla2xxx]
-                   qla2x00_do_dpc+0xcee/0xf30 [qla2xxx]
-                   kthread+0x1d2/0x1f0
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffffa125f700>] __key.62804+0x0/0xfffffffffff7e900 [qla2xxx]
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-the dependencies between the lock to be acquired
- and HARDIRQ-irq-unsafe lock:
--> (&(&k->k_lock)->rlock){+.+.} ops: 14568 {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock+0x32/0x50
-                   klist_add_tail+0x33/0xb0
-                   device_add+0x7f4/0xb60
-                   device_create_groups_vargs+0x11c/0x150
-                   device_create_with_groups+0x89/0xb0
-                   vtconsole_class_init+0xb2/0x124
-                   do_one_initcall+0xc5/0x3ce
-                   kernel_init_freeable+0x295/0x32e
-                   kernel_init+0x11/0x11b
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffff83f3d900>] __key.15805+0x0/0x40
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-stack backtrace:
-CPU: 7 PID: 1478 Comm: rmdir Tainted: G        W         5.1.0-rc1-dbg+ #11
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0x86/0xca
- check_usage.cold.59+0x473/0x563
- check_prev_add.constprop.43+0x1f1/0x1170
- __lock_acquire+0x11ed/0x1b60
- lock_acquire+0xe3/0x200
- _raw_spin_lock_irqsave+0x3d/0x60
- klist_next+0x43/0x1d0
- device_for_each_child+0x96/0x110
- scsi_target_block+0x3c/0x40 [scsi_mod]
- fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
- qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
- qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
- tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
- target_shutdown_sessions+0x17b/0x190 [target_core_mod]
- core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
- target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
- config_item_release+0x9f/0x120 [configfs]
- config_item_put+0x29/0x2b [configfs]
- configfs_rmdir+0x3d2/0x520 [configfs]
- vfs_rmdir+0xb3/0x1d0
- do_rmdir+0x25c/0x2d0
- __x64_sys_rmdir+0x24/0x30
- do_syscall_64+0x77/0x220
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 4c99f1797b489..2fcdaadd10fa5 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -366,8 +366,9 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2ddf24466a62e..75d7267b73879 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6286,19 +6286,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
+ 		goto out;
+ 	}
  
- 	spin_lock_irqsave(&vha->hw->tgt.sess_lock, flags);
- 	target_sess_cmd_list_set_waiting(se_sess);
--	tcm_qla2xxx_put_sess(sess);
- 	spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+-	if (hba->vreg_info.vcc)
++	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vcc->max_uA,
+ 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
+ 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
+ 
+-	if (hba->vreg_info.vccq)
++	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vccq->max_uA,
+ 				icc_level,
+ 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
+ 
+-	if (hba->vreg_info.vccq2)
++	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vccq2->max_uA,
+ 				icc_level,
+@@ -7001,6 +7001,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
+ 	if (!vreg)
+ 		return 0;
+ 
++	/*
++	 * "set_load" operation shall be required on those regulators
++	 * which specifically configured current limitation. Otherwise
++	 * zero max_uA may cause unexpected behavior when regulator is
++	 * enabled or set as high power mode.
++	 */
++	if (!vreg->max_uA)
++		return 0;
 +
-+	tcm_qla2xxx_put_sess(sess);
- }
- 
- static u32 tcm_qla2xxx_sess_get_index(struct se_session *se_sess)
+ 	ret = regulator_set_load(vreg->reg, ua);
+ 	if (ret < 0) {
+ 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
 -- 
 2.20.1
 
