@@ -2,135 +2,92 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C19C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15F8C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF0325F8E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD47A25F91
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHfmzG1F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbSnuErK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfE3S1B (ORCPT
+        id S1726820AbfE3S1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:27:01 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44254 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfE3S1B (ORCPT
+        Thu, 30 May 2019 14:27:51 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34028 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfE3S1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:27:01 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x47so4801469qtk.11;
-        Thu, 30 May 2019 11:27:00 -0700 (PDT)
+        Thu, 30 May 2019 14:27:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c14so2077404pfi.1;
+        Thu, 30 May 2019 11:27:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U39CGluTtC101GGj3eC1sfgooLLaLn7la6O3dF2wb8k=;
-        b=KHfmzG1FEGNUAmw9P2qZ1gedjA7AErUpKZtbPUaPnpaXO/fexEqq/ViqxeLhRwG4rS
-         23zD3OsjzxmTMVp4chldJpszpaA8jEDGJNb3DxvILL3rxrNlz+/eUNb1F1UhFatP5NAl
-         a7aevFI1SVBYqIzmLUpX04AynDtGreky9lqcUQkHC1b0swcnUzt50lZKr9W9N0VzIdy9
-         xvgUhwrD+M4WCTM+3xzIS/K7s7QCvUtk9nFM9spYCRXaqf3K8WCJbsizhvSMwEEQTZJo
-         pkGNcpzvWwsvBy+l84A4kM1d+lH05vsfL276FUAoNIuUg9NPbaH0tQ912vcHNuNhsYDj
-         BLcA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Uzm65HhSNN1fcmtt/Wa7yU7SbppJINSbRm2BJyTrW0A=;
+        b=sbSnuErKWDWIZt2mopN4EdYZQM3stYUcIVPMv1WlxRUnQ1+utWW/t9SQ/+xdZNoRE/
+         z4rrtFtWTV8AoL4Fw2ZVqKRpAZal+YAgGS+iE8ZcmObpeOdpu2AraB7nK66IODU/QUt+
+         p36zqrfW/03F09bwF7ANH5PgD2umX1wAniB2kDVoUGlj+KHaDjPdTrzs6LARVzqpJHwr
+         6jm4VFdrJBsejmbqF0EIrsPMt6MYPJn2whD9sEk76DBXljDONt0TQBFL2Wr+H8oM1XsZ
+         8w+1kFaRgkVwWVxCDJlo02CycZgNP28ygF2zU6M9bmMz42QPrxy918fnUuIqJewgSTLT
+         nOpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U39CGluTtC101GGj3eC1sfgooLLaLn7la6O3dF2wb8k=;
-        b=ck5sNSNj1RtI2aWFttjBANK9bfLv80TZC8E9nKO6UH9Vwz+PzkfMh/0KG1VBJek7V7
-         v05MII4YjfQ39Cy72EQRreLJ4bJh3G3K3/PFeiaK47eF7aAX5PXUZyEj9tXhjfBRFMEd
-         GqEzu/ZURkllRfrKiLjhI/hj2KTv5xKmnWlch4PLbcj0/EwNBKsibIG+rqAk8HVZF2AT
-         G1iyiC2pJkS39I4dJOa4AQhpoudgV3nkwF93/6r4Lb56HdYfYIoAE35s8tMZoeIFUwci
-         vK//gQDg/qDZYQgxz+auG4+QJkHA7EKlKTQ31AoqlTVoVvd+E3VxeQOTNQrU+WuVDmuj
-         IkoQ==
-X-Gm-Message-State: APjAAAUPfFYil87oRImHbjCqrd79r/uSlyNIv5073d5pAFHjqQLEOFoK
-        /nJMHCJStIohIpFg1Vaj5l+GTUthhi5yA1GUzGQ=
-X-Google-Smtp-Source: APXvYqwBedhtM7sICx5e8OtUsAq2knjHWe9TjbXGAFgyILtcmqp7M1CmMBTNv/0/1VmtVlzM8QshPwxUy3y3RcX7Njw=
-X-Received: by 2002:a0c:bf4f:: with SMTP id b15mr4737694qvj.24.1559240819991;
- Thu, 30 May 2019 11:26:59 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uzm65HhSNN1fcmtt/Wa7yU7SbppJINSbRm2BJyTrW0A=;
+        b=aJcEq0W4C60oHIupJgOK9VmtJ4keImzFYOupB1dN955BaYPAYtpg3T3En/3rfATk+f
+         l+5bU7WMiZTVi+U3gew1KjXrlLpJuks9jy8ywWwJlgu18YxqwCC3YwGtA2NxyzjB9/nL
+         f1b4NqJtJT2ykuFiihP7Nu8Zq+/bJy6NFbTZAY0AMjzne87UiRS8LwCwA7Z8GR3CSG2x
+         0NbARk0aZ9SirfUgLU9131IG+W8J/02L5Mq9vlmfsq0e6aDhXCjlPlXMIe6YvS0n6bjv
+         4SoHgNwmFupmBdGYH01z6kikKuBGwBFYgzuu2RVs7T7d07gyLUikrQBUTGs6PtEWAAlW
+         U/uw==
+X-Gm-Message-State: APjAAAW4JmhWuPtK1Qz1c4UOHNT1na3Fp+73WZpiTIhzR8Eb/bcnTM6c
+        3c4X2UikcnTNmeD1onXGERI=
+X-Google-Smtp-Source: APXvYqzdplx15olZulXztvbcPMjAW8y3Q0IQ6Xo6P5SFLiKz+/5oTDn5Vy4bUMmmscwsvXtDgfPhDQ==
+X-Received: by 2002:a63:fc08:: with SMTP id j8mr4772350pgi.432.1559240870190;
+        Thu, 30 May 2019 11:27:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z18sm3630452pfa.101.2019.05.30.11.27.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 11:27:49 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:27:47 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 000/128] 4.9.180-stable review
+Message-ID: <20190530182747.GA22970@roeck-us.net>
+References: <20190530030432.977908967@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190530010359.2499670-1-guro@fb.com> <20190530010359.2499670-3-guro@fb.com>
-In-Reply-To: <20190530010359.2499670-3-guro@fb.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 30 May 2019 11:26:48 -0700
-Message-ID: <CAPhsuW68VmmryjT1owjGY1W0e=n_X6f6kOQm_di-BkCagioKmA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/5] bpf: add memlock precharge for socket local storage
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 6:05 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Socket local storage maps lack the memlock precharge check,
-> which is performed before the memory allocation for
-> most other bpf map types.
->
-> Let's add it in order to unify all map types.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Wed, May 29, 2019 at 08:05:32PM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.180 release.
+> There are 128 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 01 Jun 2019 03:02:06 AM UTC.
+> Anything received after that time might be too late.
+> 
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 320 pass: 320 fail: 0
 
-> ---
->  net/core/bpf_sk_storage.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-> index cc9597a87770..9a8aaf8e235d 100644
-> --- a/net/core/bpf_sk_storage.c
-> +++ b/net/core/bpf_sk_storage.c
-> @@ -626,7 +626,9 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
->         struct bpf_sk_storage_map *smap;
->         unsigned int i;
->         u32 nbuckets;
-> +       u32 pages;
->         u64 cost;
-> +       int ret;
->
->         smap = kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN);
->         if (!smap)
-> @@ -635,13 +637,19 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
->
->         smap->bucket_log = ilog2(roundup_pow_of_two(num_possible_cpus()));
->         nbuckets = 1U << smap->bucket_log;
-> +       cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
-> +       pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +
-> +       ret = bpf_map_precharge_memlock(pages);
-> +       if (ret < 0)
-> +               return ERR_PTR(ret);
-> +
->         smap->buckets = kvcalloc(sizeof(*smap->buckets), nbuckets,
->                                  GFP_USER | __GFP_NOWARN);
->         if (!smap->buckets) {
->                 kfree(smap);
->                 return ERR_PTR(-ENOMEM);
->         }
-> -       cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
->
->         for (i = 0; i < nbuckets; i++) {
->                 INIT_HLIST_HEAD(&smap->buckets[i].list);
-> @@ -651,7 +659,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
->         smap->elem_size = sizeof(struct bpf_sk_storage_elem) + attr->value_size;
->         smap->cache_idx = (unsigned int)atomic_inc_return(&cache_idx) %
->                 BPF_SK_STORAGE_CACHE_SIZE;
-> -       smap->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       smap->map.pages = pages;
->
->         return &smap->map;
->  }
-> --
-> 2.20.1
->
+Guenter
