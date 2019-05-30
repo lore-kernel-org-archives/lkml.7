@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FFDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71CF324201
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE3424B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187780;
-	bh=5yfE+PIdwBJEYMQT2JIinYrvyYeU/jnxN8az01WPZ08=;
+	s=default; t=1559187783;
+	bh=hp9hfkTL0sLwLVIrSzc0yhCcVwG/a/CO1GCvj2NGoLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9cs7YWvoAiIgA2aEp5c39jfzGmfjdL3YKPeS6olOf1UVTZhmNfWTgs1rBx5Qq9Vm
-	 bQHSJYacyKg05go2wfWYaHNiJMGUIFLJ/BKcqkdyZRJTa3XHZLfMYVsfxjPrrB2AdJ
-	 Jg8rLwIi03S3J8ZrFXYQjXnSmiky5VxUYIiAg3Ss=
+	b=IYNgAmCyi7uuYaUazc6eZijzEFrmZGWgrHRmqqZS7UsBIXSgHuTo9xb1lmP5U8sH7
+	 0qunMi6Ctm8Asudospf7AyEsilwSetE5xvSk1OTOQFa7jmoAPPvqF5FW6cRehtgzWc
+	 FYfzOfjQNG7BjSNBQyc/e7NotqxX3F8f3IsEhaDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbfE3Dm7 (ORCPT
+        id S1732433AbfE3DVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbfE3DVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730621AbfE3DQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66CFA2496D;
-        Thu, 30 May 2019 03:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDB6245DB;
+        Thu, 30 May 2019 03:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186464;
-        bh=5yfE+PIdwBJEYMQT2JIinYrvyYeU/jnxN8az01WPZ08=;
+        s=default; t=1559186172;
+        bh=hp9hfkTL0sLwLVIrSzc0yhCcVwG/a/CO1GCvj2NGoLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GqOkuGKgWcd9gZ6MR3H4Uo5/gzSwSF8H9i6383J2JpGJSBJq6naRjMj6Dsv7widCG
-         zxIiIlS97mMJZBZ+/g6ijsgdMIKwzNeqo+eOgOUluTvEuRyY3TeoebdBUmgjXIaBCA
-         YHqnPKMt3zPhsAw9QG1Nop+4NCIWAzyOp5f3hCm0=
+        b=mv4HU5fxxrB2t3NyP+iRcsKvDEQ1vsQextFoLsn8PnnOCxHyOuco2IsNCwr+4llqm
+         LHbcvHGwEOO1tI55Ay9e6PBklHAan+YujlbD27FllMNav0ZdvgY6wj7LQOFZbj7lvi
+         9UhlAhUFBay9natrqd5Rqw9A8958lT+5n0PkvcbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/128] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 29 May 2019 20:06:14 -0700
-Message-Id: <20190530030441.786039033@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 4.19 004/276] f2fs: Fix use of number of devices
+Date:   Wed, 29 May 2019 20:02:42 -0700
+Message-Id: <20190530030523.689230340@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,47 +59,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+commit 0916878da355650d7e77104a7ac0fa1784eca852 upstream.
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
+For a single device mount using a zoned block device, the zone
+information for the device is stored in the sbi->devs single entry
+array and sbi->s_ndevs is set to 1. This differs from a single device
+mount using a regular block device which does not allocate sbi->devs
+and sets sbi->s_ndevs to 0.
 
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
+However, sbi->s_devs == 0 condition is used throughout the code to
+differentiate a single device mount from a multi-device mount where
+sbi->s_ndevs is always larger than 1. This results in problems with
+single zoned block device volumes as these are treated as multi-device
+mounts but do not have the start_blk and end_blk information set. One
+of the problem observed is skipping of zone discard issuing resulting in
+write commands being issued to full zones or unaligned to a zone write
+pointer.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
+Fix this problem by simply treating the cases sbi->s_ndevs == 0 (single
+regular block device mount) and sbi->s_ndevs == 1 (single zoned block
+device mount) in the same manner. This is done by introducing the
+helper function f2fs_is_multi_device() and using this helper in place
+of direct tests of sbi->s_ndevs value, improving code readability.
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 9fadf7e31c5f8..cb43f57f978b1 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+Fixes: 7bb3a371d199 ("f2fs: Fix zoned block device support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 08314fb42652..4d02e76b648a 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -197,12 +197,14 @@ struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
+ 	struct block_device *bdev = sbi->sb->s_bdev;
+ 	int i;
+ 
+-	for (i = 0; i < sbi->s_ndevs; i++) {
+-		if (FDEV(i).start_blk <= blk_addr &&
+-					FDEV(i).end_blk >= blk_addr) {
+-			blk_addr -= FDEV(i).start_blk;
+-			bdev = FDEV(i).bdev;
+-			break;
++	if (f2fs_is_multi_device(sbi)) {
++		for (i = 0; i < sbi->s_ndevs; i++) {
++			if (FDEV(i).start_blk <= blk_addr &&
++			    FDEV(i).end_blk >= blk_addr) {
++				blk_addr -= FDEV(i).start_blk;
++				bdev = FDEV(i).bdev;
++				break;
++			}
+ 		}
+ 	}
+ 	if (bio) {
+@@ -216,6 +218,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
+ {
+ 	int i;
+ 
++	if (!f2fs_is_multi_device(sbi))
++		return 0;
++
+ 	for (i = 0; i < sbi->s_ndevs; i++)
+ 		if (FDEV(i).start_blk <= blkaddr && FDEV(i).end_blk >= blkaddr)
+ 			return i;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 1f5d5f62bb77..a4b6eacf22ea 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1336,6 +1336,17 @@ static inline bool time_to_inject(struct f2fs_sb_info *sbi, int type)
+ }
+ #endif
+ 
++/*
++ * Test if the mounted volume is a multi-device volume.
++ *   - For a single regular disk volume, sbi->s_ndevs is 0.
++ *   - For a single zoned disk volume, sbi->s_ndevs is 1.
++ *   - For a multi-device volume, sbi->s_ndevs is always 2 or more.
++ */
++static inline bool f2fs_is_multi_device(struct f2fs_sb_info *sbi)
++{
++	return sbi->s_ndevs > 1;
++}
++
+ /* For write statistics. Suppose sector size is 512 bytes,
+  * and the return value is in kbytes. s is of struct f2fs_sb_info.
+  */
+@@ -3455,7 +3466,7 @@ static inline bool f2fs_force_buffered_io(struct inode *inode, int rw)
+ {
+ 	return (f2fs_post_read_required(inode) ||
+ 			(rw == WRITE && test_opt(F2FS_I_SB(inode), LFS)) ||
+-			F2FS_I_SB(inode)->s_ndevs);
++			f2fs_is_multi_device(F2FS_I_SB(inode)));
+ }
+ 
+ #ifdef CONFIG_F2FS_FAULT_INJECTION
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index b3f46e3bec17..8d1eb8dec605 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2539,7 +2539,7 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
+ 							sizeof(range)))
+ 		return -EFAULT;
+ 
+-	if (sbi->s_ndevs <= 1 || sbi->s_ndevs - 1 <= range.dev_num ||
++	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
+ 			sbi->segs_per_sec != 1) {
+ 		f2fs_msg(sbi->sb, KERN_WARNING,
+ 			"Can't flush %u in %d for segs_per_sec %u != 1\n",
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 5c8d00422237..d44b57a363ff 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1256,7 +1256,7 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+ 	sbi->gc_pin_file_threshold = DEF_GC_FAILED_PINNED_FILES;
+ 
+ 	/* give warm/cold data area from slower device */
+-	if (sbi->s_ndevs && sbi->segs_per_sec == 1)
++	if (f2fs_is_multi_device(sbi) && sbi->segs_per_sec == 1)
+ 		SIT_I(sbi)->last_victim[ALLOC_NEXT] =
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index ac038563273d..03fa2c4d3d79 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -574,7 +574,7 @@ static int submit_flush_wait(struct f2fs_sb_info *sbi, nid_t ino)
+ 	int ret = 0;
+ 	int i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return __submit_flush_wait(sbi, sbi->sb->s_bdev);
+ 
+ 	for (i = 0; i < sbi->s_ndevs; i++) {
+@@ -640,7 +640,8 @@ int f2fs_issue_flush(struct f2fs_sb_info *sbi, nid_t ino)
+ 		return ret;
+ 	}
+ 
+-	if (atomic_inc_return(&fcc->issing_flush) == 1 || sbi->s_ndevs > 1) {
++	if (atomic_inc_return(&fcc->issing_flush) == 1 ||
++	    f2fs_is_multi_device(sbi)) {
+ 		ret = submit_flush_wait(sbi, ino);
+ 		atomic_dec(&fcc->issing_flush);
+ 
+@@ -746,7 +747,7 @@ int f2fs_flush_device_cache(struct f2fs_sb_info *sbi)
+ {
+ 	int ret = 0, i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return 0;
+ 
+ 	for (i = 1; i < sbi->s_ndevs; i++) {
+@@ -1289,7 +1290,7 @@ static int __queue_discard_cmd(struct f2fs_sb_info *sbi,
+ 
+ 	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		int devi = f2fs_target_device_index(sbi, blkstart);
+ 
+ 		blkstart -= FDEV(devi).start_blk;
+@@ -1638,7 +1639,7 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+ 	block_t lblkstart = blkstart;
+ 	int devi = 0;
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		devi = f2fs_target_device_index(sbi, blkstart);
+ 		blkstart -= FDEV(devi).start_blk;
+ 	}
+@@ -2971,7 +2972,7 @@ static void update_device_state(struct f2fs_io_info *fio)
+ 	struct f2fs_sb_info *sbi = fio->sbi;
+ 	unsigned int devidx;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return;
+ 
+ 	devidx = f2fs_target_device_index(sbi, fio->new_blkaddr);
 -- 
-2.20.1
+2.21.0
 
 
 
