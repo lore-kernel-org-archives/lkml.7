@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B94C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C8FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92AC125152
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18DA25159
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189448;
-	bh=4db5lcLgJ3ET8TrH4aWhQ7EKOifDOX0uLXxtvfOh7nM=;
+	s=default; t=1559189450;
+	bh=mB1JwBppuuYo9KbxWZGD36wEw4Y+aFhaE5D0Y/3vHP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UAigZjXA/IIK4CbkFjzpdZBpbpkPRN4m0WR5VujIX4nTQ2CiG7u/94dQ/LwH2DgE7
-	 ll+Oolk4zW1iYUwR08o31DaTLosGI5QHwe6F4qpNrDYF8ajN1CuANseFl3OAICTp0f
-	 7ASvb9vPCf5xexidAbsnoolFL7i1Ntd4z9GVFXo0=
+	b=1yn1aTysCfwc2iLM3/ggCQ8wWdi4zDxyz0AV66PcWx54a0JS01GHNhv++pkRFBTEk
+	 iCF5EMXqA2DO7F3Gbe/BsG0vSvoGALXaop3KUNBFR+0UoDRpotS5nsQFP0lgQqWCI3
+	 JqiHDOFIMY40h0jzOm1leQLdWgPKDuoQvJUY6iSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfE3EKo (ORCPT
+        id S1727881AbfE3EKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbfE3DQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:59 -0400
+        id S1729935AbfE3DQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C1F724627;
-        Thu, 30 May 2019 03:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3032463F;
+        Thu, 30 May 2019 03:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186218;
-        bh=4db5lcLgJ3ET8TrH4aWhQ7EKOifDOX0uLXxtvfOh7nM=;
+        bh=mB1JwBppuuYo9KbxWZGD36wEw4Y+aFhaE5D0Y/3vHP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytsp3uqcOBlnb6sRDhZxJfJOPuQtZq6QEbTu/DMyifb4SpLXXHfr+gX0t+muoUPr/
-         O7i1if/+8sALyUghzXfCbRhf99891mwSrhV7oPcNfT8NEMe0RIjMuU37OJO5imnb0d
-         okjn1B+cMc0Hv2w0ekVHHrifNMkSnDWJ/wNZlOxo=
+        b=1BsVPh4lb43Cuz1pkWH0TJS96AsWBF79mhWbcVbr2Kcxk5xwpLtJ2I0e+e5a/UAq0
+         Q66PuHoYDHapbbhOQ6UdHbwlRMDmIsHpfMJ7rRDxOBHNWGe9t75WSzb8dM99Z+8ncY
+         FGbWfX8OJ/N5eUccyx86EVGErBzVCiQcqSUfDcYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Robbie Ko <robbieko@synology.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 107/276] RDMA/cma: Consider scope_id while binding to ipv6 ll address
-Date:   Wed, 29 May 2019 20:04:25 -0700
-Message-Id: <20190530030532.719815315@linuxfoundation.org>
+Subject: [PATCH 4.19 080/276] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
+Date:   Wed, 29 May 2019 20:03:58 -0700
+Message-Id: <20190530030531.374696788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,80 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d7ed2f27bbd482fd29e6b2e204b1a1ee8a0b268 ]
+[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
 
-When two netdev have same link local addresses (such as vlan and non
-vlan), two rdma cm listen id should be able to bind to following different
-addresses.
+When doing fallocate, we first add the range to the reserve_list and
+then reserve the quota.  If quota reservation fails, we'll release all
+reserved parts of reserve_list.
 
-listener-1: addr=lla, scope_id=A, port=X
-listener-2: addr=lla, scope_id=B, port=X
+However, cur_offset is not updated to indicate that this range is
+already been inserted into the list.  Therefore, the same range is freed
+twice.  Once at list_for_each_entry loop, and once at the end of the
+function.  This will result in WARN_ON on bytes_may_use when we free the
+remaining space.
 
-However while comparing the addresses only addr and port are considered,
-due to which 2nd listener fails to listen.
+At the end, under the 'out' label we have a call to:
 
-In below example of two listeners, 2nd listener is failing with address in
-use error.
+   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
 
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1 -p 4545&
+The start offset, third argument, should be cur_offset.
 
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1.200 -p 4545
-rdma_bind_addr: Address already in use
+Everything from alloc_start to cur_offset was freed by the
+list_for_each_entry_safe_loop.
 
-To overcome this, consider the scope_ids as well which forms the accurate
-IPv6 link local address.
-
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Robbie Ko <robbieko@synology.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ fs/btrfs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 6f5be78024762..39dc7be56884a 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1078,18 +1078,31 @@ static inline bool cma_any_addr(const struct sockaddr *addr)
- 	return cma_zero_addr(addr) || cma_loopback_addr(addr);
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index de4d3baec1616..e24c0a69ff5d4 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -3161,6 +3161,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+ 					cur_offset, last_byte - cur_offset);
+ 			if (ret < 0) {
++				cur_offset = last_byte;
+ 				free_extent_map(em);
+ 				break;
+ 			}
+@@ -3210,7 +3211,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 	/* Let go of our reservation. */
+ 	if (ret != 0 && !(mode & FALLOC_FL_ZERO_RANGE))
+ 		btrfs_free_reserved_data_space(inode, data_reserved,
+-				alloc_start, alloc_end - cur_offset);
++				cur_offset, alloc_end - cur_offset);
+ 	extent_changeset_free(data_reserved);
+ 	return ret;
  }
- 
--static int cma_addr_cmp(struct sockaddr *src, struct sockaddr *dst)
-+static int cma_addr_cmp(const struct sockaddr *src, const struct sockaddr *dst)
- {
- 	if (src->sa_family != dst->sa_family)
- 		return -1;
- 
- 	switch (src->sa_family) {
- 	case AF_INET:
--		return ((struct sockaddr_in *) src)->sin_addr.s_addr !=
--		       ((struct sockaddr_in *) dst)->sin_addr.s_addr;
--	case AF_INET6:
--		return ipv6_addr_cmp(&((struct sockaddr_in6 *) src)->sin6_addr,
--				     &((struct sockaddr_in6 *) dst)->sin6_addr);
-+		return ((struct sockaddr_in *)src)->sin_addr.s_addr !=
-+		       ((struct sockaddr_in *)dst)->sin_addr.s_addr;
-+	case AF_INET6: {
-+		struct sockaddr_in6 *src_addr6 = (struct sockaddr_in6 *)src;
-+		struct sockaddr_in6 *dst_addr6 = (struct sockaddr_in6 *)dst;
-+		bool link_local;
-+
-+		if (ipv6_addr_cmp(&src_addr6->sin6_addr,
-+					  &dst_addr6->sin6_addr))
-+			return 1;
-+		link_local = ipv6_addr_type(&dst_addr6->sin6_addr) &
-+			     IPV6_ADDR_LINKLOCAL;
-+		/* Link local must match their scope_ids */
-+		return link_local ? (src_addr6->sin6_scope_id !=
-+				     dst_addr6->sin6_scope_id) :
-+				    0;
-+	}
-+
- 	default:
- 		return ib_addr_cmp(&((struct sockaddr_ib *) src)->sib_addr,
- 				   &((struct sockaddr_ib *) dst)->sib_addr);
 -- 
 2.20.1
 
