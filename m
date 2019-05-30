@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23498C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D9CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F106C24C26
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938942411E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187734;
-	bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+	s=default; t=1559187746;
+	bh=EkBCv1heqGKzTiAmeF4zZ0mO7WABHV4kA/21WAkBZRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu3ZgZpGZU1z6bmK4fAmpAVn8IPzmasHIGQcNKpGJ93pfEIB2hFcYhtULCDCuFdl1
-	 o7wlDvfEvwWA1vJI1o9D71i9FssDTYEByV7LLHU1upIj8QVXsRZgsAjeJ/fxFqXSi5
-	 MKDyzglWrMHnO1Ufs3huGNSyk/zHavKq3SVhredU=
+	b=f5SOKrKZRPeitvyalNR/m9TvM9arWAFBd7LXeEpxcB0GMftksf6j0n1qWsi7kl41s
+	 cPTN3sBDKVVceCvW291+DdsAR1aTZWKjW8JE0XHboF/cvwNGisdMgA8Yl2XgHkeQoa
+	 NciAf8IlEj+qIsr6Jl70iWgQGAWnYuHc1YLRmxDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732742AbfE3DmF (ORCPT
+        id S1728099AbfE3DmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732500AbfE3DVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:15 -0400
+        id S1732490AbfE3DVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C492495E;
-        Thu, 30 May 2019 03:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E31249D8;
+        Thu, 30 May 2019 03:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186475;
-        bh=7HI6N91vbKXJrX1wN4OS7tsYTq/hOQxF0ZkTbp8oJ14=;
+        s=default; t=1559186473;
+        bh=EkBCv1heqGKzTiAmeF4zZ0mO7WABHV4kA/21WAkBZRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZjI7dSDTxBJdqIp6W3j9DYyRoinKtMlQ7CDBYUTo3zMEmsvsL14LIutYCaLW3YN+q
-         lWZi6yRh++dGqGCts1XDhF0bU9ZYoawhw3v5xvJ5j+Nusmn0yjxXufp4Z8IhnJt9Bf
-         CyyypOlSgTbkH7uh/4Rvsn8qUARB6jx/q8uJV6SI=
+        b=1toQv7zJrbGTIqPRYDkUSU4jyLBU/gMJXUAXXu8x72qAQEhBPl93gQwoDa+W1sbTH
+         E1XWBNnO6baqZSVoC2Bt6yCQJBAA0unyBAQ3AI9rsNzYIdr9O4Wf/E+6u0Nua1tsEo
+         aQd2BXqxscRLeMM1g6OKDSTVc2R99XWQepeZszP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 107/128] ASoC: fsl_utils: fix a leaked reference by adding missing of_node_put
-Date:   Wed, 29 May 2019 20:07:19 -0700
-Message-Id: <20190530030453.891084085@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 103/128] x86/ia32: Fix ia32_restore_sigcontext() AC leak
+Date:   Wed, 29 May 2019 20:07:15 -0700
+Message-Id: <20190530030453.278831048@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -67,45 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c705247136a523488eac806bd357c3e5d79a7acd ]
+[ Upstream commit 67a0514afdbb8b2fc70b771b8c77661a9cb9d3a9 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Objtool spotted that we call native_load_gs_index() with AC set.
+Re-arrange the code to avoid that.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/fsl_utils.c:74:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 38, but without a corresponding     object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_utils.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/ia32/ia32_signal.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_utils.c b/sound/soc/fsl/fsl_utils.c
-index b9e42b503a377..4f8bdb7650e84 100644
---- a/sound/soc/fsl/fsl_utils.c
-+++ b/sound/soc/fsl/fsl_utils.c
-@@ -75,6 +75,7 @@ int fsl_asoc_get_dma_channel(struct device_node *ssi_np,
- 	iprop = of_get_property(dma_np, "cell-index", NULL);
- 	if (!iprop) {
- 		of_node_put(dma_np);
-+		of_node_put(dma_channel_np);
- 		return -EINVAL;
- 	}
- 	*dma_id = be32_to_cpup(iprop);
+diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+index cb13c0564ea7b..9978ea4382bf6 100644
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -60,9 +60,8 @@
+ } while (0)
+ 
+ #define RELOAD_SEG(seg)		{		\
+-	unsigned int pre = GET_SEG(seg);	\
++	unsigned int pre = (seg) | 3;		\
+ 	unsigned int cur = get_user_seg(seg);	\
+-	pre |= 3;				\
+ 	if (pre != cur)				\
+ 		set_user_seg(seg, pre);		\
+ }
+@@ -71,6 +70,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 				   struct sigcontext_32 __user *sc)
+ {
+ 	unsigned int tmpflags, err = 0;
++	u16 gs, fs, es, ds;
+ 	void __user *buf;
+ 	u32 tmp;
+ 
+@@ -78,16 +78,10 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 	current->restart_block.fn = do_no_restart_syscall;
+ 
+ 	get_user_try {
+-		/*
+-		 * Reload fs and gs if they have changed in the signal
+-		 * handler.  This does not handle long fs/gs base changes in
+-		 * the handler, but does not clobber them at least in the
+-		 * normal case.
+-		 */
+-		RELOAD_SEG(gs);
+-		RELOAD_SEG(fs);
+-		RELOAD_SEG(ds);
+-		RELOAD_SEG(es);
++		gs = GET_SEG(gs);
++		fs = GET_SEG(fs);
++		ds = GET_SEG(ds);
++		es = GET_SEG(es);
+ 
+ 		COPY(di); COPY(si); COPY(bp); COPY(sp); COPY(bx);
+ 		COPY(dx); COPY(cx); COPY(ip); COPY(ax);
+@@ -105,6 +99,17 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
+ 		buf = compat_ptr(tmp);
+ 	} get_user_catch(err);
+ 
++	/*
++	 * Reload fs and gs if they have changed in the signal
++	 * handler.  This does not handle long fs/gs base changes in
++	 * the handler, but does not clobber them at least in the
++	 * normal case.
++	 */
++	RELOAD_SEG(gs);
++	RELOAD_SEG(fs);
++	RELOAD_SEG(ds);
++	RELOAD_SEG(es);
++
+ 	err |= fpu__restore_sig(buf, 1);
+ 
+ 	force_iret();
 -- 
 2.20.1
 
