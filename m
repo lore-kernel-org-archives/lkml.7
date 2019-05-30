@@ -2,60 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36831C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6B624F10
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C4D124F01
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188726;
-	bh=tDB5YY0NPcT0l/Ix8REcVlx+WJ/4cDK4koo2CQwZI9s=;
+	s=default; t=1559188733;
+	bh=iGxECOeYoMheEdkjkj36hyuYRAMoQSKnz47vNcgJL9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UWnjywXT8+NaehJNMpoE6dbNzifvps2mGIuSQFZcf8ML4de8Fppi37p+K+H5JJaEi
-	 W40VUUv21w/q3XKgTciubt+RIH6zuzTotA75/2MwY2WXjWwuE7NQQZY+QPVfgLShFU
-	 qmvn8DgDBdPUQBxpuRq/mvqKvxGNGGfjV3nuzbFc=
+	b=KaIXELxFbMd3baF64ja49zLwnIF+DsOoyY6ZJH2oSArmdySgMlmm8NgEHWue+I5dL
+	 VWBpXX2soMaHfVBoo9Uh71lBAMn/+bmyXkjDK2JwrHcCx9MxG7q4uI06GspbBGl4/f
+	 lE40GM7iiDhCGG7EW0qoCq7FCktgKFC2SUsx6yIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbfE3D6p (ORCPT
+        id S1731629AbfE3DSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52258 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbfE3DSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:43 -0400
+        id S1729949AbfE3DOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959DF2475F;
-        Thu, 30 May 2019 03:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A1024585;
+        Thu, 30 May 2019 03:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186322;
-        bh=tDB5YY0NPcT0l/Ix8REcVlx+WJ/4cDK4koo2CQwZI9s=;
+        s=default; t=1559186081;
+        bh=iGxECOeYoMheEdkjkj36hyuYRAMoQSKnz47vNcgJL9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXj1mQfxDKKIQnSK4NIcYqTfb483F9S64qhmmmVPi2NTJZX2THFEchOsYDKS5iP1A
-         83kYDZpgKpmsvVkikVious7Up2N3L48sSFCTziD7FW21iR/1Kc/lQJ/lLI8qRdpE6p
-         OBVM6rVx2tLBG9mmwsxoj88e6aP2n12m+uVOa5Qk=
+        b=0Zea+2cc0MwqMnt4pcEfiaqgotPTKjXVPOwszXfNsmpEcBzehTlCtGNvKbB7CKhPH
+         BGE+Y3ppKIjKaJpXvCU3LHm1bSbPO/GmVBdjEtCNFk5iQSqyaULdJbJ/UopqMVgyAB
+         UMHUDWN1DFxLF2u8hsM/7tluGXLTUC5uOpxl1d1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9723f2d288e49b492cf0@syzkaller.appspotmail.com,
-        syzbot+f0ddeb2b032a8e1d9098@syzkaller.appspotmail.com,
-        syzbot+f14b3703cd8d7670203f@syzkaller.appspotmail.com,
-        syzbot+eefa384efad8d7997f20@syzkaller.appspotmail.com,
-        William Tu <u9012063@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Paasch <cpaasch@apple.com>
-Subject: [PATCH 4.14 034/193] net: erspan: fix use-after-free
-Date:   Wed, 29 May 2019 20:04:48 -0700
-Message-Id: <20190530030454.006155866@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Shuah Khan (Samsung OSG)" <shuah@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 202/346] selftests: cgroup: fix cleanup path in test_memcg_subtree_control()
+Date:   Wed, 29 May 2019 20:04:35 -0700
+Message-Id: <20190530030551.424054947@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,76 +62,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Tu <u9012063@gmail.com>
+[ Upstream commit e14d314c7a489f060d6d691866fef5f131281718 ]
 
-commit b423d13c08a656c719fa56324a8f4279c835d90c upstream.
+Dan reported, that cleanup path in test_memcg_subtree_control()
+triggers a static checker warning:
+  ./tools/testing/selftests/cgroup/test_memcontrol.c:76 \
+  test_memcg_subtree_control()
+  error: uninitialized symbol 'child2'.
 
-When building the erspan header for either v1 or v2, the eth_hdr()
-does not point to the right inner packet's eth_hdr,
-causing kasan report use-after-free and slab-out-of-bouds read.
+Fix this by initializing child2 and parent2 variables and
+split the cleanup path into few stages.
 
-The patch fixes the following syzkaller issues:
-[1] BUG: KASAN: slab-out-of-bounds in erspan_xmit+0x22d4/0x2430 net/ipv4/ip_gre.c:735
-[2] BUG: KASAN: slab-out-of-bounds in erspan_build_header+0x3bf/0x3d0 net/ipv4/ip_gre.c:698
-[3] BUG: KASAN: use-after-free in erspan_xmit+0x22d4/0x2430 net/ipv4/ip_gre.c:735
-[4] BUG: KASAN: use-after-free in erspan_build_header+0x3bf/0x3d0 net/ipv4/ip_gre.c:698
-
-[2] CPU: 0 PID: 3654 Comm: syzkaller377964 Not tainted 4.15.0-rc9+ #185
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:17 [inline]
- dump_stack+0x194/0x257 lib/dump_stack.c:53
- print_address_description+0x73/0x250 mm/kasan/report.c:252
- kasan_report_error mm/kasan/report.c:351 [inline]
- kasan_report+0x25b/0x340 mm/kasan/report.c:409
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/report.c:440
- erspan_build_header+0x3bf/0x3d0 net/ipv4/ip_gre.c:698
- erspan_xmit+0x3b8/0x13b0 net/ipv4/ip_gre.c:740
- __netdev_start_xmit include/linux/netdevice.h:4042 [inline]
- netdev_start_xmit include/linux/netdevice.h:4051 [inline]
- packet_direct_xmit+0x315/0x6b0 net/packet/af_packet.c:266
- packet_snd net/packet/af_packet.c:2943 [inline]
- packet_sendmsg+0x3aed/0x60b0 net/packet/af_packet.c:2968
- sock_sendmsg_nosec net/socket.c:638 [inline]
- sock_sendmsg+0xca/0x110 net/socket.c:648
- SYSC_sendto+0x361/0x5c0 net/socket.c:1729
- SyS_sendto+0x40/0x50 net/socket.c:1697
- do_syscall_32_irqs_on arch/x86/entry/common.c:327 [inline]
- do_fast_syscall_32+0x3ee/0xf9d arch/x86/entry/common.c:389
- entry_SYSENTER_compat+0x54/0x63 arch/x86/entry/entry_64_compat.S:129
-RIP: 0023:0xf7fcfc79
-RSP: 002b:00000000ffc6976c EFLAGS: 00000286 ORIG_RAX: 0000000000000171
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020011000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020008000
-RBP: 000000000000001c R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: f551c91de262 ("net: erspan: introduce erspan v2 for ip_gre")
-Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
-Reported-by: syzbot+9723f2d288e49b492cf0@syzkaller.appspotmail.com
-Reported-by: syzbot+f0ddeb2b032a8e1d9098@syzkaller.appspotmail.com
-Reported-by: syzbot+f14b3703cd8d7670203f@syzkaller.appspotmail.com
-Reported-by: syzbot+eefa384efad8d7997f20@syzkaller.appspotmail.com
-Signed-off-by: William Tu <u9012063@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Fixes: 84092dbcf901 ("selftests: cgroup: add memory controller self-tests")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Shuah Khan (Samsung OSG) <shuah@kernel.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_gre.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/cgroup/test_memcontrol.c        | 38 ++++++++++---------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -689,7 +689,7 @@ static void erspan_build_header(struct s
- 				__be32 id, u32 index, bool truncate)
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index 28d321ba311b4..6f339882a6ca1 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -26,7 +26,7 @@
+  */
+ static int test_memcg_subtree_control(const char *root)
  {
- 	struct iphdr *iphdr = ip_hdr(skb);
--	struct ethhdr *eth = eth_hdr(skb);
-+	struct ethhdr *eth = (struct ethhdr *)skb->data;
- 	enum erspan_encap_type enc_type;
- 	struct erspanhdr *ershdr;
- 	struct qtag_prefix {
+-	char *parent, *child, *parent2, *child2;
++	char *parent, *child, *parent2 = NULL, *child2 = NULL;
+ 	int ret = KSFT_FAIL;
+ 	char buf[PAGE_SIZE];
+ 
+@@ -34,50 +34,54 @@ static int test_memcg_subtree_control(const char *root)
+ 	parent = cg_name(root, "memcg_test_0");
+ 	child = cg_name(root, "memcg_test_0/memcg_test_1");
+ 	if (!parent || !child)
+-		goto cleanup;
++		goto cleanup_free;
+ 
+ 	if (cg_create(parent))
+-		goto cleanup;
++		goto cleanup_free;
+ 
+ 	if (cg_write(parent, "cgroup.subtree_control", "+memory"))
+-		goto cleanup;
++		goto cleanup_parent;
+ 
+ 	if (cg_create(child))
+-		goto cleanup;
++		goto cleanup_parent;
+ 
+ 	if (cg_read_strstr(child, "cgroup.controllers", "memory"))
+-		goto cleanup;
++		goto cleanup_child;
+ 
+ 	/* Create two nested cgroups without enabling memory controller */
+ 	parent2 = cg_name(root, "memcg_test_1");
+ 	child2 = cg_name(root, "memcg_test_1/memcg_test_1");
+ 	if (!parent2 || !child2)
+-		goto cleanup;
++		goto cleanup_free2;
+ 
+ 	if (cg_create(parent2))
+-		goto cleanup;
++		goto cleanup_free2;
+ 
+ 	if (cg_create(child2))
+-		goto cleanup;
++		goto cleanup_parent2;
+ 
+ 	if (cg_read(child2, "cgroup.controllers", buf, sizeof(buf)))
+-		goto cleanup;
++		goto cleanup_all;
+ 
+ 	if (!cg_read_strstr(child2, "cgroup.controllers", "memory"))
+-		goto cleanup;
++		goto cleanup_all;
+ 
+ 	ret = KSFT_PASS;
+ 
+-cleanup:
+-	cg_destroy(child);
+-	cg_destroy(parent);
+-	free(parent);
+-	free(child);
+-
++cleanup_all:
+ 	cg_destroy(child2);
++cleanup_parent2:
+ 	cg_destroy(parent2);
++cleanup_free2:
+ 	free(parent2);
+ 	free(child2);
++cleanup_child:
++	cg_destroy(child);
++cleanup_parent:
++	cg_destroy(parent);
++cleanup_free:
++	free(parent);
++	free(child);
+ 
+ 	return ret;
+ }
+-- 
+2.20.1
+
 
 
