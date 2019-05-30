@@ -6,93 +6,142 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF31C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415A2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7822B25800
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5D325813
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfE3LPE (ORCPT
+        id S1726878AbfE3LPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:15:04 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:36458 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfE3LPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:15:04 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hWJ1K-0006Uv-O0; Thu, 30 May 2019 07:15:01 -0400
-Date:   Thu, 30 May 2019 07:14:27 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        Steve Grubb <sgrubb@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Fix xoring of arch_get_random_long into crng->state array
-Message-ID: <20190530111427.GA1966@hmswarspite.think-freely.org>
-References: <20190402220025.14499-1-nhorman@tuxdriver.com>
- <20190530031201.GA2751@mit.edu>
+        Thu, 30 May 2019 07:15:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38854 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbfE3LPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:15:30 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63AEB308FF30;
+        Thu, 30 May 2019 11:15:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 94F747944B;
+        Thu, 30 May 2019 11:15:21 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 30 May 2019 13:15:24 +0200 (CEST)
+Date:   Thu, 30 May 2019 13:15:20 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     axboe@kernel.dk, akpm@linux-foundation.org, hch@lst.de,
+        peterz@infradead.org, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+Message-ID: <20190530111519.GC22536@redhat.com>
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190530031201.GA2751@mit.edu>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1559161526-618-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 30 May 2019 11:15:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:12:01PM -0400, Theodore Ts'o wrote:
-> On Tue, Apr 02, 2019 at 06:00:25PM -0400, Neil Horman wrote:
-> > When _crng_extract is called, any arch that has a registered
-> > arch_get_random_long method, attempts to mix an unsigned long value into
-> > the crng->state buffer, it only mixes in 32 of the 64 bits available,
-> > because the state buffer is an array of u32 values, even though 2 u32
-> > are expected to be filled (owing to the fact that it expects indexes 14
-> > and 15 to be filled).
+On 05/29, Qian Cai wrote:
+>
+> The commit 0619317ff8ba ("block: add polled wakeup task helper")
+> replaced wake_up_process() with blk_wake_io_task() in
+> end_swap_bio_read() which triggers a crash when running heavy swapping
+> workloads.
 > 
-> Index 15 does get initialized; in fact, it's changed each time
-> crng_reseed() is called.
+> [T114538] kernel BUG at kernel/sched/core.c:3462!
+> [T114538] Process oom01 (pid: 114538, stack limit = 0x000000004f40e0c1)
+> [T114538] Call trace:
+> [T114538]  do_task_dead+0xf0/0xf8
+> [T114538]  do_exit+0xd5c/0x10fc
+> [T114538]  do_group_exit+0xf4/0x110
+> [T114538]  get_signal+0x280/0xdd8
+> [T114538]  do_notify_resume+0x720/0x968
+> [T114538]  work_pending+0x8/0x10
 > 
-> The way things currently work is that we use state[12] and state[13]
-> as 64-bit counter (it gets incremented each time we call
-> _extract_crng), and state[14] and state[15] are nonce values.  After
-> crng->state has been in use for five minutes, we reseed the crng by
-> grabbing randomness from the input pool, and using that to initialize
-> state[4..15].  (State[0..3] are always set to the ChaCha20 constant of
-> "expand 32-byte k".)
+> This is because shortly after set_special_state(TASK_DEAD),
+> end_swap_bio_read() is called from an interrupt handler that revive the
+> task state to TASK_RUNNING causes __schedule() to return and trip the
+> BUG() later.
 > 
-> If the CPU provides and RDRAND-like instruction (which can be the case
-> for x86, PPC, and S390), we xor it into state[14].  Whether we xor any
-> extra entropy into state[15] to be honest, really doesn't matter much.
-> I think I was trying to keep things simple, and it wasn't worth it to
-> call RDRAND twice on a 32-bit x86.  (And there isn't an
-> arch_get_random_long_long.  :-)
+> [  C206] Call trace:
+> [  C206]  dump_backtrace+0x0/0x268
+> [  C206]  show_stack+0x20/0x2c
+> [  C206]  dump_stack+0xb4/0x108
+> [  C206]  blk_wake_io_task+0x7c/0x80
+> [  C206]  end_swap_bio_read+0x22c/0x31c
+> [  C206]  bio_endio+0x3d8/0x414
+> [  C206]  dec_pending+0x280/0x378 [dm_mod]
+> [  C206]  clone_endio+0x128/0x2ac [dm_mod]
+> [  C206]  bio_endio+0x3d8/0x414
+> [  C206]  blk_update_request+0x3ac/0x924
+> [  C206]  scsi_end_request+0x54/0x350
+> [  C206]  scsi_io_completion+0xf0/0x6f4
+> [  C206]  scsi_finish_command+0x214/0x228
+> [  C206]  scsi_softirq_done+0x170/0x1a4
+> [  C206]  blk_done_softirq+0x100/0x194
+> [  C206]  __do_softirq+0x350/0x790
+> [  C206]  irq_exit+0x200/0x26c
+> [  C206]  handle_IPI+0x2e8/0x514
+> [  C206]  gic_handle_irq+0x224/0x228
+> [  C206]  el1_irq+0xb8/0x140
+> [  C206]  _raw_spin_unlock_irqrestore+0x3c/0x74
+> [  C206]  do_task_dead+0x88/0xf8
+> [  C206]  do_exit+0xd5c/0x10fc
+> [  C206]  do_group_exit+0xf4/0x110
+> [  C206]  get_signal+0x280/0xdd8
+> [  C206]  do_notify_resume+0x720/0x968
+> [  C206]  work_pending+0x8/0x10
 > 
-> Why do we do this at all?  Well, the goal was to feed in some
-> contributing randomness from RDRAND when we turn the CRNG crank.  (The
-> reason why we don't just XOR in the RDRAND into the output ohf the
-> CRNG is mainly to assuage critics that hypothetical RDRAND backdoor
-> has access to the CPU registers.  So we perturb the inputs to the
-> CRNG, on the theory that if malicious firmware can reverse
-> CHACHA20... we've got bigger problems.  :-)  We get up to 20 bytes out
-> of a single turn of the CRNG crank, so whether we mix in 4 bytes or 8
-> bytes from RDRAND, we're never going to be depending on RDRAND
-> completely in any case.
+> Before the offensive commit, wake_up_process() will prevent this from
+> happening by taking the pi_lock and bail out immediately if TASK_DEAD is
+> set.
 > 
-> The bottom line is that I'm not at all convinced it worth the effort
-> to mix in 8 bytes versus 4 bytes from RDRAND.  This is really a CRNG,
-> and the RDRAND inputs really don't change that.
-> 
-Ok, so what I'm getting is that the exclusion of the second 32 bit word here
-from &crng->state[15], isn't an oversight, its just skipped because its not
-worth taking the time for the extra write there, and this is not a bug.  I'm ok
-with that.
+> if (!(p->state & TASK_NORMAL))
+> 	goto out;
 
-Thanks for the explination
-Neil
+I don't understand this code at all but I am just curious, can we do
+something like incomplete patch below ?
 
->     	       	      	     	   	  - Ted
-> 
+Oleg.
+
+--- x/mm/page_io.c
++++ x/mm/page_io.c
+@@ -140,8 +140,10 @@ int swap_readpage(struct page *page, bool synchronous)
+ 	unlock_page(page);
+ 	WRITE_ONCE(bio->bi_private, NULL);
+ 	bio_put(bio);
+-	blk_wake_io_task(waiter);
+-	put_task_struct(waiter);
++	if (waiter) {
++		blk_wake_io_task(waiter);
++		put_task_struct(waiter);
++	}
+ }
+ 
+ int generic_swapfile_activate(struct swap_info_struct *sis,
+@@ -398,11 +400,12 @@ int swap_readpage(struct page *page, boo
+ 	 * Keep this task valid during swap readpage because the oom killer may
+ 	 * attempt to access it in the page fault retry time check.
+ 	 */
+-	get_task_struct(current);
+-	bio->bi_private = current;
+ 	bio_set_op_attrs(bio, REQ_OP_READ, 0);
+-	if (synchronous)
++	if (synchronous) {
+ 		bio->bi_opf |= REQ_HIPRI;
++		get_task_struct(current);
++		bio->bi_private = current;
++	}
+ 	count_vm_event(PSWPIN);
+ 	bio_get(bio);
+ 	qc = submit_bio(bio);
+
