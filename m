@@ -2,162 +2,98 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE7C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8497C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A21726260
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09022629A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="M+lxrRvM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHqwW19z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfE3WdJ (ORCPT
+        id S1726667AbfE3WeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:33:09 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:53149 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3WdJ (ORCPT
+        Thu, 30 May 2019 18:34:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42159 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:33:09 -0400
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 72F8B7F8BF;
-        Thu, 30 May 2019 17:33:07 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1559255588; bh=3ZOWYrFYbkF4GORGQ+Tfp7UoyviSixFiW9Lo/7bz6do=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=M+lxrRvMT6PV/3q7mqKTyEQq6Y/Bq0qvZpo8+0gEZ8xNqXCwiXB4vzvl6XfoXL0im
-         KtCT7SK67s8LIKoPP/0gbjLJE7dIj8tWfyhbVgiCsajhsMNxZtP20aDvHRz3RhTekW
-         uIeqYh6LZakkKsWQKGrO4YtmAZcKttqsVfePLHEo5G41dXiaVGkUf0Ng43ltcuY2tU
-         jr3JFJWd6xmJCJAyl5WYiPaJhVtnNo0ULrVVUxFxbOUm3u74KpqUrM9LT5bHQXpZAt
-         5+EKsu9zGSOViXVcgGKlsdkYpzlGprPWwmKJ2PyhRhtY9XvnI41EVATsr4Fi+N0E8i
-         RS29W2UNAkjBg==
-Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] PCI: Introduce
- pcibios_ignore_alignment_request
-To:     Sam Bobroff <sbobroff@linux.ibm.com>, Oliver <oohall@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rppt@linux.ibm.com, Paul Mackerras <paulus@samba.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, xyjxie@linux.vnet.ibm.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20190528040313.35582-1-shawn@anastas.io>
- <20190528040313.35582-2-shawn@anastas.io>
- <CAOSf1CEFfbmwfvmdqT1xdt8SFb=tYdYXLfXeyZ8=iRnhg4a3Pg@mail.gmail.com>
- <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
-From:   Shawn Anastasio <shawn@anastas.io>
-Message-ID: <8785226a-b2eb-8157-e724-d575c66b7bef@anastas.io>
-Date:   Thu, 30 May 2019 17:33:05 -0500
+        Thu, 30 May 2019 18:34:23 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so9036970qtk.9;
+        Thu, 30 May 2019 15:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dX8WKZ9qrWHo5nxihC0jGW8Sb1EefXDVfC2HVTjTW0U=;
+        b=SHqwW19zaTXztrJeZskOeIDsvYpDUNgAyfzDHK+7CwSuJ/UY2vvMulHl3fn3EPiwKp
+         7dKcSWfYL+Q3/J5scsAXqmDM93STQJCcctjaf+s7HkYdnWxeY4IOiufkNdk8pufPU0pj
+         GhFes5XTPJLMDHW+THbGMSg8EmhmiYBNj0buWdRMkcs7B2pPSWWIzRlxtrj9EbpXMpqm
+         T/VOdM5GzRAnyKCZmB0mQ86cnoV3h2WF3fPP29KhYS5ojCjCyIL9rq8qPU/93eYdIMY0
+         x81ZlfNy4Cd1zUGsYKKuU2JtB3Z+xL3smYWMothHCdscWTLrYojSJEBTU3RFPTlEcGYr
+         S/OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dX8WKZ9qrWHo5nxihC0jGW8Sb1EefXDVfC2HVTjTW0U=;
+        b=YVEbwD8LVkmLiuNvLhn38ZDFn46ES1nnrrn/hzzkhvJNIy9UJa8M3ZTLMZRDCGJoew
+         NPcHqqzcCd4wmZMDdWWt5m7xePORLkfgjKvg2R8sTHyzlMpbm9FZBM69qBx06ktZzon9
+         OhrstqwIX6Ylg/tszWleYNDt/R21ZusNBC8f9YClQO5WJDCBMwScTIE2oTZfjonfdJcj
+         2vKGYivDUONsgg7bwR+K+HcdNR3YKQbeeeO4gXAut0oYQuV57Jwe7K9B6ETRZkGb6eMi
+         DisEBSQCEfIvH0aCKpoGh2IUPZK0yTg742eAk/nG4XA/G7VRoyNxQA8ddjPWBeDl+aOl
+         oqhQ==
+X-Gm-Message-State: APjAAAU9LTHEGxOXaTU8Q0h7vjz3j61nxu/NqDIpy7oDtj5UGazAjDQg
+        A+ehMCo0Jt1jPxWJ+UoGlrI/kmq9LD1dEfYH49o=
+X-Google-Smtp-Source: APXvYqyd9G1R8zZihg8bY4icpgogJCi9+Y+3btVGT2ymcWviQbGEG+KSKqLohEXCy5dnnujIVem0Lk5vCSbh6Nw1U4s=
+X-Received: by 2002:a0c:b032:: with SMTP id k47mr5801528qvc.86.1559255662262;
+ Thu, 30 May 2019 15:34:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190530065556.GA29428@tungsten.ozlabs.ibm.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190530190800.7633-1-luke.r.nels@gmail.com> <CAPhsuW4kMBSjpATqHrEhTmuqje=XZNGOrMyNur8f6K0RNQP=yw@mail.gmail.com>
+In-Reply-To: <CAPhsuW4kMBSjpATqHrEhTmuqje=XZNGOrMyNur8f6K0RNQP=yw@mail.gmail.com>
+From:   Luke Nelson <luke.r.nels@gmail.com>
+Date:   Thu, 30 May 2019 15:34:10 -0700
+Message-ID: <CAB-e3NSidgz8gLRTL796A0DyRVePPjVDpSC6=gSA4hH8q6VqvQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bpf, riscv: fix bugs in JIT for 32-bit ALU operations
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Xi Wang <xi.wang@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 30, 2019 at 1:53 PM Song Liu <liu.song.a23@gmail.com> wrote:
+>
+> This is a little messy. How about we introduce some helper function
+> like:
+>
+> /* please find a better name... */
+> emit_32_or_64(bool is64, const u32 insn_32, const u32 inst_64, struct
+> rv_jit_context *ctx)
+> {
+>        if (is64)
+>             emit(insn_64, ctx);
+>        else {
+>             emit(insn_32, ctx);
+>            rd = xxxx;
+>            emit_zext_32(rd, ctx);
+>        }
+> }
 
-
-On 5/30/19 1:55 AM, Sam Bobroff wrote:
-> On Tue, May 28, 2019 at 03:36:34PM +1000, Oliver wrote:
->> On Tue, May 28, 2019 at 2:03 PM Shawn Anastasio <shawn@anastas.io> wrote:
->>>
->>> Introduce a new pcibios function pcibios_ignore_alignment_request
->>> which allows the PCI core to defer to platform-specific code to
->>> determine whether or not to ignore alignment requests for PCI resources.
->>>
->>> The existing behavior is to simply ignore alignment requests when
->>> PCI_PROBE_ONLY is set. This is behavior is maintained by the
->>> default implementation of pcibios_ignore_alignment_request.
->>>
->>> Signed-off-by: Shawn Anastasio <shawn@anastas.io>
->>> ---
->>>   drivers/pci/pci.c   | 9 +++++++--
->>>   include/linux/pci.h | 1 +
->>>   2 files changed, 8 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 8abc843b1615..8207a09085d1 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -5882,6 +5882,11 @@ resource_size_t __weak pcibios_default_alignment(void)
->>>          return 0;
->>>   }
->>>
->>> +int __weak pcibios_ignore_alignment_request(void)
->>> +{
->>> +       return pci_has_flag(PCI_PROBE_ONLY);
->>> +}
->>> +
->>>   #define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
->>>   static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
->>>   static DEFINE_SPINLOCK(resource_alignment_lock);
->>> @@ -5906,9 +5911,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
->>>          p = resource_alignment_param;
->>>          if (!*p && !align)
->>>                  goto out;
->>> -       if (pci_has_flag(PCI_PROBE_ONLY)) {
->>> +       if (pcibios_ignore_alignment_request()) {
->>>                  align = 0;
->>> -               pr_info_once("PCI: Ignoring requested alignments (PCI_PROBE_ONLY)\n");
->>> +               pr_info_once("PCI: Ignoring requested alignments\n");
->>>                  goto out;
->>>          }
->>
->> I think the logic here is questionable to begin with. If the user has
->> explicitly requested re-aligning a resource via the command line then
->> we should probably do it even if PCI_PROBE_ONLY is set. When it breaks
->> they get to keep the pieces.
->>
->> That said, the real issue here is that PCI_PROBE_ONLY probably
->> shouldn't be set under qemu/kvm. Under the other hypervisor (PowerVM)
->> hotplugged devices are configured by firmware before it's passed to
->> the guest and we need to keep the FW assignments otherwise things
->> break. QEMU however doesn't do any BAR assignments and relies on that
->> being handled by the guest. At boot time this is done by SLOF, but
->> Linux only keeps SLOF around until it's extracted the device-tree.
->> Once that's done SLOF gets blown away and the kernel needs to do it's
->> own BAR assignments. I'm guessing there's a hack in there to make it
->> work today, but it's a little surprising that it works at all...
->>
->> IIRC Sam Bobroff was looking at hotplug under pseries recently so he
->> might have something to add. He's sick at the moment, but I'll ask him
->> to take a look at this once he's back among the living
-> 
-> There seems to be some code already in the kernel that will disable
-> PCI_PROBE_ONLY based on a device tree property, so I did a quick test
-> today and it seems to work. Only a trivial tweak is needed in QEMU to
-> do it (have spapr_dt_chosen() add a node called "linux,pci-probe-only"
-> with a value of 0), and that would allow us to set it only for QEMU (and
-> not PowerVM) if that's what we want to do. Is that useful?
-> 
-> (I haven't done any real testing yet but the guest booted up OK.)
-
-It was my understanding that PCI_PROBE_ONLY should actually be set
-initially so that Linux uses SLOF's BAR assignments. The issue here
-is that PCI_PROBE_ONLY shouldn't be honored after initial bringup
-on KVM so that hotplugged PCI devices can have custom BAR alignments.
-
-Of course, if there's no need to honor SLOF's initial assignments,
-I assume disabling PCI_PROBE_ONLY would work fine. In fact, I'm
-not entirely sure why it's done in the first place. Does anybody
-know?
-
-If there is actually a valid reason for preserving SLOF's initial
-assignments, then it seems like the correct solution is to disable
-PCI_PROBE_ONLY after initial PCI bringup or ignore it in
-pci_specified_resource_alignment() like I do in this patch set.
-
-Bjorn Helgaas also suggested marking individual resources provided
-by SLOF/PHYP with IORESOURCE_PCI_FIXED which would remove the need
-to use PCI_PROBE_ONLY altogether.
-
-Any thoughts?
-
-- Shawn
+This same check is used throughout the file, maybe clean it up in a
+separate patch?
