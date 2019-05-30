@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D492DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426EEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AE423DE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6B32449A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185965;
-	bh=wpFLMUdKh6awHahOy9KGYWpTkPUbg8nLPGHSCdP0rJ0=;
+	s=default; t=1559185968;
+	bh=mcd2FS0t0z1bCwO4klx+xNkmovjnhdydm2bFSiWeul0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUD5ZYXYlqV8ysXHr24ym/nzEpX5lVcKyVNUtt99ejr1v0h4PHbZ7x7KtlxwFMmUE
-	 jbIO4WXXXyNdwGut6WrSKTje8USdvCYfMj3qWm9HkwcqpjEpy0n8iGp6ZmFdASiR58
-	 eJVvWyQqF7lZCfUFFWqRuK6ent57PlnWimjVKKGo=
+	b=uDND4+rNnpI5mrfrDb17iglkLAwHTdVpVNsNPms/IMOo93gy/6p81tcm5peiQyWcp
+	 Vqj95DjNnMqIMPyIzx97uhMugY8KHrfZAc0VUZy3478fPROuf8glkjdDqlEs0T0x63
+	 qj5DMHYf+oD5iDTNx4wFqZrX1yPTDOlPquPU9SV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfE3DMp (ORCPT
+        id S1729231AbfE3DMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50164 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfE3DLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:11 -0400
+        id S1728421AbfE3DLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE1A244A0;
-        Thu, 30 May 2019 03:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC5A5244D8;
+        Thu, 30 May 2019 03:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185871;
-        bh=wpFLMUdKh6awHahOy9KGYWpTkPUbg8nLPGHSCdP0rJ0=;
+        s=default; t=1559185873;
+        bh=mcd2FS0t0z1bCwO4klx+xNkmovjnhdydm2bFSiWeul0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RS0kFXL5vKThCo0yphQ4gjUoIwLGcEo5pXnCM1A9yakqqITBoFg5hymkThLBiDGRM
-         JdubVHwuMw0KDGJF74jsmRcP2U96nmqI4ieynH1hjpQwAurH9kZ8ljGCuLz6VpXCQX
-         PvCd5mnMBPiQoJPpwFfO2j6SsS1ZNJuxHkR+qSzQ=
+        b=xdvcxNCXCDEM9Yyc43pcEkMLcomFkw/mKdUEDqYDWtlIusEN5GuX2HHHdbQSHe92/
+         YkduuaQzLjfg54B7MuLgJTGTVyj0vyzu+5xcIdw0Qq6q1yGbXA3OEbPto6uK8med7q
+         mhXU+whhEuRlxtP5GXnztHowRLUnpjy5b3GPi10A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 213/405] clk: rockchip: Make rkpwm a critical clock on rk3288
-Date:   Wed, 29 May 2019 20:03:31 -0700
-Message-Id: <20190530030551.876695901@linuxfoundation.org>
+Subject: [PATCH 5.1 190/405] arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
+Date:   Wed, 29 May 2019 20:03:08 -0700
+Message-Id: <20190530030550.629262924@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,52 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dfe7fb21cd9e730230d55a79bc72cf2ece67cdd5 ]
+[ Upstream commit 81fb8736dd81da3fe94f28968dac60f392ec6746 ]
 
-Most rk3288-based boards are derived from the EVB and thus use a PWM
-regulator for the logic rail.  However, most rk3288-based boards don't
-specify the PWM regulator in their device tree.  We'll deal with that
-by making it critical.
+clock_getres() in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-NOTE: it's important to make it critical and not just IGNORE_UNUSED
-because all PWMs in the system share the same clock.  We don't want
-another PWM user to turn the clock on and off and kill the logic rail.
+In particular, posix_get_hrtimer_res() does:
 
-This change is in preparation for actually having the PWMs in the
-rk3288 device tree actually point to the proper PWM clock.  Up until
-now they've all pointed to the clock for the old IP block and they've
-all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
-clock rates for both clocks were the same.
+    sec = 0;
+    ns = hrtimer_resolution;
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+where 'hrtimer_resolution' depends on whether or not high resolution
+timers are enabled, which is a runtime decision.
+
+The vDSO incorrectly returns the constant CLOCK_REALTIME_RES. Fix this
+by exposing 'hrtimer_resolution' in the vDSO datapage and returning that
+instead.
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+[will: Use WRITE_ONCE(), move adr off COARSE path, renumber labels, use 'w' reg]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/vdso_datapage.h | 1 +
+ arch/arm64/kernel/asm-offsets.c        | 2 +-
+ arch/arm64/kernel/vdso.c               | 3 +++
+ arch/arm64/kernel/vdso/gettimeofday.S  | 7 +++----
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 623c5f684987c..355d6a3611dbf 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -697,7 +697,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
- 	GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
- 	GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
- 	GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
--	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
-+	GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
- 
- 	/* ddrctrl [DDR Controller PHY clock] gates */
- 	GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
-@@ -838,6 +838,8 @@ static const char *const rk3288_critical_clocks[] __initconst = {
- 	"pclk_pd_pmu",
- 	"pclk_pmu_niu",
- 	"pmu_hclk_otg0",
-+	/* pwm-regulators on some boards, so handoff-critical later */
-+	"pclk_rkpwm",
+diff --git a/arch/arm64/include/asm/vdso_datapage.h b/arch/arm64/include/asm/vdso_datapage.h
+index 2b9a63771eda8..f89263c8e11af 100644
+--- a/arch/arm64/include/asm/vdso_datapage.h
++++ b/arch/arm64/include/asm/vdso_datapage.h
+@@ -38,6 +38,7 @@ struct vdso_data {
+ 	__u32 tz_minuteswest;	/* Whacky timezone stuff */
+ 	__u32 tz_dsttime;
+ 	__u32 use_syscall;
++	__u32 hrtimer_res;
  };
  
- static void __iomem *rk3288_cru_base;
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 7f40dcbdd51d0..e10e2a5d9ddcf 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -94,7 +94,7 @@ int main(void)
+   DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
+   DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
+   DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
+-  DEFINE(CLOCK_REALTIME_RES,	MONOTONIC_RES_NSEC);
++  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
+   DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
+   DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
+   DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 2d419006ad433..ec0bb588d7553 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -232,6 +232,9 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_data->wtm_clock_sec		= tk->wall_to_monotonic.tv_sec;
+ 	vdso_data->wtm_clock_nsec		= tk->wall_to_monotonic.tv_nsec;
+ 
++	/* Read without the seqlock held by clock_getres() */
++	WRITE_ONCE(vdso_data->hrtimer_res, hrtimer_resolution);
++
+ 	if (!use_syscall) {
+ 		/* tkr_mono.cycle_last == tkr_raw.cycle_last */
+ 		vdso_data->cs_cycle_last	= tk->tkr_mono.cycle_last;
+diff --git a/arch/arm64/kernel/vdso/gettimeofday.S b/arch/arm64/kernel/vdso/gettimeofday.S
+index e8f60112818fc..856fee6d35129 100644
+--- a/arch/arm64/kernel/vdso/gettimeofday.S
++++ b/arch/arm64/kernel/vdso/gettimeofday.S
+@@ -308,13 +308,14 @@ ENTRY(__kernel_clock_getres)
+ 	ccmp	w0, #CLOCK_MONOTONIC_RAW, #0x4, ne
+ 	b.ne	1f
+ 
+-	ldr	x2, 5f
++	adr	vdso_data, _vdso_data
++	ldr	w2, [vdso_data, #CLOCK_REALTIME_RES]
+ 	b	2f
+ 1:
+ 	cmp	w0, #CLOCK_REALTIME_COARSE
+ 	ccmp	w0, #CLOCK_MONOTONIC_COARSE, #0x4, ne
+ 	b.ne	4f
+-	ldr	x2, 6f
++	ldr	x2, 5f
+ 2:
+ 	cbz	x1, 3f
+ 	stp	xzr, x2, [x1]
+@@ -328,8 +329,6 @@ ENTRY(__kernel_clock_getres)
+ 	svc	#0
+ 	ret
+ 5:
+-	.quad	CLOCK_REALTIME_RES
+-6:
+ 	.quad	CLOCK_COARSE_RES
+ 	.cfi_endproc
+ ENDPROC(__kernel_clock_getres)
 -- 
 2.20.1
 
