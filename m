@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA72BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEACFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945342463C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B2A244D2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186241;
-	bh=ETxqmV7FS2AKCIeo4tjonjq8r25TMozlArfrBeEhZBQ=;
+	s=default; t=1559186245;
+	bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3wfuRZODG95A1W4HtDBNroqgtXvH00wLryswsZusddFduRSAnzQHn9sRMBym/TNr
-	 DNPGLHf4xRWpmpQ8Pxx+42+vzIvMKXG1STp4eoz6l2Fqet1V29bwg7l/qc4cVeMSpY
-	 4R0iiULpeu7llEQexrNQPvGFz86ZtG1TFxGKz27A=
+	b=Dlit5RgzTTgetJPiNc+SDvAnXnMcpQVZJT5Jji5vlhUwaCx1o1+O7b2tSEWygEel0
+	 qPHkgyKcuHVsyOK1l13qRaxs4FAiBpwO5BLbE6WLhaxawadtdaqOIfpfthuC0biit/
+	 +uEm6vcBPaD3nW6urq5dWYQw3QEVgcZWXkWyT37M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfE3DRU (ORCPT
+        id S1731101AbfE3DRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbfE3DNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:53 -0400
+        id S1729639AbfE3DN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48CF424556;
-        Thu, 30 May 2019 03:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC4562457A;
+        Thu, 30 May 2019 03:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186033;
-        bh=ETxqmV7FS2AKCIeo4tjonjq8r25TMozlArfrBeEhZBQ=;
+        s=default; t=1559186037;
+        bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kc64T8FkPbQ7BeoVE7JL0QFkflcebQ5sLrcFCIVqK1eTw6VV70PujpjtQBjADe7+x
-         gJnAxpFuaCEqC34qC4KeigJSYCAYL67nis/MgHLS4tS3ozk3T1Am9wc/cquLcEsNds
-         aEn0YyV2TEOH7+17iAPD4xqiOhA8ZVTksw+IRK78=
+        b=MA3Q4MHDipwjBGzgw126SMkKWfC2jpnAZbH2zCos1zHuypzc8IaUZ2HqCo1BKgKdY
+         Kkf4wMm1Xmzbyt53U6k86QyPKZi+kD8AAMiICogbwUeWSW0uzDBRNfYvJuKLvnVqwN
+         GC7LIRlwgg4S6qp/nN8G9pmsq6Hv4BhasN4VRgnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 071/346] ASoC: imx: fix fiq dependencies
-Date:   Wed, 29 May 2019 20:02:24 -0700
-Message-Id: <20190530030544.667482429@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 125/346] smpboot: Place the __percpu annotation correctly
+Date:   Wed, 29 May 2019 20:03:18 -0700
+Message-Id: <20190530030547.440701217@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,65 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
+[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+The test robot reported a wrong assignment of a per-CPU variable which
+it detected by using sparse and sent a report. The assignment itself is
+correct. The annotation for sparse was wrong and hence the report.
+The first pointer is a "normal" pointer and points to the per-CPU memory
+area. That means that the __percpu annotation has to be moved.
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+Move the __percpu annotation to pointer which points to the per-CPU
+area. This change affects only the sparse tool (and is ignored by the
+compiler).
 
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
-
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
-
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
-
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
+Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/smpboot.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 2e75b5bc5f1da..f721cd4e3f972 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -173,16 +173,17 @@ config SND_MPC52xx_SOC_EFIKA
- 
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
-+
- if SND_IMX_SOC
- 
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
- 
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
- 
- config SND_MXC_SOC_WM1133_EV1
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index d0884b5250010..9d1bc65d226cc 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -29,7 +29,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
+  */
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		* __percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
 -- 
 2.20.1
 
