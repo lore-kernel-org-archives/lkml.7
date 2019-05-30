@@ -2,109 +2,143 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A31C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AECC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6820D24339
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hV1VOhHU"
+	by mail.kernel.org (Postfix) with ESMTP id 04712243AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfE3BXB (ORCPT
+        id S1727298AbfE3B2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:23:01 -0400
-Received: from mail-eopbgr40046.outbound.protection.outlook.com ([40.107.4.46]:3844
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfE3BXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:23:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JXNqwIC2b9bEE9RPSsmlQy1hX2NkCqvOJCJuqqYnoIo=;
- b=hV1VOhHUicDnjAD3zz6nOCjIJfDi4gJVxSey8lgU8wWZ72Iirx7/hGMgs2aQLw3NSNQ6Ne/mBOXzLmRmprTZ0PP0ObsiFBfUPABMBAaHVzPWKJk0qHk4BgmAPijLMowpIZ/Ec2lF7EDdwdZwochisqotxLKTjr7I3Q/I68LksWo=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4145.eurprd04.prod.outlook.com (52.134.90.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.22; Thu, 30 May 2019 01:22:58 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 01:22:58 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] clk: imx: imx8mm: correct audio_pll2_clk to
- audio_pll2_out
-Thread-Topic: [PATCH] clk: imx: imx8mm: correct audio_pll2_clk to
- audio_pll2_out
-Thread-Index: AQHVED6JGbhPMl1ASUycBcbN9uhZiqZ4tK8AgAoZTgCAAB1qcA==
-Date:   Thu, 30 May 2019 01:22:57 +0000
-Message-ID: <AM0PR04MB4481A7FF28A9AB9A1584423888180@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190522014832.29485-1-peng.fan@nxp.com>
- <20190523132235.GZ9261@dragon> <20190529233547.B7F6F2435D@mail.kernel.org>
-In-Reply-To: <20190529233547.B7F6F2435D@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 48fbac38-aaff-4ac7-8dff-08d6e49d597d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4145;
-x-ms-traffictypediagnostic: AM0PR04MB4145:
-x-microsoft-antispam-prvs: <AM0PR04MB4145EA9A552E94996523BB2C88180@AM0PR04MB4145.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(366004)(346002)(376002)(199004)(189003)(33656002)(7416002)(86362001)(25786009)(74316002)(316002)(6436002)(44832011)(52536014)(68736007)(305945005)(7736002)(73956011)(76176011)(76116006)(64756008)(66556008)(9686003)(66446008)(81156014)(66946007)(55016002)(110136005)(54906003)(66476007)(99286004)(71200400001)(14454004)(2906002)(3846002)(7696005)(66066001)(256004)(5660300002)(229853002)(486006)(6116002)(6246003)(8676002)(446003)(8936002)(53936002)(71190400001)(6506007)(186003)(4326008)(11346002)(478600001)(4744005)(102836004)(81166006)(26005)(476003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4145;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 94ycI5JvLjVuYqo9FeQ4xsNJ+VxOKEozwWIKa9DZyr68UbGkuMklDHtDDdoO8gX022ux6A3wBM/9/1Yd8MrWKsDTh9eMgatSctfP93B0KU8eq2fw2BUsLUC3MYE7so56uu7o0O8eJ3KvqYo0q0daYja3GmyqXWSlxXD04/eoWNUulCP1p4DbvtJf/D205MT9VGmoxTH7vvrLM3YmDUguRc/WAaXp7/vwx8AwJCh2qnx4fDWqVLrnoevAVpxp4Z+EpS/YTZyW2wlw0xSPDQ3ktUq5/woKPKSgmDem/SLt3sLp2w0OI73lMvzB/90NGeEW02BGpIFSmnILgevwAAyl+GMRqDiCo2LJiUv2fyMsMVkoXZ0v/uVPpCBaHHBrmha+fNYZfKhY3bUS2tjdqoDrmHGB9ZdOV9FOg5nSqrNUYqU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 29 May 2019 21:28:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38034 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfE3B2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 21:28:13 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A40A083F44;
+        Thu, 30 May 2019 01:28:13 +0000 (UTC)
+Received: from [10.72.12.96] (ovpn-12-96.pek2.redhat.com [10.72.12.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4323B19C70;
+        Thu, 30 May 2019 01:28:10 +0000 (UTC)
+Subject: Re: [PATCH] nbd: fix crash when the blksize is zero
+To:     Mike Christie <mchristi@redhat.com>, josef@toxicpanda.com,
+        axboe@kernel.dk, nbd@other.debian.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        atumball@redhat.com
+References: <20190527054438.13548-1-xiubli@redhat.com>
+ <5CEED598.7080703@redhat.com>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <3a7e1aed-c07a-8338-73a5-8389a2fe78dc@redhat.com>
+Date:   Thu, 30 May 2019 09:28:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48fbac38-aaff-4ac7-8dff-08d6e49d597d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 01:22:58.0223
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4145
+In-Reply-To: <5CEED598.7080703@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 30 May 2019 01:28:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBjbGs6IGlteDogaW14OG1tOiBj
-b3JyZWN0IGF1ZGlvX3BsbDJfY2xrIHRvDQo+IGF1ZGlvX3BsbDJfb3V0DQo+IA0KPiBRdW90aW5n
-IFNoYXduIEd1byAoMjAxOS0wNS0yMyAwNjoyMjozNikNCj4gPiBPbiBXZWQsIE1heSAyMiwgMjAx
-OSBhdCAwMTozNDo0NkFNICswMDAwLCBQZW5nIEZhbiB3cm90ZToNCj4gPiA+IFRoZXJlIGlzIG5v
-IGF1ZGlvX3BsbDJfY2xrIHJlZ2lzdGVyZWQsIGl0IHNob3VsZCBiZSBhdWRpb19wbGwyX291dC4N
-Cj4gPiA+DQo+ID4gPiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+DQo+ID4gPiBGaXhlczog
-YmE1NjI1YzNlMjcgKCJjbGs6IGlteDogQWRkIGNsb2NrIGRyaXZlciBzdXBwb3J0IGZvciBpbXg4
-bW0iKQ0KPiA+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+
-ID4NCj4gPiBTdGVwaGVuLA0KPiA+DQo+ID4gSSBsZWF2ZSB0aGlzIHRvIHlvdSwgc2luY2UgaXQn
-cyBhIGZpeC4NCj4gPg0KPiANCj4gSXMgaXQgYSBjcml0aWNhbCBmaXg/IE9yIGlzIGl0IGFuIGFu
-bm95YW5jZSB0aGF0IGNhbiB3YWl0IGluIC1uZXh0IHVudGlsIHRoZSBuZXh0DQo+IG1lcmdlIHdp
-bmRvdz8NCg0KSSBkaWQgbm90IHJ1biBpbnRvIGlzc3VlIHdpdGhvdXQgdGhpcyBmaXggY3VycmVu
-dGx5LCBzbyBpdCBzaG91bGQgYmUgZmluZSB0byB3YWl0DQppbiAtbmV4dCB1bnRpbCB0aGUgbmV4
-dCBtZXJnZSB3aW5kb3cuDQoNClRoYW5rcywNClBlbmcuDQoNCg==
+On 2019/5/30 2:55, Mike Christie wrote:
+> On 05/27/2019 12:44 AM, xiubli@redhat.com wrote:
+>> From: Xiubo Li <xiubli@redhat.com>
+>>
+>> This will allow the blksize to be set zero and then use 1024 as
+>> default.
+>>
+>> Signed-off-by: Xiubo Li <xiubli@redhat.com>
+>> ---
+>>   drivers/block/nbd.c | 21 ++++++++++++++++++---
+>>   1 file changed, 18 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>> index 053958a..4c1de1c 100644
+>> --- a/drivers/block/nbd.c
+>> +++ b/drivers/block/nbd.c
+>> @@ -135,6 +135,8 @@ struct nbd_cmd {
+>>   
+>>   #define NBD_MAGIC 0x68797548
+>>   
+>> +#define NBD_DEF_BLKSIZE 1024
+>> +
+>>   static unsigned int nbds_max = 16;
+>>   static int max_part = 16;
+>>   static struct workqueue_struct *recv_workqueue;
+>> @@ -1237,6 +1239,14 @@ static void nbd_clear_sock_ioctl(struct nbd_device *nbd,
+>>   		nbd_config_put(nbd);
+>>   }
+>>   
+>> +static bool nbd_is_valid_blksize(unsigned long blksize)
+>> +{
+>> +	if (!blksize || !is_power_of_2(blksize) || blksize < 512 ||
+>> +		blksize > PAGE_SIZE)
+>> +		return false;
+>> +	return true;
+>> +}
+>> +
+>>   /* Must be called with config_lock held */
+>>   static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+>>   		       unsigned int cmd, unsigned long arg)
+>> @@ -1252,8 +1262,9 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+>>   	case NBD_SET_SOCK:
+>>   		return nbd_add_socket(nbd, arg, false);
+>>   	case NBD_SET_BLKSIZE:
+>> -		if (!arg || !is_power_of_2(arg) || arg < 512 ||
+>> -		    arg > PAGE_SIZE)
+>> +		if (!arg)
+>> +			arg = NBD_DEF_BLKSIZE;
+>> +		if (!nbd_is_valid_blksize(arg))
+>>   			return -EINVAL;
+>>   		nbd_size_set(nbd, arg,
+>>   			     div_s64(config->bytesize, arg));
+>> @@ -1333,7 +1344,7 @@ static struct nbd_config *nbd_alloc_config(void)
+>>   	atomic_set(&config->recv_threads, 0);
+>>   	init_waitqueue_head(&config->recv_wq);
+>>   	init_waitqueue_head(&config->conn_wait);
+>> -	config->blksize = 1024;
+>> +	config->blksize = NBD_DEF_BLKSIZE;
+>>   	atomic_set(&config->live_connections, 0);
+>>   	try_module_get(THIS_MODULE);
+>>   	return config;
+>> @@ -1769,6 +1780,10 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+>>   	if (info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]) {
+>>   		u64 bsize =
+>>   			nla_get_u64(info->attrs[NBD_ATTR_BLOCK_SIZE_BYTES]);
+>> +		if (!bsize)
+>> +			bsize = NBD_DEF_BLKSIZE;
+>> +		if (!nbd_is_valid_blksize(bsize))
+>> +			return -EINVAL;
+> You can't only return here. You need to also drop the mutex, do
+> nbd_put, and drop config_refs reference.
+>
+> Maybe you want to move this check to the beginning of the function with
+> the NBD_ATTR_SIZE_BYTES sanity check since the error handling is easier
+> there.
+
+Yeah, right.
+
+I saw your resend patch of this and that looks good to me.
+
+Thanks
+BRs
+Xiubo
+
+
+>
+>>   		nbd_size_set(nbd, bsize, div64_u64(config->bytesize, bsize));
+>>   	}
+>>   	if (info->attrs[NBD_ATTR_TIMEOUT]) {
+>>
+
