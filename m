@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5857C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ACEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B932607F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC1126046
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192376;
-	bh=55OWPQIuvJiKNCgmIZHGccYZDkm8BvapdJPPQcLkwS0=;
+	s=default; t=1559192382;
+	bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJux9TNpzxmvOw2IZ6DTTXTqdTxa2qXH/ZqKUAFBp2qQglk8PVJ1YcclhJwAbC6f8
-	 IJL3SP6pvQ3dXEHpEwC/JfIQGtg0VgK+JL74Q3HdOo+wcu6YEUzfUmPJ2H16305ajg
-	 f/AUFjiYUFZKyjN6cFdd0zMHfVhgXlYPbg/iHg7U=
+	b=nmpNwazF1pAPCw1QyGzAr1v0mkKd9wmtdnZ9koGy1fIvQiTBkOQtk3WCPthTFMnuQ
+	 rZUpCfVXycR2Jn+BFY6lqPcTdfIM3TOZWLqcEaspj1MZnKpPPgxqw9f/G3dm75VHHB
+	 /EL9Oo5F+quOWcABTh9KlDobeZ5l3Q0L+7tUZRSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389300AbfE3E7g (ORCPT
+        id S1732720AbfE3E7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44662 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbfE3DJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:38 -0400
+        id S1727668AbfE3DJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B0B2449B;
-        Thu, 30 May 2019 03:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA31A24496;
+        Thu, 30 May 2019 03:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185777;
-        bh=55OWPQIuvJiKNCgmIZHGccYZDkm8BvapdJPPQcLkwS0=;
+        s=default; t=1559185776;
+        bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGc+xQ4a+SfrA80QHaybDuHSZ8f0fCCwsoeibnSC1OuHw337iPqLsrtTuaw+M+2U4
-         IzjdOBrqo2Gg9oqhf+wB/VxfIb1f2jYK4Yi76dTrGDBGVxaWpQPEXiem94KItm/EZ1
-         nqFqBVE2myivUtxjms0QctyyJQ/MS8E5/MEAQ5IY=
+        b=t6R3NKDT2QlX2VIUuzSS2LvELbqjutJjfbHc6itXj1ecAUGvVvVOAzPH0kTalTeHF
+         4/GYapLYrhlbJIiNX8OjVg9jmGBZnxFVIkexY27tafLqGqOJtSr4jNgPolQ2wTxqmE
+         HauN2W+eK7stZnT+ISw5SG+nfZ69OmDikmojg9SI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 034/405] media: cpia2: Fix use-after-free in cpia2_exit
-Date:   Wed, 29 May 2019 20:00:32 -0700
-Message-Id: <20190530030542.473357606@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.1 032/405] ovl: relax WARN_ON() for overlapping layers use case
+Date:   Wed, 29 May 2019 20:00:30 -0700
+Message-Id: <20190530030542.349418095@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,124 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit dea37a97265588da604c6ba80160a287b72c7bfd upstream.
+commit acf3062a7e1ccf67c6f7e7c28671a6708fde63b0 upstream.
 
-Syzkaller report this:
+This nasty little syzbot repro:
+https://syzkaller.appspot.com/x/repro.syz?x=12c7a94f400000
 
-BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
-Read of size 8 at addr ffff8881f59a6b70 by task syz-executor.0/8363
+Creates overlay mounts where the same directory is both in upper and lower
+layers. Simplified example:
 
-CPU: 0 PID: 8363 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- usb_remove_newid_files drivers/usb/core/driver.c:212 [inline]
- usb_deregister+0x12a/0x3b0 drivers/usb/core/driver.c:1005
- cpia2_exit+0xa/0x16 [cpia2]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f86f3754c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f86f37556bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+  mkdir foo work
+  mount -t overlay none foo -o"lowerdir=.,upperdir=foo,workdir=work"
 
-Allocated by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
- driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
- usb_register_driver+0x267/0x520 drivers/usb/core/driver.c:965
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The repro runs several threads in parallel that attempt to chdir into foo
+and attempt to symlink/rename/exec/mkdir the file bar.
 
-Freed by task 8363:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
- slab_free_hook mm/slub.c:1430 [inline]
- slab_free_freelist_hook mm/slub.c:1457 [inline]
- slab_free mm/slub.c:3005 [inline]
- kfree+0xe1/0x270 mm/slub.c:3957
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- usb_register_driver+0x341/0x520 drivers/usb/core/driver.c:980
- 0xffffffffc1b4817c
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The repro hits a WARN_ON() I placed in ovl_instantiate(), which suggests
+that an overlay inode already exists in cache and is hashed by the pointer
+of the real upper dentry that ovl_create_real() has just created. At the
+point of the WARN_ON(), for overlay dir inode lock is held and upper dir
+inode lock, so at first, I did not see how this was possible.
 
-The buggy address belongs to the object at ffff8881f59a6b40
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8881f59a6b40, ffff8881f59a6c40)
-The buggy address belongs to the page:
-page:ffffea0007d66980 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6c02e00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+On a closer look, I see that after ovl_create_real(), because of the
+overlapping upper and lower layers, a lookup by another thread can find the
+file foo/bar that was just created in upper layer, at overlay path
+foo/foo/bar and hash the an overlay inode with the new real dentry as lower
+dentry. This is possible because the overlay directory foo/foo is not
+locked and the upper dentry foo/bar is in dcache, so ovl_lookup() can find
+it without taking upper dir inode shared lock.
 
-Memory state around the buggy address:
- ffff8881f59a6a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881f59a6a80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff8881f59a6b00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881f59a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881f59a6c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+Overlapping layers is considered a wrong setup which would result in
+unexpected behavior, but it shouldn't crash the kernel and it shouldn't
+trigger WARN_ON() either, so relax this WARN_ON() and leave a pr_warn()
+instead to cover all cases of failure to get an overlay inode.
 
-cpia2_init does not check return value of cpia2_init, if it failed
-in usb_register_driver, there is already cleanup using driver_unregister.
-No need call cpia2_usb_cleanup on module exit.
+The error returned from failure to insert new inode to cache with
+inode_insert5() was changed to -EEXIST, to distinguish from the error
+-ENOMEM returned on failure to get/allocate inode with iget5_locked().
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com
+Fixes: 01b39dcc9568 ("ovl: use inode_insert5() to hash a newly...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/cpia2/cpia2_v4l.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/overlayfs/dir.c   |    2 +-
+ fs/overlayfs/inode.c |    3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/cpia2/cpia2_v4l.c
-+++ b/drivers/media/usb/cpia2/cpia2_v4l.c
-@@ -1240,8 +1240,7 @@ static int __init cpia2_init(void)
- 	LOG("%s v%s\n",
- 	    ABOUT, CPIA_VERSION);
- 	check_parameters();
--	cpia2_usb_init();
--	return 0;
-+	return cpia2_usb_init();
+--- a/fs/overlayfs/dir.c
++++ b/fs/overlayfs/dir.c
+@@ -260,7 +260,7 @@ static int ovl_instantiate(struct dentry
+ 		 * hashed directory inode aliases.
+ 		 */
+ 		inode = ovl_get_inode(dentry->d_sb, &oip);
+-		if (WARN_ON(IS_ERR(inode)))
++		if (IS_ERR(inode))
+ 			return PTR_ERR(inode);
+ 	} else {
+ 		WARN_ON(ovl_inode_real(inode) != d_inode(newdentry));
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -832,7 +832,7 @@ struct inode *ovl_get_inode(struct super
+ 	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+-	int err = -ENOMEM;
++	int err = oip->newinode ? -EEXIST : -ENOMEM;
+ 
+ 	if (!realinode)
+ 		realinode = d_inode(lowerdentry);
+@@ -917,6 +917,7 @@ out:
+ 	return inode;
+ 
+ out_err:
++	pr_warn_ratelimited("overlayfs: failed to get inode (%i)\n", err);
+ 	inode = ERR_PTR(err);
+ 	goto out;
  }
- 
- 
 
 
