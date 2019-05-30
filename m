@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCC6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E1FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935E525839
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83AE2580D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190979;
-	bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
+	s=default; t=1559190985;
+	bh=A/qTvWQsG3Ff5F0BoRVW48/iXrDe5cHXZgzWL8eWG+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smt1EA9dWgKqhRnnjD+yGVdeHrTPCLTrk/ubhgbyTUeURoUvz7PPNTC3bJE7LOPN6
-	 DJlNQeBh92cbE2a143UH4LKSnjcSXjQasm23ICEI0wl3uQhUsrNIiwlMMyEHDmajXG
-	 ow82IvYIyFn+Z7X8TD9hHe2GAOHYXkpxc0og/2Fs=
+	b=wVTL/O/KGSvqhCnyROYxFAXHTeM8hExeWbRIL8curxMiQuYrpqzGFIECTXdxEtuEc
+	 5xDkkA5xxffOSg75cnAEo8U81Nqsklv9wp/gQTmyFI6SqZr2i2+jnDurWEluQ1nJpZ
+	 xGBUdlyg1THTdotXPL9b9o/yAvEShs3C6c72o5RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbfE3EgS (ORCPT
+        id S2388517AbfE3EgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbfE3DNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:01 -0400
+        id S1728379AbfE3DNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F035823D83;
-        Thu, 30 May 2019 03:13:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC5521BE2;
+        Thu, 30 May 2019 03:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185981;
-        bh=2W0LCAp+js594ct7JLGSdDfTbTh5tQVJFIJpPYJMW8k=;
+        s=default; t=1559185982;
+        bh=A/qTvWQsG3Ff5F0BoRVW48/iXrDe5cHXZgzWL8eWG+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2l75gPO0s28p7c8MenKFYRzUz1x6rSXpyEmQmQXnwDRMmPsqzdZ56HOFHvNDKuU6M
-         J6jzo3JLW8lXjOYDFMgPKynnrh30zW7jCwcs3jtQjm0rr70zrMJVWNVBildwe5uIfr
-         +q298usc9M6jGiBxTojIdHV/r8oF2xhV5pocm+Hg=
+        b=zU9Lgb33IEaYD8XWlTlGLzR3DL0tASMSTsJBzgQEBKXoqezI2oYoCCLzplSuc8PWg
+         JNBaJLztD7Vorap5bS/ICjJUWROQ1a8RHQA4Vtwx3dMcAte82vWB2qcz2JcvmUsQNy
+         iErzeka7ARvMdxc3aEw/Fo+pgpoBzhXJAqeFTmTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 004/346] KVM: x86: fix return value for reserved EFER
-Date:   Wed, 29 May 2019 20:01:17 -0700
-Message-Id: <20190530030540.651104022@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
+Subject: [PATCH 5.0 006/346] sbitmap: fix improper use of smp_mb__before_atomic()
+Date:   Wed, 29 May 2019 20:01:19 -0700
+Message-Id: <20190530030540.773962234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,36 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-commit 66f61c92889ff3ca365161fb29dd36d6354682ba upstream.
+commit a0934fd2b1208458e55fc4b48f55889809fce666 upstream.
 
-Commit 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for
-host-initiated writes", 2019-04-02) introduced a "return false" in a
-function returning int, and anyway set_efer has a "nonzero on error"
-conventon so it should be returning 1.
+This barrier only applies to the read-modify-write operations; in
+particular, it does not apply to the atomic_set() primitive.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Fixes: 11988499e62b ("KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes")
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Replace the barrier with an smp_mb().
+
+Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: linux-block@vger.kernel.org
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
+ lib/sbitmap.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1288,7 +1288,7 @@ static int set_efer(struct kvm_vcpu *vcp
- 	u64 efer = msr_info->data;
- 
- 	if (efer & efer_reserved_bits)
--		return false;
-+		return 1;
- 
- 	if (!msr_info->host_initiated) {
- 		if (!__kvm_valid_efer(vcpu, efer))
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_ba
+ 		 * to ensure that the batch size is updated before the wait
+ 		 * counts.
+ 		 */
+-		smp_mb__before_atomic();
++		smp_mb();
+ 		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
+ 			atomic_set(&sbq->ws[i].wait_cnt, 1);
+ 	}
 
 
