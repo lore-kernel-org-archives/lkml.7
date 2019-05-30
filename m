@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB14C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0556C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DC725B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B059525B63
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfE3Omd (ORCPT
+        id S1727752AbfE3Oo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:42:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57994 "EHLO
+        Thu, 30 May 2019 10:44:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58090 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726589AbfE3Omc (ORCPT
+        by vger.kernel.org with ESMTP id S1727219AbfE3Omd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:42:32 -0400
+        Thu, 30 May 2019 10:42:33 -0400
 Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEdPQI086708
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:31 -0400
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEdPIx086771
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:32 -0400
 Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2stg3bu5h9-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2stg3bu5jf-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:30 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:32 -0400
 Received: from localhost
         by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 15:42:30 +0100
+        Thu, 30 May 2019 15:42:31 +0100
 Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
         by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 15:42:26 +0100
+        Thu, 30 May 2019 15:42:27 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgPrq29032552
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEgQQY33357878
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 14:42:25 GMT
+        Thu, 30 May 2019 14:42:26 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4554BB2071;
+        by IMSVA (Postfix) with ESMTP id B5D78B2073;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27CE6B206B;
+        by IMSVA (Postfix) with ESMTP id A04EEB2085;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Thu, 30 May 2019 14:42:25 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A8FAD16C5D9E; Thu, 30 May 2019 07:42:26 -0700 (PDT)
+        id 2362B16C8E88; Thu, 30 May 2019 07:42:27 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -58,89 +58,55 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH RFC memory-model 09/33] tools/memory-model: Make cmplitmushist.sh note timeouts
-Date:   Thu, 30 May 2019 07:42:01 -0700
+Subject: [PATCH RFC memory-model 27/33] tools/memory-model: Fix scripting --jobs argument
+Date:   Thu, 30 May 2019 07:42:19 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190530144202.GA26201@linux.ibm.com>
 References: <20190530144202.GA26201@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19053014-0060-0000-0000-00000349F4E9
+x-cbid: 19053014-0060-0000-0000-00000349F4EB
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
  PH=3.00000004; SC=3.00000286; SDB=6.01210779; UDB=6.00636154; IPR=6.00991814;
- MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:29
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:30
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053014-0061-0000-0000-0000498DEF4F
-Message-Id: <20190530144225.27624-9-paulmck@linux.ibm.com>
+x-cbparentid: 19053014-0061-0000-0000-0000498DEF53
+Message-Id: <20190530144225.27624-27-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=680 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905300105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, cmplitmushist.sh treats timeouts (as in the "--timeout"
-argument) as "Missing Observation line".  This can be misleading because
-it is quite possible that running the test longer would have produced
-a verification.  This commit therefore changes cmplitmushist.sh to check
-for timeouts and to report them with "Timed out".
+The parseargs.sh regular expression for the --jobs argument incorrectly
+requires that the number of jobs be at least 10, that is, have at least
+two digits.  This commit therefore adjusts this regular expression to
+allow single-digit numbers of jobs to be specified.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/cmplitmushist.sh | 22 +++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/memory-model/scripts/parseargs.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/memory-model/scripts/cmplitmushist.sh b/tools/memory-model/scripts/cmplitmushist.sh
-index 0f498aeeccf5..b9c174dd8004 100755
---- a/tools/memory-model/scripts/cmplitmushist.sh
-+++ b/tools/memory-model/scripts/cmplitmushist.sh
-@@ -12,12 +12,30 @@ trap 'rm -rf $T' 0
- mkdir $T
- 
- # comparetest oldpath newpath
-+timedout=0
- perfect=0
- obsline=0
- noobsline=0
- obsresult=0
- badcompare=0
- comparetest () {
-+	if grep -q '^Command exited with non-zero status 124' $1 ||
-+	   grep -q '^Command exited with non-zero status 124' $2
-+	then
-+		if grep -q '^Command exited with non-zero status 124' $1 &&
-+		   grep -q '^Command exited with non-zero status 124' $2
-+		then
-+			echo Both runs timed out: $2
-+		elif grep -q '^Command exited with non-zero status 124' $1
-+		then
-+			echo Old run timed out: $2
-+		elif grep -q '^Command exited with non-zero status 124' $2
-+		then
-+			echo New run timed out: $2
-+		fi
-+		timedout=`expr "$timedout" + 1`
-+		return 0
-+	fi
- 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $1 > $T/oldout
- 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $2 > $T/newout
- 	if cmp -s $T/oldout $T/newout && grep -q '^Observation' $1
-@@ -78,6 +96,10 @@ if test "$obsresult" -ne 0
- then
- 	echo Matching Observation Always/Sometimes/Never result: $obsresult 1>&2
- fi
-+if test "$timedout" -ne 0
-+then
-+	echo "!!!" Timed out: $timedout 1>&2
-+fi
- if test "$badcompare" -ne 0
- then
- 	echo "!!!" Result changed: $badcompare 1>&2
+diff --git a/tools/memory-model/scripts/parseargs.sh b/tools/memory-model/scripts/parseargs.sh
+index 5f016fc3f3af..25a81ac0dfdf 100755
+--- a/tools/memory-model/scripts/parseargs.sh
++++ b/tools/memory-model/scripts/parseargs.sh
+@@ -113,7 +113,7 @@ do
+ 		LKMM_JOBS="`echo $njobs | sed -e 's/^\([0-9]\+\).*$/\1/'`"
+ 		;;
+ 	--jobs|--job|-j)
+-		checkarg --jobs "(number)" "$#" "$2" '^[1-9][0-9]\+$' '^--'
++		checkarg --jobs "(number)" "$#" "$2" '^[1-9][0-9]*$' '^--'
+ 		LKMM_JOBS="$2"
+ 		shift
+ 		;;
 -- 
 2.17.1
 
