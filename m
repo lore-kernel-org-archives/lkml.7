@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB05C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1F23C7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7104023CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187226;
-	bh=QHHJzmGmENwLd9+4/6BGh0e0DWoeRUnT3nr0VX28p8E=;
+	s=default; t=1559187230;
+	bh=CyIcZPQHOgjIo3Ni7LFoeAxlzrAmKxGH3TFcgoGOEgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnVuJsz/Gk4IOj43oHnoGlNH8mZz32VyTG4VnkPS/uCoG0agX54Cu7NfEbqhQs/Fh
-	 z+RNFiDaQVC3gDXpCpijssTKFEM4jIQ31KCSmt8UPY/4OckuOqNIx7rRAPtFCvZ4vK
-	 +WxNsO3MnHL6utiZ9P/yRM2KpYZncfpsPJfaDOLs=
+	b=wKSALGWTZZ/9sJf4BlscIhTM7YmbSmOCftcectbaKXui45q8y2MAnfiSi6PkVm/vs
+	 MnU3w4Fe8mEF51C+W/UU71ON4VcCcK/KRA5Cri//TTKUOc5ueD62ke8oV9TjhIgP6e
+	 R/cVDV7z+CNEKAv1PWlrQjkZ2FI4hvsk6Cdg8X/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfE3D2G (ORCPT
+        id S2388108AbfE3D2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732040AbfE3DTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:49 -0400
+        id S1732012AbfE3DTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8611248CF;
-        Thu, 30 May 2019 03:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8E024839;
+        Thu, 30 May 2019 03:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186389;
-        bh=QHHJzmGmENwLd9+4/6BGh0e0DWoeRUnT3nr0VX28p8E=;
+        s=default; t=1559186383;
+        bh=CyIcZPQHOgjIo3Ni7LFoeAxlzrAmKxGH3TFcgoGOEgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvROQc4hPQcTFqy0ajb1SeIvavvwLnTLKy/K7foUKO9JflFeITnKN+zwSb6v4eeeS
-         yZ5C3unv0CjSZI1HY1aoSP7Y29FbwJeL6zb4l3GbzVJ9uJ0QvfQz767+BWlLFct1O+
-         +aMm1tFvQBlFDJVLFoh5wug7SVT+RLP7JnskoYLE=
+        b=CvgTTwSrQUeWsMt1ebopiCaNNepI86TeiXZVfvvccp0bZ1XeAvyZ1w9fTA1Lk3//B
+         F2+Qdoo2xo+JIODWV9K/Gjxm2V4Qw15TazdM7DtRjQ575gDBtJtnD3XXhAL+Tmrxkl
+         BXGKG7Md5f48pnyEmEDXcbehnwJ1/yYNJTM7+V7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 158/193] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
-Date:   Wed, 29 May 2019 20:06:52 -0700
-Message-Id: <20190530030510.126576297@linuxfoundation.org>
+Subject: [PATCH 4.14 149/193] scsi: ufs: Fix regulator load and icc-level configuration
+Date:   Wed, 29 May 2019 20:06:43 -0700
+Message-Id: <20190530030508.999171624@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -63,49 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
+[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Currently if a regulator has "<name>-fixed-regulator" property in device
+tree, it will skip current limit initialization.  This lead to a zero
+"max_uA" value in struct ufs_vreg.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
-./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+However, "regulator_set_load" operation shall be required on regulators
+which have valid current limits, otherwise a zero "max_uA" set by
+"regulator_set_load" may cause unexpected behavior when this regulator is
+enabled or set as high power mode.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Similarly, in device's icc_level configuration flow, the target icc_level
+shall be updated if regulator also has valid current limit, otherwise a
+wrong icc_level will be calculated by zero "max_uA" and thus causes
+unexpected results after it is written to device.
+
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/eukrea-tlv320.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
-index 84ef6385736cd..4c6f19ef98b25 100644
---- a/sound/soc/fsl/eukrea-tlv320.c
-+++ b/sound/soc/fsl/eukrea-tlv320.c
-@@ -119,13 +119,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"fsl,mux-int-port node missing or invalid.\n");
--			return ret;
-+			goto err;
- 		}
- 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"fsl,mux-ext-port node missing or invalid.\n");
--			return ret;
-+			goto err;
- 		}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 581571de24614..c2395b8e72894 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5911,19 +5911,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
+ 		goto out;
+ 	}
  
- 		/*
+-	if (hba->vreg_info.vcc)
++	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vcc->max_uA,
+ 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
+ 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
+ 
+-	if (hba->vreg_info.vccq)
++	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vccq->max_uA,
+ 				icc_level,
+ 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
+ 
+-	if (hba->vreg_info.vccq2)
++	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
+ 		icc_level = ufshcd_get_max_icc_level(
+ 				hba->vreg_info.vccq2->max_uA,
+ 				icc_level,
+@@ -6525,6 +6525,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
+ 	if (!vreg)
+ 		return 0;
+ 
++	/*
++	 * "set_load" operation shall be required on those regulators
++	 * which specifically configured current limitation. Otherwise
++	 * zero max_uA may cause unexpected behavior when regulator is
++	 * enabled or set as high power mode.
++	 */
++	if (!vreg->max_uA)
++		return 0;
++
+ 	ret = regulator_set_load(vreg->reg, ua);
+ 	if (ret < 0) {
+ 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
 -- 
 2.20.1
 
