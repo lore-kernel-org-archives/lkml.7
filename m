@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7709BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD98C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455A924725
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E601C247D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186306;
-	bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
+	s=default; t=1559186309;
+	bh=uehieXudrxU2deCpWjUOTsxJYwDki7icIgGbHkm1yKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5tnBepqrDK5PQXw7RXI1X3OW4edV+dkUFOQgOeY0meMX3YFVrfP6k3uJU8agf3c3
-	 y9Kp+c2/RWWlKx0JrqcJHxR/97w4eEF01c/rZ2tkItqEZfdESz3DbChBGSIoVeHpsW
-	 UCKyc+CL7oLd360q1hq83nhoJJY29Fs4RbRpdvlo=
+	b=eL39Cb7MMW7+26xNVG1sk3veRFjmb5coGCVurzGMSphs6teTw8pHW/vKmy/osVkgJ
+	 mdpL7Vm+pm6ycTO7ILLWA5RB+W9Or6RrBeTDFAs2GocEcmzNhxQJyBLnc9yRWD1Du5
+	 n/na+01gWYqwd/tQEsBP82/Yy9HuwZWhqb/hWl6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbfE3DSZ (ORCPT
+        id S1731557AbfE3DS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35044 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbfE3DOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:35 -0400
+        id S1729914AbfE3DOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5708B2456A;
-        Thu, 30 May 2019 03:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD2B24502;
+        Thu, 30 May 2019 03:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186074;
-        bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
+        s=default; t=1559186075;
+        bh=uehieXudrxU2deCpWjUOTsxJYwDki7icIgGbHkm1yKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=onM2LSGPu6wWQfWecngReE80HmclV2I4If9hUsENltBlJ+5I8rooAVa4Jr0MfXmxC
-         hbZ8pxIy0f1s3d524mYoZx4lRQ7U53GCht5adi/Y8b79LrE76lJce3y1J+YIvlhDx9
-         0igup57uUeGW6KuCypIWu1oyS32RJd9ltVEtVnNc=
+        b=bhG+WFGdLCeJ0IPPr0dOjVwfOX1pevY9KqkcKnoCAWJGQr/IjknGgvfMW+XE7jSbz
+         wuVbgaQ0BVSPLddKj2VjM1q2dN/c9Bwz24mPMhO38uS84ixBaQhbF/y8TvfvOME8Cy
+         /YCMwLikEbUAaAlPr+A/9k1Q6NrPuIhRr3OSOBCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 190/346] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
-Date:   Wed, 29 May 2019 20:04:23 -0700
-Message-Id: <20190530030550.700038526@linuxfoundation.org>
+Subject: [PATCH 5.0 192/346] drm/amdgpu: fix old fence check in amdgpu_fence_emit
+Date:   Wed, 29 May 2019 20:04:25 -0700
+Message-Id: <20190530030550.803212918@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,45 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
+[ Upstream commit 3d2aca8c8620346abdba96c6300d2c0b90a1d0cc ]
 
-eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
-reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
-and 0xC(2^25 SD clock). The data timeout counter can count from
-2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
-counter counts for only 2^13 SD clocks.
-A-008358: The data timeout counter value loaded into the timeout
-counter is less than expected and can result into early timeout
-error in case of eSDHC data transactions. The table below shows
-the expected vs actual timeout period for different values of
-SYSCTL[DTOCV]:
-these two erratum has the same quirk to control it, and set
-SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
+We don't hold a reference to the old fence, so it can go away
+any time we are waiting for it to signal.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 24 ++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index 4fc4d2c7643c5..7e0eae8dafae0 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -1077,8 +1077,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+index ee47c11e92ce7..4dee2326b29c3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+@@ -136,8 +136,9 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
+ {
+ 	struct amdgpu_device *adev = ring->adev;
+ 	struct amdgpu_fence *fence;
+-	struct dma_fence *old, **ptr;
++	struct dma_fence __rcu **ptr;
+ 	uint32_t seq;
++	int r;
  
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
- 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+ 	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
+ 	if (fence == NULL)
+@@ -153,15 +154,24 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
+ 			       seq, flags | AMDGPU_FENCE_FLAG_INT);
+ 
+ 	ptr = &ring->fence_drv.fences[seq & ring->fence_drv.num_fences_mask];
++	if (unlikely(rcu_dereference_protected(*ptr, 1))) {
++		struct dma_fence *old;
++
++		rcu_read_lock();
++		old = dma_fence_get_rcu_safe(ptr);
++		rcu_read_unlock();
++
++		if (old) {
++			r = dma_fence_wait(old, false);
++			dma_fence_put(old);
++			if (r)
++				return r;
++		}
 +	}
++
+ 	/* This function can't be called concurrently anyway, otherwise
+ 	 * emitting the fence would mess up the hardware ring buffer.
+ 	 */
+-	old = rcu_dereference_protected(*ptr, 1);
+-	if (old && !dma_fence_is_signaled(old)) {
+-		DRM_INFO("rcu slot is busy\n");
+-		dma_fence_wait(old, false);
+-	}
+-
+ 	rcu_assign_pointer(*ptr, dma_fence_get(&fence->base));
  
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+ 	*f = &fence->base;
 -- 
 2.20.1
 
