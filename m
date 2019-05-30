@@ -2,324 +2,210 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B89C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C2BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6AC25897
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559217470;
-	bh=LRK6dGxNSuYKyIerY8KHoArG9Oy9R1nhcJ7jMQWi9+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gdhzHyrvrhDCnsQKuZTh6/AgfUqcYyQkeMa9KHGqz/RCIbRZ1cpmxqKaR85QAzmGl
-	 fd1wBc53R+Hxz+L1NHnZFuwG+c5LTQRT4Fu3l68eu1oFcESnx9FaJVP7oa9sp1WqmE
-	 YHV2HEJ023Zk4elnaPHn5CJYzS2uTB89o+ndKVfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1FFD8254D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfE3L5t (ORCPT
+        id S1727140AbfE3L7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 07:59:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56028 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbfE3L5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:57:48 -0400
-Received: from linux-8ccs (ip5f5adbeb.dynamic.kabel-deutschland.de [95.90.219.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726792AbfE3L7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:59:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0EF4253BD;
-        Thu, 30 May 2019 11:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559217466;
-        bh=LRK6dGxNSuYKyIerY8KHoArG9Oy9R1nhcJ7jMQWi9+s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=itNA5pACeRGvhlVcUpUql0ZW/S8BXzT+N+H9lnzQbze3fvmAcC+q8E40A2VbKSRNA
-         uvBeIzN877qadGnH7poBLJScX3ma7NFJkhXWbyUSPi9OOTx787BXKdtGNpCOchv9dM
-         uTv8P/1EI3NL5b9KUHjqosxKRNbOLVF5QPx0eRoc=
-Date:   Thu, 30 May 2019 13:57:41 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] livepatch: Fix ftrace module text permissions race
-Message-ID: <20190530115741.GB16012@linux-8ccs>
-References: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 05923308626C;
+        Thu, 30 May 2019 11:59:23 +0000 (UTC)
+Received: from [10.72.12.113] (ovpn-12-113.pek2.redhat.com [10.72.12.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C96AA19736;
+        Thu, 30 May 2019 11:59:15 +0000 (UTC)
+Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190528105623.27983-1-sgarzare@redhat.com>
+ <20190528105623.27983-4-sgarzare@redhat.com>
+ <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
+ <20190529105832.oz3sagbne5teq3nt@steredhat>
+ <8c9998c8-1b9c-aac6-42eb-135fcb966187@redhat.com>
+ <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <4c881585-8fee-0a53-865c-05d41ffb8ed1@redhat.com>
+Date:   Thu, 30 May 2019 19:59:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 30 May 2019 11:59:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Josh Poimboeuf [29/05/19 14:02 -0500]:
->It's possible for livepatch and ftrace to be toggling a module's text
->permissions at the same time, resulting in the following panic:
->
->  BUG: unable to handle page fault for address: ffffffffc005b1d9
->  #PF: supervisor write access in kernel mode
->  #PF: error_code(0x0003) - permissions violation
->  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
->  Oops: 0003 [#1] PREEMPT SMP PTI
->  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
->  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
->  RIP: 0010:apply_relocate_add+0xbe/0x14c
->  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
->  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
->  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
->  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
->  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
->  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
->  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
->  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  Call Trace:
->   klp_init_object_loaded+0x10f/0x219
->   ? preempt_latency_start+0x21/0x57
->   klp_enable_patch+0x662/0x809
->   ? virt_to_head_page+0x3a/0x3c
->   ? kfree+0x8c/0x126
->   patch_init+0x2ed/0x1000 [livepatch_test02]
->   ? 0xffffffffc0060000
->   do_one_initcall+0x9f/0x1c5
->   ? kmem_cache_alloc_trace+0xc4/0xd4
->   ? do_init_module+0x27/0x210
->   do_init_module+0x5f/0x210
->   load_module+0x1c41/0x2290
->   ? fsnotify_path+0x3b/0x42
->   ? strstarts+0x2b/0x2b
->   ? kernel_read+0x58/0x65
->   __do_sys_finit_module+0x9f/0xc3
->   ? __do_sys_finit_module+0x9f/0xc3
->   __x64_sys_finit_module+0x1a/0x1c
->   do_syscall_64+0x52/0x61
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
->The above panic occurs when loading two modules at the same time with
->ftrace enabled, where at least one of the modules is a livepatch module:
->
->CPU0					CPU1
->klp_enable_patch()
->  klp_init_object_loaded()
->    module_disable_ro()
->    					ftrace_module_enable()
->					  ftrace_arch_code_modify_post_process()
->				    	    set_all_modules_text_ro()
->      klp_write_object_relocations()
->        apply_relocate_add()
->	  *patches read-only code* - BOOM
->
->A similar race exists when toggling ftrace while loading a livepatch
->module.
->
->Fix it by ensuring that the livepatch and ftrace code patching
->operations -- and their respective permissions changes -- are protected
->by the text_mutex.
->
->Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
->Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-For module.c:
+On 2019/5/30 下午6:10, Stefano Garzarella wrote:
+> On Thu, May 30, 2019 at 05:46:18PM +0800, Jason Wang wrote:
+>> On 2019/5/29 下午6:58, Stefano Garzarella wrote:
+>>> On Wed, May 29, 2019 at 11:22:40AM +0800, Jason Wang wrote:
+>>>> On 2019/5/28 下午6:56, Stefano Garzarella wrote:
+>>>>> We flush all pending works before to call vdev->config->reset(vdev),
+>>>>> but other works can be queued before the vdev->config->del_vqs(vdev),
+>>>>> so we add another flush after it, to avoid use after free.
+>>>>>
+>>>>> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+>>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>>>> ---
+>>>>>     net/vmw_vsock/virtio_transport.c | 23 +++++++++++++++++------
+>>>>>     1 file changed, 17 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>>>>> index e694df10ab61..ad093ce96693 100644
+>>>>> --- a/net/vmw_vsock/virtio_transport.c
+>>>>> +++ b/net/vmw_vsock/virtio_transport.c
+>>>>> @@ -660,6 +660,15 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+>>>>>     	return ret;
+>>>>>     }
+>>>>> +static void virtio_vsock_flush_works(struct virtio_vsock *vsock)
+>>>>> +{
+>>>>> +	flush_work(&vsock->loopback_work);
+>>>>> +	flush_work(&vsock->rx_work);
+>>>>> +	flush_work(&vsock->tx_work);
+>>>>> +	flush_work(&vsock->event_work);
+>>>>> +	flush_work(&vsock->send_pkt_work);
+>>>>> +}
+>>>>> +
+>>>>>     static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>     {
+>>>>>     	struct virtio_vsock *vsock = vdev->priv;
+>>>>> @@ -668,12 +677,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>     	mutex_lock(&the_virtio_vsock_mutex);
+>>>>>     	the_virtio_vsock = NULL;
+>>>>> -	flush_work(&vsock->loopback_work);
+>>>>> -	flush_work(&vsock->rx_work);
+>>>>> -	flush_work(&vsock->tx_work);
+>>>>> -	flush_work(&vsock->event_work);
+>>>>> -	flush_work(&vsock->send_pkt_work);
+>>>>> -
+>>>>>     	/* Reset all connected sockets when the device disappear */
+>>>>>     	vsock_for_each_connected_socket(virtio_vsock_reset_sock);
+>>>>> @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>     	vsock->event_run = false;
+>>>>>     	mutex_unlock(&vsock->event_lock);
+>>>>> +	/* Flush all pending works */
+>>>>> +	virtio_vsock_flush_works(vsock);
+>>>>> +
+>>>>>     	/* Flush all device writes and interrupts, device will not use any
+>>>>>     	 * more buffers.
+>>>>>     	 */
+>>>>> @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+>>>>>     	/* Delete virtqueues and flush outstanding callbacks if any */
+>>>>>     	vdev->config->del_vqs(vdev);
+>>>>> +	/* Other works can be queued before 'config->del_vqs()', so we flush
+>>>>> +	 * all works before to free the vsock object to avoid use after free.
+>>>>> +	 */
+>>>>> +	virtio_vsock_flush_works(vsock);
+>>>> Some questions after a quick glance:
+>>>>
+>>>> 1) It looks to me that the work could be queued from the path of
+>>>> vsock_transport_cancel_pkt() . Is that synchronized here?
+>>>>
+>>> Both virtio_transport_send_pkt() and vsock_transport_cancel_pkt() can
+>>> queue work from the upper layer (socket).
+>>>
+>>> Setting the_virtio_vsock to NULL, should synchronize, but after a careful look
+>>> a rare issue could happen:
+>>> we are setting the_virtio_vsock to NULL at the start of .remove() and we
+>>> are freeing the object pointed by it at the end of .remove(), so
+>>> virtio_transport_send_pkt() or vsock_transport_cancel_pkt() may still be
+>>> running, accessing the object that we are freed.
+>>
+>> Yes, that's my point.
+>>
+>>
+>>> Should I use something like RCU to prevent this issue?
+>>>
+>>>       virtio_transport_send_pkt() and vsock_transport_cancel_pkt()
+>>>       {
+>>>           rcu_read_lock();
+>>>           vsock = rcu_dereference(the_virtio_vsock_mutex);
+>>
+>> RCU is probably a way to go. (Like what vhost_transport_send_pkt() did).
+>>
+> Okay, I'm going this way.
+>
+>>>           ...
+>>>           rcu_read_unlock();
+>>>       }
+>>>
+>>>       virtio_vsock_remove()
+>>>       {
+>>>           rcu_assign_pointer(the_virtio_vsock_mutex, NULL);
+>>>           synchronize_rcu();
+>>>
+>>>           ...
+>>>
+>>>           free(vsock);
+>>>       }
+>>>
+>>> Could there be a better approach?
+>>>
+>>>
+>>>> 2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run still
+>>>> needed? It looks to me we've already done except that we need flush rx_work
+>>>> in the end since send_pkt_work can requeue rx_work.
+>>> The main reason of tx_run/rx_run/event_run is to prevent that a worker
+>>> function is running while we are calling config->reset().
+>>>
+>>> E.g. if an interrupt comes between virtio_vsock_flush_works() and
+>>> config->reset(), it can queue new works that can access the device while
+>>> we are in config->reset().
+>>>
+>>> IMHO they are still needed.
+>>>
+>>> What do you think?
+>>
+>> I mean could we simply do flush after reset once and without tx_rx/rx_run
+>> tricks?
+>>
+>> rest();
+>>
+>> virtio_vsock_flush_work();
+>>
+>> virtio_vsock_free_buf();
+> My only doubt is:
+> is it safe to call config->reset() while a worker function could access
+> the device?
+>
+> I had this doubt reading the Michael's advice[1] and looking at
+> virtnet_remove() where there are these lines before the config->reset():
+>
+> 	/* Make sure no work handler is accessing the device. */
+> 	flush_work(&vi->config_work);
+>
+> Thanks,
+> Stefano
+>
+> [1] https://lore.kernel.org/netdev/20190521055650-mutt-send-email-mst@kernel.org
 
-Acked-by: Jessica Yu <jeyu@kernel.org>
 
-Thanks!
+Good point. Then I agree with you. But if we can use the RCU to detect 
+the detach of device from socket for these, it would be even better.
 
->---
-> kernel/livepatch/core.c |  6 ++++++
-> kernel/module.c         | 21 ++++++++++++++++++---
-> kernel/trace/ftrace.c   | 10 +++++++++-
-> 3 files changed, 33 insertions(+), 4 deletions(-)
->
->diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
->index 2398832947c6..c4ce08f43bd6 100644
->--- a/kernel/livepatch/core.c
->+++ b/kernel/livepatch/core.c
->@@ -18,6 +18,7 @@
-> #include <linux/elf.h>
-> #include <linux/moduleloader.h>
-> #include <linux/completion.h>
->+#include <linux/memory.h>
-> #include <asm/cacheflush.h>
-> #include "core.h"
-> #include "patch.h"
->@@ -718,16 +719,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
-> 	struct klp_func *func;
-> 	int ret;
->
->+	mutex_lock(&text_mutex);
->+
-> 	module_disable_ro(patch->mod);
-> 	ret = klp_write_object_relocations(patch->mod, obj);
-> 	if (ret) {
-> 		module_enable_ro(patch->mod, true);
->+		mutex_unlock(&text_mutex);
-> 		return ret;
-> 	}
->
-> 	arch_klp_init_object_loaded(patch, obj);
-> 	module_enable_ro(patch->mod, true);
->
->+	mutex_unlock(&text_mutex);
->+
-> 	klp_for_each_func(obj, func) {
-> 		ret = klp_find_object_symbol(obj->name, func->old_name,
-> 					     func->old_sympos,
->diff --git a/kernel/module.c b/kernel/module.c
->index 6e6712b3aaf5..3c056b56aefa 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -64,6 +64,7 @@
-> #include <linux/bsearch.h>
-> #include <linux/dynamic_debug.h>
-> #include <linux/audit.h>
->+#include <linux/memory.h>
-> #include <uapi/linux/module.h>
-> #include "module-internal.h"
->
->@@ -1943,6 +1944,8 @@ static void frob_writable_data(const struct module_layout *layout,
-> /* livepatching wants to disable read-only so it can frob module. */
-> void module_disable_ro(const struct module *mod)
-> {
->+	lockdep_assert_held(&text_mutex);
->+
-> 	if (!rodata_enabled)
-> 		return;
->
->@@ -1953,7 +1956,7 @@ void module_disable_ro(const struct module *mod)
-> 	frob_rodata(&mod->init_layout, set_memory_rw);
-> }
->
->-void module_enable_ro(const struct module *mod, bool after_init)
->+static void __module_enable_ro(const struct module *mod, bool after_init)
-> {
-> 	if (!rodata_enabled)
-> 		return;
->@@ -1974,6 +1977,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
-> 		frob_ro_after_init(&mod->core_layout, set_memory_ro);
-> }
->
->+void module_enable_ro(const struct module *mod, bool after_init)
->+{
->+	lockdep_assert_held(&text_mutex);
->+
->+	__module_enable_ro(mod, after_init);
->+}
->+
-> static void module_enable_nx(const struct module *mod)
-> {
-> 	frob_rodata(&mod->core_layout, set_memory_nx);
->@@ -1988,6 +1998,8 @@ void set_all_modules_text_rw(void)
-> {
-> 	struct module *mod;
->
->+	lockdep_assert_held(&text_mutex);
->+
-> 	if (!rodata_enabled)
-> 		return;
->
->@@ -2007,6 +2019,8 @@ void set_all_modules_text_ro(void)
-> {
-> 	struct module *mod;
->
->+	lockdep_assert_held(&text_mutex);
->+
-> 	if (!rodata_enabled)
-> 		return;
->
->@@ -2027,6 +2041,7 @@ void set_all_modules_text_ro(void)
-> 	mutex_unlock(&module_mutex);
-> }
-> #else
->+static void __module_enable_ro(const struct module *mod, bool after_init) { }
-> static void module_enable_nx(const struct module *mod) { }
-> #endif
->
->@@ -3519,7 +3534,7 @@ static noinline int do_init_module(struct module *mod)
-> 	/* Switch to core kallsyms now init is done: kallsyms may be walking! */
-> 	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
-> #endif
->-	module_enable_ro(mod, true);
->+	__module_enable_ro(mod, true);
-> 	mod_tree_remove_init(mod);
-> 	module_arch_freeing_init(mod);
-> 	mod->init_layout.base = NULL;
->@@ -3626,7 +3641,7 @@ static int complete_formation(struct module *mod, struct load_info *info)
-> 	/* This relies on module_mutex for list integrity. */
-> 	module_bug_finalize(info->hdr, info->sechdrs, mod);
->
->-	module_enable_ro(mod, false);
->+	__module_enable_ro(mod, false);
-> 	module_enable_nx(mod);
->
-> 	/* Mark state as coming so strong_try_module_get() ignores us,
->diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->index a12aff849c04..8259d4ba8b00 100644
->--- a/kernel/trace/ftrace.c
->+++ b/kernel/trace/ftrace.c
->@@ -34,6 +34,7 @@
-> #include <linux/hash.h>
-> #include <linux/rcupdate.h>
-> #include <linux/kprobes.h>
->+#include <linux/memory.h>
->
-> #include <trace/events/sched.h>
->
->@@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
-> {
-> 	int ret;
->
->+	mutex_lock(&text_mutex);
->+
-> 	ret = ftrace_arch_code_modify_prepare();
-> 	FTRACE_WARN_ON(ret);
-> 	if (ret)
->-		return;
->+		goto out_unlock;
->
-> 	/*
-> 	 * By default we use stop_machine() to modify the code.
->@@ -2625,6 +2628,9 @@ static void ftrace_run_update_code(int command)
->
-> 	ret = ftrace_arch_code_modify_post_process();
-> 	FTRACE_WARN_ON(ret);
->+
->+out_unlock:
->+	mutex_unlock(&text_mutex);
-> }
->
-> static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
->@@ -5776,6 +5782,7 @@ void ftrace_module_enable(struct module *mod)
-> 	struct ftrace_page *pg;
->
-> 	mutex_lock(&ftrace_lock);
->+	mutex_lock(&text_mutex);
->
-> 	if (ftrace_disabled)
-> 		goto out_unlock;
->@@ -5837,6 +5844,7 @@ void ftrace_module_enable(struct module *mod)
-> 		ftrace_arch_code_modify_post_process();
->
->  out_unlock:
->+	mutex_unlock(&text_mutex);
-> 	mutex_unlock(&ftrace_lock);
->
-> 	process_cached_mods(mod->name);
->-- 
->2.20.1
->
+Thanks
+
+
