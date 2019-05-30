@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13BAC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A630DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768FB2582F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A19325851
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190998;
-	bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
+	s=default; t=1559191001;
+	bh=k0FQIGkfAm/PewsCfwZLsT1OwTJqrkaAFB/IDlbtVFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXqu/piNcX+bg+vKQ3CDtQcv1BfG0TTcftPAYYNu3H0Buu9m8j4CYisZWQMgGHACR
-	 ELSyZLDknYWs9HWWdKGc868KE/+xtwseoTtNCcS7kgzF+EI7KLhxYzR+5NbS5Lrguj
-	 CRA7Jj1Gn5Mqqqfr4JtKhQUNI0J6NH4+AmFHazqw=
+	b=T7hNixuq/V3uZOfZwPjVwa3sNeGG8lemB28B8I5XY8b46d+9lKqel3CihbK8lfRV2
+	 6Ppy9bzmGW3NEuFXPSVEn+knlA9O+frPvirLlsg78ePCHmUHc2ceViXrTqqwQ987B8
+	 ZgGrLa06AV6HMuH5tAYGn4YRxMYKLb9p1kkFxQSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbfE3Egh (ORCPT
+        id S1730266AbfE3Egf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbfE3DNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729310AbfE3DNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90EB72449A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 009D9218B6;
         Thu, 30 May 2019 03:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185979;
-        bh=SbTFFUuSRSP005lrWiHb6QE2jPtSQRfWODw8nUneGEI=;
+        s=default; t=1559185980;
+        bh=k0FQIGkfAm/PewsCfwZLsT1OwTJqrkaAFB/IDlbtVFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKiLXXrf/nzsU3Qv1Xeu7rrJ2Ldu5pSLVYFIB03529IK73G2B8h6G6QuMsVPfTV6A
-         ayCu6hDyIh6D3Lj6l0MNZGR8nT96mcA9gkgU9KOCsSfyVCrVMxANRFAVBgq3Vb5UFL
-         FLEgqnzjUt/PY7YzaP33RCHhoxC5L95YuxmkjBxk=
+        b=Mb2KJ9ncx9ACVvNp0tEjf6IqdCCYutykwzIs32Phjnmk1n7kX4GfBw6rCUB6pekgt
+         O4ziXhNy+SmJZqCHCH7e8xBcV+Tx6oB6C7ejGxwbNEfHmQ41vl08cHOUro/X0f6/nv
+         4Ka4tXLlidM40a5/RvtrxUsByG1BP0d+X0UmWmMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.0 014/346] arm64/kernel: kaslr: reduce module randomization range to 2 GB
-Date:   Wed, 29 May 2019 20:01:27 -0700
-Message-Id: <20190530030541.312633535@linuxfoundation.org>
+        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.0 002/346] ext4: do not delete unlinked inode from orphan list on failed truncate
+Date:   Wed, 29 May 2019 20:01:15 -0700
+Message-Id: <20190530030540.518398703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,85 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@arm.com>
+From: Jan Kara <jack@suse.cz>
 
-commit b2eed9b58811283d00fa861944cb75797d4e52a7 upstream.
+commit ee0ed02ca93ef1ecf8963ad96638795d55af2c14 upstream.
 
-The following commit
+It is possible that unlinked inode enters ext4_setattr() (e.g. if
+somebody calls ftruncate(2) on unlinked but still open file). In such
+case we should not delete the inode from the orphan list if truncate
+fails. Note that this is mostly a theoretical concern as filesystem is
+corrupted if we reach this path anyway but let's be consistent in our
+orphan handling.
 
-  7290d5809571 ("module: use relative references for __ksymtab entries")
-
-updated the ksymtab handling of some KASLR capable architectures
-so that ksymtab entries are emitted as pairs of 32-bit relative
-references. This reduces the size of the entries, but more
-importantly, it gets rid of statically assigned absolute
-addresses, which require fixing up at boot time if the kernel
-is self relocating (which takes a 24 byte RELA entry for each
-member of the ksymtab struct).
-
-Since ksymtab entries are always part of the same module as the
-symbol they export, it was assumed at the time that a 32-bit
-relative reference is always sufficient to capture the offset
-between a ksymtab entry and its target symbol.
-
-Unfortunately, this is not always true: in the case of per-CPU
-variables, a per-CPU variable's base address (which usually differs
-from the actual address of any of its per-CPU copies) is allocated
-in the vicinity of the ..data.percpu section in the core kernel
-(i.e., in the per-CPU reserved region which follows the section
-containing the core kernel's statically allocated per-CPU variables).
-
-Since we randomize the module space over a 4 GB window covering
-the core kernel (based on the -/+ 4 GB range of an ADRP/ADD pair),
-we may end up putting the core kernel out of the -/+ 2 GB range of
-32-bit relative references of module ksymtab entries that refer to
-per-CPU variables.
-
-So reduce the module randomization range a bit further. We lose
-1 bit of randomization this way, but this is something we can
-tolerate.
-
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/kaslr.c  |    6 +++---
- arch/arm64/kernel/module.c |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -145,15 +145,15 @@ u64 __init kaslr_early_init(u64 dt_phys)
- 
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_MODULE_REGION_FULL)) {
- 		/*
--		 * Randomize the module region over a 4 GB window covering the
-+		 * Randomize the module region over a 2 GB window covering the
- 		 * kernel. This reduces the risk of modules leaking information
- 		 * about the address of the kernel itself, but results in
- 		 * branches between modules and the core kernel that are
- 		 * resolved via PLTs. (Branches between modules will be
- 		 * resolved normally.)
- 		 */
--		module_range = SZ_4G - (u64)(_end - _stext);
--		module_alloc_base = max((u64)_end + offset - SZ_4G,
-+		module_range = SZ_2G - (u64)(_end - _stext);
-+		module_alloc_base = max((u64)_end + offset - SZ_2G,
- 					(u64)MODULES_VADDR);
- 	} else {
- 		/*
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -56,7 +56,7 @@ void *module_alloc(unsigned long size)
- 		 * can simply omit this fallback in that case.
- 		 */
- 		p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
--				module_alloc_base + SZ_4G, GFP_KERNEL,
-+				module_alloc_base + SZ_2G, GFP_KERNEL,
- 				PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
- 				__builtin_return_address(0));
- 
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5627,7 +5627,7 @@ int ext4_setattr(struct dentry *dentry,
+ 			up_write(&EXT4_I(inode)->i_data_sem);
+ 			ext4_journal_stop(handle);
+ 			if (error) {
+-				if (orphan)
++				if (orphan && inode->i_nlink)
+ 					ext4_orphan_del(NULL, inode);
+ 				goto err_out;
+ 			}
 
 
