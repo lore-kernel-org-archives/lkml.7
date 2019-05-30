@@ -2,101 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C9AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E60C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFEE24BA4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187604;
-	bh=7uK9JClRjBpcmWQyTcy+7AOYcOvd9/bhbDUILfDQj0s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1RDQKB691T4qOlopsaNBPu2e7UG2Ix5wfgHXVob3NjhfpnWgXHiy4FZhwOmugQta
-	 SOKKqGcm82C0RIhjZ27PP8XUUt0lAbrcrVCkDIL0k/kr1MJBgVjyaQtk3QNX3e3HMv
-	 iYTTv9yDzjWV1KitUqBsUeUxnd+1fpyd4m5oRpaw=
+	by mail.kernel.org (Postfix) with ESMTP id CCE9124BBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFE4DqoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbfE3DVf (ORCPT
+        id S1729919AbfE3DkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730666AbfE3DQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:25 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E68245AC;
-        Thu, 30 May 2019 03:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186184;
-        bh=7uK9JClRjBpcmWQyTcy+7AOYcOvd9/bhbDUILfDQj0s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r9CSvoFfkb7AzVS3IiqYWGDBl2L+BvLCix+F+kr3Owxy9mD2muquecwN5suod+Aww
-         41BF2g41+oVxejgJKfeakmmS02TXErV+z/8YkirEQCfjVmcvQxY/MYUvEyFewDPMOc
-         P0kye5fbA8hyEnDEddKvnyKfyKLlFOoriTMDObNY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/276] selftests/bpf: set RLIMIT_MEMLOCK properly for test_libbpf_open.c
-Date:   Wed, 29 May 2019 20:03:29 -0700
-Message-Id: <20190530030528.215407626@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 29 May 2019 23:40:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41469 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbfE3DkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:40:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q17so3017399pfq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 20:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=On4X9gP05IE6u39GfyTMWmnrBCSblT4ly+1lTynpuxM=;
+        b=WFE4DqoYhBaDtI9vw3yEq3Sxu3mrMEHM4SNbqfZDx7gvEkRpIDcYfZQiHrSXQ1Bc7B
+         FK+LpSF8yaLmLfFN5JYb7uj1zjEQektzjXwoPdv3ZQaKBCm/ElkH+ni23Al/lwx2KgQG
+         AfhookdRR5uoVsK8/zss+h1bMt9jBNPhTzG4Eu+a25QFFV5nu4WB7B5plmiZ4sM8rbZL
+         pgvBSDmABvSSWZbepyvbrSth84KbKOm07FT4plShm+qxtdFkO5tu5ztV326tDGiLQ2rt
+         YKnj2Yn+0yF+fzra8DM4HhFuSscDR9floBREUQ12DB/kazlg2m+CadyTZmQZP6i7qqZA
+         1PNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=On4X9gP05IE6u39GfyTMWmnrBCSblT4ly+1lTynpuxM=;
+        b=qceonGsqykFoKCiorq+OC80Sw+ccvuEgmWmu3FMKH8ADvUqpVqVqycCqFSD505jRNC
+         1NWtogBNbGZMJtwLoquuBCYcJGpkMU49/3G3mN1lMgcS4vZIlfc+BqYjcTT7hLamzaGD
+         EGHr4xpwM4crmhul0AtyI+2rN/IIgVbFhUCfVhuyMcb5jxqHMlBfuF8ttTrBQleOFX+q
+         1ZmeXousGRRy0Wx8LtdrHeO9kMHjJw8kgXsA1bs0hPos81azVXMqceGcHNuqSQO2SQBH
+         DaP17K1tGHaNC5iCPgzjcjr+32o0H3otRTUyfyTmDMptRoI8RMWnaWR2YZrNB8UcQFT9
+         hkgQ==
+X-Gm-Message-State: APjAAAXpCt3XpwFNzQZgw9PNpES4mstIvQdMdII+BDj00IshcD4+oirW
+        S4/3WbjbfO+bWwBvS7AEVpU=
+X-Google-Smtp-Source: APXvYqxuFSdogN4yad6fsZaedYCCU8dUKIXjf4voXj6fUVc2vKA9MzYgvckHtvbeiGEpL+lIZvhLKA==
+X-Received: by 2002:a17:90a:b393:: with SMTP id e19mr1414944pjr.91.1559187603609;
+        Wed, 29 May 2019 20:40:03 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id r4sm1155654pfq.134.2019.05.29.20.39.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 20:40:03 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:39:49 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     ssantosh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] knav_qmss_queue: fix a missing-check bug in
+ knav_pool_create()
+Message-ID: <20190530033949.GA8895@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cea33701eb024bc6c920ab83940ee22afd29139 ]
+In knav_pool_create(), 'pool->name' is allocated by kstrndup(). It
+returns NULL when fails. So 'pool->name' should be checked. And free
+'pool' when error.
 
-Test test_libbpf.sh failed on my development server with failure
-  -bash-4.4$ sudo ./test_libbpf.sh
-  [0] libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
-      Couldn't load basic 'r0 = 0' BPF program.
-  test_libbpf: failed at file test_l4lb.o
-  selftests: test_libbpf [FAILED]
-  -bash-4.4$
-
-The reason is because my machine has 64KB locked memory by default which
-is not enough for this program to get locked memory.
-Similar to other bpf selftests, let us increase RLIMIT_MEMLOCK
-to infinity, which fixed the issue.
-
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 ---
- tools/testing/selftests/bpf/test_libbpf_open.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/test_libbpf_open.c b/tools/testing/selftests/bpf/test_libbpf_open.c
-index 8fcd1c076add0..cbd55f5f8d598 100644
---- a/tools/testing/selftests/bpf/test_libbpf_open.c
-+++ b/tools/testing/selftests/bpf/test_libbpf_open.c
-@@ -11,6 +11,8 @@ static const char *__doc__ =
- #include <bpf/libbpf.h>
- #include <getopt.h>
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 8b41837..0f8cb28 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -814,6 +814,12 @@ void *knav_pool_create(const char *name,
+ 	}
  
-+#include "bpf_rlimit.h"
-+
- static const struct option long_options[] = {
- 	{"help",	no_argument,		NULL, 'h' },
- 	{"debug",	no_argument,		NULL, 'D' },
--- 
-2.20.1
-
-
-
+ 	pool->name = kstrndup(name, KNAV_NAME_SIZE - 1, GFP_KERNEL);
++	if (!pool->name) {
++		dev_err(kdev->dev, "failed to duplicate for pool(%s)\n",
++			name);
++		ret = -ENOMEM;
++		goto err_name;
++	}
+ 	pool->kdev = kdev;
+ 	pool->dev = kdev->dev;
+ 
+@@ -864,6 +870,7 @@ void *knav_pool_create(const char *name,
+ 	mutex_unlock(&knav_dev_lock);
+ err:
+ 	kfree(pool->name);
++err_name:
+ 	devm_kfree(kdev->dev, pool);
+ 	return ERR_PTR(ret);
+ }
