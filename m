@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C64C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D84C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A2824C2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D857B24C47
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187793;
-	bh=v9XJ29b5tKnUk9rdvKeSBT6JEfjRVGu9UHGCP8FJ8vY=;
+	s=default; t=1559187801;
+	bh=ee9eDab6zbIDJ0+JeCxbHQiGoNKeXIPi9XsN+fuz58M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smnkOeqAVi61qf7ZGX78kllYjYFBXodZrQVqY9deULBk+eDHfVeb5DV626puOZAzj
-	 xpuxL/2/anb/NhjZQCP9LmFdlUvKf9Hi7tv31SqzaW1bVPyayI9vxw0QEk/JybE19F
-	 L5TEGFIwwCGLxWOovnWh4FC3T5K0HsHkq84neFrM=
+	b=U6jy8tggzlTy9d8OAhSrly+D5G6VtF6E5w6H7SEE1QYruNXp23TGYNAEhof5OgTrh
+	 uW+X2NLbS4zz0YcKKtealLHmNPdjfgAB6WF59VxlKNYLJdmHcP+Ezkfe+7htQ2dgeo
+	 gIIkrW8uWQEbE8SwKe/1PIcv68kVgxmTZaQCnri8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbfE3DnM (ORCPT
+        id S1732780AbfE3DnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732428AbfE3DVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:04 -0400
+        id S1732423AbfE3DVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C8EE249A9;
-        Thu, 30 May 2019 03:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E687324987;
+        Thu, 30 May 2019 03:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186463;
-        bh=v9XJ29b5tKnUk9rdvKeSBT6JEfjRVGu9UHGCP8FJ8vY=;
+        bh=ee9eDab6zbIDJ0+JeCxbHQiGoNKeXIPi9XsN+fuz58M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HakpDD68HMPx3N6bt2afpdNnchPhoSzE9DhFqUN8SrsDgTjc49fl2wpD2Ko49xUm2
-         mrJxru7Usnsp/uX4C9Dz4ZC+k/nlC5b1jA6bPFVdoAJyEHlk5dtnCISmfs7u83ZGlx
-         aQrNqmhpKM4XYi7mCDszmfqEIpe4TuefnzcWzTHI=
+        b=zd/z4PZY9evqTiDowp7UA434PHC8lVeUV1rxKt3ZecRfTzn4H61XYGxYYqs/rhJOL
+         +ScRzFm9NarGjdTaLWQOslICpvuuZrsRpG0gbvkJcoQntXXkX+tGpUyCiOdGhqLqHv
+         8BpNiKP6cUih4dGfqhWKPlXxJji2Xy2MQ8VNsfYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 040/128] dmaengine: pl330: _stop: clear interrupt status
-Date:   Wed, 29 May 2019 20:06:12 -0700
-Message-Id: <20190530030441.263421795@linuxfoundation.org>
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 081/128] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
+Date:   Wed, 29 May 2019 20:06:53 -0700
+Message-Id: <20190530030449.224188224@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -59,90 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
+[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
 
-This patch kill instructs the DMAC to immediately terminate
-execution of a thread. and then clear the interrupt status,
-at last, stop generating interrupts for DMA_SEV. to guarantee
-the next dma start is clean. otherwise, one interrupt maybe leave
-to next start and make some mistake.
+eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
+reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
+and 0xC(2^25 SD clock). The data timeout counter can count from
+2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
+counter counts for only 2^13 SD clocks.
+A-008358: The data timeout counter value loaded into the timeout
+counter is less than expected and can result into early timeout
+error in case of eSDHC data transactions. The table below shows
+the expected vs actual timeout period for different values of
+SYSCTL[DTOCV]:
+these two erratum has the same quirk to control it, and set
+SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
 
-we can reporduce the problem as follows:
-
-DMASEV: modify the event-interrupt resource, and if the INTEN sets
-function as interrupt, the DMAC will set irq<event_num> HIGH to
-generate interrupt. write INTCLR to clear interrupt.
-
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			    mask INTEN
-		|				|
-		|			     DMAKILL
-		|				|
-		|			spin_unlock_irqrestore
-
-in above case, a interrupt was left, and if we unmask INTEN, the DMAC
-will set irq<event_num> HIGH to generate interrupt.
-
-to fix this, do as follows:
-
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			     DMAKILL
-		|				|
-		|			   clear INTCLR
-		|			    mask INTEN
-		|				|
-		|			spin_unlock_irqrestore
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 6d7e3cd4aba4c..57b375d0de292 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1020,6 +1020,7 @@ static void _stop(struct pl330_thread *thrd)
- {
- 	void __iomem *regs = thrd->dmac->base;
- 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
-+	u32 inten = readl(regs + INTEN);
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index 4db2769ea20c1..6f11cd95bb5fb 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -636,8 +636,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
- 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
- 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
-@@ -1032,10 +1033,13 @@ static void _stop(struct pl330_thread *thrd)
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+ 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++	}
  
- 	_emit_KILL(0, insn);
- 
--	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
--
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
-+
-+	/* clear the event */
-+	if (inten & (1 << thrd->ev))
-+		writel(1 << thrd->ev, regs + INTCLR);
-+	/* Stop generating interrupts for SEV */
-+	writel(inten & ~(1 << thrd->ev), regs + INTEN);
- }
- 
- /* Start doing req 'idx' of thread 'thrd' */
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
 -- 
 2.20.1
 
