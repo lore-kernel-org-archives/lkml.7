@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A68CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847D0C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6559924A66
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E85824A65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186759;
-	bh=8V/djj7n2UwkZEhgqEcVbopB5yeGDmz/7VoaNTY769M=;
+	s=default; t=1559186761;
+	bh=xntRxPlWYdQfPjD7QGj11AmNCrP8tvlr+4AU/4fmfpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a3ef5wZljhHuVmDDyhIWrswR95BAruBajLBvmZXWOcD0j4EhkyNfJuLE9pC1AQVyv
-	 4BHnMQzTyxFU/DVMw4sv0f1EvTLQFmr1w+L7jdsXqPxhDsIfK3w8UthK2u/xi9OJok
-	 wg3oqaUjjU/XHMkwpES6TkjfI0rJziVyG7ig4u2k=
+	b=jrTAItpCAkI3yHuVn3SLp0VpGWBBxSdYhGPKk3MzHoGKU4B0OYi7JGkt49WTmeLn1
+	 aAiJn1X2MGY1fx13hzhDZm1aT+UTWTsjsNboomCEmwy8a5vGOC3ZsQVmzWQiD831nN
+	 UXrYuyhZwzquVVanyH7MaRjUU2x1/+UrNRZfNXZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfE3DZ5 (ORCPT
+        id S2387643AbfE3D0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbfE3DSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731640AbfE3DSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C8A24779;
-        Thu, 30 May 2019 03:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F142474D;
+        Thu, 30 May 2019 03:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186320;
-        bh=8V/djj7n2UwkZEhgqEcVbopB5yeGDmz/7VoaNTY769M=;
+        s=default; t=1559186321;
+        bh=xntRxPlWYdQfPjD7QGj11AmNCrP8tvlr+4AU/4fmfpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYZlx6Brz/XmyWoDO+S93tRNZ7hFoggIibYafRON77UzGeR9mycrVWyp9TRx+izj9
-         xiGP7GGX8ymAGXmw739+68rrMYK1d7y150jxY0OyYpI4oB92bZ4KDnFVTG/07BSnvb
-         mrQtgXGVJ1WLb8DbudilisDsUVIEleF0GBOvlPMU=
+        b=WYEc+WFeYJGvoqTVJkU8A7dDB1LtHuGr4IIbyRvukPdfuk60QyXA/qOoEWUj4Xq7p
+         CzY8F92KqRvNXfKUkYXvLwE6HC6iOkED+j8kGDT1KLdAmeRW+6LIWQvuVqRG7pR+vf
+         2TggcAj2u55oIZ47oxo5R9AURFgMWpB2oNLjpTb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 022/193] hugetlb: use same fault hash key for shared and private mappings
-Date:   Wed, 29 May 2019 20:04:36 -0700
-Message-Id: <20190530030451.882753502@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
+        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
+        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
+        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 032/193] batman-adv: mcast: fix multicast tt/tvlv worker locking
+Date:   Wed, 29 May 2019 20:04:46 -0700
+Message-Id: <20190530030453.779235840@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -65,186 +65,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit 1b426bac66e6cc83c9f2d92b96e4e72acf43419a upstream.
+commit a3c7cd0cdf1107f891aff847ad481e34df727055 upstream.
 
-hugetlb uses a fault mutex hash table to prevent page faults of the
-same pages concurrently.  The key for shared and private mappings is
-different.  Shared keys off address_space and file index.  Private keys
-off mm and virtual address.  Consider a private mappings of a populated
-hugetlbfs file.  A fault will map the page from the file and if needed
-do a COW to map a writable page.
+Syzbot has reported some issues with the locking assumptions made for
+the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
+batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
+While hard/not reproduceable for us so far it seems that the
+delayed_work_pending() we use might not be quite safe from reordering.
 
-Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
-pages.  It uses the address_space file index key.  However, private
-mappings will use a different key and could race with this code to map
-the file page.  This causes problems (BUG) for the page cache remove
-code as it expects the page to be unmapped.  A sample stack is:
+Therefore this patch adds an explicit, new spinlock to protect the
+update of the mla_list and flags in bat_priv and then removes the
+WARN_ON(delayed_work_pending()).
 
-page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
-kernel BUG at mm/filemap.c:169!
-...
-RIP: 0010:unaccount_page_cache_page+0x1b8/0x200
-...
-Call Trace:
-__delete_from_page_cache+0x39/0x220
-delete_from_page_cache+0x45/0x70
-remove_inode_hugepages+0x13c/0x380
-? __add_to_page_cache_locked+0x162/0x380
-hugetlbfs_fallocate+0x403/0x540
-? _cond_resched+0x15/0x30
-? __inode_security_revalidate+0x5d/0x70
-? selinux_file_permission+0x100/0x130
-vfs_fallocate+0x13f/0x270
-ksys_fallocate+0x3c/0x80
-__x64_sys_fallocate+0x1a/0x20
-do_syscall_64+0x5b/0x180
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-There seems to be another potential COW issue/race with this approach
-of different private and shared keys as noted in commit 8382d914ebf7
-("mm, hugetlb: improve page-fault scalability").
-
-Since every hugetlb mapping (even anon and private) is actually a file
-mapping, just use the address_space index key for all mappings.  This
-results in potentially more hash collisions.  However, this should not
-be the common case.
-
-Link: http://lkml.kernel.org/r/20190328234704.27083-3-mike.kravetz@oracle.com
-Link: http://lkml.kernel.org/r/20190412165235.t4sscoujczfhuiyt@linux-r8p5
-Fixes: b5cec28d36f5 ("hugetlbfs: truncate_hugepages() takes a range of pages")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
+Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
+Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
+Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/hugetlbfs/inode.c    |    8 ++------
- include/linux/hugetlb.h |    4 +---
- mm/hugetlb.c            |   23 +++++++----------------
- mm/userfaultfd.c        |    3 +--
- 4 files changed, 11 insertions(+), 27 deletions(-)
+ net/batman-adv/main.c      |    1 +
+ net/batman-adv/multicast.c |   11 +++--------
+ net/batman-adv/types.h     |    2 ++
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -436,9 +436,7 @@ static void remove_inode_hugepages(struc
- 			u32 hash;
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -153,6 +153,7 @@ int batadv_mesh_init(struct net_device *
+ 	spin_lock_init(&bat_priv->tt.commit_lock);
+ 	spin_lock_init(&bat_priv->gw.list_lock);
+ #ifdef CONFIG_BATMAN_ADV_MCAST
++	spin_lock_init(&bat_priv->mcast.mla_lock);
+ 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
+ #endif
+ 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
+--- a/net/batman-adv/multicast.c
++++ b/net/batman-adv/multicast.c
+@@ -269,8 +269,6 @@ static void batadv_mcast_mla_list_free(s
+  * translation table except the ones listed in the given mcast_list.
+  *
+  * If mcast_list is NULL then all are retracted.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+ 					struct hlist_head *mcast_list)
+@@ -278,8 +276,6 @@ static void batadv_mcast_mla_tt_retract(
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
- 			index = page->index;
--			hash = hugetlb_fault_mutex_hash(h, current->mm,
--							&pseudo_vma,
--							mapping, index, 0);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
+ 				  list) {
+ 		if (mcast_list &&
+@@ -303,8 +299,6 @@ static void batadv_mcast_mla_tt_retract(
+  *
+  * Adds multicast listener announcements from the given mcast_list to the
+  * translation table if they have not been added yet.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
+ 				    struct hlist_head *mcast_list)
+@@ -312,8 +306,6 @@ static void batadv_mcast_mla_tt_add(stru
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
- 			/*
-@@ -557,7 +555,6 @@ static long hugetlbfs_fallocate(struct f
- 	struct address_space *mapping = inode->i_mapping;
- 	struct hstate *h = hstate_inode(inode);
- 	struct vm_area_struct pseudo_vma;
--	struct mm_struct *mm = current->mm;
- 	loff_t hpage_size = huge_page_size(h);
- 	unsigned long hpage_shift = huge_page_shift(h);
- 	pgoff_t start, index, end;
-@@ -621,8 +618,7 @@ static long hugetlbfs_fallocate(struct f
- 		addr = index * hpage_size;
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	if (!mcast_list)
+ 		return;
  
- 		/* mutex taken here, fault path and hole punch */
--		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
--						index, addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+@@ -600,7 +592,10 @@ static void batadv_mcast_mla_update(stru
+ 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
+ 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
  
- 		/* See if already present in mapping to avoid alloc/free */
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -122,9 +122,7 @@ void putback_active_hugepage(struct page
- void free_huge_page(struct page *page);
- void hugetlb_fix_reserve_counts(struct inode *inode);
- extern struct mutex *hugetlb_fault_mutex_table;
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--				struct vm_area_struct *vma,
--				struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 				pgoff_t idx, unsigned long address);
- 
- pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3729,8 +3729,8 @@ retry:
- 			 * handling userfault.  Reacquire after handling
- 			 * fault to make calling code simpler.
- 			 */
--			hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping,
--							idx, address);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, idx,
-+							address);
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
- 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
-@@ -3842,21 +3842,14 @@ backout_unlocked:
++	spin_lock(&bat_priv->mcast.mla_lock);
+ 	__batadv_mcast_mla_update(bat_priv);
++	spin_unlock(&bat_priv->mcast.mla_lock);
++
+ 	batadv_mcast_start_timer(bat_priv);
  }
  
- #ifdef CONFIG_SMP
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	unsigned long key[2];
- 	u32 hash;
- 
--	if (vma->vm_flags & VM_SHARED) {
--		key[0] = (unsigned long) mapping;
--		key[1] = idx;
--	} else {
--		key[0] = (unsigned long) mm;
--		key[1] = address >> huge_page_shift(h);
--	}
-+	key[0] = (unsigned long) mapping;
-+	key[1] = idx;
- 
- 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
- 
-@@ -3867,9 +3860,7 @@ u32 hugetlb_fault_mutex_hash(struct hsta
-  * For uniprocesor systems we always use a single mutex, so just
-  * return 0 and avoid the hashing overhead.
-  */
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	return 0;
-@@ -3915,7 +3906,7 @@ int hugetlb_fault(struct mm_struct *mm,
- 	 * get spurious allocation failures if two CPUs race to instantiate
- 	 * the same page in the page cache.
- 	 */
--	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, address);
-+	hash = hugetlb_fault_mutex_hash(h, mapping, idx, address);
- 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 	entry = huge_ptep_get(ptep);
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -272,8 +272,7 @@ retry:
- 		 */
- 		idx = linear_page_index(dst_vma, dst_addr);
- 		mapping = dst_vma->vm_file->f_mapping;
--		hash = hugetlb_fault_mutex_hash(h, dst_mm, dst_vma, mapping,
--								idx, dst_addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		err = -ENOMEM;
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -798,6 +798,7 @@ struct batadv_mcast_querier_state {
+  * @flags: the flags we have last sent in our mcast tvlv
+  * @enabled: whether the multicast tvlv is currently enabled
+  * @bridged: whether the soft interface has a bridge on top
++ * @mla_lock: a lock protecting mla_list and mla_flags
+  * @num_disabled: number of nodes that have no mcast tvlv
+  * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP traffic
+  * @num_want_all_ipv4: counter for items in want_all_ipv4_list
+@@ -816,6 +817,7 @@ struct batadv_priv_mcast {
+ 	u8 flags;
+ 	bool enabled;
+ 	bool bridged;
++	spinlock_t mla_lock;
+ 	atomic_t num_disabled;
+ 	atomic_t num_want_all_unsnoopables;
+ 	atomic_t num_want_all_ipv4;
 
 
