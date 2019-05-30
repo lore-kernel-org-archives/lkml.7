@@ -2,52 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE035C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36142C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EDB25E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D66D25E73
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192052;
-	bh=jc8jg/4Suw9jHmZotilKT0dohU7tQI2Is86LcdciVw8=;
+	s=default; t=1559192057;
+	bh=F5SjXWFP/MCO38KNM1YvGGxVRtvKdVTkdH3h+7Hp3rY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxe9tXMkkbtQQsYkOiP8HQMOssdsoGyrMnvZixz9jI9kFgHq1zS5M+b3DPmX9Uej5
-	 RnuI7OGQ3Pa9vTVbKv705nSv8Kc/WeDFKtd9VPuqM5hbii1E1ecdYOv+Jq5ZtClywP
-	 zCg8KcFCFgUVjh3UUZddLmrGrCqU2AD9lA2/fyGM=
+	b=o7agWnRZX+FuLyls0fwOzT6GIH5lOzQcEYCSbcTxszBMKQvxHDj5UbBFBu+GKWvW8
+	 ta7abQmJmtRzIpCeDyhRxPsyMzk7BUkjU2XrqCUFAMlnS781X3rjPdCZDz5BLTLsK8
+	 fwO5kMIRXKi9vUSjmRQhIFK0VgYX9f8wkh1kiH4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389112AbfE3EyM (ORCPT
+        id S1728113AbfE3DK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728114AbfE3DKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:30 -0400
+        id S1727854AbfE3DJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FF70244CA;
-        Thu, 30 May 2019 03:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0293A244A6;
+        Thu, 30 May 2019 03:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185829;
-        bh=jc8jg/4Suw9jHmZotilKT0dohU7tQI2Is86LcdciVw8=;
+        s=default; t=1559185795;
+        bh=F5SjXWFP/MCO38KNM1YvGGxVRtvKdVTkdH3h+7Hp3rY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDnrBZwnpm2LMsnFi/AB4Iy7nJYBqEf/lLeNloFNmVC5xcgmm/Mrcb5n4FP6PrsZ9
-         D2RGs1yvMCDK3+J0LcpWj1ofa1EbADqZ7EcakHNqLis5OIW3yOgq+c1Ggigcbn6QGR
-         V/MUUUBPiq3/WVlu8sepXIZQvbNrmcbIyCitI74U=
+        b=UtXkrjR76ju9b9EuirCzpr/tpATsno03kNrkvz6X4bmNMRzwZyNCpeeZ1ccMatsLs
+         iubLd613TfOKJlTyKralqW6Z4TY4DmYKi9GZTytiT8nT1sD/6zH7oHpdzoc99uYe1G
+         35spHIognNpUZi0cO8+Z0NFgNfMdRkcrvVtzJE3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
-        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 131/405] bcache: fix failure in journal relplay
-Date:   Wed, 29 May 2019 20:02:09 -0700
-Message-Id: <20190530030547.700242980@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 070/405] usb: dwc2: gadget: Increase descriptors count for ISOCs
+Date:   Wed, 29 May 2019 20:01:08 -0700
+Message-Id: <20190530030544.467965406@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,86 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
+[ Upstream commit 54f37f56631747075f1f9a2f0edf6ba405e3e66c ]
 
-journal replay failed with messages:
-Sep 10 19:10:43 ceph kernel: bcache: error on
-bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
-2057493-2057567 missing! (replaying 2057493-2076601), disabling
-caching
+Some function drivers queueing more than 128 ISOC requests at a time.
+To avoid "descriptor chain full" cases, increasing descriptors count
+from MAX_DMA_DESC_NUM_GENERIC to MAX_DMA_DESC_NUM_HS_ISOC for ISOC's
+only.
 
-The reason is in journal_reclaim(), when discard is enabled, we send
-discard command and reclaim those journal buckets whose seq is old
-than the last_seq_now, but before we write a journal with last_seq_now,
-the machine is restarted, so the journal with the last_seq_now is not
-written to the journal bucket, and the last_seq_wrote in the newest
-journal is old than last_seq_now which we expect to be, so when we doing
-replay, journals from last_seq_wrote to last_seq_now are missing.
-
-It's hard to write a journal immediately after journal_reclaim(),
-and it harmless if those missed journal are caused by discarding
-since those journals are already wrote to btree node. So, if miss
-seqs are started from the beginning journal, we treat it as normal,
-and only print a message to show the miss journal, and point out
-it maybe caused by discarding.
-
-Patch v2 add a judgement condition to ignore the missed journal
-only when discard enabled as Coly suggested.
-
-(Coly Li: rebase the patch with other changes in bch_journal_replay())
-
-Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
-Tested-by: Dennis Schridde <devurandom@gmx.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ drivers/usb/dwc2/gadget.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 9e557164209c1..6c94fa0077968 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -317,6 +317,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
- 	}
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 6812a8a3a98ba..a749de7604c62 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -714,13 +714,11 @@ static unsigned int dwc2_gadget_get_chain_limit(struct dwc2_hsotg_ep *hs_ep)
+ 	unsigned int maxsize;
+ 
+ 	if (is_isoc)
+-		maxsize = hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
+-					   DEV_DMA_ISOC_RX_NBYTES_LIMIT;
++		maxsize = (hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
++					   DEV_DMA_ISOC_RX_NBYTES_LIMIT) *
++					   MAX_DMA_DESC_NUM_HS_ISOC;
+ 	else
+-		maxsize = DEV_DMA_NBYTES_LIMIT;
+-
+-	/* Above size of one descriptor was chosen, multiple it */
+-	maxsize *= MAX_DMA_DESC_NUM_GENERIC;
++		maxsize = DEV_DMA_NBYTES_LIMIT * MAX_DMA_DESC_NUM_GENERIC;
+ 
+ 	return maxsize;
  }
+@@ -932,7 +930,7 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
  
-+bool is_discard_enabled(struct cache_set *s)
-+{
-+	struct cache *ca;
-+	unsigned int i;
-+
-+	for_each_cache(ca, s, i)
-+		if (ca->discard)
-+			return true;
-+
-+	return false;
-+}
-+
- int bch_journal_replay(struct cache_set *s, struct list_head *list)
- {
- 	int ret = 0, keys = 0, entries = 0;
-@@ -331,10 +343,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+ 	/* Update index of last configured entry in the chain */
+ 	hs_ep->next_desc++;
+-	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_GENERIC)
++	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_HS_ISOC)
+ 		hs_ep->next_desc = 0;
  
- 		if (n != i->j.seq) {
--			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--			n, i->j.seq - 1, start, end);
--			ret = -EIO;
--			goto err;
-+			if (n == start && is_discard_enabled(s))
-+				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+			else {
-+				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+				ret = -EIO;
-+				goto err;
-+			}
- 		}
+ 	return 0;
+@@ -964,7 +962,7 @@ static void dwc2_gadget_start_isoc_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 	}
  
- 		for (k = i->j.start;
+ 	/* Initialize descriptor chain by Host Busy status */
+-	for (i = 0; i < MAX_DMA_DESC_NUM_GENERIC; i++) {
++	for (i = 0; i < MAX_DMA_DESC_NUM_HS_ISOC; i++) {
+ 		desc = &hs_ep->desc_list[i];
+ 		desc->status = 0;
+ 		desc->status |= (DEV_DMA_BUFF_STS_HBUSY
+@@ -2162,7 +2160,7 @@ static void dwc2_gadget_complete_isoc_request_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 		dwc2_hsotg_complete_request(hsotg, hs_ep, hs_req, 0);
+ 
+ 		hs_ep->compl_desc++;
+-		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_GENERIC - 1))
++		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_HS_ISOC - 1))
+ 			hs_ep->compl_desc = 0;
+ 		desc_sts = hs_ep->desc_list[hs_ep->compl_desc].status;
+ 	}
+@@ -3899,6 +3897,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	unsigned int i, val, size;
+ 	int ret = 0;
+ 	unsigned char ep_type;
++	int desc_num;
+ 
+ 	dev_dbg(hsotg->dev,
+ 		"%s: ep %s: a 0x%02x, attr 0x%02x, mps 0x%04x, intr %d\n",
+@@ -3945,11 +3944,15 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	dev_dbg(hsotg->dev, "%s: read DxEPCTL=0x%08x from 0x%08x\n",
+ 		__func__, epctrl, epctrl_reg);
+ 
++	if (using_desc_dma(hsotg) && ep_type == USB_ENDPOINT_XFER_ISOC)
++		desc_num = MAX_DMA_DESC_NUM_HS_ISOC;
++	else
++		desc_num = MAX_DMA_DESC_NUM_GENERIC;
++
+ 	/* Allocate DMA descriptor chain for non-ctrl endpoints */
+ 	if (using_desc_dma(hsotg) && !hs_ep->desc_list) {
+ 		hs_ep->desc_list = dmam_alloc_coherent(hsotg->dev,
+-			MAX_DMA_DESC_NUM_GENERIC *
+-			sizeof(struct dwc2_dma_desc),
++			desc_num * sizeof(struct dwc2_dma_desc),
+ 			&hs_ep->desc_list_dma, GFP_ATOMIC);
+ 		if (!hs_ep->desc_list) {
+ 			ret = -ENOMEM;
+@@ -4092,7 +4095,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 
+ error2:
+ 	if (ret && using_desc_dma(hsotg) && hs_ep->desc_list) {
+-		dmam_free_coherent(hsotg->dev, MAX_DMA_DESC_NUM_GENERIC *
++		dmam_free_coherent(hsotg->dev, desc_num *
+ 			sizeof(struct dwc2_dma_desc),
+ 			hs_ep->desc_list, hs_ep->desc_list_dma);
+ 		hs_ep->desc_list = NULL;
 -- 
 2.20.1
 
