@@ -2,66 +2,81 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29270C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E36C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DFA24F57
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083DD24F7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfE3I3d (ORCPT
+        id S1726836AbfE3IaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:29:33 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:56488 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbfE3I3c (ORCPT
+        Thu, 30 May 2019 04:30:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38518 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfE3IaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:29:32 -0400
-Received: from c-73-193-85-113.hsd1.wa.comcast.net ([73.193.85.113] helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hWGRC-000QA7-QF; Thu, 30 May 2019 04:29:26 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
-Date:   Thu, 30 May 2019 01:29:23 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 30 May 2019 04:30:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t5so3241358wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 01:30:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pIqrbsE6/Nv/138vVdlcEQnoXvw/3uCQiUSd/l1oIaY=;
+        b=IvIPojDmgyXQLFQ1Fs5HcQRWmWbK8XNHbJToQN89nm5JKGOs2GXezs+b6E3qCpnCiL
+         wTzzfTw22oxeWv/d9XqNgqmpmj7FItM/j5Dlte2aSe72RJJnPMd6FZRh1VnSX+o1xUlM
+         voMH51WJ0ZyEWsBlbSoF2zr8sU05RCLnSIf0LxqXzWeY/Eg8qEh2xydYPO0ORTgnq70X
+         oKBc6r7V0RQMkx55JV8Y+Vk/v/oqjyNKYcQvvVDTLvYu57JclLraeBaSswRr5eO8ceag
+         C/6eaG7vuS/Y/2kfNlPZtUyN9dE2fpL+I1LxOuAcclZ2QgvoPAzluTsbY+OLRuHIFIZd
+         BuUg==
+X-Gm-Message-State: APjAAAWcutovYY3azN8uAaeCfDG5YKYSXQTDeaSkIhiEihSgyjF9VNJ6
+        sTo5400vM0lK4BGSdRgTyXXTIw==
+X-Google-Smtp-Source: APXvYqxguQuxTuphnJ9ISpnJqaH4xcMLu4CCyeeLtDHqpdu4VJX+hsaHIz6Atqsiq1kkBiYITPXGpg==
+X-Received: by 2002:a7b:c043:: with SMTP id u3mr910083wmc.56.1559205017089;
+        Thu, 30 May 2019 01:30:17 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3da1:318a:275c:408? ([2001:b07:6468:f312:3da1:318a:275c:408])
+        by smtp.gmail.com with ESMTPSA id y8sm1688765wmi.8.2019.05.30.01.30.15
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 01:30:16 -0700 (PDT)
+Subject: Re: [PATCH 09/22] docs: mark orphan documents as such
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ea534992-07ff-15d8-e48b-5fde37c88f73@redhat.com>
+Date:   Thu, 30 May 2019 10:30:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,67 +84,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 12:41 AM, Paolo Valente wrote:
+On 30/05/19 01:23, Mauro Carvalho Chehab wrote:
+> Sphinx doesn't like orphan documents:
 > 
+>     Documentation/accelerators/ocxl.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/stm32f429-overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/stm32f746-overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/stm32f769-overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/stm32h743-overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/arm/stm32/stm32mp157-overview.rst: WARNING: document isn't included in any toctree
+>     Documentation/gpu/msm-crash-dump.rst: WARNING: document isn't included in any toctree
+>     Documentation/interconnect/interconnect.rst: WARNING: document isn't included in any toctree
+>     Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
+>     Documentation/powerpc/isa-versions.rst: WARNING: document isn't included in any toctree
+>     Documentation/virtual/kvm/amd-memory-encryption.rst: WARNING: document isn't included in any toctree
+>     Documentation/virtual/kvm/vcpu-requests.rst: WARNING: document isn't included in any toctree
 > 
->> Il giorno 29 mag 2019, alle ore 03:09, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>
->> On 5/23/19 11:51 PM, Paolo Valente wrote:
->>>
->>>> Il giorno 24 mag 2019, alle ore 01:43, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>>>
->>>> When trying to run multiple dd tasks simultaneously, I get the kernel
->>>> panic shown below (mainline is fine, without these patches).
->>>>
->>>
->>> Could you please provide me somehow with a list *(bfq_serv_to_charge+0x21) ?
->>>
->>
->> Hi Paolo,
->>
->> Sorry for the delay! Here you go:
->>
->> (gdb) list *(bfq_serv_to_charge+0x21)
->> 0xffffffff814bad91 is in bfq_serv_to_charge (./include/linux/blkdev.h:919).
->> 914
->> 915	extern unsigned int blk_rq_err_bytes(const struct request *rq);
->> 916
->> 917	static inline unsigned int blk_rq_sectors(const struct request *rq)
->> 918	{
->> 919		return blk_rq_bytes(rq) >> SECTOR_SHIFT;
->> 920	}
->> 921
->> 922	static inline unsigned int blk_rq_cur_sectors(const struct request *rq)
->> 923	{
->> (gdb)
->>
->>
->> For some reason, I've not been able to reproduce this issue after
->> reporting it here. (Perhaps I got lucky when I hit the kernel panic
->> a bunch of times last week).
->>
->> I'll test with your fix applied and see how it goes.
->>
+> So, while they aren't on any toctree, add :orphan: to them, in order
+> to silent this warning.
 > 
-> Great!  the offending line above gives me hope that my fix is correct.
-> If no more failures occur, then I'm eager (and a little worried ...)
-> to see how it goes with throughput :)
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Please leave out KVM, I'll fix that instead.  Thanks for the report!
+
+Paolo
+
+> ---
+>  Documentation/accelerators/ocxl.rst                 | 2 ++
+>  Documentation/arm/stm32/overview.rst                | 2 ++
+>  Documentation/arm/stm32/stm32f429-overview.rst      | 2 ++
+>  Documentation/arm/stm32/stm32f746-overview.rst      | 2 ++
+>  Documentation/arm/stm32/stm32f769-overview.rst      | 2 ++
+>  Documentation/arm/stm32/stm32h743-overview.rst      | 2 ++
+>  Documentation/arm/stm32/stm32mp157-overview.rst     | 2 ++
+>  Documentation/gpu/msm-crash-dump.rst                | 2 ++
+>  Documentation/interconnect/interconnect.rst         | 2 ++
+>  Documentation/laptops/lg-laptop.rst                 | 2 ++
+>  Documentation/powerpc/isa-versions.rst              | 2 ++
+>  Documentation/virtual/kvm/amd-memory-encryption.rst | 2 ++
+>  Documentation/virtual/kvm/vcpu-requests.rst         | 2 ++
+>  13 files changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/accelerators/ocxl.rst
+> index 14cefc020e2d..b1cea19a90f5 100644
+> --- a/Documentation/accelerators/ocxl.rst
+> +++ b/Documentation/accelerators/ocxl.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  ========================================================
+>  OpenCAPI (Open Coherent Accelerator Processor Interface)
+>  ========================================================
+> diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+> index 85cfc8410798..f7e734153860 100644
+> --- a/Documentation/arm/stm32/overview.rst
+> +++ b/Documentation/arm/stm32/overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  ========================
+>  STM32 ARM Linux Overview
+>  ========================
+> diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
+> index 18feda97f483..65bbb1c3b423 100644
+> --- a/Documentation/arm/stm32/stm32f429-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f429-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  STM32F429 Overview
+>  ==================
+>  
+> diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
+> index b5f4b6ce7656..42d593085015 100644
+> --- a/Documentation/arm/stm32/stm32f746-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f746-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  STM32F746 Overview
+>  ==================
+>  
+> diff --git a/Documentation/arm/stm32/stm32f769-overview.rst b/Documentation/arm/stm32/stm32f769-overview.rst
+> index 228656ced2fe..f6adac862b17 100644
+> --- a/Documentation/arm/stm32/stm32f769-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f769-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  STM32F769 Overview
+>  ==================
+>  
+> diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
+> index 3458dc00095d..c525835e7473 100644
+> --- a/Documentation/arm/stm32/stm32h743-overview.rst
+> +++ b/Documentation/arm/stm32/stm32h743-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  STM32H743 Overview
+>  ==================
+>  
+> diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
+> index 62e176d47ca7..2c52cd020601 100644
+> --- a/Documentation/arm/stm32/stm32mp157-overview.rst
+> +++ b/Documentation/arm/stm32/stm32mp157-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  STM32MP157 Overview
+>  ===================
+>  
+> diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
+> index 757cd257e0d8..240ef200f76c 100644
+> --- a/Documentation/gpu/msm-crash-dump.rst
+> +++ b/Documentation/gpu/msm-crash-dump.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  =====================
+>  MSM Crash Dump Format
+>  =====================
+> diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/interconnect/interconnect.rst
+> index c3e004893796..56e331dab70e 100644
+> --- a/Documentation/interconnect/interconnect.rst
+> +++ b/Documentation/interconnect/interconnect.rst
+> @@ -1,5 +1,7 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+>  
+> +:orphan:
+> +
+>  =====================================
+>  GENERIC SYSTEM INTERCONNECT SUBSYSTEM
+>  =====================================
+> diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> index aa503ee9b3bc..f2c2ffe31101 100644
+> --- a/Documentation/laptops/lg-laptop.rst
+> +++ b/Documentation/laptops/lg-laptop.rst
+> @@ -1,5 +1,7 @@
+>  .. SPDX-License-Identifier: GPL-2.0+
+>  
+> +:orphan:
+> +
+>  LG Gram laptop extra features
+>  =============================
+>  
+> diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
+> index 812e20cc898c..66c24140ebf1 100644
+> --- a/Documentation/powerpc/isa-versions.rst
+> +++ b/Documentation/powerpc/isa-versions.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  CPU to ISA Version Mapping
+>  ==========================
+>  
+> diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> index 659bbc093b52..33d697ab8a58 100644
+> --- a/Documentation/virtual/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  ======================================
+>  Secure Encrypted Virtualization (SEV)
+>  ======================================
+> diff --git a/Documentation/virtual/kvm/vcpu-requests.rst b/Documentation/virtual/kvm/vcpu-requests.rst
+> index 5feb3706a7ae..c1807a1b92e6 100644
+> --- a/Documentation/virtual/kvm/vcpu-requests.rst
+> +++ b/Documentation/virtual/kvm/vcpu-requests.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>  =================
+>  KVM VCPU Requests
+>  =================
 > 
 
-Your fix held up well under my testing :)
-
-As for throughput, with low_latency = 1, I get around 1.4 MB/s with
-bfq (vs 1.6 MB/s with mq-deadline). This is a huge improvement
-compared to what it was before (70 KB/s).
-
-With tracing on, the throughput is a bit lower (as expected I guess),
-about 1 MB/s, and the corresponding trace file
-(trace-waker-detection-1MBps) is available at:
-
-https://www.dropbox.com/s/3roycp1zwk372zo/bfq-traces.tar.gz?dl=0
-
-Thank you so much for your tireless efforts in fixing this issue!
-
-Regards,
-Srivatsa
-VMware Photon OS
