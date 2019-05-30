@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F3BC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3D9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D14325408
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E6325425
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190324;
-	bh=b2FfiIFLax+t5DBMjGWUhK/t6nTUndNyCzFPq8pAh8k=;
+	s=default; t=1559190327;
+	bh=l2lCQC88FteZ3o8hc2q7Gubze7R3bePhk1MTicc8pgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qEvDM+5QXzyb4wcjo0rbQzJYYL4PuU5FED512Ip+TikNqHkZyS3nJxm1YaG0g1bw1
-	 eNbtK8H42jESPZbNHRv+zCW52AYmLA4BrbzyGItMSr2LoJJYWwJ0UMEveuNcjgnkrx
-	 LvKzAz7mB5XdpynLbPsiExdbPptALylWQCebAfo4=
+	b=GMs1bi3cGdD0VdhxHg4BoA4K7AJ7duUGQYXhoA3auqDvYJG6/zYUPQzRJUXJiEo7y
+	 Wu2Axagd4Ob3b6FIW0gwa1kRdTMHwzPAOaZJ4zS/r+O+RA5hUX9GuSdS+YY2Ec5oy7
+	 vXijqClSuVUO4E+Eq6RGHfied3T6ByZ9Y/RYihHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfE3DOp (ORCPT
+        id S1732422AbfE3EZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbfE3DMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:07 -0400
+        id S1729961AbfE3DOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F60C2452D;
-        Thu, 30 May 2019 03:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E739C24559;
+        Thu, 30 May 2019 03:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185926;
-        bh=b2FfiIFLax+t5DBMjGWUhK/t6nTUndNyCzFPq8pAh8k=;
+        s=default; t=1559186084;
+        bh=l2lCQC88FteZ3o8hc2q7Gubze7R3bePhk1MTicc8pgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPDCBH0t5twEe4nZA0KPryhE/FKZOJifOpG1Z4npBhLjurXJGGDllcck/nUnljZ82
-         Tw7fW53KIiHrLPF6mFu833Z9jUcSxIFwrBIyKU+ditsxl2jplvirImaebLEbA4gGTO
-         fuS1COsIizC2G0+9S4/2ZqwJ9MXxvYeVeOC1sOAE=
+        b=K0ukpS703s0GPapWMDpGuEZ8y2KeAjxrGJib44Wm9sKVu7xWtNk5WocCtLP4Mz6pt
+         47Mz4bIGpJFwzHPqpEGP2Srb517Pu8HLMXWBvAzij4CK9eKeCLTgV82aCpTw6xEiKq
+         KRCHQ5MJyq2x6Ke/olXZRt0JmAQK4hMMtxm0PBlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dafna Hirschfeld <dafna3@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 317/405] media: vicodec: bugfix - call v4l2_m2m_buf_copy_metadata also if decoding fails
-Date:   Wed, 29 May 2019 20:05:15 -0700
-Message-Id: <20190530030556.815667530@linuxfoundation.org>
+Subject: [PATCH 5.0 163/346] s390/qeth: handle error from qeth_update_from_chp_desc()
+Date:   Wed, 29 May 2019 20:03:56 -0700
+Message-Id: <20190530030549.429751456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,85 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8eead25cbdf911e17cff321903bd3397bc6ea22c ]
+[ Upstream commit a4cdc9baee0740748f16e50cd70c2607510df492 ]
 
-The function 'v4l2_m2m_buf_copy_metadata' should
-be called even if decoding/encoding ends with
-status VB2_BUF_STATE_ERROR, so that the metadata
-is copied from the source buffer to the dest buffer.
+Subsequent code relies on the values that qeth_update_from_chp_desc()
+reads from the CHP descriptor. Rather than dealing with weird errors
+later on, just handle it properly here.
 
-Signed-off-by: Dafna Hirschfeld <dafna3@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vicodec/vicodec-core.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/vicodec/vicodec-core.c b/drivers/media/platform/vicodec/vicodec-core.c
-index d7636fe9e1749..6b618452700c4 100644
---- a/drivers/media/platform/vicodec/vicodec-core.c
-+++ b/drivers/media/platform/vicodec/vicodec-core.c
-@@ -159,12 +159,10 @@ static int device_process(struct vicodec_ctx *ctx,
- 			  struct vb2_v4l2_buffer *dst_vb)
- {
- 	struct vicodec_dev *dev = ctx->dev;
--	struct vicodec_q_data *q_dst;
- 	struct v4l2_fwht_state *state = &ctx->state;
- 	u8 *p_src, *p_dst;
- 	int ret;
- 
--	q_dst = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
- 	if (ctx->is_enc)
- 		p_src = vb2_plane_vaddr(&src_vb->vb2_buf, 0);
- 	else
-@@ -186,8 +184,10 @@ static int device_process(struct vicodec_ctx *ctx,
- 			return ret;
- 		vb2_set_plane_payload(&dst_vb->vb2_buf, 0, ret);
- 	} else {
-+		struct vicodec_q_data *q_dst;
- 		unsigned int comp_frame_size = ntohl(ctx->state.header.size);
- 
-+		q_dst = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
- 		if (comp_frame_size > ctx->comp_max_size)
- 			return -EINVAL;
- 		state->info = q_dst->info;
-@@ -196,11 +196,6 @@ static int device_process(struct vicodec_ctx *ctx,
- 			return ret;
- 		vb2_set_plane_payload(&dst_vb->vb2_buf, 0, q_dst->sizeimage);
- 	}
--
--	dst_vb->sequence = q_dst->sequence++;
--	dst_vb->flags &= ~V4L2_BUF_FLAG_LAST;
--	v4l2_m2m_buf_copy_metadata(src_vb, dst_vb, !ctx->is_enc);
--
- 	return 0;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 89f912213e626..8786805b9d1c6 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -1325,7 +1325,7 @@ static void qeth_set_multiple_write_queues(struct qeth_card *card)
+ 	card->qdio.no_out_queues = 4;
  }
  
-@@ -274,16 +269,22 @@ static void device_run(void *priv)
- 	struct vicodec_ctx *ctx = priv;
- 	struct vicodec_dev *dev = ctx->dev;
- 	struct vb2_v4l2_buffer *src_buf, *dst_buf;
--	struct vicodec_q_data *q_src;
-+	struct vicodec_q_data *q_src, *q_dst;
- 	u32 state;
+-static void qeth_update_from_chp_desc(struct qeth_card *card)
++static int qeth_update_from_chp_desc(struct qeth_card *card)
+ {
+ 	struct ccw_device *ccwdev;
+ 	struct channel_path_desc_fmt0 *chp_dsc;
+@@ -1335,7 +1335,7 @@ static void qeth_update_from_chp_desc(struct qeth_card *card)
+ 	ccwdev = card->data.ccwdev;
+ 	chp_dsc = ccw_device_get_chp_desc(ccwdev, 0);
+ 	if (!chp_dsc)
+-		goto out;
++		return -ENOMEM;
  
- 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
- 	q_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
-+	q_dst = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
+ 	card->info.func_level = 0x4100 + chp_dsc->desc;
+ 	if (card->info.type == QETH_CARD_TYPE_IQD)
+@@ -1350,6 +1350,7 @@ static void qeth_update_from_chp_desc(struct qeth_card *card)
+ 	kfree(chp_dsc);
+ 	QETH_DBF_TEXT_(SETUP, 2, "nr:%x", card->qdio.no_out_queues);
+ 	QETH_DBF_TEXT_(SETUP, 2, "lvl:%02x", card->info.func_level);
++	return 0;
+ }
  
- 	state = VB2_BUF_STATE_DONE;
- 	if (device_process(ctx, src_buf, dst_buf))
- 		state = VB2_BUF_STATE_ERROR;
-+	else
-+		dst_buf->sequence = q_dst->sequence++;
-+	dst_buf->flags &= ~V4L2_BUF_FLAG_LAST;
-+	v4l2_m2m_buf_copy_metadata(src_buf, dst_buf, !ctx->is_enc);
-+
- 	ctx->last_dst_buf = dst_buf;
+ static void qeth_init_qdio_info(struct qeth_card *card)
+@@ -5086,7 +5087,9 @@ int qeth_core_hardsetup_card(struct qeth_card *card, bool *carrier_ok)
  
- 	spin_lock(ctx->lock);
+ 	QETH_DBF_TEXT(SETUP, 2, "hrdsetup");
+ 	atomic_set(&card->force_alloc_skb, 0);
+-	qeth_update_from_chp_desc(card);
++	rc = qeth_update_from_chp_desc(card);
++	if (rc)
++		return rc;
+ retry:
+ 	if (retries < 3)
+ 		QETH_DBF_MESSAGE(2, "Retrying to do IDX activates on device %x.\n",
+@@ -5755,7 +5758,9 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 	}
+ 
+ 	qeth_setup_card(card);
+-	qeth_update_from_chp_desc(card);
++	rc = qeth_update_from_chp_desc(card);
++	if (rc)
++		goto err_chp_desc;
+ 
+ 	card->dev = qeth_alloc_netdev(card);
+ 	if (!card->dev) {
+@@ -5790,6 +5795,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 	qeth_core_free_discipline(card);
+ err_load:
+ 	free_netdev(card->dev);
++err_chp_desc:
+ err_card:
+ 	qeth_core_free_card(card);
+ err_dev:
 -- 
 2.20.1
 
