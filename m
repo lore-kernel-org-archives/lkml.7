@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D711AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34052495E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E178A249A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186515;
-	bh=rGYkPEUNxSrzRwyQUAHdYE0cJaWGG91Py/JCKHHZwno=;
+	s=default; t=1559186523;
+	bh=z91C+efps4nO/LVIwO5lsJQzsK4lqT/ZYA0wlbfwdYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZlerfOljnILjwv1854VHJRCzVVCPe8ktAxeFIBLu799pNCJTmbsWOkFvuJ6AFYxC
-	 QVg+xo/dFRe6EyA9xluWS4PjuWSYPM0uTKSDorQHgFXsfCDq38wmdDpNq2M05WWYI9
-	 AmhOQx7gSpYiQrHmEMUkseAcLHvbQkWfEi+AcD8Q=
+	b=0eVdvXqFzhOIBAwJ6iLuBtlJ3Wz4M0L3qVT8RWfIIJdh/lZTolJf6MSoJpYYWO2an
+	 r9Eoh4knxAqk04/4U403ixmKwhnnmAQh+0HBCljw53amyJnqI1HDAWXU3SeWHnXbwK
+	 GsSQeE4E7s3KoS6MC2yZzj3zjvEPVcLE7kehKOx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbfE3DVx (ORCPT
+        id S1732676AbfE3DWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42908 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfE3DQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:31 -0400
+        id S1728384AbfE3DQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B1F624598;
-        Thu, 30 May 2019 03:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3E0245F8;
+        Thu, 30 May 2019 03:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186191;
-        bh=rGYkPEUNxSrzRwyQUAHdYE0cJaWGG91Py/JCKHHZwno=;
+        s=default; t=1559186192;
+        bh=z91C+efps4nO/LVIwO5lsJQzsK4lqT/ZYA0wlbfwdYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBwsG+2FAS8htd93IP7sdavXt/0NKfsbnxlc7FLKyutvDinAdenNsU02Zyr3fg0jB
-         ZpbbHRJ81EoR2pzv8v/WmkybN84Ww1U4m61EyL0DQ1f1KPwD1oa4afAN4LJ4Zex25u
-         o2/YtQVnTpZ2xvwqb5fgL/Y18Ouz5KbM7qn8NBWc=
+        b=rlbexNxmtDGGYER3Ez40Da8/kVNiEqyanp6TuTkjXcbGLLBS3ZIUUFj1u1Dvb76Nn
+         3wwZO87NX+v0PAk/l9qVhaJ7RTMTOKxeoVoDwV77Mer38kxtt+okYm1b3NZjDDuYv0
+         alwm+MOZkn8f8S3qqDpeEp87e5kVX9sDeTqnh0PM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/276] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 29 May 2019 20:03:39 -0700
-Message-Id: <20190530030529.529479407@linuxfoundation.org>
+Subject: [PATCH 4.19 064/276] powerpc/perf: Fix loop exit condition in nest_imc_event_init
+Date:   Wed, 29 May 2019 20:03:42 -0700
+Message-Id: <20190530030529.899161703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,39 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+The data structure (i.e struct imc_mem_info) to hold the memory address
+information for nest imc units is allocated based on the number of nodes
+in the system.
 
-Make sure the pointer cleared if an error is reported.
+nest_imc_event_init() traverse this struct array to calculate the memory
+base address for the event-cpu. If we fail to find a match for the event
+cpu's chip-id in imc_mem_info struct array, then the do-while loop will
+iterate until we crash.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by changing the loop exit condition based on the number of
+non zero vbase elements in the array, since the allocation is done for
+nr_chips + 1.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/perf/imc-pmu.c               | 2 +-
+ arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index d5f73c8372817..7994e8ddc7d21 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index 3cebfdf362116..5553226770748 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -508,7 +508,7 @@ static int nest_imc_event_init(struct perf_event *event)
+ 			break;
  		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+ 		pcni++;
+-	} while (pcni);
++	} while (pcni->vbase != 0);
+ 
+ 	if (!flag)
+ 		return -ENODEV;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 58a07948c76e7..3d27f02695e41 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
+ 								nr_chips))
+ 		goto error;
+ 
+-	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
++	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
+ 				    GFP_KERNEL);
+ 	if (!pmu_ptr->mem_info)
+ 		goto error;
 -- 
 2.20.1
 
