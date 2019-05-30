@@ -2,56 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4B8C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DC2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAEE24CA4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC5A24CA6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187928;
-	bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
+	s=default; t=1559187931;
+	bh=qkwd9eIKiOLTaNRg5Lmx8eX/tVIFVAe+vFJasx520v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IeA6U+Ht/nTQI9Esk37AUPSG+cwEqEAQNoh+Zd/ELDSYBwm+t+nNHsUKVJ538Bpja
-	 beghlz9iNcTNKfiHBBREPzdf6GOcXxXt12PR89wxxMTGfU2ZSzi1r95V0CPeJ+z8jS
-	 1rkbL6PxubrH9hv64I0qMuFGAgx433TZ1Z0LojXY=
+	b=VAyJGu3Yt0PVMj6r3Dit1nbXHvNiDkg9qgDjRdPLLFX/bArj5NELOni4WKuu08VOf
+	 mhVpoYTDWEu8lenbT+Ygd8dPXRpaBfNnwyZP7HyZNqJ/Oto1vWK2EAvCs1igytuBz5
+	 OOG2Uf2HxZJp+B4V8VycIs+UqgGaoRazRQ2+sXdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbfE3DUs (ORCPT
+        id S1732943AbfE3Dpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbfE3DQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:03 -0400
+        id S1732338AbfE3DUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A94E2458A;
-        Thu, 30 May 2019 03:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2219E2496F;
+        Thu, 30 May 2019 03:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186162;
-        bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
+        s=default; t=1559186448;
+        bh=qkwd9eIKiOLTaNRg5Lmx8eX/tVIFVAe+vFJasx520v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMKhxT/nntqrZw6YJ67VAzdRt2YSE691w+UPCpe54YyNLwBYcz2Ck7cjpqMrMBSiB
-         gcSn86Oqx9Eud42oBDDfyx08aCco1i/sllsoFnpF7Um8qTJXtoL1ACLHjzafRe+s2u
-         X1HygizBiXDvQa6X9JqwIil0ptITnUb7H9qxK+fg=
+        b=E0xSJaU1S8sgkpUd5z1CvhxotGLeVihCwWeKpWtwt8IcqGu59Rsckx8QYzbzt661H
+         5nKj0YOCiap+e2L8cEBNp/rGsg1EZr30WClsjDnBsWDZsVnkKqUTwCyv2qBYI1wPRI
+         Q5ZK3qCuYdaVOud1eGc9u4HvF96Dn8/yTlWTI2+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 011/276] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
-Date:   Wed, 29 May 2019 20:02:49 -0700
-Message-Id: <20190530030524.271602909@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 056/128] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
+Date:   Wed, 29 May 2019 20:06:28 -0700
+Message-Id: <20190530030444.958709319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,44 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trac Hoang <trac.hoang@broadcom.com>
+[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
 
-commit ec0970e0a1b2c807c908d459641a9f9a1be3e130 upstream.
+Even if this case shouldn't happen when controller is properly programmed,
+it's still better to avoid dumping a kernel Oops for this.
+As the sequence may happen only for debugging purposes, log the error and
+just finish the tasklet call.
 
-The iproc host eMMC/SD controller hold time does not meet the
-specification in the HS50 mode.  This problem can be mitigated
-by disabling the HISPD bit; thus forcing the controller output
-data to be driven on the falling clock edges rather than the
-rising clock edges.
-
-Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
-the change does not produce merge conflicts backporting to older kernel
-versions. In reality, the timing bug existed since the driver was first
-introduced but there is no need for this driver to be supported in kernel
-versions that old.
-
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-iproc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-iproc.c
-+++ b/drivers/mmc/host/sdhci-iproc.c
-@@ -209,7 +209,8 @@ static const struct sdhci_iproc_data ipr
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index b222dd7afe8e2..12d9048293245 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1608,7 +1608,11 @@ static void at_xdmac_tasklet(unsigned long data)
+ 					struct at_xdmac_desc,
+ 					xfer_node);
+ 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+-		BUG_ON(!desc->active_xfer);
++		if (!desc->active_xfer) {
++			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
++			spin_unlock_bh(&atchan->lock);
++			return;
++		}
  
- static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
- 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
--		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
-+		  SDHCI_QUIRK_NO_HISPD_BIT,
- 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
- 	.ops = &sdhci_iproc_ops,
- };
+ 		txd = &desc->tx_dma_desc;
+ 
+-- 
+2.20.1
+
 
 
