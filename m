@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE35C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A04C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA63E2548C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436CC254BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190402;
-	bh=KP7lvIFijuAn26mjaA5TFZqQkhkHwDao4ZgML5cbYZg=;
+	s=default; t=1559190408;
+	bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ty/W8skiYHLPuxO1+Mv7JZBn1Q6hwnAWiOpqTPSxHO7A8aIkXYLckmNOOtnxbB5aa
-	 D/07hFhoJetWaGvsLmlN//sFvO4IcdjW1fZyCmit/TnnB1uHEhddCTgDoCMKHilqhL
-	 Cn9SnuMc8/6GEW+tsntcVa7184K6qo40/ft8l7FM=
+	b=RKYxtyguJjMqQerAVcnOsJm7YgDaKG+XwRX2AV0MEa8K9h+zOhs2zYSNO7hz8a62X
+	 dUbWp3/BwXV0RqD2E23kywTORktZW7VSc3UyQqfyHk5Ma7l7o0ITQKU+iM54uxxMBD
+	 e3zt2Cwmk/HGNvu2EeJuwfXGVuB0wnrNSkF3EKQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387685AbfE3E0l (ORCPT
+        id S2387726AbfE3E0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:26:41 -0400
+        Thu, 30 May 2019 00:26:47 -0400
 Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729883AbfE3DOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:30 -0400
+        id S1729875AbfE3DO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45ABA24593;
-        Thu, 30 May 2019 03:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC5B2455E;
+        Thu, 30 May 2019 03:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186070;
-        bh=KP7lvIFijuAn26mjaA5TFZqQkhkHwDao4ZgML5cbYZg=;
+        s=default; t=1559186069;
+        bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uS7CqsVzzGsPeoLFGnLTRPr4dCr7a41k1irYxVs3YAy4BTVIkCJSfc26LX1LQCj2R
-         IM5oygVjlLW+BCrsozrzcf6k2XHLO4sJOfdc2lKH4IB5r0uGIp4ZaGavRRgH139UWv
-         V8zcOwgOqA3tXmZ5MG88dq8mqGCFPryn9y0OWjDI=
+        b=0YT7oZBVFszm5EBJpsSJDc4YlzSpr+pcM+uo1wM2EOj5HKpNsHBmaZfnNPIwl/TP/
+         1s9PoZWUCWa98c+OpXYLqfbKT0YQ6RcBux5eFQfDMbv+u25j5fkPLDfrcYxtnplzw7
+         5RHg+6KBqL7um/SxzfDbzGQ/b4D7LHphNsV535o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         John Garry <john.garry@huawei.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 184/346] hwmon: (f71805f) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:04:17 -0700
-Message-Id: <20190530030550.429515183@linuxfoundation.org>
+Subject: [PATCH 5.0 182/346] hwmon: (smsc47b397) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:04:15 -0700
+Message-Id: <20190530030550.332532730@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,28 +61,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 73e6ff71a7ea924fb7121d576a2d41e3be3fc6b5 ]
+[ Upstream commit 8c0826756744c0ac1df600a5e4cca1a341b13101 ]
 
 Super-IO accesses may fail on a system with no or unmapped LPC bus.
-
-Unable to handle kernel paging request at virtual address ffffffbffee0002e
-pgd = ffffffc1d68d4000
-[ffffffbffee0002e] *pgd=0000000000000000, *pud=0000000000000000
-Internal error: Oops: 94000046 [#1] PREEMPT SMP
-Modules linked in: f71805f(+) hwmon
-CPU: 3 PID: 1659 Comm: insmod Not tainted 4.5.0+ #88
-Hardware name: linux,dummy-virt (DT)
-task: ffffffc1f6665400 ti: ffffffc1d6418000 task.ti: ffffffc1d6418000
-PC is at f71805f_find+0x6c/0x358 [f71805f]
 
 Also, other drivers may attempt to access the LPC bus at the same time,
 resulting in undefined behavior.
 
 Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple
-drivers is synchronized.
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-Fixes: e53004e20a58e ("hwmon: New f71805f driver")
+Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
 Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 Reported-by: John Garry <john.garry@huawei.com>
 Cc: John Garry <john.garry@huawei.com>
@@ -90,60 +80,48 @@ Acked-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/f71805f.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/hwmon/smsc47b397.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/f71805f.c b/drivers/hwmon/f71805f.c
-index 73c681162653b..623736d2a7c1d 100644
---- a/drivers/hwmon/f71805f.c
-+++ b/drivers/hwmon/f71805f.c
-@@ -96,17 +96,23 @@ superio_select(int base, int ld)
- 	outb(ld, base + 1);
+diff --git a/drivers/hwmon/smsc47b397.c b/drivers/hwmon/smsc47b397.c
+index 6bd2007565603..cbdb5c4991ae3 100644
+--- a/drivers/hwmon/smsc47b397.c
++++ b/drivers/hwmon/smsc47b397.c
+@@ -72,14 +72,19 @@ static inline void superio_select(int ld)
+ 	superio_outb(0x07, ld);
  }
  
--static inline void
-+static inline int
- superio_enter(int base)
+-static inline void superio_enter(void)
++static inline int superio_enter(void)
  {
-+	if (!request_muxed_region(base, 2, DRVNAME))
++	if (!request_muxed_region(REG, 2, DRVNAME))
 +		return -EBUSY;
 +
- 	outb(0x87, base);
- 	outb(0x87, base);
-+
+ 	outb(0x55, REG);
 +	return 0;
  }
  
- static inline void
- superio_exit(int base)
+ static inline void superio_exit(void)
  {
- 	outb(0xaa, base);
-+	release_region(base, 2);
+ 	outb(0xAA, REG);
++	release_region(REG, 2);
  }
  
- /*
-@@ -1561,7 +1567,7 @@ static int __init f71805f_device_add(unsigned short address,
- static int __init f71805f_find(int sioaddr, unsigned short *address,
- 			       struct f71805f_sio_data *sio_data)
- {
--	int err = -ENODEV;
+ #define SUPERIO_REG_DEVID	0x20
+@@ -300,8 +305,12 @@ static int __init smsc47b397_find(void)
+ 	u8 id, rev;
+ 	char *name;
+ 	unsigned short addr;
 +	int err;
- 	u16 devid;
- 
- 	static const char * const names[] = {
-@@ -1569,8 +1575,11 @@ static int __init f71805f_find(int sioaddr, unsigned short *address,
- 		"F71872F/FG or F71806F/FG",
- 	};
- 
--	superio_enter(sioaddr);
-+	err = superio_enter(sioaddr);
++
++	err = superio_enter();
 +	if (err)
 +		return err;
  
-+	err = -ENODEV;
- 	devid = superio_inw(sioaddr, SIO_REG_MANID);
- 	if (devid != SIO_FINTEK_ID)
- 		goto exit;
+-	superio_enter();
+ 	id = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
+ 
+ 	switch (id) {
 -- 
 2.20.1
 
