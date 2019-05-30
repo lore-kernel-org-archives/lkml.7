@@ -1,185 +1,100 @@
 Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A97C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC260C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D6F243AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="nW0+RjTg"
+	by mail.kernel.org (Postfix) with ESMTP id 739E3243AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559176529;
+	bh=oO5qw6KcCYUQXW/Btf/T5AVuZKeA6eFYF4kxfBv2rHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bs5x1NnodY/USIwYQ/pX320q0mUogpBSwV7UTLHt0fC4G+OitJfcdHuFuu5bpk24T
+	 utAbMxjxVEgvW2ykCk+39Ku1bLJQQPsuHv8QbLjBHqKhTaUMIc+Tp68kBJmnkpwxUe
+	 B0hxm6dejbez8yZXW/M6VuSaCSUZx5HyUxIxBFQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfE3AeU (ORCPT
+        id S1726925AbfE3Af2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:34:20 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33696 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfE3AeU (ORCPT
+        Wed, 29 May 2019 20:35:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38279 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfE3Af2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:34:20 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p18so2795819qkk.0;
-        Wed, 29 May 2019 17:34:19 -0700 (PDT)
+        Wed, 29 May 2019 20:35:28 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so1781403plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KHD+sHVUPLQmygDU5dgl8aDe2PTeVVrxe8ejiYsJbzA=;
-        b=nW0+RjTgr112JeSC0qx2gUZmFr6cGCDqdl+BpCHWqJuE+d78Bs5iJJebC6syz05H1g
-         APITCHaqFOtnhiPTw51uDWFk0zRdcaug6U0SqwHUL+FX62RpIXyMwquSehD4D9wCa9Nz
-         DjkgdB2ypi/hj1qa/QKZLnb8qvc1wkMBkifao=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WCSz9/I6gTeqg/ESOjee5MQIcRdo/bNNoxObWxNXK4E=;
+        b=opqCw3aqBIiknEKeQodAFFu3OCxtwvP+W4j9BVCjB36idpHMrPJrPuD5ph2s9xacgY
+         fafk59YaCZmoDVNf64N7EctZ0V370beTquv0AGmOqimjyZ5UBcTuiUG6Z927N967cMRd
+         CR3J73QQiSo7PFksi/g2h10sGE+qf+UlSrsXgb0c1vE0F24uoabRtcUWmov3uOZMJETH
+         XF0B0gxdMK1u6tihyh92ckmO5B4OJbRTm8i1dDuBzZ14eITrt+6tvm1PaD82ziYXfkfT
+         YgsEDfXqnArQu3czX0Vt6HJALiMWMcI7uP1mPTqs2V91tk6hCvtV8fUoDsIYlt4rm/3g
+         2A9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KHD+sHVUPLQmygDU5dgl8aDe2PTeVVrxe8ejiYsJbzA=;
-        b=PSozzJ5MylixD74xAziq2vnYErIjyjlFPOeJRj+qEWtVcGEkWDo+JKoN8WZThX5Dw7
-         xb/Vc6oY3DjOT5hvQBIbeNXLsnTNfr78w1lYDWKTy3yHYbFW/n25Lx+ABuQXx5hTPUZ6
-         bMHK7+skthwO/JKcLRD6Jov8iJKc6L9EZFM6llifQZixo5W6A4B6kBtp0m0mxtO9TTiU
-         q95eH9PfyMR8DSP9U3ahoRG/7IKyyNtud7ILDGSXYHqD61LT2tpZLuLkdmLeBj9E66Aj
-         TnXoyALnWsgam0NCTsmfWGGclrbnvfQqwBvD0Ww/+7Pdo2/CPNAofJTzA6Eovb1+w9r5
-         RxMg==
-X-Gm-Message-State: APjAAAUPR9RH5raicE9cF1iie/t13w24IdRjHdQ97DIGrxjVVkPDAepr
-        l8WKP+ibJHltRQ4JMtasuanUUlAfIYRw6VxQ4Og=
-X-Google-Smtp-Source: APXvYqxYyCeKyYUztJa3DHENKeZigts1pQtuupR+90lPSZNjZI5bKFuOpg4mU0O5bqKNHFmvb0879Dook4z1MhjB/qo=
-X-Received: by 2002:a37:a10b:: with SMTP id k11mr713236qke.76.1559176459320;
- Wed, 29 May 2019 17:34:19 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WCSz9/I6gTeqg/ESOjee5MQIcRdo/bNNoxObWxNXK4E=;
+        b=ozsKRTgoRHR9OuuPwJQCAOloN+L5NSv2pQsrwbuCBQYOC6B3VcuO1Rz4Y9OWzEldnM
+         7qRyVfdyVNH7VHw5dMuUT7UTXg3P2erpAFGDNzudE8ELI45mnO8W9O4Koqfx6jYf7F67
+         eFzsgCvWhLySdKRivdegEK2T9dH6a98ZLXRoGN6yLisr3dmteIf5sl7i7mjszqQAXQ+Q
+         fDnL3MTaK6kR075rEZAJQPhVxL/07hq0qYSRMXMW73QRlRdyU2tHgeTMUVOuTeju1LDz
+         CmROQtSod3TdfFsstMPEzLuOYxf7ZOb0TeJQoO+siXIoHwpJNi/Dkt81Vo1tRu5A4rFb
+         mPZw==
+X-Gm-Message-State: APjAAAU3wldJywwLkul6alckOg5nuRN3+vNN0Gz4ywSXRZVJB/63yt6q
+        wh82GW91M1JreReVZPC1IWItGFw2
+X-Google-Smtp-Source: APXvYqwqxTqPzeJe0bYTfxudVeVQk2PJ/n+gl8eR6vQJis3N9o3oE/pOOo35+eiB0i/2B3itKVDFXA==
+X-Received: by 2002:a17:902:b495:: with SMTP id y21mr839620plr.243.1559176527378;
+        Wed, 29 May 2019 17:35:27 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id r7sm751659pjb.8.2019.05.29.17.35.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 29 May 2019 17:35:26 -0700 (PDT)
+Date:   Thu, 30 May 2019 09:35:20 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190530003520.GA229459@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
 MIME-Version: 1.0
-References: <20190527112753.1681-1-a.filippov@yadro.com>
-In-Reply-To: <20190527112753.1681-1-a.filippov@yadro.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 30 May 2019 00:34:04 +0000
-Message-ID: <CACPK8XeXh8uiQ6f5LWJRBJ=VwMAvdPHOo34uHhWZyMFBG2HVqw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: g4: add video engine support
-To:     Alexander Filippov <a.filippov@yadro.com>
-Cc:     linux-aspeed@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520035254.57579-7-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+On Wed, May 29, 2019 at 12:14:47PM +0800, Hillf Danton wrote:
+> 
+> On Mon, 20 May 2019 12:52:53 +0900 Minchan Kim wrote:
+> > Example)
+> > 
+> Better if the following stuff is stored somewhere under the
+> tools/testing directory.
 
-On Mon, 27 May 2019 at 11:28, Alexander Filippov <a.filippov@yadro.com> wrote:
->
-> Add a node to describe the video engine and VGA scratch registers on
-> AST2400.
-
-The scratch registers are unrelated to the video engine. As Andrew
-pointed out, the bindings are not upstream either.
-
-Can you re-spin this patch wit just the video engine changes?
-
-We also need a platform to enable and test this on. Can you submit the
-device tree for your system?
-
->
-> These changes were copied from aspeed-g5.dtsi
->
-> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
-> ---
->  arch/arm/boot/dts/aspeed-g4.dtsi | 62 ++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index 6011692df15a..adc1804918df 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -168,6 +168,10 @@
->                                         compatible = "aspeed,g4-pinctrl";
->                                 };
->
-> +                               vga_scratch: scratch {
-> +                                       compatible = "aspeed,bmc-misc";
-> +                               };
-> +
->                                 p2a: p2a-control {
->                                         compatible = "aspeed,ast2400-p2a-ctrl";
->                                         status = "disabled";
-> @@ -195,6 +199,16 @@
->                                 reg = <0x1e720000 0x8000>;      // 32K
->                         };
->
-> +                       video: video@1e700000 {
-> +                               compatible = "aspeed,ast2400-video-engine";
-> +                               reg = <0x1e700000 0x1000>;
-> +                               clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-> +                                        <&syscon ASPEED_CLK_GATE_ECLK>;
-> +                               clock-names = "vclk", "eclk";
-> +                               interrupts = <7>;
-> +                               status = "disabled";
-> +                       };
-> +
->                         gpio: gpio@1e780000 {
->                                 #gpio-cells = <2>;
->                                 gpio-controller;
-> @@ -1408,6 +1422,54 @@
->         };
->  };
->
-> +&vga_scratch {
-> +       dac_mux {
-> +               offset = <0x2c>;
-> +               bit-mask = <0x3>;
-> +               bit-shift = <16>;
-> +       };
-> +       vga0 {
-> +               offset = <0x50>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga1 {
-> +               offset = <0x54>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga2 {
-> +               offset = <0x58>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga3 {
-> +               offset = <0x5c>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga4 {
-> +               offset = <0x60>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga5 {
-> +               offset = <0x64>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga6 {
-> +               offset = <0x68>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +       vga7 {
-> +               offset = <0x6c>;
-> +               bit-mask = <0xffffffff>;
-> +               bit-shift = <0>;
-> +       };
-> +};
-> +
->  &sio_regs {
->         sio_2b {
->                 offset = <0xf0>;
-> --
-> 2.20.1
->
+Sure, I will do once we figure out RFC stage.
