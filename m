@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B245DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FFDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE3B251C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DB3241B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189574;
-	bh=d0ynFPtdGmt3C0L85voa+MD7+1VbO0i7QBEovZkzBqw=;
+	s=default; t=1559189582;
+	bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hu6JWPvP8wT9Fg3zDQ67md5ctnszS/QoNlknnjdElGRoCOGk9gvDfIiBQe19q/8/O
-	 ANuXUlxxAaswNI34fJoBBMKtxqlj3Wuy9TQjZ1DyWx9jTiEYOlP/Gyyj1C5FitU0QT
-	 DvlwT8ngkHGGM3RtDTIpXX15H4ITgScBVvZtFo+s=
+	b=COHNcuOcNol0TSFaTJQq1A5UWhCrs5zACSKgC1OjZJc49zYveQ6jg1+RuAFtnwqcV
+	 qEk+35PJas9XgzBtg32IwWMpcsINCdAkYBtYREvrNRhOZviJUJImn+KiQoeF46CWoR
+	 ekl8fMIc1IUzG2YmltpQ3IKuWftUpeh67b5P1Fv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfE3EMx (ORCPT
+        id S1727144AbfE3ENB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42806 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730695AbfE3DQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:30 -0400
+        id S1730671AbfE3DQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82F5B245EA;
-        Thu, 30 May 2019 03:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBCDD245DF;
+        Thu, 30 May 2019 03:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186189;
-        bh=d0ynFPtdGmt3C0L85voa+MD7+1VbO0i7QBEovZkzBqw=;
+        s=default; t=1559186185;
+        bh=VEZpUIdlXjhf23J0PQHrbPeW73H2jqsEXS2Vwuma1lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TMeZUwWv7hnmnuNJoO6JwzqZCTZ+zjjtwItb55mHfiZbD8U8v7WALT018M9V4rUx
-         sQrOSdHvqZEo8XFZjzR7Dz5EuXnYkvk3XZWD/SnNCbsvTVI3SLyBhpP7UcCop2ssdU
-         rA/cNHT8CJtVGR4CFT6TeLRgaKBgZ8QMZKMWOxrI=
+        b=xKnP5yrQ/JxZORrQV5/hDw60ckGALYbdwvPkxZH9riO2/NnQbtqe/ZoYVmiOWCgqq
+         pe74eZlDPA0Ev6psGhkMDC5L40CFIy4GHc/QUg6Cy7vZSQYVecpKte8/p0bikHm8zo
+         I1YnVoCcYUMjDDdoah7KrRj2sa3BHeMPJ1ppPGq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mac Chiang <mac.chiang@intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/276] ASoC: Intel: kbl_da7219_max98357a: Map BTN_0 to KEY_PLAYPAUSE
-Date:   Wed, 29 May 2019 20:03:36 -0700
-Message-Id: <20190530030529.129690606@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 053/276] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 29 May 2019 20:03:31 -0700
+Message-Id: <20190530030528.440186289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,47 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16ec5dfe0327ddcf279957bffe4c8fe527088c63 ]
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-On kbl_rt5663_max98927, commit 38a5882e4292
-    ("ASoC: Intel: kbl_rt5663_max98927: Map BTN_0 to KEY_PLAYPAUSE")
-    This key pair mapping to play/pause when playing Youtube
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-The Android 3.5mm Headset jack specification mentions that BTN_0 should
-be mapped to KEY_MEDIA, but this is less logical than KEY_PLAYPAUSE,
-which has much broader userspace support.
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-For example, the Chrome OS userspace now supports KEY_PLAYPAUSE to toggle
-play/pause of videos and audio, but does not handle KEY_MEDIA.
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
 
-Furthermore, Android itself now supports KEY_PLAYPAUSE equivalently, as the
-new USB headset spec requires KEY_PLAYPAUSE for BTN_0.
-https://source.android.com/devices/accessories/headset/usb-headset-spec
-
-The same fix is required on Chrome kbl_da7219_max98357a.
-
-Signed-off-by: Mac Chiang <mac.chiang@intel.com>
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_da7219_max98357a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/intel/boards/kbl_da7219_max98357a.c b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-index 38f6ab74709d0..07491a0f8fb8b 100644
---- a/sound/soc/intel/boards/kbl_da7219_max98357a.c
-+++ b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-@@ -188,7 +188,7 @@ static int kabylake_da7219_codec_init(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b26256f23d67f..08b10274284a8 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
- 	jack = &ctx->kabylake_headset;
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
  
--	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_MEDIA);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOLUMEUP);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
+ 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
