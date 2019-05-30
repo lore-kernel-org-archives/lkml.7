@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEACFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E675DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B2A244D2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2245246DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186245;
-	bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
+	s=default; t=1559186249;
+	bh=2CHFQ1yD2ZdQPUiiceM3lTdpPGv4jFPq8lmnLRRah/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dlit5RgzTTgetJPiNc+SDvAnXnMcpQVZJT5Jji5vlhUwaCx1o1+O7b2tSEWygEel0
-	 qPHkgyKcuHVsyOK1l13qRaxs4FAiBpwO5BLbE6WLhaxawadtdaqOIfpfthuC0biit/
-	 +uEm6vcBPaD3nW6urq5dWYQw3QEVgcZWXkWyT37M=
+	b=l+3r7Q4FIxdv065kZx+P4Bj/B4WI71kebbK52j1qdRD880uN3hqJk05d4DevwtrIM
+	 AsK6ydrU2X0KdufjEQenGbHqInhpaMqXdkyICFaoEkUs5wFDsCqEJ3XBa5Yl2YZvb4
+	 HNLsH5R757cE5rzGQkoL/7DIj7EeTkM1ej9n06fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfE3DRY (ORCPT
+        id S1731130AbfE3DR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729639AbfE3DN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:59 -0400
+        id S1729661AbfE3DOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4562457A;
-        Thu, 30 May 2019 03:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAEE72455E;
+        Thu, 30 May 2019 03:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186037;
-        bh=xtJxQC0Yev/gdAJgBJR+QbV4KFDeR1pDpv2e2eMbnsc=;
+        s=default; t=1559186039;
+        bh=2CHFQ1yD2ZdQPUiiceM3lTdpPGv4jFPq8lmnLRRah/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MA3Q4MHDipwjBGzgw126SMkKWfC2jpnAZbH2zCos1zHuypzc8IaUZ2HqCo1BKgKdY
-         Kkf4wMm1Xmzbyt53U6k86QyPKZi+kD8AAMiICogbwUeWSW0uzDBRNfYvJuKLvnVqwN
-         GC7LIRlwgg4S6qp/nN8G9pmsq6Hv4BhasN4VRgnA=
+        b=jB0lmsLx4aPnWNufuc0e2YD8Zhbkv2nWLM5Rq1TUEHWMJk8mxvq+W93dLZM+FflF9
+         tf0cRdO7uVKecp5U0bJoJV06FwgwJULHAbWunFFX+fsjhPlT2XvzQEH0Uw439YkyJS
+         vfNpKbWXGWsZLY763Ploej0Y7cki18fusOc54sAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 125/346] smpboot: Place the __percpu annotation correctly
-Date:   Wed, 29 May 2019 20:03:18 -0700
-Message-Id: <20190530030547.440701217@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 111/346] net: cw1200: fix a NULL pointer dereference
+Date:   Wed, 29 May 2019 20:03:04 -0700
+Message-Id: <20190530030546.718580107@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -64,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
+[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
 
-The test robot reported a wrong assignment of a per-CPU variable which
-it detected by using sparse and sent a report. The assignment itself is
-correct. The annotation for sparse was wrong and hence the report.
-The first pointer is a "normal" pointer and points to the per-CPU memory
-area. That means that the __percpu annotation has to be moved.
+In case create_singlethread_workqueue fails, the fix free the
+hardware and returns NULL to avoid NULL pointer dereference.
 
-Move the __percpu annotation to pointer which points to the per-CPU
-area. This change affects only the sparse tool (and is ignored by the
-compiler).
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
-Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/smpboot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/st/cw1200/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
-index d0884b5250010..9d1bc65d226cc 100644
---- a/include/linux/smpboot.h
-+++ b/include/linux/smpboot.h
-@@ -29,7 +29,7 @@ struct smpboot_thread_data;
-  * @thread_comm:	The base name of the thread
-  */
- struct smp_hotplug_thread {
--	struct task_struct __percpu	**store;
-+	struct task_struct		* __percpu *store;
- 	struct list_head		list;
- 	int				(*thread_should_run)(unsigned int cpu);
- 	void				(*thread_fn)(unsigned int cpu);
+diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
+index 90dc979f260b6..c1608f0bf6d01 100644
+--- a/drivers/net/wireless/st/cw1200/main.c
++++ b/drivers/net/wireless/st/cw1200/main.c
+@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
+ 	mutex_init(&priv->wsm_cmd_mux);
+ 	mutex_init(&priv->conf_mutex);
+ 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
++	if (!priv->workqueue) {
++		ieee80211_free_hw(hw);
++		return NULL;
++	}
++
+ 	sema_init(&priv->scan.lock, 1);
+ 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
+ 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
 -- 
 2.20.1
 
