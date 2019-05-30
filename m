@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF26C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCC0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF2F2558C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBB52559F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190551;
-	bh=rqf+WCP3JKuipcslg6e04zOOBxAAsJ9FP0vvfATf1As=;
+	s=default; t=1559190555;
+	bh=5BI3W/bQ/bJ1/zNpqUcHSObyJKPLH/lygxDPR5rIJEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0QkiFaDiM6nlL7mBfvbFsW8oj2JXNPnrPXIkmQPkwpPzl12YA12NYAgaNz8tK6Vny
-	 JE3vs5acl4fSrvWdXB9rfmq5F0mVgDT7+cFiTL/AsWxYrEUx7QQ093zvSve+dFFVoS
-	 Zg3l7RYX7tEiOihh4NJML7/lzA8IE5Q2bGbHqc2o=
+	b=OY8cJ5N2D0w/h8Dw1CygGz4c7MT5eRgEEK0VLCoMsIunefXUmRmraOydA3zm0HMoN
+	 4yWXScqSqkWgeFj9+LsS9dtr329PKQwzFt3q5nwVfUmUR3greSwCv2ZnjleEoWHvqH
+	 uGY8ralYZXaNfquY0bO3MWh4ehq09XI6pPHjWQ2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfE3DOI (ORCPT
+        id S1729719AbfE3DOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52698 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbfE3DLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:53 -0400
+        id S1728708AbfE3DLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C11724512;
-        Thu, 30 May 2019 03:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D232E24502;
+        Thu, 30 May 2019 03:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185912;
-        bh=rqf+WCP3JKuipcslg6e04zOOBxAAsJ9FP0vvfATf1As=;
+        s=default; t=1559185910;
+        bh=5BI3W/bQ/bJ1/zNpqUcHSObyJKPLH/lygxDPR5rIJEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dj3NAYhR9QShVtsJMq2IQpLjlOgCpcMqodoj02G2c2qshMJXLdn/m9DhaPUfT/e6a
-         jWOb00jC4hDL/fhHSnWRpdagSRRCpaYZNU1V7smhUy07WSJLPYeZH9iEP2A317iQfU
-         2RfFcKYCKnKbIZa/vZKQf8VvuoPcf1kQJPfjDBe8=
+        b=rZG9B/7y5NXjNOYBENxZZnlAVlqq6pq9zjE6Dh5AHiX+A6UzbUbq/LJFP6QhbVVNV
+         cowHDjXCWrGpziXfeJX7ceeqTk/SgswfgdlNICTomZlUVVvRR01pcFM6eRyJ4FL3FA
+         yAFT1mM24ioomv/xJnYpU5RZqbRG0tiCZ93fcYt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 293/405] drm: rcar-du: lvds: Set LVEN and LVRES bits together on D3
-Date:   Wed, 29 May 2019 20:04:51 -0700
-Message-Id: <20190530030555.667789342@linuxfoundation.org>
+Subject: [PATCH 5.1 244/405] net: hns3: check resetting status in hns3_get_stats()
+Date:   Wed, 29 May 2019 20:04:02 -0700
+Message-Id: <20190530030553.324991156@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,39 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 00d082cc4ea6e42ec4fed832a1020231bb1ca150 ]
+[ Upstream commit c4e401e5a934bb0798ebbba98e08dab129695eff ]
 
-On the D3 SoC the LVDS PHY must be enabled in the same register write
-that enables the LVDS output. Skip writing the LVEN bit independently
-on that platform, it will be set by the write that sets LVRES.
+hns3_get_stats() should check the resetting status firstly,
+since the device will be reinitialized when resetting. If the
+reset has not completed, the hns3_get_stats() may access
+invalid memory.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 7ef97b2a6edaa..f0314790333ba 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -485,9 +485,13 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 359d4731fb2db..ea94b5152963f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -483,6 +483,11 @@ static void hns3_get_stats(struct net_device *netdev,
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+ 	u64 *p = data;
  
- 	if (lvds->info->quirks & RCAR_LVDS_QUIRK_GEN3_LVEN) {
--		/* Turn on the LVDS PHY. */
-+		/*
-+		 * Turn on the LVDS PHY. On D3, the LVEN and LVRES bit must be
-+		 * set at the same time, so don't write the register yet.
-+		 */
- 		lvdcr0 |= LVDCR0_LVEN;
--		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
-+		if (!(lvds->info->quirks & RCAR_LVDS_QUIRK_PWD))
-+			rcar_lvds_write(lvds, LVDCR0, lvdcr0);
- 	}
- 
- 	if (!(lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)) {
++	if (hns3_nic_resetting(netdev)) {
++		netdev_err(netdev, "dev resetting, could not get stats\n");
++		return;
++	}
++
+ 	if (!h->ae_algo->ops->get_stats || !h->ae_algo->ops->update_stats) {
+ 		netdev_err(netdev, "could not get any statistics\n");
+ 		return;
 -- 
 2.20.1
 
