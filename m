@@ -2,109 +2,90 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF53C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D449C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F462588A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0086B24018
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfE3LvP (ORCPT
+        id S1727041AbfE3LwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:51:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:34882 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfE3LvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:51:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E85B9374;
-        Thu, 30 May 2019 04:51:13 -0700 (PDT)
-Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A814B3F5AF;
-        Thu, 30 May 2019 04:51:09 -0700 (PDT)
-Date:   Thu, 30 May 2019 12:51:03 +0100
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-Message-ID: <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-2-atish.patra@wdc.com>
- <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
+        Thu, 30 May 2019 07:52:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32857 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfE3LwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:52:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n18so5337850otq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:52:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vAN+W8HMPR+e2EfUykPuPve3XAe6lmTzwXCfaLwdSz8=;
+        b=oJJMIqM9fr+0cj0NekXfaW+ebhsDKaSx9gg6NMJg9jM3jFRVQTUdal/GKKqxbcaEKB
+         OcZFNUrSA8sL9sBH9cDTMTCv+6FZyecNt52/VyDppfzGxRZqAJe51dgfJNNUWF7REW+s
+         CusJ1wyiVaK9t0Ax+447kmXdAm66gpTHnnNzTGuAaN3Zi15S0zouw1hvfLdrY9i90vQI
+         i4xH4PVa2jmdXsZPuEHLI0fhlypwlnhfgAoFVmRFz3qn1I0Mrb3vTv/Q8OJ6vKLhu5yo
+         4lyHodcQTA+xsQJ/Rcb9E0FttM8pr0/mdJOR+C2v5Tai93oDjye8GBsTydRxS5/W/cnz
+         5DEQ==
+X-Gm-Message-State: APjAAAXz5MIOfQmlrMI6qL+Pd+9+q2H+r5DR3dHZ7jFBQ/dfEDO4CwTg
+        KcbK++xXqOtg6B0SFV2aLvL9FsnJ0BHgY/PbRwc/4w==
+X-Google-Smtp-Source: APXvYqxKpCp2brBM13KsmN/4s51AkFDodgy602B18KVX9OGtDboNvG1r1eWhhRO2gFVi4V5WEVlWY0LUDFO4YhGMEBE=
+X-Received: by 2002:a05:6830:154c:: with SMTP id l12mr2235146otp.66.1559217143019;
+ Thu, 30 May 2019 04:52:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190530035310.GA9127@zhanggen-UX430UQ> <CAFqZXNv-54DJhd8gyUhwDo6RvmjFGSHo=+s-BVsL87S+u0cQxQ@mail.gmail.com>
+ <20190530085106.GA2711@zhanggen-UX430UQ>
+In-Reply-To: <20190530085106.GA2711@zhanggen-UX430UQ>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Thu, 30 May 2019 13:52:12 +0200
+Message-ID: <CAFqZXNuVVTL4FmBRvsZri+tvv4T4U47tMLjTZvSr7Cro=hR5Dg@mail.gmail.com>
+Subject: Re: [PATCH v2] hooks: fix a missing-check bug in selinux_sb_eat_lsm_opts()
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, tony.luck@intel.com,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
-> On 5/29/19 5:13 PM, Atish Patra wrote:
-> >From: Sudeep Holla <sudeep.holla@arm.com>
-> >
-> >The current ARM DT topology description provides the operating system
-> >with a topological view of the system that is based on leaf nodes
-> >representing either cores or threads (in an SMT system) and a
-> >hierarchical set of cluster nodes that creates a hierarchical topology
-> >view of how those cores and threads are grouped.
-> >
-> >However this hierarchical representation of clusters does not allow to
-> >describe what topology level actually represents the physical package or
-> >the socket boundary, which is a key piece of information to be used by
-> >an operating system to optimize resource allocation and scheduling.
-> >
-> 
-> Are physical package descriptions really needed? What does "socket" imply
-> that a higher layer "cluster" node grouping does not? It doesn't imply a
-> different NUMA distance and the definition of "socket" is already not well
-> defined, is a dual chiplet processor not just a fancy dual "socket" or are
-> dual "sockets" on a server board "slotket" card, will we need new names for
-> those too..
+On Thu, May 30, 2019 at 10:51 AM Gen Zhang <blackgod016574@gmail.com> wrote:
+> In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+> returns NULL when fails. So 'arg' should be checked.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+> ---
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 3ec702c..5a9e959 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+>                                                 *q++ = c;
+>                                 }
+>                                 arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
+> +                               if (!arg)
+> +                                       return -ENOMEM;
+>                         }
+>                         rc = selinux_add_opt(token, arg, mnt_opts);
+>                         if (unlikely(rc)) {
 
-Socket (or package) just implies what you suggest, a grouping of CPUs
-based on the physical socket (or package). Some resources might be
-associated with packages and more importantly socket information is
-exposed to user-space. At the moment clusters are being exposed to
-user-space as sockets which is less than ideal for some topologies.
+Looking at the callers of security_sb_eat_lsm_opts() (which is the
+function that eventually calls the selinux_sb_eat_lsm_opts() hook),
+-ENOMEM should be appropriate here.
 
-At the moment user-space is only told about hw threads, cores, and
-sockets. In the very near future it is going to be told about dies too
-(look for Len Brown's multi-die patch set).
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-I don't see how we can provide correct information to user-space based
-on the current information in DT. I'm not convinced it was a good idea
-to expose this information to user-space to begin with but that is
-another discussion.
-
-Morten
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
