@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5B2C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58254C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C755A24A58
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B3124A58
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186678;
-	bh=9IM83kU3WNfz0QfBh+pLawTB58Dclw0rzHSXeY6vPLk=;
+	s=default; t=1559186681;
+	bh=RzkQDFObNYcIiIPGLQTQZaZDCTqXgUmZqo1AGSEvEqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OA6C4r8P/imias9wjO5Vv1LJVlRDeco8ABEdGP4bIp6523tebHW3k7WgBCfKqymZI
-	 k6gJEAMujL1kbGHDE3ANzmoFrZt2XfwV7kTzedekGDfQ9GwlAG9egVsukHyQpCA0bg
-	 fegSRxzJLuvevAeMUp2cPhU4awY2jxSOtQcwEFv0=
+	b=LJ0VsNO39Fu/J04qDwViZZPclP6YGZMEvBau15/R65fMmOqxMD9Ycd8hGBYQcoOjj
+	 8TaYjyS5r0dscIErWQdJpGi1giWLQryPwZv14cuqtTLIFDZ6pZIAALeJ+HNRaNdSgM
+	 Aa+SORMdhBEL43DFQIkawVemiAYuR+QBfDHFr81g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbfE3DYh (ORCPT
+        id S2387421AbfE3DYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:37 -0400
+        Wed, 29 May 2019 23:24:39 -0400
 Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731469AbfE3DSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:13 -0400
+        id S1731474AbfE3DSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D06824789;
-        Thu, 30 May 2019 03:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5318624763;
+        Thu, 30 May 2019 03:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186293;
-        bh=9IM83kU3WNfz0QfBh+pLawTB58Dclw0rzHSXeY6vPLk=;
+        s=default; t=1559186294;
+        bh=RzkQDFObNYcIiIPGLQTQZaZDCTqXgUmZqo1AGSEvEqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZFNpbTrzv+msJiRdWF513oBMKvAe/7QEFgrqzZXQkIcPhKEXCmcvBgbOB8tBMA3J
-         +1swqqYeOwdGRZROX6m+WHMJ/N1+z+5jBhagVCaysgoLNCk8w49XNTZMRAom6fSMCK
-         G4xHfnQIoTw/peu1luXH+iBprhAAg/X05YoXpB1c=
+        b=m8C1QCqV6sBXb5MKflp2HSQ6PetrV9DKLANQe3MCYpOK4JRll8t0APx74nC+HYJdB
+         ydF5RsYUWrmHcZClPuZUiTLjpyWk1JkaedLOHzKIRh/DNTJ6WEMIt6/E24f4AzEJyC
+         UuoMVOHQv43X6TtWwEPiAe8Dn0yayaxjPOOYfpFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Hutchinson <jahutchinson99@googlemail.com>,
-        Antti Palosaari <crope@iki.fi>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 251/276] media: m88ds3103: serialize reset messages in m88ds3103_set_frontend
-Date:   Wed, 29 May 2019 20:06:49 -0700
-Message-Id: <20190530030540.838285379@linuxfoundation.org>
+Subject: [PATCH 4.19 254/276] drm/amd/display: Set stream->mode_changed when connectors change
+Date:   Wed, 29 May 2019 20:06:52 -0700
+Message-Id: <20190530030541.032695304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,100 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 981fbe3da20a6f35f17977453bce7dfc1664d74f ]
+[ Upstream commit b9952f93cd2cf5fca82b06a8179c0f5f7b769e83 ]
 
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=199323
+[Why]
+The kms_plane@plane-position-covered-pipe-*-planes subtests can produce
+a sequence of atomic commits such that neither active_changed nor
+mode_changed but connectors_changed.
 
-Users are experiencing problems with the DVBSky S960/S960C USB devices
-since the following commit:
+When this happens we remove the old stream from the context and add
+a new stream but the new stream doesn't have mode_changed=true set.
 
-9d659ae: ("locking/mutex: Add lock handoff to avoid starvation")
+This incorrect programming sequence causes CRC mismatches to occur in
+the test.
 
-The device malfunctions after running for an indeterminable period of
-time, and the problem can only be cleared by rebooting the machine.
+The stream->mode_changed value should be set whenever a new stream
+is created.
 
-It is possible to encourage the problem to surface by blocking the
-signal to the LNB.
+[How]
+A new stream is created whenever drm_atomic_crtc_needs_modeset is true.
+We previously covered the active_changed and mode_changed conditions
+for the CRTC but connectors_changed is also checked within
+drm_atomic_crtc_needs_modeset.
 
-Further debugging revealed the cause of the problem.
+So just use drm_atomic_crtc_needs_modeset directly to determine the
+mode_changed flag.
 
-In the following capture:
-- thread #1325 is running m88ds3103_set_frontend
-- thread #42 is running ts2020_stat_work
-
-a> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 80
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 08
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 68 3f
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 08 ff
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 3d
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-b> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 00
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 21
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 66
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 60 02 10 0b
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-
-Two i2c messages are sent to perform a reset in m88ds3103_set_frontend:
-
-  a. 0x07, 0x80
-  b. 0x07, 0x00
-
-However, as shown in the capture, the regmap mutex is being handed over
-to another thread (ts2020_stat_work) in between these two messages.
-
->From here, the device responds to every i2c message with an 07 message,
-and will only return to normal operation following a power cycle.
-
-Use regmap_multi_reg_write to group the two reset messages, ensuring
-both are processed before the regmap mutex is unlocked.
-
-Signed-off-by: James Hutchinson <jahutchinson99@googlemail.com>
-Reviewed-by: Antti Palosaari <crope@iki.fi>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/m88ds3103.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
-index dffd2d4bf1c8b..c25c927974089 100644
---- a/drivers/media/dvb-frontends/m88ds3103.c
-+++ b/drivers/media/dvb-frontends/m88ds3103.c
-@@ -309,6 +309,9 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
- 	u16 u16tmp;
- 	u32 tuner_frequency_khz, target_mclk;
- 	s32 s32tmp;
-+	static const struct reg_sequence reset_buf[] = {
-+		{0x07, 0x80}, {0x07, 0x00}
-+	};
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 76ee2de43ea66..dac7978f5ee1f 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4369,8 +4369,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
+ 						struct dc_stream_state *stream_state)
+ {
+-	stream_state->mode_changed =
+-		crtc_state->mode_changed || crtc_state->active_changed;
++	stream_state->mode_changed = drm_atomic_crtc_needs_modeset(crtc_state);
+ }
  
- 	dev_dbg(&client->dev,
- 		"delivery_system=%d modulation=%d frequency=%u symbol_rate=%d inversion=%d pilot=%d rolloff=%d\n",
-@@ -321,11 +324,7 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
- 	}
- 
- 	/* reset */
--	ret = regmap_write(dev->regmap, 0x07, 0x80);
--	if (ret)
--		goto err;
--
--	ret = regmap_write(dev->regmap, 0x07, 0x00);
-+	ret = regmap_multi_reg_write(dev->regmap, reset_buf, 2);
- 	if (ret)
- 		goto err;
- 
+ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
 -- 
 2.20.1
 
