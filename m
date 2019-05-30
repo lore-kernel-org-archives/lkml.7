@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4D7C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F68C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8A025329
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0116B25354
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190187;
-	bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
+	s=default; t=1559190194;
+	bh=tJgKCQQ4e+hKu6kHOlcUTPcrbDVhyOcD4y2tBCRwQuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iOF+oG4byCAgCjNRjq34Tfe/9rCEC+quvLaKHvQxI8tmZtAINONlOIRpj3fArZUIx
-	 /+zt+eqkrnAmcY6BawBER9hFZup/KX0eGaHltqXxnolcrRU8Cop9HUy/SUxNxvJ74z
-	 FSwn4xpucORQJ8EAxaL8VMdbLZtX14HZ6ckw9vq8=
+	b=DkatMlpLbdQWm+yy3Srp03pngD+IYpwT84QqvDsbknOUuAfIJ1PnZUvPGaJVzO9ih
+	 PaTjEc1lxJAtZ8+vSLOtqrxyU45q3+nZH6gvogqF8igZ1XGmgoPTfXjjjphcsi04mM
+	 2L8WTiVQOlZz0Z1s4Lpd3xJK5zsmigy2fopU3LCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbfE3EXG (ORCPT
+        id S1732587AbfE3EXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36748 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbfE3DPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:03 -0400
+        id S1730062AbfE3DPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EF0024580;
-        Thu, 30 May 2019 03:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96F5724555;
+        Thu, 30 May 2019 03:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186102;
-        bh=a5vBKldDFMIWqKj3YFCiqzTrdTC6lPMJps72Dvwnk3k=;
+        s=default; t=1559186101;
+        bh=tJgKCQQ4e+hKu6kHOlcUTPcrbDVhyOcD4y2tBCRwQuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jzsPGwUgnNsLBBe+o67ybbeV6yenGys9+q/mTw3cyPnd7w4bnnyC9UOyUWD66ni1T
-         ywvS3WazwjkEqCPahfhOZXP5TxhEHN64pGODt+xYmm1J1LCgmSdOya9jRhEF4i11Bx
-         oURjBNiI/lPE2f5XFpgiDi4qBca3oittGy5LHiH8=
+        b=pibrLhr3aY2sZEzDIAEz672kgM5rp2v6i6eny0Idl6kWHN2C6I4sfLR8KoeFYXauq
+         3phiuhWIwtvoyC6k0TsbRHve5aTX/0kgR7mHvZMY+XS0hswaedwvfGnKyeffaoXDgB
+         ZPoQfs7OZ1sSOzm2TnPlZTp9O2H6asYpWeW7oho0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 241/346] x86/uaccess, signal: Fix AC=1 bloat
-Date:   Wed, 29 May 2019 20:05:14 -0700
-Message-Id: <20190530030553.240182109@linuxfoundation.org>
+        stable@vger.kernel.org, Lior David <liord@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 239/346] wil6210: fix return code of wmi_mgmt_tx and wmi_mgmt_tx_ext
+Date:   Wed, 29 May 2019 20:05:12 -0700
+Message-Id: <20190530030553.141076483@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -65,109 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
+[ Upstream commit 49122ec42634f73babb1dc96f170023e5228d080 ]
 
-Occasionally GCC is less agressive with inlining and the following is
-observed:
+The functions that send management TX frame have 3 possible
+results: success and other side acknowledged receive (ACK=1),
+success and other side did not acknowledge receive(ACK=0) and
+failure to send the frame. The current implementation
+incorrectly reports the ACK=0 case as failure.
 
-  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
-  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
-
-Cure this by moving this code out of the AC=1 region, since it really
-isn't needed for the user access.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Lior David <liord@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/net/wireless/ath/wil6210/cfg80211.c |  5 +++++
+ drivers/net/wireless/ath/wil6210/wmi.c      | 11 ++++++-----
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 08dfd4c1a4f95..c8aa58a2bab97 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -132,16 +132,6 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		COPY_SEG_CPL3(cs);
- 		COPY_SEG_CPL3(ss);
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index 5a44f9d0ff029..c7b5a7786e38d 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -1274,7 +1274,12 @@ int wil_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 			     params->wait);
  
--#ifdef CONFIG_X86_64
--		/*
--		 * Fix up SS if needed for the benefit of old DOSEMU and
--		 * CRIU.
--		 */
--		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
--			     user_64bit_mode(regs)))
--			force_valid_ss(regs);
--#endif
--
- 		get_user_ex(tmpflags, &sc->flags);
- 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
- 		regs->orig_ax = -1;		/* disable syscall checks */
-@@ -150,6 +140,15 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		buf = (void __user *)buf_val;
- 	} get_user_catch(err);
- 
-+#ifdef CONFIG_X86_64
-+	/*
-+	 * Fix up SS if needed for the benefit of old DOSEMU and
-+	 * CRIU.
+ out:
++	/* when the sent packet was not acked by receiver(ACK=0), rc will
++	 * be -EAGAIN. In this case this function needs to return success,
++	 * the ACK=0 will be reflected in tx_status.
 +	 */
-+	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
-+		force_valid_ss(regs);
-+#endif
-+
- 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
+ 	tx_status = (rc == 0);
++	rc = (rc == -EAGAIN) ? 0 : rc;
+ 	cfg80211_mgmt_tx_status(wdev, cookie ? *cookie : 0, buf, len,
+ 				tx_status, GFP_KERNEL);
  
- 	force_iret();
-@@ -461,6 +460,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- {
- 	struct rt_sigframe __user *frame;
- 	void __user *fp = NULL;
-+	unsigned long uc_flags;
- 	int err = 0;
- 
- 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
-@@ -473,9 +473,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- 			return -EFAULT;
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index 345f059691900..fc1b4b897cb83 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -3455,8 +3455,9 @@ int wmi_mgmt_tx(struct wil6210_vif *vif, const u8 *buf, size_t len)
+ 	rc = wmi_call(wil, WMI_SW_TX_REQ_CMDID, vif->mid, cmd, total,
+ 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
+ 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
+-		wil_err(wil, "mgmt_tx failed with status %d\n", evt.evt.status);
+-		rc = -EINVAL;
++		wil_dbg_wmi(wil, "mgmt_tx failed with status %d\n",
++			    evt.evt.status);
++		rc = -EAGAIN;
  	}
  
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 
-@@ -541,6 +543,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- {
- #ifdef CONFIG_X86_X32_ABI
- 	struct rt_sigframe_x32 __user *frame;
-+	unsigned long uc_flags;
- 	void __user *restorer;
- 	int err = 0;
- 	void __user *fpstate = NULL;
-@@ -555,9 +558,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- 			return -EFAULT;
+ 	kfree(cmd);
+@@ -3508,9 +3509,9 @@ int wmi_mgmt_tx_ext(struct wil6210_vif *vif, const u8 *buf, size_t len,
+ 	rc = wmi_call(wil, WMI_SW_TX_REQ_EXT_CMDID, vif->mid, cmd, total,
+ 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
+ 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
+-		wil_err(wil, "mgmt_tx_ext failed with status %d\n",
+-			evt.evt.status);
+-		rc = -EINVAL;
++		wil_dbg_wmi(wil, "mgmt_tx_ext failed with status %d\n",
++			    evt.evt.status);
++		rc = -EAGAIN;
  	}
  
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 		put_user_ex(0, &frame->uc.uc__pad0);
+ 	kfree(cmd);
 -- 
 2.20.1
 
