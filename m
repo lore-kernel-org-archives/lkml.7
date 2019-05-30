@@ -2,52 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C11C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931C3C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C1720717
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBD7240B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189843;
-	bh=WSi7YrwPUapR7Nvuk8w1Q2eingyk8ukERtke8sYMSNQ=;
+	s=default; t=1559189846;
+	bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhDSz/LA9BrwQICJoOT/zREMEAkbSNjddyinuCdH5wQYi687fl+bYW0Zp5OkqrGW9
-	 unftVxYXRRThamOTUjabPHD/HcAck8F+SkH0KuapO7pfzprm3HsfIu/cumKX5mq5FJ
-	 KR7c5pNjXwKGFZB9r3eKBnjQn0npRJNgAuF7bJXk=
+	b=rKKCIdCCDVsEIuS8KEYmqaHEbMx+Y4IVXSYFyRSWa4yBYve/KpuFP56Par1oUKgjn
+	 H/yTwds3I5YOsuWjSOwcqeiWn1hGVtuXQ00hkYRSNsuBd6GetbG3PfqP/8c+atWER9
+	 0XYv+0xVFe+vSlYrvdkZgNOcIRwtQCC77RiF42xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbfE3DPk (ORCPT
+        id S1731018AbfE3ERZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfE3DNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:07 -0400
+        id S1730422AbfE3DPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E3C023D83;
-        Thu, 30 May 2019 03:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A38C024559;
+        Thu, 30 May 2019 03:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185986;
-        bh=WSi7YrwPUapR7Nvuk8w1Q2eingyk8ukERtke8sYMSNQ=;
+        s=default; t=1559186139;
+        bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzpJPZQ5/Vz1kkNX7yDWK0MYiXnfqdgTC4F9Bcz5rA1WWYQL/N2ddsX7Tlw3T5WSE
-         tChEQEKY0E5pW89oPTbT9omd9UO60MhW/JQr6SzowseHJmRzHxggBRMpnoAE4XUI1B
-         cn96hIMwHoHwH4aNxJBkv8YCb/J7s6XcAt4/mwA8=
+        b=h8UL+XHX1cV2osgyaqE/IHlyYF9ilebYq6jcUaDB6bMiyXI8oFNxH0UUbdT+nuDa0
+         Rhdo1SOGya9rjylI6reYjEM7ncTYpl4sCaZtz1JzOLyhz1aif81w2dDCebMwtJlDec
+         07NLm4Kq/jS142guoj0+3NZ9GwOOtAzVBkzU4DBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.0 027/346] arm64: errata: Add workaround for Cortex-A76 erratum #1463225
-Date:   Wed, 29 May 2019 20:01:40 -0700
-Message-Id: <20190530030542.124576092@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 313/346] media: saa7146: avoid high stack usage with clang
+Date:   Wed, 29 May 2019 20:06:26 -0700
+Message-Id: <20190530030556.687259457@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,226 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit 03aa4f191a36f33fce015387f84efa0eee94408e ]
 
-commit 969f5ea627570e91c9d54403287ee3ed657f58fe upstream.
+Two saa7146/hexium files contain a construct that causes a warning
+when built with clang:
 
-Revisions of the Cortex-A76 CPU prior to r4p0 are affected by an erratum
-that can prevent interrupts from being taken when single-stepping.
+drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_probe(struct saa7146_dev *dev)
+           ^
+drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
+           ^
 
-This patch implements a software workaround to prevent userspace from
-effectively being able to disable interrupts.
+This one happens regardless of KASAN, and the problem is that a
+constructor to initialize a dynamically allocated structure leads
+to a copy of that structure on the stack, whereas gcc initializes
+it in place.
 
-Cc: <stable@vger.kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://bugs.llvm.org/show_bug.cgi?id=40776
 
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix checkpatch warnings]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm64/silicon-errata.txt |    1 
- arch/arm64/Kconfig                     |   18 ++++++++++++++++
- arch/arm64/include/asm/cpucaps.h       |    3 +-
- arch/arm64/kernel/cpu_errata.c         |   24 +++++++++++++++++++++
- arch/arm64/kernel/syscall.c            |   31 +++++++++++++++++++++++++++
- arch/arm64/mm/fault.c                  |   37 +++++++++++++++++++++++++++++++--
- 6 files changed, 111 insertions(+), 3 deletions(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 5 ++---
+ drivers/media/pci/saa7146/hexium_orion.c  | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -61,6 +61,7 @@ stable kernels.
- | ARM            | Cortex-A76      | #1188873        | ARM64_ERRATUM_1188873       |
- | ARM            | Cortex-A76      | #1165522        | ARM64_ERRATUM_1165522       |
- | ARM            | Cortex-A76      | #1286807        | ARM64_ERRATUM_1286807       |
-+| ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
- | ARM            | MMU-500         | #841119,#826419 | N/A                         |
- |                |                 |                 |                             |
- | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375        |
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -518,6 +518,24 @@ config ARM64_ERRATUM_1286807
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index 5817d9cde4d0c..6d8e4afe9673a 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	/* enable i2c-port pins */
+ 	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
  
- 	  If unsure, say Y.
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium gemini",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium gemini",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
+diff --git a/drivers/media/pci/saa7146/hexium_orion.c b/drivers/media/pci/saa7146/hexium_orion.c
+index 0a05176c18ab6..a794f9e5f9908 100644
+--- a/drivers/media/pci/saa7146/hexium_orion.c
++++ b/drivers/media/pci/saa7146/hexium_orion.c
+@@ -231,9 +231,8 @@ static int hexium_probe(struct saa7146_dev *dev)
+ 	saa7146_write(dev, DD1_STREAM_B, 0x00000000);
+ 	saa7146_write(dev, MC2, (MASK_09 | MASK_25 | MASK_10 | MASK_26));
  
-+config ARM64_ERRATUM_1463225
-+	bool "Cortex-A76: Software Step might prevent interrupt recognition"
-+	default y
-+	help
-+	  This option adds a workaround for Arm Cortex-A76 erratum 1463225.
-+
-+	  On the affected Cortex-A76 cores (r0p0 to r3p1), software stepping
-+	  of a system call instruction (SVC) can prevent recognition of
-+	  subsequent interrupts when software stepping is disabled in the
-+	  exception handler of the system call and either kernel debugging
-+	  is enabled or VHE is in use.
-+
-+	  Work around the erratum by triggering a dummy step exception
-+	  when handling a system call from a task that is being stepped
-+	  in a VHE configuration of the kernel.
-+
-+	  If unsure, say Y.
-+
- config CAVIUM_ERRATUM_22375
- 	bool "Cavium erratum 22375, 24313"
- 	default y
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -60,7 +60,8 @@
- #define ARM64_HAS_ADDRESS_AUTH_IMP_DEF		39
- #define ARM64_HAS_GENERIC_AUTH_ARCH		40
- #define ARM64_HAS_GENERIC_AUTH_IMP_DEF		41
-+#define ARM64_WORKAROUND_1463225		42
- 
--#define ARM64_NCAPS				42
-+#define ARM64_NCAPS				43
- 
- #endif /* __ASM_CPUCAPS_H */
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -464,6 +464,22 @@ out_printmsg:
- }
- #endif	/* CONFIG_ARM64_SSBD */
- 
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static bool
-+has_cortex_a76_erratum_1463225(const struct arm64_cpu_capabilities *entry,
-+			       int scope)
-+{
-+	u32 midr = read_cpuid_id();
-+	/* Cortex-A76 r0p0 - r3p1 */
-+	struct midr_range range = MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1);
-+
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+	return is_midr_in_range(midr, &range) && is_kernel_in_hyp_mode();
-+}
-+#endif
-+
- static void __maybe_unused
- cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
- {
-@@ -739,6 +755,14 @@ const struct arm64_cpu_capabilities arm6
- 		ERRATA_MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 2, 0),
- 	},
- #endif
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+	{
-+		.desc = "ARM erratum 1463225",
-+		.capability = ARM64_WORKAROUND_1463225,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = has_cortex_a76_erratum_1463225,
-+	},
-+#endif
- 	{
- 	}
- };
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- 
- #include <asm/daifflags.h>
-+#include <asm/debug-monitors.h>
- #include <asm/fpsimd.h>
- #include <asm/syscall.h>
- #include <asm/thread_info.h>
-@@ -60,6 +61,35 @@ static inline bool has_syscall_work(unsi
- int syscall_trace_enter(struct pt_regs *regs);
- void syscall_trace_exit(struct pt_regs *regs);
- 
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static void cortex_a76_erratum_1463225_svc_handler(void)
-+{
-+	u32 reg, val;
-+
-+	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
-+		return;
-+
-+	if (!unlikely(this_cpu_has_cap(ARM64_WORKAROUND_1463225)))
-+		return;
-+
-+	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
-+	reg = read_sysreg(mdscr_el1);
-+	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-+	write_sysreg(val, mdscr_el1);
-+	asm volatile("msr daifclr, #8");
-+	isb();
-+
-+	/* We will have taken a single-step exception by this point */
-+
-+	write_sysreg(reg, mdscr_el1);
-+	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 0);
-+}
-+#else
-+static void cortex_a76_erratum_1463225_svc_handler(void) { }
-+#endif /* CONFIG_ARM64_ERRATUM_1463225 */
-+
- static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
- 			   const syscall_fn_t syscall_table[])
- {
-@@ -68,6 +98,7 @@ static void el0_svc_common(struct pt_reg
- 	regs->orig_x0 = regs->regs[0];
- 	regs->syscallno = scno;
- 
-+	cortex_a76_erratum_1463225_svc_handler();
- 	local_daif_restore(DAIF_PROCCTX);
- 	user_exit();
- 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -824,14 +824,47 @@ void __init hook_debug_fault_code(int nr
- 	debug_fault_info[nr].name	= name;
- }
- 
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static int __exception
-+cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
-+{
-+	if (user_mode(regs))
-+		return 0;
-+
-+	if (!__this_cpu_read(__in_cortex_a76_erratum_1463225_wa))
-+		return 0;
-+
-+	/*
-+	 * We've taken a dummy step exception from the kernel to ensure
-+	 * that interrupts are re-enabled on the syscall path. Return back
-+	 * to cortex_a76_erratum_1463225_svc_handler() with debug exceptions
-+	 * masked so that we can safely restore the mdscr and get on with
-+	 * handling the syscall.
-+	 */
-+	regs->pstate |= PSR_D_BIT;
-+	return 1;
-+}
-+#else
-+static int __exception
-+cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_ARM64_ERRATUM_1463225 */
-+
- asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
--					      unsigned int esr,
--					      struct pt_regs *regs)
-+					       unsigned int esr,
-+					       struct pt_regs *regs)
- {
- 	const struct fault_info *inf = esr_to_debug_fault_info(esr);
- 	unsigned long pc = instruction_pointer(regs);
- 	int rv;
- 
-+	if (cortex_a76_erratum_1463225_debug_handler(regs))
-+		return 0;
-+
- 	/*
- 	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
- 	 * already disabled to preserve the last enabled/disabled addresses.
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium orion",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium orion",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
+-- 
+2.20.1
+
 
 
