@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF819C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8555124AC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031FF24AC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187017;
-	bh=hqO8khmazp4lM1KFVi1BgHAUrnclTL+xalaZPhEo3hE=;
+	s=default; t=1559187019;
+	bh=V+BBz4ewor3VDGhV2wJZv25VePeUO9pa0pnTOtYQyO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFofFm2xOu2x1LLuKqWh7WGFBf5cOtryeYWQufsyxDV1r1yrijcoPEFdpg1JJimqP
-	 HrulJbEqyI262J9Pm6eSOXvQ9m69z/jyvwtXXPgvBSK9yHn/WoccVjf7KA2xMRPuLV
-	 P1KRb9rc0CKRGTiOeGvDu43TzcEW6v5dtdRimQBY=
+	b=hTKhZ2OGcxiRsJYWK65t0ueKP4YSmKkspwbWIaPU1+bnFFMl/oenEJficroLFRq7/
+	 Oc7a8PWeqAcuZba/tBTpBjk3Zp50HvdWwyTvRgRcl4YdM1+GJy1BiAeOkYIzYOMeDR
+	 9xl5k21DKLgUDuCa5/63ko2nq2vpgLJStLsozHQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbfE3DaQ (ORCPT
+        id S2388178AbfE3DaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33432 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732506AbfE3DVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:17 -0400
+        id S1732516AbfE3DVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2D3249DA;
-        Thu, 30 May 2019 03:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569DF24A03;
+        Thu, 30 May 2019 03:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186476;
-        bh=hqO8khmazp4lM1KFVi1BgHAUrnclTL+xalaZPhEo3hE=;
+        s=default; t=1559186479;
+        bh=V+BBz4ewor3VDGhV2wJZv25VePeUO9pa0pnTOtYQyO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJZB6USRY6akt0L/eQxxtQieUapVRk+ihKYWvePGeYTu/gN1arVyDKTzQBqoGX4aH
-         pRc/zhtWOK5GVwFWdSVGc2OsDzPx8zuFEaMrBAkshuYc2rq5xp1MUmqeSk3rRzgeYY
-         Ad/jJ9uZQ/CvCkXxSA7V+rSTYTbeGMaNC+vNL2E0=
+        b=e88SioLV11IBmJ6zW1cChHBfa+/jsFgrQUryJFNUaKRjViBtD8DKxGWMIAhaehrgX
+         cppMGuXHZSPLcY9CJML7TAIvovtP2GPwV9gMDvxDMjsTiZfxb+QVY7qIHADnRTPk+9
+         rqjUEQMMBOHXLIDNgum6+xOeAY4xxkeUlGqB0cMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 110/128] media: wl128x: prevent two potential buffer overflows
-Date:   Wed, 29 May 2019 20:07:22 -0700
-Message-Id: <20190530030454.354971883@linuxfoundation.org>
+Subject: [PATCH 4.9 114/128] rcutorture: Fix cleanup path for invalid torture_type strings
+Date:   Wed, 29 May 2019 20:07:26 -0700
+Message-Id: <20190530030454.951960906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,60 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c2ccc324b3a6cbc865ab8b3e1a09e93d3c8ade9 ]
+[ Upstream commit b813afae7ab6a5e91b4e16cc567331d9c2ae1f04 ]
 
-Smatch marks skb->data as untrusted so it warns that "evt_hdr->dlen"
-can copy up to 255 bytes and we only have room for two bytes.  Even
-if this comes from the firmware and we trust it, the new policy
-generally is just to fix it as kernel hardenning.
+If the specified rcutorture.torture_type is not in the rcu_torture_init()
+function's torture_ops[] array, rcutorture prints some console messages
+and then invokes rcu_torture_cleanup() to set state so that a future
+torture test can run.  However, rcu_torture_cleanup() also attempts to
+end the test that didn't actually start, and in doing so relies on the
+value of cur_ops, a value that is not particularly relevant in this case.
+This can result in confusing output or even follow-on failures due to
+attempts to use facilities that have not been properly initialized.
 
-I can't test this code so I tried to be very conservative.  I considered
-not allowing "evt_hdr->dlen == 1" because it doesn't initialize the
-whole variable but in the end I decided to allow it and manually
-initialized "asic_id" and "asic_ver" to zero.
+This commit therefore sets the value of cur_ops to NULL in this case
+and inserts a check near the beginning of rcu_torture_cleanup(),
+thus avoiding relying on an irrelevant cur_ops value.
 
-Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/rcu/rcutorture.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
-index 642b89c66bcb9..c1457cf466981 100644
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -494,7 +494,8 @@ int fmc_send_cmd(struct fmdev *fmdev, u8 fm_op, u16 type, void *payload,
- 		return -EIO;
- 	}
- 	/* Send response data to caller */
--	if (response != NULL && response_len != NULL && evt_hdr->dlen) {
-+	if (response != NULL && response_len != NULL && evt_hdr->dlen &&
-+	    evt_hdr->dlen <= payload_len) {
- 		/* Skip header info and copy only response data */
- 		skb_pull(skb, sizeof(struct fm_event_msg_hdr));
- 		memcpy(response, skb->data, evt_hdr->dlen);
-@@ -590,6 +591,8 @@ static void fm_irq_handle_flag_getcmd_resp(struct fmdev *fmdev)
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index bf08fee53dc75..5393bbcf3c1ad 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -1595,6 +1595,10 @@ rcu_torture_cleanup(void)
+ 			cur_ops->cb_barrier();
  		return;
- 
- 	fm_evt_hdr = (void *)skb->data;
-+	if (fm_evt_hdr->dlen > sizeof(fmdev->irq_info.flag))
+ 	}
++	if (!cur_ops) {
++		torture_cleanup_end();
 +		return;
++	}
  
- 	/* Skip header info and copy only response data */
- 	skb_pull(skb, sizeof(struct fm_event_msg_hdr));
-@@ -1315,7 +1318,7 @@ static int load_default_rx_configuration(struct fmdev *fmdev)
- static int fm_power_up(struct fmdev *fmdev, u8 mode)
- {
- 	u16 payload;
--	__be16 asic_id, asic_ver;
-+	__be16 asic_id = 0, asic_ver = 0;
- 	int resp_len, ret;
- 	u8 fw_name[50];
- 
+ 	rcu_torture_barrier_cleanup();
+ 	torture_stop_kthread(rcu_torture_stall, stall_task);
+@@ -1730,6 +1734,7 @@ rcu_torture_init(void)
+ 			pr_alert(" %s", torture_ops[i]->name);
+ 		pr_alert("\n");
+ 		firsterr = -EINVAL;
++		cur_ops = NULL;
+ 		goto unwind;
+ 	}
+ 	if (cur_ops->fqs == NULL && fqs_duration != 0) {
 -- 
 2.20.1
 
