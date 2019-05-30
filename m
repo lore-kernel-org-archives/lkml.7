@@ -2,52 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9E9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB46E24EAA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BE924E99
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188600;
-	bh=CLzmkCeDUTXeQSAoIWSMUtN2s/dle3ux9x8AjJvHwHA=;
+	s=default; t=1559188604;
+	bh=guWak9EOfp267jSjWw7eC6SC2ejMvmYr0tCI7eLzrCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7jJpHIynd7DJn53HfmKYE8CnR1k2eXjXRtPUY34mBugSR0cbNAvPnPuateCdJva8
-	 DLSqhCyLaIQ92jhb6/fN1C5jmeAf0VB4aCUBxFSZx8JBd1dS9QJ9ho4tTedekz9wrR
-	 8jrLXdQPXCEKC6X6/byciB8Y3cMl0wWaCEK+lJjs=
+	b=hvuAFoxvUeptaIp947GAglDVaUGj0WhqMJPdYn/+goovWARQp39R0EchP3mPn3VCz
+	 XHrEIS1Q21i6Z+e2bhx/uhSw4Z1rDLDc3ATIvSuhSaaHzO/AmMubIbukAFkPYQrbFy
+	 WgErL/ILckF6Gw0HtiAIQ7MufNbHSASZB8Y65BV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbfE3D4j (ORCPT
+        id S1731936AbfE3D4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53108 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731758AbfE3DS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731761AbfE3DS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C1724807;
-        Thu, 30 May 2019 03:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E1E2481A;
+        Thu, 30 May 2019 03:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186337;
-        bh=CLzmkCeDUTXeQSAoIWSMUtN2s/dle3ux9x8AjJvHwHA=;
+        s=default; t=1559186338;
+        bh=guWak9EOfp267jSjWw7eC6SC2ejMvmYr0tCI7eLzrCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZZPG0eB9TvTz1R/qwTSy7srtMXvmd2xiMG8B/iyObW09CqUdA8tSvkLI78rEa7mE
-         uv9GGKjQK+ZkQRkikrAB+HdqpKd/kFJns0mIcF37SGUdP6WXPwzyJSoVEPmT+zLOai
-         sQV5oYZZNhja+4gjiYoTMuDroPFZVK6oGRqGfqTQ=
+        b=Wkwiiy8jlm44EbpAjpschRmT64AcHDWzY3pOO6Cn/1QEaboST82GJyYXZ+i4YMSsD
+         vIxnjqYM7Ea1RYbsWayiteerN0SPv0brprheFNKT62DVwu69kU8sSqqwAbSWkTzjbf
+         tW7RSi2uGpHx7gWrjIpoh+HX9tfAiXJ2vybHL5nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 025/193] btrfs: honor path->skip_locking in backref code
-Date:   Wed, 29 May 2019 20:04:39 -0700
-Message-Id: <20190530030452.374190769@linuxfoundation.org>
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 061/193] btrfs: Dont panic when we cant find a root key
+Date:   Wed, 29 May 2019 20:05:15 -0700
+Message-Id: <20190530030457.976825255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,154 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
 
-commit 38e3eebff643db725633657d1d87a3be019d1018 upstream.
+When we failed to find a root key in btrfs_update_root(), we just panic.
 
-Qgroups will do the old roots lookup at delayed ref time, which could be
-while walking down the extent root while running a delayed ref.  This
-should be fine, except we specifically lock eb's in the backref walking
-code irrespective of path->skip_locking, which deadlocks the system.
-Fix up the backref code to honor path->skip_locking, nobody will be
-modifying the commit_root when we're searching so it's completely safe
-to do.
+That's definitely not cool, fix it by outputting an unique error
+message, aborting current transaction and return -EUCLEAN. This should
+not normally happen as the root has been used by the callers in some
+way.
 
-This happens since fb235dc06fac ("btrfs: qgroup: Move half of the qgroup
-accounting time out of commit trans"), kernel may lockup with quota
-enabled.
-
-There is one backref trace triggered by snapshot dropping along with
-write operation in the source subvolume.  The example can be reliably
-reproduced:
-
-  btrfs-cleaner   D    0  4062      2 0x80000000
-  Call Trace:
-   schedule+0x32/0x90
-   btrfs_tree_read_lock+0x93/0x130 [btrfs]
-   find_parent_nodes+0x29b/0x1170 [btrfs]
-   btrfs_find_all_roots_safe+0xa8/0x120 [btrfs]
-   btrfs_find_all_roots+0x57/0x70 [btrfs]
-   btrfs_qgroup_trace_extent_post+0x37/0x70 [btrfs]
-   btrfs_qgroup_trace_leaf_items+0x10b/0x140 [btrfs]
-   btrfs_qgroup_trace_subtree+0xc8/0xe0 [btrfs]
-   do_walk_down+0x541/0x5e3 [btrfs]
-   walk_down_tree+0xab/0xe7 [btrfs]
-   btrfs_drop_snapshot+0x356/0x71a [btrfs]
-   btrfs_clean_one_deleted_snapshot+0xb8/0xf0 [btrfs]
-   cleaner_kthread+0x12b/0x160 [btrfs]
-   kthread+0x112/0x130
-   ret_from_fork+0x27/0x50
-
-When dropping snapshots with qgroup enabled, we will trigger backref
-walk.
-
-However such backref walk at that timing is pretty dangerous, as if one
-of the parent nodes get WRITE locked by other thread, we could cause a
-dead lock.
-
-For example:
-
-           FS 260     FS 261 (Dropped)
-            node A        node B
-           /      \      /      \
-       node C      node D      node E
-      /   \         /  \        /     \
-  leaf F|leaf G|leaf H|leaf I|leaf J|leaf K
-
-The lock sequence would be:
-
-      Thread A (cleaner)             |       Thread B (other writer)
------------------------------------------------------------------------
-write_lock(B)                        |
-write_lock(D)                        |
-^^^ called by walk_down_tree()       |
-                                     |       write_lock(A)
-                                     |       write_lock(D) << Stall
-read_lock(H) << for backref walk     |
-read_lock(D) << lock owner is        |
-                the same thread A    |
-                so read lock is OK   |
-read_lock(A) << Stall                |
-
-So thread A hold write lock D, and needs read lock A to unlock.
-While thread B holds write lock A, while needs lock D to unlock.
-
-This will cause a deadlock.
-
-This is not only limited to snapshot dropping case.  As the backref
-walk, even only happens on commit trees, is breaking the normal top-down
-locking order, makes it deadlock prone.
-
-Fixes: fb235dc06fac ("btrfs: qgroup: Move half of the qgroup accounting time out of commit trans")
-CC: stable@vger.kernel.org # 4.14+
-Reported-and-tested-by: David Sterba <dsterba@suse.com>
-Reported-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ rebase to latest branch and fix lock assert bug in btrfs/007 ]
-[ backport to linux-4.19.y branch, solve minor conflicts ]
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
 Signed-off-by: Qu Wenruo <wqu@suse.com>
-[ copy logs and deadlock analysis from Qu's patch ]
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/backref.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ fs/btrfs/root-tree.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -718,7 +718,7 @@ out:
-  * read tree blocks and add keys where required.
-  */
- static int add_missing_keys(struct btrfs_fs_info *fs_info,
--			    struct preftrees *preftrees)
-+			    struct preftrees *preftrees, bool lock)
- {
- 	struct prelim_ref *ref;
- 	struct extent_buffer *eb;
-@@ -742,12 +742,14 @@ static int add_missing_keys(struct btrfs
- 			free_extent_buffer(eb);
- 			return -EIO;
- 		}
--		btrfs_tree_read_lock(eb);
-+		if (lock)
-+			btrfs_tree_read_lock(eb);
- 		if (btrfs_header_level(eb) == 0)
- 			btrfs_item_key_to_cpu(eb, &ref->key_for_search, 0);
- 		else
- 			btrfs_node_key_to_cpu(eb, &ref->key_for_search, 0);
--		btrfs_tree_read_unlock(eb);
-+		if (lock)
-+			btrfs_tree_read_unlock(eb);
- 		free_extent_buffer(eb);
- 		prelim_ref_insert(fs_info, &preftrees->indirect, ref, NULL);
- 		cond_resched();
-@@ -1228,7 +1230,7 @@ again:
- 
- 	btrfs_release_path(path);
- 
--	ret = add_missing_keys(fs_info, &preftrees);
-+	ret = add_missing_keys(fs_info, &preftrees, path->skip_locking == 0);
- 	if (ret)
+diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
+index a44519b1897fe..7bae7cff150e9 100644
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -148,11 +148,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
+ 	if (ret < 0)
  		goto out;
  
-@@ -1290,9 +1292,14 @@ again:
- 				}
- 				btrfs_tree_read_lock(eb);
- 				btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
-+				if (!path->skip_locking) {
-+					btrfs_tree_read_lock(eb);
-+					btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
-+				}
- 				ret = find_extent_in_eb(eb, bytenr,
- 							*extent_item_pos, &eie);
--				btrfs_tree_read_unlock_blocking(eb);
-+				if (!path->skip_locking)
-+					btrfs_tree_read_unlock_blocking(eb);
- 				free_extent_buffer(eb);
- 				if (ret < 0)
- 					goto out;
+-	if (ret != 0) {
+-		btrfs_print_leaf(path->nodes[0]);
+-		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
+-			   key->objectid, key->type, key->offset);
+-		BUG_ON(1);
++	if (ret > 0) {
++		btrfs_crit(fs_info,
++			"unable to find root key (%llu %u %llu) in tree %llu",
++			key->objectid, key->type, key->offset,
++			root->root_key.objectid);
++		ret = -EUCLEAN;
++		btrfs_abort_transaction(trans, ret);
++		goto out;
+ 	}
+ 
+ 	l = path->nodes[0];
+-- 
+2.20.1
+
 
 
