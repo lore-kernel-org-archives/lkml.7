@@ -2,110 +2,101 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A31C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625BD25FA8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B4225FAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2f1cgQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfE3SaE (ORCPT
+        id S1726787AbfE3SaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:30:04 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19647 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbfE3SaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:30:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 11:30:03 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.228.129.69]) ([10.228.129.69])
-  by orsmga007.jf.intel.com with ESMTP; 30 May 2019 11:30:01 -0700
-Subject: Re: [PATCH][next] IB/hfi1: Use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190529151528.GA24148@embeddedor>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <1f382255-fdce-1f3d-d336-c36b09116c7e@intel.com>
-Date:   Thu, 30 May 2019 14:30:01 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 30 May 2019 14:30:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39940 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfE3SaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 14:30:17 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so4487680pfn.7;
+        Thu, 30 May 2019 11:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=icbxC9bWDA/gr+Swd+x5aWdN0xZB1FG4LYelE4YdeDY=;
+        b=b2f1cgQhL+d74DQIZw+OUVAoOEEfz25VEOH8kZHyO7DKC5vt8Dn25S0y1NYrsC4BYk
+         gmOr2vR1nUP/xsc6Qw+RAsBQybjXa7Ow16A4xO+qbmPfxAfrw/zyv6jvRs85Vn5N+qXN
+         Yyx0qhntZ9x+Q6i0N88xresUO3zpUK8Q/zgyJRbp7SYxOVQcOmlY2ktq/DQ42r8qmhFY
+         8sjd0RC59bGwrkMwZAnR84Bso12toiC2uPdS5gXplVZV6U18hC+vuWkNutbiGWIxqZFl
+         oHD5oTwmC2rWDPoJWcJ8WO3NXfwayGqCBPe60v7bMWQmSFvvERO7tKZ7oR0xxHcITsse
+         aIFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=icbxC9bWDA/gr+Swd+x5aWdN0xZB1FG4LYelE4YdeDY=;
+        b=oGtIc8TUMyDQvOJNrCJY05si37aewBl+yP9NJEgRrbE6FDkzolRHFeZq3W6SDhQrfV
+         Q9ePV9oO0ie4gJ8qgJrIPPNXtjx1FOlHtA1i0IxI6RCsPxAJ1hzwZNPMDu30Nv2AuxB5
+         U/0wpbFAHkCmNJ1/VWyIZC08jrazUZpZKWbTqxLVweaYoPbtr8E+7Qg7sMw6LXrdU38Z
+         Qzh8JnjyzA62T1jPWfD5ILU1BjAOu++PMGJfwNnTYR9ru5XTy1xmz0L4GfL98rvZIpcI
+         YVaiCN/eFlJRBhPmwBIGEgFtZZb/sM6UY3/LHdqHM7qBgHN5LKlSeeuD/+EJC/pfrOMM
+         aC8A==
+X-Gm-Message-State: APjAAAVEJy3/Np5ZR5xf2mmFKa7gjpsegvbZoDxT9uj3gfK8x6LQJzTf
+        l72IxpEq/KPcvEliZVW2TCs=
+X-Google-Smtp-Source: APXvYqxmXZ1NRNEntwY+yrXIl+p4r36/Zk5hcBsFtCkMgEo1FMWC52x7y2R5LXECgCPXcSactAjdJg==
+X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr4803031pjo.131.1559241017239;
+        Thu, 30 May 2019 11:30:17 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id w1sm5341263pfg.51.2019.05.30.11.30.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 11:30:16 -0700 (PDT)
+Date:   Fri, 31 May 2019 00:00:13 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: pmcraid: Remove call to memset after dma_alloc_coherent
+Message-ID: <20190530183013.GA8526@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190529151528.GA24148@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2019 11:15 AM, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace the following form:
-> 
-> sizeof(struct opa_port_status_rsp) + num_vls * sizeof(struct _vls_pctrs)
-> 
-> with:
-> 
-> struct_size(rsp, vls, num_vls)
-> 
-> and so on...
-> 
-> Also, notice that variable size is unnecessary, hence it is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->   drivers/infiniband/hw/hfi1/mad.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
-> index 4228393e6c4c..184dba3c2828 100644
-> --- a/drivers/infiniband/hw/hfi1/mad.c
-> +++ b/drivers/infiniband/hw/hfi1/mad.c
-> @@ -2744,8 +2744,7 @@ static int pma_get_opa_portstatus(struct opa_pma_mad *pmp,
->   	u16 link_width;
->   	u16 link_speed;
->   
-> -	response_data_size = sizeof(struct opa_port_status_rsp) +
-> -				num_vls * sizeof(struct _vls_pctrs);
-> +	response_data_size = struct_size(rsp, vls, num_vls);
->   	if (response_data_size > sizeof(pmp->data)) {
->   		pmp->mad_hdr.status |= OPA_PM_STATUS_REQUEST_TOO_LARGE;
->   		return reply((struct ib_mad_hdr *)pmp);
-> @@ -3014,8 +3013,7 @@ static int pma_get_opa_datacounters(struct opa_pma_mad *pmp,
->   	}
->   
->   	/* Sanity check */
-> -	response_data_size = sizeof(struct opa_port_data_counters_msg) +
-> -				num_vls * sizeof(struct _vls_dctrs);
-> +	response_data_size = struct_size(req, port[0].vls, num_vls);
->   
->   	if (response_data_size > sizeof(pmp->data)) {
->   		pmp->mad_hdr.status |= IB_SMP_INVALID_FIELD;
-> @@ -3232,8 +3230,7 @@ static int pma_get_opa_porterrors(struct opa_pma_mad *pmp,
->   		return reply((struct ib_mad_hdr *)pmp);
->   	}
->   
-> -	response_data_size = sizeof(struct opa_port_error_counters64_msg) +
-> -				num_vls * sizeof(struct _vls_ectrs);
-> +	response_data_size = struct_size(req, port[0].vls, num_vls);
->   
->   	if (response_data_size > sizeof(pmp->data)) {
->   		pmp->mad_hdr.status |= IB_SMP_INVALID_FIELD;
-> 
+This patch fixes below warning reported by coccicheck
 
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+./drivers/scsi/pmcraid.c:4728:3-21: WARNING: dma_alloc_coherent use in
+pinstance -> hrrq_start [ i ] already zeroes out memory,  so memset is
+not needed
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/scsi/pmcraid.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index e338d7a..112a617 100644
+--- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -4678,8 +4678,6 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
+ 			pmcraid_release_control_blocks(pinstance, i);
+ 			return -ENOMEM;
+ 		}
+-		memset(pinstance->cmd_list[i]->ioa_cb, 0,
+-			sizeof(struct pmcraid_control_block));
+ 	}
+ 	return 0;
+ }
+-- 
+2.7.4
+
