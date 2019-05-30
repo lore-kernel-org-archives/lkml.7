@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2386BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F556C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E460924A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7842324A3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186663;
-	bh=x5VhJwigPDOHBAwqUH1tDZvuT045Kx3Kovey9QFR+7U=;
+	s=default; t=1559186667;
+	bh=giia1H8fV3MI0n0b6NEl9yVmTOqXajqyIE74fhzbvmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=il3tMsO3cXtu/15haCPriOrdVw4YNjo4dSYdTtBvk9keGvNlB8BUhz9cUbSsRo+Lh
-	 owBszFLcLW88Kyn0TszFAnrlhYGmz4KLs8NtRQdo/aQUOG8hTL+k0SqO8fJERed0N0
-	 T7Gm6P8MvIjS6c2Rcy6IUrSF2+Hz9rq+i0JG6VbI=
+	b=j6Fg6Ck5g2Y3wkNM06gvyqufyn2exi9g8NE43szOpuqJdNkc/DOAskfg102w4jTwe
+	 Qo6yJi8fNI5NcWCJLpazZyNd5vmNQgvJ+A8NrP4vQ1+timntn5Zjpt+IfzSgA2dTnT
+	 +iIUpuh/5JFcqOafP2CQcLPUfpJmUty/KFFiAbMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733262AbfE3DYW (ORCPT
+        id S1733289AbfE3DY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731378AbfE3DSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:00 -0400
+        id S1731410AbfE3DSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1E224755;
-        Thu, 30 May 2019 03:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 663FF24755;
+        Thu, 30 May 2019 03:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186280;
-        bh=x5VhJwigPDOHBAwqUH1tDZvuT045Kx3Kovey9QFR+7U=;
+        s=default; t=1559186284;
+        bh=giia1H8fV3MI0n0b6NEl9yVmTOqXajqyIE74fhzbvmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llvlxvi/v//2D8pdZBnnewDyEZLebObjT5BZvthCqZXH7aVHMeepshsZKnQov7yfZ
-         l1Kif3Vz1O4cSMMjeVwH8/STe5NBAjSm2lJoG/8A5oaimN4Zx1CuFBjwqWiHrQh8sd
-         6EYSc7RzC5Wn1b3ALYmQGZcY1FP+ERV+FxggA3LA=
+        b=GNwm1GheKEJrzYLCy24aqfsU4m5YFQjXmIBuwDqxd2bAJEHSz5OOLpOE4CND13mF0
+         j+Uj3bi8zeuENH+5nu07IQ7FtL9+/5YDelDV3s7xjyIj7xSPrfgLK/PSfMmAvqlekL
+         K2DsxKRlD7I5I7W/U7MJvzW2inK63d8NZwV9Jaw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 222/276] media: gspca: Kill URBs on USB device disconnect
-Date:   Wed, 29 May 2019 20:06:20 -0700
-Message-Id: <20190530030538.990409984@linuxfoundation.org>
+Subject: [PATCH 4.19 238/276] selinux: avoid uninitialized variable warning
+Date:   Wed, 29 May 2019 20:06:36 -0700
+Message-Id: <20190530030540.009046196@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,46 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b9ea7c2b57a0c9c3341fc6db039d1f7971a432e ]
+[ Upstream commit 98bbbb76f2edcfb8fb2b8f4b3ccc7b6e99d64bd8 ]
 
-In order to prevent ISOC URBs from being infinitely resubmitted,
-the driver's USB disconnect handler must kill all the in-flight URBs.
+clang correctly points out a code path that would lead
+to an uninitialized variable use:
 
-While here, change the URB packet status message to a debug level,
-to avoid spamming the console too much.
+security/selinux/netlabel.c:310:6: error: variable 'addr' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+        if (ip_hdr(skb)->version == 4) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~
+security/selinux/netlabel.c:322:40: note: uninitialized use occurs here
+        rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+                                              ^~~~
+security/selinux/netlabel.c:310:2: note: remove the 'if' if its condition is always true
+        if (ip_hdr(skb)->version == 4) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+security/selinux/netlabel.c:291:23: note: initialize the variable 'addr' to silence this warning
+        struct sockaddr *addr;
+                             ^
+                              = NULL
 
-This commit fixes a lockup caused by an interrupt storm coming
-from the URB completion handler.
+This is probably harmless since we should not see ipv6 packets
+of CONFIG_IPV6 is disabled, but it's better to rearrange the code
+so this cannot happen.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[PM: removed old patchwork link, fixed checkpatch.pl style errors]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/gspca/gspca.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ security/selinux/netlabel.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
-index 405a6a76d820f..fd4a1456b6ca2 100644
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -294,7 +294,7 @@ static void fill_frame(struct gspca_dev *gspca_dev,
- 		/* check the packet status and length */
- 		st = urb->iso_frame_desc[i].status;
- 		if (st) {
--			pr_err("ISOC data error: [%d] len=%d, status=%d\n",
-+			gspca_dbg(gspca_dev, D_PACK, "ISOC data error: [%d] len=%d, status=%d\n",
- 			       i, len, st);
- 			gspca_dev->last_packet_type = DISCARD_PACKET;
- 			continue;
-@@ -1630,6 +1630,8 @@ void gspca_disconnect(struct usb_interface *intf)
+diff --git a/security/selinux/netlabel.c b/security/selinux/netlabel.c
+index 186e727b737b9..6fd9954e1c085 100644
+--- a/security/selinux/netlabel.c
++++ b/security/selinux/netlabel.c
+@@ -288,11 +288,8 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+ 	int rc;
+ 	struct netlbl_lsm_secattr secattr;
+ 	struct sk_security_struct *sksec = ep->base.sk->sk_security;
+-	struct sockaddr *addr;
+ 	struct sockaddr_in addr4;
+-#if IS_ENABLED(CONFIG_IPV6)
+ 	struct sockaddr_in6 addr6;
+-#endif
  
- 	mutex_lock(&gspca_dev->usb_lock);
- 	gspca_dev->present = false;
-+	destroy_urbs(gspca_dev);
-+	gspca_input_destroy_urb(gspca_dev);
+ 	if (ep->base.sk->sk_family != PF_INET &&
+ 				ep->base.sk->sk_family != PF_INET6)
+@@ -310,16 +307,15 @@ int selinux_netlbl_sctp_assoc_request(struct sctp_endpoint *ep,
+ 	if (ip_hdr(skb)->version == 4) {
+ 		addr4.sin_family = AF_INET;
+ 		addr4.sin_addr.s_addr = ip_hdr(skb)->saddr;
+-		addr = (struct sockaddr *)&addr4;
+-#if IS_ENABLED(CONFIG_IPV6)
+-	} else {
++		rc = netlbl_conn_setattr(ep->base.sk, (void *)&addr4, &secattr);
++	} else if (IS_ENABLED(CONFIG_IPV6) && ip_hdr(skb)->version == 6) {
+ 		addr6.sin6_family = AF_INET6;
+ 		addr6.sin6_addr = ipv6_hdr(skb)->saddr;
+-		addr = (struct sockaddr *)&addr6;
+-#endif
++		rc = netlbl_conn_setattr(ep->base.sk, (void *)&addr6, &secattr);
++	} else {
++		rc = -EAFNOSUPPORT;
+ 	}
  
- 	vb2_queue_error(&gspca_dev->queue);
+-	rc = netlbl_conn_setattr(ep->base.sk, addr, &secattr);
+ 	if (rc == 0)
+ 		sksec->nlbl_state = NLBL_LABELED;
  
 -- 
 2.20.1
