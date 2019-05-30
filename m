@@ -2,118 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23B9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE772C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4E625B5F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b1T1Y6wm"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC1525B44
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559191554;
+	bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wQ2zyt3G7WYImBMkP9/qZigtNuR7hM6o5eE0ANGWUo2K1NHgtpdF/EEeFKoJRcGqU
+	 eVD/cfMI/piSUU2DBPz2lxdSbz31SSBvWnDlp9w3jRq5XWsfJuszGFm63ZFdG100R7
+	 F4gxMwPk73f96OzuLh1z7tWEgQBZ7BXKuoDDFwHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbfE3Epp (ORCPT
+        id S1729711AbfE3Epx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:45:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:32991 "EHLO ozlabs.org"
+        Thu, 30 May 2019 00:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388748AbfE3Epl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 00:45:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728688AbfE3DLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:49 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Dw4f319Qz9sTN;
-        Thu, 30 May 2019 14:45:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559191538;
-        bh=CW8og/tTXaggc7WogDYrOnBUihyTAEdMDiSH8tYq6xw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=b1T1Y6wmO5kKKlaq4IxJrgTJw8qpxplHTqUW5nDN5R98YkELPTzfi2UizhaqMP7l9
-         s5rtXxh3jgaXyUM59fZshCUZMPKx8yZMFE5vaD9sDFZE/JCiDEp89l+LBW2egjiHrC
-         nle9z37zmFleU3cqX5/QxnVoafdsoptt9KyWTntObERD3/CGb9p96B7AAOEQn/CxF3
-         F5ZQJIKS/CpQLt0ruzoeJTzXW8jINEhpHE3heMJ91R9nPHjwS19GxbuMBCQlsAIISm
-         I1lSfUnmOEckBZ1WozQdaAWgfYsDLCdp2wRV4vq2Li7pHMI+aJd+iIMUxG/b/S6nMS
-         ksduMUgv//W/A==
-Date:   Thu, 30 May 2019 14:45:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20190530144536.7b65be9b@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 42650244D2;
+        Thu, 30 May 2019 03:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559185908;
+        bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r/RkqZeAsW7wicJ1xQ25a8rwENZKtaACDcKrtl5UhrCazNtIEaNpr2WuKb7Ng+Qi7
+         leswgrGY48nd4MSCOauwl1q8nkihMIdjbTjVx5SOMTc+m8/cWGwZafsFPV/f4E/4ss
+         uBCFBBvig6PvvNOAsOpcFEf6tQaGSzIMq2m0rB6s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 282/405] HID: logitech-hidpp: change low battery level threshold from 31 to 30 percent
+Date:   Wed, 29 May 2019 20:04:40 -0700
+Message-Id: <20190530030555.149187976@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/65cL.CDXbotvOfjdJoQ/zV/"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/65cL.CDXbotvOfjdJoQ/zV/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 1f87b0cd32b3456d7efdfb017fcf74d0bfe3ec29 ]
 
-Hi all,
+According to hidpp20_batterylevel_get_battery_info my Logitech K270
+keyboard reports only 2 battery levels. This matches with what I've seen
+after testing with batteries at varying level of fullness, it always
+reports either 5% or 30%.
 
-After merging the akpm-current tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Windows reports "battery good" for the 30% level. I've captured an USB
+trace of Windows reading the battery and it is getting the same info
+as the Linux hidpp code gets.
 
+Now that Linux handles these devices as hidpp devices, it reports the
+battery as being low as it treats anything under 31% as low, this leads
+to the user constantly getting a "Keyboard battery is low" warning from
+GNOME3, which is very annoying.
 
-Caused by commit
+This commit fixes this by changing the low threshold to anything under
+30%, which I assume is what Windows does.
 
-  a826492f28d9 ("mm: move ioremap page table mapping function to mm/")
-
-I have applied the following patch for today (which makes it build at
-least):
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 30 May 2019 14:42:20 +1000
-Subject: [PATCH] fix "mm: move ioremap page table mapping function to mm/"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-logitech-hidpp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 6370e0876a2c..f3abede9f161 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -322,7 +322,7 @@ int vmap_range(unsigned long addr,
- 	int ret;
-=20
- 	ret =3D vmap_range_noflush(addr, end, phys_addr, prot, max_page_shift);
--	flush_cache_vmap(start, end);
-+	flush_cache_vmap(addr, end);
- 	return ret;
- }
-=20
---=20
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index ffd30c7492df8..e74fa990ba133 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1021,7 +1021,11 @@ static int hidpp_map_battery_level(int capacity)
+ {
+ 	if (capacity < 11)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+-	else if (capacity < 31)
++	/*
++	 * The spec says this should be < 31 but some devices report 30
++	 * with brand new batteries and Windows reports 30 as "Good".
++	 */
++	else if (capacity < 30)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+ 	else if (capacity < 81)
+ 		return POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+-- 
 2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/65cL.CDXbotvOfjdJoQ/zV/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzvX/AACgkQAVBC80lX
-0GzAmwf/e9J+Ipx65rX4Ab1JfAhlegR8rrPs2FJpx7BVork0Jo6W92UA6VBMRSUF
-IUU/zpNVPDV2KFQ4tLHfvOIWSIBrfYaQGE7oYb3XxAPt3nmtvzB658KANgS20DaG
-rIdjKoD2h10K8fnJGyLO0PZxZPdh0d3GWT3L3wSUKqhXRnzJqU0X+WtJrPBK/Hqm
-Q1tRKJKF8MYiYGXNmon/ttFO8PjpCgHOGKbsOxk3cjYe2C9+hVObQZ8Ivq3pFmG9
-o7CpAXQ3Z7ppd0T6D72Ct8+UZVe0+I2Wqp0Y0uNGfEt0dJeHH27Ds9uHeXucUsOY
-khvzKNInhV8Q7C4CP5YSSlKdZ3iaJg==
-=BgnB
------END PGP SIGNATURE-----
-
---Sig_/65cL.CDXbotvOfjdJoQ/zV/--
