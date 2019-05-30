@@ -7,59 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6F9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A97C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5169E250D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EFF254E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190453;
-	bh=BCc15NeOx4Irdj+ofRsABC8wNfwE3dbtR0v/5IB/peg=;
+	s=default; t=1559190458;
+	bh=jP6U941xMJ/pMv0W8Qfpa6TpUNeBvAA7kHsdYd6KMp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PElxBZBv2E15QUvVqlguR7iHhTv+iuuz78aEy3F1wjs73+fjimgeR4aeiCq1vZF6k
-	 4aWKW2cu4wFTqf7Z7lmunGkkOGAmUp3Kb3k/RV00Tk6Bn8Hn6U7Lb0OEhuLJZJ4xiY
-	 N5r0vYiwWRd0tvq4sSxNZve7GYlPvuTLxMj4icQk=
+	b=e1ZfFNOPbuxw3pmATJnWEnbDfQLdHWOPq9hBVj2V9zUg4KKb9ibzOSZT2lU7j8EoE
+	 /5HmYdNXP20Mppho0eyMM6iDPmpTY7CQ8HVU5KGKonM5mdvMHRvCDt3Qkukd53dMHR
+	 vojLabH1RV41dvKvCiW/5kbVyDHuYndCB+mTZhv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfE3E1c (ORCPT
+        id S1729819AbfE3DOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728154AbfE3DOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:21 -0400
+        id S1728154AbfE3DL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:58 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471E7244EF;
-        Thu, 30 May 2019 03:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A296224496;
+        Thu, 30 May 2019 03:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186060;
-        bh=BCc15NeOx4Irdj+ofRsABC8wNfwE3dbtR0v/5IB/peg=;
+        s=default; t=1559185917;
+        bh=jP6U941xMJ/pMv0W8Qfpa6TpUNeBvAA7kHsdYd6KMp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Auz2xXd7L3a3uyV7zzC7tpj/5uzvDMUONujntAvtXEYKtzb2y5F5igzrbcs1Pq+bo
-         1DMmrWLlR1ulga34KRdNhsmmrY1vuq5V8vgrlQUW/tNoMJGx8dtup+VWlyeg8+BzFw
-         xgYNdY+THxkPslXBw32yE0N1FNIT2ifS9t7VGm7o=
+        b=zOSSdgOCdYhiG4/V8P9LB0YYLfRCW+EDCwDsdMgN7T7q5TAqG32VgTBVrEetcLJHd
+         ObrECoF9oPoniZ+kXnaq1N7o31ZqKum0oG7B5JGNQlecqKWWJKzsxuNleFC43FVlz7
+         oyGlCMb7L8xN2CqhacyIunCVxMLFxQEhwdzxGhfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 158/346] drm/msm: a5xx: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:03:51 -0700
-Message-Id: <20190530030549.183893460@linuxfoundation.org>
+Subject: [PATCH 5.1 302/405] tty: ipwireless: fix missing checks for ioremap
+Date:   Wed, 29 May 2019 20:05:00 -0700
+Message-Id: <20190530030556.096928382@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,71 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cd5235c3135ea84b32469ea51b2aae384eda8af ]
+[ Upstream commit 1bbb1c318cd8a3a39e8c3e2e83d5e90542d6c3e3 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+ipw->attr_memory and ipw->common_memory are assigned with the
+return value of ioremap. ioremap may fail, but no checks
+are enforced. The fix inserts the checks to avoid potential
+NULL pointer dereferences.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Mamta Shukla <mamtashukla555@gmail.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Sharat Masetty <smasetty@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org (open list)
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/tty/ipwireless/main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index d5f5e56422f57..270da14cba673 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -34,7 +34,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
- {
- 	struct device *dev = &gpu->pdev->dev;
- 	const struct firmware *fw;
--	struct device_node *np;
-+	struct device_node *np, *mem_np;
- 	struct resource r;
- 	phys_addr_t mem_phys;
- 	ssize_t mem_size;
-@@ -48,11 +48,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
- 	if (!np)
- 		return -ENODEV;
+diff --git a/drivers/tty/ipwireless/main.c b/drivers/tty/ipwireless/main.c
+index 3475e841ef5c1..4c18bbfe1a92e 100644
+--- a/drivers/tty/ipwireless/main.c
++++ b/drivers/tty/ipwireless/main.c
+@@ -114,6 +114,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
  
--	np = of_parse_phandle(np, "memory-region", 0);
--	if (!np)
-+	mem_np = of_parse_phandle(np, "memory-region", 0);
-+	of_node_put(np);
-+	if (!mem_np)
- 		return -EINVAL;
+ 	ipw->common_memory = ioremap(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]));
++	if (!ipw->common_memory) {
++		ret = -ENOMEM;
++		goto exit1;
++	}
+ 	if (!request_mem_region(p_dev->resource[2]->start,
+ 				resource_size(p_dev->resource[2]),
+ 				IPWIRELESS_PCCARD_NAME)) {
+@@ -134,6 +138,10 @@ static int ipwireless_probe(struct pcmcia_device *p_dev, void *priv_data)
  
--	ret = of_address_to_resource(np, 0, &r);
-+	ret = of_address_to_resource(mem_np, 0, &r);
-+	of_node_put(mem_np);
- 	if (ret)
- 		return ret;
- 
+ 	ipw->attr_memory = ioremap(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]));
++	if (!ipw->attr_memory) {
++		ret = -ENOMEM;
++		goto exit3;
++	}
+ 	if (!request_mem_region(p_dev->resource[3]->start,
+ 				resource_size(p_dev->resource[3]),
+ 				IPWIRELESS_PCCARD_NAME)) {
 -- 
 2.20.1
 
