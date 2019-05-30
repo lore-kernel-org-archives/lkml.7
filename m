@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD299C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466CCC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D9724B53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0946F24B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187291;
-	bh=+Gt3yha4H/+lKvAWpUCj6MTamW/nP7rXy47C+174hdU=;
+	s=default; t=1559187298;
+	bh=PEFDu1+k8T8ykKHz4YwvRCtoXOkMfwVc22GXXxz3HMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJZOZIBTbnAI3m7xXe3WEpUfELxAK6ZWzLlLTKvTJ0FsETu6Y7aJOLU/RRQ6uI4oY
-	 uFU6CjOUuYaPZtBg+nparErA0ytyUXcrb2X6gEdzSzn0fezrGiUByBlsWG6tXleMTX
-	 Qa9KUZbP5GTRlv2EUv9HwOF00na/QsJgsbueHFNE=
+	b=keYT5aTZ5bUCFXt5DFeHs9HdbHljkJuP8e5FvWv47uHCMEopmm8cYKekm0toN1BCW
+	 2S/iGH2yLq9WiZn+UYBLmAx2nssEWqzbjtlzdYTVbF7YdnGyhyNI73gjVlBUK1mK5C
+	 tTRYtq/NwYcCLCGyKwvl3N8zYMLh5pJ8x/TUBQh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387851AbfE3D1J (ORCPT
+        id S2387830AbfE3D1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731831AbfE3DTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:12 -0400
+        id S1730116AbfE3DTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD792484B;
-        Thu, 30 May 2019 03:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383C9247F0;
+        Thu, 30 May 2019 03:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186351;
-        bh=+Gt3yha4H/+lKvAWpUCj6MTamW/nP7rXy47C+174hdU=;
+        s=default; t=1559186349;
+        bh=PEFDu1+k8T8ykKHz4YwvRCtoXOkMfwVc22GXXxz3HMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nEhb9IixDPGc1t7i0ubZN6p7rBcCO/d4M+Ok22u9V7HiUEtk7muHnLPsHCSD0s/nW
-         PuqjOTq4j/RoqYqjRkNhoai8wWw2poH7J3Aup8ufgfvPp/wtZe4S3Nm41U8mDBD/pf
-         fUz6bNYjz4K3Z18q/b9hKJRaKf1fAGkR7eaS6RsY=
+        b=xbSSxhSdMyvLNxbyP/5nxkH4MrgMj5Mcgy6YLFVZV/gSOvM5glNSqqB7GQgNSpaP7
+         1QDTWTbGslmZFxOdIk5IroPPuPaICxO4b5/g8ZNOf/TQGEUdigfPuPOFPG4HafrkT5
+         7v2DfmmP/2vroRMdnENGWmWd4ZggM9QkoSU/EzpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Shuah Khan <shuah@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/193] media: au0828: stop video streaming only when last user stops
-Date:   Wed, 29 May 2019 20:05:44 -0700
-Message-Id: <20190530030501.529087638@linuxfoundation.org>
+Subject: [PATCH 4.14 086/193] clk: rockchip: undo several noc and special clocks as critical on rk3288
+Date:   Wed, 29 May 2019 20:05:40 -0700
+Message-Id: <20190530030500.969590456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,67 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
+[ Upstream commit f4033db5b84ebe4b32c25ba2ed65ab20b628996a ]
 
-If the application was streaming from both videoX and vbiX, and streaming
-from videoX was stopped, then the vbi streaming also stopped.
+This is mostly a revert of commit 55bb6a633c33 ("clk: rockchip: mark
+noc and some special clk as critical on rk3288") except that we're
+keeping "pmu_hclk_otg0" as critical still.
 
-The cause being that stop_streaming for video stopped the subdevs as well,
-instead of only doing that if dev->streaming_users reached 0.
+NOTE: turning these clocks off doesn't seem to do a whole lot in terms
+of power savings (checking the power on the logic rail).  It appears
+to save maybe 1-2mW.  ...but still it seems like we should turn the
+clocks off if they aren't needed.
 
-au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
-at all when dev->streaming_users reached 0.
+About "pmu_hclk_otg0" (the one clock from the original commit we're
+still keeping critical) from an email thread:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> pmu ahb clock
+>
+> Function: Clock to pmu module when hibernation and/or ADP is
+> enabled. Must be greater than or equal to 30 MHz.
+>
+> If the SOC design does not support hibernation/ADP function, only have
+> hclk_otg, this clk can be switched according to the usage of otg.
+> If the SOC design support hibernation/ADP, has two clocks, hclk_otg and
+> pmu_hclk_otg0.
+> Hclk_otg belongs to the closed part of otg logic, which can be switched
+> according to the use of otg.
+>
+> pmu_hclk_otg0 belongs to the always on part.
+>
+> As for whether pmu_hclk_otg0 can be turned off when otg is not in use,
+> we have not tested. IC suggest make pmu_hclk_otg0 always on.
+
+For the rest of the clocks:
+
+atclk: No documentation about this clock other than that it goes to
+the CPU.  CPU functions fine without it on.  Maybe needed for JTAG?
+
+jtag: Presumably this clock is only needed if you're debugging with
+JTAG.  It doesn't seem like it makes sense to waste power for every
+rk3288 user.  In any case to do JTAG you'd need private patches to
+adjust the pinctrl the mux the JTAG out anyway.
+
+pclk_dbg, pclk_core_niu: On veyron Chromebooks we turn these two
+clocks on only during kernel panics in order to access some coresight
+registers.  Since nothing in the upstream kernel does this we should
+be able to leave them off safely.  Maybe also needed for JTAG?
+
+hsicphy12m_xin12m: There is no indication of why this clock would need
+to be turned on for boards that don't use HSIC.
+
+pclk_ddrupctl[0-1], pclk_publ0[0-1]: On veyron Chromebooks we turn
+these 4 clocks on only when doing DDR transitions and they are off
+otherwise.  I see no reason why they'd need to be on in the upstream
+kernel which doesn't support DDRFreq.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/clk/rockchip/clk-rk3288.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
-index 9342402b92f76..7cd2daf869895 100644
---- a/drivers/media/usb/au0828/au0828-video.c
-+++ b/drivers/media/usb/au0828/au0828-video.c
-@@ -839,9 +839,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
- 			return rc;
- 		}
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 450de24a1b422..45cd2897e586b 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -292,13 +292,13 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NOMUX(0, "aclk_core_mp", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(0), 4, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 6, GFLAGS),
+-	COMPOSITE_NOMUX(0, "atclk", "armclk", CLK_IGNORE_UNUSED,
++	COMPOSITE_NOMUX(0, "atclk", "armclk", 0,
+ 			RK3288_CLKSEL_CON(37), 4, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 7, GFLAGS),
+ 	COMPOSITE_NOMUX(0, "pclk_dbg_pre", "armclk", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKSEL_CON(37), 9, 5, DFLAGS | CLK_DIVIDER_READ_ONLY,
+ 			RK3288_CLKGATE_CON(12), 8, GFLAGS),
+-	GATE(0, "pclk_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
++	GATE(0, "pclk_dbg", "pclk_dbg_pre", 0,
+ 			RK3288_CLKGATE_CON(12), 9, GFLAGS),
+ 	GATE(0, "cs_dbg", "pclk_dbg_pre", CLK_IGNORE_UNUSED,
+ 			RK3288_CLKGATE_CON(12), 10, GFLAGS),
+@@ -626,7 +626,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	INVERTER(SCLK_HSADC, "sclk_hsadc", "sclk_hsadc_out",
+ 			RK3288_CLKSEL_CON(22), 7, IFLAGS),
  
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
-+
- 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
--			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
--						s_stream, 1);
- 			dev->vid_timeout_running = 1;
- 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
- 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
-@@ -861,10 +861,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
+-	GATE(0, "jtag", "ext_jtag", CLK_IGNORE_UNUSED,
++	GATE(0, "jtag", "ext_jtag", 0,
+ 			RK3288_CLKGATE_CON(4), 14, GFLAGS),
  
- 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
+ 	COMPOSITE_NODIV(SCLK_USBPHY480M_SRC, "usbphy480m_src", mux_usbphy480m_p, 0,
+@@ -635,7 +635,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	COMPOSITE_NODIV(SCLK_HSICPHY480M, "sclk_hsicphy480m", mux_hsicphy480m_p, 0,
+ 			RK3288_CLKSEL_CON(29), 0, 2, MFLAGS,
+ 			RK3288_CLKGATE_CON(3), 6, GFLAGS),
+-	GATE(0, "hsicphy12m_xin12m", "xin12m", CLK_IGNORE_UNUSED,
++	GATE(0, "hsicphy12m_xin12m", "xin12m", 0,
+ 			RK3288_CLKGATE_CON(13), 9, GFLAGS),
+ 	DIV(0, "hsicphy12m_usbphy", "sclk_hsicphy480m", 0,
+ 			RK3288_CLKSEL_CON(11), 8, 6, DFLAGS),
+@@ -816,11 +816,6 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+ 	"pclk_alive_niu",
+ 	"pclk_pd_pmu",
+ 	"pclk_pmu_niu",
+-	"pclk_core_niu",
+-	"pclk_ddrupctl0",
+-	"pclk_publ0",
+-	"pclk_ddrupctl1",
+-	"pclk_publ1",
+ 	"pmu_hclk_otg0",
+ };
  
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
--	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
- 	dev->vid_timeout_running = 0;
- 	del_timer_sync(&dev->vid_timeout);
- 
-@@ -893,8 +894,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
- 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
- 		dev->streaming_users);
- 
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
- 	spin_lock_irqsave(&dev->slock, flags);
- 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
