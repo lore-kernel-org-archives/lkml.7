@@ -2,192 +2,279 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3A5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982DAC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6139A25299
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:53:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="fipr1Uc3"
+	by mail.kernel.org (Postfix) with ESMTP id 5C7A6252EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 19:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfE3TxC (ORCPT
+        id S1726664AbfE3TxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 15:53:02 -0400
-Received: from mail-eopbgr720040.outbound.protection.outlook.com ([40.107.72.40]:20256
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbfE3TxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 15:53:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YbnY4SdUFpu3BOzdXOCINY4ZgZpPhhdh4vhljyyG+iA=;
- b=fipr1Uc3a7MakWuAYHbVyaJv2qYll/MSLQdTxDb6VFyqe0G9zBZ8wdzV5rj40NGbZGIutxI6GxavUej/EqSHemjEMHfOTMCBoNoqxPIif6beHZbtP6jP74qs4Q3iFQN3jrTiN/uKxNJK9g+w82VUWqIII+JWLkQRAh2Gx5auWeI=
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com (52.132.228.77) by
- CH2PR15MB3670.namprd15.prod.outlook.com (52.132.229.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.17; Thu, 30 May 2019 19:51:18 +0000
-Received: from CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0]) by CH2PR15MB3575.namprd15.prod.outlook.com
- ([fe80::8d6a:e759:6fd:5ee0%7]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 19:51:18 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Mihai Moldovan <ionic@ionic.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Ying Xue <ying.xue@windriver.com>
-Subject: RE: Userspace woes with 5.1.5 due to TIPC
-Thread-Topic: Userspace woes with 5.1.5 due to TIPC
-Thread-Index: AQHVFx6rf0Q3NUZ4q0Cvx22vAuNEcKaEEfNQ
-Date:   Thu, 30 May 2019 19:51:18 +0000
-Message-ID: <CH2PR15MB3575BD29C90539022364B8719A180@CH2PR15MB3575.namprd15.prod.outlook.com>
-References: <4ad776cb-c597-da1d-7d5e-af39ded17c40@ionic.de>
-In-Reply-To: <4ad776cb-c597-da1d-7d5e-af39ded17c40@ionic.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12c92ad9-c418-45e8-53cc-08d6e5382ed2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR15MB3670;
-x-ms-traffictypediagnostic: CH2PR15MB3670:
-x-microsoft-antispam-prvs: <CH2PR15MB36704EC91785310D614147349A180@CH2PR15MB3670.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(366004)(13464003)(189003)(199004)(6436002)(7736002)(66556008)(66476007)(71200400001)(52536014)(73956011)(66946007)(53546011)(76116006)(478600001)(81166006)(81156014)(14454004)(6506007)(305945005)(446003)(71190400001)(8676002)(86362001)(316002)(2501003)(7696005)(256004)(76176011)(99286004)(2906002)(229853002)(68736007)(26005)(5024004)(14444005)(186003)(102836004)(9686003)(66446008)(5660300002)(44832011)(64756008)(110136005)(74316002)(4326008)(6116002)(11346002)(3846002)(6246003)(53936002)(33656002)(66066001)(486006)(8936002)(55016002)(476003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3670;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QE9a0kYg53mOxXx2fOJ3DQsUkfxO25YkKPbtYSYEKbubjp4Am4pG6hslDFMXb2sxvmH2r+8vDqOMTpU8Gu4dmAI45buF481IQ7W366tU7L7vPlqc4MGYy1zmh2QR1fuLletMvbUxAo5Y8U8yoCT5rJJDa014XpEsbrjv0RCLmWxLaqST9MRl5ze8AiMmjhEtIgTjaFR41TKzKuJmO8HfSQKlsMpxLz4Ak611AVuTewIDFqo1Jx1VB48o99ZdYhOJZQ4wVIdz8AXDfPLU/BaWCvOJSsmZRIPfmWkVhp/uBv/SVyKVk28UQzZERA8n/ZZUQNIGSaNks9M6t8LmEz8PqxR+CGZgBxgysn6BqFX2JBrv2q+feqQCan3nPBPSvsChiy/8lgqiSw6baBwoutKZyC+jZzvG1+Uvuh1yLU476GQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 30 May 2019 15:53:20 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58122 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfE3TxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 15:53:19 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 51852728;
+        Thu, 30 May 2019 19:53:18 +0000 (UTC)
+Date:   Thu, 30 May 2019 13:53:17 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Subject: [PATCH RFC] Rough draft document on merging and rebasing
+Message-ID: <20190530135317.3c8d0d7b@lwn.net>
+Organization: LWN.net
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12c92ad9-c418-45e8-53cc-08d6e5382ed2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 19:51:18.4420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3670
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWloYWksDQpNYWtlIHN1cmUgdGhlIGZvbGxvd2luZyB0aHJlZSBjb21taXRzIGFyZSBwcmVz
-ZW50IGluIFRJUEMgKmFmdGVyKiB0aGUgb2ZmZW5kaW5nIGNvbW1pdDoNCg0KY29tbWl0IDUzMmIw
-ZjdlY2U0YyAidGlwYzogZml4IG1vZHByb2JlIHRpcGMgZmFpbGVkIGFmdGVyIHN3aXRjaCBvcmRl
-ciBvZiBkZXZpY2UgcmVnaXN0cmF0aW9uIg0KDQpTaW5jZSB0aGF0IHBhdGNoIG9uZSB3YXMgZmxh
-d2VkIGl0IGhhZCB0byBiZSByZXZlcnRlZDoNCmNvbW1pdCA1NTkzNTMwZTU2OTQgICIiUmV2ZXJ0
-IHRpcGM6IGZpeCBtb2Rwcm9iZSB0aXBjIGZhaWxlZCBhZnRlciBzd2l0Y2ggb3JkZXIgb2YgZGV2
-aWNlIHJlZ2lzdHJhdGlvbiINCg0KSXQgd2FzIHRoZW4gcmVwbGFjZWQgd2l0aCB0aGlzIG9uZTog
-DQpjb21taXQgNTI2ZjViODUxYTk2ICJ0aXBjOiBmaXggbW9kcHJvYmUgdGlwYyBmYWlsZWQgYWZ0
-ZXIgc3dpdGNoIG9yZGVyIG9mIGRldmljZSByZWdpc3RyYXRpb24iDQoNCkJSDQpKb24gTWFsb3kN
-Cg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1paGFpIE1vbGRvdmFu
-IDxpb25pY0Bpb25pYy5kZT4NCj4gU2VudDogMzAtTWF5LTE5IDE1OjM0DQo+IFRvOiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBZaW5nIFh1ZSA8eWluZy54dWVAd2luZHJpdmVy
-LmNvbT47IEpvbiBNYWxveQ0KPiA8am9uLm1hbG95QGVyaWNzc29uLmNvbT4NCj4gU3ViamVjdDog
-VXNlcnNwYWNlIHdvZXMgd2l0aCA1LjEuNSBkdWUgdG8gVElQQw0KPiANCj4gSGkNCj4gDQo+IA0K
-PiBJJ3ZlIGhhZCBhIGZldyBpc3N1ZXMgbGF0ZWx5IChtYWlubHkgYmFkIFJBTSBvbmx5LCBob3Bl
-ZnVsbHksIHdoaWNoIHNob3VsZCBiZQ0KPiBmaXhlZCBub3cpIGFuZCBnZW5lcmFsbHkgdXBncmFk
-ZWQgZXZlcnl0aGluZy4NCj4gDQo+IFdpdGggNS4xLjUsIHRob3VnaCwgc29tZSBwcm9ncmFtcyBl
-eGhpYml0ZWQgdmVyeSB3ZWlyZCBiZWhhdmlvcjogQ2hyb21pdW0NCj4gY3Jhc2hlZCB3aGlsZSBz
-dGFydGluZyB1cCBkdWUgdG8gbm90IGJlaW5nIGFibGUgdG8gbGF1bmNoIGEgbmV3IHp5Z290ZQ0K
-PiBwcm9jZXNzLCBhbGJlaXQgc3RhcnRlZCB3aGVuIHVzaW5nIC0tbm8tc2FuZGJveCAobGlrZWx5
-IGJlY2F1c2UgdGhhdCBkaWRuJ3QgdHJ5DQo+IHRvIGNyZWF0ZSBvdGhlciBwcm9jZXNzZXMpOyBP
-cGVyYSAoYmFzZWQgdXBvbiBDaHJvbWl1bSkgZmFpbGVkIHRvIHN0YXJ0IHdpdGgNCj4gU0lHSUxM
-LCBidXQgdGhhdCB3YXMgb25seSBhIHJlZCBoZXJyaW5nIHRyaWdnZXJlZCBieSB0aGUgc2FtZSBw
-cm9ibGVtIEkgZ3Vlc3M7DQo+IEZpcmVmb3ggc3RhcnRlZCB1cCwgYnV0IHdhcyB1bmFibGUgdG8g
-cmVuZGVyIGFueSBjb250ZW50IGJlY2F1c2UgaXRzIG11bHRpLQ0KPiBwcm9jZXNzIElQQyBkaWRu
-J3Qgd29yayAoaS5lLiwgaXQgY291bGRuJ3Qgc3RhcnQgbmV3IHJlbmRlcmluZyBwcm9jZXNzZXMp
-Lg0KPiBJbnRlcmVzdGluZ2x5LCBtb3N0IG90aGVyIHByb2dyYW1zIEkgdXNlIGRhaWx5IHN0aWxs
-IHdvcmtlZCwgZXZlbiB0aG91Z2ggdGhleQ0KPiB1c2VkIG5ldHdvcmtpbmcgYW5kIElQQyAoY29t
-bWFuZC1saW5lIGJyb3dzZXJzLCBNQVRFIFRlcm1pbmFsLCBlbGVjdHJvbi0NCj4gYmFzZWQgcHJv
-Z3JhbXMpLCBzbyB0aGlzIGJ1ZyBkaWRuJ3QgbWFrZSB0aGUgbWFjaGluZSBjb21wbGV0ZWx5IHVu
-dXNhYmxlLg0KPiANCj4gU2luY2UgSSd2ZSBiZWVuIHVzaW5nIDUuMS4zIHdpdGhvdXQgcHJvYmxl
-bXMgYmVmb3JlIGFuZCB0aGUgaXNzdWUgd2FzDQo+IHN0cmFpZ2h0LWZvcndhcmQgdG8gdGVzdCBm
-b3IsIEkgZGlkIGEgYmlzZWN0aW9uIHJ1biBhbmQgY2FtZSB0byB0aGF0IGNvbmNsdXNpb246DQo+
-IA0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSBiaXNlY3QgbG9nDQo+ID09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+IEJpc2VjdGluZzogMTI0IHJldmlzaW9ucyBs
-ZWZ0IHRvIHRlc3QgYWZ0ZXIgdGhpcyAocm91Z2hseSA3IHN0ZXBzKQ0KPiBbZWU0YzNlMjgzZjhm
-MzI4NmJlYTYwZTkwMzhhZGM3MDQzNmQ4N2QwMl0gczM5MC9tbTogY29udmVydCB0byB0aGUNCj4g
-Z2VuZXJpYyBnZXRfdXNlcl9wYWdlc19mYXN0IGNvZGUNCj4gQmlzZWN0aW5nOiA2MiByZXZpc2lv
-bnMgbGVmdCB0byB0ZXN0IGFmdGVyIHRoaXMgKHJvdWdobHkgNiBzdGVwcykNCj4gW2Y3MzQ2ZGMw
-NjM0Y2JhZDdmY2E1ZDk1MWI5MWFkMmUxM2Y0OTdiMGJdIGNsazogbWVkaWF0ZWs6IERpc2FibGUN
-Cj4gdHVuZXJfZW4gYmVmb3JlIGNoYW5nZSBQTEwgcmF0ZQ0KPiBCaXNlY3Rpbmc6IDMwIHJldmlz
-aW9ucyBsZWZ0IHRvIHRlc3QgYWZ0ZXIgdGhpcyAocm91Z2hseSA1IHN0ZXBzKQ0KPiBbNWFjOGU2
-OTg1MjgxNDliYjE2MTgxMTFkNjRlMjJiZDhiYjc4NDI1Nl0gcGFyaXNjOiBBbGxvdyBsaXZlLQ0K
-PiBwYXRjaGluZyBvZiBfX21lbWluaXQgZnVuY3Rpb25zDQo+IEJpc2VjdGluZzogMTUgcmV2aXNp
-b25zIGxlZnQgdG8gdGVzdCBhZnRlciB0aGlzIChyb3VnaGx5IDQgc3RlcHMpDQo+IFtjODljOWFm
-OTk4ZmVmMmFmNGU1YjJiMzVmYjcyMzY5M2YxN2UwNWVmXSBtbHhzdzogY29yZTogUHJldmVudCBR
-U0ZQDQo+IG1vZHVsZSBpbml0aWFsaXphdGlvbiBmb3Igb2xkIGhhcmR3YXJlDQo+IEJpc2VjdGlu
-ZzogNyByZXZpc2lvbnMgbGVmdCB0byB0ZXN0IGFmdGVyIHRoaXMgKHJvdWdobHkgMyBzdGVwcykN
-Cj4gWzkxMmQ4YzRjZjlmMTljOTNkZmRmMDZiODIyZWVhZGVjOWQ3MTQ5NGRdIG5ldDogdGVzdCBu
-b3VhcmcgYmVmb3JlDQo+IGRlcmVmZXJlbmNpbmcgemVyb2NvcHkgcG9pbnRlcnMNCj4gQmlzZWN0
-aW5nOiAzIHJldmlzaW9ucyBsZWZ0IHRvIHRlc3QgYWZ0ZXIgdGhpcyAocm91Z2hseSAyIHN0ZXBz
-KQ0KPiBbOTIxNjYxOTBiODI4MmQ5OTI1ZTkwYTY2OTYxODc5NzgyYzUwZDAzN10gcnRuZXRsaW5r
-OiBhbHdheXMgcHV0DQo+IElGTEFfTElOSyBmb3IgbGlua3Mgd2l0aCBhIGxpbmstbmV0bnNpZA0K
-PiBCaXNlY3Rpbmc6IDEgcmV2aXNpb24gbGVmdCB0byB0ZXN0IGFmdGVyIHRoaXMgKHJvdWdobHkg
-MSBzdGVwKQ0KPiBbN2QyOWM5YWQwZWQ1MjVjMWIxMGUyOWNmY2E0ZmIxZWVjZTFlOTNmYl0gdnNv
-Y2svdmlydGlvOiBmcmVlIHBhY2tldHMNCj4gZHVyaW5nIHRoZSBzb2NrZXQgcmVsZWFzZQ0KPiBC
-aXNlY3Rpbmc6IDAgcmV2aXNpb25zIGxlZnQgdG8gdGVzdCBhZnRlciB0aGlzIChyb3VnaGx5IDAg
-c3RlcHMpDQo+IFsyZDA4ZjIwNDMyOGFjYWY4NWFjMmM2ZmU1ZDVkOWQ0NzYwZjEyZTEzXSB0aXBj
-OiBmaXggbW9kcHJvYmUgdGlwYw0KPiBmYWlsZWQgYWZ0ZXIgc3dpdGNoIG9yZGVyIG9mIGRldmlj
-ZSByZWdpc3RyYXRpb24NCj4gMmQwOGYyMDQzMjhhY2FmODVhYzJjNmZlNWQ1ZDlkNDc2MGYxMmUx
-MyBpcyB0aGUgZmlyc3QgYmFkIGNvbW1pdA0KPiBjb21taXQgMmQwOGYyMDQzMjhhY2FmODVhYzJj
-NmZlNWQ1ZDlkNDc2MGYxMmUxMw0KPiBBdXRob3I6IEp1bndlaSBIdSA8aHVqdW53ZWk0QGh1YXdl
-aS5jb20+DQo+IERhdGU6ICAgRnJpIE1heSAxNyAxOToyNzozNCAyMDE5ICswODAwDQo+IA0KPiAg
-ICAgdGlwYzogZml4IG1vZHByb2JlIHRpcGMgZmFpbGVkIGFmdGVyIHN3aXRjaCBvcmRlciBvZiBk
-ZXZpY2UgcmVnaXN0cmF0aW9uDQo+IA0KPiAgICAgWyBVcHN0cmVhbSBjb21taXQgNTMyYjBmN2Vj
-ZTRjYjJmZmQyNGRjNzIzZGRmNTUyNDJkMTE4OGU1ZSBdDQo+IA0KPiAgICAgRXJyb3IgbWVzc2Fn
-ZSBwcmludGVkOg0KPiAgICAgbW9kcHJvYmU6IEVSUk9SOiBjb3VsZCBub3QgaW5zZXJ0ICd0aXBj
-JzogQWRkcmVzcyBmYW1pbHkgbm90DQo+ICAgICBzdXBwb3J0ZWQgYnkgcHJvdG9jb2wuDQo+ICAg
-ICB3aGVuIG1vZHByb2JlIHRpcGMgYWZ0ZXIgdGhlIGZvbGxvd2luZyBwYXRjaDogc3dpdGNoIG9y
-ZGVyIG9mDQo+ICAgICBkZXZpY2UgcmVnaXN0cmF0aW9uLCBjb21taXQgN2UyN2U4ZDYxMzBjDQo+
-ICAgICAoInRpcGM6IHN3aXRjaCBvcmRlciBvZiBkZXZpY2UgcmVnaXN0cmF0aW9uIHRvIGZpeCBh
-IGNyYXNoIikNCj4gDQo+ICAgICBCZWNhdXNlIHNvY2tfY3JlYXRlX2tlcm4obmV0LCBBRl9USVBD
-LCAuLi4pIGlzIGNhbGxlZCBieQ0KPiAgICAgdGlwY190b3BzcnZfY3JlYXRlX2xpc3RlbmVyKCkg
-aW4gdGhlIGluaXRpYWxpemF0aW9uIHByb2Nlc3MNCj4gICAgIG9mIHRpcGNfbmV0X29wcywgdGlw
-Y19zb2NrZXRfaW5pdCgpIG11c3QgYmUgZXhlY3V0ZSBiZWZvcmUgdGhhdC4NCj4gDQo+ICAgICBJ
-IG1vdmUgdGlwY19zb2NrZXRfaW5pdCgpIGludG8gZnVuY3Rpb24gdGlwY19pbml0X25ldCgpLg0K
-PiANCj4gICAgIEZpeGVzOiA3ZTI3ZThkNjEzMGMNCj4gICAgICgidGlwYzogc3dpdGNoIG9yZGVy
-IG9mIGRldmljZSByZWdpc3RyYXRpb24gdG8gZml4IGEgY3Jhc2giKQ0KPiAgICAgU2lnbmVkLW9m
-Zi1ieTogSnVud2VpIEh1IDxodWp1bndlaTRAaHVhd2VpLmNvbT4NCj4gICAgIFJlcG9ydGVkLWJ5
-OiBXYW5nIFdhbmcgPHdhbmd3YW5nMkBodWF3ZWkuY29tPg0KPiAgICAgUmV2aWV3ZWQtYnk6IEth
-bmcgWmhvdSA8emhvdWthbmc3QGh1YXdlaS5jb20+DQo+ICAgICBSZXZpZXdlZC1ieTogU3Vhbm1p
-bmcgTW91IDxtb3VzdWFubWluZ0BodWF3ZWkuY29tPg0KPiAgICAgU2lnbmVkLW9mZi1ieTogRGF2
-aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KPiAgICAgU2lnbmVkLW9mZi1ieTog
-R3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4NCj4gDQo+IDow
-NDAwMDAgMDQwMDAwIDEzZDliMDE0MzM4Y2NmNmFlMGMzMmJkYjJiZTc3OTg3MGJiZjk3ZGENCj4g
-ZGY4YTljMmE5ZjFmOGRmMjEyOTk5YzI5MDQ2MzJhNzdhZGIwMzc4MiBNCW5ldA0KPiA9PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09IC8gYmlzZWN0IGxvZw0KPiA9PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09DQo+IA0KPiBNeSBrZXJuZWwgY29uZmlnIGlzIHRhaWxvcmVkIHRvIG15
-IG1hY2hpbmUsIHNvIHByb2JhYmx5IG5vdCB2ZXJ5IHVzZWZ1bCB0bw0KPiBvdGhlcnMsIGJ1dCBJ
-J20gaW5jbHVkaW5nIGl0IGFueXdheS4gVGhlIG1vc3Qgb2J2aW91cyBwb2ludCBiZWluZw0KPiBD
-T05GSUdfVElQQz15LCBpLmUuLCBUSVBDIGJlaW5nIGJ1aWx0IHN0YXRpY2FsbHkgaW50byB0aGUg
-a2VybmVsLiBOb3Qgc3VyZSB3aHkNCj4gSSd2ZSBkb25lIHRoYXQgaW4gdGhlIGZpcnN0IHBsYWNl
-IGJlY2F1c2UgVElQQyBpcyBub3Qgc29tZXRoaW5nIHRoYXQgd291bGQgYmUNCj4gdXNlZnVsIHRv
-IG1lLCBidXQgSSBvZnRlbiBlcnIgb24gdGhlICJtaWdodCBiZSB1c2VmdWwgbGF0ZXIiIHNpZGUu
-IEkgbWlnaHQgcmV0aGluaw0KPiB0aGF0IGRlY2lzaW9uIGFuZCBqdXN0IGRpc2FibGUgVElQQyBm
-b3IgZ29vZCBpbiB0aGUgZnV0dXJlLg0KPiANCj4gDQo+IFdpdGggdGhpcyBwYXRjaCBhcHBsaWVk
-LCB0aGUga2VybmVsIGdlbmVyYWxseSBzcGV3cyBvdXQgYSBmZXcgd29ua3kgbWVzc2FnZXMNCj4g
-dGhhdCBJJ3ZlIG5ldmVyIHNlZW4gYmVmb3JlLiBGb3IgY29tcGxldGVuZXNzIHNha2UsIEkndmUg
-YXR0YWNoZWQgYSByaW5nIGJ1ZmZlcg0KPiBsb2cgZnJvbSBydW5uaW5nIHRoZSBsYXN0IHdvcmtp
-bmcgYW5kIGZpcnN0IGJhZCB2ZXJzaW9uLg0KPiANCj4gPT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT0gVElQQyBtZXNzYWdlcw0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PQ0KPiBORVQ6IFJlZ2lzdGVyZWQgcHJvdG9jb2wgZmFtaWx5IDMwDQo+IEZhaWxlZCB0byByZWdp
-c3RlciBUSVBDIHNvY2tldCB0eXBlDQo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0g
-LyBUSVBDIG1lc3NhZ2VzDQo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gDQo+
-IA0KPiBOb3csIGJsaW5kbHkgcmV2ZXJ0aW5nIHRoZSBwYXRjaCB3b3VsZCBvYnZpb3VzbHkgYSBi
-YWQgaWRlYSwgc2luY2UgdGhhdCB3b3VsZA0KPiBtZWFuIHRyYWRpbmcgb25lIHJlZ3Jlc3Npb24g
-Zm9yIHRoZSAoaW5pdGlhbCkgb3RoZXIgb25lLiBJJ20gdGh1cyBDQ2luZyB0aGUNCj4gbWFpbnRh
-aW5lcnMgdG8gaGVscC4NCj4gDQo+IA0KPiANCj4gTWloYWkNCg==
+This is a first attempt at following through on last month's discussion
+about common merging and rebasing errors.  The hope here is to document
+existing best practices rather than trying to define new ones.  I've
+certainly failed somewhere along the way; please set me straight and I'll
+try to do better next time.
+
+Thanks,
+
+jon
+
+-------------
+docs: Add a document on repository management
+
+Every merge window seems to involve at least one episode where subsystem
+maintainers don't manage their trees as Linus would like.  Document the
+expectations so that at least he has something to point people to.
+
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+---
+ Documentation/maintainer/index.rst        |   1 +
+ Documentation/maintainer/repo-hygiene.rst | 195 ++++++++++++++++++++++
+ 2 files changed, 196 insertions(+)
+ create mode 100644 Documentation/maintainer/repo-hygiene.rst
+
+diff --git a/Documentation/maintainer/index.rst b/Documentation/maintainer/index.rst
+index 2a14916930cb..48c1d56253d8 100644
+--- a/Documentation/maintainer/index.rst
++++ b/Documentation/maintainer/index.rst
+@@ -10,5 +10,6 @@ additions to this manual.
+    :maxdepth: 2
+ 
+    configure-git
++   repo-hygiene
+    pull-requests
+ 
+diff --git a/Documentation/maintainer/repo-hygiene.rst b/Documentation/maintainer/repo-hygiene.rst
+new file mode 100644
+index 000000000000..0a738ea51d65
+--- /dev/null
++++ b/Documentation/maintainer/repo-hygiene.rst
+@@ -0,0 +1,195 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++========================================
++Repository hygiene: rebasing and merging
++========================================
++
++Maintaining a subsystem, as a general rule, requires a familiarity with the
++Git source-code management system.  Git is a powerful tool with a lot of
++features; as is often the case with such tools, there are right and wrong
++ways to use those features.  This document looks in particular at the use
++of rebasing and merging.  Maintainers often get in trouble when they use
++those tools incorrectly, but avoiding problems is not actually all that
++hard.
++
++One thing to be aware of in general is that, unlike many other projects,
++the kernel community is not scared by seeing merge commits in its
++development history.  Indeed, given the scale of the project, avoiding
++merges would be nearly impossible.  Some problems encountered by
++maintainers results from a desire to avoid merges, while others come from
++merging a little too often.
++
++Rebasing
++========
++
++"Rebasing" is the process of changing the history of a series of commits
++within a repository.  At its simplest, a rebase could change the starting
++point of a patch series from one point to another.  Other uses include
++fixing (or deleting) broken commits, adding tags to commits, or changing
++the order in which commits are applied.  Used properly, rebasing can yield
++a cleaner and clearer development history; used improperly, it can obscure
++that history and introduce bugs.
++
++There are a few rules of thumb that can help developers to avoid the worst
++perils of rebasing:
++
++ - History that has been exposed to the world beyond your private system
++   should not be rebased.  Others may have pulled a copy of your tree and
++   built on it; rebasing your tree will create pain for them.  If work is
++   in need of rebasing, that is usually a sign that it is not yet ready to
++   be committed to a public repository.
++
++ - Do not rebase a branch that contains history created by others.  If you
++   have pulled changes from another developer's repository, you are now a
++   custodian of their history.  You should not change it.
++
++ - Do not rebase without a good reason to do so.  Just being on a newer
++   base or avoiding a merge with an upstream repository is not generally a
++   good reason.
++
++ - If you must rebase a repository, do not pick some random kernel commit
++   as the new base.  The kernel is often in a relatively unstable state
++   between release points; basing development on one of those points
++   increases the chances of running into surprising bugs.  When a patch
++   series must move to a new base, pick a stable point (such as one of
++   the -rc releases) to move to.
++
++ - Realize the rebasing a patch series changes the environment in which it
++   was developed and, likely, invalidates much of the testing that was
++   done.  A rebased patch series should, as a general rule, be treated like
++   new code and retested from the beginning.
++
++A frequent cause of merge-window trouble is when Linus is presented with a
++patch series that has clearly been rebased, often to a random commit,
++shortly before the pull request was sent.  The chances of such a series
++having been adequately tested are relatively low - as are the chances of
++the pull request being acted upon.
++
++If, instead, rebasing is limited to private trees, commits are based on a
++well-known starting point, and they are well tested, the potential for
++trouble is low.
++
++Merging
++=======
++
++Merging is a common operation in the kernel development process; the 5.1
++development cycle included 1,126 merge commits - nearly 9% of the total.
++Kernel work is accumulated in over 100 different subsystem trees, each of
++which may contain multiple topic branches; each branch is usually developed
++independently of the others.  So naturally, at least merge will be required
++before any given branch finds its way into an upstream repository.
++
++Many projects require that branches in pull requests be based on the
++current trunk so that no merge commits appear in the history.  The kernel
++is not such a project; any rebasing of branches to avoid merges will, as
++described above, lead to certain trouble.
++
++Subsystem maintainers find themselves having to do two types of merges:
++from lower-level subsystem trees and from others, either sibling trees or
++the mainline.  The best practices to follow differ in those two situations.
++
++Merging from lower-level trees
++------------------------------
++
++Larger subsystems tend to have multiple levels of maintainers, with the
++lower-level maintainers sending pull requests to the higher levels.  Acting
++on such a pull request will almost certainly generate a merge commit; that
++is as it should be.  In fact, subsystem maintainers may want to use
++the --no-ff flag to force the addition of a merge commit in the rare cases
++where one would not normally be created so that the reasons for the merge
++can be recorded.  The changelog for the merge should, for any kind of
++merge, say *why* the merge is being done.  For a lower-level tree, "why" is
++usually a summary of the changes that will come with that pull.
++
++Maintainers at all levels should be using signed tags on their pull
++requests, and upstream maintainers should verify the tags when pulling
++branches.  Failure to do so threatens the security of the development
++process as a whole.
++
++As per the rules outlined above, once you have merged somebody else's
++history into your tree, you cannot rebase that branch, even if you
++otherwise would be able to.
++
++Merging from sibling or upstream trees
++--------------------------------------
++
++While merges from downstream are common and unremarkable, merges from other
++trees tend to be a red flag when it comes time to push a branch upstream.
++Such merges need to be carefully thought about and well justified, or
++there's a good chance that a subsequent pull request will be rejected.
++
++It is natural to want to merge the master branch into a repository; it can
++help to make sure that there are no conflicts with parallel development and
++generally gives a warm, fuzzy feeling of being up-to-date.  But this
++temptation should be avoided almost all of the time.
++
++Why is that?  Merges with upstream will muddy the development history of
++your own branch.  They will significantly increase your chances of
++encountering bugs from elsewhere in the community and make it hard to
++ensure that the work you are managing is stable and ready for upstream.
++Frequent merges can also obscure problems with the development process in
++your tree; they can hide interactions with other trees that should not be
++happening (often) in a well-managed branch.
++
++One of the most frequent causes of merge-related trouble is when a
++maintainer merges with the upstream in order to resolve merge conflicts
++before sending a pull request.  Again, this temptation is easy enough to
++understand, but it should absolutely be avoided.  This is especially true
++for the final pull request: Linus is adamant that he would much rather see
++merge conflicts than unnecessary back merges.  Seeing the conflicts lets
++him know where potential problem areas are.  He does a lot of merges (382
++in the 5.1 development cycle) and has gotten quite good at conflict
++resolution - often better than the developers involved.
++
++So what should a maintainer do when there is a conflict between their
++subsystem branch and the mainline?  The most important step is to warn
++Linus in the pull request that the conflict will happen; if nothing else,
++that demonstrates an awareness of how your branch fits into the whole.  For
++especially difficult conflicts, create and push a *separate* branch to show
++how you would resolve things.  Mention that branch in your pull request,
++but the pull request itself should be for the unmerged branch.
++
++Even in the absence of known conflicts, doing a test merge before sending a
++pull request is a good idea.  It may alert you to problems that you somehow
++didn't see from linux-next and helps to understand exactly what you are
++asking upstream to do.
++
++Another reason for doing merges of upstream or another subsystem tree is to
++resolve dependencies.  These dependency issues do happen at times, and
++sometimes a cross-merge with another tree is the best way to resolve them;
++as always, in such situations, the merge commit should explain why the
++merge has been done.  Take a moment to do it right; people will read those
++changelogs.
++
++Often, though, dependency issues indicate that a change of approach is
++needed.  Merging another subsystem tree to resolve a dependency risks
++bringing in other bugs.  If that subsystem tree fails to be pulled
++upstream, whatever problems it had will block the merging of your tree as
++well.  Possible alternatives include agreeing with the maintainer to carry
++both sets of changes in one of the trees or creating a special branch
++dedicated to the dependent commits.  If the dependency is related to major
++infrastructural changes, the right solution might be to hold the dependent
++commits for one development cycle so that those changes have time to
++stabilize in the mainline.
++
++Finally
++=======
++
++It is relatively common to merge with the mainline toward the beginning of
++the development cycle in order to pick up changes and fixes done elsewhere
++in the tree.  As always, such a merge should pick a well-known release
++point rather than some random spot.  If your upstream-bound branch has
++emptied entirely into the mainline during the merge window, you can pull it
++forward with a command like::
++
++  git merge v5.2-rc1^0
++
++The "^0" will cause Git to do a fast-forward merge (which should be
++possible in this situation), thus avoiding the addition of a spurious merge
++commit.
++
++The guidelines laid out above are just that: guidelines.  There will always
++be situations that call out for a different solution, and these guidelines
++should not prevent developers from doing the right thing when the need
++arises.  But one should always think about whether the need has truly
++arisen and be prepared to explain why something abnormal needs to be done. 
+-- 
+2.21.0
+
