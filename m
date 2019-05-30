@@ -2,145 +2,66 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78763C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB6BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4042620A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QntIfn3Q"
+	by mail.kernel.org (Postfix) with ESMTP id E3AA226217
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfE3VzA (ORCPT
+        id S1726787AbfE3Vxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:55:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39903 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbfE3Vy6 (ORCPT
+        Thu, 30 May 2019 17:53:51 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60834 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfE3Vxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:54:58 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v2so6183695oie.6;
-        Thu, 30 May 2019 14:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=tFR5eWyyHKLzv/rG+/k1EP28VfnvmUHd1en3f8cuet4=;
-        b=QntIfn3QP7w8OAf3KeLsA35GzvqasynhBr/LPKQ9UMSeS7sqkj18UbNYx/lJnWUJpx
-         f9XhduhHSqYQrgukNTzCY6WtbcIgGHsNYgnGj2IhxiM0AVHY2+kyTEyxdSCPnZMVDLIx
-         9F25FqTBOpb+X9YuJjyHH3ZeN/n7u048oiFLngFfpUu8oI0RouCxcc88D1IA4PwTWbV6
-         YeeIFLwG3GLDmk1UTKsyorsyB8oh3Cc+b4Ql1DRnh02Uyw3Mddx82RmNGlqoHGX8YCHx
-         neY4bedgWaliCWNuwj2x5E4P1f3BsPX6mffX4wlZD7UVun/2Shv7YNn8yRoAMtSRlhmk
-         Enrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=tFR5eWyyHKLzv/rG+/k1EP28VfnvmUHd1en3f8cuet4=;
-        b=LMMseEKlSNSmzCYwqqFLuqEcinAe8xbhNXntLvVE1bcZw6U2of7TlkYCnU80eG7S3l
-         FhljUUYYK2GR2j7jIuE1JdVLVVlzHzWPgBcIbuHM4dg3K8nVkbynopNkH1hYk+kCFEd9
-         ynBNl1iDwHhCyBGGcuZt/Pc/DAcvtqCR76lrv4XxSvxdPzTP9tWnvQ6YV/g4+L5SsL1f
-         w28avHQp/r7XSAOtZ5cwpyl4LmHfw++DTp07JcZWIhAY3BSD9O4TLz+Zg3hUYZwrAucx
-         1DFGgVZA4vwMeCkhWIBbRoupjgDVYfc7HSaninW/vNGMvT4Wtm8J2MFINgBKkRtIrVb2
-         W5kg==
-X-Gm-Message-State: APjAAAVhdTCNcylZwvyZT2wzf2fkcADyEJozArmb3Q3d9cX0sr7G5fac
-        lpt2SPBSXHV5r2Awy1n0Ysk=
-X-Google-Smtp-Source: APXvYqxfGBCA97YkaWM4wjgbjBJNwlQrAjyiLnkd5V2gUCN0ncNK3/MIrN/Ma+crH/dforiEy7/ROg==
-X-Received: by 2002:aca:4e42:: with SMTP id c63mr4187588oib.170.1559253298022;
-        Thu, 30 May 2019 14:54:58 -0700 (PDT)
-Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
-        by smtp.gmail.com with ESMTPSA id 33sm1412918otb.56.2019.05.30.14.54.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 14:54:57 -0700 (PDT)
-Subject: [RFC PATCH 11/11] mm: Add free page notification hook
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Date:   Thu, 30 May 2019 14:54:55 -0700
-Message-ID: <20190530215455.13974.87717.stgit@localhost.localdomain>
-In-Reply-To: <20190530215223.13974.22445.stgit@localhost.localdomain>
-References: <20190530215223.13974.22445.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Thu, 30 May 2019 17:53:50 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B069C14DB1C74;
+        Thu, 30 May 2019 14:34:45 -0700 (PDT)
+Date:   Thu, 30 May 2019 14:34:45 -0700 (PDT)
+Message-Id: <20190530.143445.293369224441787273.davem@davemloft.net>
+To:     mcroce@redhat.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: avoid indirect calls in L4 checksum
+ calculation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190529151348.31311-1-mcroce@redhat.com>
+References: <20190529151348.31311-1-mcroce@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 14:34:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+From: Matteo Croce <mcroce@redhat.com>
+Date: Wed, 29 May 2019 17:13:48 +0200
 
-Add a hook so that we are notified when a new page is available. We will
-use this hook to notify the virtio aeration system when we have achieved
-enough free higher-order pages to justify the process of pulling some pages
-and hinting on them.
+> Commit 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up
+> indirect calls of builtin") introduces some macros to avoid doing
+> indirect calls.
+> 
+> Use these helpers to remove two indirect calls in the L4 checksum
+> calculation for devices which don't have hardware support for it.
+> 
+> As a test I generate packets with pktgen out to a dummy interface
+> with HW checksumming disabled, to have the checksum calculated in
+> every sent packet.
+> The packet rate measured with an i7-6700K CPU and a single pktgen
+> thread raised from 6143 to 6608 Kpps, an increase by 7.5%
+> 
+> Suggested-by: Davide Caratti <dcaratti@redhat.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- arch/x86/include/asm/page.h |   11 +++++++++++
- include/linux/gfp.h         |    4 ++++
- mm/page_alloc.c             |    2 ++
- 3 files changed, 17 insertions(+)
-
-diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-index 7555b48803a8..dfd546230120 100644
---- a/arch/x86/include/asm/page.h
-+++ b/arch/x86/include/asm/page.h
-@@ -18,6 +18,17 @@
- 
- struct page;
- 
-+#ifdef CONFIG_AERATION
-+#include <linux/memory_aeration.h>
-+
-+#define HAVE_ARCH_FREE_PAGE_NOTIFY
-+static inline void
-+arch_free_page_notify(struct page *page, struct zone *zone, int order)
-+{
-+	aerator_notify_free(page, zone, order);
-+}
-+
-+#endif
- #include <linux/range.h>
- extern struct range pfn_mapped[];
- extern int nr_pfn_mapped;
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 407a089d861f..d975e7eabbf8 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -459,6 +459,10 @@ static inline struct zonelist *node_zonelist(int nid, gfp_t flags)
- #ifndef HAVE_ARCH_FREE_PAGE
- static inline void arch_free_page(struct page *page, int order) { }
- #endif
-+#ifndef HAVE_ARCH_FREE_PAGE_NOTIFY
-+static inline void
-+arch_free_page_notify(struct page *page, struct zone *zone, int order) { }
-+#endif
- #ifndef HAVE_ARCH_ALLOC_PAGE
- static inline void arch_alloc_page(struct page *page, int order) { }
- #endif
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e3800221414b..104763034ce3 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -999,6 +999,8 @@ static inline void __free_one_page(struct page *page,
- 		add_to_free_area_tail(page, area, migratetype);
- 	else
- 		add_to_free_area(page, area, migratetype);
-+
-+	arch_free_page_notify(page, zone, order);
- }
- 
- /*
-
+Applied.
