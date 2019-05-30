@@ -2,112 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE357C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7F4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5FA2578D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f+Oh6cI/"
+	by mail.kernel.org (Postfix) with ESMTP id 1E344257AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfE3Kyv (ORCPT
+        id S1726768AbfE3LAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:54:51 -0400
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:46006 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbfE3Kyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:54:51 -0400
-Received: by mail-ot1-f45.google.com with SMTP id t24so5130196otl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 03:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H9yxvCBVLUZ22iym/X49g7BmHyoRHVeYfpzhUUaExWk=;
-        b=f+Oh6cI/+BXPVeuDxFfHoLSzuWDrYh7O/5x6u6aq/mFFWzISCX7o9nZZYGMesH4+D/
-         pQl6V3p5ozIEo6z7k9LdXIqP6UaSSD8yIdtDeBDhdbkoUAXGUzvmuunmn3GR5oUkXhtF
-         1jHM5F44DvOIDq4BHcDgpTjBZkA9iMfAE+SQ8kC8CZFSbYow6gEMtObX9AlJlgCHY6TS
-         +0E70BJQS/cCiz7H5GdwtmUuKihM+PQMVQsXFBDmMxqDji3sbk6oQ78lafiur047Vrt3
-         i293GhbZ2MqJ7zfjDkGVxxCRkC4SIyVNnbhkk7bA3CDz1xQECHp0pBC+b16v3QZwPKHo
-         wFJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H9yxvCBVLUZ22iym/X49g7BmHyoRHVeYfpzhUUaExWk=;
-        b=YXGivxz2rLK7TTOQDOLEltWzMt1ad0hnpzY0MJy6h8jk/YDyxoM2pOlUB3jVfGX5se
-         6ky137my3CF4ejCVmHEQu1bg33fjps7SUv0Fa8JUUkhCNwLqUtqRTB8Im1W1F7IFkRsL
-         YUUuCe9Jy3wjLZtVX7F5PYwHAHAmjwLgzzZoSJ5lKRopgnr0TstU2ZDgIQPR1jWlFTxf
-         c+PwxQdiyv1qc5pColMQCjWgblPKO56y+Ijnb7nNB20NE6o09I8nS4pvKMdXsAXcet2N
-         as+RMr/kABflnqVEySC7KnXu4oQAvj15OrfuCDXwUMGJNETir/pZlGjKKxnfsvLQSpCs
-         +4Mw==
-X-Gm-Message-State: APjAAAW61BG7Jahh49IltqoOINuItwzznoVTa/C/ykPDgWKSjzVN6tEw
-        YNcIljJmK8hlc6QOjG207rP5ZA==
-X-Google-Smtp-Source: APXvYqzrwDU340MtHjWTjnUNSNlrdSArjnqCVKEBR3/2qQV4Yxlwn7OtgMX4ZGuWt7LiDY3MzbBLIA==
-X-Received: by 2002:a05:6830:1408:: with SMTP id v8mr2180538otp.48.1559213690489;
-        Thu, 30 May 2019 03:54:50 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
-        by smtp.gmail.com with ESMTPSA id l20sm810412otj.62.2019.05.30.03.54.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2019 03:54:49 -0700 (PDT)
-Date:   Thu, 30 May 2019 18:54:39 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCHv3 00/12] perf tools: Display eBPF code in intel_pt trace
-Message-ID: <20190530105439.GA5927@leoy-ThinkPad-X240s>
-References: <20190508132010.14512-1-jolsa@kernel.org>
+        Thu, 30 May 2019 07:00:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50354 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726359AbfE3LA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:00:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A629AEB8;
+        Thu, 30 May 2019 11:00:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 928B31E3C08; Thu, 30 May 2019 13:00:24 +0200 (CEST)
+Date:   Thu, 30 May 2019 13:00:24 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 0/7] Mount, FS, Block and Keyrings notifications
+Message-ID: <20190530110024.GB29237@quack2.suse.cz>
+References: <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjC1M7jwjd9zSaSa6UW2dbEjc+ZbFSo7j9F1YHAQxQ8LQ@mail.gmail.com>
+ <20190529142504.GC32147@quack2.suse.cz>
+ <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508132010.14512-1-jolsa@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAOQ4uxjLzURf8c1UH_xCJKkuD2es8i-=P-ZNM=t3aFcZLMwXEg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
-
-On Wed, May 08, 2019 at 03:19:58PM +0200, Jiri Olsa wrote:
-> hi,
-> this patchset adds dso support to read and display
-> bpf code in intel_pt trace output. I had to change
-> some of the kernel maps processing code, so hopefully
-> I did not break too many things ;-)
+On Wed 29-05-19 18:53:21, Amir Goldstein wrote:
+> > > David,
+> > >
+> > > I am interested to know how you envision filesystem notifications would
+> > > look with this interface.
+> > >
+> > > fanotify can certainly benefit from providing a ring buffer interface to read
+> > > events.
+> > >
+> > > From what I have seen, a common practice of users is to monitor mounts
+> > > (somehow) and place FAN_MARK_MOUNT fanotify watches dynamically.
+> > > It'd be good if those users can use a single watch mechanism/API for
+> > > watching the mount namespace and filesystem events within mounts.
+> > >
+> > > A similar usability concern is with sb_notify and FAN_MARK_FILESYSTEM.
+> > > It provides users with two complete different mechanisms to watch error
+> > > and filesystem events. That is generally not a good thing to have.
+> > >
+> > > I am not asking that you implement fs_notify() before merging sb_notify()
+> > > and I understand that you have a use case for sb_notify().
+> > > I am asking that you show me the path towards a unified API (how a
+> > > typical program would look like), so that we know before merging your
+> > > new API that it could be extended to accommodate fsnotify events
+> > > where the final result will look wholesome to users.
+> >
+> > Are you sure we want to combine notification about file changes etc. with
+> > administrator-type notifications about the filesystem? To me these two
+> > sound like rather different (although sometimes related) things.
+> >
 > 
-> It's now possible to see bpf code flow via:
+> Well I am sure that ring buffer for fanotify events would be useful, so
+> seeing that David is proposing a generic notification mechanism, I wanted
+> to know how that mechanism could best share infrastructure with fsnotify.
 > 
->   # perf-with-kcore record pt -e intel_pt//ku -- sleep 1
->   # perf-with-kcore script pt --insn-trace --xed
+> But apart from that I foresee the questions from users about why the
+> mount notification API and filesystem events API do not have better
+> integration.
+> 
+> The way I see it, the notification queue can serve several classes
+> of notifications and fsnotify could be one of those classes
+> (at least FAN_CLASS_NOTIF fits nicely to the model).
 
-This is very interesting work for me!
+I agree that for some type of fsnotify uses a ring buffer would make sense.
+But for others - such as permission events or unlimited queues - you cannot
+really use the ring buffer and I don't like the idea of having different
+ways of passing fsnotify events to userspace based on notification group
+type...
 
-I want to verify this feature with Arm CoreSight trace, I have one
-question so that I have more direction for the tesing:
-
-What's the bpf program you are suing for the testing?  e.g. some
-testing program under the kernel's folder $kernel/samples/bpf?
-Or you uses perf command to launch bpf program?
-
-[...]
-
-Thanks
-Leo Yan
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
