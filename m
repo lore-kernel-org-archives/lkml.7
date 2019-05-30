@@ -2,58 +2,59 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8FAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2999FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EE825F63
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066DE25F5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUINiA4t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NTEyy87m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfE3SUw (ORCPT
+        id S1726738AbfE3SUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:20:52 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38478 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfE3SUv (ORCPT
+        Thu, 30 May 2019 14:20:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36249 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfE3SUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:20:51 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b11so5794384lfa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:50 -0700 (PDT)
+        Thu, 30 May 2019 14:20:53 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m22so6787279ljc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=8x97jd39TwyBk8v0q4IVmayr713NLQSBbX6u/ZPdPME=;
-        b=qUINiA4ttbzBtbe1hlkF3Nw+walwKPKkCWoqKpBx5LsOqYa9O8VkD3su5CoY7cmEpv
-         sgoUuAMAqL7oUQ3pq0y/mNdHF0vxBxthSplDF5bOmjYiTbcfaiyDm8+FCeCgCD89vMFs
-         o5bCIcAltuCh7c/TMagy62EwPDHKdf6NP4tU/AhF73C7sSCTKXiF6Q0XmE7DmrkjVaql
-         6Ts21LwqV/nGuAiyDjT6jtRHz4x+vB/83M6hUPrIvD0djrh4cya/WOQG+zb1YvjXmhtc
-         DKM4aJZJhuxlWhYQ41SmVt5mxZSowZxZwn35scDT3sVdR5H7FJtheqvfkmJ2xLUaXJXZ
-         6aVg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=AdSMTsu+LtgUCnPNRXGwSYsCPQyqbNfQqw5/RcvDJNQ=;
+        b=NTEyy87mbpZennf/zO3UY3SG/jU34eWt9oBeag4D8YjahXlGpvo7jFJ45TsemIdnir
+         GDDTpbKLurGeDuALSvM6j7s2xNdezurfEaq3Do0FdVu1zSrcVUfBnzEjlX9CPvMPhzYJ
+         syvG28Ahiha6P8q/z1kIyl0178d00DQHN+sX/j5wk8ko44/63zLEGfJyi7VPUdIJ0LKG
+         TgaTpYJ6tpJG3xAZrI95TMKLk8q+WGk0L19nUTHjuhUVz5EeWBCSPoZe7eWVxtRSZtYW
+         kYjH1/WFTyKdQ+VO2y6VV9nuGp1SruffgOv8KjxhvVfDhLZ+qlpEcUfBKzBd6xbaakTA
+         2nxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8x97jd39TwyBk8v0q4IVmayr713NLQSBbX6u/ZPdPME=;
-        b=AZtctgWctdGsBeZPkdtZ/gtpDNkItm3ZCrqEoqlmeaVD2aTR/m7nZOHH+mFs7OT+mr
-         ut6MptdqFBUY8dXOLCiPzn3czHinFabMdxtl+WZRkAkaqDz+kmcI9z6Hjrb0LYaUr10e
-         wZCblhK/uCISTkt0ud4SEgCOviS2pXhvaMnyV6ajfEX/rNLlIJrY6FGB65eiUYR0eI2o
-         FWP+EDi6bHyLpHz72BXe6i7iXhCsg7JeJhh7lst3butXKEDjITH1gGYP9gLpWgDlttRW
-         1B3LsBdm7LVLY0s5rohc66l9+nMfQ3CNjpG0x18+FetqIco/pDaVuxVj3lk2IR5Q7OsL
-         jE8w==
-X-Gm-Message-State: APjAAAVS8/152jLwnh5/JcnD8jm8yeINzwi4XJGv8bYYsZoUTuo0fsri
-        VRBlzh3sJwwimJBZLgnFNiYKzg==
-X-Google-Smtp-Source: APXvYqwkzz3vxranwYdEP7uuv1JNKx8JMvIdv7IdoppufWr3JFhZFcY716iTa5IT+G6Bn2TcmtwUTw==
-X-Received: by 2002:ac2:5922:: with SMTP id v2mr2926685lfi.180.1559240449769;
-        Thu, 30 May 2019 11:20:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=AdSMTsu+LtgUCnPNRXGwSYsCPQyqbNfQqw5/RcvDJNQ=;
+        b=ZXKmn5oJ3RdxFXn7L45+qx3OR9LYg+lkNjAjsoI7YEbhClxvDQKdTo5qM+uaf6JtCX
+         TnwXaFZ+kxTns3ZbJtqTomkOgYXbGoNJbJhvp7YFj6fOexA9Q6rmpdqM4StFZdc/IZY4
+         /KzsUo6uwmd49Kjr245wb/SLi5vs4b+rCXIv10BITYM7q+1bvGU/YPj12x5IgWlJZpEH
+         jdo1mhZq+Uf16sBrZcvKa3JlSkQlXQLC9vgIUUEYU70p12riYcZPVOnGEL0R3aQMgC9n
+         esXMo87jmINpB5wioVd5101twCZsKPyeBohBZp1EHlKEHyD82Bsm8QHPVIXagnVe1Ydf
+         0g4A==
+X-Gm-Message-State: APjAAAWnkrI97YA/D4UxSxkR86ufAA/OO5e5YaVoWvx0mK3TRCYRbE5G
+        dX/4+un9QEZkeINWt6PiN1wrve6Tq6U=
+X-Google-Smtp-Source: APXvYqwcOOLVdQF2eRwE44U7qP1o+9tRsDYFuMaBYPD6l5MItx//FH0w80EsZyjHpAQDOz9EOA3SFQ==
+X-Received: by 2002:a2e:9756:: with SMTP id f22mr3083605ljj.30.1559240451067;
+        Thu, 30 May 2019 11:20:51 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.48
+        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:20:49 -0700 (PDT)
+        Thu, 30 May 2019 11:20:50 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -61,73 +62,47 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v2 net-next 0/7] net: ethernet: ti: cpsw: Add XDP support
-Date:   Thu, 30 May 2019 21:20:32 +0300
-Message-Id: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v2 net-next 1/7] net: page_pool: add helper function to retrieve dma addresses
+Date:   Thu, 30 May 2019 21:20:33 +0300
+Message-Id: <20190530182039.4945-2-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds XDP support for TI cpsw driver and base it on
-page_pool allocator. It was verified on af_xdp socket drop,
-af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-It was verified with following configs enabled:
-CONFIG_JIT=y
-CONFIG_BPFILTER=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_XDP_SOCKETS=y
-CONFIG_BPF_EVENTS=y
-CONFIG_HAVE_EBPF_JIT=y
-CONFIG_BPF_JIT=y
-CONFIG_CGROUP_BPF=y
+On a previous patch dma addr was stored in 'struct page'.
+Use that to retrieve DMA addresses used by network drivers
 
-Link on previous v1:
-https://lkml.org/lkml/2019/5/23/795
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ include/net/page_pool.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Also regular tests with iperf2 were done in order to verify impact on
-regular netstack performance, compared with base commit:
-https://pastebin.com/JSMT0iZ4
-
-v1..v2:
-- combined xdp_xmit functions
-- used page allocation w/o refcnt juggle
-- unmapped page for skb netstack
-- moved rxq/page pool allocation to open/close pair
-- added several preliminary patches:
-  net: page_pool: add helper function to retrieve dma addresses
-  net: page_pool: add helper function to unmap dma addresses
-  net: ethernet: ti: cpsw: use cpsw as drv data
-  net: ethernet: ti: cpsw_ethtool: simplify slave loops
-
-
-Based on net-next/master
-
-Ilias Apalodimas (2):
-  net: page_pool: add helper function to retrieve dma addresses
-  net: page_pool: add helper function to unmap dma addresses
-
-Ivan Khoronzhuk (5):
-  net: ethernet: ti: cpsw: use cpsw as drv data
-  net: ethernet: ti: cpsw_ethtool: simplify slave loops
-  net: ethernet: ti: davinci_cpdma: add dma mapped submit
-  net: ethernet: ti: davinci_cpdma: return handler status
-  net: ethernet: ti: cpsw: add XDP support
-
- drivers/net/ethernet/ti/Kconfig         |   1 +
- drivers/net/ethernet/ti/cpsw.c          | 537 ++++++++++++++++++++----
- drivers/net/ethernet/ti/cpsw_ethtool.c  | 136 +++++-
- drivers/net/ethernet/ti/cpsw_priv.h     |  12 +-
- drivers/net/ethernet/ti/davinci_cpdma.c | 122 ++++--
- drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
- drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
- include/net/page_pool.h                 |   6 +
- net/core/page_pool.c                    |   7 +
- 9 files changed, 710 insertions(+), 135 deletions(-)
-
+diff --git a/include/net/page_pool.h b/include/net/page_pool.h
+index 694d055e01ef..b885d86cb7a1 100644
+--- a/include/net/page_pool.h
++++ b/include/net/page_pool.h
+@@ -132,6 +132,11 @@ static inline void page_pool_recycle_direct(struct page_pool *pool,
+ 	__page_pool_put_page(pool, page, true);
+ }
+ 
++static inline dma_addr_t page_pool_get_dma_addr(struct page *page)
++{
++	return page->dma_addr;
++}
++
+ static inline bool is_page_pool_compiled_in(void)
+ {
+ #ifdef CONFIG_PAGE_POOL
 -- 
 2.17.1
 
