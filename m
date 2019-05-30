@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A697FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83DEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A7B24B3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB1C24B53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187267;
-	bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+	s=default; t=1559187270;
+	bh=WIW7TRRR60WvoppCDT/V9I9oaUVjM2Daff/dvhwr9FE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lylk6zahSTZOsrryqwxTiJU4+1sd4r+RChChv/QOwvTOEYq22/l73fXmTNCqspOrN
-	 yVdxvzXL7cOfVzMTXUTr27b22lRNmwmthAyJjxULCpuI7du+UtLUM6hf6rezpFXJct
-	 IrFrSuuerg13D1MKnQbHeX/AmoMSGmtcuYSFFeWE=
+	b=K515z7EcGkfbSOsTr96pXBAItRkSsgpccvo30E6mnLwRKJFx79iX+d5Dcy+91Eg8A
+	 E8fC0untZgP6yhXhCmb+FWzJZf9MdicqgKflzotbbhqQUJ881F9wCtD1BvrV0KVR/t
+	 FsfX9IjQemdBBTwRioxSJIXgfJRwfaLW4bxxLKC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733010AbfE3D1R (ORCPT
+        id S2387963AbfE3D1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731864AbfE3DTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731865AbfE3DTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:19:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1BE824871;
-        Thu, 30 May 2019 03:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66BA924725;
+        Thu, 30 May 2019 03:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186359;
-        bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+        s=default; t=1559186360;
+        bh=WIW7TRRR60WvoppCDT/V9I9oaUVjM2Daff/dvhwr9FE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCtIS8QHlwpjBNxR2kh9vJ1KLM1pBCth8+/zx+4z5YVmR8qwGXUni/Aaqr74dGxsh
-         KUKMUJimUDDbDOIBqKwrzCEieyT3Pn4/W0KVKyMEH//Z8I5BDSs65Y342KxN5Gkec+
-         bVeKpgDgEB4fKOIseV7+sf1H7Pd5OhoFQV6m6A74=
+        b=mAUP/Q0vL0twBF8Jv3N6kr9edxNN6QGPmXSxYG39g7iXJu2rNCI4yELqsW3Ded9ux
+         S7fZrhQ6lNtPO1qb/6SbhZIPvpt3oe8tsSlp8uls5dA4adoJA0Y0c1um2KdU0+zBIr
+         ExOom+Myjd9VQKhf68/fvIwfVcikwpE6Vn7HetCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/193] x86/irq/64: Limit IST stack overflow check to #DB stack
-Date:   Wed, 29 May 2019 20:05:59 -0700
-Message-Id: <20190530030503.464322165@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 106/193] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
+Date:   Wed, 29 May 2019 20:06:00 -0700
+Message-Id: <20190530030503.576175153@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -66,80 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
+[ Upstream commit e6f32efb1b128344a2c7df9875bc1a1abaa1d395 ]
 
-Commit
+On platforms where the MUSB and HCI controllers share PHY0, PHY passby
+is required when using the HCI controller with the PHY, but it must be
+disabled when the MUSB controller is used instead.
 
-  37fe6a42b343 ("x86: Check stack overflow in detail")
+Without this, PHY0 passby is always enabled, which results in broken
+peripheral mode on such platforms (e.g. H3/H5).
 
-added a broad check for the full exception stack area, i.e. it considers
-the full exception stack area as valid.
+Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
 
-That's wrong in two aspects:
-
- 1) It does not check the individual areas one by one
-
- 2) #DF, NMI and #MCE are not enabling interrupts which means that a
-    regular device interrupt cannot happen in their context. In fact if a
-    device interrupt hits one of those IST stacks that's a bug because some
-    code path enabled interrupts while handling the exception.
-
-Limit the check to the #DB stack and consider all other IST stacks as
-'overflow' or invalid.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 0469cd078db15..b50ac9c7397bb 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
- /*
-  * Probabilistic stack overflow check:
-  *
-- * Only check the stack in process context, because everything else
-- * runs on the big interrupt stacks. Checking reliably is too expensive,
-- * so we just check from interrupts.
-+ * Regular device interrupts can enter on the following stacks:
-+ *
-+ * - User stack
-+ *
-+ * - Kernel task stack
-+ *
-+ * - Interrupt stack if a device driver reenables interrupts
-+ *   which should only happen in really old drivers.
-+ *
-+ * - Debug IST stack
-+ *
-+ * All other contexts are invalid.
-  */
- static inline void stack_overflow_check(struct pt_regs *regs)
- {
-@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 		return;
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 4d34dfb64998f..46d60a3bf2608 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -549,6 +549,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
++	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
+ 	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
  
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
--	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
-+	estack_bottom = (u64)oist->ist[DEBUG_STACK];
-+	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
- 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
- 		return;
+@@ -605,6 +606,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 			mutex_unlock(&phy0->mutex);
+ 		}
  
++		/* Enable PHY0 passby for host mode only. */
++		sun4i_usb_phy_passby(phy, !id_det);
++
+ 		/* Re-route PHY0 if necessary */
+ 		if (data->cfg->phy0_dual_route)
+ 			sun4i_usb_phy0_reroute(data, id_det);
 -- 
 2.20.1
 
