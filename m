@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3DDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC329C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B9A24658
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7918424E0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188385;
-	bh=/9gO1owKbVSEM1J1l/p0XqI3NOncT/RkO+xEAx1EsGc=;
+	s=default; t=1559188391;
+	bh=2YrukC3cEquubOCbw1IuRKiQl5aoHpT/7i1Fh9AHkO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5kXWEdsErDycriBahz6V1zmI1phIuRyARaED5HiVelf85CFm6O19BRZpHXo+2uwW
-	 /g45IkydA3fHajkntpqdWJT80oz3a6Nb9BhGDhSZSEyji8SNGFerECd1TB5lMXPIPV
-	 g3JslQ+TOvYitideUb2n3HrftYYCtxQCUokktHVo=
+	b=tbAhPb1mtZUFh5sahj1YMPIGuJfyAFFRnPucUrA5r9P9QIDmjnpebrepxiELn3I5D
+	 ZH26SQR0yx9SONUFE32XSWNQHLvahg1KGTK1WHuak5i6N7JSM+IGCXFvChzgaFHZcG
+	 xGX59Z4QHndnM1MPojwBjb/5M68a7niAhzzOTfoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387790AbfE3DxD (ORCPT
+        id S1731979AbfE3DTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:53:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55652 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731932AbfE3DTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:33 -0400
+        id S1730362AbfE3DPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C6E24820;
-        Thu, 30 May 2019 03:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF02024569;
+        Thu, 30 May 2019 03:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186372;
-        bh=/9gO1owKbVSEM1J1l/p0XqI3NOncT/RkO+xEAx1EsGc=;
+        s=default; t=1559186133;
+        bh=2YrukC3cEquubOCbw1IuRKiQl5aoHpT/7i1Fh9AHkO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jw+mLu1NQMYQ8LmX/NMQYBjb4hathAmsul7rNDgO2YzDUAmiB89fqjmsdsv1TItc4
-         YPzN/Hg+I3FQQqvTBgHqhziKYd9pcUGdq4Q971DdU6yDmTzqtL2uEvK1+TQyufTWiC
-         B/lK6kCK4h4MNmiWC4gAJqaabUhfvYN8emZ9hkeg=
+        b=gJkkS/wFITPWgP38JbiVNmg4nEAkLI1IjY6htcHpNog+iPuDnXrIYAfZDwh9xdUYO
+         swsLPRG4G4Ctgi6LYhIrlJriiYz2Tk/XgR6840H2FwJEOKuA1Z6VjB5X1K/en61b9d
+         Pc2w5xIWS6Be8KaZW9mYZ9ly7dcHg2iG1rnd8X0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 130/193] cpufreq: ppc_cbe: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:06:24 -0700
-Message-Id: <20190530030506.541854823@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 298/346] media: dvbsky: Avoid leaking dvb frontend
+Date:   Wed, 29 May 2019 20:06:11 -0700
+Message-Id: <20190530030555.955572319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 233298032803f2802fe99892d0de4ab653bfece4 ]
+[ Upstream commit fdfa59cd63b184e1e96d51ff170fcac739bc6f6f ]
 
-The call to of_get_cpu_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Commit 14f4eaeddabc ("media: dvbsky: fix driver unregister logic") fixed
+a use-after-free by removing the reference to the frontend after deleting
+the backing i2c device.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/ppc_cbe_cpufreq.c:89:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 76, but without a corresponding object release within this function.
-./drivers/cpufreq/ppc_cbe_cpufreq.c:89:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 76, but without a corresponding object release within this function.
+This has the unfortunate side effect the frontend device is never freed
+in the dvb core leaving a dangling device, leading to errors when the
+dvb core tries to register the frontend after e.g. a replug as reported
+here: https://www.spinics.net/lists/linux-media/msg138181.html
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+media: dvbsky: issues with DVBSky T680CI
+
+===
+[  561.119145] sp2 8-0040: CIMaX SP2 successfully attached
+[  561.119161] usb 2-3: DVB: registering adapter 0 frontend 0 (Silicon Labs
+Si2168)...
+[  561.119174] sysfs: cannot create duplicate filename '/class/dvb/
+dvb0.frontend0'
+===
+
+The use after free happened as dvb_usbv2_disconnect calls in this order:
+- dvb_usb_device::props->exit(...)
+- dvb_usbv2_adapter_frontend_exit(...)
+  + if (fe) dvb_unregister_frontend(fe)
+  + dvb_usb_device::props->frontend_detach(...)
+
+Moving the release of the i2c device from exit() to frontend_detach()
+avoids the dangling pointer access and allows the core to unregister
+the frontend.
+
+This was originally reported for a DVBSky T680CI, but it also affects
+the MyGica T230C. As all supported devices structure the registration/
+unregistration identically, apply the change for all device types.
+
+Signed-off-by: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/ppc_cbe_cpufreq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/dvb-usb-v2/dvbsky.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
-index 5a4c5a639f618..2eaeebcc93afe 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq.c
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
-@@ -86,6 +86,7 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	if (!cbe_get_cpu_pmd_regs(policy->cpu) ||
- 	    !cbe_get_cpu_mic_tm_regs(policy->cpu)) {
- 		pr_info("invalid CBE regs pointers for cpufreq\n");
-+		of_node_put(cpu);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+index e28bd8836751e..ae0814dd202a6 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -615,16 +615,18 @@ static int dvbsky_init(struct dvb_usb_device *d)
+ 	return 0;
+ }
  
+-static void dvbsky_exit(struct dvb_usb_device *d)
++static int dvbsky_frontend_detach(struct dvb_usb_adapter *adap)
+ {
++	struct dvb_usb_device *d = adap_to_d(adap);
+ 	struct dvbsky_state *state = d_to_priv(d);
+-	struct dvb_usb_adapter *adap = &d->adapter[0];
++
++	dev_dbg(&d->udev->dev, "%s: adap=%d\n", __func__, adap->id);
+ 
+ 	dvb_module_release(state->i2c_client_tuner);
+ 	dvb_module_release(state->i2c_client_demod);
+ 	dvb_module_release(state->i2c_client_ci);
+ 
+-	adap->fe[0] = NULL;
++	return 0;
+ }
+ 
+ /* DVB USB Driver stuff */
+@@ -640,11 +642,11 @@ static struct dvb_usb_device_properties dvbsky_s960_props = {
+ 
+ 	.i2c_algo         = &dvbsky_i2c_algo,
+ 	.frontend_attach  = dvbsky_s960_attach,
++	.frontend_detach  = dvbsky_frontend_detach,
+ 	.init             = dvbsky_init,
+ 	.get_rc_config    = dvbsky_get_rc_config,
+ 	.streaming_ctrl   = dvbsky_streaming_ctrl,
+ 	.identify_state	  = dvbsky_identify_state,
+-	.exit             = dvbsky_exit,
+ 	.read_mac_address = dvbsky_read_mac_addr,
+ 
+ 	.num_adapters = 1,
+@@ -667,11 +669,11 @@ static struct dvb_usb_device_properties dvbsky_s960c_props = {
+ 
+ 	.i2c_algo         = &dvbsky_i2c_algo,
+ 	.frontend_attach  = dvbsky_s960c_attach,
++	.frontend_detach  = dvbsky_frontend_detach,
+ 	.init             = dvbsky_init,
+ 	.get_rc_config    = dvbsky_get_rc_config,
+ 	.streaming_ctrl   = dvbsky_streaming_ctrl,
+ 	.identify_state	  = dvbsky_identify_state,
+-	.exit             = dvbsky_exit,
+ 	.read_mac_address = dvbsky_read_mac_addr,
+ 
+ 	.num_adapters = 1,
+@@ -694,11 +696,11 @@ static struct dvb_usb_device_properties dvbsky_t680c_props = {
+ 
+ 	.i2c_algo         = &dvbsky_i2c_algo,
+ 	.frontend_attach  = dvbsky_t680c_attach,
++	.frontend_detach  = dvbsky_frontend_detach,
+ 	.init             = dvbsky_init,
+ 	.get_rc_config    = dvbsky_get_rc_config,
+ 	.streaming_ctrl   = dvbsky_streaming_ctrl,
+ 	.identify_state	  = dvbsky_identify_state,
+-	.exit             = dvbsky_exit,
+ 	.read_mac_address = dvbsky_read_mac_addr,
+ 
+ 	.num_adapters = 1,
+@@ -721,11 +723,11 @@ static struct dvb_usb_device_properties dvbsky_t330_props = {
+ 
+ 	.i2c_algo         = &dvbsky_i2c_algo,
+ 	.frontend_attach  = dvbsky_t330_attach,
++	.frontend_detach  = dvbsky_frontend_detach,
+ 	.init             = dvbsky_init,
+ 	.get_rc_config    = dvbsky_get_rc_config,
+ 	.streaming_ctrl   = dvbsky_streaming_ctrl,
+ 	.identify_state	  = dvbsky_identify_state,
+-	.exit             = dvbsky_exit,
+ 	.read_mac_address = dvbsky_read_mac_addr,
+ 
+ 	.num_adapters = 1,
+@@ -748,11 +750,11 @@ static struct dvb_usb_device_properties mygica_t230c_props = {
+ 
+ 	.i2c_algo         = &dvbsky_i2c_algo,
+ 	.frontend_attach  = dvbsky_mygica_t230c_attach,
++	.frontend_detach  = dvbsky_frontend_detach,
+ 	.init             = dvbsky_init,
+ 	.get_rc_config    = dvbsky_get_rc_config,
+ 	.streaming_ctrl   = dvbsky_streaming_ctrl,
+ 	.identify_state	  = dvbsky_identify_state,
+-	.exit             = dvbsky_exit,
+ 
+ 	.num_adapters = 1,
+ 	.adapter = {
 -- 
 2.20.1
 
