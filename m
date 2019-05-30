@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28149C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F765C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37A2245A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBA8245AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186107;
-	bh=jbUgxzC1P1dcl4lQYxJurSTa42eGwoXCqACb1Nmkxjs=;
+	s=default; t=1559186112;
+	bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ll9h9wblXNMqaVm2Ccr1PWOaKb9jgEs+4yU9Jng8/357H/DejDKLcKwczJZlIBBkV
-	 4AgpyxZLhSYrHW/JqGXPRofbv+9JXERbYaZ7+nX5gSVViMshU6a/SSeaBZ9SgocDkD
-	 Ls3cJPFpS8gVQr3QENnM6j07mgRAoffhA1duwVtQ=
+	b=PnlXU2AC4jw1kJD27L9t48tJhP4xdHBbDGmoiRDryGCcvqkMxuvNdXPhCwWIhVood
+	 VU/xX4n/RPxUlnfZcBDWdEm+QVWN0eM7Sg5QyuW9eYNXRXSvgBAK4TpP/IZKbPewJE
+	 eejZo6kaZDGWdYU2yYNHPvClh2NuH2Mq5Tud0Z/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfE3DPG (ORCPT
+        id S1730154AbfE3DPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54704 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbfE3DMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:23 -0400
+        id S1729058AbfE3DM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA44421BE2;
-        Thu, 30 May 2019 03:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CE8218B6;
+        Thu, 30 May 2019 03:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185942;
-        bh=jbUgxzC1P1dcl4lQYxJurSTa42eGwoXCqACb1Nmkxjs=;
+        s=default; t=1559185949;
+        bh=NY+bzGCLjPOwmO4DfrTLzjvI0VS/oC+/ExlyrjN8xHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0AhUGo7/xAojQxjSS3Q3xeAp89DZj0vzJ3D9IS5a8Sa5CfeyxkTIVWRu3JzIhpSm
-         eTBJ+06L6VIxM6x9K3h7HJsBF2Bwi6utH8ftlNnAaJjC2Ynaa8NjlN1EHSo+24huVO
-         O6yq0mnkMEbczywwnlRKCOS9JbWC8sLpU6DjIBAs=
+        b=hmAdeJTB9h4RdHZzpVsLknpTOx+zgsix2PACuYvP1VfetU08/wcZArCFDXYDKQFfI
+         zwVthCc1HI9CT5GU9uJgZPAaKJxq+2vLT5NO+xkW413k75Ss4jhGFZgkBQmsMNLlpk
+         BzLCpguTh4ZJcIkczPFsxArWX/i6tsqlsybWfank=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Leung <martin.leung@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Aidan Wood <Aidan.Wood@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 350/405] drm/amd/display: half bandwidth for YCbCr420 during validation
-Date:   Wed, 29 May 2019 20:05:48 -0700
-Message-Id: <20190530030558.378476809@linuxfoundation.org>
+Subject: [PATCH 5.1 334/405] thunderbolt: property: Fix a NULL pointer dereference
+Date:   Wed, 29 May 2019 20:05:32 -0700
+Message-Id: <20190530030557.612661571@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -63,108 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 162f807858d15bde60cf373a3ad46e03200ad9d8 ]
+[ Upstream commit 106204b56f60abf1bead7dceb88f2be3e34433da ]
 
-[Why]
-used to be unable to run 4:2:0 if using a dongle because 4k60 bandwidth
-exceeded dongle caps
+In case kzalloc fails, the fix releases resources and returns
+-ENOMEM to avoid the NULL pointer dereference.
 
-[How]
-half pixel clock during comparison to dongle cap. *Could get stuck on black
-screen on monitor that don't support 420 but will be selecting 420 as
-preferred mode*
-
-Signed-off-by: Martin Leung <martin.leung@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Aidan Wood <Aidan.Wood@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 33 +++++++++++--------
- 1 file changed, 20 insertions(+), 13 deletions(-)
+ drivers/thunderbolt/property.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index ea2f271e234bd..419e8de8c0f48 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2074,11 +2074,28 @@ static void disable_link(struct dc_link *link, enum signal_type signal)
- 	}
- }
+diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
+index ead18c532b53d..8c077c4f3b5b2 100644
+--- a/drivers/thunderbolt/property.c
++++ b/drivers/thunderbolt/property.c
+@@ -548,6 +548,11 @@ int tb_property_add_data(struct tb_property_dir *parent, const char *key,
  
-+static uint32_t get_timing_pixel_clock_100hz(const struct dc_crtc_timing *timing)
-+{
+ 	property->length = size / 4;
+ 	property->value.data = kzalloc(size, GFP_KERNEL);
++	if (!property->value.data) {
++		kfree(property);
++		return -ENOMEM;
++	}
 +
-+	uint32_t pxl_clk = timing->pix_clk_100hz;
-+
-+	if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR420)
-+		pxl_clk /= 2;
-+	else if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
-+		pxl_clk = pxl_clk * 2 / 3;
-+
-+	if (timing->display_color_depth == COLOR_DEPTH_101010)
-+		pxl_clk = pxl_clk * 10 / 8;
-+	else if (timing->display_color_depth == COLOR_DEPTH_121212)
-+		pxl_clk = pxl_clk * 12 / 8;
-+
-+	return pxl_clk;
-+}
-+
- static bool dp_active_dongle_validate_timing(
- 		const struct dc_crtc_timing *timing,
- 		const struct dpcd_caps *dpcd_caps)
- {
--	unsigned int required_pix_clk_100hz = timing->pix_clk_100hz;
- 	const struct dc_dongle_caps *dongle_caps = &dpcd_caps->dongle_caps;
+ 	memcpy(property->value.data, buf, buflen);
  
- 	switch (dpcd_caps->dongle_type) {
-@@ -2115,13 +2132,6 @@ static bool dp_active_dongle_validate_timing(
- 		return false;
- 	}
- 
--
--	/* Check Color Depth and Pixel Clock */
--	if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR420)
--		required_pix_clk_100hz /= 2;
--	else if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
--		required_pix_clk_100hz = required_pix_clk_100hz * 2 / 3;
--
- 	switch (timing->display_color_depth) {
- 	case COLOR_DEPTH_666:
- 	case COLOR_DEPTH_888:
-@@ -2130,14 +2140,11 @@ static bool dp_active_dongle_validate_timing(
- 	case COLOR_DEPTH_101010:
- 		if (dongle_caps->dp_hdmi_max_bpc < 10)
- 			return false;
--		required_pix_clk_100hz = required_pix_clk_100hz * 10 / 8;
- 		break;
- 	case COLOR_DEPTH_121212:
- 		if (dongle_caps->dp_hdmi_max_bpc < 12)
- 			return false;
--		required_pix_clk_100hz = required_pix_clk_100hz * 12 / 8;
- 		break;
--
- 	case COLOR_DEPTH_141414:
- 	case COLOR_DEPTH_161616:
- 	default:
-@@ -2145,7 +2152,7 @@ static bool dp_active_dongle_validate_timing(
- 		return false;
- 	}
- 
--	if (required_pix_clk_100hz > (dongle_caps->dp_hdmi_max_pixel_clk * 10))
-+	if (get_timing_pixel_clock_100hz(timing) > (dongle_caps->dp_hdmi_max_pixel_clk * 10))
- 		return false;
- 
- 	return true;
-@@ -2166,7 +2173,7 @@ enum dc_status dc_link_validate_mode_timing(
- 		return DC_OK;
- 
- 	/* Passive Dongle */
--	if (0 != max_pix_clk && timing->pix_clk_100hz > max_pix_clk)
-+	if (max_pix_clk != 0 && get_timing_pixel_clock_100hz(timing) > max_pix_clk)
- 		return DC_EXCEED_DONGLE_CAP;
- 
- 	/* Active Dongle*/
+ 	list_add_tail(&property->list, &parent->properties);
 -- 
 2.20.1
 
