@@ -2,154 +2,108 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C50C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F997C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA39243B2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E43E243B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fbbGY86H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfE3AqL (ORCPT
+        id S1727192AbfE3AxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:46:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41436 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbfE3AqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:46:11 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3847281F12;
-        Thu, 30 May 2019 00:46:10 +0000 (UTC)
-Received: from localhost (ovpn-12-25.pek2.redhat.com [10.72.12.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93290617BE;
-        Thu, 30 May 2019 00:46:09 +0000 (UTC)
-Date:   Thu, 30 May 2019 08:46:01 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, bp@alien8.de, stable@vger.kernel.org
-Subject: Re: [PATCH v5] x86/mm/KASLR: Fix the size of vmemmap section
-Message-ID: <20190530004601.GT3805@MiWiFi-R3L-srv>
-References: <20190523025744.3756-1-bhe@redhat.com>
- <20190529131454.9818321019@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529131454.9818321019@mail.kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 30 May 2019 00:46:10 +0000 (UTC)
+        Wed, 29 May 2019 20:53:08 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:37686 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfE3AxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 20:53:08 -0400
+Received: by mail-yw1-f73.google.com with SMTP id j68so3937914ywj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=p0enTo1paGhtTCzKrRxNViLV0NJbbGkfixUzKcvFAIM=;
+        b=fbbGY86HQAvMyuGABmIV5PWAqyAjKpNYQPTVcYsDDwLMglTCo/RHkGXEHGjlPQlO1i
+         1maBy1XlB8ZPwQF1a4O65dbNcWKaebodjcj8l91tKo7tj7lfzms/LmWum3fYAkSCF9+a
+         1MduZ6NgfZ4J4RsrcjHMnjmUA/OLn/1xplY3+eg6JF39R9cjdd0UM4lb5tbyKLyN2Flw
+         Imwh+pgUv75Np9AyNwYEWKPBO/FRJRrzAlqLSYPGQ2W1XvDlp+vOaZzMVcUBsMuVa0aF
+         UhUtZx1Rwvk2/6sFkV3HlEKjNDlqDECo3ImPqfc4klHFAG5mtBhfs4Gt4xbiOYfl1x3s
+         9mKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=p0enTo1paGhtTCzKrRxNViLV0NJbbGkfixUzKcvFAIM=;
+        b=LbTranNk64Xv2s2+6Hd9wHSNf0u4aI9F9mKAcn+jGM2wenrfebqgcXpV4KZbtiXqTJ
+         ry1kKYIzuSnQYP/ikCzPDRPeHFaURMP7ntf5TfK6mEhnok5mxIuU42zzI1Tu2youRBfn
+         GoKZJ5TyOcCQXr77VAsnSvH49RWcQNP/hjqlWEnJdZ4UL8Rv/Iw+4BLOAAo9fMj/c6Yo
+         SFey52g6gpFtmsJE6bRdp0zM8Zn6ijW/d2pUm9GlSOT0BWwk2DoHh5c/tUE8UvSwHXwm
+         IsgvYO7bnGlZFCrPypJ7Vh5bJjmYLPzRo9L79xfU2CmLaSDnxV60GLp42HY7DOVeIEhq
+         KjJw==
+X-Gm-Message-State: APjAAAVvMkHcm1EvUIc5EqsPR/g/ksAYIk1ZVZMT6jHAK1zlVnXRpQOP
+        QSWgj7Lg9BxrcVQBKbJlAQ8sLQZdcGg=
+X-Google-Smtp-Source: APXvYqzWm35RV29MwLeQluK9gcDBYwAUwpZj3MTGP+M+S2CQ5CrRwwOROjnO+bcTCPD25gcsaXKtfsvXOEM=
+X-Received: by 2002:a25:4050:: with SMTP id n77mr310800yba.77.1559177587174;
+ Wed, 29 May 2019 17:53:07 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:49:02 -0700
+Message-Id: <20190530004906.261170-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
+Subject: [PATCH v3 0/4] F2FS Checkpointing without GC, related fixes
+From:   Daniel Rosenberg <drosen@google.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-team@android.com,
+        Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The first patch adjusts the default allowable holes for checkpointing, and
+the next two patches fix underflow issues related to inc_valid_block_count
+and inc_valid_node_count. The final one adds a new feature for
+checkpointing where the user can specify an acceptable amount of space to
+lose access to up front in checkpointing=disable mode instead of requiring
+garbage collection.
 
-On 05/29/19 at 01:14pm, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
-> 
-> The bot has tested the following trees: v5.1.4, v5.0.18, v4.19.45, v4.14.121, v4.9.178, v4.4.180, v3.18.140.
+There is still a question around what to do when the current reserved
+space is less than reserved. As it stands, when a block is deleted, if it
+was an old block, the space is not actually given back, and is marked as
+unusable. But current reserve may still rise towards reserve, which would
+make freeing one block result in a net loss of one block, as opposed to no
+change. Reserved and unusable serve the same function, so it may make
+sense to just handle it as max(current_reserved, unusable), which
+effectively removes the double counting. I'm leaving that until later.
 
-I marked below commit with 'Fixes' tag.
-Fiexes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
+Changes from v2:
+Adjust threshold for initial unusable blocks
+Patches to fix underflows
+Added option to set a block limit in addition to a percent for initial
+unusable space
 
-[bhe@ linux]$ git describe --contains eedb92abb9bb
-v4.17-rc1~171^2~51
+Daniel Rosenberg (4):
+  f2fs: Lower threshold for disable_cp_again
+  f2fs: Fix root reserved on remount
+  f2fs: Fix accounting for unusable blocks
+  f2fs: Add option to limit required GC for checkpoint=disable
 
-You can see that it was added in kernel 4.17-rc1, as above. Can we just
-apply this patch to stable trees after 4.17?
+ Documentation/ABI/testing/sysfs-fs-f2fs |  8 ++++
+ Documentation/filesystems/f2fs.txt      | 19 +++++++-
+ fs/f2fs/f2fs.h                          | 22 ++++++---
+ fs/f2fs/segment.c                       | 21 +++++++--
+ fs/f2fs/super.c                         | 62 ++++++++++++++++---------
+ fs/f2fs/sysfs.c                         | 16 +++++++
+ 6 files changed, 115 insertions(+), 33 deletions(-)
 
-> 
-> v5.1.4: Build OK!
-> v5.0.18: Build OK!
-> v4.19.45: Build OK!
+-- 
+2.22.0.rc1.257.g3120a18244-goog
 
-We just apply it to above three trees which are after 4.17, and the build
-for them is OK. Can we?
-
-Thanks
-Baoquan
-
-> v4.14.121: Failed to apply! Possible dependencies:
->     4c2b4058ab325 ("x86/mm: Initialize 'pgtable_l5_enabled' at boot-time")
->     4fa5662b6b496 ("x86/mm: Initialize 'page_offset_base' at boot-time")
->     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
->     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
->     b16e770bfa534 ("x86/mm: Initialize 'pgdir_shift' and 'ptrs_per_p4d' at boot-time")
->     c65e774fb3f6a ("x86/mm: Make PGDIR_SHIFT and PTRS_PER_P4D variable")
->     e626e6bb0dfac ("x86/mm: Introduce 'pgtable_l5_enabled'")
->     eedb92abb9bb0 ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
-> 
-> v4.9.178: Failed to apply! Possible dependencies:
->     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
->     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
->     69218e47994da ("x86: Remap GDT tables in the fixmap section")
->     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
->     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
->     aaeed3aeb39c1 ("x86/entry/gdt: Put per-CPU GDT remaps in ascending order")
->     b23adb7d3f7d1 ("x86/xen/gdt: Use X86_FEATURE_XENPV instead of globals for the GDT fixup")
->     b7ffc44d5b2ea ("x86/kvm/vmx: Defer TR reload after VM exit")
->     b9b1a9c363ff7 ("x86/boot/smp/32: Fix initial idle stack location on 32-bit kernels")
->     ed1bbc40a0d10 ("x86/cpu_entry_area: Move it to a separate unit")
->     ef8813ab28050 ("x86/mm/fixmap: Generalize the GDT fixmap mechanism, introduce struct cpu_entry_area")
-> 
-> v4.4.180: Failed to apply! Possible dependencies:
->     021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory regions")
->     0483e1fa6e09d ("x86/mm: Implement ASLR for kernel memory regions")
->     071a74930e60d ("x86/KASLR: Add virtual address choosing function")
->     206f25a8319b3 ("x86/KASLR: Remove unneeded boot_params argument")
->     2bc1cd39fa9f6 ("x86/boot: Clean up pointer casting")
->     3a94707d7a7bb ("x86/KASLR: Build identity mappings on demand")
->     4252db10559fc ("x86/KASLR: Update description for decompressor worst case size")
->     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
->     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
->     6655e0aaf768c ("x86/boot: Rename "real_mode" to "boot_params"")
->     7de828dfe6070 ("x86/KASLR: Clarify purpose of kaslr.c")
->     8665e6ff21072 ("x86/boot: Clean up indenting for asm/boot.h")
->     9016875df408f ("x86/KASLR: Rename "random" to "random_addr"")
->     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
->     9b238748cb6e9 ("x86/KASLR: Rename aslr.c to kaslr.c")
->     9dc1969c24eff ("x86/KASLR: Consolidate mem_avoid[] entries")
->     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
->     d2d3462f9f08d ("x86/KASLR: Clarify purpose of each get_random_long()")
->     d899a7d146a2e ("x86/mm: Refactor KASLR entropy functions")
->     ed09acde44e30 ("x86/KASLR: Improve comments around the mem_avoid[] logic")
-> 
-> v3.18.140: Failed to apply! Possible dependencies:
->     021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory regions")
->     0b24becc810dc ("kasan: add kernel address sanitizer infrastructure")
->     2aa79af642631 ("locking/qspinlock: Revert to test-and-set on hypervisors")
->     3a94707d7a7bb ("x86/KASLR: Build identity mappings on demand")
->     4c7c44837be77 ("x86/mm: Define virtual memory map for 5-level paging")
->     4ea1636b04dbd ("x86/asm/tsc: Rename native_read_tsc() to rdtsc()")
->     5c7919bb1994f ("x86/mm: Make LDT_BASE_ADDR dynamic")
->     87be28aaf1458 ("x86/asm/tsc: Replace rdtscll() with native_read_tsc()")
->     9261e050b686c ("x86/asm/tsc, x86/paravirt: Remove read_tsc() and read_tscp() paravirt hooks")
->     92a0f81d89571 ("x86/cpu_entry_area: Move it out of the fixmap")
->     9b238748cb6e9 ("x86/KASLR: Rename aslr.c to kaslr.c")
->     a33fda35e3a76 ("locking/qspinlock: Introduce a simple generic 4-byte queued spinlock")
->     a7412546d8cb5 ("x86/mm: Adjust vmalloc base and size at boot-time")
->     c6e5ca35c4685 ("x86/asm/tsc: Inline native_read_tsc() and remove __native_read_tsc()")
->     cf991de2f614f ("x86/asm/msr: Make wrmsrl_safe() a function")
->     d6f2d75a7ae06 ("x86/kasan: Move KASAN_SHADOW_OFFSET to the arch Kconfig")
->     d73a33973f16a ("locking/qspinlock, x86: Enable x86-64 to use queued spinlocks")
->     d84b6728c54dc ("locking/mcs: Better differentiate between MCS variants")
->     ef7f0d6a6ca8c ("x86_64: add KASan support")
->     f233f7f1581e7 ("locking/pvqspinlock, x86: Implement the paravirt qspinlock call patching")
-> 
-> 
-> How should we proceed with this patch?
-> 
-> --
-> Thanks,
-> Sasha
