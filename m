@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E3CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB428C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77C62548C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8173D254BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190434;
-	bh=BPAmBvRdrM0+9Hrl/sZmbLqwysejDtJbo/57DQcGMrU=;
+	s=default; t=1559190441;
+	bh=VXyRPV+AZqNbT4pLdeZ9aZNRbMmkTY9wRADnGD5Tbac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ld6+fnB8vMyOcHE0Hu0nMPESaEVxDEEB5k23oXoYr5ruVOoYYLJXadd+/pFXeVr43
-	 sgMQLwfHQRJno1QKhN+Mr1y16E8vILnRTAj1ee5hJqa6cgq3BFphpn0jW+7E1nL/WD
-	 3zN9dvOaENr3NOvDJ5v5jyYSMi5Gi0w0t4lSMT1o=
+	b=Cumy+ts8+L9ZKcXFD3aHzfxFW7ACwQcaRzhErXj7vJxtGTri5GWoTOQnXKQPnUrTl
+	 M6EOaZ47QQ5yUbi9RfpwUD59Y0IQi+tlG1/S/POP7DcVvtHMsGYE7Sq/JeSCq2uunk
+	 BlqNJCkfYCiDl+0gzFkZKTfdNnruyWX+X7PiD+xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfE3E1N (ORCPT
+        id S1729834AbfE3DOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34142 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729846AbfE3DOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:22 -0400
+        id S1728770AbfE3DL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 540FB24555;
-        Thu, 30 May 2019 03:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0CB244B0;
+        Thu, 30 May 2019 03:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186062;
-        bh=BPAmBvRdrM0+9Hrl/sZmbLqwysejDtJbo/57DQcGMrU=;
+        s=default; t=1559185918;
+        bh=VXyRPV+AZqNbT4pLdeZ9aZNRbMmkTY9wRADnGD5Tbac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2MhViauFmjMeBOMPxM32wiadDHHNvXuLo20f0F9T9KCPzD85S2HHT/YuaRSFicvt
-         U4ZMt/FMrrbmAHdU2s0C6AHlBDeXToPvlrduXp9NN3g6CIWR5xuW+gA5mNcmK3rIH4
-         mCD5mTPeKr9C4bPJEM7aERznm8lXnLaJ8zpHvu3M=
+        b=rr8IA0y7ZNGNxFjbXbHrUShs9qz+hvU4qAJWvIFGnqXZn4mTWgyU2tQXpFXdG1UvV
+         n5HciVRL27JEHPIsWQPhoa34/vKzpyjOL66pVAk9fHa+ejvyEmWtLYO9pO4dVCxbP9
+         vK+UE1fx25gwFSvN3g5ZC4PdFVEEqAC1FXzq4oG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        George Hilliard <thirtythreeforty@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 170/346] dpaa2-eth: Fix Rx classification status
-Date:   Wed, 29 May 2019 20:04:03 -0700
-Message-Id: <20190530030549.769816752@linuxfoundation.org>
+Subject: [PATCH 5.1 303/405] staging: mt7621-mmc: Initialize completions a single time during probe
+Date:   Wed, 29 May 2019 20:05:01 -0700
+Message-Id: <20190530030556.141474496@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,47 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df8e249be866e2f762be11b14a9e7a94752614d4 ]
+[ Upstream commit 7ca8c2c8bbeda2a2a2a9898cd35066bc1dc83836 ]
 
-Set the Rx flow classification enable flag only if key config
-operation is successful.
+The module was initializing completions whenever it was going to wait on
+them, and not when the completion was allocated.  This is incorrect
+according to the completion docs:
 
-Fixes 3f9b5c9 ("dpaa2-eth: Configure Rx flow classification key")
+    Calling init_completion() on the same completion object twice is
+    most likely a bug [...]
 
-Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Re-initialization is also unnecessary because the module never uses
+complete_all().  Fix this by only ever initializing the completion a
+single time, and log if the completions are not consumed as intended
+(this is not a fatal problem, but should not go unnoticed).
+
+Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/staging/mt7621-mmc/sd.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-index 1ca9a18139ec5..0982fb4f131db 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -2604,6 +2604,7 @@ int dpaa2_eth_set_hash(struct net_device *net_dev, u64 flags)
- static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
- {
- 	struct device *dev = priv->net_dev->dev.parent;
-+	int err;
+diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
+index 4b26ec896a96f..74f0e57ad2f15 100644
+--- a/drivers/staging/mt7621-mmc/sd.c
++++ b/drivers/staging/mt7621-mmc/sd.c
+@@ -468,7 +468,11 @@ static unsigned int msdc_command_start(struct msdc_host   *host,
+ 	host->cmd     = cmd;
+ 	host->cmd_rsp = resp;
  
- 	/* Check if we actually support Rx flow classification */
- 	if (dpaa2_eth_has_legacy_dist(priv)) {
-@@ -2622,9 +2623,13 @@ static int dpaa2_eth_set_cls(struct dpaa2_eth_priv *priv)
- 		return -EOPNOTSUPP;
- 	}
+-	init_completion(&host->cmd_done);
++	// The completion should have been consumed by the previous command
++	// response handler, because the mmc requests should be serialized
++	if (completion_done(&host->cmd_done))
++		dev_err(mmc_dev(host->mmc),
++			"previous command was not handled\n");
  
-+	err = dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
-+	if (err)
-+		return err;
+ 	sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 	sdc_send_cmd(rawcmd, cmd->arg);
+@@ -490,7 +494,6 @@ static unsigned int msdc_command_resp(struct msdc_host   *host,
+ 		    MSDC_INT_ACMD19_DONE;
+ 
+ 	BUG_ON(in_interrupt());
+-	//init_completion(&host->cmd_done);
+ 	//sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 
+ 	spin_unlock(&host->lock);
+@@ -674,7 +677,13 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		//msdc_clr_fifo(host);  /* no need */
+ 
+ 		msdc_dma_on();  /* enable DMA mode first!! */
+-		init_completion(&host->xfer_done);
 +
- 	priv->rx_cls_enabled = 1;
++		// The completion should have been consumed by the previous
++		// xfer response handler, because the mmc requests should be
++		// serialized
++		if (completion_done(&host->cmd_done))
++			dev_err(mmc_dev(host->mmc),
++				"previous transfer was not handled\n");
  
--	return dpaa2_eth_set_dist_key(priv->net_dev, DPAA2_ETH_RX_DIST_CLS, 0);
-+	return 0;
- }
+ 		/* start the command first*/
+ 		if (msdc_command_start(host, cmd, CMD_TIMEOUT) != 0)
+@@ -693,7 +702,6 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		/* for read, the data coming too fast, then CRC error
+ 		 *  start DMA no business with CRC.
+ 		 */
+-		//init_completion(&host->xfer_done);
+ 		msdc_dma_start(host);
  
- /* Bind the DPNI to its needed objects and resources: buffer pool, DPIOs,
+ 		spin_unlock(&host->lock);
+@@ -1688,6 +1696,8 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 	}
+ 	msdc_init_gpd_bd(host, &host->dma);
+ 
++	init_completion(&host->cmd_done);
++	init_completion(&host->xfer_done);
+ 	INIT_DELAYED_WORK(&host->card_delaywork, msdc_tasklet_card);
+ 	spin_lock_init(&host->lock);
+ 	msdc_init_hw(host);
 -- 
 2.20.1
 
