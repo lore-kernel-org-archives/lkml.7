@@ -2,126 +2,129 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176E5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD70C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6E225BE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:57:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ap3UfpQY"
+	by mail.kernel.org (Postfix) with ESMTP id 5AFF425C05
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfE3O5n (ORCPT
+        id S1726955AbfE3O7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:57:43 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41539 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfE3O5m (ORCPT
+        Thu, 30 May 2019 10:59:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44584 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbfE3O7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:57:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id y15so3573069edo.8;
-        Thu, 30 May 2019 07:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gUcLhVuM4u8ThLlgb5AD/BxYretrvQweG0sh8Y6YVsQ=;
-        b=ap3UfpQYhfSmX+EQxxFZ+Ou73eB0So1oqkh7kGnfO3ROYDmxqk8AJGTDTYaMT8Lk5+
-         89eB/zKGk0Be9WjtaEX76sLZmDM2lVx983WR7sjnnXCCzlj6hjjV+DijOgNJRIx+WaUs
-         250X4RBksnDnyT1DJ+PmPUrYqtPpCPA74QfJQRDyhMt8Jift6YD/s3YScFjcifvPQJ1h
-         dsfDBsgkiBAUoflJCLhb1/YuZq6oDNWvJvOtqaKbQ2Dwvxgr/rpesdnp1Q7ibWfeQOOJ
-         0Z+OcfWY0rkzemEnGjJ97tvwIz2d/7ORe9DNe8itb4Xn0TjSTcUmDvH+Qb25BLNiOSoy
-         8YRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gUcLhVuM4u8ThLlgb5AD/BxYretrvQweG0sh8Y6YVsQ=;
-        b=AejEfjXu4HW8r5guDqxl0QMiFeIY+iQoC3dCrM5ePaUzB8nBem+fDRTYX2YlSrK+OS
-         mH8HrsE+cUQQm8yG1/wf+LPoE0VRQOSEBzuX7qzDa/MB7emrnlV+utoMEUvuMklSfJXP
-         6pxBAdaMPQl27Xlnq9D0AWClhFy7C9XOGkFV5pHOosMLxejHWgsQUXi0lw4A3Zqxjgad
-         fRDyfbjTI2IZLT/foufB7DyvSBIFOvbmNODRGcLBIJXfp7GwUWOaPHrXW5Vh8fGxpLnD
-         cXuoZSTG8ugZCRhb0fLvoTMdoMpy0MrsadHCyGkPLBPuBQWtSZxEDJmXGXiu4iFYlkY+
-         vnzQ==
-X-Gm-Message-State: APjAAAUpKwJ4jLUePVtzv3YXtMywHj7mrRDoXxgwKD14SE9LEo9vvROV
-        6yih7rgOmEjGRkSXcdwLKiYjYbVeXHmhiT6F62w=
-X-Google-Smtp-Source: APXvYqw7zpObGQB3C2POA85DrkRu6dZnPLYfC0oGlSNSGn3E+DbA6SQ1FgUNoticBxJCGrQrET23jX26Bbmbi2WgUjw=
-X-Received: by 2002:aa7:c402:: with SMTP id j2mr5159229edq.165.1559228261213;
- Thu, 30 May 2019 07:57:41 -0700 (PDT)
+        Thu, 30 May 2019 10:59:50 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEpsWV128942
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:59:48 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stfb3pr23-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:59:48 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 15:59:47 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 15:59:41 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UExeCt32440696
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 14:59:40 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 664DFB2066;
+        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 483A5B205F;
+        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 14:59:40 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 0E65716C09D5; Thu, 30 May 2019 07:59:42 -0700 (PDT)
+Date:   Thu, 30 May 2019 07:59:42 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/9] Miscellaneous fixes for v5.3
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-References: <20190528235627.1315-1-olteanv@gmail.com> <20190529045207.fzvhuu6d6jf5p65t@localhost>
- <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com> <20190530034555.wv35efen3igwwzjq@localhost>
- <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com> <20190530143037.iky5kk3h4ssmec3f@localhost>
-In-Reply-To: <20190530143037.iky5kk3h4ssmec3f@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 30 May 2019 17:57:30 +0300
-Message-ID: <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19053014-0052-0000-0000-000003C9136A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210785; UDB=6.00636158; IPR=6.00991819;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:59:45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053014-0053-0000-0000-0000611A13F7
+Message-Id: <20190530145942.GA30318@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=718 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 17:30, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Thu, May 30, 2019 at 12:01:23PM +0300, Vladimir Oltean wrote:
-> > In fact that's why it doesn't work: because linuxptp adds ptp_dst_mac
-> > (01-1B-19-00-00-00) and (01-80-C2-00-00-0E) to the MAC's multicast
-> > filter, but the switch in its great wisdom mangles bytes
-> > 01-1B-19-xx-xx-00 of the DMAC to place the switch id and source port
-> > there (a rudimentary tagging mechanism). So the frames are no longer
-> > accepted by this multicast MAC filter on the DSA master port unless
-> > it's put in ALLMULTI or PROMISC.
->
-> IOW, it is not linuxptp's choice to use these modes, but rather this
-> is caused by a limitation of your device.
->
+Hello!
 
-Didn't want to suggest otherwise. I'll see how I'm going to address that.
+This series provides miscellaneous fixes:
 
-> > If the meta frames weren't associated with the correct link-local
-> > frame, then the whole expect_meta -> SJA1105_STATE_META_ARRIVED
-> > mechanism would go haywire, but it doesn't.
->
-> Not necessarily.  If two frames that arrive at nearly the same time
-> get their timestamps mixed up, that would be enough to break the time
-> values but without breaking your state machine.
->
+1.	Dump specified number of blocked tasks rather than rely on
+	serendipity, courtesy of Neeraj Upadhyay.
 
-This doesn't exactly sound like the type of thing I can check for.
-The RX and TX timestamps *are* monotonically increasing with time for
-all frames when I'm printing them in the {rx,tx}tstamp callbacks.
+2.	Correctly unlock root node in rcu_check_gp_start_stall(),
+	courtesy of Neeraj Upadhyay.
 
-> > I was actually thinking it has something to do with the fact that I
-> > shouldn't apply frequency corrections on timestamps of PTP delay
-> > messages. Does that make any sense?
->
-> What do you mean by that?  Is the driver altering PTP message fields?
+3.	Make kfree_rcu() ignore NULL pointers.
 
-No.
-The driver returns free-running timestamps altered with a timecounter
-frequency set by adjfine and offset set by adjtime.
-I was wondering out loud if there's any value in identifying delay
-messages in order to not apply this frequency adjustment for their
-timestamps.
+4.	Set a maximum limit for back-to-back callback invocation.
 
--Vladimir
+5.	Remove ".vnet" from paulmck email addresses.
 
->
-> Thanks,
-> Richard
+6.	Upgrade sync_exp_work_done() to smp_mb().
+
+7.	Fix irritating whitespace error in rcu_assign_pointer().
+
+8.	Force inlining of rcu_read_lock(), courtesy of Waiman Long.
+
+9.	Don't return a value from rcu_assign_pointer(), courtesy of
+	Andrea Parri.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/RCU/whatisRCU.txt                      |    8 +++----
+ Documentation/core-api/circular-buffers.rst          |    2 -
+ Documentation/memory-barriers.txt                    |    2 -
+ Documentation/translations/ko_KR/memory-barriers.txt |    2 -
+ include/linux/rcupdate.h                             |   21 ++++++++++---------
+ kernel/rcu/tree.c                                    |    7 +++---
+ kernel/rcu/tree_exp.h                                |    3 --
+ kernel/rcu/tree_plugin.h                             |    2 -
+ kernel/rcu/tree_stall.h                              |    4 ++-
+ tools/include/linux/rcu.h                            |    4 +--
+ tools/testing/radix-tree/linux/rcupdate.h            |    2 -
+ 11 files changed, 31 insertions(+), 26 deletions(-)
+
