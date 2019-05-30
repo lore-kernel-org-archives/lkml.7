@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18058C46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE5AC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A962462A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB56D246B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186236;
-	bh=RxJjvz/zEW6RUDErfC0p1xNfkRJnAxcsVv41U5YKCbA=;
+	s=default; t=1559186237;
+	bh=NP9GJwS7GdR8uLfmWhGAHZP3f6D5LrFqhmkGBFMjYQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aI4djd1Sx6AcsoBWO44tgywhUEioE1Ho+sP8FLNrz7HsEKSK11nVDTqMzFqYwoZlL
-	 9vdKArWXyEXYiwJgGQlIDidlCwIF/QbGl6Yh6n3BnJuZZ7W+N35xiHxx0znajuLEl9
-	 U3dsmCKBuIBglcwpwal1XRP29K3IqWLnhFiL7VLk=
+	b=CZtUSMvTgbqVO6QZQuUteOSV1yky8w8tcTdiBTX4NvfObgKMK4oz2H0oebEZjtt2Y
+	 PLKycHtgXZP6KzzFDxO+NfwgR69U9i22oeDvDnd6pgiyYM4ROS9fkEowlZz6vXEUc3
+	 tYQOP4naUq8MiAjbwN3Is42QzlocoGmauHIh2ZDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfE3DRN (ORCPT
+        id S1730120AbfE3DRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729599AbfE3DNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:50 -0400
+        id S1728697AbfE3DNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E5B244EF;
-        Thu, 30 May 2019 03:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFA2E24547;
+        Thu, 30 May 2019 03:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186029;
-        bh=RxJjvz/zEW6RUDErfC0p1xNfkRJnAxcsVv41U5YKCbA=;
+        s=default; t=1559186032;
+        bh=NP9GJwS7GdR8uLfmWhGAHZP3f6D5LrFqhmkGBFMjYQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lakPHLM5rRdJAME34SRspiYOYsIuIci08JzXA2zN4PMa7UwyYo6uM8Hdtw51h1jbo
-         6QjlDWhEDFOJVSimHLQbIStckrsCozVDOoqSYWkHra49P2fYDkNV23mGn0WF4Sk6cR
-         JAWSbJ7vRtlew244iolzG7xZ5N1DjK2Nbo3DKvp4=
+        b=10zfsgnnuk3vStWlMwiypVZcsKMid6nlYIAF57WLcWrFT/2E1s3tkA1XmbmLmI3gI
+         neaWpS0VGqwpWg80Gcd0ZDz2sEeDtWiv/kzNWy/J1MniYAAbQ/rDl0C/PoSlHI7vNI
+         0HvfS1QR0lzTo/6nlgHAZiwBx0I+PBWqAcbr1SIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 105/346] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
-Date:   Wed, 29 May 2019 20:02:58 -0700
-Message-Id: <20190530030546.445364118@linuxfoundation.org>
+Subject: [PATCH 5.0 070/346] spi: atmel-quadspi: fix crash while suspending
+Date:   Wed, 29 May 2019 20:02:23 -0700
+Message-Id: <20190530030544.608765568@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,61 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
+[ Upstream commit e5c27498a0403b270620b1a8a0a66e3efc222fb6 ]
 
-Currently, building bpf samples will cause the following error.
+atmel_qspi objects are kept in spi_controller objects, so, first get
+pointer to spi_controller object and then get atmel_qspi object from
+spi_controller object.
 
-    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
-     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
-                               ^
-    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
-     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
-                             ^~~~~~~~~~~~~~~~
-
-Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
-hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
-defined in <stdint.h> header.
-
-Even with this change, bpf selftests are running fine since these are built
-with clang and it includes header(-idirafter) from clang/6.0.0/include.
-(it has <stdint.h>)
-
-    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
-    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
-    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
-    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
-
-But bpf samples are compiled with GCC, and it only searches and includes
-headers declared at the target file. As '#include <stdint.h>' hasn't been
-declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
-
-    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
-    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
-    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
-
-This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
-to fix this problem.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/atmel-quadspi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index 8f09de482839e..64762a62c008d 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -26,6 +26,7 @@
- #include <linux/bpf.h>
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdint.h>
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index ddc7124108125..ec6e9970d7750 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -506,7 +506,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
  
- #ifdef __cplusplus
- extern "C" {
+ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ 
+ 	clk_disable_unprepare(aq->clk);
+ 
+@@ -515,7 +516,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ 
+ static int __maybe_unused atmel_qspi_resume(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ 
+ 	clk_prepare_enable(aq->clk);
+ 
 -- 
 2.20.1
 
