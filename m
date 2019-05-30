@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A2C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D11C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF2524AAD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACF924AB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186971;
-	bh=U4u82knWy9GTzBmOLurMhlPwYmPP1crbMlWFFDbH9Kw=;
+	s=default; t=1559186980;
+	bh=xHVzDq91aH0SJhrqyRTORQomLvIyxj+MOPYxDC+DYK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnjIqBRrEjUL9U8ttIKgAFeead8qP98hBCXIswkGRzSfkbNLsxMsrtpBk/H7NsY0B
-	 KNo2hqjs4+C9vG0pDstZRhXOKxSzYLu1f+btWOPNofZMqhBp4f4MdhdzloRHTtdz90
-	 fOLAVLISXSXTyPfuWRyHPhmKs9Kq83KDvaYJ/hmc=
+	b=Bm5USM6JdO5YSz2xsmyXhgqJgkugy3GfyLBwzDmXD75El0U0U2wC70katibYlmNC/
+	 a6y7oxrLufnp8jAKNw0zxo+s3G/vm3FjXr0qcLWbWnJedhE6zz1ik5hCnLqI4eRcOG
+	 7Eb3BU40cZyWzGBtF6JnCCI98phghu5ZYvYZKGto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388018AbfE3D3a (ORCPT
+        id S2388426AbfE3D3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732302AbfE3DUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:43 -0400
+        id S1730575AbfE3DUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DBC2492F;
-        Thu, 30 May 2019 03:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D8F2496F;
+        Thu, 30 May 2019 03:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186442;
-        bh=U4u82knWy9GTzBmOLurMhlPwYmPP1crbMlWFFDbH9Kw=;
+        s=default; t=1559186447;
+        bh=xHVzDq91aH0SJhrqyRTORQomLvIyxj+MOPYxDC+DYK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdRKTCwsFRwxisTr+nO3i1Kx8LMAeTOfMaHiG7sAZ+Kkxsowf2jH/oOFl5xDWWTvX
-         wlv9JjQCvnFVxIlf9hj2jbMfxxWoayRtXMfO5l0tJRn66vyyrneebh4ShzfkV8lapV
-         GyAtlMU5j5+e6OnyFaL2pmaYvFAujy+xcbwtRaZk=
+        b=aAX7HdddUkmF56IjZtnmHpDnyuJ5b5ie8gPmEXg10EWvtVWspm3uAKK0k8h/0o5Ra
+         O5otIA/3O3rD0uD1vpBlW3B86ekuE9AXuy/er17XB4PcpeETMXMHP5zGunKt91cIg0
+         9FfyRb1nFm5l+pHo3BIt3cu9Q7y6FLYznocwrWv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/128] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 29 May 2019 20:06:18 -0700
-Message-Id: <20190530030442.983554516@linuxfoundation.org>
+Subject: [PATCH 4.9 037/128] iwlwifi: pcie: dont crash on invalid RX interrupt
+Date:   Wed, 29 May 2019 20:06:09 -0700
+Message-Id: <20190530030440.829423723@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,50 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+If for some reason the device gives us an RX interrupt before we're
+ready for it, perhaps during device power-on with misconfigured IRQ
+causes mapping or so, we can crash trying to access the queues.
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+Prevent that by checking that we actually have RXQs and that they
+were properly allocated.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index c76a0176b5c68..f8ae7ce29809d 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -322,9 +322,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index c21f8bd32d08f..25f2a0aceaa21 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1225,10 +1225,15 @@ static void iwl_pcie_rx_handle_rb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+-	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
++	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
- 
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
++	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
++		return;
++
++	rxq = &trans_pcie->rxq[queue];
++
+ restart:
+ 	spin_lock(&rxq->lock);
+ 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
 -- 
 2.20.1
 
