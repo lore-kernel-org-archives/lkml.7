@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB817C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559E2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961F02562F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263CA2563A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190642;
-	bh=0qTx3l/7Ma5xkUz5EzJuuQo0VKTEYK0t0soS6lpaNVU=;
+	s=default; t=1559190649;
+	bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FfuwO2tLgbgHh0Y0EaV8XJ3iaeaWZXiSbl8CLhjLga1nP/as7zeh5+U7u+EQflHcn
-	 uETgZ9e83heRaTujkLhyhEefKjE9Rnu3E/KwdZe331TX97ioTNO5KnTr8kkvZXcyt9
-	 LpQeo5GsinsZ/ZQPM+YoWrSEA3C3m6NDD17w5OaY=
+	b=ebVgT4oIE46+W1CeZiy36tbu64YGmZg4KVhAXCWu6wZ0Y6YXe4j+3oViZMvwWeqM0
+	 u339UMyuJRLKjfuZQBulxVDTvxqkGgLZiErS6mT32Q7pUD+oieWOOhq0rq5SIbryF6
+	 Na/etvF2mc8SVjNpNeB6cEuU7jsOvyS5xJsKOA5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732982AbfE3Eal (ORCPT
+        id S2388125AbfE3Eas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbfE3DNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:54 -0400
+        id S1729617AbfE3DNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E8B2455E;
-        Thu, 30 May 2019 03:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AA92455A;
+        Thu, 30 May 2019 03:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186034;
-        bh=0qTx3l/7Ma5xkUz5EzJuuQo0VKTEYK0t0soS6lpaNVU=;
+        s=default; t=1559186031;
+        bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJreSCdxbrPrSuKhC8On0dW7wcvxULbYHYB0Ac64nt8Dweu12Z4sAnbRlIi106qsi
-         2ZVSf2okp9z/6hW9wE5xFsolSkWaAsteqWqfDzYRTI2Ocphwk3YfcJpS8H3FiOlqzi
-         u+4kvLmDbrXU7vQ5OXHmPiwff+ZjZKnbdvO/XSAo=
+        b=x/bp+nOQgBn/GCfMFbO7z9puWJTZnLRb035NWQxqbGjeKUHIm3ZVv6ms7tvKCwRVZ
+         EJ6mYSXBRUJYTgaqRD53r4t/uRZ2mpklqiWrOJ6UPb1jppNwuQKqcRKLK6V+639TKT
+         VgNu2EXMWGsESlLi83HHgGgfIRwb8iqoqREg5haY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Bo YU <tsu.yubo@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 110/346] rsi: Fix NULL pointer dereference in kmalloc
-Date:   Wed, 29 May 2019 20:03:03 -0700
-Message-Id: <20190530030546.674031942@linuxfoundation.org>
+Subject: [PATCH 5.0 068/346] powerpc/boot: Fix missing check of lseek() return value
+Date:   Wed, 29 May 2019 20:02:21 -0700
+Message-Id: <20190530030544.504392018@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,88 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d5414c2355b20ea8201156d2e874265f1cb0d775 ]
+[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
 
-kmalloc can fail in rsi_register_rates_channels but memcpy still attempts
-to write to channels. The patch replaces these calls with kmemdup and
-passes the error upstream.
+This is detected by Coverity scan: CID: 1440481
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_91x_mac80211.c | 30 ++++++++++++---------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ arch/powerpc/boot/addnote.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-index e56fc83faf0ef..2f604e8bc991b 100644
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -188,27 +188,27 @@ bool rsi_is_cipher_wep(struct rsi_common *common)
-  * @adapter: Pointer to the adapter structure.
-  * @band: Operating band to be set.
-  *
-- * Return: None.
-+ * Return: int - 0 on success, negative error on failure.
-  */
--static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
-+static int rsi_register_rates_channels(struct rsi_hw *adapter, int band)
- {
- 	struct ieee80211_supported_band *sbands = &adapter->sbands[band];
- 	void *channels = NULL;
+diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
+index 9d9f6f334d3cc..3da3e2b1b51bc 100644
+--- a/arch/powerpc/boot/addnote.c
++++ b/arch/powerpc/boot/addnote.c
+@@ -223,7 +223,11 @@ main(int ac, char **av)
+ 	PUT_16(E_PHNUM, np + 2);
  
- 	if (band == NL80211_BAND_2GHZ) {
--		channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
--		memcpy(channels,
--		       rsi_2ghz_channels,
--		       sizeof(rsi_2ghz_channels));
-+		channels = kmemdup(rsi_2ghz_channels, sizeof(rsi_2ghz_channels),
-+				   GFP_KERNEL);
-+		if (!channels)
-+			return -ENOMEM;
- 		sbands->band = NL80211_BAND_2GHZ;
- 		sbands->n_channels = ARRAY_SIZE(rsi_2ghz_channels);
- 		sbands->bitrates = rsi_rates;
- 		sbands->n_bitrates = ARRAY_SIZE(rsi_rates);
- 	} else {
--		channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
--		memcpy(channels,
--		       rsi_5ghz_channels,
--		       sizeof(rsi_5ghz_channels));
-+		channels = kmemdup(rsi_5ghz_channels, sizeof(rsi_5ghz_channels),
-+				   GFP_KERNEL);
-+		if (!channels)
-+			return -ENOMEM;
- 		sbands->band = NL80211_BAND_5GHZ;
- 		sbands->n_channels = ARRAY_SIZE(rsi_5ghz_channels);
- 		sbands->bitrates = &rsi_rates[4];
-@@ -227,6 +227,7 @@ static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
- 	sbands->ht_cap.mcs.rx_mask[0] = 0xff;
- 	sbands->ht_cap.mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
- 	/* sbands->ht_cap.mcs.rx_highest = 0x82; */
-+	return 0;
- }
- 
- /**
-@@ -1985,11 +1986,16 @@ int rsi_mac80211_attach(struct rsi_common *common)
- 	wiphy->available_antennas_rx = 1;
- 	wiphy->available_antennas_tx = 1;
- 
--	rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
-+	status = rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
-+	if (status)
-+		return status;
- 	wiphy->bands[NL80211_BAND_2GHZ] =
- 		&adapter->sbands[NL80211_BAND_2GHZ];
- 	if (common->num_supp_bands > 1) {
--		rsi_register_rates_channels(adapter, NL80211_BAND_5GHZ);
-+		status = rsi_register_rates_channels(adapter,
-+						     NL80211_BAND_5GHZ);
-+		if (status)
-+			return status;
- 		wiphy->bands[NL80211_BAND_5GHZ] =
- 			&adapter->sbands[NL80211_BAND_5GHZ];
- 	}
+ 	/* write back */
+-	lseek(fd, (long) 0, SEEK_SET);
++	i = lseek(fd, (long) 0, SEEK_SET);
++	if (i < 0) {
++		perror("lseek");
++		exit(1);
++	}
+ 	i = write(fd, buf, n);
+ 	if (i < 0) {
+ 		perror("write");
 -- 
 2.20.1
 
