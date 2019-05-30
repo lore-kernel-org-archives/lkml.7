@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E6EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36358C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B318424A8B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D82B24A93
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186811;
-	bh=nPvomvPQq5adWu3ARBRN8eWC1pZmBx/+VxfUKkmkx04=;
+	s=default; t=1559186814;
+	bh=Nmf83k/tJU31KQN/PoLuiZHPJEcaxrZfzZ6Fw9uzICY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLuPEPmVyCXlr9XXXTnK2hYAPTdmYAA3Se0WsmUMadY5hAg8TmosKICqd1z5gBai7
-	 Lv67vMgzopE6mI94FhnvEDz+h6J5MqSYpOss2QR5EmdlrdUQJ6xWtRHCr0CjbvHJUx
-	 iOfmLisjlHIxEWG6xD9Zt2fO/PuEYRgSDRM/0xwo=
+	b=x+wSme97ZmbmA+GBVOH38WKuZHN7G07ISYp+3pgQe+83Yqq8N/uZNdHXNNbBtWlNg
+	 9i18VrwE3/vsoami3kx4kQqyU7K9wgA6xCcvF73pjCmXIGkVIUNWc3cDA/mf3uwEtC
+	 HveODxOZTIQkTBDYKVNlc8MM+ShT5pvZtxan4ntQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbfE3D0v (ORCPT
+        id S2387781AbfE3D0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731782AbfE3DTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:03 -0400
+        id S1730383AbfE3DTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75940247F0;
-        Thu, 30 May 2019 03:19:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D46B024725;
+        Thu, 30 May 2019 03:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186342;
-        bh=nPvomvPQq5adWu3ARBRN8eWC1pZmBx/+VxfUKkmkx04=;
+        s=default; t=1559186341;
+        bh=Nmf83k/tJU31KQN/PoLuiZHPJEcaxrZfzZ6Fw9uzICY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+Ve/SOUYpWXSMan6j9ocsNuMHLK4ngHa3iI5x9CaT96ygAasWiLFpL/0DFHPpvUv
-         J9IPmFwMijfzSjDCM1J8ud7Dx6kc+l3/W1jUm6iJ7w5/RBxeN6AuN/ubL8IpwpP31/
-         N+SeAXB5ZNBr8z54nb6sWVJ4slquhsvwO/psXpZU=
+        b=rqZldkN1xDSTt7kBBl4gei4A4VUwXG7wD6ZaDCnvC3mN3QCTgUWAIsscbyjpM51y9
+         B0lHKRUFp5TvYb2WmogdR1+L24oTPky2278q0BJ91+QmQe6NKJdEkVTDWsAlmPpVzj
+         sRnwYrrsXdshIy0qBVp7vffC1C67p7BArH4MRi+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 069/193] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 29 May 2019 20:05:23 -0700
-Message-Id: <20190530030458.901771595@linuxfoundation.org>
+Subject: [PATCH 4.14 068/193] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
+Date:   Wed, 29 May 2019 20:05:22 -0700
+Message-Id: <20190530030458.820580739@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,45 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+Currently, building bpf samples will cause the following error.
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
+    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
+     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
+                               ^
+    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
+     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
+                             ^~~~~~~~~~~~~~~~
 
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
+Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
+hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
+defined in <stdint.h> header.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Even with this change, bpf selftests are running fine since these are built
+with clang and it includes header(-idirafter) from clang/6.0.0/include.
+(it has <stdint.h>)
+
+    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
+    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
+    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
+    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
+
+But bpf samples are compiled with GCC, and it only searches and includes
+headers declared at the target file. As '#include <stdint.h>' hasn't been
+declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
+
+    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
+    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
+    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
+
+This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
+to fix this problem.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/lib/bpf/bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 18e5ce81527d2..c1c733b573a7f 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index b8ea5843c39ee..e9423d6af9332 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -23,6 +23,7 @@
+ 
+ #include <linux/bpf.h>
+ #include <stddef.h>
++#include <stdint.h>
+ 
+ int bpf_create_map_node(enum bpf_map_type map_type, int key_size,
+ 			int value_size, int max_entries, __u32 map_flags,
 -- 
 2.20.1
 
