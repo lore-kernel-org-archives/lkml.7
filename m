@@ -4,48 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3607DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03A5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D8423FC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96F224F1A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188785;
-	bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+	s=default; t=1559188789;
+	bh=SZYgzCSl2InSQyrNHF2tnU1aOYnCmJ61nTCrd7r9g6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1X8muWim6N07SzgIcZbUI96UrISDtCxOD12VPRZg8WOG5wtkh3PyG0G5bqhcAzXHW
-	 3qk1cyY1hcAN+IAjJByM/lkQIfk6ydE12iHuPDwcb688LFa3wjtE2V+HEYDBgQ81GT
-	 SEqCXoZ2v3f0vlpPNWantwU1kyck7AWjkTg6HJ1Q=
+	b=BXE8mp12at/B08Cyel28Q3Q9aBIBLv4TMjBeLidprzg2GK8fCMGdXSg/LRdhItuRK
+	 caxxuANrtsBfReBEI1ZRxnnYqpdt/KjheM2JjkpeWqPhlLNncFzeSSbib8DzPYusgl
+	 fmT9GQaFWZ1dzxgO8J8BHa1xgJbLYtjRdza8Mbec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbfE3D7n (ORCPT
+        id S2387991AbfE3D7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:59:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731585AbfE3DSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:33 -0400
+        id S1731578AbfE3DSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96C82475F;
-        Thu, 30 May 2019 03:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74BBF24790;
+        Thu, 30 May 2019 03:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186313;
-        bh=Npxmw6nnvgD0ZjvtCKn1B+RkWhFeIgCUudF25HHwcB4=;
+        s=default; t=1559186311;
+        bh=SZYgzCSl2InSQyrNHF2tnU1aOYnCmJ61nTCrd7r9g6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vuDYpk/LUMqDsPLFXlQ4P45lDuzfzKIQfxAbuxTTyn5e2sqNB5ufhJZWDPLXqY7ng
-         B2ajfskZAqL/h3ZpVyYKkzzjxej/JX9aIFztxoySOdU92JpphiSXfdDtx2rylM2q6F
-         LlVcom8lFRD1mLjMo9EAzdh0JDG6zjoHMybYGpYk=
+        b=BQUAR/xqK6RxP3+NV4Qk8g+1rTEZBQ+ber4m0W7tVWbUdwZd8o1tBssMQGin41ONj
+         gJVfqoUZ+0o8Rap3t0q1P7e6ixyXCsNGjDpEAzXIe2ZAHTPiiFgBg4/sLdCxhe3jPm
+         TuHnDV72249WK0Bk4yR+EEn3pXhuVwyc4EJW01wo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 4.14 015/193] gfs2: Fix sign extension bug in gfs2_update_stats
-Date:   Wed, 29 May 2019 20:04:29 -0700
-Message-Id: <20190530030450.062891747@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jeff Smits <jeff.smits@intel.com>
+Subject: [PATCH 4.14 012/193] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Date:   Wed, 29 May 2019 20:04:26 -0700
+Message-Id: <20190530030449.639898524@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -58,49 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 5a5ec83d6ac974b12085cd99b196795f14079037 upstream.
+commit 52f476a323f9efc959be1c890d0cdcf12e1582e0 upstream.
 
-Commit 4d207133e9c3 changed the types of the statistic values in struct
-gfs2_lkstats from s64 to u64.  Because of that, what should be a signed
-value in gfs2_update_stats turned into an unsigned value.  When shifted
-right, we end up with a large positive value instead of a small negative
-value, which results in an incorrect variance estimate.
+Jeff discovered that performance improves from ~375K iops to ~519K iops
+on a simple psync-write fio workload when moving the location of 'struct
+page' from the default PMEM location to DRAM. This result is surprising
+because the expectation is that 'struct page' for dax is only needed for
+third party references to dax mappings. For example, a dax-mapped buffer
+passed to another system call for direct-I/O requires 'struct page' for
+sending the request down the driver stack and pinning the page. There is
+no usage of 'struct page' for first party access to a file via
+read(2)/write(2) and friends.
 
-Fixes: 4d207133e9c3 ("gfs2: Make statistics unsigned, suitable for use with do_div()")
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
+However, this "no page needed" expectation is violated by
+CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
+copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
+check_heap_object() helper routine assumes the buffer is backed by a
+slab allocator (DRAM) page and applies some checks.  Those checks are
+invalid, dax pages do not originate from the slab, and redundant,
+dax_iomap_actor() has already validated that the I/O is within bounds.
+Specifically that routine validates that the logical file offset is
+within bounds of the file, then it does a sector-to-pfn translation
+which validates that the physical mapping is within bounds of the block
+device.
+
+Bypass additional hardened usercopy overhead and call the 'no check'
+versions of the copy_{to,from}_iter operations directly.
+
+Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache...")
+Cc: <stable@vger.kernel.org>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Reported-and-tested-by: Jeff Smits <jeff.smits@intel.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/lock_dlm.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/nvdimm/pmem.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/fs/gfs2/lock_dlm.c
-+++ b/fs/gfs2/lock_dlm.c
-@@ -31,9 +31,10 @@
-  * @delta is the difference between the current rtt sample and the
-  * running average srtt. We add 1/8 of that to the srtt in order to
-  * update the current srtt estimate. The variance estimate is a bit
-- * more complicated. We subtract the abs value of the @delta from
-- * the current variance estimate and add 1/4 of that to the running
-- * total.
-+ * more complicated. We subtract the current variance estimate from
-+ * the abs value of the @delta and add 1/4 of that to the running
-+ * total.  That's equivalent to 3/4 of the current variance
-+ * estimate plus 1/4 of the abs of @delta.
-  *
-  * Note that the index points at the array entry containing the smoothed
-  * mean value, and the variance is always in the following entry
-@@ -49,7 +50,7 @@ static inline void gfs2_update_stats(str
- 	s64 delta = sample - s->stats[index];
- 	s->stats[index] += (delta >> 3);
- 	index++;
--	s->stats[index] += ((abs(delta) - s->stats[index]) >> 2);
-+	s->stats[index] += (s64)(abs(delta) - s->stats[index]) >> 2;
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -256,10 +256,16 @@ static long pmem_dax_direct_access(struc
+ 	return __pmem_direct_access(pmem, pgoff, nr_pages, kaddr, pfn);
  }
  
- /**
++/*
++ * Use the 'no check' versions of copy_from_iter_flushcache() and
++ * copy_to_iter_mcsafe() to bypass HARDENED_USERCOPY overhead. Bounds
++ * checking, both file offset and device offset, is handled by
++ * dax_iomap_actor()
++ */
+ static size_t pmem_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	return copy_from_iter_flushcache(addr, bytes, i);
++	return _copy_from_iter_flushcache(addr, bytes, i);
+ }
+ 
+ static const struct dax_operations pmem_dax_ops = {
 
 
