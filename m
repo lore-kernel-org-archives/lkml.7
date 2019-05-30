@@ -5,55 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D337C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEC0C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E664025374
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEE825281
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190210;
-	bh=T4dd8ApveJOaVaQZYHfqP1ICixbz55uiW5XkeUbLFtM=;
+	s=default; t=1559190214;
+	bh=n5kjA7fjbOwqd5N27ytYvPLS2ALxClmy4UA9vMmx6Oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbDBfEzpKz5fVjcy0ZpKWfIZL6HcS96Y2aYqKXG7d5Pq2wpwTqjbOQGfzPgyBXbB4
-	 59HFHXOt9gD+dY/xr9kpZhLQMfexma5EFz8ieVJ2pq3Eu9J3o5OP/fiNxbm+JatR8j
-	 eiIkZYir7zR+7ZveANRyT1nEInwzfRfLnHcF6ozY=
+	b=jdvQRL7RXYjeyvPHHm6hsKPjE80ZSaNtdzsx29WgoBfuYOZ4Z6Edf31jK5Xd2CuRE
+	 9in8EkoGuIiYkVVDXk43rkNXtCvWIIcVbw0LAO4nC2Gr60FgGqnyGa+LPDZomdjaOd
+	 +oUe0lKmp7MLJISkJHzPVVhKUesyUB4zYkjZLZwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732067AbfE3EX2 (ORCPT
+        id S1730058AbfE3DPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728641AbfE3DPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728935AbfE3DMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50B2424586;
-        Thu, 30 May 2019 03:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856A7244D4;
+        Thu, 30 May 2019 03:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186100;
-        bh=T4dd8ApveJOaVaQZYHfqP1ICixbz55uiW5XkeUbLFtM=;
+        s=default; t=1559185937;
+        bh=n5kjA7fjbOwqd5N27ytYvPLS2ALxClmy4UA9vMmx6Oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KId+aGUTkdoeUgcjNBjXwev5F3/ZH92mhLldOLmvVzoUlQn6Zr/KRUavooKqCnq9W
-         D9zrtZpfDXxi6m+uQZjh5xFpjbkyGpu7EwySRuHnYJEyBknCiLpC5jphSxSR4EeFy6
-         rrueFF39NNwhXVUzhv0ppbiwe3QsgPQF0hhcCH5Y=
+        b=IwB42shWgQqL01jbE5OMNPkTBM37wxqSEBJ22y2gvjeoTUYMUOxEdYD8ZBd3e6b4V
+         NuayEhYKwHLwp6VyeO5uxt5VTd07fvi7ICUoz5meb5n9dmVY6ExKD3CH1XlwXggKcF
+         lkIDlPueMSims2Pqr2rAoqH/pjw9c5Hdz9HOlPRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
+        stable@vger.kernel.org, David Francis <David.Francis@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
         Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 236/346] drm/amd/display: Prevent cursor hotspot overflow for RV overlay planes
-Date:   Wed, 29 May 2019 20:05:09 -0700
-Message-Id: <20190530030552.998746142@linuxfoundation.org>
+Subject: [PATCH 5.1 332/405] drm/amd/display: Update ABM crtc state on non-modeset
+Date:   Wed, 29 May 2019 20:05:30 -0700
+Message-Id: <20190530030557.522308546@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,78 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6752bea8b03e77c98be7d8d25b0a9d86a00b3cf7 ]
+[ Upstream commit b05e2c5e81f9a0be4a145e0926b1dfe62f6347d4 ]
 
 [Why]
-The actual position for the cursor on the screen is essentially:
-
-x_out = x - x_plane - x_hotspot
-y_out = y - y_plane - y_hotspot
-
-The register values for cursor position and cursor hotspot need to be
-greater than zero when programmed, but we also need to subtract off
-the plane position to display the cursor at the correct position.
-
-Since we don't want x or y to be less than zero, we add the plane
-position as a positive value to x_hotspot or y_hotspot. However, what
-this doesn't take into account is that the hotspot registers are limited
-by the maximum cursor size.
-
-On DCN10 the cursor hotspot regitsers are masked to 0xFF, so they have
-a maximum value of 0-255. Values greater this will wrap, causing the
-cursor to display in the wrong position.
-
-In practice this means that for sufficiently large plane positions, the
-cursor will be drawn twice on the screen, and can cause screen flashes
-or p-state WARNS depending on what the wrapped value is.
-
-So we need a way to remove the value from x_plane and y_plane without
-exceeding the maximum cursor size.
+Somewhere in the atomic check reshuffle ABM got lost.
+ABM is a crtc property (copied from a connector property).
+It can change without a modeset, just like underscan.
 
 [How]
-Subtract as much as x_plane/y_plane as possible from x and y and place
-the remainder in the cursor hotspot register.
+In the skip_modeset branch of atomic check crtc updates,
+copy over the abm property.
 
-The value for x_hotspot and y_hotspot can still wrap around but it
-won't happen in a case where the cursor is actually enabled.
-
-The cursor plane needs to intersect at least one pixel of the plane's
-rectangle to be enabled, so the cursor position + hotspot provided by
-userspace must always be strictly less than the maximum cursor size for
-the cursor to actually be enabled.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Signed-off-by: David Francis <David.Francis@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
 Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c    | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index a684b38332ac3..2ab05a4e8ed4a 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -2658,9 +2658,15 @@ static void dcn10_set_cursor_position(struct pipe_ctx *pipe_ctx)
- 		.rotation = pipe_ctx->plane_state->rotation,
- 		.mirror = pipe_ctx->plane_state->horizontal_mirror
- 	};
--
--	pos_cpy.x_hotspot += pipe_ctx->plane_state->dst_rect.x;
--	pos_cpy.y_hotspot += pipe_ctx->plane_state->dst_rect.y;
-+	uint32_t x_plane = pipe_ctx->plane_state->dst_rect.x;
-+	uint32_t y_plane = pipe_ctx->plane_state->dst_rect.y;
-+	uint32_t x_offset = min(x_plane, pos_cpy.x);
-+	uint32_t y_offset = min(y_plane, pos_cpy.y);
-+
-+	pos_cpy.x -= x_offset;
-+	pos_cpy.y -= y_offset;
-+	pos_cpy.x_hotspot += (x_plane - x_offset);
-+	pos_cpy.y_hotspot += (y_plane - y_offset);
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 66f19d1864b17..c212bff457eec 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -5661,6 +5661,9 @@ static int dm_update_crtc_state(struct amdgpu_display_manager *dm,
+ 		update_stream_scaling_settings(
+ 			&new_crtc_state->mode, dm_new_conn_state, dm_new_crtc_state->stream);
  
- 	if (pipe_ctx->plane_state->address.type
- 			== PLN_ADDR_TYPE_VIDEO_PROGRESSIVE)
++	/* ABM settings */
++	dm_new_crtc_state->abm_level = dm_new_conn_state->abm_level;
++
+ 	/*
+ 	 * Color management settings. We also update color properties
+ 	 * when a modeset is needed, to ensure it gets reprogrammed.
 -- 
 2.20.1
 
