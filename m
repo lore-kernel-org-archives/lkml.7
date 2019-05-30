@@ -2,100 +2,79 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1897C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A09C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9769225421
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D64D254CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFXjyuJz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dQ4HCu1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfE3Ivb (ORCPT
+        id S1727034AbfE3Ix3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:51:31 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:33489 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbfE3Ivb (ORCPT
+        Thu, 30 May 2019 04:53:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45162 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfE3Ix3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:51:31 -0400
-Received: by mail-pg1-f173.google.com with SMTP id h17so1637665pgv.0;
-        Thu, 30 May 2019 01:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9yPNki8tFmIgDjX+2v/i+yBX4YbiShnd6bPfUYaPNcY=;
-        b=bFXjyuJzEziH0nuuB8bYDwiEuyEkZjkBk3ZzpHUpSMKjUkJc5ctwmzPPoENpZjfGcn
-         QF8I2/ImQRSTLJjjiCAP2YDQY65pWycuP2uBDtqLC1AbrfAZVOMutCwt4KZdbBfJvxr6
-         DvrQZUsDKo3N2h3X0l6CVvmyj9r685BsnPXNFky/0ppnTK76TyBUE+idc9175k1zCLL+
-         e06KDeKwzf6F5y1aaTmg6A7dAYabxHhGCDAUEOQknBEyXwDPybZ6AilZdIoD+/IqAy8d
-         EVp5FzU1vntuD/LgnzC71HcgqzMhJGNW+BTSzlnKP6aog68gQEu91tYV8idhS1mE+h5j
-         u43A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9yPNki8tFmIgDjX+2v/i+yBX4YbiShnd6bPfUYaPNcY=;
-        b=PIhXSHTxSpNBc9T9V4XrgTBB6IjjTPEsnPwyMSxQZCnil8/jr+AEF3OVcuZburTTQ9
-         rr2YiWoqhKUfzvSLhQDhmsGyj3LtQuNYgCPWxVQ7caFxlAvVzVaRxmVwGKH6cfKWS9ek
-         PW65EbwRRO77s9yH91LnxEDM9lO+8XXl7HtXby9qtgNgAkKX6YqKYOS8axuMBXjSNDvX
-         fwFFAqHTgSgAt6pnC3LgZHPpoJr/0jvyH9HYQKmknLcukRBKXVFHy/YVQF1Lc3XSkCIc
-         OLY6WK0K1KwkQ3cv2qJccxp/xXSlI8Huw5gUN6c1aB9fnpHJaZKMgVdGUWuOGxp9pPtn
-         7fyg==
-X-Gm-Message-State: APjAAAXWnS0QuESdwizwIriuE5D0A2s/y6Hs87Y9oR5sIEuYejzYhREq
-        lUd0fOaBQKFHSyXWBjxFhOI=
-X-Google-Smtp-Source: APXvYqx9XdArytw1HgFQ+Cty8TFXJEMG9A1YWtTO99CkXPQIYGmKOANGeO5dkNBHfkmV5Tnue+57Dw==
-X-Received: by 2002:a65:62d8:: with SMTP id m24mr2755254pgv.141.1559206290397;
-        Thu, 30 May 2019 01:51:30 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id q28sm2405694pfn.106.2019.05.30.01.51.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 01:51:29 -0700 (PDT)
-Date:   Thu, 30 May 2019 16:51:06 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>, tony.luck@intel.com,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Subject: [PATCH v2] hooks: fix a missing-check bug in
- selinux_sb_eat_lsm_opts()
-Message-ID: <20190530085106.GA2711@zhanggen-UX430UQ>
-References: <20190530035310.GA9127@zhanggen-UX430UQ>
- <CAFqZXNv-54DJhd8gyUhwDo6RvmjFGSHo=+s-BVsL87S+u0cQxQ@mail.gmail.com>
+        Thu, 30 May 2019 04:53:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7aH335K8bkoHEjqmekfUR/dxSx+60OHumVq1hGf49IM=; b=dQ4HCu1qVgISjGAbLPD/Q3rw8v
+        1foKw4rPUo8IVyIavrr82ZM8Z//0KK+u3uEp7R1+o6P8b9DIpr9mXpyYgdRuT/KMvuG/DxNnEG5o2
+        AwI1mmuVei2+4lTWig4t4cbY40g/AR/A42JqFdVkZRC1S4imIWKR91C0Rfpd0N4faVUvhTy2WAQC2
+        sxc5Qo9A3V3TUyG1Vgp6fglA6LE/DpeXRovD2++zTKiqSO23a27Rid5l34b5jfalO5y5/IW9yYaZA
+        uYzOoV/0bu0TIboplGAVRAayDwpRVRXAgXejY9+5b2+ROH9ztyUWOetv/V6YewC/kHoo3jcphtnu4
+        br8X/bvQ==;
+Received: from 089144193064.atnat0002.highway.a1.net ([89.144.193.64] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hWGoO-0002lZ-N8; Thu, 30 May 2019 08:53:25 +0000
+Date:   Thu, 30 May 2019 10:53:21 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joel Becker <jlbec@evilplan.org>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] configfs fix for 5.2
+Message-ID: <20190530085321.GA24647@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFqZXNv-54DJhd8gyUhwDo6RvmjFGSHo=+s-BVsL87S+u0cQxQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-returns NULL when fails. So 'arg' should be checked.
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
----
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec702c..5a9e959 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2635,6 +2635,8 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 						*q++ = c;
- 				}
- 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
-+				if (!arg)
-+					return -ENOMEM;
- 			}
- 			rc = selinux_add_opt(token, arg, mnt_opts);
- 			if (unlikely(rc)) {
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/hch/configfs.git tags/configfs-for-5.2-2
+
+for you to fetch changes up to f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781:
+
+  configfs: Fix use-after-free when accessing sd->s_dentry (2019-05-28 08:11:58 +0200)
+
+----------------------------------------------------------------
+configs fix for 5.2
+
+ - fix a use after free in configfs_d_iput (Sahitya Tummala)
+
+----------------------------------------------------------------
+Sahitya Tummala (1):
+      configfs: Fix use-after-free when accessing sd->s_dentry
+
+ fs/configfs/dir.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
