@@ -5,51 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF6B25524
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9808225556
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190511;
-	bh=DGwY8+PMszvfrhekxgnzEn85BTPXoR99XdKjRFYihnk=;
+	s=default; t=1559190514;
+	bh=mRHgJ3UhnTRcFQL1xZISQ2F6rEeLpWGTtQaHVwdZ1n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJeaidU5YMyVO7f9ia3Euc4bn2SC8SR6pgzP+bXMHVXujOt8kZal03dIZFPF4lReF
-	 JDbkdbZuF8GIP3mobnyaf4PMW9Ew2J82Y1TcOOoRkQseUR5/7eFhgs3gypb5EVmCBp
-	 iEImIiNIFDh8niixqf8fkRIXJsTc4ie/WiywGdtA=
+	b=mh5NCOelvSyiNLzpqRf6BDmmb7rncw6sFNxbYhJmmxzakTmL4wJ876aOZcsmcOcnA
+	 16CrlJ8G1QBSTqL+2s6KF8UBm4yoqXKpaOuiNpTPxztgA3Tlw7cp6xCXTz87nrNHSi
+	 BoZcLMHKkTnmkTRwxGB6MU2jtXVD+up9iW9hM3y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729775AbfE3DOO (ORCPT
+        id S1729761AbfE3DON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbfE3DLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728728AbfE3DLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A33B1244B0;
-        Thu, 30 May 2019 03:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F46244D6;
+        Thu, 30 May 2019 03:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185914;
-        bh=DGwY8+PMszvfrhekxgnzEn85BTPXoR99XdKjRFYihnk=;
+        bh=mRHgJ3UhnTRcFQL1xZISQ2F6rEeLpWGTtQaHVwdZ1n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rco3KMreUwsrjXjCnKv63gwh1m+86HnHjkb8HTS4kZ+0zVbiwb6y28u0b75EEVgR
-         mGFU+48stRBMtER6dXH8+ALr/8UdT03INXn73bxyAYrA2LzktUqle/8SV8baNzbWGI
-         veHRjpjW7+41b8s4hY5GLFwFkFl/dXjnqHj+jZaE=
+        b=OoDXiCWRh2qii/FPKN5mRklWUAHlwjMS+2SyrMq4pSJ7v8S+TLiC9PC26kNvK2iyC
+         ercNP2Oq3syWIaV/9CIUpRFeKgOrqjliSbV3u6O1Rmg9e4xJzSOvd+utn8QfvDK2i5
+         mvohwvrNbYDEH4fvq+fdnaosMEGcGhSrifhiD5jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 296/405] IB/mlx5: Compare only index part of a memory window rkey
-Date:   Wed, 29 May 2019 20:04:54 -0700
-Message-Id: <20190530030555.810274417@linuxfoundation.org>
+Subject: [PATCH 5.1 295/405] timekeeping: Force upper bound for setting CLOCK_REALTIME
+Date:   Wed, 29 May 2019 20:04:53 -0700
+Message-Id: <20190530030555.760390115@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,60 +67,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d623dfd2836114507d647c9793a80d213d8bffe8 ]
+[ Upstream commit 7a8e61f8478639072d402a26789055a4a4de8f77 ]
 
-The InfiniBand Architecture Specification section 10.6.7.2.4 TYPE 2 MEMORY
-WINDOWS says that if the CI supports the Base Memory Management Extensions
-defined in this specification, the R_Key format for a Type 2 Memory Window
-must consist of:
+Several people reported testing failures after setting CLOCK_REALTIME close
+to the limits of the kernel internal representation in nanoseconds,
+i.e. year 2262.
 
-* 24 bit index in the most significant bits of the R_Key, which is owned
-  by the CI, and
-* 8 bit key in the least significant bits of the R_Key, which is owned by
-  the Consumer.
+The failures are exposed in subsequent operations, i.e. when arming timers
+or when the advancing CLOCK_MONOTONIC makes the calculation of
+CLOCK_REALTIME overflow into negative space.
 
-This means that the kernel should compare only the index part of a R_Key
-to determine equality with another R_Key.
+Now people start to paper over the underlying problem by clamping
+calculations to the valid range, but that's just wrong because such
+workarounds will prevent detection of real issues as well.
 
-Fixes: db570d7deafb ("IB/mlx5: Add ODP support to MW")
-Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Moni Shoua <monis@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+It is reasonable to force an upper bound for the various methods of setting
+CLOCK_REALTIME. Year 2262 is the absolute upper bound. Assume a maximum
+uptime of 30 years which is plenty enough even for esoteric embedded
+systems. That results in an upper bound of year 2232 for setting the time.
+
+Once that limit is reached in reality this limit is only a small part of
+the problem space. But until then this stops people from trying to paper
+over the problem at the wrong places.
+
+Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Reported-by: Hongbo Yao <yaohongbo@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/odp.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ include/linux/time64.h    | 21 +++++++++++++++++++++
+ kernel/time/time.c        |  2 +-
+ kernel/time/timekeeping.c |  6 +++---
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
-index 0aa10ebda5d9a..91669e35c6ca8 100644
---- a/drivers/infiniband/hw/mlx5/odp.c
-+++ b/drivers/infiniband/hw/mlx5/odp.c
-@@ -711,6 +711,15 @@ struct pf_frame {
- 	int depth;
- };
+diff --git a/include/linux/time64.h b/include/linux/time64.h
+index f38d382ffec13..a620ee610b9f3 100644
+--- a/include/linux/time64.h
++++ b/include/linux/time64.h
+@@ -33,6 +33,17 @@ struct itimerspec64 {
+ #define KTIME_MAX			((s64)~((u64)1 << 63))
+ #define KTIME_SEC_MAX			(KTIME_MAX / NSEC_PER_SEC)
  
-+static bool mkey_is_eq(struct mlx5_core_mkey *mmkey, u32 key)
++/*
++ * Limits for settimeofday():
++ *
++ * To prevent setting the time close to the wraparound point time setting
++ * is limited so a reasonable uptime can be accomodated. Uptime of 30 years
++ * should be really sufficient, which means the cutoff is 2232. At that
++ * point the cutoff is just a small part of the larger problem.
++ */
++#define TIME_UPTIME_SEC_MAX		(30LL * 365 * 24 *3600)
++#define TIME_SETTOD_SEC_MAX		(KTIME_SEC_MAX - TIME_UPTIME_SEC_MAX)
++
+ static inline int timespec64_equal(const struct timespec64 *a,
+ 				   const struct timespec64 *b)
+ {
+@@ -100,6 +111,16 @@ static inline bool timespec64_valid_strict(const struct timespec64 *ts)
+ 	return true;
+ }
+ 
++static inline bool timespec64_valid_settod(const struct timespec64 *ts)
 +{
-+	if (!mmkey)
++	if (!timespec64_valid(ts))
 +		return false;
-+	if (mmkey->type == MLX5_MKEY_MW)
-+		return mlx5_base_mkey(mmkey->key) == mlx5_base_mkey(key);
-+	return mmkey->key == key;
++	/* Disallow values which cause overflow issues vs. CLOCK_REALTIME */
++	if ((unsigned long long)ts->tv_sec >= TIME_SETTOD_SEC_MAX)
++		return false;
++	return true;
 +}
 +
- static int get_indirect_num_descs(struct mlx5_core_mkey *mmkey)
- {
- 	struct mlx5_ib_mw *mw;
-@@ -760,7 +769,7 @@ static int pagefault_single_data_segment(struct mlx5_ib_dev *dev,
+ /**
+  * timespec64_to_ns - Convert timespec64 to nanoseconds
+  * @ts:		pointer to the timespec64 variable to be converted
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index c3f756f8534bb..86656bbac232e 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -171,7 +171,7 @@ int do_sys_settimeofday64(const struct timespec64 *tv, const struct timezone *tz
+ 	static int firsttime = 1;
+ 	int error = 0;
  
- next_mr:
- 	mmkey = __mlx5_mr_lookup(dev->mdev, mlx5_base_mkey(key));
--	if (!mmkey || mmkey->key != key) {
-+	if (!mkey_is_eq(mmkey, key)) {
- 		mlx5_ib_dbg(dev, "failed to find mkey %x\n", key);
- 		ret = -EFAULT;
- 		goto srcu_unlock;
+-	if (tv && !timespec64_valid(tv))
++	if (tv && !timespec64_valid_settod(tv))
+ 		return -EINVAL;
+ 
+ 	error = security_settime64(tv, tz);
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index f986e1918d129..f136c56c28057 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1221,7 +1221,7 @@ int do_settimeofday64(const struct timespec64 *ts)
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
+-	if (!timespec64_valid_strict(ts))
++	if (!timespec64_valid_settod(ts))
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock_irqsave(&timekeeper_lock, flags);
+@@ -1278,7 +1278,7 @@ static int timekeeping_inject_offset(const struct timespec64 *ts)
+ 	/* Make sure the proposed value is valid */
+ 	tmp = timespec64_add(tk_xtime(tk), *ts);
+ 	if (timespec64_compare(&tk->wall_to_monotonic, ts) > 0 ||
+-	    !timespec64_valid_strict(&tmp)) {
++	    !timespec64_valid_settod(&tmp)) {
+ 		ret = -EINVAL;
+ 		goto error;
+ 	}
+@@ -1527,7 +1527,7 @@ void __init timekeeping_init(void)
+ 	unsigned long flags;
+ 
+ 	read_persistent_wall_and_boot_offset(&wall_time, &boot_offset);
+-	if (timespec64_valid_strict(&wall_time) &&
++	if (timespec64_valid_settod(&wall_time) &&
+ 	    timespec64_to_ns(&wall_time) > 0) {
+ 		persistent_clock_exists = true;
+ 	} else if (timespec64_to_ns(&wall_time) != 0) {
 -- 
 2.20.1
 
