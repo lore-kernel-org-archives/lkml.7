@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF667C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0D5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91487250D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FFA250D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189320;
-	bh=j2Q8UvMbIUpdug7JZmOyqriFBo2hIP5LGfQbHkTGIb4=;
+	s=default; t=1559189325;
+	bh=5lqbSiFsCzajkB4FyK61e1Rl1EHlse2aMLHD0Ua8Zf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xk4G2NJ2RnTuRYN5XTwnnin789CiFfeDdiXKgkXmJAPYmGPMo4SucN3OkFAVOZuNT
-	 T/e2uVnzBvKojfVSG5Ez8X5yIW+cPC1NUv/EZ8tgaKdD9zZRUb7QpEMStis0HqyE+G
-	 mKPRELxgUizieYV0E6XNbEjHFpQyGlc3StZBUMS4=
+	b=u7dWKkuTOCqj8QHXjTtoGqAOVnO08W7kNTvRmg2/uZ3Rc+b2xW9brqwzpJaF8wupE
+	 Ot/s0WY6GHBKmX+MwUL+iAkhfEcjjoTGM3vwR1Vc3ub8WxxHsFVG9LC9NMwHMEtNxm
+	 nGIKAg/dKPBa/Hre53x5d7q9TNSpCUeIuxm5bHbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfE3EIj (ORCPT
+        id S1727493AbfE3EIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45864 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbfE3DRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731069AbfE3DRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38816246AA;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEB2246A2;
         Thu, 30 May 2019 03:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186237;
-        bh=j2Q8UvMbIUpdug7JZmOyqriFBo2hIP5LGfQbHkTGIb4=;
+        bh=5lqbSiFsCzajkB4FyK61e1Rl1EHlse2aMLHD0Ua8Zf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzD93mWiQcAqgkbd0EH/Z3wTr6Wjit6tFJBW8THMZmtygXifNe/3x1aeIaL4uzaHn
-         0CaTpDdkOa6vJx7+jIpAsimbuw066swj/mVm8gE4+vnHeQweyDQsUUo35Q33Sx3dTY
-         OTu74Zt/CPIxVXFxPl3RV6NHncmm1Dh5nDiz2tUw=
+        b=X19UE1MITgMojc+wdzxN4OPmLva/R23ieQsO85X0b3hHcPiDjEwNRE4yUnYu7TXyj
+         dubWyi/JWeHE5SpuZvXe6ZiyloY5kqMkDQz6rH5VU8zYmnuZZCmnsdTrJwVApiPkxo
+         GXEukqXdobnS7xIu/WSxYc5MlP7s9Tdbvd6kbpbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 146/276] drm: etnaviv: avoid DMA API warning when importing buffers
-Date:   Wed, 29 May 2019 20:05:04 -0700
-Message-Id: <20190530030534.767991607@linuxfoundation.org>
+Subject: [PATCH 4.19 147/276] phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
+Date:   Wed, 29 May 2019 20:05:05 -0700
+Message-Id: <20190530030534.820598616@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,90 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1262cc8893ecb0eb2c21e042d0d268cc180edb61 ]
+[ Upstream commit e6f32efb1b128344a2c7df9875bc1a1abaa1d395 ]
 
-During boot, I get this kernel warning:
+On platforms where the MUSB and HCI controllers share PHY0, PHY passby
+is required when using the HCI controller with the PHY, but it must be
+disabled when the MUSB controller is used instead.
 
-WARNING: CPU: 0 PID: 19001 at kernel/dma/debug.c:1301 debug_dma_map_sg+0x284/0x3dc
-etnaviv etnaviv: DMA-API: mapping sg segment longer than device claims to support [len=3145728] [max=65536]
-Modules linked in: ip6t_REJECT nf_reject_ipv6 ip6t_rpfilter xt_tcpudp ipt_REJECT nf_reject_ipv4 xt_conntrack ip_set nfnetlink ebtable_broute ebtable_nat ip6table_raw ip6table_nat nf_nat_ipv6 ip6table_mangle iptable_raw iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 libcrc32c iptable_mangle ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter caam_jr error snd_soc_imx_spdif imx_thermal snd_soc_imx_audmux nvmem_imx_ocotp snd_soc_sgtl5000
-caam imx_sdma virt_dma coda rc_cec v4l2_mem2mem snd_soc_fsl_ssi snd_soc_fsl_spdif imx_vdoa imx_pcm_dma videobuf2_dma_contig etnaviv dw_hdmi_cec gpu_sched dw_hdmi_ahb_audio imx6q_cpufreq nfsd sch_fq_codel ip_tables x_tables
-CPU: 0 PID: 19001 Comm: Xorg Not tainted 4.20.0+ #307
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[<c0019658>] (unwind_backtrace) from [<c001489c>] (show_stack+0x10/0x14)
-[<c001489c>] (show_stack) from [<c07fb420>] (dump_stack+0x9c/0xd4)
-[<c07fb420>] (dump_stack) from [<c00312dc>] (__warn+0xf8/0x124)
-[<c00312dc>] (__warn) from [<c00313d0>] (warn_slowpath_fmt+0x38/0x48)
-[<c00313d0>] (warn_slowpath_fmt) from [<c00b14e8>] (debug_dma_map_sg+0x284/0x3dc)
-[<c00b14e8>] (debug_dma_map_sg) from [<c046eb40>] (drm_gem_map_dma_buf+0xc4/0x13c)
-[<c046eb40>] (drm_gem_map_dma_buf) from [<c04c3314>] (dma_buf_map_attachment+0x38/0x5c)
-[<c04c3314>] (dma_buf_map_attachment) from [<c046e728>] (drm_gem_prime_import_dev+0x74/0x104)
-[<c046e728>] (drm_gem_prime_import_dev) from [<c046e5bc>] (drm_gem_prime_fd_to_handle+0x84/0x17c)
-[<c046e5bc>] (drm_gem_prime_fd_to_handle) from [<c046edd0>] (drm_prime_fd_to_handle_ioctl+0x38/0x4c)
-[<c046edd0>] (drm_prime_fd_to_handle_ioctl) from [<c0460efc>] (drm_ioctl_kernel+0x90/0xc8)
-[<c0460efc>] (drm_ioctl_kernel) from [<c0461114>] (drm_ioctl+0x1e0/0x3b0)
-[<c0461114>] (drm_ioctl) from [<c01cae20>] (do_vfs_ioctl+0x90/0xa48)
-[<c01cae20>] (do_vfs_ioctl) from [<c01cb80c>] (ksys_ioctl+0x34/0x60)
-[<c01cb80c>] (ksys_ioctl) from [<c0009000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd81a9fa8 to 0xd81a9ff0)
-9fa0:                   b6c69c88 bec613f8 00000009 c00c642e bec613f8 b86c4600
-9fc0: b6c69c88 bec613f8 c00c642e 00000036 012762e0 01276348 00000300 012d91f8
-9fe0: b6989f18 bec613dc b697185c b667be5c
-irq event stamp: 47905
-hardirqs last  enabled at (47913): [<c0098824>] console_unlock+0x46c/0x680
-hardirqs last disabled at (47922): [<c0098470>] console_unlock+0xb8/0x680
-softirqs last  enabled at (47754): [<c000a484>] __do_softirq+0x344/0x540
-softirqs last disabled at (47701): [<c0038700>] irq_exit+0x124/0x144
----[ end trace af477747acbcc642 ]---
+Without this, PHY0 passby is always enabled, which results in broken
+peripheral mode on such platforms (e.g. H3/H5).
 
-The reason is the contiguous buffer exceeds the default maximum segment
-size of 64K as specified by dma_get_max_seg_size() in
-linux/dma-mapping.h.  Fix this by providing our own segment size, which
-is set to 2GiB to cover the window found in MMUv1 GPUs.
+Fixes: ba4bdc9e1dc0 ("PHY: sunxi: Add driver for sunxi usb phy")
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 5 +++++
- drivers/gpu/drm/etnaviv/etnaviv_drv.h | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 83c1f46670bfe..00675fcbffa2d 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -527,6 +527,9 @@ static int etnaviv_bind(struct device *dev)
- 	}
- 	drm->dev_private = priv;
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 15c8fc2abf01f..1f8809bab002c 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -550,6 +550,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
++	struct sun4i_usb_phy *phy = phy_get_drvdata(phy0);
+ 	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
  
-+	dev->dma_parms = &priv->dma_parms;
-+	dma_set_max_seg_size(dev, SZ_2G);
+@@ -606,6 +607,9 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 			mutex_unlock(&phy0->mutex);
+ 		}
+ 
++		/* Enable PHY0 passby for host mode only. */
++		sun4i_usb_phy_passby(phy, !id_det);
 +
- 	mutex_init(&priv->gem_lock);
- 	INIT_LIST_HEAD(&priv->gem_list);
- 	priv->num_gpus = 0;
-@@ -564,6 +567,8 @@ static void etnaviv_unbind(struct device *dev)
- 
- 	component_unbind_all(dev, drm);
- 
-+	dev->dma_parms = NULL;
-+
- 	drm->dev_private = NULL;
- 	kfree(priv);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index 8d02d1b7dcf5a..b2930d1fe97c0 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -43,6 +43,7 @@ struct etnaviv_file_private {
- 
- struct etnaviv_drm_private {
- 	int num_gpus;
-+	struct device_dma_parameters dma_parms;
- 	struct etnaviv_gpu *gpu[ETNA_MAX_PIPES];
- 
- 	/* list of GEM objects: */
+ 		/* Re-route PHY0 if necessary */
+ 		if (data->cfg->phy0_dual_route)
+ 			sun4i_usb_phy0_reroute(data, id_det);
 -- 
 2.20.1
 
