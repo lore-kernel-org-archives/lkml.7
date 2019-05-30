@@ -2,177 +2,118 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF48DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC0DC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3ED925E3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35FF25E50
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfE3RWm (ORCPT
+        id S1726535AbfE3RZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:22:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53050 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726538AbfE3RWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:22:41 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UHMbEj078678
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:22:40 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sthh558p2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:22:39 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 30 May 2019 18:22:38 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 May 2019 18:22:36 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UHLKLf43319380
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 17:21:20 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59079B2064;
-        Thu, 30 May 2019 17:21:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2CEEAB2065;
-        Thu, 30 May 2019 17:21:20 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 30 May 2019 17:21:20 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1A01016C5D7E; Thu, 30 May 2019 10:21:22 -0700 (PDT)
-Date:   Thu, 30 May 2019 10:21:22 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:test 69/69] arch/x86/include/asm/irqflags.h:41:2: warning:
- 'flags' may be used uninitialized in this function
-Reply-To: paulmck@linux.ibm.com
-References: <201905310055.7eYmYEK8%lkp@intel.com>
+        Thu, 30 May 2019 13:25:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33128 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3RZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:25:19 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4E814E3E00;
+        Thu, 30 May 2019 17:25:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7B3660BE1;
+        Thu, 30 May 2019 17:25:11 +0000 (UTC)
+Subject: [PATCH 00/10] keys: Miscellany [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     keyrings@vger.kernel.org
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ebiggers@kernel.org
+Date:   Thu, 30 May 2019 18:25:11 +0100
+Message-ID: <155923711088.949.14909672457214372214.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905310055.7eYmYEK8%lkp@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19053017-0060-0000-0000-0000034A0372
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01210833; UDB=6.00636186; IPR=6.00991867;
- MB=3.00027121; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 17:22:37
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19053017-0061-0000-0000-0000498E449D
-Message-Id: <20190530172122.GE28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300122
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 30 May 2019 17:25:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 12:35:01AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git test
-> head:   685a26bc60076305987bf06cfd1269e5e4094c73
-> commit: 685a26bc60076305987bf06cfd1269e5e4094c73 [69/69] rcu/nocb: Avoid ->nocb_lock capture by corresponding CPU
-> config: x86_64-randconfig-x009-201921 (attached as .config)
-> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> reproduce:
->         git checkout 685a26bc60076305987bf06cfd1269e5e4094c73
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
-> http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
 
-This is a false positive.  The return value of rcu_segcblist_is_offloaded()
-for a given CPU cannot change post-boot.  (Famous last words!)
+Here are some miscellaneous keyrings fixes and improvements intended for
+the next merge window:
 
-								Thanx, Paul
+ (1) Fix a bunch of warnings from sparse, including missing RCU bits and
+     kdoc-function argument mismatches
 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/irqflags.h:16:0,
->                     from arch/x86/include/asm/processor.h:33,
->                     from arch/x86/include/asm/cpufeature.h:5,
->                     from arch/x86/include/asm/thread_info.h:53,
->                     from include/linux/thread_info.h:38,
->                     from arch/x86/include/asm/preempt.h:7,
->                     from include/linux/preempt.h:78,
->                     from include/linux/spinlock.h:51,
->                     from kernel/rcu/tree.c:23:
->    kernel/rcu/tree_plugin.h: In function 'rcu_nocb_gp_kthread':
-> >> arch/x86/include/asm/irqflags.h:41:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->      asm volatile("push %0 ; popf"
->      ^~~
->    In file included from kernel/rcu/tree.c:3519:0:
->    kernel/rcu/tree_plugin.h:1719:16: note: 'flags' was declared here
->      unsigned long flags;
->                    ^~~~~
->    kernel/rcu/tree_plugin.h: In function 'do_nocb_deferred_wakeup_common':
->    kernel/rcu/tree_plugin.h:1891:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->      wake_nocb_gp(rdp, ndw == RCU_NOCB_WAKE_FORCE, flags);
->      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> --
->    In file included from include/linux/irqflags.h:16:0,
->                     from arch/x86/include/asm/processor.h:33,
->                     from arch/x86/include/asm/cpufeature.h:5,
->                     from arch/x86/include/asm/thread_info.h:53,
->                     from include/linux/thread_info.h:38,
->                     from arch/x86/include/asm/preempt.h:7,
->                     from include/linux/preempt.h:78,
->                     from include/linux/spinlock.h:51,
->                     from kernel//rcu/tree.c:23:
->    kernel//rcu/tree_plugin.h: In function 'rcu_nocb_gp_kthread':
-> >> arch/x86/include/asm/irqflags.h:41:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->      asm volatile("push %0 ; popf"
->      ^~~
->    In file included from kernel//rcu/tree.c:3519:0:
->    kernel//rcu/tree_plugin.h:1719:16: note: 'flags' was declared here
->      unsigned long flags;
->                    ^~~~~
->    kernel//rcu/tree_plugin.h: In function 'do_nocb_deferred_wakeup_common':
->    kernel//rcu/tree_plugin.h:1891:2: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->      wake_nocb_gp(rdp, ndw == RCU_NOCB_WAKE_FORCE, flags);
->      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> vim +/flags +41 arch/x86/include/asm/irqflags.h
-> 
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  37  
-> 1f59a458 arch/x86/include/asm/irqflags.h Nick Desaulniers          2018-08-27  38  extern inline void native_restore_fl(unsigned long flags);
-> 1f59a458 arch/x86/include/asm/irqflags.h Nick Desaulniers          2018-08-27  39  extern inline void native_restore_fl(unsigned long flags)
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  40  {
-> cf7f7191 include/asm-x86/irqflags.h      Joe Perches               2008-03-23 @41  	asm volatile("push %0 ; popf"
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  42  		     : /* no output */
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  43  		     :"g" (flags)
-> cf7f7191 include/asm-x86/irqflags.h      Joe Perches               2008-03-23  44  		     :"memory", "cc");
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  45  }
-> 6abcd98f include/asm-x86/irqflags.h      Glauber de Oliveira Costa 2008-01-30  46  
-> 
-> :::::: The code at line 41 was first introduced by commit
-> :::::: cf7f7191cf20011e47243b594e433275a6db811b include/asm-x86/irqflags.h: checkpatch cleanups - formatting only
-> 
-> :::::: TO: Joe Perches <joe@perches.com>
-> :::::: CC: Ingo Molnar <mingo@elte.hu>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ (2) Implement a keyctl to allow a key to be moved from one keyring to
+     another, with the option of prohibiting key replacement in the
+     destination keyring.
 
+ (3) Grant Link permission to possessors of request_key_auth tokens so that
+     upcall servicing daemons can more easily arrange things such that only
+     the necessary auth key is passed to the actual service program, and
+     not all the auth keys a daemon might possesss.
+
+ (4) Improvement in lookup_user_key().
+
+ (5) Implement a keyctl to allow keyrings subsystem capabilities to be
+     queried.
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-misc
+
+The keyutils next branch has commits to make available, document and test
+the move-key and capabilities code:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log/?h=next
+
+Changes:
+
+ (*) Fixed lock ordering bug in KEYCTL_MOVE.
+
+ (*) Added improvement patch from Eric.
+
+ (*) Added capabilities patch.
+
+David
+---
+David Howells (9):
+      keys: sparse: Fix key_fs[ug]id_changed()
+      keys: sparse: Fix incorrect RCU accesses
+      keys: sparse: Fix kdoc mismatches
+      keys: Change keyring_serialise_link_sem to a mutex
+      keys: Break bits out of key_unlink()
+      keys: Hoist locking out of __key_link_begin()
+      keys: Add a keyctl to move a key between keyrings
+      keys: Grant Link permission to possessers of request_key auth keys
+      keys: Add capability-checking keyctl function
+
+Eric Biggers (1):
+      KEYS: reuse keyring_index_key::desc_len in lookup_user_key()
+
+
+ Documentation/security/keys/core.rst |   21 +++
+ include/linux/key.h                  |   13 +-
+ include/uapi/linux/keyctl.h          |   17 ++
+ kernel/cred.c                        |    4 
+ security/keys/compat.c               |    6 +
+ security/keys/internal.h             |    7 +
+ security/keys/key.c                  |   23 ++-
+ security/keys/keyctl.c               |   92 +++++++++++
+ security/keys/keyring.c              |  275 +++++++++++++++++++++++++++-------
+ security/keys/process_keys.c         |   26 +--
+ security/keys/request_key.c          |    7 +
+ security/keys/request_key_auth.c     |    4 
+ 12 files changed, 413 insertions(+), 82 deletions(-)
 
