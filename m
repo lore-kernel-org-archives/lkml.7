@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38290C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA492C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112F5258BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE2C2229C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191075;
-	bh=BJ39WeU6Gz7O+UFcSfdaXtCV0vuqbjEefStskKc/mqo=;
+	s=default; t=1559191078;
+	bh=19fyECl+rhBtJIFXsu7wTfF73tIVsZeisJEa/ZsHLXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fty2aYeXV0aAapUa+XGAtmQG7As0p3XmWrRW+PVGCjRn/90MdWN9LX4aczVkwzM3D
-	 /8e1APFQG15QY4dZVu9FQXlqocMyNKnNc1jhEfoRo+8tLSvQlBn0ymdLKwD/Useh4M
-	 OOwz2kVCYMowjvcNbNcCDPODnqzKIB5uzBA1oudI=
+	b=o+HN31FHmwNH6TO6GfqGqTz3duZavxcqKLOj5rA2S4d+F5yGySTSF2WZsMAufSpq3
+	 GNvEwiyiZcqkTWZH4aAjMqc7g17HQD5J2qFYN5FvFz7fcNUaJQLS1tMSLgyuJrlJZ6
+	 OP0VZpPl5JLcBH28euio+fpfsPl1Nr2GvBTzH5Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388476AbfE3Ehx (ORCPT
+        id S2388544AbfE3Eh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:37:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfE3DMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:50 -0400
+        id S1729239AbfE3DMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B16C24532;
-        Thu, 30 May 2019 03:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3519244B0;
+        Thu, 30 May 2019 03:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185969;
-        bh=BJ39WeU6Gz7O+UFcSfdaXtCV0vuqbjEefStskKc/mqo=;
+        s=default; t=1559185967;
+        bh=19fyECl+rhBtJIFXsu7wTfF73tIVsZeisJEa/ZsHLXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEHJfF5FttDMxuPAIUEOZGv8nHpQAvUCpU4rnwTzQBA5fg17T0KdT5Sohl21muIXM
-         v3k3LLEbwyaigDiK0yB/2BYhv36IeeEs9gIlXNysHrtTNEA2PDngUSQ4lMRu6s5Oc9
-         dtItXFyglqOegmFPK8tRLr9twR2ymiMfFZXexbiA=
+        b=trsELMFLGZQVURt9AizmnrSZ7T+F4ughTRBF7L4XHoAFT4xZgk+XgxgjgSinAqyki
+         2/0vSM5+P27ECol+blwW2RZScsRVFSBK5QhLRL2pHHn/yjEbuk1ab3E9aYTctwGz+l
+         TFTDzAOxZTpXDRipI0LNnkgEojK/ZdXsuJvo/s/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Trent Piepho <tpiepho@impinj.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 382/405] spi: imx: stop buffer overflow in RX FIFO flush
-Date:   Wed, 29 May 2019 20:06:20 -0700
-Message-Id: <20190530030600.062448385@linuxfoundation.org>
+Subject: [PATCH 5.1 397/405] drm/drv: Hold ref on parent device during drm_device lifetime
+Date:   Wed, 29 May 2019 20:06:35 -0700
+Message-Id: <20190530030600.666129751@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,55 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c842749ea1d32513f9e603c074d60d7aa07cb2ef ]
+[ Upstream commit 56be6503aab2bc3a30beae408071b9be5e1bae51 ]
 
-Commit 71abd29057cb ("spi: imx: Add support for SPI Slave mode") added
-an RX FIFO flush before start of a transfer.  In slave mode, the master
-may have sent more data than expected and this data will still be in the
-RX FIFO at the start of the next transfer, and so needs to be flushed.
+This makes it safe to access drm_device->dev after the parent device has
+been removed/unplugged.
 
-However, the code to do the flush was accidentally saving this data into
-the previous transfer's RX buffer, clobbering the contents of whatever
-followed that buffer.
-
-Change it to empty the FIFO and throw away the data.  Every one of the
-RX functions for the different eCSPI versions and modes reads the RX
-FIFO data using the same readl() call, so just use that, rather than
-using the spi_imx->rx function pointer and making sure all the different
-rx functions have a working "throw away" mode.
-
-There is another issue, which affects master mode when switching from
-DMA to PIO.  There can be extra data in the RX FIFO which triggers this
-flush code, causing memory corruption in the same manner.  I don't know
-why this data is unexpectedly in the FIFO.  It's likely there is a
-different bug or erratum responsible for that.  But regardless of that,
-I think this is proper fix the for bug at hand here.
-
-Fixes: 71abd29057cb ("spi: imx: Add support for SPI Slave mode")
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190225144232.20761-2-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_drv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 6ec647bbba772..a81ae29aa68a9 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -1494,7 +1494,7 @@ static int spi_imx_transfer(struct spi_device *spi,
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 05bbc2b622fc1..04aa6ccdfb242 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -497,7 +497,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	BUG_ON(!parent);
  
- 	/* flush rxfifo before transfer */
- 	while (spi_imx->devtype_data->rx_available(spi_imx))
--		spi_imx->rx(spi_imx);
-+		readl(spi_imx->base + MXC_CSPIRXDATA);
+ 	kref_init(&dev->ref);
+-	dev->dev = parent;
++	dev->dev = get_device(parent);
+ 	dev->driver = driver;
  
- 	if (spi_imx->slave_mode)
- 		return spi_imx_pio_transfer_slave(spi, transfer);
+ 	/* no per-device feature limits by default */
+@@ -567,6 +567,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	drm_minor_free(dev, DRM_MINOR_RENDER);
+ 	drm_fs_inode_free(dev->anon_inode);
+ err_free:
++	put_device(dev->dev);
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->clientlist_mutex);
+@@ -602,6 +603,8 @@ void drm_dev_fini(struct drm_device *dev)
+ 	drm_minor_free(dev, DRM_MINOR_PRIMARY);
+ 	drm_minor_free(dev, DRM_MINOR_RENDER);
+ 
++	put_device(dev->dev);
++
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->clientlist_mutex);
 -- 
 2.20.1
 
