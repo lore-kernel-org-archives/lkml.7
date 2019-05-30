@@ -2,55 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3292CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F67C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08612240BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3452410F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189862;
-	bh=b/IinIURLaCTrdzZikqrms9DNQ+ATXm92QGfCHzVu7A=;
+	s=default; t=1559189867;
+	bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JMoH7gNn2cNcYNTSl6jniZAwRuQCfLU/omBIx6ZW6kk0iyu5YAiTnjVlL25M391/4
-	 ibuF8nKLlDnacKCZy45AJ0RAFIxHabfJVUk5GH1VLUKQzd29s54kd/eeYkcGkGLyjs
-	 LUK2HmVALd4WaTe/4MjZzazbNAE72VDEOI+5OBvA=
+	b=2FYHXzH7cexeKl45ZOhXYfOh29PTkDuW03o5xiOKhM71JldutXwJh4nJZ65jQ+PNS
+	 IyixgQxTQh9G7h+VBOGKfvxTJno8CUiUFiIUqPGV5tzCdLBH3oBNnX6tZyzlJPHzqP
+	 EHUVgnyLswY65wLgzPj1sCnTY4Wop4mjt4Gbrs14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfE3ERl (ORCPT
+        id S1730402AbfE3DPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbfE3DPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:39 -0400
+        id S1729327AbfE3DNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA1B2459C;
-        Thu, 30 May 2019 03:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2658C2452E;
+        Thu, 30 May 2019 03:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186138;
-        bh=b/IinIURLaCTrdzZikqrms9DNQ+ATXm92QGfCHzVu7A=;
+        s=default; t=1559185983;
+        bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLvR1yEmVOCx/5XAA3cd1g/s+OITnM8ig1OMYvSlW3DErqARE9SUsPbxdw/NyLbKN
-         2/5xGSAq2zEa6N1aa+DI8CkRhZWSuH7nwH8pLBe8p2XtfoiG7bDiyO5rGs/diXQvi/
-         ovhRJQgrUIKYmYdumJ5dn20LvsrP8R5/b3GPPWLM=
+        b=an0VR1W3RnNzs24v/BkUGCwJT7g41lw2lqyeOD32zMa9QPKfXSjynwF/rMCaW1/6Z
+         R9kBeG2jXwzAJ2PXG4CULRdA+ELAsF3gZMYB2OtAx+21uIwnUvm1RnYaEPA1ONYMnu
+         KCM/WYt1gmJjRPE5Jph6juQSsyN978wYgpWpMNNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 303/346] drm/amd/display: Set stream->mode_changed when connectors change
-Date:   Wed, 29 May 2019 20:06:16 -0700
-Message-Id: <20190530030556.187855921@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.0 008/346] crypto: hash - fix incorrect HASH_MAX_DESCSIZE
+Date:   Wed, 29 May 2019 20:01:21 -0700
+Message-Id: <20190530030540.906315583@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -63,56 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b9952f93cd2cf5fca82b06a8179c0f5f7b769e83 ]
+From: Eric Biggers <ebiggers@google.com>
 
-[Why]
-The kms_plane@plane-position-covered-pipe-*-planes subtests can produce
-a sequence of atomic commits such that neither active_changed nor
-mode_changed but connectors_changed.
+commit e1354400b25da645c4764ed6844d12f1582c3b66 upstream.
 
-When this happens we remove the old stream from the context and add
-a new stream but the new stream doesn't have mode_changed=true set.
+The "hmac(sha3-224-generic)" algorithm has a descsize of 368 bytes,
+which is greater than HASH_MAX_DESCSIZE (360) which is only enough for
+sha3-224-generic.  The check in shash_prepare_alg() doesn't catch this
+because the HMAC template doesn't set descsize on the algorithms, but
+rather sets it on each individual HMAC transform.
 
-This incorrect programming sequence causes CRC mismatches to occur in
-the test.
+This causes a stack buffer overflow when SHASH_DESC_ON_STACK() is used
+with hmac(sha3-224-generic).
 
-The stream->mode_changed value should be set whenever a new stream
-is created.
+Fix it by increasing HASH_MAX_DESCSIZE to the real maximum.  Also add a
+sanity check to hmac_init().
 
-[How]
-A new stream is created whenever drm_atomic_crtc_needs_modeset is true.
-We previously covered the active_changed and mode_changed conditions
-for the CRTC but connectors_changed is also checked within
-drm_atomic_crtc_needs_modeset.
+This was detected by the improved crypto self-tests in v5.2, by loading
+the tcrypt module with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y enabled.  I
+didn't notice this bug when I ran the self-tests by requesting the
+algorithms via AF_ALG (i.e., not using tcrypt), probably because the
+stack layout differs in the two cases and that made a difference here.
 
-So just use drm_atomic_crtc_needs_modeset directly to determine the
-mode_changed flag.
+KASAN report:
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:359 [inline]
+    BUG: KASAN: stack-out-of-bounds in shash_default_import+0x52/0x80 crypto/shash.c:223
+    Write of size 360 at addr ffff8880651defc8 by task insmod/3689
+
+    CPU: 2 PID: 3689 Comm: insmod Tainted: G            E     5.1.0-10741-g35c99ffa20edd #11
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+    Call Trace:
+     __dump_stack lib/dump_stack.c:77 [inline]
+     dump_stack+0x86/0xc5 lib/dump_stack.c:113
+     print_address_description+0x7f/0x260 mm/kasan/report.c:188
+     __kasan_report+0x144/0x187 mm/kasan/report.c:317
+     kasan_report+0x12/0x20 mm/kasan/common.c:614
+     check_memory_region_inline mm/kasan/generic.c:185 [inline]
+     check_memory_region+0x137/0x190 mm/kasan/generic.c:191
+     memcpy+0x37/0x50 mm/kasan/common.c:125
+     memcpy include/linux/string.h:359 [inline]
+     shash_default_import+0x52/0x80 crypto/shash.c:223
+     crypto_shash_import include/crypto/hash.h:880 [inline]
+     hmac_import+0x184/0x240 crypto/hmac.c:102
+     hmac_init+0x96/0xc0 crypto/hmac.c:107
+     crypto_shash_init include/crypto/hash.h:902 [inline]
+     shash_digest_unaligned+0x9f/0xf0 crypto/shash.c:194
+     crypto_shash_digest+0xe9/0x1b0 crypto/shash.c:211
+     generate_random_hash_testvec.constprop.11+0x1ec/0x5b0 crypto/testmgr.c:1331
+     test_hash_vs_generic_impl+0x3f7/0x5c0 crypto/testmgr.c:1420
+     __alg_test_hash+0x26d/0x340 crypto/testmgr.c:1502
+     alg_test_hash+0x22e/0x330 crypto/testmgr.c:1552
+     alg_test.part.7+0x132/0x610 crypto/testmgr.c:4931
+     alg_test+0x1f/0x40 crypto/testmgr.c:4952
+
+Fixes: b68a7ec1e9a3 ("crypto: hash - Remove VLA usage")
+Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.20+
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ crypto/hmac.c         |    2 ++
+ include/crypto/hash.h |    8 +++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index e766dede5b472..864c2faf672bd 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4978,8 +4978,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
- 						struct dc_stream_state *stream_state)
- {
--	stream_state->mode_changed =
--		crtc_state->mode_changed || crtc_state->active_changed;
-+	stream_state->mode_changed = drm_atomic_crtc_needs_modeset(crtc_state);
- }
+--- a/crypto/hmac.c
++++ b/crypto/hmac.c
+@@ -168,6 +168,8 @@ static int hmac_init_tfm(struct crypto_t
  
- static int amdgpu_dm_atomic_commit(struct drm_device *dev,
--- 
-2.20.1
-
+ 	parent->descsize = sizeof(struct shash_desc) +
+ 			   crypto_shash_descsize(hash);
++	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE))
++		return -EINVAL;
+ 
+ 	ctx->hash = hash;
+ 	return 0;
+--- a/include/crypto/hash.h
++++ b/include/crypto/hash.h
+@@ -152,7 +152,13 @@ struct shash_desc {
+ };
+ 
+ #define HASH_MAX_DIGESTSIZE	 64
+-#define HASH_MAX_DESCSIZE	360
++
++/*
++ * Worst case is hmac(sha3-224-generic).  Its context is a nested 'shash_desc'
++ * containing a 'struct sha3_state'.
++ */
++#define HASH_MAX_DESCSIZE	(sizeof(struct shash_desc) + 360)
++
+ #define HASH_MAX_STATESIZE	512
+ 
+ #define SHASH_DESC_ON_STACK(shash, ctx)				  \
 
 
