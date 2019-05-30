@@ -5,54 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FFBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09741C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0157624B14
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D365623BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187142;
-	bh=cljvCdreLiATqOX+yPWqpwvNf0F2rEkzn8uzKx7ndVo=;
+	s=default; t=1559187144;
+	bh=tZflS49DPNtO7Lc38JLA01S4YHi42nusf2afGwu/Y7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxbR7paxnbRuCcCQT7Vj4ybNdsVW/HKI/pZiyBqH9pYelw0QGXLuCWX6Vqft3HrAI
-	 KF4JGgnIDph0JkYbojh4Y83aK/Rvcoa7avxrCB2EJ95A5uzUaT545AnyleDNeVQjaQ
-	 wof8ytooSGO/ixH3BJbuOOxsjut//aFb07mhAiOk=
+	b=shR1HGyfLuexSkRuvUMojPV2kY0GhQIu3/vYSoaRyBbb7Yg5EllH830t/SdUchD1D
+	 BLCf3KM45nghC3+Cx1MZutU9EdwUw+M21qP3L42L0KwhXhyex2aAiFqz+VdEWGEbSB
+	 /ZKClKf/pD7kz0oh3NnIymGbaVCJMkbCOn6KybRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfE3D3f (ORCPT
+        id S2388401AbfE3D3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbfE3DUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:45 -0400
+        id S1732312AbfE3DUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 847722492F;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9C524934;
         Thu, 30 May 2019 03:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186444;
-        bh=cljvCdreLiATqOX+yPWqpwvNf0F2rEkzn8uzKx7ndVo=;
+        bh=tZflS49DPNtO7Lc38JLA01S4YHi42nusf2afGwu/Y7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHFMTvJz5TBSyR4eGSG332svgfuj0dsjZVhGY0xeM59t9zQIX1g/yEPtyzc0qZF6y
-         oN7gzTbilh6dH8q+M8y+CfLd2QXIkQ6r47LuPI/oiY/SavEbKJWqBH9o9qOiRPqYV1
-         TtkotPQnxfY4QXVuTa3cNKiNN4A5r0bEdhn6CNvg=
+        b=z38nWaLz4LH60RyyDxLeMkFQcv/sER9h34wnpjCYDXkAfJunR9fZtlqw/hscNcuIm
+         mv3tgzecGGgLSwo0PCxQWeSP9yTldaoQfuV+2qn39wr9avw9Cl3IUwGFH/DwitH+eN
+         3FFBN8lBao6NqJ0Gp5tIvii95nkFd2Bpv0qMyY8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH 4.9 050/128] x86/build: Move _etext to actual end of .text
-Date:   Wed, 29 May 2019 20:06:22 -0700
-Message-Id: <20190530030443.771931522@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 049/128] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 29 May 2019 20:06:21 -0700
+Message-Id: <20190530030443.598433870@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -65,49 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+clang has identified a code path in which it thinks a
+variable may be unused:
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
+
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
+
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 55f04875293fa..51b772f9d886a 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -111,11 +111,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index dd344ee9e62b7..ebacd21714efa 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -322,10 +322,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
  
-+	/* End of text section */
-+	_etext = .;
-+
- 	NOTES :text :note
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
  
- 	EXCEPTION_TABLE(16) :text = 0x9090
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
 -- 
 2.20.1
 
