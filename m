@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38083C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F89AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079FB25CCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590E925D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191792;
-	bh=wAoKdH08sGvXUO6NMdS4L0VCg3tFUqAm5C0tAAGgYXQ=;
+	s=default; t=1559191798;
+	bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRZPwEEoQRfzJuhSekcz81wClpVF2FepfgrIZo8BzOs1IdCD9V83X5jSZrG6glMQW
-	 rPobKjRpIdfRkS9Yw92HmGVnh+/eFNeSvl94GIknvXoJ2W3DCKnPbraoc49KJE0Dbq
-	 nWuUmxf0ouUeRPxH3WcBRbhfPACIzZ9mMC/jXSkk=
+	b=kinYw3hGU0/JDW31sto5h1NstltH5t/2BJQa9TxeADlGvSBsH0toqztNT57+pEXAY
+	 xStQ+QPBbsqr7xxZ4XHYrB//XAzGBUPaTg/ctzxW1bb/u0uyVDSxg3SQdhlwn3aNby
+	 zv4m9QPYWm0Lbqn074ZffTSSv7VNYlw4R7L03WAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfE3Etu (ORCPT
+        id S2388863AbfE3Et5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbfE3DLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:10 -0400
+        id S1728377AbfE3DLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 556E3244E6;
-        Thu, 30 May 2019 03:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7CBB244A0;
+        Thu, 30 May 2019 03:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185869;
-        bh=wAoKdH08sGvXUO6NMdS4L0VCg3tFUqAm5C0tAAGgYXQ=;
+        s=default; t=1559185867;
+        bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMn8CuwzGNI+IFTO3bgEKdi0QIWrcbKakDZsqqb+DEE8sEr8p8U/ufxafO5q6Zu4O
-         anThEJtqGr0SyYVSWi7zWZNzEGUgg7znkmvi8J8ciQoGTqkoJXSl+spFU7Ov2SGVNU
-         aozIF7HKrL1xogCHdtD4+a/cbrfSjXZmxUxQUzHQ=
+        b=ZVrtnM9EOfn9ZAwdhrWNeXK3K1L/NxD/x43r5WThBxXsxYbqSfu9zL5tc6+WL0u3d
+         4FYrYzDo5x/UfqxKXIGs2n6YMRii0w6+7pjuwq1cvgfz8tzZB2qPesb4KpCS2/tWAs
+         exKFphSH7jAcOovF3VBMIytT92PK/Amn1ShZ19Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Pallardy <loic.pallardy@st.com>,
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 210/405] PM / core: Propagate dev->power.wakeup_path when no callbacks
-Date:   Wed, 29 May 2019 20:03:28 -0700
-Message-Id: <20190530030551.739793139@linuxfoundation.org>
+Subject: [PATCH 5.1 207/405] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
+Date:   Wed, 29 May 2019 20:03:25 -0700
+Message-Id: <20190530030551.606966990@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,45 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc351d4c5f4fe4d0f274d6d660227be0c3a03317 ]
+[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
 
-The dev->power.direct_complete flag may become set in device_prepare() in
-case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-set). This leads to a broken behaviour, when there is child having wakeup
-enabled and relies on its parent to be used in the wakeup path.
+eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
+reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
+and 0xC(2^25 SD clock). The data timeout counter can count from
+2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
+counter counts for only 2^13 SD clocks.
+A-008358: The data timeout counter value loaded into the timeout
+counter is less than expected and can result into early timeout
+error in case of eSDHC data transactions. The table below shows
+the expected vs actual timeout period for different values of
+SYSCTL[DTOCV]:
+these two erratum has the same quirk to control it, and set
+SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
 
-More precisely, when the direct complete path becomes selected for the
-child in __device_suspend(), the propagation of the dev->power.wakeup_path
-becomes skipped as well.
-
-Let's address this problem, by checking if the device is a part the wakeup
-path or has wakeup enabled, then prevent the direct complete path from
-being used.
-
-Reported-by: Loic Pallardy <loic.pallardy@st.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-[ rjw: Comment cleanup ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index f80d298de3fa4..8ad20ed0cb7c3 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
- 	if (dev->power.syscore)
- 		goto Complete;
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index 4fc4d2c7643c5..7e0eae8dafae0 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -1077,8 +1077,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
-+	/* Avoid direct_complete to let wakeup_path propagate. */
-+	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-+		dev->power.direct_complete = false;
-+
- 	if (dev->power.direct_complete) {
- 		if (pm_runtime_status_suspended(dev)) {
- 			pm_runtime_disable(dev);
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+ 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++	}
+ 
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
 -- 
 2.20.1
 
