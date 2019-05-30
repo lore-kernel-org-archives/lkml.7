@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE772C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8A1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC1525B44
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0490225B7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191554;
-	bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+	s=default; t=1559191560;
+	bh=ASvY6a5M6iEQjWScKSfAjtQLT7Ex6G0T4yGJbVUtEaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQ2zyt3G7WYImBMkP9/qZigtNuR7hM6o5eE0ANGWUo2K1NHgtpdF/EEeFKoJRcGqU
-	 eVD/cfMI/piSUU2DBPz2lxdSbz31SSBvWnDlp9w3jRq5XWsfJuszGFm63ZFdG100R7
-	 F4gxMwPk73f96OzuLh1z7tWEgQBZ7BXKuoDDFwHo=
+	b=YLWyaoGZp7Salg2TLgEsGt9x6z5ySTICSSwsu9+hOFbOSQ7Ut10IoymY359KImuVY
+	 fFvaboWggno3qK8iwRmIPUzX+/hmrfv6wkSsby+bQZm7O2oxiLfBXqnmBWHtP1Fyt1
+	 7C89Nohv11BwVC6VST/e2sDUjYUWnA/2Wwm0naAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbfE3Epx (ORCPT
+        id S2388812AbfE3Ep6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbfE3DLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:49 -0400
+        id S1727874AbfE3DLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42650244D2;
-        Thu, 30 May 2019 03:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4652244E8;
+        Thu, 30 May 2019 03:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185908;
-        bh=xBU2hhLJSBFB5kZNSkrZObsIKiSrJiUa1t5WuCZg3jo=;
+        s=default; t=1559185907;
+        bh=ASvY6a5M6iEQjWScKSfAjtQLT7Ex6G0T4yGJbVUtEaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/RkqZeAsW7wicJ1xQ25a8rwENZKtaACDcKrtl5UhrCazNtIEaNpr2WuKb7Ng+Qi7
-         leswgrGY48nd4MSCOauwl1q8nkihMIdjbTjVx5SOMTc+m8/cWGwZafsFPV/f4E/4ss
-         uBCFBBvig6PvvNOAsOpcFEf6tQaGSzIMq2m0rB6s=
+        b=aVhbqK8p5yifn9Qh6CiN3kBgy5YaykUUbRq7diE9FFTYTnZR1vVANhzjnzRLIk4TC
+         RMR+W1OB+QvLSAmyEx6DXuCZ5gHqo1uhUpHTNgPenUKt4fPFfj/2COgV7RECEMqEX5
+         XJcDTrNtitDSiZTHE1NgkwKk//m1xGHd+DvF2T+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 282/405] HID: logitech-hidpp: change low battery level threshold from 31 to 30 percent
-Date:   Wed, 29 May 2019 20:04:40 -0700
-Message-Id: <20190530030555.149187976@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 281/405] clk: renesas: rcar-gen3: Correct parent clock of Audio-DMAC
+Date:   Wed, 29 May 2019 20:04:39 -0700
+Message-Id: <20190530030555.106478106@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,49 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1f87b0cd32b3456d7efdfb017fcf74d0bfe3ec29 ]
+[ Upstream commit b9df2ea2b8d09ad850afe4d4a0403cb23d9e0c02 ]
 
-According to hidpp20_batterylevel_get_battery_info my Logitech K270
-keyboard reports only 2 battery levels. This matches with what I've seen
-after testing with batteries at varying level of fullness, it always
-reports either 5% or 30%.
+The clock sources of the AXI-bus clock (266.66 MHz) used for Audio-DMAC
+DMA transfers are:
 
-Windows reports "battery good" for the 30% level. I've captured an USB
-trace of Windows reading the battery and it is getting the same info
-as the Linux hidpp code gets.
+    Channel        R-Car H3    R-Car M3-W    R-Car M3-N    R-Car E3
+    ---------------------------------------------------------------
+    Audio-DMAC0    S1D2        S1D2          S1D2          S1D2
+    Audio-DMAC1    S1D2        S1D2          S1D2          -
 
-Now that Linux handles these devices as hidpp devices, it reports the
-battery as being low as it treats anything under 31% as low, this leads
-to the user constantly getting a "Keyboard battery is low" warning from
-GNOME3, which is very annoying.
+As a result, change the parent clocks of the Audio-DMAC{0,1} module
+clocks on R-Car H3, R-Car M3-W, and R-Car M3-N to S1D2, and change the
+parent clock of the Audio-DMAC0 module on R-Car E3 to S1D2.
 
-This commit fixes this by changing the low threshold to anything under
-30%, which I assume is what Windows does.
+NOTE: This information will be reflected in a future revision of the
+      R-Car Gen3 Hardware Manual.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[geert: Update R-Car D3, RZ/G2M, and RZ/G2E]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/clk/renesas/r8a774a1-cpg-mssr.c | 4 ++--
+ drivers/clk/renesas/r8a774c0-cpg-mssr.c | 2 +-
+ drivers/clk/renesas/r8a7795-cpg-mssr.c  | 4 ++--
+ drivers/clk/renesas/r8a7796-cpg-mssr.c  | 4 ++--
+ drivers/clk/renesas/r8a77965-cpg-mssr.c | 4 ++--
+ drivers/clk/renesas/r8a77990-cpg-mssr.c | 2 +-
+ drivers/clk/renesas/r8a77995-cpg-mssr.c | 2 +-
+ 7 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index ffd30c7492df8..e74fa990ba133 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1021,7 +1021,11 @@ static int hidpp_map_battery_level(int capacity)
- {
- 	if (capacity < 11)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
--	else if (capacity < 31)
-+	/*
-+	 * The spec says this should be < 31 but some devices report 30
-+	 * with brand new batteries and Windows reports 30 as "Good".
-+	 */
-+	else if (capacity < 30)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_LOW;
- 	else if (capacity < 81)
- 		return POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+diff --git a/drivers/clk/renesas/r8a774a1-cpg-mssr.c b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
+index 047599579c651..7a4c5957939a5 100644
+--- a/drivers/clk/renesas/r8a774a1-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
+@@ -143,8 +143,8 @@ static const struct mssr_mod_clk r8a774a1_mod_clks[] __initconst = {
+ 	DEF_MOD("rwdt",			 402,	R8A774A1_CLK_R),
+ 	DEF_MOD("intc-ex",		 407,	R8A774A1_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A774A1_CLK_S0D3),
+-	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S0D3),
+-	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S0D3),
++	DEF_MOD("audmac1",		 501,	R8A774A1_CLK_S1D2),
++	DEF_MOD("audmac0",		 502,	R8A774A1_CLK_S1D2),
+ 	DEF_MOD("hscif4",		 516,	R8A774A1_CLK_S3D1),
+ 	DEF_MOD("hscif3",		 517,	R8A774A1_CLK_S3D1),
+ 	DEF_MOD("hscif2",		 518,	R8A774A1_CLK_S3D1),
+diff --git a/drivers/clk/renesas/r8a774c0-cpg-mssr.c b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
+index 34e274f2a273a..93dacd826fd04 100644
+--- a/drivers/clk/renesas/r8a774c0-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a774c0-cpg-mssr.c
+@@ -157,7 +157,7 @@ static const struct mssr_mod_clk r8a774c0_mod_clks[] __initconst = {
+ 	DEF_MOD("intc-ex",		 407,	R8A774C0_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A774C0_CLK_S0D3),
+ 
+-	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S3D4),
++	DEF_MOD("audmac0",		 502,	R8A774C0_CLK_S1D2),
+ 	DEF_MOD("hscif4",		 516,	R8A774C0_CLK_S3D1C),
+ 	DEF_MOD("hscif3",		 517,	R8A774C0_CLK_S3D1C),
+ 	DEF_MOD("hscif2",		 518,	R8A774C0_CLK_S3D1C),
+diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+index eade38e9ed36b..0825cd0ff2866 100644
+--- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+@@ -153,8 +153,8 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
+ 	DEF_MOD("rwdt",			 402,	R8A7795_CLK_R),
+ 	DEF_MOD("intc-ex",		 407,	R8A7795_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A7795_CLK_S0D3),
+-	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S0D3),
+-	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S0D3),
++	DEF_MOD("audmac1",		 501,	R8A7795_CLK_S1D2),
++	DEF_MOD("audmac0",		 502,	R8A7795_CLK_S1D2),
+ 	DEF_MOD("drif7",		 508,	R8A7795_CLK_S3D2),
+ 	DEF_MOD("drif6",		 509,	R8A7795_CLK_S3D2),
+ 	DEF_MOD("drif5",		 510,	R8A7795_CLK_S3D2),
+diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+index 654f3ea88f335..997cd956f12bc 100644
+--- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
+ 	DEF_MOD("rwdt",			 402,	R8A7796_CLK_R),
+ 	DEF_MOD("intc-ex",		 407,	R8A7796_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A7796_CLK_S0D3),
+-	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S0D3),
+-	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S0D3),
++	DEF_MOD("audmac1",		 501,	R8A7796_CLK_S1D2),
++	DEF_MOD("audmac0",		 502,	R8A7796_CLK_S1D2),
+ 	DEF_MOD("drif7",		 508,	R8A7796_CLK_S3D2),
+ 	DEF_MOD("drif6",		 509,	R8A7796_CLK_S3D2),
+ 	DEF_MOD("drif5",		 510,	R8A7796_CLK_S3D2),
+diff --git a/drivers/clk/renesas/r8a77965-cpg-mssr.c b/drivers/clk/renesas/r8a77965-cpg-mssr.c
+index 13d1f88be04a5..afc9c72fa0940 100644
+--- a/drivers/clk/renesas/r8a77965-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
+@@ -146,8 +146,8 @@ static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
+ 	DEF_MOD("intc-ex",		407,	R8A77965_CLK_CP),
+ 	DEF_MOD("intc-ap",		408,	R8A77965_CLK_S0D3),
+ 
+-	DEF_MOD("audmac1",		501,	R8A77965_CLK_S0D3),
+-	DEF_MOD("audmac0",		502,	R8A77965_CLK_S0D3),
++	DEF_MOD("audmac1",		501,	R8A77965_CLK_S1D2),
++	DEF_MOD("audmac0",		502,	R8A77965_CLK_S1D2),
+ 	DEF_MOD("drif7",		508,	R8A77965_CLK_S3D2),
+ 	DEF_MOD("drif6",		509,	R8A77965_CLK_S3D2),
+ 	DEF_MOD("drif5",		510,	R8A77965_CLK_S3D2),
+diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+index 9a278c75c918c..03f445d47ef69 100644
+--- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+@@ -152,7 +152,7 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
+ 	DEF_MOD("intc-ex",		 407,	R8A77990_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A77990_CLK_S0D3),
+ 
+-	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S3D4),
++	DEF_MOD("audmac0",		 502,	R8A77990_CLK_S1D2),
+ 	DEF_MOD("drif7",		 508,	R8A77990_CLK_S3D2),
+ 	DEF_MOD("drif6",		 509,	R8A77990_CLK_S3D2),
+ 	DEF_MOD("drif5",		 510,	R8A77990_CLK_S3D2),
+diff --git a/drivers/clk/renesas/r8a77995-cpg-mssr.c b/drivers/clk/renesas/r8a77995-cpg-mssr.c
+index eee3874865a95..68707277b17b4 100644
+--- a/drivers/clk/renesas/r8a77995-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77995-cpg-mssr.c
+@@ -133,7 +133,7 @@ static const struct mssr_mod_clk r8a77995_mod_clks[] __initconst = {
+ 	DEF_MOD("rwdt",			 402,	R8A77995_CLK_R),
+ 	DEF_MOD("intc-ex",		 407,	R8A77995_CLK_CP),
+ 	DEF_MOD("intc-ap",		 408,	R8A77995_CLK_S1D2),
+-	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S3D1),
++	DEF_MOD("audmac0",		 502,	R8A77995_CLK_S1D2),
+ 	DEF_MOD("hscif3",		 517,	R8A77995_CLK_S3D1C),
+ 	DEF_MOD("hscif0",		 520,	R8A77995_CLK_S3D1C),
+ 	DEF_MOD("thermal",		 522,	R8A77995_CLK_CP),
 -- 
 2.20.1
 
