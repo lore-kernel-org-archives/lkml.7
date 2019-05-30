@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1CCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA5CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE4D24A77
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB97324A77
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186770;
-	bh=48QWxyRbS6OIC0nyUfFd69jYM1HcEg4sAJ2IE52vsMw=;
+	s=default; t=1559186773;
+	bh=mj3NLwoyomYSM+hcO9K+n0XKllV0m5YM8lDNJf4s3LM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jtTXTJXQhZ1oDSb3PSKo6kbD4cOFyCLkcsvgYxjOLGtKu2OPdJPuTcB18FNAaA1ww
-	 KGkb0OYRAixC2ZXO4ll8TN9G61KBDUArFbNub63jTrWzJtBw2BfngcGHFCIbyvQKlo
-	 4tHxfCdk1E/KitJJium32urqmP7AzZJYk8WSRqJM=
+	b=Fs4xBPlRQCSE/mEFOsMLBq29OQk00UlhR2nOwHB+dJAKl5gCDNqYuFbxZ4va6Ri/q
+	 WtUPqj32vF+2BIjOtyz7fQdZS0JEz10JQ4Pp5tMjiyWOE0o7774VasZ3Kmab9pIaGF
+	 cJPNMBveFo0L3CcmIxBAadfDiEwerhyXgeYUz5Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbfE3D0J (ORCPT
+        id S2387672AbfE3D0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731714AbfE3DSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:48 -0400
+        id S1731729AbfE3DSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:49 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A86247F3;
-        Thu, 30 May 2019 03:18:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B7B324713;
+        Thu, 30 May 2019 03:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186327;
-        bh=48QWxyRbS6OIC0nyUfFd69jYM1HcEg4sAJ2IE52vsMw=;
+        s=default; t=1559186329;
+        bh=mj3NLwoyomYSM+hcO9K+n0XKllV0m5YM8lDNJf4s3LM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0T5heefgHir4HAT65IuWKHfen01CBTCpRVL8ghm5v3o6c+ZT9/FK4eoJHTVkWxJBF
-         dv7rharekN6EqWJDPyaWKdHKwmnc0DG7GauHdt/iDnqbPCzGvpuwf0xZWyoyMDrYS2
-         LpeyghN+RXOrDLTKOQ8wyN7jHFZOLUbzqpKztW/o=
+        b=mQGbucqk4WH1YGMuYjjbQBVIw9T9uNsx9whQIZXq6009mSURMr1L2hf3KY5q/18R/
+         7uaXuzAhtMqr8hZTIvaewYEcJLqIXPz8ptRoj+NRxJpbtScJieAXKYf2U+STeT583q
+         9wDKgk0T7duPfj+g+qmROMX5tF0oSB6p1aQFMXxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/193] tools/bpf: fix perf build error with uClibc (seen on ARC)
-Date:   Wed, 29 May 2019 20:04:56 -0700
-Message-Id: <20190530030455.429601103@linuxfoundation.org>
+Subject: [PATCH 4.14 046/193] ASoC: hdmi-codec: unlock the device on startup errors
+Date:   Wed, 29 May 2019 20:05:00 -0700
+Message-Id: <20190530030456.034354001@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,45 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca31ca8247e2d3807ff5fa1d1760616a2292001c ]
+[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
 
-When build perf for ARC recently, there was a build failure due to lack
-of __NR_bpf.
+If the hdmi codec startup fails, it should clear the current_substream
+pointer to free the device. This is properly done for the audio_startup()
+callback but for snd_pcm_hw_constraint_eld().
 
-| Auto-detecting system features:
-|
-| ...                     get_cpuid: [ OFF ]
-| ...                           bpf: [ on  ]
-|
-| #  error __NR_bpf not defined. libbpf does not support your arch.
-    ^~~~~
-| bpf.c: In function 'sys_bpf':
-| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
-|  return syscall(__NR_bpf, cmd, attr, size);
-|                 ^~~~~~~~
-|                 sys_bpf
+Make sure the pointer cleared if an error is reported.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/hdmi-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-index 1d6907d379c99..976b28137d836 100644
---- a/tools/lib/bpf/bpf.c
-+++ b/tools/lib/bpf/bpf.c
-@@ -41,6 +41,8 @@
- #  define __NR_bpf 349
- # elif defined(__s390__)
- #  define __NR_bpf 351
-+# elif defined(__arc__)
-+#  define __NR_bpf 280
- # else
- #  error __NR_bpf not defined. libbpf does not support your arch.
- # endif
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 7406695ee5dc2..e00f5f49f21d1 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -446,8 +446,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 		if (!ret) {
+ 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
+ 							hcp->eld);
+-			if (ret)
++			if (ret) {
++				mutex_lock(&hcp->current_stream_lock);
++				hcp->current_stream = NULL;
++				mutex_unlock(&hcp->current_stream_lock);
+ 				return ret;
++			}
+ 		}
+ 		/* Select chmap supported */
+ 		hdmi_codec_eld_chmap(hcp);
 -- 
 2.20.1
 
