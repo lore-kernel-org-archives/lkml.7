@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C47DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04377C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E6D24C53
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF93924C4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187811;
-	bh=bppTzBxoO9Ue7WR8F4rWlFuDGJvLkjrVlQGw2T/vVjs=;
+	s=default; t=1559187815;
+	bh=ySYL4sbIizg+Ief6OvDuTlZg0OnJU4Uya54J22FAqHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7vzNvyx+kifVzKEKpDKb8G7QtPZiigIZcfBvfwaUW7D2Sl8/QuLgzOFIGAzMElcX
-	 oHiEKxDnih8QW6n+cYutjMTGnSKIHRjrYmaEycbZekmdKnYWBIk/c5qWu8JUUpLuLp
-	 dbxqipTxi7q2M80rHFXaXGH0oXBUgiwk0u599kA4=
+	b=lAkCS19dWYsLgkBHuZhdWWGBRpYShaIu/IhPUYTnojeCaluP8chYTwODwcLujlc9G
+	 kZNBhHw3g4Ot4iS6OiytLKtqZsYxPD4eY2rBX2flK0G9xKAnv3/sCu6iFhQkHXFHpP
+	 zEXrufVO8nam3El6xXen2avwV3je1zqHkp/ksHK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732860AbfE3Dna (ORCPT
+        id S1732629AbfE3Dnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732469AbfE3DVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:08 -0400
+        id S1729849AbfE3DVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A711249A9;
-        Thu, 30 May 2019 03:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24705249D2;
+        Thu, 30 May 2019 03:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186468;
-        bh=bppTzBxoO9Ue7WR8F4rWlFuDGJvLkjrVlQGw2T/vVjs=;
+        s=default; t=1559186471;
+        bh=ySYL4sbIizg+Ief6OvDuTlZg0OnJU4Uya54J22FAqHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZW+7SGMosHbrqzOdj/ZS3WUGfPt464BY71E+5/AW1nvUDYA3zY+CrF0jFtJ7agIJF
-         hSwcXIJJJb9nxVOnZsPTnlhH7FinFad8FzYF4olKYUHrZ/fokuIWIgoS8CNTJGb1Oi
-         kINirgvbvBd2zc3iYDVyp3030pWrlIooTTTIW8Sw=
+        b=ewytRsRkUJKKZHd5Y+5B3pOhmlF69i0SU7lgG7U9gGvD4AcuX41ZjHUcE6BKaskxE
+         1b7BF6wdExOAV1avXxhCOipqy1jiE/g6jqB0cDbDoOuAs8RKHmJrEpYSX5FKTdzcgE
+         CNEbuDKeAoKbZKDGhgqQNjv56HlJTtGIrVAFFEvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 094/128] brcmfmac: fix missing checks for kmemdup
-Date:   Wed, 29 May 2019 20:07:06 -0700
-Message-Id: <20190530030451.578660109@linuxfoundation.org>
+Subject: [PATCH 4.9 100/128] scsi: ufs: Avoid configuring regulator with undefined voltage range
+Date:   Wed, 29 May 2019 20:07:12 -0700
+Message-Id: <20190530030452.519233138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,41 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46953f97224d56a12ccbe9c6acaa84ca0dab2780 ]
+[ Upstream commit 3b141e8cfd54ba3e5c610717295b2a02aab26a05 ]
 
-In case kmemdup fails, the fix sets conn_info->req_ie_len and
-conn_info->resp_ie_len to zero to avoid buffer overflows.
+For regulators used by UFS, vcc, vccq and vccq2 will have voltage range
+initialized by ufshcd_populate_vreg(), however other regulators may have
+undefined voltage range if dt-bindings have no such definition.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In above undefined case, both "min_uV" and "max_uV" fields in ufs_vreg
+struct will be zero values and these values will be configured on
+regulators in different power modes.
+
+Currently this may have no harm if both "min_uV" and "max_uV" always keep
+"zero values" because regulator_set_voltage() will always bypass such
+invalid values and return "good" results.
+
+However improper values shall be fixed to avoid potential bugs.  Simply
+bypass voltage configuration if voltage range is not defined.
+
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index 530f521209728..8f8fe6f2af5b0 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -5374,6 +5374,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
- 		conn_info->req_ie =
- 		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
- 			    GFP_KERNEL);
-+		if (!conn_info->req_ie)
-+			conn_info->req_ie_len = 0;
- 	} else {
- 		conn_info->req_ie_len = 0;
- 		conn_info->req_ie = NULL;
-@@ -5390,6 +5392,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
- 		conn_info->resp_ie =
- 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
- 			    GFP_KERNEL);
-+		if (!conn_info->resp_ie)
-+			conn_info->resp_ie_len = 0;
- 	} else {
- 		conn_info->resp_ie_len = 0;
- 		conn_info->resp_ie = NULL;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 8869c666d458c..0fe4f8e8c8c91 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5504,12 +5504,15 @@ static int ufshcd_config_vreg(struct device *dev,
+ 	name = vreg->name;
+ 
+ 	if (regulator_count_voltages(reg) > 0) {
+-		min_uV = on ? vreg->min_uV : 0;
+-		ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
+-		if (ret) {
+-			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
++		if (vreg->min_uV && vreg->max_uV) {
++			min_uV = on ? vreg->min_uV : 0;
++			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
++			if (ret) {
++				dev_err(dev,
++					"%s: %s set voltage failed, err=%d\n",
+ 					__func__, name, ret);
+-			goto out;
++				goto out;
++			}
+ 		}
+ 
+ 		uA_load = on ? vreg->max_uA : 0;
 -- 
 2.20.1
 
