@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FAFC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB477C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22A424A66
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815E324A65
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186724;
-	bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+	s=default; t=1559186727;
+	bh=0Yf7YGQ/sEpb1kMylafb/6YPgn3HoZ7N3cN3eq1HrTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBy4XHtzuvMaKqo+AFJ3zw7MPt8wEUnUAAaxI+ESZnOCh11G9F6jb54ex43ZMtbLM
-	 xVi0rbtiE2JKjvRZuO4fjeSGNV15kMh0IYAHEHngmf5HYwTIDKCafQsrdQDb/KLyfJ
-	 vAfET7rfTIekScQ5H2WYAvQ0PjlyHHyXyQ7p7+s8=
+	b=WdoHcMXlUp6FSjJ3QMDEePLRJyeSmVSrTyF/09W/HkFemvBUXxFpiwS8cV7Pfhaaz
+	 ABBG+dAFlqs2TUEfEWCT3mWDjBnW8Q6VvMPRMas6OqUqHMbg1L1bh/CjbT/3MNTFnz
+	 zv8pK7l5XFZX6E1ydEAd5MseY4X77FobwGuBumes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387532AbfE3DZY (ORCPT
+        id S1732868AbfE3DZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51226 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbfE3DS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:26 -0400
+        id S1731549AbfE3DS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C5C247C2;
-        Thu, 30 May 2019 03:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42419247C9;
+        Thu, 30 May 2019 03:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186305;
-        bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+        s=default; t=1559186307;
+        bh=0Yf7YGQ/sEpb1kMylafb/6YPgn3HoZ7N3cN3eq1HrTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rg9YKHunu036IWBb0qgJSb3zg2aiOJDghrSQot/TXAaD0tg0PgPgvGQ+6zf4puISp
-         94ZanE0aJ38vUc//g4bI8d5dcFJqH9bZBIksG0rqMqfl6hNDB5wyECbhwC8YLghH6J
-         CyAv51R84fEShfsPhuGkMc7unf5sKM+mf4WvpHR0=
+        b=hCogC67faGCcET/7J7GXCV7w3Em/aNIANPz9LUCqtK3s1MA6DuSvcQCUri5B7aSW7
+         wmubR0gxjag0sdFSRNPQbx3fjX3JEh63SE3CXtCrsjDKn6JY3YtpWI9vE6qjarT+ND
+         Zbh7uOwCtzoG7hLg4/iheBFyNG5MBGiYJgCW6lig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 230/276] overflow: Fix -Wtype-limits compilation warnings
-Date:   Wed, 29 May 2019 20:06:28 -0700
-Message-Id: <20190530030539.509570163@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 272/276] drm: Wake up next in drm_read() chain if we are forced to putback the event
+Date:   Wed, 29 May 2019 20:07:10 -0700
+Message-Id: <20190530030542.215922846@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,74 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc7fe518b0493faa0af0568d6d8c2a33c00f58d0 ]
+[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
 
-Attempt to use check_shl_overflow() with inputs of unsigned type
-produces the following compilation warnings.
+After an event is sent, we try to copy it into the user buffer of the
+first waiter in drm_read() and if the user buffer doesn't have enough
+room we put it back onto the list. However, we didn't wake up any
+subsequent waiter, so that event may sit on the list until either a new
+vblank event is sent or a new waiter appears. Rare, but in the worst
+case may lead to a stuck process.
 
-drivers/infiniband/hw/mlx5/qp.c: In function _set_user_rq_size_:
-./include/linux/overflow.h:230:6: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-   _s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;  \
-      ^~
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,
-&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:26: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                          ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift, &rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:36: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                                    ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-
-Fixes: 0c66847793d1 ("overflow.h: Add arithmetic shift helper")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Testcase: igt/drm_read/short-buffer-wakeup
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/overflow.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 40b48e2133cb8..15eb85de92269 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -36,6 +36,12 @@
- #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
- #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index e4ccb52c67ea4..334addaca9c54 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -567,6 +567,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
+ 				file_priv->event_space -= length;
+ 				list_add(&e->link, &file_priv->event_list);
+ 				spin_unlock_irq(&dev->event_lock);
++				wake_up_interruptible(&file_priv->event_wait);
+ 				break;
+ 			}
  
-+/*
-+ * Avoids triggering -Wtype-limits compilation warning,
-+ * while using unsigned data types to check a < 0.
-+ */
-+#define is_non_negative(a) ((a) > 0 || (a) == 0)
-+#define is_negative(a) (!(is_non_negative(a)))
- 
- #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
- /*
-@@ -227,10 +233,10 @@
- 	typeof(d) _d = d;						\
- 	u64 _a_full = _a;						\
- 	unsigned int _to_shift =					\
--		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
-+		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
- 	*_d = (_a_full << _to_shift);					\
--	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
--		(*_d >> _to_shift) != _a);				\
-+	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
-+	(*_d >> _to_shift) != _a);					\
- })
- 
- /**
 -- 
 2.20.1
 
