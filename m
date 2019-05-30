@@ -2,55 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8EAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DC3C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFDA24C69
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4097524C62
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187858;
-	bh=cGfEHtuiOHzUiQbwxipjkkL7KlbpjcCT+PcwOTXyAto=;
+	s=default; t=1559187863;
+	bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fiswcjblHzRqVjDSSyDh2g49yArs/hgc7+SO/CcodFsnwt1Wovr7pTDl6apGLDdar
-	 lV4pXlL6U05B1H5R00Vmo/QZiXJ34TcwLFvNEiDxVJQbgocOakYYNRowRC8rFi8qMT
-	 EfawLomWYrtbW98SERGMmBb6Dvif/Ya0OjS3SkUQ=
+	b=S4NrR32y9BhoqtFgGFLCbbostgaTlK1usJKSldwla0PKaJY5wrmqymTNq5Y+X8aYI
+	 K0RYSPT1qlJmKIp6G9nCOiDLkcEPsFlKRbVGDEEd68/sOJH8wyVWU82qoDP/VPKuhM
+	 7+oJlCgWQt/UHHrTrY4KBj/ztlhBswl5wq9JEevE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbfE3DU7 (ORCPT
+        id S1732456AbfE3DoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730595AbfE3DQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:07 -0400
+        id S1732397AbfE3DU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 032A6245C1;
-        Thu, 30 May 2019 03:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D12C249A0;
+        Thu, 30 May 2019 03:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186167;
-        bh=cGfEHtuiOHzUiQbwxipjkkL7KlbpjcCT+PcwOTXyAto=;
+        s=default; t=1559186458;
+        bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JAk7M9vg0XESI/v+sfYpRGaUp8ORHEv3PUVbJa1ztND3ZYJ/baSyku4ZXTtC34v9E
-         ZCr8yCZN6aSLzbMw1REhOhCgUhk1CHO7HFMhU1I8xjgNlk4AsWfqa3Fs7CgTAKMINu
-         erKH9KYow5/NtaW7Ykm6h+eURHuxTOIbTe9zRPZs=
+        b=t4TvQxcKwdQALmGRJM+koAToXob8SHAn6wYH54WVAaqJCJtx4fOJ0pwx4vzsKjLy0
+         XRiLJz24iZB4D7ApGgmAZAU0BkLbmm3TWI4HcIOK7G0Z7WRxCmX59URP5KbsFWSZ2b
+         1XZLXI0XHWhobzl8LXkMyNOYXKip4VVH4g45EWwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.19 002/276] ext4: do not delete unlinked inode from orphan list on failed truncate
-Date:   Wed, 29 May 2019 20:02:40 -0700
-Message-Id: <20190530030523.367094213@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 074/128] hwmon: (smsc47b397) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:06:46 -0700
+Message-Id: <20190530030447.969984888@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+[ Upstream commit 8c0826756744c0ac1df600a5e4cca1a341b13101 ]
 
-commit ee0ed02ca93ef1ecf8963ad96638795d55af2c14 upstream.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-It is possible that unlinked inode enters ext4_setattr() (e.g. if
-somebody calls ftruncate(2) on unlinked but still open file). In such
-case we should not delete the inode from the orphan list if truncate
-fails. Note that this is mostly a theoretical concern as filesystem is
-corrupted if we reach this path anyway but let's be consistent in our
-orphan handling.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
+Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/smsc47b397.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5596,7 +5596,7 @@ int ext4_setattr(struct dentry *dentry,
- 			up_write(&EXT4_I(inode)->i_data_sem);
- 			ext4_journal_stop(handle);
- 			if (error) {
--				if (orphan)
-+				if (orphan && inode->i_nlink)
- 					ext4_orphan_del(NULL, inode);
- 				goto err_out;
- 			}
+diff --git a/drivers/hwmon/smsc47b397.c b/drivers/hwmon/smsc47b397.c
+index 6bd2007565603..cbdb5c4991ae3 100644
+--- a/drivers/hwmon/smsc47b397.c
++++ b/drivers/hwmon/smsc47b397.c
+@@ -72,14 +72,19 @@ static inline void superio_select(int ld)
+ 	superio_outb(0x07, ld);
+ }
+ 
+-static inline void superio_enter(void)
++static inline int superio_enter(void)
+ {
++	if (!request_muxed_region(REG, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x55, REG);
++	return 0;
+ }
+ 
+ static inline void superio_exit(void)
+ {
+ 	outb(0xAA, REG);
++	release_region(REG, 2);
+ }
+ 
+ #define SUPERIO_REG_DEVID	0x20
+@@ -300,8 +305,12 @@ static int __init smsc47b397_find(void)
+ 	u8 id, rev;
+ 	char *name;
+ 	unsigned short addr;
++	int err;
++
++	err = superio_enter();
++	if (err)
++		return err;
+ 
+-	superio_enter();
+ 	id = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
+ 
+ 	switch (id) {
+-- 
+2.20.1
+
 
 
