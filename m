@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFA6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA568C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA5624592
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A499224592
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186070;
-	bh=IhqzS5kn9D2++obbCuqop4TPzQXIpOqdjVY8mQvNTfo=;
+	s=default; t=1559186072;
+	bh=+n9P5jighs7ry8zd1sXze259asg1PsT25vC4Zi044LI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKXh52VJ4gnaG/w+AZE9Tu6tNbNKjyp2imVXzqw2KIfblbbFBk5/6jXPEaRsXVfdu
-	 m1JPQqo64iOaT1WpWy/2RW0IA0SbLOH5dol4EGGfRwVvtKcvicA2wdc/MOtg9xHla9
-	 aGefEzChG07MtpY5TZ5li85XZ39MThEWckpxjrYI=
+	b=YgSS47w1vbHmBUU0N95iiMHh0NV98gN14YEIRAp02KylstED3N4Hb6cowqUY5/PQq
+	 RNPXwLlh+qkAPuOgUqa61jRmrRafP2VaV6DFOf0W2lPSaem3sqdvZGl0hTD3HwhIq6
+	 WfC7bq3Cq6eqCZF+azEr0yxlDeaAxWKCgMAsSs+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfE3DO2 (ORCPT
+        id S1729884AbfE3DOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53248 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfE3DMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:02 -0400
+        id S1728811AbfE3DME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDCF24481;
-        Thu, 30 May 2019 03:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AECC24481;
+        Thu, 30 May 2019 03:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185921;
-        bh=IhqzS5kn9D2++obbCuqop4TPzQXIpOqdjVY8mQvNTfo=;
+        s=default; t=1559185923;
+        bh=+n9P5jighs7ry8zd1sXze259asg1PsT25vC4Zi044LI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG/VHiQ9+rXZmTveYnsP6kuGQMe8e812fQ5NEGJ25Y9EHLrQRTeUVtRvtCFXH7b22
-         EK9uMGWV1NGebv19Dhj9A4dpYWTuNSgyw44Y9+n2qfQR84aPUyUlU3c9Bp3r7wvkhp
-         xg55KOV/bcWhSV1b1N6Hulyu2m2G9cpXRNc0cJvo=
+        b=CeqzIPI0l++P7b5AU1Pso/lPL0gHkx9iqWw9cR0Y7GZOSJF5ajVzd0SXjWid+ilBx
+         R62+kkBXdRwON+6RjnHfzAZI7X+Fkd5r7LAc3U4BPCgpp1F55CkHN4MCTijy7zCQKr
+         dcBz6LhKuVkLaX/uuYAE8gpg8WnZDsJ1+klm/XT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 309/405] rcu: Do a single rhp->func read in rcu_head_after_call_rcu()
-Date:   Wed, 29 May 2019 20:05:07 -0700
-Message-Id: <20190530030556.439992073@linuxfoundation.org>
+Subject: [PATCH 5.1 312/405] spi: stm32-qspi: add spi_master_put in release function
+Date:   Wed, 29 May 2019 20:05:10 -0700
+Message-Id: <20190530030556.583338115@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,45 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b699cce1604e828f19c39845252626eb78cdf38a ]
+[ Upstream commit a88eceb17ac7e8dc4ad9995681af61c8371668f4 ]
 
-The rcu_head_after_call_rcu() function reads the rhp->func pointer twice,
-which can result in a false-positive WARN_ON_ONCE() if the callback
-were passed to call_rcu() between the two reads.  Although racing
-rcu_head_after_call_rcu() with call_rcu() is to be a dubious use case
-(the return value is not reliable in that case), intermittent and
-irreproducible warnings are also quite dubious.  This commit therefore
-uses a single READ_ONCE() to pick up the value of rhp->func once, then
-tests that value twice, thus guaranteeing consistent processing within
-rcu_head_after_call_rcu()().
+This patch adds spi_master_put in release function
+to drop the controller's refcount.
 
-Neverthless, racing rcu_head_after_call_rcu() with call_rcu() is still
-a dubious use case.
-
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-[ paulmck: Add blank line after declaration per checkpatch.pl. ]
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-stm32-qspi.c | 46 ++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 6cdb1db776cf9..922bb68488133 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -878,9 +878,11 @@ static inline void rcu_head_init(struct rcu_head *rhp)
- static inline bool
- rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
- {
--	if (READ_ONCE(rhp->func) == f)
-+	rcu_callback_t func = READ_ONCE(rhp->func);
-+
-+	if (func == f)
- 		return true;
--	WARN_ON_ONCE(READ_ONCE(rhp->func) != (rcu_callback_t)~0L);
-+	WARN_ON_ONCE(func != (rcu_callback_t)~0L);
- 	return false;
+diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
+index 3b2a9a6b990da..0b9a8bddb939d 100644
+--- a/drivers/spi/spi-stm32-qspi.c
++++ b/drivers/spi/spi-stm32-qspi.c
+@@ -93,6 +93,7 @@ struct stm32_qspi_flash {
+ 
+ struct stm32_qspi {
+ 	struct device *dev;
++	struct spi_controller *ctrl;
+ 	void __iomem *io_base;
+ 	void __iomem *mm_base;
+ 	resource_size_t mm_size;
+@@ -397,6 +398,7 @@ static void stm32_qspi_release(struct stm32_qspi *qspi)
+ 	writel_relaxed(0, qspi->io_base + QSPI_CR);
+ 	mutex_destroy(&qspi->lock);
+ 	clk_disable_unprepare(qspi->clk);
++	spi_master_put(qspi->ctrl);
+ }
+ 
+ static int stm32_qspi_probe(struct platform_device *pdev)
+@@ -413,43 +415,54 @@ static int stm32_qspi_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	qspi = spi_controller_get_devdata(ctrl);
++	qspi->ctrl = ctrl;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi");
+ 	qspi->io_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(qspi->io_base))
+-		return PTR_ERR(qspi->io_base);
++	if (IS_ERR(qspi->io_base)) {
++		ret = PTR_ERR(qspi->io_base);
++		goto err;
++	}
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
+ 	qspi->mm_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(qspi->mm_base))
+-		return PTR_ERR(qspi->mm_base);
++	if (IS_ERR(qspi->mm_base)) {
++		ret = PTR_ERR(qspi->mm_base);
++		goto err;
++	}
+ 
+ 	qspi->mm_size = resource_size(res);
+-	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ)
+-		return -EINVAL;
++	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
+ 			       dev_name(dev), qspi);
+ 	if (ret) {
+ 		dev_err(dev, "failed to request irq\n");
+-		return ret;
++		goto err;
+ 	}
+ 
+ 	init_completion(&qspi->data_completion);
+ 
+ 	qspi->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(qspi->clk))
+-		return PTR_ERR(qspi->clk);
++	if (IS_ERR(qspi->clk)) {
++		ret = PTR_ERR(qspi->clk);
++		goto err;
++	}
+ 
+ 	qspi->clk_rate = clk_get_rate(qspi->clk);
+-	if (!qspi->clk_rate)
+-		return -EINVAL;
++	if (!qspi->clk_rate) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	ret = clk_prepare_enable(qspi->clk);
+ 	if (ret) {
+ 		dev_err(dev, "can not enable the clock\n");
+-		return ret;
++		goto err;
+ 	}
+ 
+ 	rstc = devm_reset_control_get_exclusive(dev, NULL);
+@@ -472,14 +485,11 @@ static int stm32_qspi_probe(struct platform_device *pdev)
+ 	ctrl->dev.of_node = dev->of_node;
+ 
+ 	ret = devm_spi_register_master(dev, ctrl);
+-	if (ret)
+-		goto err_spi_register;
+-
+-	return 0;
++	if (!ret)
++		return 0;
+ 
+-err_spi_register:
++err:
+ 	stm32_qspi_release(qspi);
+-
+ 	return ret;
  }
  
 -- 
