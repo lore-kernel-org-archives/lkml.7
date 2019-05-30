@@ -2,61 +2,80 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60579C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCF8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E65A26241
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1EB2624C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 21:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559253583;
+	bh=5qshIW5Gt3KAVKJzOXgOCt/l0/l0VeA73U46WzDaneQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=E0w1rPKRozJwvVuMuZ/3hUFbA1+mRCrZ8bB7YevFOFuIu8bGoCSCvXEb1jPV50FU1
+	 /85JygdwYpXcKhNS6ZHOVItR6mQzl5ShL2Ts2ESZmE2nJE6jA4aluOJ7Jyxf7VxNUB
+	 Eq2rQ9/615JWUfD8mvo1zMjbXyGE09e5Mjw+tofI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfE3V6u (ORCPT
+        id S1726741AbfE3V7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 17:58:50 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60928 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfE3V6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 17:58:50 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8473314DB3D28;
-        Thu, 30 May 2019 14:49:07 -0700 (PDT)
-Date:   Thu, 30 May 2019 14:49:07 -0700 (PDT)
-Message-Id: <20190530.144907.723803908854753596.davem@davemloft.net>
-To:     ivan.khoronzhuk@linaro.org
-Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: ti: cpsw_ethtool: fix ethtool ring
- param set
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190529214753.21804-1-ivan.khoronzhuk@linaro.org>
-References: <20190529214753.21804-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 14:49:07 -0700 (PDT)
+        Thu, 30 May 2019 17:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbfE3V7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 17:59:42 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49CD426242;
+        Thu, 30 May 2019 21:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559253581;
+        bh=5qshIW5Gt3KAVKJzOXgOCt/l0/l0VeA73U46WzDaneQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n6sSxJzuf3xuFlAw42kcZMQtZwPqy4EA3EwSchHYq4dw9FZKzPMYsAdMQrpM/uCDL
+         gy4f4NddeT1JGDWQgD1HuttweHMtIDWMxpBgFxGSbHCxaPvxAxYnRsSLwme2dWUJ+M
+         IVWAu2z8T2PHmGT5Y5mBrf5sfnrn+wz14UHX9V54=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] scripts/sphinx-pre-install: fix "dependenties" typo
+Date:   Thu, 30 May 2019 16:59:14 -0500
+Message-Id: <20190530215914.67896-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Date: Thu, 30 May 2019 00:47:53 +0300
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> Fixes: 37e2d99b59c4765112533a1d38174fea58d28a51 ("ethtool: Ensure new
-> ring parameters are within bounds during SRINGPARAM")
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Fix typo ("dependenties" for "dependencies").
 
-Please do not chop up Fixes: tags into multiple lines.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ scripts/sphinx-pre-install | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please do not place an empty line between Fixes: and other tags,
-they should all be together.
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index f6a5c0bae31e..78bcd29139b2 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -559,7 +559,7 @@ sub check_needs()
+ 	}
+ 	printf "\n";
+ 
+-	print "All optional dependenties are met.\n" if (!$optional);
++	print "All optional dependencies are met.\n" if (!$optional);
+ 
+ 	if ($need == 1) {
+ 		die "Can't build as $need mandatory dependency is missing";
+-- 
+2.22.0.rc1.257.g3120a18244-goog
 
-Thank you.
