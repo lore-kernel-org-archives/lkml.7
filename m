@@ -2,77 +2,104 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6074C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A69C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9580825D5F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F83025D73
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 16:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfE3QLJ (ORCPT
+        id S1727745AbfE3QLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 12:11:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51240 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbfE3QLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 12:11:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 26820859FF;
-        Thu, 30 May 2019 16:11:09 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C18591001E93;
-        Thu, 30 May 2019 16:11:04 +0000 (UTC)
-Date:   Thu, 30 May 2019 12:11:03 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, dm-devel@redhat.com,
-        agk@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: dm-init: fix 2 incorrect use of kstrndup()
-Message-ID: <20190530161103.GA30026@redhat.com>
-References: <20190529013320.GA3307@zhanggen-UX430UQ>
- <fcf2c3c0-e479-9e74-59d5-79cd2a0bade6@acm.org>
- <20190529152443.GA4076@zhanggen-UX430UQ>
+        Thu, 30 May 2019 12:11:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39216 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbfE3QLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 12:11:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4FF9341;
+        Thu, 30 May 2019 09:11:29 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94B503F5AF;
+        Thu, 30 May 2019 09:11:28 -0700 (PDT)
+Date:   Thu, 30 May 2019 17:11:26 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, ebiederm@xmission.com
+Subject: [GIT PULL] arm64: fixes for -rc3
+Message-ID: <20190530161126.GB16230@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190529152443.GA4076@zhanggen-UX430UQ>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 30 May 2019 16:11:09 +0000 (UTC)
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29 2019 at 11:24am -0400,
-Gen Zhang <blackgod016574@gmail.com> wrote:
+Hi Linus,
 
-> On Wed, May 29, 2019 at 05:23:53AM -0700, Bart Van Assche wrote:
-> > On 5/28/19 6:33 PM, Gen Zhang wrote:
-> > > In drivers/md/dm-init.c, kstrndup() is incorrectly used twice.
-> > > 
-> > > It should be: char *kstrndup(const char *s, size_t max, gfp_t gfp);
-> > 
-> > Should the following be added to this patch?
-> > 
-> > Fixes: 6bbc923dfcf5 ("dm: add support to directly boot to a mapped
-> > device") # v5.1.
-> > Cc: stable
-> > 
-> > Thanks,
-> > 
-> > Bart.
-> Personally, I am not quite sure about this question, because I am not 
-> the maintainer of this part.
+The fixes are still trickling in for arm64, but the only really significant
+one here is actually fixing a regression in the botched module relocation
+range checking merged for -rc2. Hopefully we've nailed it this time.
 
-Yes, it should have the tags Bart suggested.
-
-I'll take care it.
+Please pull.
 
 Thanks,
-Mike
+
+Will
+
+--->8
+
+The following changes since commit edbcf50eb8aea5f81ae6d83bb969cb0bc02805a1:
+
+  arm64: insn: Add BUILD_BUG_ON() for invalid masks (2019-05-24 14:58:30 +0100)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 1e29ab3186e33c77dbb2d7566172a205b59fa390:
+
+  arm64: use the correct function type for __arm64_sys_ni_syscall (2019-05-29 13:46:00 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc3
+
+- Fix implementation of our set_personality() system call, which wasn't
+  being wrapped properly
+
+- Fix system call function types to keep CFI happy
+
+- Fix siginfo layout when delivering SIGKILL after a kernel fault
+
+- Really fix module relocation range checking
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64/module: revert to unsigned interpretation of ABS16/32 relocations
+
+Catalin Marinas (1):
+      arm64: Fix the arm64_personality() syscall wrapper redirection
+
+Eric W. Biederman (1):
+      signal/arm64: Use force_sig not force_sig_fault for SIGKILL
+
+Sami Tolvanen (3):
+      arm64: fix syscall_fn_t type
+      arm64: use the correct function type in SYSCALL_DEFINE0
+      arm64: use the correct function type for __arm64_sys_ni_syscall
+
+ arch/arm64/include/asm/syscall.h         |  2 +-
+ arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++--------
+ arch/arm64/kernel/module.c               | 38 +++++++++++++++++++++++++-------
+ arch/arm64/kernel/sys.c                  | 16 +++++++++-----
+ arch/arm64/kernel/sys32.c                |  7 ++----
+ arch/arm64/kernel/traps.c                |  5 ++++-
+ 6 files changed, 56 insertions(+), 30 deletions(-)
+
