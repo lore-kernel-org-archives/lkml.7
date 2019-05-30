@@ -2,55 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DA7C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EF324C74
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F1D24C53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187842;
-	bh=HQ47/W/TexHVx9+J4QWQwLtC/wbwDwbWg6IttAznL7M=;
+	s=default; t=1559187846;
+	bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Px/CvAJjU/W275SKSN8kEMLe+l8LpfDjaL2WURLfV1fmBtJDc93Wqnn7Kr+xX5aCz
-	 l5WDC67FxB7g6bopSNb5fHRdYaRVb9LVuFm0RNKotckeT3KtfVTzKYOwRsAAXCNTr2
-	 pL7ZZDDes4ze1tmP5OhNkH6m9AwibieNZguzTN8M=
+	b=CARcUApzpHtNhJk6Mn/X17tEZyRMiLC1+M8pOIQy5hh+Kqh3pU2YugACIHgNvNHlc
+	 X7dCKYShznqOG3FRagI/fheUWLLvuSVbBywUB0R1s1c1xx+xiGfVA9IA8y8huHws/m
+	 k6CkFvAJmx9UNW8q7QX3ytrARS8tW+yWhsFQnGvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfE3DVB (ORCPT
+        id S1732623AbfE3DoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:44:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbfE3DQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:09 -0400
+        id S1732401AbfE3DVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB4624585;
-        Thu, 30 May 2019 03:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B493248FC;
+        Thu, 30 May 2019 03:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186167;
-        bh=HQ47/W/TexHVx9+J4QWQwLtC/wbwDwbWg6IttAznL7M=;
+        s=default; t=1559186459;
+        bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHlXOPN1BCfmJnyAVZTBDKhRGUSNiOm8vvsqUbMa7MhiaiFcFhLFW36ez8A6E33W5
-         rO/79ZK52w9EIXrqaTKDT3PLA7qYIptsUbsu72033mq7jFqbfMsARtao/NVjP1kKAh
-         a07MS83KZv1Skz/yO+i/p68iSrWdzb28Y8rYQ2Ug=
+        b=I817d4i0ti8EEro01hUbKhCpONkYU91h2Eseeyuidfo1Dq0STA1YZuYHL+L7izoLP
+         0iT9NXPV47ybR7ttSpl+W1ePvRYDnWMNA2nB5rnYc3eJr5umrlDQbKAGgcr8LCMPNy
+         E9C0EpolMRUCkoQxjskSDEOFTqE5DeMEfv6Y3dZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 020/276] Btrfs: fix race between ranged fsync and writeback of adjacent ranges
-Date:   Wed, 29 May 2019 20:02:58 -0700
-Message-Id: <20190530030525.333004259@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 075/128] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
+Date:   Wed, 29 May 2019 20:06:47 -0700
+Message-Id: <20190530030448.157699409@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,243 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
 
-commit 0c713cbab6200b0ab6473b50435e450a6e1de85d upstream.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-When we do a full fsync (the bit BTRFS_INODE_NEEDS_FULL_SYNC is set in the
-inode) that happens to be ranged, which happens during a msync() or writes
-for files opened with O_SYNC for example, we can end up with a corrupt log,
-due to different file extent items representing ranges that overlap with
-each other, or hit some assertion failures.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-When doing a ranged fsync we only flush delalloc and wait for ordered
-exents within that range. If while we are logging items from our inode
-ordered extents for adjacent ranges complete, we end up in a race that can
-make us insert the file extent items that overlap with others we logged
-previously and the assertion failures.
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-For example, if tree-log.c:copy_items() receives a leaf that has the
-following file extents items, all with a length of 4K and therefore there
-is an implicit hole in the range 68K to 72K - 1:
-
-  (257 EXTENT_ITEM 64K), (257 EXTENT_ITEM 72K), (257 EXTENT_ITEM 76K), ...
-
-It copies them to the log tree. However due to the need to detect implicit
-holes, it may release the path, in order to look at the previous leaf to
-detect an implicit hole, and then later it will search again in the tree
-for the first file extent item key, with the goal of locking again the
-leaf (which might have changed due to concurrent changes to other inodes).
-
-However when it locks again the leaf containing the first key, the key
-corresponding to the extent at offset 72K may not be there anymore since
-there is an ordered extent for that range that is finishing (that is,
-somewhere in the middle of btrfs_finish_ordered_io()), and it just
-removed the file extent item but has not yet replaced it with a new file
-extent item, so the part of copy_items() that does hole detection will
-decide that there is a hole in the range starting from 68K to 76K - 1,
-and therefore insert a file extent item to represent that hole, having
-a key offset of 68K. After that we now have a log tree with 2 different
-extent items that have overlapping ranges:
-
- 1) The file extent item copied before copy_items() released the path,
-    which has a key offset of 72K and a length of 4K, representing the
-    file range 72K to 76K - 1.
-
- 2) And a file extent item representing a hole that has a key offset of
-    68K and a length of 8K, representing the range 68K to 76K - 1. This
-    item was inserted after releasing the path, and overlaps with the
-    extent item inserted before.
-
-The overlapping extent items can cause all sorts of unpredictable and
-incorrect behaviour, either when replayed or if a fast (non full) fsync
-happens later, which can trigger a BUG_ON() when calling
-btrfs_set_item_key_safe() through __btrfs_drop_extents(), producing a
-trace like the following:
-
-  [61666.783269] ------------[ cut here ]------------
-  [61666.783943] kernel BUG at fs/btrfs/ctree.c:3182!
-  [61666.784644] invalid opcode: 0000 [#1] PREEMPT SMP
-  (...)
-  [61666.786253] task: ffff880117b88c40 task.stack: ffffc90008168000
-  [61666.786253] RIP: 0010:btrfs_set_item_key_safe+0x7c/0xd2 [btrfs]
-  [61666.786253] RSP: 0018:ffffc9000816b958 EFLAGS: 00010246
-  [61666.786253] RAX: 0000000000000000 RBX: 000000000000000f RCX: 0000000000030000
-  [61666.786253] RDX: 0000000000000000 RSI: ffffc9000816ba4f RDI: ffffc9000816b937
-  [61666.786253] RBP: ffffc9000816b998 R08: ffff88011dae2428 R09: 0000000000001000
-  [61666.786253] R10: 0000160000000000 R11: 6db6db6db6db6db7 R12: ffff88011dae2418
-  [61666.786253] R13: ffffc9000816ba4f R14: ffff8801e10c4118 R15: ffff8801e715c000
-  [61666.786253] FS:  00007f6060a18700(0000) GS:ffff88023f5c0000(0000) knlGS:0000000000000000
-  [61666.786253] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [61666.786253] CR2: 00007f6060a28000 CR3: 0000000213e69000 CR4: 00000000000006e0
-  [61666.786253] Call Trace:
-  [61666.786253]  __btrfs_drop_extents+0x5e3/0xaad [btrfs]
-  [61666.786253]  ? time_hardirqs_on+0x9/0x14
-  [61666.786253]  btrfs_log_changed_extents+0x294/0x4e0 [btrfs]
-  [61666.786253]  ? release_extent_buffer+0x38/0xb4 [btrfs]
-  [61666.786253]  btrfs_log_inode+0xb6e/0xcdc [btrfs]
-  [61666.786253]  ? lock_acquire+0x131/0x1c5
-  [61666.786253]  ? btrfs_log_inode_parent+0xee/0x659 [btrfs]
-  [61666.786253]  ? arch_local_irq_save+0x9/0xc
-  [61666.786253]  ? btrfs_log_inode_parent+0x1f5/0x659 [btrfs]
-  [61666.786253]  btrfs_log_inode_parent+0x223/0x659 [btrfs]
-  [61666.786253]  ? arch_local_irq_save+0x9/0xc
-  [61666.786253]  ? lockref_get_not_zero+0x2c/0x34
-  [61666.786253]  ? rcu_read_unlock+0x3e/0x5d
-  [61666.786253]  btrfs_log_dentry_safe+0x60/0x7b [btrfs]
-  [61666.786253]  btrfs_sync_file+0x317/0x42c [btrfs]
-  [61666.786253]  vfs_fsync_range+0x8c/0x9e
-  [61666.786253]  SyS_msync+0x13c/0x1c9
-  [61666.786253]  entry_SYSCALL_64_fastpath+0x18/0xad
-
-A sample of a corrupt log tree leaf with overlapping extents I got from
-running btrfs/072:
-
-      item 14 key (295 108 200704) itemoff 2599 itemsize 53
-              extent data disk bytenr 0 nr 0
-              extent data offset 0 nr 458752 ram 458752
-      item 15 key (295 108 659456) itemoff 2546 itemsize 53
-              extent data disk bytenr 4343541760 nr 770048
-              extent data offset 606208 nr 163840 ram 770048
-      item 16 key (295 108 663552) itemoff 2493 itemsize 53
-              extent data disk bytenr 4343541760 nr 770048
-              extent data offset 610304 nr 155648 ram 770048
-      item 17 key (295 108 819200) itemoff 2440 itemsize 53
-              extent data disk bytenr 4334788608 nr 4096
-              extent data offset 0 nr 4096 ram 4096
-
-The file extent item at offset 659456 (item 15) ends at offset 823296
-(659456 + 163840) while the next file extent item (item 16) starts at
-offset 663552.
-
-Another different problem that the race can trigger is a failure in the
-assertions at tree-log.c:copy_items(), which expect that the first file
-extent item key we found before releasing the path exists after we have
-released path and that the last key we found before releasing the path
-also exists after releasing the path:
-
-  $ cat -n fs/btrfs/tree-log.c
-  4080          if (need_find_last_extent) {
-  4081                  /* btrfs_prev_leaf could return 1 without releasing the path */
-  4082                  btrfs_release_path(src_path);
-  4083                  ret = btrfs_search_slot(NULL, inode->root, &first_key,
-  4084                                  src_path, 0, 0);
-  4085                  if (ret < 0)
-  4086                          return ret;
-  4087                  ASSERT(ret == 0);
-  (...)
-  4103                  if (i >= btrfs_header_nritems(src_path->nodes[0])) {
-  4104                          ret = btrfs_next_leaf(inode->root, src_path);
-  4105                          if (ret < 0)
-  4106                                  return ret;
-  4107                          ASSERT(ret == 0);
-  4108                          src = src_path->nodes[0];
-  4109                          i = 0;
-  4110                          need_find_last_extent = true;
-  4111                  }
-  (...)
-
-The second assertion implicitly expects that the last key before the path
-release still exists, because the surrounding while loop only stops after
-we have found that key. When this assertion fails it produces a stack like
-this:
-
-  [139590.037075] assertion failed: ret == 0, file: fs/btrfs/tree-log.c, line: 4107
-  [139590.037406] ------------[ cut here ]------------
-  [139590.037707] kernel BUG at fs/btrfs/ctree.h:3546!
-  [139590.038034] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
-  [139590.038340] CPU: 1 PID: 31841 Comm: fsstress Tainted: G        W         5.0.0-btrfs-next-46 #1
-  (...)
-  [139590.039354] RIP: 0010:assfail.constprop.24+0x18/0x1a [btrfs]
-  (...)
-  [139590.040397] RSP: 0018:ffffa27f48f2b9b0 EFLAGS: 00010282
-  [139590.040730] RAX: 0000000000000041 RBX: ffff897c635d92c8 RCX: 0000000000000000
-  [139590.041105] RDX: 0000000000000000 RSI: ffff897d36a96868 RDI: ffff897d36a96868
-  [139590.041470] RBP: ffff897d1b9a0708 R08: 0000000000000000 R09: 0000000000000000
-  [139590.041815] R10: 0000000000000008 R11: 0000000000000000 R12: 0000000000000013
-  [139590.042159] R13: 0000000000000227 R14: ffff897cffcbba88 R15: 0000000000000001
-  [139590.042501] FS:  00007f2efc8dee80(0000) GS:ffff897d36a80000(0000) knlGS:0000000000000000
-  [139590.042847] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [139590.043199] CR2: 00007f8c064935e0 CR3: 0000000232252002 CR4: 00000000003606e0
-  [139590.043547] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [139590.043899] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [139590.044250] Call Trace:
-  [139590.044631]  copy_items+0xa3f/0x1000 [btrfs]
-  [139590.045009]  ? generic_bin_search.constprop.32+0x61/0x200 [btrfs]
-  [139590.045396]  btrfs_log_inode+0x7b3/0xd70 [btrfs]
-  [139590.045773]  btrfs_log_inode_parent+0x2b3/0xce0 [btrfs]
-  [139590.046143]  ? do_raw_spin_unlock+0x49/0xc0
-  [139590.046510]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
-  [139590.046872]  btrfs_sync_file+0x3b6/0x440 [btrfs]
-  [139590.047243]  btrfs_file_write_iter+0x45b/0x5c0 [btrfs]
-  [139590.047592]  __vfs_write+0x129/0x1c0
-  [139590.047932]  vfs_write+0xc2/0x1b0
-  [139590.048270]  ksys_write+0x55/0xc0
-  [139590.048608]  do_syscall_64+0x60/0x1b0
-  [139590.048946]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [139590.049287] RIP: 0033:0x7f2efc4be190
-  (...)
-  [139590.050342] RSP: 002b:00007ffe743243a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  [139590.050701] RAX: ffffffffffffffda RBX: 0000000000008d58 RCX: 00007f2efc4be190
-  [139590.051067] RDX: 0000000000008d58 RSI: 00005567eca0f370 RDI: 0000000000000003
-  [139590.051459] RBP: 0000000000000024 R08: 0000000000000003 R09: 0000000000008d60
-  [139590.051863] R10: 0000000000000078 R11: 0000000000000246 R12: 0000000000000003
-  [139590.052252] R13: 00000000003d3507 R14: 00005567eca0f370 R15: 0000000000000000
-  (...)
-  [139590.055128] ---[ end trace 193f35d0215cdeeb ]---
-
-So fix this race between a full ranged fsync and writeback of adjacent
-ranges by flushing all delalloc and waiting for all ordered extents to
-complete before logging the inode. This is the simplest way to solve the
-problem because currently the full fsync path does not deal with ranges
-at all (it assumes a full range from 0 to LLONG_MAX) and it always needs
-to look at adjacent ranges for hole detection. For use cases of ranged
-fsyncs this can make a few fsyncs slower but on the other hand it can
-make some following fsyncs to other ranges do less work or no need to do
-anything at all. A full fsync is rare anyway and happens only once after
-loading/creating an inode and once after less common operations such as a
-shrinking truncate.
-
-This is an issue that exists for a long time, and was often triggered by
-generic/127, because it does mmap'ed writes and msync (which triggers a
-ranged fsync). Adding support for the tree checker to detect overlapping
-extents (next patch in the series) and trigger a WARN() when such cases
-are found, and then calling btrfs_check_leaf_full() at the end of
-btrfs_insert_file_extent() made the issue much easier to detect. Running
-btrfs/072 with that change to the tree checker and making fsstress open
-files always with O_SYNC made it much easier to trigger the issue (as
-triggering it with generic/127 is very rare).
-
-CC: stable@vger.kernel.org # 3.16+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/hwmon/pc87427.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2059,6 +2059,18 @@ int btrfs_sync_file(struct file *file, l
- 	u64 len;
+diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
+index cb9fdd37bd0d9..2b5b8c3de8fce 100644
+--- a/drivers/hwmon/pc87427.c
++++ b/drivers/hwmon/pc87427.c
+@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
+ #define LD_IN		1
+ #define LD_TEMP		1
  
- 	/*
-+	 * If the inode needs a full sync, make sure we use a full range to
-+	 * avoid log tree corruption, due to hole detection racing with ordered
-+	 * extent completion for adjacent ranges, and assertion failures during
-+	 * hole detection.
-+	 */
-+	if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
-+		     &BTRFS_I(inode)->runtime_flags)) {
-+		start = 0;
-+		end = LLONG_MAX;
-+	}
++static inline int superio_enter(int sioaddr)
++{
++	if (!request_muxed_region(sioaddr, 2, DRVNAME))
++		return -EBUSY;
++	return 0;
++}
 +
-+	/*
- 	 * The range length can be represented by u64, we have to do the typecasts
- 	 * to avoid signed overflow if it's [0, LLONG_MAX] eg. from fsync()
- 	 */
+ static inline void superio_outb(int sioaddr, int reg, int val)
+ {
+ 	outb(reg, sioaddr);
+@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
+ {
+ 	outb(0x02, sioaddr);
+ 	outb(0x02, sioaddr + 1);
++	release_region(sioaddr, 2);
+ }
+ 
+ /*
+@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
+ {
+ 	u16 val;
+ 	u8 cfg, cfg_b;
+-	int i, err = 0;
++	int i, err;
++
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
+ 	/* Identify device */
+ 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
+-- 
+2.20.1
+
 
 
