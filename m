@@ -2,93 +2,130 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7405C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE25C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AFF258A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323C7258AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BliolhNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfE3MBe (ORCPT
+        id S1727264AbfE3MBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:01:34 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35048 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfE3MBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:01:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2154374;
-        Thu, 30 May 2019 05:01:33 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2086D3F5AF;
-        Thu, 30 May 2019 05:01:31 -0700 (PDT)
-Date:   Thu, 30 May 2019 13:01:29 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        rostedt@goodmis.org, bigeasy@linutronix.de, suzuki.poulose@arm.com,
-        catalin.marinas@arm.com, dave.martin@arm.com
-Subject: Re: [PATCH] arm64/cpufeature: Convert hook_lock to raw_spin_lock_t
- in cpu_enable_ssbs()
-Message-ID: <20190530120129.GD13751@fuggles.cambridge.arm.com>
-References: <20190530113058.1988-1-julien.grall@arm.com>
+        Thu, 30 May 2019 08:01:41 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16744 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfE3MBl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:01:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cefc6230000>; Thu, 30 May 2019 05:01:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 May 2019 05:01:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 May 2019 05:01:39 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
+ 2019 12:01:37 +0000
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT
+ flag is unset
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190529214355.15339-1-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9b0e0d20-6386-a38a-1347-4264d249cb44@nvidia.com>
+Date:   Thu, 30 May 2019 13:01:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530113058.1988-1-julien.grall@arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190529214355.15339-1-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559217699; bh=reDR5M2JTDqXTNW7rZr6EEAnF0APcRZ8+YH4GK7K9dE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BliolhNRG2WTgLrf6H0GFf5HF31eruBgAHOZAX6toRT8oUBUTYu6t2Fn4HDHfFdJL
+         LfX4YVRxf9P8LarsHlwQS9BL9vEySKTUE81LAW36e3f7UXT/OFEoLN8tZa5Pkte1VX
+         svKBviaEQYzKQ7Q0QhVCnq8raycDlnkbj4OHBgwAFarfVJGU/UJcpulXgboES0XU9G
+         Yl0YwdNCoe23LPh20wdwQjwLTfpCOavYH5HQAFo0uZja1cGhBEX944JHQnaR8yl2WS
+         esnhAbT8t+EU6qnFfzkMhcNiHJ7DzU8SYuGbRGvAjF9NS7brdhMYGcK+Q2ZX9qs/Pn
+         6kYWF83dcrYhg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:30:58PM +0100, Julien Grall wrote:
-> cpu_enable_ssbs() is called via stop_machine() as part of the cpu_enable
-> callback. A spin lock is used to ensure the hook is registered before
-> the rest of the callback is executed.
+
+On 29/05/2019 22:43, Dmitry Osipenko wrote:
+> Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
+> unset since it completely disables interrupt handling instead of skipping
+> the callbacks invocations, hence putting channel into unusable state.
 > 
-> On -RT spin_lock() may sleep. However, all the callees in stop_machine()
-> are expected to not sleep. Therefore a raw_spin_lock() is required here.
+> The flag is always set by all of kernel drivers that use APB DMA, so let's
+> error out in otherwise case for consistency. It won't be difficult to
+> support that case properly if ever will be needed.
 > 
-> Given this is already done under stop_machine() and the work done under
-> the lock is quite small, the latency should not increase too much.
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
+>  drivers/dma/tegra20-apb-dma.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> It was noticed when looking at the current use of spin_lock in
-> arch/arm64. I don't have a platform calling that callback, so I have
-> hacked the code to reproduce the error and check it is now fixed.
-> ---
->  arch/arm64/kernel/cpufeature.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index ca27e08e3d8a..2a7159fda3ce 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1194,14 +1194,14 @@ static struct undef_hook ssbs_emulation_hook = {
->  static void cpu_enable_ssbs(const struct arm64_cpu_capabilities *__unused)
->  {
->  	static bool undef_hook_registered = false;
-> -	static DEFINE_SPINLOCK(hook_lock);
-> +	static DEFINE_RAW_SPINLOCK(hook_lock);
->  
-> -	spin_lock(&hook_lock);
-> +	raw_spin_lock(&hook_lock);
->  	if (!undef_hook_registered) {
->  		register_undef_hook(&ssbs_emulation_hook);
->  		undef_hook_registered = true;
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index cf462b1abc0b..2c84a660ba36 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -988,8 +988,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
 >  	}
-> -	spin_unlock(&hook_lock);
-> +	raw_spin_unlock(&hook_lock);
+>  
+> -	if (flags & DMA_PREP_INTERRUPT)
+> +	if (flags & DMA_PREP_INTERRUPT) {
+>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+> +	} else {
+> +		WARN_ON_ONCE(1);
+> +		return NULL;
+> +	}
+>  
+>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+>  
+> @@ -1131,8 +1135,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+>  	}
+>  
+> -	if (flags & DMA_PREP_INTERRUPT)
+> +	if (flags & DMA_PREP_INTERRUPT) {
+>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+> +	} else {
+> +		WARN_ON_ONCE(1);
+> +		return NULL;
+> +	}
+>  
+>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
 
-Makes sense to me. We could probably avoid the lock entirely if we wanted
-to (via atomic_dec_if_positive), but I'm not sure it's really worth it.
+Looks good to me.
 
-Will
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic
