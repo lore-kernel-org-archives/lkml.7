@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B96CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824ACC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B59C2558C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B9B25589
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190588;
-	bh=C5z9Bk167e3r31mhrvlDOQ2kyyHohCiznWZsGsX1/50=;
+	s=default; t=1559190594;
+	bh=XMg1VJPFU8dRxGPVBd3Y/ZFiH2pYiUvj9KpvL6JtE/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLOCOI7GaVZIi9H/yEKyefziFo4EKOXlkkVXRsNXDxWJ6hOfEks99iVpuCim/UDlS
-	 UIxuewx8kqF290CXP6FCa1wmw7I+X5tCZgmEoVFTwOWik6ayOrUpdM3VfS/CfJxUWo
-	 n4QqDLfvtG1+tNzlEgdB/vJZt9RJmQB/RXN4Jqoc=
+	b=jVYdHv6Cmbv9LO2hpkaerAyrHm7IB9J7PdeCru9mugZ+jizrxPptd6DWRM3jJRgdk
+	 yuSHyUIvTGNvpFULDhN4O2krpKpCzPHivbLQwY2h59s+3Vg8fnfYTxFXG8PQuiOas7
+	 PlAzEZZfoLd13lLmD4ecHXyKQaT/YSuv+vP9TGUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbfE3E3q (ORCPT
+        id S1729660AbfE3DN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfE3DOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:01 -0400
+        id S1728676AbfE3DLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 669DE24570;
-        Thu, 30 May 2019 03:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EDB624502;
+        Thu, 30 May 2019 03:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186040;
-        bh=C5z9Bk167e3r31mhrvlDOQ2kyyHohCiznWZsGsX1/50=;
+        s=default; t=1559185906;
+        bh=XMg1VJPFU8dRxGPVBd3Y/ZFiH2pYiUvj9KpvL6JtE/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKXKGd2B2akp1fllsHHU7ha5fmv6yIYE0jReanuJRSEjEyokeCTXRxQGHrQIP3b96
-         YRKL6nyKp9+JqAZfc9zIbwpu3xWHSAdy4QwOGGFoJ0LlMs7Tn3TXZVXylBcUckM4MI
-         O1TiRnPBxZu0+atO2vH8k71Cih2iZvX2YVCI7fM8=
+        b=VA4AA1Jqb2pOj+SdtoiO1joQ8Bgw1JA9QTHFYOA7IN4vEtxQ5igRGsSei+ovEsOTt
+         ZozCH9uneWHWi5YczIitWGI2O+Bqqh2K+LPy10BGjj2AMd+aJWhYO0nR1fFZ2wYejJ
+         7KWbR+qefySQ9zaoaWEBXlv6f77mKFZaEs0cTKqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Claire Chang <tientzu@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, ris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Juergen Gross <jgross@suse.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 129/346] Bluetooth: hci_qca: Give enough time to ROME controller to bootup.
-Date:   Wed, 29 May 2019 20:03:22 -0700
-Message-Id: <20190530030547.653264330@linuxfoundation.org>
+Subject: [PATCH 5.1 279/405] block: avoid to break XEN by multi-page bvec
+Date:   Wed, 29 May 2019 20:04:37 -0700
+Message-Id: <20190530030555.005862356@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,35 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7f09d5a6c33be66a5ca19bf9dd1c2d90c5dfcf0d ]
+[ Upstream commit db5ebd6edd2627d7e81a031643cf43587f63e66c ]
 
-This patch enables enough time to ROME controller to bootup
-after we bring the enable pin out of reset.
+XEN has special page merge requirement, see xen_biovec_phys_mergeable().
+We can't merge pages into one bvec simply for XEN.
 
-Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support").
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
-Tested-by: Rocky Liao <rjliao@codeaurora.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+So move XEN's specific check on page merge into __bio_try_merge_page(),
+then abvoid to break XEN by multi-page bvec.
+
+Cc: ris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_qca.c | 2 ++
+ block/bio.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index f036c8f98ea33..97bc17670b7aa 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -508,6 +508,8 @@ static int qca_open(struct hci_uart *hu)
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
- 		if (qcadev->btsoc_type != QCA_WCN3990) {
- 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-+			/* Controller needs time to bootup. */
-+			msleep(150);
- 		} else {
- 			hu->init_speed = qcadev->init_speed;
- 			hu->oper_speed = qcadev->oper_speed;
+diff --git a/block/bio.c b/block/bio.c
+index 716510ecd7ffa..a3c80a6c1fe51 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -776,6 +776,8 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+ 
+ 		if (vec_end_addr + 1 != page_addr + off)
+ 			return false;
++		if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
++			return false;
+ 		if (same_page && (vec_end_addr & PAGE_MASK) != page_addr)
+ 			return false;
+ 
 -- 
 2.20.1
 
