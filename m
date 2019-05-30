@@ -2,97 +2,182 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCFDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85DDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B87F25EFF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MwFQC0UI"
+	by mail.kernel.org (Postfix) with ESMTP id 851E825EE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559192141;
+	bh=BVZeyU1/iVIaE/V2LIymSSwYBEsq99mennyrdoguKtQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IXmF7uPlwiVq7xQ/4jU6Cp2fsvRIEnKGm4WGPevleQ2mfsYtIZpN8oeg6AP4rIE8h
+	 /uUF74m/43ASmQTaRqPsd6OSBB6cTr5lWPw7lZG0g1AWER7E33MLIn9uymf784ody2
+	 ghwMiGMeGzlSDDkOH2lSsGlIAkzEuZyazZZF7vX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbfE3Eze (ORCPT
+        id S2389175AbfE3Ezj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48881 "EHLO ozlabs.org"
+        Thu, 30 May 2019 00:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389159AbfE3Ez2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 00:55:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727663AbfE3DKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:15 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45DwHy1HfMz9s5c;
-        Thu, 30 May 2019 14:55:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559192126;
-        bh=u6qX2YcuuXUCj/6CtLWX3CJivrXavFG+g3vTC3MYfAc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MwFQC0UI8ucaEuuFqT5vif7bsig8REJxHLJjTwdpysfmXDzHBsd+c90jQQ9Eeu3xj
-         mJCgs3itT/0eovrlyNSDloRzfbglDsAJCSOqJCFo1vAmAHtlmFWizmY0j3ft8sW+Vz
-         CDqY54mnIT5cucBWn8DtEfK12V+vo5KkHLk0AlXNe/SwGPj/d6BcpvBMDhxi/9YQqW
-         DCkSyR9DPw3U/CYlPmyYdatHaJQpiDQFxtODblzgk4UUWctpnROXOk/CoyDMj8ILiv
-         jl1N814XoOGvgsd4K3CSiHrGWM7zJraRNlXHseqXzXMLA5ZuPqE7K9Ep6PkM5a6BwA
-         tYfg6n6xDcefA==
-Date:   Thu, 30 May 2019 14:55:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matteo Croce <mcroce@redhat.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20190530145525.3cca17cb@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id BED092446F;
+        Thu, 30 May 2019 03:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559185814;
+        bh=BVZeyU1/iVIaE/V2LIymSSwYBEsq99mennyrdoguKtQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kY1j902DWZi+kCB76H/uYlTSTEGaWnUfCnmvMI61lggrWlTh8P/GFD5oMYWXV5iDf
+         kdrGz3Z94+3ejvTP+DDF+rcpnjZJlEP2wtLCTHEWgfDsSPAVZ25xfkGH5FEUbX17UI
+         xTp3YqY00dLbzbr9TJLc6JMIB5hlZO2PdcOxBu8U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 106/405] net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
+Date:   Wed, 29 May 2019 20:01:44 -0700
+Message-Id: <20190530030546.366066429@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/8aSEcKm1n18JLWopbjCv0hG"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8aSEcKm1n18JLWopbjCv0hG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 06095f34f8a0a2c4c83a19514c272699edd5f80b ]
 
-Hi all,
+Now CPSW ALE will set/clean Host port bit in Unregistered Multicast Flood
+Mask (UNREG_MCAST_FLOOD_MASK) for every VLAN without checking if this port
+belongs to VLAN or not when ALLMULTI mode flag is set for nedev. This is
+working in non dual_mac mode, but in dual_mac - it causes
+enabling/disabling ALLMULTI flag for both ports.
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Hence fix it by adding additional parameter to cpsw_ale_set_allmulti() to
+specify ALE port number for which ALLMULTI has to be enabled and check if
+port belongs to VLAN before modifying UNREG_MCAST_FLOOD_MASK.
 
-net/tipc/sysctl.c:42:12: warning: 'one' defined but not used [-Wunused-vari=
-able]
- static int one =3D 1;
-            ^~~
-net/tipc/sysctl.c:41:12: warning: 'zero' defined but not used [-Wunused-var=
-iable]
- static int zero;
-            ^~~~
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/ti/cpsw.c     | 12 +++++++++---
+ drivers/net/ethernet/ti/cpsw_ale.c | 19 ++++++++++---------
+ drivers/net/ethernet/ti/cpsw_ale.h |  3 +--
+ 3 files changed, 20 insertions(+), 14 deletions(-)
 
-Introduced by commit
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index a591583d120e1..dd12b73a88530 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -800,12 +800,17 @@ static int cpsw_purge_all_mc(struct net_device *ndev, const u8 *addr, int num)
+ 
+ static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
+ {
+-	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
++	struct cpsw_priv *priv = netdev_priv(ndev);
++	struct cpsw_common *cpsw = priv->cpsw;
++	int slave_port = -1;
++
++	if (cpsw->data.dual_emac)
++		slave_port = priv->emac_port + 1;
+ 
+ 	if (ndev->flags & IFF_PROMISC) {
+ 		/* Enable promiscuous mode */
+ 		cpsw_set_promiscious(ndev, true);
+-		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI);
++		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI, slave_port);
+ 		return;
+ 	} else {
+ 		/* Disable promiscuous mode */
+@@ -813,7 +818,8 @@ static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
+ 	}
+ 
+ 	/* Restore allmulti on vlans if necessary */
+-	cpsw_ale_set_allmulti(cpsw->ale, ndev->flags & IFF_ALLMULTI);
++	cpsw_ale_set_allmulti(cpsw->ale,
++			      ndev->flags & IFF_ALLMULTI, slave_port);
+ 
+ 	/* add/remove mcast address either for real netdev or for vlan */
+ 	__hw_addr_ref_sync_dev(&ndev->mc, ndev, cpsw_add_mc_addr,
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 798c989d5d934..b3d9591b4824a 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -482,24 +482,25 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
+ }
+ EXPORT_SYMBOL_GPL(cpsw_ale_del_vlan);
+ 
+-void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti)
++void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
+ {
+ 	u32 ale_entry[ALE_ENTRY_WORDS];
+-	int type, idx;
+ 	int unreg_mcast = 0;
+-
+-	/* Only bother doing the work if the setting is actually changing */
+-	if (ale->allmulti == allmulti)
+-		return;
+-
+-	/* Remember the new setting to check against next time */
+-	ale->allmulti = allmulti;
++	int type, idx;
+ 
+ 	for (idx = 0; idx < ale->params.ale_entries; idx++) {
++		int vlan_members;
++
+ 		cpsw_ale_read(ale, idx, ale_entry);
+ 		type = cpsw_ale_get_entry_type(ale_entry);
+ 		if (type != ALE_TYPE_VLAN)
+ 			continue;
++		vlan_members =
++			cpsw_ale_get_vlan_member_list(ale_entry,
++						      ale->vlan_field_bits);
++
++		if (port != -1 && !(vlan_members & BIT(port)))
++			continue;
+ 
+ 		unreg_mcast =
+ 			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index cd07a3e96d576..1fe196d8a5e42 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -37,7 +37,6 @@ struct cpsw_ale {
+ 	struct cpsw_ale_params	params;
+ 	struct timer_list	timer;
+ 	unsigned long		ageout;
+-	int			allmulti;
+ 	u32			version;
+ 	/* These bits are different on NetCP NU Switch ALE */
+ 	u32			port_mask_bits;
+@@ -116,7 +115,7 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
+ 			int reg_mcast, int unreg_mcast);
+ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port);
+-void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti);
++void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port);
+ 
+ int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control);
+ int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
+-- 
+2.20.1
 
-  6a33853c5773 ("proc/sysctl: add shared variables for range check")
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/8aSEcKm1n18JLWopbjCv0hG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzvYj0ACgkQAVBC80lX
-0GwB6wgAmmW1oDLUmcW6Jc2Q79FQC0TF/nrsmwrnrFajk64ae3ZfZYJpfRZn++9p
-QyqqPNyEIKbIeFEZ2TG30LPZ6NgKStitxF4MhgnUr25NEmp1WjoCbniZhxNy4YG/
-7VezifgRRiWkaTEHWutSDvdyiq3y6lR9K6flYYr2oQhpCnvqlAWLVyn6gJNTh9Vu
-boELoEuJsePyiayxjK/Hryp4QW2b2QVMlU3uooueo7mVRUsxzeNd/nwiEgLFmmEO
-e/3rDYA8yhCNKSy2zWw+40bSjpVY5MTm0moLBOM9Gnw4aTZcVyPtG+Pq4fpnED+T
-w8ClR4AEddix/9uKLHAAw4mDvuSQFA==
-=kH6a
------END PGP SIGNATURE-----
-
---Sig_/8aSEcKm1n18JLWopbjCv0hG--
