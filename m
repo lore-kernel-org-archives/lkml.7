@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD768C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27424C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9133524B78
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F320D24B73
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187382;
-	bh=bB6jC1Dmpqr111bwzyRwcfMB0pV1fnZ4gBFTnhP25eI=;
+	s=default; t=1559187397;
+	bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S3X8rhe4Kzixr4Vw749HgvkDhtMBHKkilO0VFOIaWy8O3FgSf6fxEZthQLuX2VKTO
-	 I8nT6szB8tCgAvCFL8Q8JwzYzc1KQRBquaWrxL2qL0bzY6UMOJDMi9G8z5nPror/GV
-	 NOY9hOD7t0UuQGzQmWWPuyG/qeAFP8pLL8Jj62GA=
+	b=VXl6U3FA+PI6pAOYjLH2uAfk+TwPEPAIXNs+I6m6ZRIRrHeSoML3pDGDV2UHxsJMe
+	 5I9h6+AAJFcEXGjVLTNYY2k9FIcX4c6Vh6tK+MsQ1+k+xaJcaKYa14T4PNmy75/FHF
+	 eSHufBAbded7go5mPpBv8fOtrSNE0OksUrxXKU3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbfE3DZW (ORCPT
+        id S1732440AbfE3DZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbfE3DS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:27 -0400
+        id S1730556AbfE3DSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB35247C8;
-        Thu, 30 May 2019 03:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1247E24787;
+        Thu, 30 May 2019 03:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186306;
-        bh=bB6jC1Dmpqr111bwzyRwcfMB0pV1fnZ4gBFTnhP25eI=;
+        s=default; t=1559186299;
+        bh=R/jHQoHhzUBZoo0xB8dbxQm1qlSAWS2p063ehpSGLWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HeEX4owEoIRIKNU4TGsV3qgQ/kwBJm+7i72NJov/3iKjV/rND3loh2OW4wXdZ8s5m
-         rt8IZZ7d4FbnEb1LcOglex/xDSNXRCEwcNUr54l2g7Zz0tFKmLfNmfQ8NlSqMB05Bm
-         4CgN2G7uLDR5mvSGFgj9VBBfDSx0OfSm4IXqbKvc=
+        b=QV6ytdw150VcR4N0QqVeT1T88aZaAdJ00uAvMjv/loKDKPD0NrA71TozeoYQG+YP5
+         xxC4VCdrUri5FhEh2QHXKuiDtm9daP02+u4UHeAORSdGD9pBojyUPOtshT1btkcRe+
+         9lTq2BgZbbEeTE8iUAmeJTzufvS4MTHjnyhutBjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 271/276] drm/drv: Hold ref on parent device during drm_device lifetime
-Date:   Wed, 29 May 2019 20:07:09 -0700
-Message-Id: <20190530030542.146504255@linuxfoundation.org>
+Subject: [PATCH 4.19 262/276] media: saa7146: avoid high stack usage with clang
+Date:   Wed, 29 May 2019 20:07:00 -0700
+Message-Id: <20190530030541.589347419@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,49 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56be6503aab2bc3a30beae408071b9be5e1bae51 ]
+[ Upstream commit 03aa4f191a36f33fce015387f84efa0eee94408e ]
 
-This makes it safe to access drm_device->dev after the parent device has
-been removed/unplugged.
+Two saa7146/hexium files contain a construct that causes a warning
+when built with clang:
 
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190225144232.20761-2-noralf@tronnes.org
+drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_probe(struct saa7146_dev *dev)
+           ^
+drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
+      [-Werror,-Wframe-larger-than=]
+static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
+           ^
+
+This one happens regardless of KASAN, and the problem is that a
+constructor to initialize a dynamically allocated structure leads
+to a copy of that structure on the stack, whereas gcc initializes
+it in place.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=40776
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix checkpatch warnings]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/pci/saa7146/hexium_gemini.c | 5 ++---
+ drivers/media/pci/saa7146/hexium_orion.c  | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 0201ccb22f4ca..d8ae4ca129c70 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -499,7 +499,7 @@ int drm_dev_init(struct drm_device *dev,
- 	}
+diff --git a/drivers/media/pci/saa7146/hexium_gemini.c b/drivers/media/pci/saa7146/hexium_gemini.c
+index 5817d9cde4d0c..6d8e4afe9673a 100644
+--- a/drivers/media/pci/saa7146/hexium_gemini.c
++++ b/drivers/media/pci/saa7146/hexium_gemini.c
+@@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+ 	/* enable i2c-port pins */
+ 	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
  
- 	kref_init(&dev->ref);
--	dev->dev = parent;
-+	dev->dev = get_device(parent);
- 	dev->driver = driver;
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium gemini",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium gemini",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
+diff --git a/drivers/media/pci/saa7146/hexium_orion.c b/drivers/media/pci/saa7146/hexium_orion.c
+index 0a05176c18ab6..a794f9e5f9908 100644
+--- a/drivers/media/pci/saa7146/hexium_orion.c
++++ b/drivers/media/pci/saa7146/hexium_orion.c
+@@ -231,9 +231,8 @@ static int hexium_probe(struct saa7146_dev *dev)
+ 	saa7146_write(dev, DD1_STREAM_B, 0x00000000);
+ 	saa7146_write(dev, MC2, (MASK_09 | MASK_25 | MASK_10 | MASK_26));
  
- 	INIT_LIST_HEAD(&dev->filelist);
-@@ -568,6 +568,7 @@ int drm_dev_init(struct drm_device *dev,
- 	drm_minor_free(dev, DRM_MINOR_RENDER);
- 	drm_fs_inode_free(dev->anon_inode);
- err_free:
-+	put_device(dev->dev);
- 	mutex_destroy(&dev->master_mutex);
- 	mutex_destroy(&dev->ctxlist_mutex);
- 	mutex_destroy(&dev->clientlist_mutex);
-@@ -603,6 +604,8 @@ void drm_dev_fini(struct drm_device *dev)
- 	drm_minor_free(dev, DRM_MINOR_PRIMARY);
- 	drm_minor_free(dev, DRM_MINOR_RENDER);
- 
-+	put_device(dev->dev);
-+
- 	mutex_destroy(&dev->master_mutex);
- 	mutex_destroy(&dev->ctxlist_mutex);
- 	mutex_destroy(&dev->clientlist_mutex);
+-	hexium->i2c_adapter = (struct i2c_adapter) {
+-		.name = "hexium orion",
+-	};
++	strscpy(hexium->i2c_adapter.name, "hexium orion",
++		sizeof(hexium->i2c_adapter.name));
+ 	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+ 	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+ 		DEB_S("cannot register i2c-device. skipping.\n");
 -- 
 2.20.1
 
