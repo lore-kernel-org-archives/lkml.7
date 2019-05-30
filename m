@@ -2,130 +2,78 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE25C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323C7258AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BliolhNR"
+	by mail.kernel.org (Postfix) with ESMTP id 2C396258B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfE3MBl (ORCPT
+        id S1727215AbfE3MFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:01:41 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16744 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfE3MBl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:01:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cefc6230000>; Thu, 30 May 2019 05:01:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 May 2019 05:01:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 May 2019 05:01:39 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
- 2019 12:01:37 +0000
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT
- flag is unset
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190529214355.15339-1-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <9b0e0d20-6386-a38a-1347-4264d249cb44@nvidia.com>
-Date:   Thu, 30 May 2019 13:01:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 30 May 2019 08:05:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58876 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727015AbfE3MFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:05:43 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EA1EA0B58;
+        Thu, 30 May 2019 12:05:35 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B24C819736;
+        Thu, 30 May 2019 12:05:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 30 May 2019 14:05:34 +0200 (CEST)
+Date:   Thu, 30 May 2019 14:05:31 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ptrace: restore smp_rmb() in __ptrace_may_access()
+Message-ID: <20190530120531.GE22536@redhat.com>
+References: <20190529113157.227380-1-jannh@google.com>
+ <20190529162120.GB27659@redhat.com>
+ <CAG48ez3S1c_cd8RNSb9TrF66d+1AMAxD4zh-kixQ6uSEnmS-tg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190529214355.15339-1-digetx@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559217699; bh=reDR5M2JTDqXTNW7rZr6EEAnF0APcRZ8+YH4GK7K9dE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BliolhNRG2WTgLrf6H0GFf5HF31eruBgAHOZAX6toRT8oUBUTYu6t2Fn4HDHfFdJL
-         LfX4YVRxf9P8LarsHlwQS9BL9vEySKTUE81LAW36e3f7UXT/OFEoLN8tZa5Pkte1VX
-         svKBviaEQYzKQ7Q0QhVCnq8raycDlnkbj4OHBgwAFarfVJGU/UJcpulXgboES0XU9G
-         Yl0YwdNCoe23LPh20wdwQjwLTfpCOavYH5HQAFo0uZja1cGhBEX944JHQnaR8yl2WS
-         esnhAbT8t+EU6qnFfzkMhcNiHJ7DzU8SYuGbRGvAjF9NS7brdhMYGcK+Q2ZX9qs/Pn
-         6kYWF83dcrYhg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3S1c_cd8RNSb9TrF66d+1AMAxD4zh-kixQ6uSEnmS-tg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 30 May 2019 12:05:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/29, Jann Horn wrote:
+>
+> > (I am wondering if smp_acquire__after_ctrl_dep() could be used instead, just to
+> >  make this code look more confusing)
+>
+> Uuh, I had no idea that that barrier type exists. The helper isn't
+> even explicitly mentioned in Documentation/memory-barriers.rst. I
+> don't really want to use dark magic in the middle of ptrace access
+> logic...
 
-On 29/05/2019 22:43, Dmitry Osipenko wrote:
-> Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
-> unset since it completely disables interrupt handling instead of skipping
-> the callbacks invocations, hence putting channel into unusable state.
-> 
-> The flag is always set by all of kernel drivers that use APB DMA, so let's
-> error out in otherwise case for consistency. It won't be difficult to
-> support that case properly if ever will be needed.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index cf462b1abc0b..2c84a660ba36 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -988,8 +988,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
->  	}
->  
-> -	if (flags & DMA_PREP_INTERRUPT)
-> +	if (flags & DMA_PREP_INTERRUPT) {
->  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
-> +	} else {
-> +		WARN_ON_ONCE(1);
-> +		return NULL;
-> +	}
->  
->  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
->  
-> @@ -1131,8 +1135,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
->  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
->  	}
->  
-> -	if (flags & DMA_PREP_INTERRUPT)
-> +	if (flags & DMA_PREP_INTERRUPT) {
->  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
-> +	} else {
-> +		WARN_ON_ONCE(1);
-> +		return NULL;
-> +	}
->  
->  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+Yes. and if it was not clear I didn't try to seriously suggest to use this
+barrier. I was just curious if it can be used or not in this particular case.
 
-Looks good to me.
+> Anyway, looking at it, I think smp_acquire__after_ctrl_dep() doesn't
+> make sense here;
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Well I still _think_ it should work, it provides the LOAD-LOAD ordering
+and this is what we need.
 
-Cheers
-Jon
+But I can be easily wrong, and again, I wasn't serious.
 
--- 
-nvpublic
+Oleg.
+
