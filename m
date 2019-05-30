@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2843EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C091C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E589C24FBE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2904C204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188935;
-	bh=688BSSCjm1VH0CTrn3FpYfvI2i1PqdHOIh0iUUQkLaU=;
+	s=default; t=1559188942;
+	bh=fGKK+pcT+AlvrtG9AhPCrF4t6p1NfH72TS0Z4aRRBdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plKxmSKkHf/DM2wS4eryjOrBCpl/1YUw2G2ciZrKvqJP5idxv1/3rzBkEDB/+QtF8
-	 t2N7NfRXf0KxPysvWFIhVO1XqTY7pDhqgSuVFOnbeakF2wh0Bi/A25+TUCbVy73EI8
-	 sf8qsxuc6Jm05+CB8W/HFbm6byQ5TEPWs75jtFMw=
+	b=iWEdbWbrpqPHsn1isnCdNljVB+U00iYPiZuGq+xb57jIW8btKLuRdWWgzYsr1SXlF
+	 rmM5yBUzlcjkPSnl+2rJp1k8cje28A/m7cpccP3fDJX5jFKbNotq2kGkyuqtO4fc0W
+	 xQeMkqo+et5HEy3HykJO+MHr0FNC7x2jBQvkwnNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbfE3ECO (ORCPT
+        id S2387896AbfE3ECQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731393AbfE3DSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731385AbfE3DSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:18:02 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10A5124733;
-        Thu, 30 May 2019 03:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744E224763;
+        Thu, 30 May 2019 03:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186282;
-        bh=688BSSCjm1VH0CTrn3FpYfvI2i1PqdHOIh0iUUQkLaU=;
+        s=default; t=1559186281;
+        bh=fGKK+pcT+AlvrtG9AhPCrF4t6p1NfH72TS0Z4aRRBdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P34Zv68LFL3/cYDXPVYwafE860h8YKS9vUxxkVBjEs7s+Re3M04xA2q67BJS/EgU4
-         3WljBeo7XzIiHjVtT6YKMXIfSL8oBpdiuMDshBt0W45IUFOnk1YcoFvF+r3V1Qz/yC
-         Qpd0+MdWO4ov/BDq48uzynMKfXSkBt3ebZMty/zc=
+        b=JrsKF599cxtxoeIRgws6IL74MN7DI7NWIyCjHgeCivfjJ9ANi0FfjQFINuTO+c6+9
+         Wm5xO/cewPJefF+3LG+H7tcRdgezI7d5k0S7meKwJETZiU/O/AZ1DYbnt3fg+ASw/i
+         4QAzk1yWkoOMJXFJSqqCEOOPEdyMHPQHWkO7gndc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 234/276] rcuperf: Fix cleanup path for invalid perf_type strings
-Date:   Wed, 29 May 2019 20:06:32 -0700
-Message-Id: <20190530030539.764604914@linuxfoundation.org>
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>, Pu Wen <puwen@hygon.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 233/276] x86/mce: Handle varying MCA bank counts
+Date:   Wed, 29 May 2019 20:06:31 -0700
+Message-Id: <20190530030539.701299147@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -59,50 +65,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
+[ Upstream commit 006c077041dc73b9490fffc4c6af5befe0687110 ]
 
-If the specified rcuperf.perf_type is not in the rcu_perf_init()
-function's perf_ops[] array, rcuperf prints some console messages and
-then invokes rcu_perf_cleanup() to set state so that a future torture
-test can run.  However, rcu_perf_cleanup() also attempts to end the
-test that didn't actually start, and in doing so relies on the value
-of cur_ops, a value that is not particularly relevant in this case.
-This can result in confusing output or even follow-on failures due to
-attempts to use facilities that have not been properly initialized.
+Linux reads MCG_CAP[Count] to find the number of MCA banks visible to a
+CPU. Currently, this number is the same for all CPUs and a warning is
+shown if there is a difference. The number of banks is overwritten with
+the MCG_CAP[Count] value of each following CPU that boots.
 
-This commit therefore sets the value of cur_ops to NULL in this case and
-inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
-relying on an irrelevant cur_ops value.
+According to the Intel SDM and AMD APM, the MCG_CAP[Count] value gives
+the number of banks that are available to a "processor implementation".
+The AMD BKDGs/PPRs further clarify that this value is per core. This
+value has historically been the same for every core in the system, but
+that is not an architectural requirement.
 
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Future AMD systems may have different MCG_CAP[Count] values per core,
+so the assumption that all CPUs will have the same MCG_CAP[Count] value
+will no longer be valid.
+
+Also, the first CPU to boot will allocate the struct mce_banks[] array
+using the number of banks based on its MCG_CAP[Count] value. The machine
+check handler and other functions use the global number of banks to
+iterate and index into the mce_banks[] array. So it's possible to use an
+out-of-bounds index on an asymmetric system where a following CPU sees a
+MCG_CAP[Count] value greater than its predecessors.
+
+Thus, allocate the mce_banks[] array to the maximum number of banks.
+This will avoid the potential out-of-bounds index since the value of
+mca_cfg.banks is capped to MAX_NR_BANKS.
+
+Set the value of mca_cfg.banks equal to the max of the previous value
+and the value for the current CPU. This way mca_cfg.banks will always
+represent the max number of banks detected on any CPU in the system.
+
+This will ensure that all CPUs will access all the banks that are
+visible to them. A CPU that can access fewer than the max number of
+banks will find the registers of the extra banks to be read-as-zero.
+
+Furthermore, print the resulting number of MCA banks in use. Do this in
+mcheck_late_init() so that the final value is printed after all CPUs
+have been initialized.
+
+Finally, get bank count from target CPU when doing injection with mce-inject
+module.
+
+ [ bp: Remove out-of-bounds example, passify and cleanup commit message. ]
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20180727214009.78289-1-Yazen.Ghannam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcuperf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/cpu/mcheck/mce-inject.c | 14 +++++++-------
+ arch/x86/kernel/cpu/mcheck/mce.c        | 22 +++++++---------------
+ 2 files changed, 14 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 34244523550e1..19249b86fb33e 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -561,6 +561,10 @@ rcu_perf_cleanup(void)
+diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+index c805a06e14c38..ff1c00b695aed 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
++++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+@@ -46,8 +46,6 @@
+ static struct mce i_mce;
+ static struct dentry *dfs_inj;
  
- 	if (torture_cleanup_begin())
- 		return;
-+	if (!cur_ops) {
-+		torture_cleanup_end();
-+		return;
-+	}
+-static u8 n_banks;
+-
+ #define MAX_FLAG_OPT_SIZE	4
+ #define NBCFG			0x44
  
- 	if (reader_tasks) {
- 		for (i = 0; i < nrealreaders; i++)
-@@ -681,6 +685,7 @@ rcu_perf_init(void)
- 			pr_cont(" %s", perf_ops[i]->name);
- 		pr_cont("\n");
- 		firsterr = -EINVAL;
-+		cur_ops = NULL;
- 		goto unwind;
+@@ -567,9 +565,15 @@ static void do_inject(void)
+ static int inj_bank_set(void *data, u64 val)
+ {
+ 	struct mce *m = (struct mce *)data;
++	u8 n_banks;
++	u64 cap;
++
++	/* Get bank count on target CPU so we can handle non-uniform values. */
++	rdmsrl_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
++	n_banks = cap & MCG_BANKCNT_MASK;
+ 
+ 	if (val >= n_banks) {
+-		pr_err("Non-existent MCE bank: %llu\n", val);
++		pr_err("MCA bank %llu non-existent on CPU%d\n", val, m->extcpu);
+ 		return -EINVAL;
  	}
- 	if (cur_ops->init)
+ 
+@@ -659,10 +663,6 @@ static struct dfs_node {
+ static int __init debugfs_init(void)
+ {
+ 	unsigned int i;
+-	u64 cap;
+-
+-	rdmsrl(MSR_IA32_MCG_CAP, cap);
+-	n_banks = cap & MCG_BANKCNT_MASK;
+ 
+ 	dfs_inj = debugfs_create_dir("mce-inject", NULL);
+ 	if (!dfs_inj)
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 45bd926359f62..fee118b3b69fd 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1480,13 +1480,12 @@ EXPORT_SYMBOL_GPL(mce_notify_irq);
+ static int __mcheck_cpu_mce_banks_init(void)
+ {
+ 	int i;
+-	u8 num_banks = mca_cfg.banks;
+ 
+-	mce_banks = kcalloc(num_banks, sizeof(struct mce_bank), GFP_KERNEL);
++	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
+ 	if (!mce_banks)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < num_banks; i++) {
++	for (i = 0; i < MAX_NR_BANKS; i++) {
+ 		struct mce_bank *b = &mce_banks[i];
+ 
+ 		b->ctl = -1ULL;
+@@ -1500,28 +1499,19 @@ static int __mcheck_cpu_mce_banks_init(void)
+  */
+ static int __mcheck_cpu_cap_init(void)
+ {
+-	unsigned b;
+ 	u64 cap;
++	u8 b;
+ 
+ 	rdmsrl(MSR_IA32_MCG_CAP, cap);
+ 
+ 	b = cap & MCG_BANKCNT_MASK;
+-	if (!mca_cfg.banks)
+-		pr_info("CPU supports %d MCE banks\n", b);
+-
+-	if (b > MAX_NR_BANKS) {
+-		pr_warn("Using only %u machine check banks out of %u\n",
+-			MAX_NR_BANKS, b);
++	if (WARN_ON_ONCE(b > MAX_NR_BANKS))
+ 		b = MAX_NR_BANKS;
+-	}
+ 
+-	/* Don't support asymmetric configurations today */
+-	WARN_ON(mca_cfg.banks != 0 && b != mca_cfg.banks);
+-	mca_cfg.banks = b;
++	mca_cfg.banks = max(mca_cfg.banks, b);
+ 
+ 	if (!mce_banks) {
+ 		int err = __mcheck_cpu_mce_banks_init();
+-
+ 		if (err)
+ 			return err;
+ 	}
+@@ -2503,6 +2493,8 @@ EXPORT_SYMBOL_GPL(mcsafe_key);
+ 
+ static int __init mcheck_late_init(void)
+ {
++	pr_info("Using %d MCE banks\n", mca_cfg.banks);
++
+ 	if (mca_cfg.recovery)
+ 		static_branch_inc(&mcsafe_key);
+ 
 -- 
 2.20.1
 
