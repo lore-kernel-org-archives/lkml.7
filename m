@@ -2,140 +2,179 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EE5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E01C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017BA243FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:46:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KETqi6vN";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="tKh1K7ia"
+	by mail.kernel.org (Postfix) with ESMTP id C87C224400
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfE3BqY (ORCPT
+        id S1727392AbfE3Bql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:46:24 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:21818 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3BqY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:46:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559180784; x=1590716784;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=2skhv6t5NmmyBNwMEVbEZL06uEBMBA1e770aw93H7UI=;
-  b=KETqi6vN4QgjQAvAhl358zfHF0DMEYT9jjV0FZxzvobmr2+1Ks86yLPS
-   N/Hcm/vA6m6pKNBDXHncedMq7+zUbGIxOG5BhokVtEJQahk5kWjES4Ybv
-   bFEN2h4tz6w0CgUImr/PwEBfTGPzlhDFSad1pjNOdCYQD3vP05yn5Yn4m
-   CVyY6JzsGr/T1rC7WVP+LHQ7FIv9bQclyDit5fdBlbIt4zD0tLdrEc1NH
-   +Hrx3sqqZTSW/k6fbNCcM5oZlGJXrNWzQ/bwTL66Ulj+dMvj+mqJdx11h
-   HhqcG9C+3UR0POPMGMxp4hxA3z0XuK4UU5wmZZmlQ4XyeHihGkZV5FBzA
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,529,1549900800"; 
-   d="scan'208";a="110619213"
-Received: from mail-cys01nam02lp2057.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.57])
-  by ob1.hgst.iphmx.com with ESMTP; 30 May 2019 09:46:24 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7MIDSLLRHZN8g/hqgsc3mHYe47dtQgBx6ElUsahmn8=;
- b=tKh1K7ia5shq7jdb3vDCrHhFcRw89MB73YdWIMs92w4zFJRikRSgkJOApz2zm5/AR4P9YCWcGftKj48o8jbpmXj+MzGDXGcfTMK20SIgYAASHBDPaaz+l1aornYs6hvB/cwhhz8Bj4uXty9MYCK7BpDlmSimqEfwBcEUuk7QvCM=
-Received: from BYAPR04MB4502.namprd04.prod.outlook.com (52.135.238.11) by
- BYAPR04MB4136.namprd04.prod.outlook.com (20.176.250.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Thu, 30 May 2019 01:46:18 +0000
-Received: from BYAPR04MB4502.namprd04.prod.outlook.com
- ([fe80::e15b:4e75:ab6c:8e1a]) by BYAPR04MB4502.namprd04.prod.outlook.com
- ([fe80::e15b:4e75:ab6c:8e1a%6]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 01:46:18 +0000
-From:   Maciej Rozycki <macro@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "mick@ics.forth.gr" <mick@ics.forth.gr>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel
- endianess
-Thread-Topic: [PATCH, RFC] byteorder: sanity check toolchain vs kernel
- endianess
-Thread-Index: AQHVFocqnLOMqr+xHUalN8wTyDzDBqaC5dyA
-Date:   Thu, 30 May 2019 01:46:18 +0000
-Message-ID: <alpine.DEB.2.20.1905300243200.18422@tpp.hgst.com>
-References: <20190412143538.11780-1-hch@lst.de>
-In-Reply-To: <20190412143538.11780-1-hch@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=macro@wdc.com; 
-x-originating-ip: [129.253.244.4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c4808cbc-7abb-42ad-1456-08d6e4a09bf6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4136;
-x-ms-traffictypediagnostic: BYAPR04MB4136:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <BYAPR04MB41360FB6925C1EBD8D670235B7180@BYAPR04MB4136.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:60;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(346002)(376002)(396003)(136003)(189003)(199004)(66946007)(71190400001)(76116006)(6436002)(73956011)(66446008)(26005)(64756008)(7736002)(91956017)(9686003)(6512007)(3846002)(6116002)(305945005)(66556008)(53936002)(71200400001)(256004)(14444005)(6486002)(11346002)(446003)(5660300002)(186003)(316002)(476003)(486006)(66066001)(102836004)(6506007)(478600001)(4326008)(14454004)(2906002)(54906003)(76176011)(74826001)(99286004)(68736007)(86362001)(6916009)(229853002)(8936002)(8676002)(81166006)(81156014)(25786009)(66476007)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4136;H:BYAPR04MB4502.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7WI4NCkTRLDjV1io87Vxpu8SbNAkGuyAYX2zEruiT4OBwtR3YKHUq6/k7LCZsPwA9vqOjjpPr7T3d/4Wd86hNTMNyILb4WHZh6PKPikqo0qSs2cn6xxxgtqXyYXFp9xkNu+6lFG41VGCUv52BgSOi8gRaGUA+8sFMhse9W4lK+w+G7yx0c4lHq9RrDrO0Emed1Zmp0IemUE3AvlBXVAFxSP0xjnx/+ztZfzQtrgqOv37peNJ4NREwyYd6z40bA1GEBr5fn4yfVsuIKIybA9S4F2G/HB1y6dXcCThO1aKX0xhQO42iAhEz4cuyl7tI237elmMi4lQWN7OOEzDanGdt6uWsSNgqltcUHlV+TtCd+7geKcPomNRNUSffjTyycQjuR68SByp+shzwX0IRV8cJoWUhZEBk+G3da/HYmsp6Kg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A88CFBB7AEBF874388829DAF30C86426@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 29 May 2019 21:46:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56366 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfE3Bql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 21:46:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 67627309264D;
+        Thu, 30 May 2019 01:46:40 +0000 (UTC)
+Received: from [10.72.12.105] (ovpn-12-105.pek2.redhat.com [10.72.12.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7ECC519C70;
+        Thu, 30 May 2019 01:46:37 +0000 (UTC)
+Subject: Re: [PATCH 8/8] ceph: hold i_ceph_lock when removing caps for freeing
+ inode
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     idryomov@redhat.com, jlayton@redhat.com, stable@vger.kernel.org
+References: <20190523080646.19632-8-zyan@redhat.com>
+ <20190529131452.43F372081C@mail.kernel.org>
+From:   "Yan, Zheng" <zyan@redhat.com>
+Message-ID: <1fb32a0f-545c-2ace-3dcd-8df6ca9d32e6@redhat.com>
+Date:   Thu, 30 May 2019 09:46:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4808cbc-7abb-42ad-1456-08d6e4a09bf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 01:46:18.0620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: macro@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4136
+In-Reply-To: <20190529131452.43F372081C@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 30 May 2019 01:46:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019, Christoph Hellwig wrote:
+On 5/29/19 9:14 PM, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.1.4, v5.0.18, v4.19.45, v4.14.121, v4.9.178, v4.4.180, v3.18.140.
+> 
+> v5.1.4: Build OK!
+> v5.0.18: Failed to apply! Possible dependencies:
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+> 
+> v4.19.45: Failed to apply! Possible dependencies:
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+> 
+> v4.14.121: Failed to apply! Possible dependencies:
+>      a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
+>      a57d9064e4ee4 ("ceph: flush pending works before shutdown super")
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+> 
+> v4.9.178: Failed to apply! Possible dependencies:
+>      a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
+>      a57d9064e4ee4 ("ceph: flush pending works before shutdown super")
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+> 
+> v4.4.180: Failed to apply! Possible dependencies:
+>      13d1ad16d05ee ("libceph: move message allocation out of ceph_osdc_alloc_request()")
+>      34b759b4a22b0 ("ceph: kill ceph_empty_snapc")
+>      3f1af42ad0fad ("libceph: enable large, variable-sized OSD requests")
+>      5be0389dac662 ("ceph: re-send AIO write request when getting -EOLDSNAP error")
+>      7627151ea30bc ("libceph: define new ceph_file_layout structure")
+>      779fe0fb8e188 ("ceph: rados pool namespace support")
+>      922dab6134178 ("libceph, rbd: ceph_osd_linger_request, watch/notify v2")
+>      a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
+>      ae458f5a171ba ("libceph: make r_request msg_size calculation clearer")
+>      c41d13a31fefe ("rbd: use header_oid instead of header_name")
+>      c8fe9b17d055f ("ceph: Asynchronous IO support")
+>      d30291b985d18 ("libceph: variable-sized ceph_object_id")
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+> 
+> v3.18.140: Failed to apply! Possible dependencies:
+>      10183a69551f7 ("ceph: check OSD caps before read/write")
+>      28127bdd2f843 ("ceph: convert inline data to normal data before data write")
+>      31c542a199d79 ("ceph: add inline data to pagecache")
+>      5be0389dac662 ("ceph: re-send AIO write request when getting -EOLDSNAP error")
+>      70db4f3629b34 ("ceph: introduce a new inode flag indicating if cached dentries are ordered")
+>      745a8e3bccbc6 ("ceph: don't pre-allocate space for cap release messages")
+>      7627151ea30bc ("libceph: define new ceph_file_layout structure")
+>      779fe0fb8e188 ("ceph: rados pool namespace support")
+>      83701246aee8f ("ceph: sync read inline data")
+>      a1c6b8358171c ("ceph: define argument structure for handle_cap_grant")
+>      affbc19a68f99 ("ceph: make sure syncfs flushes all cap snaps")
+>      c8fe9b17d055f ("ceph: Asynchronous IO support")
+>      d30291b985d18 ("libceph: variable-sized ceph_object_id")
+>      d3383a8e37f80 ("ceph: avoid block operation when !TASK_RUNNING (ceph_mdsc_sync)")
+>      e3ec8d6898f71 ("ceph: send cap releases more aggressively")
+>      e96a650a8174e ("ceph, rbd: delete unnecessary checks before two function calls")
+> 
+> 
+> How should we proceed with this patch?
+> 
 
-> diff --git a/include/uapi/linux/byteorder/big_endian.h b/include/uapi/lin=
-ux/byteorder/big_endian.h
-> index 2199adc6a6c2..34a5864526d2 100644
-> --- a/include/uapi/linux/byteorder/big_endian.h
-> +++ b/include/uapi/linux/byteorder/big_endian.h
-> @@ -2,6 +2,10 @@
->  #ifndef _UAPI_LINUX_BYTEORDER_BIG_ENDIAN_H
->  #define _UAPI_LINUX_BYTEORDER_BIG_ENDIAN_H
-> =20
-> +#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ !=3D __ORDER_BIG_ENDIAN__
-> +#error "Unsupported endianess, check your toolchain"
+please use following patch for old kernels
 
- Typo here: s/endianess/endianness/.
+Regards
+Yan, Zheng
 
-> diff --git a/include/uapi/linux/byteorder/little_endian.h b/include/uapi/=
-linux/byteorder/little_endian.h
-> index 601c904fd5cd..0cdf3583e19f 100644
-> --- a/include/uapi/linux/byteorder/little_endian.h
-> +++ b/include/uapi/linux/byteorder/little_endian.h
-> @@ -2,6 +2,10 @@
->  #ifndef _UAPI_LINUX_BYTEORDER_LITTLE_ENDIAN_H
->  #define _UAPI_LINUX_BYTEORDER_LITTLE_ENDIAN_H
-> =20
-> +#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ !=3D  __ORDER_LITTLE_ENDIA=
-N__
-> +#error "Unsupported endianess, check your toolchain"
+---
+ From 55937416f12e096621b06ada7554cacb89d06e97 Mon Sep 17 00:00:00 2001
+From: "Yan, Zheng" <zyan@redhat.com>
+Date: Thu, 23 May 2019 11:01:37 +0800
+Subject: [PATCH] ceph: hold i_ceph_lock when removing caps for freeing inode
 
- Likewise.
+ceph_d_revalidate(, LOOKUP_RCU) may call __ceph_caps_issued_mask()
+on a freeing inode.
 
-  Maciej=
+Cc: stable@vger.kernel.org
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+---
+  fs/ceph/caps.c | 7 +++++--
+  1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index ff5d32cf9578..0fb4e919cdce 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1119,20 +1119,23 @@ static int send_cap_msg(struct cap_msg_args *arg)
+  }
+
+  /*
+- * Queue cap releases when an inode is dropped from our cache.  Since
+- * inode is about to be destroyed, there is no need for i_ceph_lock.
++ * Queue cap releases when an inode is dropped from our cache.
+   */
+  void ceph_queue_caps_release(struct inode *inode)
+  {
+  	struct ceph_inode_info *ci = ceph_inode(inode);
+  	struct rb_node *p;
+
++	/* lock i_ceph_lock, because ceph_d_revalidate(..., LOOKUP_RCU)
++	 * may call __ceph_caps_issued_mask() on a freeing inode. */
++	spin_lock(&ci->i_ceph_lock);
+  	p = rb_first(&ci->i_caps);
+  	while (p) {
+  		struct ceph_cap *cap = rb_entry(p, struct ceph_cap, ci_node);
+  		p = rb_next(p);
+  		__ceph_remove_cap(cap, true);
+  	}
++	spin_unlock(&ci->i_ceph_lock);
+  }
+
+  /*
+-- 
+2.17.2
+
+
+
+
+
+> --
+> Thanks,
+> Sasha
+> 
+
+
