@@ -2,61 +2,125 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FACC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C622EC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570F125F8D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3C925F8E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Me4frF9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfE3S0d (ORCPT
+        id S1726798AbfE3S0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:26:33 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56736 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfE3S0b (ORCPT
+        Thu, 30 May 2019 14:26:51 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39348 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfE3S0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:26:31 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 19E9F14D92C59;
-        Thu, 30 May 2019 11:26:31 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:26:30 -0700 (PDT)
-Message-Id: <20190530.112630.476132829981439143.davem@davemloft.net>
-To:     mkubecek@suse.cz
-Cc:     netdev@vger.kernel.org, vivien.didelot@gmail.com,
-        linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com,
-        linville@redhat.com, f.fainelli@gmail.com
-Subject: Re: [PATCH net-next] ethtool: copy reglen to userspace
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190530082722.GB27401@unicorn.suse.cz>
-References: <20190529.221744.1136074795446305909.davem@davemloft.net>
-        <20190530064848.GA27401@unicorn.suse.cz>
-        <20190530082722.GB27401@unicorn.suse.cz>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 May 2019 11:26:31 -0700 (PDT)
+        Thu, 30 May 2019 14:26:50 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g9so2894755plm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=479NrpI5Fpv8iNSEqJ5Iw1oq9Ng17zG9lbJXZZiDpy0=;
+        b=Me4frF9wOzh8lEvpxZ+vU5EUYHAr4jOgS4hV4/+Jkt5CrHU3uvrkkrEJk1V/YWWY3c
+         O1LeU+cx+xBxaGd3saLITg7VBE7sFN0iIWNHmc08B3n/Pa92mPLjpcam2qtui/OMGHdR
+         yhNXhwF9tOi0AGMYVP4ueerYO83fR82m00jDg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=479NrpI5Fpv8iNSEqJ5Iw1oq9Ng17zG9lbJXZZiDpy0=;
+        b=WaCBRj3mCo0q+50CHhzC+kjjlQN2kE6+UZQqw5yJm4OmkDTDMD0iWME1ivq9FKWqYq
+         SpZrtAcF2B+3VZRJMXBpcjbMhnhIhQtOqZjZHns6wO6ghUBXhsPnGqQY9UTAPc8bzfQA
+         S0BehzgBZ+7cFeFe7udqNEgwbrPRuRK/fFV+L5fSFnt3xfnAv9F+C+9NcOv+uC8h+AHe
+         3vpCRI+ik4sqI3KiPTCvp0udM3HUEzJfaLaCWLLpuECp3PykMdeEShgjuMtvujj51rj9
+         PXcQrZQejebfrxxGMrjM2QwIrkWJbbSz+ASosH1eYehgnU+31wRqUH/fo3En+TyfD66c
+         nhAA==
+X-Gm-Message-State: APjAAAXMkc/SjKrnsm1RMmCDadEbD0Wqf/7AboWYwvEw4oYwuYzCew0h
+        59yO4ca3S7MC8MHid4sOQ18uVA==
+X-Google-Smtp-Source: APXvYqyHXrW5NCEsy8spGMlIWgFWxdYS/BWA/cI4wEZ5qBofJ864Jbzeza81bYct/2aQTQraJavC3A==
+X-Received: by 2002:a17:902:148:: with SMTP id 66mr4639420plb.143.1559240810223;
+        Thu, 30 May 2019 11:26:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m123sm3886620pfm.39.2019.05.30.11.26.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 11:26:48 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:26:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/2] fork: add clone6
+Message-ID: <201905301122.88FD40B3@keescook>
+References: <20190526102612.6970-1-christian@brauner.io>
+ <CAHk-=wieuV4hGwznPsX-8E0G2FKhx3NjZ9X3dTKh5zKd+iqOBw@mail.gmail.com>
+ <20190527104239.fbnjzfyxa4y4acpf@brauner.io>
+ <CAHk-=wjnbK5ob9JE0H1Ge_R4BL6D0ztsAvrM6DN+S+zyDWE=7A@mail.gmail.com>
+ <CAG48ez2wyDhM-V1hs5ya1R4x7wHT=T8XLOYCPUyw97kzzLhbhg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2wyDhM-V1hs5ya1R4x7wHT=T8XLOYCPUyw97kzzLhbhg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Thu, 30 May 2019 10:27:22 +0200
+On Mon, May 27, 2019 at 09:36:18PM +0200, Jann Horn wrote:
+> +Kees
+> 
+> On Mon, May 27, 2019 at 9:27 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> > On Mon, May 27, 2019 at 3:42 AM Christian Brauner <christian@brauner.io> wrote:
+> > > Hm, still pondering whether having one unsigned int argument passed
+> > > through registers that captures all the flags from the old clone() would
+> > > be a good idea.
+> >
+> > That sounds like a reasonable thing to do.
+> >
+> > Maybe we could continue to call the old flags CLONE_XYZ and continue
+> > to pass them in as "flags" argument, and then we have CLONE_EXT_XYZ
+> > flags for a new 64-bit flag field that comes in through memory in the
+> > new clone_args thing?
+> 
+> With the current seccomp model, that would have the unfortunate effect
+> of making it impossible to filter out new clone flags - which would
+> likely mean that people who want to sandbox their code would not use
+> the new clone() because they don't want their sandboxed code to be
+> able to create time namespaces and whatever other new fancy things
+> clone() might support in the future. This is why I convinced Christian
+> to pass flags in registers for the first patch version.
+> 
+> The alternative I see would be to somehow extend seccomp to support
+> argument structures that are passed in memory - that would probably
+> require quite a bit of new plumbing though, both in the kernel and in
+> userspace code that configures seccomp filters.
 
-> I believe this should be handled by ethtool_get_regs(), either by
-> returning an error or by only copying data up to original regs.len
-> passed by userspace. The former seems more correct but broken userspace
-> software would suddenly start to fail where it "used to work". The
-> latter would be closer to current behaviour but it would mean that
-> broken userspace software might nerver notice there is something wrong.
+FWIW, the only path forward on this that I've been able to see is to
+normalize how syscalls read memory from userspace, and to basically
+provide a cache (i.e. copy from userspace once) that will be examined by
+both seccomp and later kernel functions. I have not been able to imagine
+an API that wasn't a massive amount of work to implement, though. Maybe
+it could be done only for a few kinds of arguments (file paths, certain
+structures, etc) but I haven't made any progress on it.
 
-I therefore think we need to meticulously fixup all of these adjustments
-of regs.len before adjusting the copy call here in generic ethtool.
+-- 
+Kees Cook
