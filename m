@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0118CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9F7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C933A24B4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA1F24B5D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187321;
-	bh=FUWFGkI+avhhIMj5xY7obzPjugS8WIf66DnHTnzx6qY=;
+	s=default; t=1559187327;
+	bh=h5PVYRuniRZJ0/n0iOpYilvo2GmxHdFIE+EpkaXm9YM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DaJJ9cmBMJakihrB5TY/L39PJVpXkyfACS2Psws/+0ENXoZwW4sId6DQrmi9USgdb
-	 odN2nAvoEzfDUqoOksTA2WKhrOhjCSd1g1GnTDcZEELJp/n0YaKWSyxvLYaJoIrfmw
-	 wcLO/A0QJfzu7LcaNIGm8hwxDqPagCUm8DZP9h4g=
+	b=gB7+/m2pxvHJmBhDNE2rcxgzp7D9ksp8zWiRg/cF2zwX5NAGo6oRMbOwSGJLbFtQh
+	 Slmf/ELKEihszG0NXTIGHQR/Kq6KISEnrS3iJRnUYy01NodnYCH9TRekNZyVeB/0LL
+	 F3k9DPi1tvQbIrXjO30woXQHWOVEPh7JnrG30hRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbfE3D0l (ORCPT
+        id S2387724AbfE3D0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53472 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731772AbfE3DTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:01 -0400
+        id S1731754AbfE3DS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC5024821;
-        Thu, 30 May 2019 03:19:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB57724814;
+        Thu, 30 May 2019 03:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186340;
-        bh=FUWFGkI+avhhIMj5xY7obzPjugS8WIf66DnHTnzx6qY=;
+        s=default; t=1559186336;
+        bh=h5PVYRuniRZJ0/n0iOpYilvo2GmxHdFIE+EpkaXm9YM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDApBuhSdXwGpuZ1JLvKUdiJtdwx3LW9MlWkY/zlFzgLbZbSBhLur/g+gXh9u/z9i
-         hhpF6NS1rCwxuU8uXP3EKZPtepPJXNIHMxQ2bH3t0JzCHdOJdy5/w0f97IqvItuBY4
-         y3q11YKGMVsi8vD6P6KHaXOsLzMxRRXNb+C6Pkuw=
+        b=L7yN6uWnvcTiAHtrQb7YQ93IrKhQgDatXsAbARkId5YvyFk08tHMk69pGw76dexds
+         98+SiXZmfX0vSPm0mF5MIHJVzvRu5O5sTKgKbdXYTz6YbwxEa1md8aWzebsGhy2KKf
+         q7AHvtt3RGr1DlxiyDTeHL+gQrblZUo+N56U8WjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/193] dmaengine: pl330: _stop: clear interrupt status
-Date:   Wed, 29 May 2019 20:05:20 -0700
-Message-Id: <20190530030458.588626818@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Robbie Ko <robbieko@synology.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 059/193] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
+Date:   Wed, 29 May 2019 20:05:13 -0700
+Message-Id: <20190530030457.743362179@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -59,90 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
+[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
 
-This patch kill instructs the DMAC to immediately terminate
-execution of a thread. and then clear the interrupt status,
-at last, stop generating interrupts for DMA_SEV. to guarantee
-the next dma start is clean. otherwise, one interrupt maybe leave
-to next start and make some mistake.
+When doing fallocate, we first add the range to the reserve_list and
+then reserve the quota.  If quota reservation fails, we'll release all
+reserved parts of reserve_list.
 
-we can reporduce the problem as follows:
+However, cur_offset is not updated to indicate that this range is
+already been inserted into the list.  Therefore, the same range is freed
+twice.  Once at list_for_each_entry loop, and once at the end of the
+function.  This will result in WARN_ON on bytes_may_use when we free the
+remaining space.
 
-DMASEV: modify the event-interrupt resource, and if the INTEN sets
-function as interrupt, the DMAC will set irq<event_num> HIGH to
-generate interrupt. write INTCLR to clear interrupt.
+At the end, under the 'out' label we have a call to:
 
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			    mask INTEN
-		|				|
-		|			     DMAKILL
-		|				|
-		|			spin_unlock_irqrestore
+   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
 
-in above case, a interrupt was left, and if we unmask INTEN, the DMAC
-will set irq<event_num> HIGH to generate interrupt.
+The start offset, third argument, should be cur_offset.
 
-to fix this, do as follows:
+Everything from alloc_start to cur_offset was freed by the
+list_for_each_entry_safe_loop.
 
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			     DMAKILL
-		|				|
-		|			   clear INTCLR
-		|			    mask INTEN
-		|				|
-		|			spin_unlock_irqrestore
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Robbie Ko <robbieko@synology.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/btrfs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 6afd42cfbf5d5..b4fa555a243f9 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -960,6 +960,7 @@ static void _stop(struct pl330_thread *thrd)
- {
- 	void __iomem *regs = thrd->dmac->base;
- 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
-+	u32 inten = readl(regs + INTEN);
- 
- 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
- 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
-@@ -972,10 +973,13 @@ static void _stop(struct pl330_thread *thrd)
- 
- 	_emit_KILL(0, insn);
- 
--	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
--
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
-+
-+	/* clear the event */
-+	if (inten & (1 << thrd->ev))
-+		writel(1 << thrd->ev, regs + INTCLR);
-+	/* Stop generating interrupts for SEV */
-+	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 821001138c296..97958ecaeed9d 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2976,6 +2976,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+ 					cur_offset, last_byte - cur_offset);
+ 			if (ret < 0) {
++				cur_offset = last_byte;
+ 				free_extent_map(em);
+ 				break;
+ 			}
+@@ -3046,7 +3047,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 	/* Let go of our reservation. */
+ 	if (ret != 0)
+ 		btrfs_free_reserved_data_space(inode, data_reserved,
+-				alloc_start, alloc_end - cur_offset);
++				cur_offset, alloc_end - cur_offset);
+ 	extent_changeset_free(data_reserved);
+ 	return ret;
  }
- 
- /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
