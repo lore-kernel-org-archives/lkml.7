@@ -2,159 +2,137 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C27C28CC0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA98C28CC3
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D102525775
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3791D257C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="su5Hjy8R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbrEx/lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfE3H4g (ORCPT
+        id S1727777AbfE3H6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:56:36 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39900 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfE3H4f (ORCPT
+        Thu, 30 May 2019 03:58:06 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34381 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfE3H6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:56:35 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U7mlNM049054;
-        Thu, 30 May 2019 07:55:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=nmmfilcgBZH9BqOY/WIuIaoFLAVPuz8Rl7m+poEdBWU=;
- b=su5Hjy8RbZi5FXmU9nvLnvAA0nfFKMzaBdiFuHQ1rz1S5Uvq0v6HtHqFjzcue0WfPZm0
- +ZW0McT52kYhoe/vsJUfjL54oXCJYYik/Y+sFUKO7iVf5V4BpuL5BfOeJAGJm+v1ahoz
- aAPjvAPdSiwIitrxlnD7a1X1rr8df5odwHozh1iEGNgljxHp76xOQWwizdu8yDg4AKVH
- hvISaePzEOY3rw6M0uX33ESoeS7q9c5oYk5IAM4i4Dv2UEPCw9nTqq2OZZ4p5bKg8QvG
- oKLGHZr6CG7n2BDNqKdCnSNiGYjZ3SAUPKs85p5wPs7a0JhEeR+EilAOpQcOTTlv9jDI 1g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2spu7dppkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 07:55:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U7prMn102700;
-        Thu, 30 May 2019 07:53:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2srbdxupyg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 07:53:29 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4U7rN9N003456;
-        Thu, 30 May 2019 07:53:25 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 May 2019 00:53:23 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: [PATCH] x86/mm/tlb: Do partial TLB flush when possible
-Date:   Wed, 29 May 2019 15:56:44 +0800
-Message-Id: <1559116604-23105-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905300059
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905300059
+        Thu, 30 May 2019 03:58:05 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v18so4271076lfi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 00:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bPRq+E2M4k4dnnJqaH6HZOTnuL1bcV5ql1EtUHn1F7c=;
+        b=GbrEx/lj/tDGSeKBw7jDjiLis2BVHIGcW6qr1MHD62CyU0PWV+NYSxqfD4VoPaIO0q
+         a66gvf/i7IzTVZlCJjXio7STBZ1YyAqLM0WoBtO+TwcWxiS3VSKThlcKnVgNGoqBiukN
+         RiJvQ7jJ+yFLZ8l57FQWW+kFP4Nw1lFyoMAq8Bizf8/AMy2bF2h8ZdY5d1GCfxmEYXrN
+         sY2sU4QRQbWshpSXRFZfK4zBWrh3+6Aws2nE4JRvSJDJHooStJ1nUJdOOMAncs07Pt/q
+         2IlDYChz8p7KROUlM5m2PnG5mS/QQA9w5f9ZMifk8l76Xl6TGOjyptTaT9vusb1Cu9XL
+         sjVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bPRq+E2M4k4dnnJqaH6HZOTnuL1bcV5ql1EtUHn1F7c=;
+        b=qfzxBWr98IqpwSsSdfrv1ENKwaNqtdfqJZsGm/4iUTPfLVbHf7SME3kHkuDQTOMXci
+         UEgjxY/AdUpvMDzi3JC+Hu0rfzGSiTrXnLkFvahf8ZqR8HC1EEI7FhvsC/nW+8s6njkV
+         RZYcvEt2ycDdQS0eeLm7OKNAkY4h9Bgizs1KO1ksXlKMhTB08DoPXExUGAtsSW2WAwCG
+         28iXLTrAO4UF+RypdUdvpO+H2cDJ5+WtTyvAcAueo26HbK9/annhq27t9E9ZMC4cVyEB
+         iDzKaskNCtEqGZCqCv3ahKhhBzmyY0ga+N3cfPSGeKamg5gbdfmPtKPoKnOFlKNPQU06
+         S67g==
+X-Gm-Message-State: APjAAAWQY+HRs8jZd0esgEPJjlIT+CicWacWLtucNb2hcWCXsYZS5Hev
+        VmPeI1Y2foks5hycb12gB9E=
+X-Google-Smtp-Source: APXvYqyc9i3ZYnrQp2KnqOu0K+AzfZb4LKFfGO1IQXISkfsMxRFTr8AaNX3JTxmvX9YXkBJJgNyYbA==
+X-Received: by 2002:a19:fc1d:: with SMTP id a29mr1395727lfi.35.1559203083598;
+        Thu, 30 May 2019 00:58:03 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.102.224])
+        by smtp.gmail.com with ESMTPSA id r2sm349338lfi.51.2019.05.30.00.58.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 00:58:02 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 0A7324606B3; Thu, 30 May 2019 10:58:02 +0300 (MSK)
+Date:   Thu, 30 May 2019 10:58:02 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kernel/sys.c: fix possible spectre-v1 in do_prlimit()
+Message-ID: <20190530075801.GV11013@uranus>
+References: <CAFbcbMATqCCpCR596FTaSdUV50nQSxDgXMd1ASgXu1CE+DJqTw@mail.gmail.com>
+ <20190528071053.GL11013@uranus>
+ <CAFbcbMAi_QhoT=JyU6NjNiJJwFbXF4Z1eV8TtfLv9UWJT-K_CQ@mail.gmail.com>
+ <20190529121831.GU11013@uranus>
+ <CAFbcbMCLwoBB8syLCSU8i0Hc7OMnHT4A+AzWdmF5g9BzbY7CXQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFbcbMCLwoBB8syLCSU8i0Hc7OMnHT4A+AzWdmF5g9BzbY7CXQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a small optimization to stale TLB flush, if there is one new TLB
-flush, let it choose to do partial or full flush. or else, the stale
-flush take over and do full flush.
+On Thu, May 30, 2019 at 01:45:16PM +0800, Dianzhang Chen wrote:
+>
+> Though syscall `getrlimit` , it seems not works after check_prlimit_permission.
+> 
+> And the speculation windows are large, as said[1]:
+> >> Can the speculation proceed past the task_lock()?  Or is the policy to
+> >> ignore such happy happenstances even if they are available?
+> >
+> > Locks are not in the way of speculation. Speculation has almost no limits
+> > except serializing instructions. At least they respect the magic AND
+> > limitation in array_index_nospec().
+> 
+> [1] https://do-db2.lkml.org/lkml/2018/5/15/1056
 
-Add unlikely() to info->freed_tables check as freeing page tables
-is relatively less.
+Please, stop top-posting, it trashes conversation context. You miss the point:
+before bpu hits misprediction we've a number of branches, second in case of
+misprediction the kernel's stack value is cached, so I'm not convinced at all
+that teaching bpu and read the cache is easy here (or possible at all). Thus,
+the final solution is up to maintainers. Another reason why I complaining about
+the patch -- it is not the patch body, as I said I'm fine with it, but the patch
+title: it implies the fix should go in stable kernels, that's what I dont agree
+with. But again, I'm not a maintainer and might be wrong.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Srinivas Eeda <srinivas.eeda@oracle.com>
-Cc: x86@kernel.org
+> 
+> On Wed, May 29, 2019 at 8:18 PM Cyrill Gorcunov <gorcunov@gmail.com> wrote:
+> >
+> > On Wed, May 29, 2019 at 10:39:52AM +0800, Dianzhang Chen wrote:
+> > > Hi,
+> > >
+> > > Although when detect it is misprediction and drop the execution, but
+> > > it can not drop all the effects of speculative execution, like the
+> > > cache state. During the speculative execution, the:
+> > >
+> > >
+> > > rlim = tsk->signal->rlim + resource;    // use resource as index
+> > >
+> > > ...
+> > >
+> > >             *old_rlim = *rlim;
+> > >
+> > >
+> > > may read some secret data into cache.
+> > >
+> > > and then the attacker can use side-channel attack to find out what the
+> > > secret data is.
+> >
+> > This code works after check_prlimit_permission call, which means you already
+> > should have a permission granted. And you implies that misprediction gonna
+> > be that deep which involves a number of calls/read/writes/jumps/locks-rb-wb-flushes
+> > and a bunch or other instructions, moreover all conditions are "mispredicted".
+> > This is very bold and actually unproved claim!
+> >
+> > Note that I pointed the patch is fine in cleanup context but seriously I
+> > don't see how this all can be exploitable in sense of spectre.
+> 
 
----
- arch/x86/mm/tlb.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 91f6db9..63a8125 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -569,6 +569,17 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 		return;
- 	}
- 
-+	if (unlikely(f->new_tlb_gen <= local_tlb_gen &&
-+	    local_tlb_gen + 1 == mm_tlb_gen)) {
-+		/*
-+		 * For stale TLB flush request, if there will be one new TLB
-+		 * flush coming, we leave the work to the new IPI as it knows
-+		 * partial or full TLB flush to take, or else we do the full
-+		 * flush.
-+		 */
-+		trace_tlb_flush(reason, 0);
-+		return;
-+	}
- 	WARN_ON_ONCE(local_tlb_gen > mm_tlb_gen);
- 	WARN_ON_ONCE(f->new_tlb_gen > mm_tlb_gen);
- 
-@@ -577,7 +588,8 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 	 * This does not strictly imply that we need to flush (it's
- 	 * possible that f->new_tlb_gen <= local_tlb_gen), but we're
- 	 * going to need to flush in the very near future, so we might
--	 * as well get it over with.
-+	 * as well get it over with in case we know there will be more
-+	 * than one outstanding TLB flush request.
- 	 *
- 	 * The only question is whether to do a full or partial flush.
- 	 *
-@@ -609,9 +621,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 	 *    local_tlb_gen all the way to mm_tlb_gen and we can probably
- 	 *    avoid another flush in the very near future.
- 	 */
--	if (f->end != TLB_FLUSH_ALL &&
--	    f->new_tlb_gen == local_tlb_gen + 1 &&
--	    f->new_tlb_gen == mm_tlb_gen) {
-+	if (f->end != TLB_FLUSH_ALL && local_tlb_gen + 1 == mm_tlb_gen) {
- 		/* Partial flush */
- 		unsigned long nr_invalidate = (f->end - f->start) >> f->stride_shift;
- 		unsigned long addr = f->start;
-@@ -703,7 +713,7 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
- 	 * up on the new contents of what used to be page tables, while
- 	 * doing a speculative memory access.
- 	 */
--	if (info->freed_tables)
-+	if (unlikely(info->freed_tables))
- 		smp_call_function_many(cpumask, flush_tlb_func_remote,
- 			       (void *)info, 1);
- 	else
--- 
-1.8.3.1
-
+	Cyrill
