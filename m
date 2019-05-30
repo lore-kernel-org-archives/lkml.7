@@ -2,119 +2,97 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96551C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2424FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6602025D1E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE64725D2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfE3Pyy (ORCPT
+        id S1727488AbfE3Py7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:54:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34994 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfE3Pyy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:54:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m3so4564312wrv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:54:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FrmgiCjXWDWy++epoHTkiT3v6JKrDBvnzKAZJKqqz0M=;
-        b=H5iUiWuW6p0H8B4vqhPzPj7H14wzfsdH/GH2VIarbkBPZXflRdSWpFUkH6Il22Hyla
-         UaTjhQ4u3HHaff9quN9sj91O8YEkOPOuv6erkiU1O5u6IsBScHNWe46bRbn6LEj8GD+q
-         eq9jOM2s1qJE0lgVku1fk++qdm09eyjhIWYs2X/32HcgCh9LtqsL2takzkCPxRx/jwK6
-         a5eOUzLXb5Yua7ZGIaxe+sU6kPC1YbE0yamu+XqbM2hwk9RBzAU2VZ2FRPtacFkOR1/s
-         o0haUegCAvjRebDtjx0+zSe2b3s6iAOcjGYMznQ7ATZvToVBozOiWuaxRW+IYxCAKhwF
-         e5WQ==
-X-Gm-Message-State: APjAAAWC2tv36tDFl0Op0Bx2g+USWsNN2lmqhXzP2Q/2fvalX+K/lA8R
-        4aUdmzZzRBZ++JQlZcp618kdAg==
-X-Google-Smtp-Source: APXvYqyvEkuJhdx/IT3Pf2U65bAq0aKoTztvb4ptIHe0hPnvOP7247GIoHIWjpThdmeJ8kkW6LU8jw==
-X-Received: by 2002:adf:e311:: with SMTP id b17mr3123302wrj.11.1559231692169;
-        Thu, 30 May 2019 08:54:52 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f91e:ffe0:9205:3b26? ([2001:b07:6468:f312:f91e:ffe0:9205:3b26])
-        by smtp.gmail.com with ESMTPSA id a62sm3594397wmf.19.2019.05.30.08.54.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 08:54:51 -0700 (PDT)
-Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
-To:     Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, stefanha@redhat.com
-References: <20190530112811.3066-1-pbonzini@redhat.com>
- <20190530112811.3066-2-pbonzini@redhat.com>
- <ad0578b0-ce73-85ed-b67d-70c5d8176a23@acm.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <461fe0cd-c5bc-a612-6013-7c002b92dcdc@redhat.com>
-Date:   Thu, 30 May 2019 17:54:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 11:54:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38992 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbfE3Py6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:54:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C37DC341;
+        Thu, 30 May 2019 08:54:57 -0700 (PDT)
+Received: from redmoon (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 254DD3F59C;
+        Thu, 30 May 2019 08:54:56 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:54:53 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: qcom: Ensure that PERST is asserted for at least
+ 100 ms
+Message-ID: <20190530155453.GF13993@redmoon>
+References: <20190529094352.5961-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <ad0578b0-ce73-85ed-b67d-70c5d8176a23@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529094352.5961-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/05/19 17:36, Bart Van Assche wrote:
-> On 5/30/19 4:28 AM, Paolo Bonzini wrote:
->> +static const struct blk_mq_ops scsi_mq_ops_no_commit = {
->> +    .get_budget    = scsi_mq_get_budget,
->> +    .put_budget    = scsi_mq_put_budget,
->> +    .queue_rq    = scsi_queue_rq,
->> +    .complete    = scsi_softirq_done,
->> +    .timeout    = scsi_timeout,
->> +#ifdef CONFIG_BLK_DEBUG_FS
->> +    .show_rq    = scsi_show_rq,
->> +#endif
->> +    .init_request    = scsi_mq_init_request,
->> +    .exit_request    = scsi_mq_exit_request,
->> +    .initialize_rq_fn = scsi_initialize_rq,
->> +    .busy        = scsi_mq_lld_busy,
->> +    .map_queues    = scsi_map_queues,
->> +};
->> +
->> +static void scsi_commit_rqs(struct blk_mq_hw_ctx *hctx)
->> +{
->> +    struct request_queue *q = hctx->queue;
->> +    struct scsi_device *sdev = q->queuedata;
->> +    struct Scsi_Host *shost = sdev->host;
->> +
->> +    shost->hostt->commit_rqs(shost, hctx->queue_num);
->> +}
->> +
->>   static const struct blk_mq_ops scsi_mq_ops = {
->>       .get_budget    = scsi_mq_get_budget,
->>       .put_budget    = scsi_mq_put_budget,
->>       .queue_rq    = scsi_queue_rq,
->> +    .commit_rqs    = scsi_commit_rqs,
->>       .complete    = scsi_softirq_done,
->>       .timeout    = scsi_timeout,
->>   #ifdef CONFIG_BLK_DEBUG_FS
+On Wed, May 29, 2019 at 11:43:52AM +0200, Niklas Cassel wrote:
+> Currently, there is only a 1 ms sleep after asserting PERST.
 > 
-> Hi Paolo,
+> Reading the datasheets for different endpoints, some require PERST to be
+> asserted for 10 ms in order for the endpoint to perform a reset, others
+> require it to be asserted for 50 ms.
 > 
-> Have you considered to modify the block layer such that a single
-> scsi_mq_ops structure can be used for all SCSI LLD types?
+> Several SoCs using this driver uses PCIe Mini Card, where we don't know
+> what endpoint will be plugged in.
+> 
+> The PCI Express Card Electromechanical Specification specifies:
+> "On power up, the deassertion of PERST# is delayed 100 ms (TPVPERL) from
+> the power rails achieving specified operating limits."
+> 
+> Add a sleep of 100 ms before deasserting PERST, in order to ensure that
+> we are compliant with the spec.
+> 
+> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Cc: stable@vger.kernel.org # 4.5+
+> ---
+> Changes since v1:
+> Move the sleep into qcom_ep_reset_deassert()
+> 
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Yes, but I don't think it's possible to do it in a nice way.
-Any adjustment we make to the block layer to fit the SCSI subsystem's
-desires would make all other block drivers uglier, so I chose to confine
-the ugliness here.
+Applied to pci/qcom for v5.3, thanks.
 
-The root issue is that the SCSI subsystem is unique in how it sits on
-top of the block layer; this is the famous "adapter" (or "midlayer",
-though that is confusing when talking about SCSI) design that Linux
-usually tries to avoid.
+Lorenzo
 
-Paolo
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 0ed235d560e3..5d1713069d14 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -178,6 +178,8 @@ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+>  
+>  static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+>  {
+> +	/* Ensure that PERST has been asserted for at least 100 ms */
+> +	msleep(100);
+>  	gpiod_set_value_cansleep(pcie->reset, 0);
+>  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+>  }
+> -- 
+> 2.21.0
+> 
