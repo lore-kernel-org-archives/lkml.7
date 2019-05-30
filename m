@@ -2,52 +2,59 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C105CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AB5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F892574E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C67F2574E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190873;
-	bh=ykv74gBGgCbDRTRYSqxl8fqIgKxpMPPN5tym95YMSAI=;
+	s=default; t=1559190878;
+	bh=KKtLbADqIJY+gRZAtssZ9l6tqtMGcedHxKBhhJGaN/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ruenFk7mRY8lU4mvqvbtupVxsyvTwjN+zsW0Q/4gRZYAy17GsE5hDRpIWxNLZmtDt
-	 IJZlxShvehrl0iAM1lpl2L/NHxhX81y3Ghp/dtrwUcTNikyUns45OJVUkkK6JDYsHe
-	 54lKf10bbce2/jOsBx5Wm5V5BqIuWPFmHLm1GUBo=
+	b=AaCfz9/XNVt1WauCQErt/3hOVfVWbgRVNUoOjJ1jv67KNKV3RWl/yC4Hfdt6+tmaL
+	 RDH3n8NNKm+FLVyhHLusaGKcwFpJiaoycofpt+RA9YiE67QNFjLsL1CStX+a9O9+7q
+	 HaIfarvcllCAQqllYNev6/TBhqBVZa7zc8IP6+nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388328AbfE3Eec (ORCPT
+        id S2388343AbfE3Eeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:34:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbfE3DNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729422AbfE3DNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C354524544;
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C9F24526;
         Thu, 30 May 2019 03:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186002;
-        bh=ykv74gBGgCbDRTRYSqxl8fqIgKxpMPPN5tym95YMSAI=;
+        bh=KKtLbADqIJY+gRZAtssZ9l6tqtMGcedHxKBhhJGaN/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kDwOoM4WJri2kUgz+ozUE4xjXus0S1nNw1zmMAMaDOfe8V8+sASNkKm34PE0jrwk
-         2GZ//z3aULpuwtqYq87PD8eINLtgOHzNi+yUR51o3FHa45ZPYymGB0oekUshCaQoMW
-         +mES36lZtrb6CqoZ2oDjfHibG3iTGtNotZdq80P4=
+        b=t5Iu525SkKQD1QZCe1XjOhD9VmoxHIrJC0kTmUQo12bB2pQdvNKov2sUvDDixovh5
+         Viy+NuTF1TEJOs5JgFDNx8zB7pN/mM6lPR5zxp/JxIwYrG1DmfsJGks7jRqjUtHCIP
+         jmBA1q/lQMrx1gxxIWjRWVK7Dhi+eY+zUPj902Rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 019/346] Btrfs: avoid fallback to transaction commit during fsync of files with holes
-Date:   Wed, 29 May 2019 20:01:32 -0700
-Message-Id: <20190530030541.658740295@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 054/346] blk-mq: split blk_mq_alloc_and_init_hctx into two parts
+Date:   Wed, 29 May 2019 20:02:07 -0700
+Message-Id: <20190530030543.682671827@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,84 +67,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+[ Upstream commit 7c6c5b7c9186e3fb5b10afb8e5f710ae661144c6 ]
 
-commit ebb929060aeb162417b4c1307e63daee47b208d9 upstream.
+Split blk_mq_alloc_and_init_hctx into two parts, and one is
+blk_mq_alloc_hctx() for allocating all hctx resources, another
+is blk_mq_init_hctx() for initializing hctx, which serves as
+counter-part of blk_mq_exit_hctx().
 
-When we are doing a full fsync (bit BTRFS_INODE_NEEDS_FULL_SYNC set) of a
-file that has holes and has file extent items spanning two or more leafs,
-we can end up falling to back to a full transaction commit due to a logic
-bug that leads to failure to insert a duplicate file extent item that is
-meant to represent a hole between the last file extent item of a leaf and
-the first file extent item in the next leaf. The failure (EEXIST error)
-leads to a transaction commit (as most errors when logging an inode do).
-
-For example, we have the two following leafs:
-
-Leaf N:
-
-  -----------------------------------------------
-  | ..., ..., ..., (257, FILE_EXTENT_ITEM, 64K) |
-  -----------------------------------------------
-  The file extent item at the end of leaf N has a length of 4Kb,
-  representing the file range from 64K to 68K - 1.
-
-Leaf N + 1:
-
-  -----------------------------------------------
-  | (257, FILE_EXTENT_ITEM, 72K), ..., ..., ... |
-  -----------------------------------------------
-  The file extent item at the first slot of leaf N + 1 has a length of
-  4Kb too, representing the file range from 72K to 76K - 1.
-
-During the full fsync path, when we are at tree-log.c:copy_items() with
-leaf N as a parameter, after processing the last file extent item, that
-represents the extent at offset 64K, we take a look at the first file
-extent item at the next leaf (leaf N + 1), and notice there's a 4K hole
-between the two extents, and therefore we insert a file extent item
-representing that hole, starting at file offset 68K and ending at offset
-72K - 1. However we don't update the value of *last_extent, which is used
-to represent the end offset (plus 1, non-inclusive end) of the last file
-extent item inserted in the log, so it stays with a value of 68K and not
-with a value of 72K.
-
-Then, when copy_items() is called for leaf N + 1, because the value of
-*last_extent is smaller then the offset of the first extent item in the
-leaf (68K < 72K), we look at the last file extent item in the previous
-leaf (leaf N) and see it there's a 4K gap between it and our first file
-extent item (again, 68K < 72K), so we decide to insert a file extent item
-representing the hole, starting at file offset 68K and ending at offset
-72K - 1, this insertion will fail with -EEXIST being returned from
-btrfs_insert_file_extent() because we already inserted a file extent item
-representing a hole for this offset (68K) in the previous call to
-copy_items(), when processing leaf N.
-
-The -EEXIST error gets propagated to the fsync callback, btrfs_sync_file(),
-which falls back to a full transaction commit.
-
-Fix this by adjusting *last_extent after inserting a hole when we had to
-look at the next leaf.
-
-Fixes: 4ee3fad34a9c ("Btrfs: fix fsync after hole punching when using no-holes feature")
-Cc: stable@vger.kernel.org # 4.14+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Bart Van Assche <bart.vanassche@wdc.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: Martin K . Petersen <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tree-log.c |    1 +
- 1 file changed, 1 insertion(+)
+ block/blk-mq.c | 139 ++++++++++++++++++++++++++-----------------------
+ 1 file changed, 75 insertions(+), 64 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4106,6 +4106,7 @@ fill_holes:
- 							       *last_extent, 0,
- 							       0, len, 0, len,
- 							       0, 0, 0);
-+				*last_extent += len;
- 			}
- 		}
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 9957e0fc17fc4..27526095319c3 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2287,15 +2287,65 @@ static void blk_mq_exit_hw_queues(struct request_queue *q,
  	}
+ }
+ 
++static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
++{
++	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
++
++	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
++			   __alignof__(struct blk_mq_hw_ctx)) !=
++		     sizeof(struct blk_mq_hw_ctx));
++
++	if (tag_set->flags & BLK_MQ_F_BLOCKING)
++		hw_ctx_size += sizeof(struct srcu_struct);
++
++	return hw_ctx_size;
++}
++
+ static int blk_mq_init_hctx(struct request_queue *q,
+ 		struct blk_mq_tag_set *set,
+ 		struct blk_mq_hw_ctx *hctx, unsigned hctx_idx)
+ {
+-	int node;
++	hctx->queue_num = hctx_idx;
++
++	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
++
++	hctx->tags = set->tags[hctx_idx];
++
++	if (set->ops->init_hctx &&
++	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
++		goto unregister_cpu_notifier;
+ 
+-	node = hctx->numa_node;
++	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx,
++				hctx->numa_node))
++		goto exit_hctx;
++	return 0;
++
++ exit_hctx:
++	if (set->ops->exit_hctx)
++		set->ops->exit_hctx(hctx, hctx_idx);
++ unregister_cpu_notifier:
++	blk_mq_remove_cpuhp(hctx);
++	return -1;
++}
++
++static struct blk_mq_hw_ctx *
++blk_mq_alloc_hctx(struct request_queue *q, struct blk_mq_tag_set *set,
++		int node)
++{
++	struct blk_mq_hw_ctx *hctx;
++	gfp_t gfp = GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY;
++
++	hctx = kzalloc_node(blk_mq_hw_ctx_size(set), gfp, node);
++	if (!hctx)
++		goto fail_alloc_hctx;
++
++	if (!zalloc_cpumask_var_node(&hctx->cpumask, gfp, node))
++		goto free_hctx;
++
++	atomic_set(&hctx->nr_active, 0);
+ 	if (node == NUMA_NO_NODE)
+-		node = hctx->numa_node = set->numa_node;
++		node = set->numa_node;
++	hctx->numa_node = node;
+ 
+ 	INIT_DELAYED_WORK(&hctx->run_work, blk_mq_run_work_fn);
+ 	spin_lock_init(&hctx->lock);
+@@ -2303,58 +2353,45 @@ static int blk_mq_init_hctx(struct request_queue *q,
+ 	hctx->queue = q;
+ 	hctx->flags = set->flags & ~BLK_MQ_F_TAG_SHARED;
+ 
+-	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
+-
+-	hctx->tags = set->tags[hctx_idx];
+-
+ 	/*
+ 	 * Allocate space for all possible cpus to avoid allocation at
+ 	 * runtime
+ 	 */
+ 	hctx->ctxs = kmalloc_array_node(nr_cpu_ids, sizeof(void *),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node);
++			gfp, node);
+ 	if (!hctx->ctxs)
+-		goto unregister_cpu_notifier;
++		goto free_cpumask;
+ 
+ 	if (sbitmap_init_node(&hctx->ctx_map, nr_cpu_ids, ilog2(8),
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node))
++				gfp, node))
+ 		goto free_ctxs;
+-
+ 	hctx->nr_ctx = 0;
+ 
+ 	spin_lock_init(&hctx->dispatch_wait_lock);
+ 	init_waitqueue_func_entry(&hctx->dispatch_wait, blk_mq_dispatch_wake);
+ 	INIT_LIST_HEAD(&hctx->dispatch_wait.entry);
+ 
+-	if (set->ops->init_hctx &&
+-	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
+-		goto free_bitmap;
+-
+ 	hctx->fq = blk_alloc_flush_queue(q, hctx->numa_node, set->cmd_size,
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY);
++			gfp);
+ 	if (!hctx->fq)
+-		goto exit_hctx;
+-
+-	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx, node))
+-		goto free_fq;
++		goto free_bitmap;
+ 
+ 	if (hctx->flags & BLK_MQ_F_BLOCKING)
+ 		init_srcu_struct(hctx->srcu);
++	blk_mq_hctx_kobj_init(hctx);
+ 
+-	return 0;
++	return hctx;
+ 
+- free_fq:
+-	blk_free_flush_queue(hctx->fq);
+- exit_hctx:
+-	if (set->ops->exit_hctx)
+-		set->ops->exit_hctx(hctx, hctx_idx);
+  free_bitmap:
+ 	sbitmap_free(&hctx->ctx_map);
+  free_ctxs:
+ 	kfree(hctx->ctxs);
+- unregister_cpu_notifier:
+-	blk_mq_remove_cpuhp(hctx);
+-	return -1;
++ free_cpumask:
++	free_cpumask_var(hctx->cpumask);
++ free_hctx:
++	kfree(hctx);
++ fail_alloc_hctx:
++	return NULL;
+ }
+ 
+ static void blk_mq_init_cpu_queues(struct request_queue *q,
+@@ -2691,51 +2728,25 @@ struct request_queue *blk_mq_init_sq_queue(struct blk_mq_tag_set *set,
+ }
+ EXPORT_SYMBOL(blk_mq_init_sq_queue);
+ 
+-static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
+-{
+-	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
+-
+-	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
+-			   __alignof__(struct blk_mq_hw_ctx)) !=
+-		     sizeof(struct blk_mq_hw_ctx));
+-
+-	if (tag_set->flags & BLK_MQ_F_BLOCKING)
+-		hw_ctx_size += sizeof(struct srcu_struct);
+-
+-	return hw_ctx_size;
+-}
+-
+ static struct blk_mq_hw_ctx *blk_mq_alloc_and_init_hctx(
+ 		struct blk_mq_tag_set *set, struct request_queue *q,
+ 		int hctx_idx, int node)
+ {
+ 	struct blk_mq_hw_ctx *hctx;
+ 
+-	hctx = kzalloc_node(blk_mq_hw_ctx_size(set),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-			node);
++	hctx = blk_mq_alloc_hctx(q, set, node);
+ 	if (!hctx)
+-		return NULL;
+-
+-	if (!zalloc_cpumask_var_node(&hctx->cpumask,
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-				node)) {
+-		kfree(hctx);
+-		return NULL;
+-	}
+-
+-	atomic_set(&hctx->nr_active, 0);
+-	hctx->numa_node = node;
+-	hctx->queue_num = hctx_idx;
++		goto fail;
+ 
+-	if (blk_mq_init_hctx(q, set, hctx, hctx_idx)) {
+-		free_cpumask_var(hctx->cpumask);
+-		kfree(hctx);
+-		return NULL;
+-	}
+-	blk_mq_hctx_kobj_init(hctx);
++	if (blk_mq_init_hctx(q, set, hctx, hctx_idx))
++		goto free_hctx;
+ 
+ 	return hctx;
++
++ free_hctx:
++	kobject_put(&hctx->kobj);
++ fail:
++	return NULL;
+ }
+ 
+ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+-- 
+2.20.1
+
 
 
