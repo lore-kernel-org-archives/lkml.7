@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B591DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DFDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C63A26067
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A112606F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192365;
-	bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
+	s=default; t=1559192370;
+	bh=Q5lSDWobAriHZ4bBwYsgrm/31AWgdhRGttYgtiQ26tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mgps9Y5xjG5IPbOr0sUiRA8yjN3l0G8piNEWqx0CYg/7rmLT1Mv8vXdWdLfi86JH+
-	 1lRTwNYkNXO3EaJXZBmwVshKSxhMsGQHpQTVZcXQwy3X47HQDlvvWzOYBSHbngNM+B
-	 pdyT7v56R/F2ON6xD475ozCTrVxj2JusYnEojsxs=
+	b=cO+rpSSIWbvOdx3Ad8dvYfCrL1szDvxyV3vUhwpRNlQxm74RK1WrzfMJbYAoLjFCw
+	 7ZaGkv4tzLB8yDTP3inG0pRpv6kVOuAt5tJ1y84x7Tjl3W981Gma0SIpEnuXCbXs1L
+	 jmU+5e853Wo6W91j0SHJD9FJH1LyzRORw64U3LQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389259AbfE3E7Y (ORCPT
+        id S1727677AbfE3DJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44898 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbfE3DJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:40 -0400
+        id S1727591AbfE3DJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949B024480;
-        Thu, 30 May 2019 03:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9712C24481;
+        Thu, 30 May 2019 03:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185779;
-        bh=ecFYmclGr4Ma+CSqI+4aEMpcsPaqhZ/WD2pBQ7Jm9GI=;
+        s=default; t=1559185769;
+        bh=Q5lSDWobAriHZ4bBwYsgrm/31AWgdhRGttYgtiQ26tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/tdjYWGbKH++FHo+lQqfGMFgpYKYTgRvwDUK9OaaZ3us8j8PnwW4iugKzFrPijUX
-         UTVC6HbtLdU99E4QYoi03b/NZWO++vgFRNor+EhjKN2zONzzbF0Z22EkCJOMivfoBP
-         s+JquBkZRXx1i7d4LrEWJa3gneaKd9ylvLcSE010=
+        b=BwlmT0FyhpfD+0fA1kPYP6lKUJzfCBfizg9Lg+Eyutew3OS+w92wTiSivVdsdRKbY
+         kTTaLuX7DyBK10lK0cvnBUcgy6f9bJLNzQkNfmXZfWwRHlueKkWhZzSebEHDqEdh0U
+         ZdFdWmeDccna/YmsGT86DTa4Yr0tIZcC+mAwx58s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.1 039/405] bpf: devmap: fix use-after-free Read in __dev_map_entry_free
-Date:   Wed, 29 May 2019 20:00:37 -0700
-Message-Id: <20190530030542.749700711@linuxfoundation.org>
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 020/405] arm64: Kconfig: Make ARM64_PSEUDO_NMI depend on BROKEN for now
+Date:   Wed, 29 May 2019 20:00:18 -0700
+Message-Id: <20190530030541.616585036@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,120 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 2baae3545327632167c0180e9ca1d467416f1919 upstream.
+commit 96a13f57b946be7a6c10405e4bd780c0b6b6fe63 upstream.
 
-synchronize_rcu() is fine when the rcu callbacks only need
-to free memory (kfree_rcu() or direct kfree() call rcu call backs)
+Although we merged support for pseudo-nmi using interrupt priority
+masking in 5.1, we've since uncovered a number of non-trivial issues
+with the implementation. Although there are patches pending to address
+these problems, we're facing issues that prevent us from merging them at
+this current time:
 
-__dev_map_entry_free() is a bit more complex, so we need to make
-sure that call queued __dev_map_entry_free() callbacks have completed.
+  https://lkml.kernel.org/r/1556553607-46531-1-git-send-email-julien.thierry@arm.com
 
-sysbot report:
+For now, simply mark this optional feature as BROKEN in the hope that we
+can fix things properly in the near future.
 
-BUG: KASAN: use-after-free in dev_map_flush_old kernel/bpf/devmap.c:365
-[inline]
-BUG: KASAN: use-after-free in __dev_map_entry_free+0x2a8/0x300
-kernel/bpf/devmap.c:379
-Read of size 8 at addr ffff8801b8da38c8 by task ksoftirqd/1/18
-
-CPU: 1 PID: 18 Comm: ksoftirqd/1 Not tainted 4.17.0+ #39
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1b9/0x294 lib/dump_stack.c:113
-  print_address_description+0x6c/0x20b mm/kasan/report.c:256
-  kasan_report_error mm/kasan/report.c:354 [inline]
-  kasan_report.cold.7+0x242/0x2fe mm/kasan/report.c:412
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
-  dev_map_flush_old kernel/bpf/devmap.c:365 [inline]
-  __dev_map_entry_free+0x2a8/0x300 kernel/bpf/devmap.c:379
-  __rcu_reclaim kernel/rcu/rcu.h:178 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2558 [inline]
-  invoke_rcu_callbacks kernel/rcu/tree.c:2818 [inline]
-  __rcu_process_callbacks kernel/rcu/tree.c:2785 [inline]
-  rcu_process_callbacks+0xe9d/0x1760 kernel/rcu/tree.c:2802
-  __do_softirq+0x2e0/0xaf5 kernel/softirq.c:284
-  run_ksoftirqd+0x86/0x100 kernel/softirq.c:645
-  smpboot_thread_fn+0x417/0x870 kernel/smpboot.c:164
-  kthread+0x345/0x410 kernel/kthread.c:240
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
-
-Allocated by task 6675:
-  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-  set_track mm/kasan/kasan.c:460 [inline]
-  kasan_kmalloc+0xc4/0xe0 mm/kasan/kasan.c:553
-  kmem_cache_alloc_trace+0x152/0x780 mm/slab.c:3620
-  kmalloc include/linux/slab.h:513 [inline]
-  kzalloc include/linux/slab.h:706 [inline]
-  dev_map_alloc+0x208/0x7f0 kernel/bpf/devmap.c:102
-  find_and_alloc_map kernel/bpf/syscall.c:129 [inline]
-  map_create+0x393/0x1010 kernel/bpf/syscall.c:453
-  __do_sys_bpf kernel/bpf/syscall.c:2351 [inline]
-  __se_sys_bpf kernel/bpf/syscall.c:2328 [inline]
-  __x64_sys_bpf+0x303/0x510 kernel/bpf/syscall.c:2328
-  do_syscall_64+0x1b1/0x800 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 26:
-  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-  set_track mm/kasan/kasan.c:460 [inline]
-  __kasan_slab_free+0x11a/0x170 mm/kasan/kasan.c:521
-  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
-  __cache_free mm/slab.c:3498 [inline]
-  kfree+0xd9/0x260 mm/slab.c:3813
-  dev_map_free+0x4fa/0x670 kernel/bpf/devmap.c:191
-  bpf_map_free_deferred+0xba/0xf0 kernel/bpf/syscall.c:262
-  process_one_work+0xc64/0x1b70 kernel/workqueue.c:2153
-  worker_thread+0x181/0x13a0 kernel/workqueue.c:2296
-  kthread+0x345/0x410 kernel/kthread.c:240
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
-
-The buggy address belongs to the object at ffff8801b8da37c0
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 264 bytes inside of
-  512-byte region [ffff8801b8da37c0, ffff8801b8da39c0)
-The buggy address belongs to the page:
-page:ffffea0006e368c0 count:1 mapcount:0 mapping:ffff8801da800940
-index:0xffff8801b8da3540
-flags: 0x2fffc0000000100(slab)
-raw: 02fffc0000000100 ffffea0007217b88 ffffea0006e30cc8 ffff8801da800940
-raw: ffff8801b8da3540 ffff8801b8da3040 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8801b8da3780: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-  ffff8801b8da3800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8801b8da3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                               ^
-  ffff8801b8da3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8801b8da3980: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-
-Fixes: 546ac1ffb70d ("bpf: add devmap, a map for storing net device references")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+457d3e2ffbcf31aee5c0@syzkaller.appspotmail.com
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Cc: <stable@vger.kernel.org> # 5.1
+Cc: Julien Thierry <julien.thierry@arm.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/devmap.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -164,6 +164,9 @@ static void dev_map_free(struct bpf_map
- 	bpf_clear_redirect_map(map);
- 	synchronize_rcu();
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1347,6 +1347,7 @@ config ARM64_MODULE_PLTS
  
-+	/* Make sure prior __dev_map_entry_free() have completed. */
-+	rcu_barrier();
-+
- 	/* To ensure all pending flush operations have completed wait for flush
- 	 * bitmap to indicate all flush_needed bits to be zero on _all_ cpus.
- 	 * Because the above synchronize_rcu() ensures the map is disconnected
+ config ARM64_PSEUDO_NMI
+ 	bool "Support for NMI-like interrupts"
++	depends on BROKEN # 1556553607-46531-1-git-send-email-julien.thierry@arm.com
+ 	select CONFIG_ARM_GIC_V3
+ 	help
+ 	  Adds support for mimicking Non-Maskable Interrupts through the use of
 
 
