@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6657CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C9C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA412449A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2371624598
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186097;
-	bh=bp0ei9CW8GOV5s+gfcafVPBBEVYM5qxBTDtOvGL7eX4=;
+	s=default; t=1559186105;
+	bh=VXQLeDfoSz4hky/VbJ78p/pF58lpzAFNQGeTBEj+as0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h4buH/YZEd96LHaWiPOjVpcp2AeZQwvYy33bvP/q1MNd58mQnWqjDR9BF35065wBG
-	 n2Ad8205qxNR5lZZ8hoWnEgUtrNN9SrViqLQRKUD6D7996NjMToXm3UBxwS6O3Ef7T
-	 /gQsZk+qaC5V/eyBMXThjjl4m8efYCoOnQJ8HhZg=
+	b=i3ULISJPuQXJb7otrs2AMGMJ6JMcSZmXIqzBA5NAhLl4+GKjahMpPFmAez0XOXRtq
+	 6gaPQVwEZ+gqJNUQ5MsKr0jVjcSTpK+BRs1I36dptpHkykBdhWHcSl8s3SdgbEjBG6
+	 f/mvyq8ezAx0ydkfhhj0VkKruNpaa08Ec7U6yM68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfE3DO4 (ORCPT
+        id S1730099AbfE3DPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbfE3DMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:16 -0400
+        id S1728972AbfE3DMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C89244D4;
-        Thu, 30 May 2019 03:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E804244EF;
+        Thu, 30 May 2019 03:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185936;
-        bh=bp0ei9CW8GOV5s+gfcafVPBBEVYM5qxBTDtOvGL7eX4=;
+        s=default; t=1559185941;
+        bh=VXQLeDfoSz4hky/VbJ78p/pF58lpzAFNQGeTBEj+as0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXldf4WlfGOxBI6WJqVMtbq7hwGjUhUrlaFjQh4SCF+8R5Zu8tcBzrLuV0yafMroS
-         OevDDg332PJf1xnKR5pzkZGuLByaeHvDo0qYcveX7nBbmlrXkJA0UCCpwyFbDTbGXH
-         LRczojIIGUmUrIZs/ooS+Ush6MF4Kq3dT1AF4FLw=
+        b=i56VQa0U99VqDIMW1HdHqAuriLPV8N5imf3MY+4PiKSrqxvGp2YPibrc7EfNJZAGS
+         wPM6aT0yDXL53s7EWvxmHWnVq2UdmltWIzo4OJtno2sFRaQXsSQ3A8LJ3ve+fwtinl
+         YEh+0bL7PVMKcmtmr31JA53w4eUFUrOO6iKLmKmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 292/405] thunderbolt: Fix to check the return value of kmemdup
-Date:   Wed, 29 May 2019 20:04:50 -0700
-Message-Id: <20190530030555.624507762@linuxfoundation.org>
+Subject: [PATCH 5.1 347/405] media: staging: davinci_vpfe: disallow building with COMPILE_TEST
+Date:   Wed, 29 May 2019 20:05:45 -0700
+Message-Id: <20190530030558.239104461@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,35 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fd21b79e541e4666c938a344f3ad2df74b4f5120 ]
+[ Upstream commit 49dc762cffd8305a861ca649e82dc5533b3e3344 ]
 
-uuid in add_switch is allocted via kmemdup which can fail. The patch
-logs the error and cleans up the allocated memory for switch.
+The driver should really call dm365_isif_setup_pinmux() through a callback,
+but uses a hack to include a davinci specific machine header file when
+compile testing instead. This works almost everywhere, but not on the
+ARM omap1 platform, which has another header named mach/mux.h. This
+causes a build failure:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: implicit declaration of function 'davinci_cfg_reg' [-Werror,-Wimplicit-function-declaration]
+        davinci_cfg_reg(DM365_VIN_CAM_WEN);
+        ^
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:18: error: use of undeclared identifier 'DM365_VIN_CAM_WEN'
+        davinci_cfg_reg(DM365_VIN_CAM_WEN);
+                        ^
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2029:18: error: use of undeclared identifier 'DM365_VIN_CAM_VD'
+        davinci_cfg_reg(DM365_VIN_CAM_VD);
+                        ^
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2030:18: error: use of undeclared identifier 'DM365_VIN_CAM_HD'
+        davinci_cfg_reg(DM365_VIN_CAM_HD);
+                        ^
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:18: error: use of undeclared identifier 'DM365_VIN_YIN4_7_EN'
+        davinci_cfg_reg(DM365_VIN_YIN4_7_EN);
+                        ^
+drivers/staging/media/davinci_vpfe/dm365_isif.c:2032:18: error: use of undeclared identifier 'DM365_VIN_YIN0_3_EN'
+        davinci_cfg_reg(DM365_VIN_YIN0_3_EN);
+                        ^
+7 errors generated.
+
+Exclude omap1 from compile-testing, under the assumption that all others
+still work.
+
+Fixes: 4907c73deefe ("media: staging: davinci_vpfe: allow building with COMPILE_TEST")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/icm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/media/davinci_vpfe/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
-index e3fc920af6825..8b7f9131e9d12 100644
---- a/drivers/thunderbolt/icm.c
-+++ b/drivers/thunderbolt/icm.c
-@@ -473,6 +473,11 @@ static void add_switch(struct tb_switch *parent_sw, u64 route,
- 		goto out;
- 
- 	sw->uuid = kmemdup(uuid, sizeof(*uuid), GFP_KERNEL);
-+	if (!sw->uuid) {
-+		tb_sw_warn(sw, "cannot allocate memory for switch\n");
-+		tb_switch_put(sw);
-+		goto out;
-+	}
- 	sw->connection_id = connection_id;
- 	sw->connection_key = connection_key;
- 	sw->link = link;
+diff --git a/drivers/staging/media/davinci_vpfe/Kconfig b/drivers/staging/media/davinci_vpfe/Kconfig
+index aea449a8dbf8a..76818cc48ddcb 100644
+--- a/drivers/staging/media/davinci_vpfe/Kconfig
++++ b/drivers/staging/media/davinci_vpfe/Kconfig
+@@ -1,7 +1,7 @@
+ config VIDEO_DM365_VPFE
+ 	tristate "DM365 VPFE Media Controller Capture Driver"
+ 	depends on VIDEO_V4L2
+-	depends on (ARCH_DAVINCI_DM365 && !VIDEO_DM365_ISIF) || COMPILE_TEST
++	depends on (ARCH_DAVINCI_DM365 && !VIDEO_DM365_ISIF) || (COMPILE_TEST && !ARCH_OMAP1)
+ 	depends on VIDEO_V4L2_SUBDEV_API
+ 	depends on VIDEO_DAVINCI_VPBE_DISPLAY
+ 	select VIDEOBUF2_DMA_CONTIG
 -- 
 2.20.1
 
