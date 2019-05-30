@@ -2,158 +2,98 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CB7C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33334C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C086E2536D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1323825377
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfE3HXP (ORCPT
+        id S1727711AbfE3HXl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:23:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfE3HXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:23:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 38DF73179172;
-        Thu, 30 May 2019 07:23:12 +0000 (UTC)
-Received: from [10.36.117.30] (ovpn-117-30.ams2.redhat.com [10.36.117.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3188B2E189;
-        Thu, 30 May 2019 07:23:03 +0000 (UTC)
-Subject: Re: [PATCH V5 0/3] arm64/mm: Enable memory hot remove
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mark.rutland@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, cai@lca.pw, logang@deltatee.com,
-        james.morse@arm.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com
-References: <1559121387-674-1-git-send-email-anshuman.khandual@arm.com>
- <20190529150611.fc27dee202b4fd1646210361@linux-foundation.org>
- <c6e3af6e-27f4-ec3e-5ced-af4f62a9cdff@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <a6f05e1d-4153-ece3-a910-024c428be93b@redhat.com>
-Date:   Thu, 30 May 2019 09:23:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 30 May 2019 03:23:41 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:58606 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfE3HXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 03:23:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 4B4156074CC1;
+        Thu, 30 May 2019 09:23:38 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 7gYQFNzHwAQ9; Thu, 30 May 2019 09:23:36 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 7DEF36074CC0;
+        Thu, 30 May 2019 09:23:36 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SYWKd5C5gmcb; Thu, 30 May 2019 09:23:36 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 397BB6074CC1;
+        Thu, 30 May 2019 09:23:36 +0200 (CEST)
+Date:   Thu, 30 May 2019 09:23:36 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>, linux-imx@nxp.com,
+        festevam@gmail.com, kernel <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>, shawnguo@kernel.org,
+        davem@davemloft.net, david <david@sigma-star.at>
+Message-ID: <2084969721.73871.1559201016164.JavaMail.zimbra@nod.at>
+In-Reply-To: <20190530023357.2mrjtslnka4i6dbl@gondor.apana.org.au>
+References: <20190529224844.25203-1-richard@nod.at> <20190530023357.2mrjtslnka4i6dbl@gondor.apana.org.au>
+Subject: Re: [RFC PATCH 1/2] crypto: Allow working with key references
 MIME-Version: 1.0
-In-Reply-To: <c6e3af6e-27f4-ec3e-5ced-af4f62a9cdff@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 30 May 2019 07:23:13 +0000 (UTC)
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.8_GA_3025 (ZimbraWebClient - FF60 (Linux)/8.8.8_GA_1703)
+Thread-Topic: crypto: Allow working with key references
+Thread-Index: 6TFlo+ksej+abko/FbMI4LB7xy79pA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.05.19 06:23, Anshuman Khandual wrote:
-> 
-> 
-> On 05/30/2019 03:36 AM, Andrew Morton wrote:
->> On Wed, 29 May 2019 14:46:24 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>
->>> This series enables memory hot remove on arm64 after fixing a memblock
->>> removal ordering problem in generic __remove_memory() and one possible
->>> arm64 platform specific kernel page table race condition. This series
->>> is based on latest v5.2-rc2 tag.
->>
->> Unfortunately this series clashes syntactically and semantically with
->> David Hildenbrand's series "mm/memory_hotplug: Factor out memory block
->> devicehandling".  Could you and David please figure out what we should
->> do here?
->>
-> 
-> Hello Andrew,
-> 
-> I was able to apply the above mentioned V3 series [1] from David with some changes
-> listed below which tests positively on arm64. These changes assume that the arm64
-> hot-remove series (current V5) gets applied first.
-> 
-> Changes to David's series
-> 
-> A) Please drop (https://patchwork.kernel.org/patch/10962565/) [v3,04/11]
-> 
-> 	- arch_remove_memory() is already being added through hot-remove series
-> 
-> B) Rebase (https://patchwork.kernel.org/patch/10962575/) [v3, 06/11]
-> 
-> 	- arm64 hot-remove series adds CONFIG_MEMORY_HOTREMOVE wrapper around
-> 	  arch_remove_memory() which can be dropped in the rebased patch
-> 
-> C) Rebase (https://patchwork.kernel.org/patch/10962589/) [v3, 09/11]
-> 
-> 	- hot-remove series moves arch_remove_memory() before memblock_[free|remove]()
-> 	- So remove_memory_block_devices() should be moved before arch_remove_memory()
-> 	  in it's new position
-> 
-> David,
-> 
-> Please do let me know if the plan sounds good or you have some other suggestions.
+----- Ursprüngliche Mail -----
+> Von: "Herbert Xu" <herbert@gondor.apana.org.au>
+> An: "richard" <richard@nod.at>
+> CC: "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, linux-imx@nxp.com, festevam@gmail.com, "kernel" <kernel@pengutronix.de>, "Sascha Hauer"
+> <s.hauer@pengutronix.de>, shawnguo@kernel.org, davem@davemloft.net, "david" <david@sigma-star.at>
+> Gesendet: Donnerstag, 30. Mai 2019 04:33:57
+> Betreff: Re: [RFC PATCH 1/2] crypto: Allow working with key references
 
-That's exactly what I had in mind :)
+> On Thu, May 30, 2019 at 12:48:43AM +0200, Richard Weinberger wrote:
+>> Some crypto accelerators allow working with secure or hidden keys.
+>> This keys are not exposed to Linux nor main memory. To use them
+>> for a crypto operation they are referenced with a device specific id.
+>> 
+>> This patch adds a new flag, CRYPTO_TFM_REQ_REF_KEY.
+>> If this flag is set, crypto drivers should tread the key as
+>> specified via setkey as reference and not as regular key.
+>> Since we reuse the key data structure such a reference is limited
+>> by the key size of the chiper and is chip specific.
+>> 
+>> TODO: If the cipher implementation or the driver does not
+>> support reference keys, we need a way to detect this an fail
+>> upon setkey.
+>> How should the driver indicate that it supports this feature?
+>> 
+>> Signed-off-by: Richard Weinberger <richard@nod.at>
+> 
+> We already have existing drivers doing this.  Please have a look
+> at how they're doing it and use the same paradigm.  You can grep
+> for paes under drivers/crypto.
 
-Andrew, you can drop my series and pick up Anshumans series first. I can
-then rebase and resend.
-Cheers!
-
--- 
+Thanks for the pointer.
+So the preferred way is defining a new crypto algorithm prefixed with
+"p" and reusing setkey to provide the key reference.
 
 Thanks,
-
-David / dhildenb
+//richard
