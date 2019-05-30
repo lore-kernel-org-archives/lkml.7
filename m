@@ -2,147 +2,165 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81B2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F62C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83629248B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1AB25193
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTDSK9NZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HTnrnE85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfE3M3s (ORCPT
+        id S1726518AbfE3MaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:29:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41469 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfE3M3s (ORCPT
+        Thu, 30 May 2019 08:30:20 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57145 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfE3MaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:29:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q17so3877983pfq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hFlzPJiE7eeheJcBBg2ho7OReqyleg0TFf5mxqcXWh8=;
-        b=ZTDSK9NZ22pROK3/Hh7Mcr5ZyPo9XLvXK/iYFNQcyRV7FMay0RjaEFh1anwN2bb1rg
-         zUnEEE7rBboN0xD8aNv7EipO5xfd0iThgFu7jt/DDuCCGkhaJ7eofZYnualh7UI1fWsc
-         B51WTyo89aF8nCYpvMhdMzfRWT3TjZecBa0UgMJ61P3TT/DfhbfHEhnfOnUvBttOdxip
-         NlmrtVuVsM+ewwj3qD533PQKlO6AJWddhiMfsT+XSSb33G3ysO8pU70kFa3OonUSjV1G
-         KCMQXZzHS/QtJ69IVJjYG1qY9r1mctF+Xp4AMORftVEeDtSyPglSkDEh3biaNEPAYRW9
-         PTYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hFlzPJiE7eeheJcBBg2ho7OReqyleg0TFf5mxqcXWh8=;
-        b=Uz6TuDmF7h8m98TYbLolJjDsjcrZyN0kJShU48mXwfJzyUEwnUAIW0D8yLKXpO0JMQ
-         sR/xHhMBOkNmwyjorNbbnlbmbswhYeEUs7OjJcUM7Bolj9/Y1W30Al3KVdzIbaSPXacB
-         MZEedvo4tBufcsiJvvZ74dUeXOVTM6+S9rMS4h6xFf/fnZEBch21+g6P2JnvdLnQrdHn
-         tuYjpU6tGAhh/6T0961W+9ILhGzSmrLNEr28PnAA2Muiv2gSfvxJcKLZPKGm7Api4moO
-         xLKW2DiAek2cR4jNhedQzPfpaN0DuNjG2s2+WWHnY4cN+UouPPOeYS5o3szbFn1HA1Wv
-         2xeA==
-X-Gm-Message-State: APjAAAVKHo33Y5HlHB2DIc3g+aPblBfgDChtWFKMpyfsoz2yaJl1M+4d
-        W2zgoRfDaGcuNEOXMe+mUmBfNLel
-X-Google-Smtp-Source: APXvYqxEhObzOidVVZ98OT7SjHJNupYKgb9JPBnhUPubfIb+VEnf5JidKT3yuN8U1tlddQzL5tmCLg==
-X-Received: by 2002:a63:9d09:: with SMTP id i9mr3395991pgd.195.1559219387087;
-        Thu, 30 May 2019 05:29:47 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d10sm5695739pgh.43.2019.05.30.05.29.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:29:45 -0700 (PDT)
-Subject: Re: [PATCH] samples: pidfd: Fix compile error seen if
- __NR_pidfd_send_signal is undefined
-To:     Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <1559216447-28355-1-git-send-email-linux@roeck-us.net>
- <CAB50BEC-4816-4D92-AC46-921C62B1D344@brauner.io>
- <b4e3a71d-9892-f71c-3df5-4c721ff0ed75@roeck-us.net>
- <3C2871DE-8F84-4B5E-81CA-04B073E4B27D@brauner.io>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <29140f38-c713-109b-8b83-400191b81035@roeck-us.net>
-Date:   Thu, 30 May 2019 05:29:43 -0700
+        Thu, 30 May 2019 08:30:19 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190530123017euoutp028ce34a08cfef189aa26adcbf778a5474~jdcygxhGV1413514135euoutp02M
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 12:30:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190530123017euoutp028ce34a08cfef189aa26adcbf778a5474~jdcygxhGV1413514135euoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559219417;
+        bh=rRfb4nIQIlulai7VhUp6tUgeds7+T13bxgzJ6lGHQr0=;
+        h=From:Subject:To:Cc:Date:References:From;
+        b=HTnrnE85RKKW4euGLPzcyYUYxL/R+LhA6OJiSSo1VrdcnvSUHr2qAy8nsdo43L+zP
+         BnVorvltXUY0QdH0KIhkqh61tS82mHxtNAp5hCQoeWwZ6PgB1iOcP9UWab9jyC6Kt3
+         hGgK3F0cIpGhX5mswgfuE9plJUAXGbLRdofQ9M3M=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190530123017eucas1p2c5af602281ac3b3f30663bd705a5986f~jdcx3d3852345123451eucas1p2P;
+        Thu, 30 May 2019 12:30:17 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 19.2F.04325.8DCCFEC5; Thu, 30
+        May 2019 13:30:16 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190530123016eucas1p2e18747b8ac1d156657232eab52876a61~jdcxGWxd90451604516eucas1p2a;
+        Thu, 30 May 2019 12:30:16 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190530123015eusmtrp195d81c13e4784a1c2aef07b057426f84~jdcw22ISC1402014020eusmtrp17;
+        Thu, 30 May 2019 12:30:15 +0000 (GMT)
+X-AuditID: cbfec7f5-fbbf09c0000010e5-4b-5cefccd852ad
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B7.88.04146.7DCCFEC5; Thu, 30
+        May 2019 13:30:15 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190530123015eusmtip2b655394a251cc6ef2a9636882a39000a~jdcwYkvkm2162821628eusmtip2H;
+        Thu, 30 May 2019 12:30:15 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v3] video: fbdev: atmel_lcdfb: add COMPILE_TEST support
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <69cd6b8b-1fd1-86fa-2070-99d0ce15a868@samsung.com>
+Date:   Thu, 30 May 2019 14:30:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <3C2871DE-8F84-4B5E-81CA-04B073E4B27D@brauner.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djP87o3zryPMehaqmvR/m4Zu8WVr+/Z
+        LDY9vsZqcaLvA6vF5V1z2CxerL3OarF980JmB3aPeWuqPe53H2fy2Lyk3uPOj6WMHp83yQWw
+        RnHZpKTmZJalFunbJXBlHP2xmK3gFn/F/c5JzA2M83m7GDk5JARMJO7+bmfpYuTiEBJYwSjR
+        /Og/E4TzhVHi9srprBDOZ0aJNe+72WBaJlzrZYNILGeUOPXtB1TVW0aJV5OnsoJUsQlYSUxs
+        X8UIYgsLuEu8bfkMNJeDQ0RAX+JPlyJIPbPAJ0aJ9llrwWp4Bewkfp1bCraBRUBVonHnPxYQ
+        W1QgQuL+sQ2sEDWCEidnPgGLMwuIS9x6Mp8JwpaX2P52DjPIUAmB6ewSD1q2s0Kc6iKx7cVa
+        JghbWOLV8S3sELaMxOnJPSwQDesYJf52vIDq3s4osXzyP6hHrSUOH7/ICnI2s4CmxPpd+hBh
+        R4kfXR8ZQcISAnwSN94KQhzBJzFp23RmiDCvREebEES1msSGZRvYYNZ27VzJDGF7SLzY+YZ1
+        AqPiLCSvzULy2iwkr81CuGEBI8sqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwBR0+t/x
+        rzsY9/1JOsQowMGoxMMrcPB9jBBrYllxZe4hRgkOZiUR3p/L38UI8aYkVlalFuXHF5XmpBYf
+        YpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYEzblCu+7eCjLJPZUgu7n7Ht8m9bPtFG
+        uWJeBe/Bsxp+bXf39z6/o1F86JfY1/ZP3rZ+ffq+6de3NO9TD9EW2fGOc3n3j35LkVMS01xi
+        qzK/Mz7b7VEx460jz9yj6ivcXi9XFrJfp+g8z2HqmfgqY/dcZwXVLT88jsTMSGs5I/pu6veI
+        Sx7JD5RYijMSDbWYi4oTAbcRiMo9AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xe7rXz7yPMZi339ii/d0ydosrX9+z
+        WWx6fI3V4kTfB1aLy7vmsFm8WHud1WL75oXMDuwe89ZUe9zvPs7ksXlJvcedH0sZPT5vkgtg
+        jdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOPpj
+        MVvBLf6K+52TmBsY5/N2MXJySAiYSEy41svWxcjFISSwlFFiZ+Me9i5GDqCEjMTx9WUQNcIS
+        f651QdW8ZpTYun8DK0iCTcBKYmL7KkYQW1jAXeJty2cmkF4RAX2JP12KIPXMAp8YJX49bwer
+        4RWwk/h1bikbiM0ioCrRuPMfC4gtKhAhceb9ChaIGkGJkzOfgNnMAuoSf+ZdYoawxSVuPZnP
+        BGHLS2x/O4d5AqPALCQts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5mxiB
+        8bPt2M/NOxgvbQw+xCjAwajEwytw8H2MEGtiWXFl7iFGCQ5mJRHen8vfxQjxpiRWVqUW5ccX
+        leakFh9iNAV6aCKzlGhyPjC280riDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB
+        9DFxcEo1MOavrM9Tz6twK9dhe+n6QnzP5X+PXUoeHVTp5mMOUeL5+H5Ni4RlymG22nkKveFX
+        eZX/t0tHVd8SO7lZ2+XKyVVPv9ZYm/zce93pLsMV501X153fvDMtXfRNdMbribNUjZQutvBM
+        m/j2iEZMCAvT9Gc1ZRJn2GKPaBXnfPd/9HX2UgVv1cyWJUosxRmJhlrMRcWJAIrKAuG1AgAA
+X-CMS-MailID: 20190530123016eucas1p2e18747b8ac1d156657232eab52876a61
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190530123016eucas1p2e18747b8ac1d156657232eab52876a61
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190530123016eucas1p2e18747b8ac1d156657232eab52876a61
+References: <CGME20190530123016eucas1p2e18747b8ac1d156657232eab52876a61@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 4:55 AM, Christian Brauner wrote:
-> On May 30, 2019 1:50:31 PM GMT+02:00, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 5/30/19 4:43 AM, Christian Brauner wrote:
->>> On May 30, 2019 1:40:47 PM GMT+02:00, Guenter Roeck
->> <linux@roeck-us.net> wrote:
->>>> To make pidfd-metadata compile on all arches, irrespective of
->> whether
->>>> or not syscall numbers are assigned, define the syscall number to -1
->>>> if it isn't to cause the kernel to return -ENOSYS.
->>>>
->>>> Fixes: 43c6afee48d4 ("samples: show race-free pidfd metadata
->> access")
->>>> Cc: Christian Brauner <christian@brauner.io>
->>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>> ---
->>>> samples/pidfd/pidfd-metadata.c | 4 ++++
->>>> 1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/samples/pidfd/pidfd-metadata.c
->>>> b/samples/pidfd/pidfd-metadata.c
->>>> index 640f5f757c57..1e125ddde268 100644
->>>> --- a/samples/pidfd/pidfd-metadata.c
->>>> +++ b/samples/pidfd/pidfd-metadata.c
->>>> @@ -21,6 +21,10 @@
->>>> #define CLONE_PIDFD 0x00001000
->>>> #endif
->>>>
->>>> +#ifndef __NR_pidfd_send_signal
->>>> +#define __NR_pidfd_send_signal	-1
->>>> +#endif
->>>> +
->>>> static int do_child(void *args)
->>>> {
->>>> 	printf("%d\n", getpid());
->>>
->>> Couldn't you just use the actual syscall number?
->>> That should still fail if the kernel is to old
->>> and still work on kernels that support it
->>> but for whatever reason the unistd.h h
->>> header doesn't have it defined.
->>>
->>
->> syscall numbers can differ from architecture to architecture, and the
->> provided solution is used in other test code. Please feel free to
->> submit
->> a different patch, though - I am only interested in a fix, which
->> doesn't
->> have to be mine.
->>
->> Note that this fails in mips builds.
->>
->> Thanks,
->> Guenter
-> 
-> The syscall number is the same on all arches for this syscall.
-> It's been added after the syscall numbering
-> work by Arnd.
-> 
+Add COMPILE_TEST support to atmel_lcdfb driver for better compile
+testing coverage.
 
-As I suggested, please feel free to submit a different patch to fix the problem.
-What you are saying may be correct, but I would not personally want to rely on it
-or create a hard assumption that it will always be the case.
+While at it fix improper use of UL (to silence build warnings on
+x86_64).
 
-Thanks,
-Guenter
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+v3: fix build warnings on x86_64
+
+v2: add missing HAVE_CLK && HAS IOMEM dependencies
+
+ drivers/video/fbdev/Kconfig       |    3 ++-
+ drivers/video/fbdev/atmel_lcdfb.c |    4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+Index: b/drivers/video/fbdev/Kconfig
+===================================================================
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -855,7 +855,8 @@ config FB_S1D13XXX
+ 
+ config FB_ATMEL
+ 	tristate "AT91 LCD Controller support"
+-	depends on FB && OF && HAVE_FB_ATMEL
++	depends on FB && OF && HAVE_CLK && HAS_IOMEM
++	depends on HAVE_FB_ATMEL || COMPILE_TEST
+ 	select FB_BACKLIGHT
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+Index: b/drivers/video/fbdev/atmel_lcdfb.c
+===================================================================
+--- a/drivers/video/fbdev/atmel_lcdfb.c
++++ b/drivers/video/fbdev/atmel_lcdfb.c
+@@ -673,7 +673,7 @@ static int atmel_lcdfb_set_par(struct fb
+ 	lcdc_writel(sinfo, ATMEL_LCDC_MVAL, 0);
+ 
+ 	/* Disable all interrupts */
+-	lcdc_writel(sinfo, ATMEL_LCDC_IDR, ~0UL);
++	lcdc_writel(sinfo, ATMEL_LCDC_IDR, ~0U);
+ 	/* Enable FIFO & DMA errors */
+ 	lcdc_writel(sinfo, ATMEL_LCDC_IER, ATMEL_LCDC_UFLWI | ATMEL_LCDC_OWRI | ATMEL_LCDC_MERI);
+ 
+@@ -1291,7 +1291,7 @@ static int atmel_lcdfb_suspend(struct pl
+ 	 * We don't want to handle interrupts while the clock is
+ 	 * stopped. It may take forever.
+ 	 */
+-	lcdc_writel(sinfo, ATMEL_LCDC_IDR, ~0UL);
++	lcdc_writel(sinfo, ATMEL_LCDC_IDR, ~0U);
+ 
+ 	sinfo->saved_lcdcon = lcdc_readl(sinfo, ATMEL_LCDC_CONTRAST_CTR);
+ 	lcdc_writel(sinfo, ATMEL_LCDC_CONTRAST_CTR, 0);
