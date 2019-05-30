@@ -2,110 +2,135 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AB5C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D5C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EB52522E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C16253A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P07+rVUj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CafCN9m8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfE3JQv (ORCPT
+        id S1727183AbfE3JSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:16:51 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:54946 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfE3JQu (ORCPT
+        Thu, 30 May 2019 05:18:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40007 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfE3JSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:16:50 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190530091648epoutp0366128e4bbfb5a2d492eb471821a3e6ec~jaz2Xespl2935829358epoutp03a
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 09:16:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190530091648epoutp0366128e4bbfb5a2d492eb471821a3e6ec~jaz2Xespl2935829358epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559207808;
-        bh=/+wagvowwO5ybjT2UwhBWkybZc/JAXTt0vCjAQj+cw8=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=P07+rVUjsPGNOyyzRGHX+MQaLSAJkJKRjL9nN6Qw4aBwL4hVTwvKA1z4aVoFWuUVa
-         wneCO8kWcF+z0D78uCnVIx6lama33ZoZzEricit4Rn0WUB/VdNuGWSDCsv0h9OY8rO
-         3kEFE6123ZgD6aUiDEp+jtMapj0Duxh3PAcdgsnI=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.40.196]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20190530091646epcas5p47ecd53aaceaff4f4d45b041539478bbd~jaz00cdUG0674706747epcas5p4s;
-        Thu, 30 May 2019 09:16:46 +0000 (GMT)
-X-AuditID: b6c32a4a-973ff70000000fe2-7b-5cef9f7eadc6
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        04.55.04066.E7F9FEC5; Thu, 30 May 2019 18:16:46 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH 2/2] zstd: use U16 data type for rankPos
-Reply-To: v.narang@samsung.com
-From:   Vaneet Narang <v.narang@samsung.com>
-To:     Maninder Singh <maninder1.s@samsung.com>,
-        "terrelln@fb.com" <terrelln@fb.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        PANKAJ MISHRA <pankaj.m@samsung.com>,
-        Vaneet Narang <v.narang@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <1557468839-3388-1-git-send-email-maninder1.s@samsung.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190530091628epcms5p2ea7c6837c3ab3963815585d8b16c7838@epcms5p2>
-Date:   Thu, 30 May 2019 14:46:28 +0530
-X-CMS-MailID: 20190530091628epcms5p2ea7c6837c3ab3963815585d8b16c7838
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmpm7d/PcxBr0PlSwu7k61mHO+hcVi
-        6x5Vi+5XMhZnunMt7t/7yWRxedccNovD89tYLO692cpk8erfNTaLQyfnMjpwe8xuuMjisWXl
-        TSaPdQdVPSY2v2P32HZA1aNvyypGj8+b5ALYo3JsMlITU1KLFFLzkvNTMvPSbZW8g+Od403N
-        DAx1DS0tzJUU8hJzU22VXHwCdN0yc4DOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUW
-        pOQUGBoV6BUn5haX5qXrJefnWhkaGBiZAlUm5GQsOLCMreAUW8Xe35uYGxjXsXUxcnJICJhI
-        LJu4Fsjm4hAS2M0osaFlJ2MXIwcHr4CgxN8dwiA1wgI2Eq92rGUFsYUE5CSO39jNCBHXkTgx
-        bw1YOZuAlsTHlnCQsIjAciaJXUcsQUYyC/xilDi/+hwTxC5eiRntT1kgbGmJ7cu3gs3hFHCX
-        OLp4C1RcVOLm6rfsMPb7Y/MZIWwRidZ7Z5khbEGJBz93g+2VEJCR2PVWHGSXhEA3o8SEc8tZ
-        IZwZjBKnet9ANZhLnD85H8zmFfCVmLv1BNhQFgFViZu7VkMtc5F4uWcV2BHMAtoSyxa+ZgZZ
-        wCygKbF+lz5EiazE1FPrmCBK+CR6fz+B+2vHPBhbSeLcwZ3QsJWQeNI5E+oED4lPe38zQcK5
-        j1HizumVzBMYFWYhgnoWks2zEDYvYGRexSiZWlCcm55abFpglJdajhzBmxjByVXLawfjsnM+
-        hxgFOBiVeHgn5L+LEWJNLCuuzD3EKMHBrCTC+3M5UIg3JbGyKrUoP76oNCe1+BCjKTAMJjJL
-        iSbnAxN/Xkm8oamRmZmBpYGpsYWZoZI47yTWqzFCAumJJanZqakFqUUwfUwcnFINjEVfBQQE
-        1Zjeu3Hc0Xu9s8PR7brz7HmHZO8dP2+WmmBVZ5Tm5Pfb+zmjk0mme7aQeuCqFf+CjQ0u/VA5
-        ZfvqvNPqCT2WnJk81kbu+bweElw/7px6ut9L8VSme2DtzzPNoX4OvF6/ypl6M1jPP47Ktz3J
-        9kRB4Uep4/FvJ3n2sJfNk2hWVK5TYinOSDTUYi4qTgQAdPqeGcQDAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1
-References: <1557468839-3388-1-git-send-email-maninder1.s@samsung.com>
-        <CGME20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1@epcms5p2>
+        Thu, 30 May 2019 05:18:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d30so1656452pgm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AiM9lQChj12NVhLaqvQMt0hxwIJhnj7lqdz7I6Ifl9k=;
+        b=CafCN9m8YypnM2GI7SEoCWLj8aK6f3cTJiEE3GUT0CIR1isix8CftjLmtVJNfjlFWw
+         SPB9eFwkyaw6VXXg2KN2vlPYwFj0jhn1+6k3hZX3oAaJ8LMlzseUF7qEqNiHaqfdEL+a
+         b3DdhF8j/Wt6ijQK6bSDDPS6TLrQZ+6ZbPfiY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AiM9lQChj12NVhLaqvQMt0hxwIJhnj7lqdz7I6Ifl9k=;
+        b=CkRUpWQyEgGVOyYw5StlD+QhULN/BMmzsEsQELwpNwqZNYbEyZopqaHU8q2KQnKdEd
+         BWNM3bnHtsFo7ELf3mmUiz8k5mmiftC+f9q8YBR9fzDAcXpOzzhZXELogCThN4Nx1sgG
+         qC+d1e+DzeeHp35IMNWU0SKsES21nTb1/fAh3f2meG8kfZGd2/fq4r/SyEfCB8fKtUQ4
+         AytsDDRTwYpyxv5PCP2i3lTW9dpOfOSdy2XOqwIYQGByBTTSOm18Fd1/etFD0n+YVyC6
+         lpxSEhzgTkqghM1TRQrnanvEsOPQKUoIhlNdCfIS0Aeqs0djWfPZJ1i0zvRUtWbaEjS+
+         FeTA==
+X-Gm-Message-State: APjAAAVz/lh+MF9vwt0YXCdCD0ZfBTVUnQspdmR1q9U1VceGjhgs84QW
+        ipCSjgJt0kmh+MJErPB/NWjfTg==
+X-Google-Smtp-Source: APXvYqyR2TapAsuf4Y55MbptIVWHJtSABFxvasONsBUaove+y19OR5W0sbkiLKtro5lpzENh/qk8+g==
+X-Received: by 2002:a05:6a00:cc:: with SMTP id e12mr2753772pfj.207.1559207933788;
+        Thu, 30 May 2019 02:18:53 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id o2sm1720924pgm.51.2019.05.30.02.18.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 30 May 2019 02:18:52 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] gpu/drm: mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+Date:   Thu, 30 May 2019 17:18:47 +0800
+Message-Id: <20190530091847.90263-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=5BReminder=5D Any Comments?
+mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which needs
+ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is called,
+ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called after last
+irq, it will timeout with this message: "vblank wait timed out on crtc 0". This
+happens sometimes when turning off the screen.
 
->rankPos=C2=A0structure=C2=A0variables=C2=A0value=C2=A0can=C2=A0not=C2=A0be=
-=C2=A0more=C2=A0than=C2=A0512.=0D=0A>So=C2=A0it=C2=A0can=C2=A0easily=C2=A0b=
-e=C2=A0declared=C2=A0as=C2=A0U16=C2=A0rather=C2=A0than=C2=A0U32.=0D=0A=C2=
-=A0=0D=0A>It=C2=A0will=C2=A0reduce=C2=A0stack=C2=A0usage=C2=A0of=C2=A0HUF_s=
-ort=C2=A0from=C2=A0256=C2=A0bytes=C2=A0to=C2=A0128=C2=A0bytes=0D=0A=C2=A0=
-=0D=0A>original:=0D=0A>e24ddc01=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0sub=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sp,=C2=A0sp,=C2=A0=23256=C2=A0=C2=A0=
-=C2=A0=C2=A0;=C2=A00x100=0D=0A=C2=A0=0D=0A>changed:=0D=0A>e24dd080=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sub=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sp,=
-=C2=A0sp,=C2=A0=23128=C2=A0=C2=A0=C2=A0=C2=A0;=C2=A00x80=0D=0A=C2=A0=0D=0AR=
-egards,=0D=0AVaneet=20Narang=0D=0A
+In drm_atomic_helper.c#disable_outputs(),
+the calling sequence when turning off the screen is:
+
+1. mtk_dsi_encoder_disable()
+     --> mtk_output_dsi_disable()
+       --> mtk_dsi_stop();  // sometimes make vblank timeout in atomic_disable
+       --> mtk_dsi_poweroff();
+2. mtk_drm_crtc_atomic_disable()
+     --> drm_crtc_wait_one_vblank();
+     ...
+       --> mtk_dsi_ddp_stop()
+         --> mtk_dsi_poweroff();
+
+mtk_dsi_poweroff() has reference count design, change to make mtk_dsi_stop()
+called in mtk_dsi_poweroff() when refcount is 0.
+
+Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+change log v3->v4:
+* add comment in code.
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index b00eb2d2e086..730594a91440 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -630,6 +630,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ 	if (--dsi->refcount != 0)
+ 		return;
+ 
++	/* 
++	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
++	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
++	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
++	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
++	 * after dsi is fully set.
++	 */
++	mtk_dsi_stop(dsi);
++
+ 	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+ 		if (dsi->panel) {
+ 			if (drm_panel_unprepare(dsi->panel)) {
+@@ -696,7 +705,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 		}
+ 	}
+ 
+-	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ 
+ 	dsi->enabled = false;
+-- 
+2.20.1
+
