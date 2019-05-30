@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D185C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DF8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B98624AEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6824824ACF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187063;
-	bh=SoCcNy78lwGhxP++i8+gokc+1T3HmcxE2eEBtGwag8o=;
+	s=default; t=1559187072;
+	bh=B7VPF/oMt7zL3kPuuXld1bWvfaY8Io0vsSaCC6cL27E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWRTI2e4JkLbPx3dY4J0CXzzS3yEgdR7KSuZttGortgJjshSWPgyXGKVmGcVofXtQ
-	 ii0CZ+fJSwdNk1QUDeCbPFBDblE5+8ZZhM31uKmIDiCf4KqyhyHwxMjtRTItkZ4puU
-	 fxlFQX8QwBh2IbnxgSNni+Qzivd2Knr437vkx+/4=
+	b=huericfRB9YX5ho68mfkX4Qq7i0cW2nd+oCsWjvGx9xWJNQuS3I8GEGXIYOEK8x+W
+	 0e9WoIdWaxsq4aHlbKbr/7D0VIbjWfm7i+4zlXNPvyMIfGOht04XLRfN79Y2njgsem
+	 oRwuOcJUzJCbmpb0EFfucrhfgmp3dJ6A5R2KnYo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfE3Da2 (ORCPT
+        id S2388563AbfE3DaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34394 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbfE3DV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:27 -0400
+        id S1732539AbfE3DVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:23 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E3D249E6;
-        Thu, 30 May 2019 03:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D9F249BA;
+        Thu, 30 May 2019 03:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186486;
-        bh=SoCcNy78lwGhxP++i8+gokc+1T3HmcxE2eEBtGwag8o=;
+        s=default; t=1559186483;
+        bh=B7VPF/oMt7zL3kPuuXld1bWvfaY8Io0vsSaCC6cL27E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9sW7p2Tmd6pS4UvTiHpjseETvR/g3KzaUyt1vUUG3AkMXZ/pgOVeDka6a9DvVJY8
-         4wNGYAzhlMa91DipYJ/7bp73VYPeCiD/l+74PVriZedHy/Fy3AeBzPDEuidDYSxjAZ
-         d08427t/9V9c5tXfClQ7XCDyPG41Ubg+uGEt1UCM=
+        b=gWmVStkTae6IWvDGw9YjgQfu5QDZnDK8nIXZUqklIeVBfWoyGJrcFrOwFIGjG9fDH
+         mxRj6odPizn3Mm4cObPRtpLGoaoqM9mv457CAFVzcjVIABw/WzvgBkNOryS5RZABYP
+         ewllpKDXRvbpqcNCwcf4ExhV1usXfkzKqRpotLmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 128/128] drm: Wake up next in drm_read() chain if we are forced to putback the event
-Date:   Wed, 29 May 2019 20:07:40 -0700
-Message-Id: <20190530030457.108342500@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 121/128] scsi: lpfc: Fix FDMI manufacturer attribute value
+Date:   Wed, 29 May 2019 20:07:33 -0700
+Message-Id: <20190530030456.248152223@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
+[ Upstream commit d67f935b79a76ac9d86dde1a27bdd413feb5d987 ]
 
-After an event is sent, we try to copy it into the user buffer of the
-first waiter in drm_read() and if the user buffer doesn't have enough
-room we put it back onto the list. However, we didn't wake up any
-subsequent waiter, so that event may sit on the list until either a new
-vblank event is sent or a new waiter appears. Rare, but in the worst
-case may lead to a stuck process.
+The FDMI manufacturer value being reported on Linux is inconsistent with
+other OS's.
 
-Testcase: igt/drm_read/short-buffer-wakeup
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
+Set the value to "Emulex Corporation" for consistency.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_fops.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_ct.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_fops.c b/drivers/gpu/drm/drm_fops.c
-index c37b7b5f1dd31..921f7f690ae9b 100644
---- a/drivers/gpu/drm/drm_fops.c
-+++ b/drivers/gpu/drm/drm_fops.c
-@@ -515,6 +515,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
- 				file_priv->event_space -= length;
- 				list_add(&e->link, &file_priv->event_list);
- 				spin_unlock_irq(&dev->event_lock);
-+				wake_up_interruptible(&file_priv->event_wait);
- 				break;
- 			}
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 4ac03b16d17f5..52afbcff362f9 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1561,6 +1561,9 @@ lpfc_fdmi_hba_attr_manufacturer(struct lpfc_vport *vport,
+ 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
+ 	memset(ae, 0, 256);
  
++	/* This string MUST be consistent with other FC platforms
++	 * supported by Broadcom.
++	 */
+ 	strncpy(ae->un.AttrString,
+ 		"Emulex Corporation",
+ 		       sizeof(ae->un.AttrString));
 -- 
 2.20.1
 
