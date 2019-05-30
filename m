@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95723C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FFDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8E824C2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CF324201
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187775;
-	bh=EMYS1qhUe763nuCW1K+nwIWiN/wiyn9Qh5hzGuOl2mE=;
+	s=default; t=1559187780;
+	bh=5yfE+PIdwBJEYMQT2JIinYrvyYeU/jnxN8az01WPZ08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fm/QkTohE7H4Jw59OO/tg3Nj0k9zJtQoeX4vJvzsc2Pu01ETsGoGtArZ3rMh6diOu
-	 2VJjXlnD+VIWizzsrJe9SPeGRCFPuaRTbFHM1a60CuuAtkN7kSBWwmjBdDn9qkZhji
-	 5RHJygGsqzCL7hQD8Emh9W8C6vEcqQe+On3L08UE=
+	b=y9cs7YWvoAiIgA2aEp5c39jfzGmfjdL3YKPeS6olOf1UVTZhmNfWTgs1rBx5Qq9Vm
+	 bQHSJYacyKg05go2wfWYaHNiJMGUIFLJ/BKcqkdyZRJTa3XHZLfMYVsfxjPrrB2AdJ
+	 Jg8rLwIi03S3J8ZrFXYQjXnSmiky5VxUYIiAg3Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfE3Dmx (ORCPT
+        id S1732569AbfE3Dm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732439AbfE3DVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:05 -0400
+        id S1730621AbfE3DVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF330249AC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 66CFA2496D;
         Thu, 30 May 2019 03:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186464;
-        bh=EMYS1qhUe763nuCW1K+nwIWiN/wiyn9Qh5hzGuOl2mE=;
+        bh=5yfE+PIdwBJEYMQT2JIinYrvyYeU/jnxN8az01WPZ08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ciVQfx5u6NN/mbuWekVGhLs1KOkDBr8TOa6AFiJfd9yatiz9vcpDnWsrI5mIX7/9S
-         y4KBQb4lKQ2/H3qd5NmMcSeKCY3P20N+QW/LizsYNR1dTLq/ligbiNYgLZSZ1HbSlq
-         cAQBcTbmjqYZtu0hvCVr9FwrtXBtgZiewdQbrZAg=
+        b=GqOkuGKgWcd9gZ6MR3H4Uo5/gzSwSF8H9i6383J2JpGJSBJq6naRjMj6Dsv7widCG
+         zxIiIlS97mMJZBZ+/g6ijsgdMIKwzNeqo+eOgOUluTvEuRyY3TeoebdBUmgjXIaBCA
+         YHqnPKMt3zPhsAw9QG1Nop+4NCIWAzyOp5f3hCm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 043/128] mwifiex: prevent an array overflow
-Date:   Wed, 29 May 2019 20:06:15 -0700
-Message-Id: <20190530030442.254322473@linuxfoundation.org>
+Subject: [PATCH 4.9 042/128] ASoC: fsl_sai: Update is_slave_mode with correct value
+Date:   Wed, 29 May 2019 20:06:14 -0700
+Message-Id: <20190530030441.786039033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,36 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
+[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
 
-The "rate_index" is only used as an index into the phist_data->rx_rate[]
-array in the mwifiex_hist_data_set() function.  That array has
-MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
-debugfs information.  The "rate_index" variable comes from the network
-skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
-it to prevent an array overflow.
+is_slave_mode defaults to false because sai structure
+that contains it is kzalloc'ed.
 
-Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Anyhow, if we decide to set the following configuration
+SAI slave -> SAI master, is_slave_mode will remain set on true
+although SAI being master it should be set to false.
+
+Fix this by updating is_slave_mode for each call of
+fsl_sai_set_dai_fmt.
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/fsl/fsl_sai.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
-index 1ff22055e54f8..9ddaa767ea747 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
-@@ -533,5 +533,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
- 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
- 			      rx_rate - 1 : rx_rate;
- 
-+	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
-+		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
-+
- 	return rate_index;
- }
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 9fadf7e31c5f8..cb43f57f978b1 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+ 		sai->is_slave_mode = true;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
 -- 
 2.20.1
 
