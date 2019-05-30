@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CBAC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5261BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5EF24CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CF024CBF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187973;
-	bh=NqJj2wnZvb0IFFyMryiYTUFUXDNh3Tw4qJpTYYZ12lo=;
+	s=default; t=1559187980;
+	bh=5PplgaAws3iXqb6sbpckHoEGhKhqIT2kiGkYsYt5o04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJZbYjDFQJc8EPKjqpda4A+TCL88KPJASOJsGX6W+L1jPA3yrRUQX28U1cvX1wypj
-	 IwQe4wVHGl4/PFJssEvtKvJCMtO7sUTkEoMQkWQzfEbgJqSljSD4ey0sHOouH/rzkD
-	 oOPETfgl9LEbZ1Fz55RFg0lfh6aA4QJLc1XV/OHo=
+	b=hNvK6LTMPrNvxEagdSB0rqsHtGwVjB62pPM/1+vskOdNBcd37RDyVXQV7sz7Fhlqi
+	 aWGhNrgknmri9h6hPzmQ8ywo0Q9PkVS2G1pN1GSF24Cjhqs82qlU5Q+fwq4CGaSUQy
+	 BUGIIyHk+cP9XV/cii3vbe87xuyK3xfqUzfdhjek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbfE3DqM (ORCPT
+        id S1732906AbfE3DqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbfE3DUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:43 -0400
+        id S1732295AbfE3DUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE1124953;
-        Thu, 30 May 2019 03:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCB5024949;
+        Thu, 30 May 2019 03:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186443;
-        bh=NqJj2wnZvb0IFFyMryiYTUFUXDNh3Tw4qJpTYYZ12lo=;
+        s=default; t=1559186441;
+        bh=5PplgaAws3iXqb6sbpckHoEGhKhqIT2kiGkYsYt5o04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teeYMT3sJYSoXWmqcBrzczSMAvr7uxb1g3VtCvrjL96IUJOhnIzFPLeYMg6I088jk
-         U6YCOU7KJ9jTBKjcNjJz9FkQpqf+K3x8xWTN2+D9J/fe0ph+Osc5kgxuO5xchD1EuR
-         qxEfKAlP+FsfP/hB91VT1PlXpsTGiHrF3xPMJv0w=
+        b=EcIGmiEvIsxWG/oyt+pNK4MaVrssJ40bKpDAdkI7k23Qa3CnUBAn0Z+7jCOWKnY6C
+         MSMVC3o/2jaaNJSNe7F0W9c/SIbs95wxFpSE/P2C/Wn8Kq6pJtCGld4p1BkRi/Zqir
+         ZRW0enx7bFdYgMpbzysxQv3wDjxEAugECBG2omSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
-        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 047/128] bcache: fix failure in journal relplay
-Date:   Wed, 29 May 2019 20:06:19 -0700
-Message-Id: <20190530030443.174490450@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 045/128] crypto: sun4i-ss - Fix invalid calculation of hash end
+Date:   Wed, 29 May 2019 20:06:17 -0700
+Message-Id: <20190530030442.779255122@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,86 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
+[ Upstream commit f87391558acf816b48f325a493d81d45dec40da0 ]
 
-journal replay failed with messages:
-Sep 10 19:10:43 ceph kernel: bcache: error on
-bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
-2057493-2057567 missing! (replaying 2057493-2076601), disabling
-caching
+When nbytes < 4, end is wronlgy set to a negative value which, due to
+uint, is then interpreted to a large value leading to a deadlock in the
+following code.
 
-The reason is in journal_reclaim(), when discard is enabled, we send
-discard command and reclaim those journal buckets whose seq is old
-than the last_seq_now, but before we write a journal with last_seq_now,
-the machine is restarted, so the journal with the last_seq_now is not
-written to the journal bucket, and the last_seq_wrote in the newest
-journal is old than last_seq_now which we expect to be, so when we doing
-replay, journals from last_seq_wrote to last_seq_now are missing.
+This patch fix this problem.
 
-It's hard to write a journal immediately after journal_reclaim(),
-and it harmless if those missed journal are caused by discarding
-since those journals are already wrote to btree node. So, if miss
-seqs are started from the beginning journal, we treat it as normal,
-and only print a message to show the miss journal, and point out
-it maybe caused by discarding.
-
-Patch v2 add a judgement condition to ignore the missed journal
-only when discard enabled as Coly suggested.
-
-(Coly Li: rebase the patch with other changes in bch_journal_replay())
-
-Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
-Tested-by: Dennis Schridde <devurandom@gmx.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index f8ae7ce29809d..6ee5370eb9169 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -309,6 +309,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
- 	}
- }
- 
-+bool is_discard_enabled(struct cache_set *s)
-+{
-+	struct cache *ca;
-+	unsigned int i;
-+
-+	for_each_cache(ca, s, i)
-+		if (ca->discard)
-+			return true;
-+
-+	return false;
-+}
-+
- int bch_journal_replay(struct cache_set *s, struct list_head *list)
- {
- 	int ret = 0, keys = 0, entries = 0;
-@@ -323,10 +335,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
- 
- 		if (n != i->j.seq) {
--			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--			n, i->j.seq - 1, start, end);
--			ret = -EIO;
--			goto err;
-+			if (n == start && is_discard_enabled(s))
-+				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+			else {
-+				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+				ret = -EIO;
-+				goto err;
-+			}
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index 0de2f62d51ff7..ec16ec2e284d0 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -250,7 +250,10 @@ static int sun4i_hash(struct ahash_request *areq)
  		}
+ 	} else {
+ 		/* Since we have the flag final, we can go up to modulo 4 */
+-		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
++		if (areq->nbytes < 4)
++			end = 0;
++		else
++			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
+ 	}
  
- 		for (k = i->j.start;
+ 	/* TODO if SGlen % 4 and op->len == 0 then DMA */
 -- 
 2.20.1
 
