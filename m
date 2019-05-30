@@ -2,86 +2,105 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEF4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BD3254F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E1425501
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJIRhFYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfE3IzM (ORCPT
+        id S1727318AbfE3IzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:55:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25947 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726653AbfE3Iy6 (ORCPT
+        Thu, 30 May 2019 04:55:16 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44648 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfE3IzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:54:58 -0400
-X-UUID: 879c2a527d344a9984b1ac34210626f0-20190530
-X-UUID: 879c2a527d344a9984b1ac34210626f0-20190530
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1648121932; Thu, 30 May 2019 16:54:51 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 30 May 2019 16:54:49 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 16:54:48 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
-        <boon.leong.ong@intel.com>, <andrew@lunn.ch>
-Subject: [PATCH 2/4] net: stmmac: dwmac-mediatek: disable rx watchdog
-Date:   Thu, 30 May 2019 16:54:42 +0800
-Message-ID: <1559206484-1825-3-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1559206484-1825-1-git-send-email-biao.huang@mediatek.com>
-References: <1559206484-1825-1-git-send-email-biao.huang@mediatek.com>
+        Thu, 30 May 2019 04:55:13 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c5so2274871pll.11;
+        Thu, 30 May 2019 01:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KvjM4bsTfrcq2cHYj0Oc8PDr1CJFW5mpcAz8/WiY3E0=;
+        b=PJIRhFYa2F4McFzf+xGE3gUTho75opN9ktQ1NXCUdCcGydnK/sgVU70hxfve2x1Om4
+         y7lXw5PIyHReB38bZ9+AUHhktIyjgnChQ1AXedGWj9Iwsd4CH+wIcTPLIovd3faUjsFP
+         1/NFvpt8TeW6wPHTiPHSQftQHiNxAGSVvR0mn2DfIEfNNIc5LcWfkblavemxfWL+ETP+
+         mT7HFpTnW3wrY5Re/8uPNraDblHqA3cuWX1OYHHYuH7ferAoRnqP7p3DhZjOVoy7eu3R
+         qjwSINqsn2QOGRvm48tJuDzLp18JlNJja60GkZ5u3oe8eyI6/jP2dnLtGMuypw8YhldW
+         ITMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KvjM4bsTfrcq2cHYj0Oc8PDr1CJFW5mpcAz8/WiY3E0=;
+        b=mFuPBaZ8Bvl/S7hzfUnehpx6k667wUS6GWFsx4H5ouyUEB+lTEZYeL9+TCP1m7FO5g
+         xRvdGsJepV1hhCs3dz/J3VRoEc4wDj2LpKbN075XbsQbUZ7ylHoGlbZ01ZwL7mPcwAnf
+         CQJH4R1ExeFnZby+T7HWq075czI9ElY1xCcSzxa4qaAxmY2kvdC7lHpjz1bO75esSkl0
+         eJA6WkwSb5HmsL+HZ8V4qWUuP3IeS7lFHM+LqzicwUMwlNArhi9RhNxnMsX9rEzEGwUu
+         yUDvB/iEOBhUYG4TcHohiDyDz50SFT7I9P2ORC9IOZ5HQ76M8OTD8eoWfQ5G1K3c/qDm
+         BnbQ==
+X-Gm-Message-State: APjAAAWTk9j5tVC1j/ZMIV1UwjwhY0b7S3yyBFM/OppUzLevj0OzQYu2
+        zZGmmmvjLZs4j5dd08sXy8M=
+X-Google-Smtp-Source: APXvYqyXQwgtIekLk3xQBUwVq8/Hu5IaSkI+omKRnrbiDa6+jwZFpuFkY3MoIYdDQJrZpNi5kKmOkg==
+X-Received: by 2002:a17:902:324:: with SMTP id 33mr2735283pld.284.1559206513206;
+        Thu, 30 May 2019 01:55:13 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id o15sm921189pfh.53.2019.05.30.01.54.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 01:55:12 -0700 (PDT)
+Date:   Thu, 30 May 2019 16:54:38 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, ccross@android.com,
+        selinux@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Subject: [PATCH v2] hooks: fix a missing-check bug in selinux_add_mnt_opt()
+Message-ID: <20190530085438.GA2862@zhanggen-UX430UQ>
+References: <20190530080602.GA3600@zhanggen-UX430UQ>
+ <CAFqZXNtX1R1VDFxm7Jco3BZ=pVnNiHU3-C=d8MhCVV1XSUQ8bw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6BDEB72B246466E87AEFA38E556217A54BDD67FD1C070C393FC484201E3BDEE02000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqZXNtX1R1VDFxm7Jco3BZ=pVnNiHU3-C=d8MhCVV1XSUQ8bw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-disable rx watchdog for dwmac-mediatek, then the hw will
-issue a rx interrupt once receiving a packet, so the responding time
-for rx path will be reduced.
+In selinux_add_mnt_opt(), 'val' is allcoted by kmemdup_nul(). It returns
+NULL when fails. So 'val' should be checked.
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index 3c7a60f..38cd054 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -356,6 +356,7 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
-+	plat_dat->riwt_off = 1;
- 	plat_dat->maxmtu = ETH_DATA_LEN;
- 	plat_dat->bsp_priv = priv_plat;
- 	plat_dat->init = mediatek_dwmac_init;
--- 
-1.7.9.5
-
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 3ec702c..4797c63 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1052,8 +1052,11 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
+ 	if (token == Opt_error)
+ 		return -EINVAL;
+ 
+-	if (token != Opt_seclabel)
+-		val = kmemdup_nul(val, len, GFP_KERNEL);
++	if (token != Opt_seclabel) {
++			val = kmemdup_nul(val, len, GFP_KERNEL);
++			if (!val)
++				return -ENOMEM;
++	}
+ 	rc = selinux_add_opt(token, val, mnt_opts);
+ 	if (unlikely(rc)) {
+ 		kfree(val);
