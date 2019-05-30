@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C75C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276F4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F102554C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF6B25524
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190508;
-	bh=oH0YCFAp+soncbqg6ny+iS5tZ+uDyJS+4jsJAbEtK2w=;
+	s=default; t=1559190511;
+	bh=DGwY8+PMszvfrhekxgnzEn85BTPXoR99XdKjRFYihnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MV46LbMfzYhPtXFFfVM3QHMli1Z2RZBmeAnbNSHY/DKX7miaOmbWcmQu9D4pf9z3w
-	 L+o/1yELeKDkJmlgqBJVrS0c9ECGatAwxoLUgtTK5rnRaRMWjA19PHDj/RuZMl2mmJ
-	 CY8R9be7rFH+fzjgRGyBa31gHNCLw5ALVY3XHpzc=
+	b=PJeaidU5YMyVO7f9ia3Euc4bn2SC8SR6pgzP+bXMHVXujOt8kZal03dIZFPF4lReF
+	 JDbkdbZuF8GIP3mobnyaf4PMW9Ew2J82Y1TcOOoRkQseUR5/7eFhgs3gypb5EVmCBp
+	 iEImIiNIFDh8niixqf8fkRIXJsTc4ie/WiywGdtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388089AbfE3E21 (ORCPT
+        id S1729775AbfE3DOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33590 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729772AbfE3DOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:15 -0400
+        id S1728734AbfE3DLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED05B2455C;
-        Thu, 30 May 2019 03:14:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33B1244B0;
+        Thu, 30 May 2019 03:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186054;
-        bh=oH0YCFAp+soncbqg6ny+iS5tZ+uDyJS+4jsJAbEtK2w=;
+        s=default; t=1559185914;
+        bh=DGwY8+PMszvfrhekxgnzEn85BTPXoR99XdKjRFYihnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDw7CGF1QXKk7w4qUMQW0ytj2ymMFcMJUtYFofcMgMJXVgS2UPs155/PlTD5DmMdJ
-         +v81gtykTa3SLL1MxYyhmhhUw35ZkplG3m6sFbz7IEExlyKjGCUoBWJnFEA9nlphgE
-         oYob8DB4tB50QOmm9ExgAKK/0Ew3DjPUxZTPpCFc=
+        b=0rco3KMreUwsrjXjCnKv63gwh1m+86HnHjkb8HTS4kZ+0zVbiwb6y28u0b75EEVgR
+         mGFU+48stRBMtER6dXH8+ALr/8UdT03INXn73bxyAYrA2LzktUqle/8SV8baNzbWGI
+         veHRjpjW7+41b8s4hY5GLFwFkFl/dXjnqHj+jZaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 151/346] random: add a spinlock_t to struct batched_entropy
-Date:   Wed, 29 May 2019 20:03:44 -0700
-Message-Id: <20190530030548.829778646@linuxfoundation.org>
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 296/405] IB/mlx5: Compare only index part of a memory window rkey
+Date:   Wed, 29 May 2019 20:04:54 -0700
+Message-Id: <20190530030555.810274417@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,186 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b7d5dc21072cda7124d13eae2aefb7343ef94197 ]
+[ Upstream commit d623dfd2836114507d647c9793a80d213d8bffe8 ]
 
-The per-CPU variable batched_entropy_uXX is protected by get_cpu_var().
-This is just a preempt_disable() which ensures that the variable is only
-from the local CPU. It does not protect against users on the same CPU
-from another context. It is possible that a preemptible context reads
-slot 0 and then an interrupt occurs and the same value is read again.
+The InfiniBand Architecture Specification section 10.6.7.2.4 TYPE 2 MEMORY
+WINDOWS says that if the CI supports the Base Memory Management Extensions
+defined in this specification, the R_Key format for a Type 2 Memory Window
+must consist of:
 
-The above scenario is confirmed by lockdep if we add a spinlock:
-| ================================
-| WARNING: inconsistent lock state
-| 5.1.0-rc3+ #42 Not tainted
-| --------------------------------
-| inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-| ksoftirqd/9/56 [HC0[0]:SC1[1]:HE0:SE0] takes:
-| (____ptrval____) (batched_entropy_u32.lock){+.?.}, at: get_random_u32+0x3e/0xe0
-| {SOFTIRQ-ON-W} state was registered at:
-|   _raw_spin_lock+0x2a/0x40
-|   get_random_u32+0x3e/0xe0
-|   new_slab+0x15c/0x7b0
-|   ___slab_alloc+0x492/0x620
-|   __slab_alloc.isra.73+0x53/0xa0
-|   kmem_cache_alloc_node+0xaf/0x2a0
-|   copy_process.part.41+0x1e1/0x2370
-|   _do_fork+0xdb/0x6d0
-|   kernel_thread+0x20/0x30
-|   kthreadd+0x1ba/0x220
-|   ret_from_fork+0x3a/0x50
-…
-| other info that might help us debug this:
-|  Possible unsafe locking scenario:
-|
-|        CPU0
-|        ----
-|   lock(batched_entropy_u32.lock);
-|   <Interrupt>
-|     lock(batched_entropy_u32.lock);
-|
-|  *** DEADLOCK ***
-|
-| stack backtrace:
-| Call Trace:
-…
-|  kmem_cache_alloc_trace+0x20e/0x270
-|  ipmi_alloc_recv_msg+0x16/0x40
-…
-|  __do_softirq+0xec/0x48d
-|  run_ksoftirqd+0x37/0x60
-|  smpboot_thread_fn+0x191/0x290
-|  kthread+0xfe/0x130
-|  ret_from_fork+0x3a/0x50
+* 24 bit index in the most significant bits of the R_Key, which is owned
+  by the CI, and
+* 8 bit key in the least significant bits of the R_Key, which is owned by
+  the Consumer.
 
-Add a spinlock_t to the batched_entropy data structure and acquire the
-lock while accessing it. Acquire the lock with disabled interrupts
-because this function may be used from interrupt context.
+This means that the kernel should compare only the index part of a R_Key
+to determine equality with another R_Key.
 
-Remove the batched_entropy_reset_lock lock. Now that we have a lock for
-the data scructure, we can access it from a remote CPU.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: db570d7deafb ("IB/mlx5: Add ODP support to MW")
+Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/random.c | 52 ++++++++++++++++++++++---------------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+ drivers/infiniband/hw/mlx5/odp.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index d4d45ccfeefc0..af6e240f98ff4 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2214,8 +2214,8 @@ struct batched_entropy {
- 		u32 entropy_u32[CHACHA_BLOCK_SIZE / sizeof(u32)];
- 	};
- 	unsigned int position;
-+	spinlock_t batch_lock;
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 0aa10ebda5d9a..91669e35c6ca8 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -711,6 +711,15 @@ struct pf_frame {
+ 	int depth;
  };
--static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_reset_lock);
  
- /*
-  * Get a random word for internal kernel use only. The quality of the random
-@@ -2225,12 +2225,14 @@ static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_
-  * wait_for_random_bytes() should be called and return 0 at least once
-  * at any point prior.
-  */
--static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64);
-+static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
-+	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
-+};
++static bool mkey_is_eq(struct mlx5_core_mkey *mmkey, u32 key)
++{
++	if (!mmkey)
++		return false;
++	if (mmkey->type == MLX5_MKEY_MW)
++		return mlx5_base_mkey(mmkey->key) == mlx5_base_mkey(key);
++	return mmkey->key == key;
++}
 +
- u64 get_random_u64(void)
+ static int get_indirect_num_descs(struct mlx5_core_mkey *mmkey)
  {
- 	u64 ret;
--	bool use_lock;
--	unsigned long flags = 0;
-+	unsigned long flags;
- 	struct batched_entropy *batch;
- 	static void *previous;
+ 	struct mlx5_ib_mw *mw;
+@@ -760,7 +769,7 @@ static int pagefault_single_data_segment(struct mlx5_ib_dev *dev,
  
-@@ -2245,28 +2247,25 @@ u64 get_random_u64(void)
- 
- 	warn_unseeded_randomness(&previous);
- 
--	use_lock = READ_ONCE(crng_init) < 2;
--	batch = &get_cpu_var(batched_entropy_u64);
--	if (use_lock)
--		read_lock_irqsave(&batched_entropy_reset_lock, flags);
-+	batch = raw_cpu_ptr(&batched_entropy_u64);
-+	spin_lock_irqsave(&batch->batch_lock, flags);
- 	if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
- 		extract_crng((u8 *)batch->entropy_u64);
- 		batch->position = 0;
- 	}
- 	ret = batch->entropy_u64[batch->position++];
--	if (use_lock)
--		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
--	put_cpu_var(batched_entropy_u64);
-+	spin_unlock_irqrestore(&batch->batch_lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL(get_random_u64);
- 
--static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32);
-+static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32) = {
-+	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u32.lock),
-+};
- u32 get_random_u32(void)
- {
- 	u32 ret;
--	bool use_lock;
--	unsigned long flags = 0;
-+	unsigned long flags;
- 	struct batched_entropy *batch;
- 	static void *previous;
- 
-@@ -2275,18 +2274,14 @@ u32 get_random_u32(void)
- 
- 	warn_unseeded_randomness(&previous);
- 
--	use_lock = READ_ONCE(crng_init) < 2;
--	batch = &get_cpu_var(batched_entropy_u32);
--	if (use_lock)
--		read_lock_irqsave(&batched_entropy_reset_lock, flags);
-+	batch = raw_cpu_ptr(&batched_entropy_u32);
-+	spin_lock_irqsave(&batch->batch_lock, flags);
- 	if (batch->position % ARRAY_SIZE(batch->entropy_u32) == 0) {
- 		extract_crng((u8 *)batch->entropy_u32);
- 		batch->position = 0;
- 	}
- 	ret = batch->entropy_u32[batch->position++];
--	if (use_lock)
--		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
--	put_cpu_var(batched_entropy_u32);
-+	spin_unlock_irqrestore(&batch->batch_lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL(get_random_u32);
-@@ -2300,12 +2295,19 @@ static void invalidate_batched_entropy(void)
- 	int cpu;
- 	unsigned long flags;
- 
--	write_lock_irqsave(&batched_entropy_reset_lock, flags);
- 	for_each_possible_cpu (cpu) {
--		per_cpu_ptr(&batched_entropy_u32, cpu)->position = 0;
--		per_cpu_ptr(&batched_entropy_u64, cpu)->position = 0;
-+		struct batched_entropy *batched_entropy;
-+
-+		batched_entropy = per_cpu_ptr(&batched_entropy_u32, cpu);
-+		spin_lock_irqsave(&batched_entropy->batch_lock, flags);
-+		batched_entropy->position = 0;
-+		spin_unlock(&batched_entropy->batch_lock);
-+
-+		batched_entropy = per_cpu_ptr(&batched_entropy_u64, cpu);
-+		spin_lock(&batched_entropy->batch_lock);
-+		batched_entropy->position = 0;
-+		spin_unlock_irqrestore(&batched_entropy->batch_lock, flags);
- 	}
--	write_unlock_irqrestore(&batched_entropy_reset_lock, flags);
- }
- 
- /**
+ next_mr:
+ 	mmkey = __mlx5_mr_lookup(dev->mdev, mlx5_base_mkey(key));
+-	if (!mmkey || mmkey->key != key) {
++	if (!mkey_is_eq(mmkey, key)) {
+ 		mlx5_ib_dbg(dev, "failed to find mkey %x\n", key);
+ 		ret = -EFAULT;
+ 		goto srcu_unlock;
 -- 
 2.20.1
 
