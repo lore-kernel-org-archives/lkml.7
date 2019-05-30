@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D47C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060D1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B73B24A2A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55E224A2E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186610;
-	bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
+	s=default; t=1559186619;
+	bh=MFuOwopmUXbAwpiLYlO/N3fbmfGOTPXUDbJEuT5tAu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqHAxCoqhsG2VmN+z94NZ5voT0CwlNfobD7fjEwLXmzq0LZWZ1UMp5tONBolGoT7Y
-	 AE8AvYdltOURnExj1yaNQBx+4M/8CCkgh1EDi5my8s3CBGofcqKgmsOft5S2y5dpOX
-	 tjVsm4N2qg5W2v3nUMrLIZbHqAFacxVETv69hu9E=
+	b=02fVhXA78WTGqAKoMaf+M2WkCGbWoS1B1Jct1sDAq0OnLKQ14+jkeeaJyqa6SNL9t
+	 Vrfe4CuyoBnkxB/z6GRjupjZ57MLbHj7L8uHaAlvis7fPpaHGL0nUmqQ/AOeKpsAli
+	 UJDeA2a49h6m/BUemupBooCq62AphpVxsQSkXL/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733059AbfE3DX2 (ORCPT
+        id S1731560AbfE3DXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731100AbfE3DRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:25 -0400
+        id S1731125AbfE3DR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:29 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4B1824479;
-        Thu, 30 May 2019 03:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404742464B;
+        Thu, 30 May 2019 03:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186244;
-        bh=zabL5YfqfgkOhrTRcXafw5T08OQA8mRkWoJ70DYQGDc=;
+        s=default; t=1559186248;
+        bh=MFuOwopmUXbAwpiLYlO/N3fbmfGOTPXUDbJEuT5tAu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kYaiLQ/8h7V4PaO4FrXzoknc7RjRjyPWajsU90Ye0tn/+AMqEhHoEz0vC60GEhOn
-         mjrMf+Ro6x+irTkrdk87GnJlrwEB0ASHSS3G7RPls23YtEIBlYXGRQJ4nn/KIj2aHl
-         gIIIOuu+go9PbpleR/xQ5WlIqpKhBTpIS+Cy+Tws=
+        b=MUvAHyXTvDabfwcA6sw0d5JEWnN4rhhmBqCtAULLrnYvTb7//zjvf6HxZHfqGgaJ5
+         YfgIk0b7VkoaezTey5ADYkHq+dH9qUDXyOp6VZ6MiKztRZ/XtjqAAmz0QbIpcPEwcO
+         iiLFFLe3mWjaHTqrMAHiwOrAG2HgrKCs/b5OQ1cY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/276] hwmon: (smsc47b397) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:05:17 -0700
-Message-Id: <20190530030535.446686774@linuxfoundation.org>
+Subject: [PATCH 4.19 165/276] mmc: sdhci-of-esdhc: add erratum eSDHC5 support
+Date:   Wed, 29 May 2019 20:05:23 -0700
+Message-Id: <20190530030535.753114499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c0826756744c0ac1df600a5e4cca1a341b13101 ]
+[ Upstream commit a46e42712596b51874f04c73f1cdf1017f88df52 ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+Software writing to the Transfer Type configuration register
+(system clock domain) can cause a setup/hold violation in the
+CRC flops (card clock domain), which can cause write accesses
+to be sent with corrupt CRC values. This issue occurs only for
+write preceded by read. this erratum is to fix this issue.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/smsc47b397.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hwmon/smsc47b397.c b/drivers/hwmon/smsc47b397.c
-index 6bd2007565603..cbdb5c4991ae3 100644
---- a/drivers/hwmon/smsc47b397.c
-+++ b/drivers/hwmon/smsc47b397.c
-@@ -72,14 +72,19 @@ static inline void superio_select(int ld)
- 	superio_outb(0x07, ld);
- }
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index a7bf8515116fd..b2199d621b8c5 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -917,6 +917,9 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
+ 	if (esdhc->vendor_ver > VENDOR_V_22)
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
--static inline void superio_enter(void)
-+static inline int superio_enter(void)
- {
-+	if (!request_muxed_region(REG, 2, DRVNAME))
-+		return -EBUSY;
++	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
++		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
 +
- 	outb(0x55, REG);
-+	return 0;
- }
- 
- static inline void superio_exit(void)
- {
- 	outb(0xAA, REG);
-+	release_region(REG, 2);
- }
- 
- #define SUPERIO_REG_DEVID	0x20
-@@ -300,8 +305,12 @@ static int __init smsc47b397_find(void)
- 	u8 id, rev;
- 	char *name;
- 	unsigned short addr;
-+	int err;
-+
-+	err = superio_enter();
-+	if (err)
-+		return err;
- 
--	superio_enter();
- 	id = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
- 
- 	switch (id) {
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+ 	    of_device_is_compatible(np, "fsl,p4080-esdhc") ||
 -- 
 2.20.1
 
