@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BF9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1A6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6229724DEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2623224FF0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188996;
-	bh=pgrKVLsh0b+AWDDmrQVRBK0DwAU3bC6pO8ssl/MfGN8=;
+	s=default; t=1559188999;
+	bh=s0wBWtgYE318EaqqrCjsUgJ0uwxKN+S1DPkUv/m9A20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOebvLswTpqqek7E+ZjqxAHlShTQNKow2pp/ZquGl3afQ4Ti9BdcGlTGmAmYc1w+i
-	 UBfEvt9s3s6oKAfmbHPy2H+6YAAmur1daqRv7lbQ7PUEUxQEDFWDd6F0uR50lIgzIW
-	 gSwSLS6pgis2IgmwDFP/DLgtmfax8ERXC3tCf3Mg=
+	b=AFWu3Dd8Br7zx+BwgO59E7ShZGOoKS7U4TeRglNldeM33eeK6YuKjzlKGzgHZnfhk
+	 WDBgSV1BiDpcMXVGNR3gUgyfZOf5qdlAVmOmYrbJSVAVp0nQ8h4GRZH9wzMqoaHJbD
+	 YD2+Zb+YQNJAo+TxZvMkfQ9TdzMZgDPbF0Q5zvoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbfE3EDO (ORCPT
+        id S1731355AbfE3DR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbfE3DR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:58 -0400
+        id S1729795AbfE3DOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 356302472D;
-        Thu, 30 May 2019 03:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890A324547;
+        Thu, 30 May 2019 03:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186277;
-        bh=pgrKVLsh0b+AWDDmrQVRBK0DwAU3bC6pO8ssl/MfGN8=;
+        s=default; t=1559186056;
+        bh=s0wBWtgYE318EaqqrCjsUgJ0uwxKN+S1DPkUv/m9A20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hZvtfaBV94paiT05SFCzxk9Z07Tzo5ziWhmmay2wj6uMQGCfHsyFTsjlHAhYdKlIN
-         JA8YqnBeGMJDhzAkYnV6PmjahL8X8J9pt8ogAOqQl/ote6BaiL3Q+3RnjklRM8cBLY
-         uyG6sRt/EZw7XGanTj408ZIIOdmxnQQLwsUSO1e0=
+        b=s9nscrYNBlkoVCxQbmJAm6sOdHp0yNf6KPJZ2gafuUK3OQR8jGk1V412phahyV8IS
+         IF0StEmOet6ceYKkTiqPiAJjLhED5X13DQK56INDrB90x94Vs95nUs0lONSGlU2nng
+         U+dZt100x+70jgpfQFhZW7kPFZz0zjA1LIOperhk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
+        kbuild test robot <lkp@intel.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 178/276] qmi_wwan: Add quirk for Quectel dynamic config
-Date:   Wed, 29 May 2019 20:05:36 -0700
-Message-Id: <20190530030536.437036166@linuxfoundation.org>
+Subject: [PATCH 5.0 156/346] staging: vc04_services: handle kzalloc failure
+Date:   Wed, 29 May 2019 20:03:49 -0700
+Message-Id: <20190530030549.082533376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,163 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e4bf63482c309287ca84d91770ffa7dcc18e37eb ]
+[ Upstream commit a5112277872a56017b777770e2fd4324d4a6c866 ]
 
-Most, if not all, Quectel devices use dynamic interface numbers, and
-users are able to change the USB configuration at will. Matching on for
-example interface number is therefore not possible.
+The kzalloc here was being used without checking the return - if the
+kzalloc fails return VCHIQ_ERROR. The call-site of
+vchiq_platform_init_state() vchiq_init_state() was not responding
+to an allocation failure so checks for != VCHIQ_SUCCESS
+and pass VCHIQ_ERROR up to vchiq_platform_init() which then
+will fail with -EINVAL.
 
-Instead, the QMI device can be identified by looking at the interface
-class, subclass and protocol (all 0xff), as well as the number of
-endpoints. The reason we need to look at the number of endpoints, is
-that the diagnostic port interface has the same class, subclass and
-protocol as QMI. However, the diagnostic port only has two endpoints,
-while QMI has three.
-
-Until now, we have identified the QMI device by combining a match on
-class, subclass and protocol, with a call to the function
-quectel_diag_detect(). In quectel_diag_detect(), we check if the number
-of endpoints matches for known Quectel vendor/product ids.
-
-Adding new vendor/product ids to quectel_diag_detect() is not a good
-long-term solution. This commit replaces the function with a quirk, and
-applies the quirk to affected Quectel devices that I have been able to
-test the change with (EP06, EM12 and EC25). If the quirk is set and the
-number of endpoints equal two, we return from qmi_wwan_probe() with
--ENODEV.
-
-Signed-off-by: Kristian Evensen <kristian.evensen@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Acked-By: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 65 ++++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 3 +++
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 366217263d704..d9a6699abe592 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -63,6 +63,7 @@ enum qmi_wwan_flags {
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+index dd4898861b833..eb1e5dcb0d529 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -209,6 +209,9 @@ vchiq_platform_init_state(struct vchiq_state *state)
+ 	struct vchiq_2835_state *platform_state;
  
- enum qmi_wwan_quirks {
- 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
-+	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
- };
- 
- struct qmimux_hdr {
-@@ -845,6 +846,16 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- 	.data           = QMI_WWAN_QUIRK_DTR,
- };
- 
-+static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
-+	.description	= "WWAN/QMI device",
-+	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
-+	.bind		= qmi_wwan_bind,
-+	.unbind		= qmi_wwan_unbind,
-+	.manage_power	= qmi_wwan_manage_power,
-+	.rx_fixup       = qmi_wwan_rx_fixup,
-+	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
-+};
+ 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
++	if (!state->platform_state)
++		return VCHIQ_ERROR;
 +
- #define HUAWEI_VENDOR_ID	0x12D1
+ 	platform_state = (struct vchiq_2835_state *)state->platform_state;
  
- /* map QMI/wwan function by a fixed interface number */
-@@ -865,6 +876,15 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- #define QMI_GOBI_DEVICE(vend, prod) \
- 	QMI_FIXED_INTF(vend, prod, 0)
+ 	platform_state->inited = 1;
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+index 53f5a1cb4636e..819813e742d8a 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+@@ -2239,6 +2239,8 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
+ 	local->debug[DEBUG_ENTRIES] = DEBUG_MAX;
  
-+/* Quectel does not use fixed interface numbers on at least some of their
-+ * devices. We need to check the number of endpoints to ensure that we bind to
-+ * the correct interface.
-+ */
-+#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
-+	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
-+				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
-+	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
-+
- static const struct usb_device_id products[] = {
- 	/* 1. CDC ECM like devices match on the control interface */
- 	{	/* Huawei E392, E398 and possibly others sharing both device id and more... */
-@@ -969,20 +989,9 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
- 		.driver_info = (unsigned long)&qmi_wwan_info,
- 	},
--	{	/* Quectel EP06/EG06/EM06 */
--		USB_DEVICE_AND_INTERFACE_INFO(0x2c7c, 0x0306,
--					      USB_CLASS_VENDOR_SPEC,
--					      USB_SUBCLASS_VENDOR_SPEC,
--					      0xff),
--		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
--	},
--	{	/* Quectel EG12/EM12 */
--		USB_DEVICE_AND_INTERFACE_INFO(0x2c7c, 0x0512,
--					      USB_CLASS_VENDOR_SPEC,
--					      USB_SUBCLASS_VENDOR_SPEC,
--					      0xff),
--		.driver_info	    = (unsigned long)&qmi_wwan_info_quirk_dtr,
--	},
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
-+	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
+ 	status = vchiq_platform_init_state(state);
++	if (status != VCHIQ_SUCCESS)
++		return VCHIQ_ERROR;
  
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
-@@ -1283,7 +1292,6 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
- 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
- 	{QMI_QUIRK_SET_DTR(0x1e0e, 0x9001, 5)},	/* SIMCom 7100E, 7230E, 7600E ++ */
--	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0125, 4)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0121, 4)},	/* Quectel EC21 Mini PCIe */
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
-@@ -1363,27 +1371,12 @@ static bool quectel_ec20_detected(struct usb_interface *intf)
- 	return false;
- }
- 
--static bool quectel_diag_detected(struct usb_interface *intf)
--{
--	struct usb_device *dev = interface_to_usbdev(intf);
--	struct usb_interface_descriptor intf_desc = intf->cur_altsetting->desc;
--	u16 id_vendor = le16_to_cpu(dev->descriptor.idVendor);
--	u16 id_product = le16_to_cpu(dev->descriptor.idProduct);
--
--	if (id_vendor != 0x2c7c || intf_desc.bNumEndpoints != 2)
--		return false;
--
--	if (id_product == 0x0306 || id_product == 0x0512)
--		return true;
--	else
--		return false;
--}
--
- static int qmi_wwan_probe(struct usb_interface *intf,
- 			  const struct usb_device_id *prod)
- {
- 	struct usb_device_id *id = (struct usb_device_id *)prod;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
-+	const struct driver_info *info;
- 
- 	/* Workaround to enable dynamic IDs.  This disables usbnet
- 	 * blacklisting functionality.  Which, if required, can be
-@@ -1417,10 +1410,14 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * we need to match on class/subclass/protocol. These values are
- 	 * identical for the diagnostic- and QMI-interface, but bNumEndpoints is
- 	 * different. Ignore the current interface if the number of endpoints
--	 * the number for the diag interface (two).
-+	 * equals the number for the diag interface (two).
- 	 */
--	if (quectel_diag_detected(intf))
--		return -ENODEV;
-+	info = (void *)&id->driver_info;
-+
-+	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
-+		if (desc->bNumEndpoints == 2)
-+			return -ENODEV;
-+	}
- 
- 	return usbnet_probe(intf, id);
- }
+ 	/*
+ 		bring up slot handler thread
 -- 
 2.20.1
 
