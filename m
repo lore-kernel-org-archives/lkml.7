@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD82C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA84C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D580424D7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9466524D85
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188256;
-	bh=5zpwOjDO1fpQzwqoXZLpNd3AB+Dz2aPEnFSCm18DBbw=;
+	s=default; t=1559188260;
+	bh=+r2YI0Q+g0xBv+6BwQnG273incqihmmMR/lkbQEqO7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aa7o7i1pfwFtq49N2N38TaVddDmU0D0wwcL5vRvxop7FysBHqXl+WRw4iiuWKG3Bf
-	 RBKtXwsQ8FTagQCJrCjpUmkraqMqdjQR+w3c1unf8Z94dPBPP3IK2UYj29V2/amst4
-	 BtlLlNKGzp6S0DZ4SAJkH8ZUf78dn7XN3NYRxzvk=
+	b=aKlSX3UNHEoBZPSRFAgVooKiBRwvxp1lTMQCuVdozP5DGLCoM3RQ7NjTbVNE0r7Zp
+	 Q82sUaOMiBKUUnMuvsJ3aqdYhICP6zQaFxZAmjYlIGch7fVx33te/r5WnUL/4rsX5T
+	 xhCMxQBSTqB2a9wvWXsug1Cm3bfCaxbnIuuud9Ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfE3DTw (ORCPT
+        id S2387428AbfE3Du7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730446AbfE3DPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:42 -0400
+        id S1730656AbfE3DTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2F524585;
-        Thu, 30 May 2019 03:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 249C224849;
+        Thu, 30 May 2019 03:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186141;
-        bh=5zpwOjDO1fpQzwqoXZLpNd3AB+Dz2aPEnFSCm18DBbw=;
+        s=default; t=1559186391;
+        bh=+r2YI0Q+g0xBv+6BwQnG273incqihmmMR/lkbQEqO7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nweUEK2UNPm0hgH4Ul449Lk2fmxrP86pUg9JO6v8vwXR8WHKYbjhZ+nWlZJseUYNH
-         QfhRHBxZS8bQd5IpqPNPQJ1pG8BmjDap/WxNxqmExO/ek9aK8I78KG6iZM3v9MCNJu
-         H5tZq7DdBSkQMwx+nnOFlJeV/DO3GbzKZrs3Z0X8=
+        b=Wy+m1CJsaHLHiqoVbxrW6trCMWb5o+SaY1QHNGqwdLya3FlxstOwLt3ReVGwfSbfL
+         9HMr3YUQCjnbmni03xmbRaR94HiNYUq8mXV+m9cIurVsriftE7H62Ao41PjiC08/aY
+         yCAWtzXJjD5rmjCrcCObvpwmu6s/ryvdNJ8ODVFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 317/346] spi : spi-topcliff-pch: Fix to handle empty DMA buffers
-Date:   Wed, 29 May 2019 20:06:30 -0700
-Message-Id: <20190530030556.868566279@linuxfoundation.org>
+Subject: [PATCH 4.14 162/193] spi: tegra114: reset controller on probe
+Date:   Wed, 29 May 2019 20:06:56 -0700
+Message-Id: <20190530030510.624005517@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,63 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f37d8e67f39e6d3eaf4cc5471e8a3d21209843c6 ]
+[ Upstream commit 019194933339b3e9b486639c8cb3692020844d65 ]
 
-pch_alloc_dma_buf allocated tx, rx DMA buffers which can fail. Further,
-these buffers are used without a check. The patch checks for these
-failures and sends the error upstream.
+Fixes: SPI driver can be built as module so perform SPI controller reset
+on probe to make sure it is in valid state before initiating transfer.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-topcliff-pch.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/spi/spi-tegra114.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
-index 97d137591b18d..4389ab80c23e6 100644
---- a/drivers/spi/spi-topcliff-pch.c
-+++ b/drivers/spi/spi-topcliff-pch.c
-@@ -1294,18 +1294,27 @@ static void pch_free_dma_buf(struct pch_spi_board_data *board_dat,
- 				  dma->rx_buf_virt, dma->rx_buf_dma);
- }
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 44550182a4a36..2ad04796ef298 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -1067,27 +1067,19 @@ static int tegra_spi_probe(struct platform_device *pdev)
  
--static void pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
-+static int pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
- 			      struct pch_spi_data *data)
- {
- 	struct pch_spi_dma_ctrl *dma;
-+	int ret;
+ 	spi_irq = platform_get_irq(pdev, 0);
+ 	tspi->irq = spi_irq;
+-	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
+-			tegra_spi_isr_thread, IRQF_ONESHOT,
+-			dev_name(&pdev->dev), tspi);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
+-					tspi->irq);
+-		goto exit_free_master;
+-	}
  
- 	dma = &data->dma;
-+	ret = 0;
- 	/* Get Consistent memory for Tx DMA */
- 	dma->tx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->tx_buf_dma, GFP_KERNEL);
-+	if (!dma->tx_buf_virt)
-+		ret = -ENOMEM;
-+
- 	/* Get Consistent memory for Rx DMA */
- 	dma->rx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->rx_buf_dma, GFP_KERNEL);
-+	if (!dma->rx_buf_virt)
-+		ret = -ENOMEM;
-+
-+	return ret;
- }
- 
- static int pch_spi_pd_probe(struct platform_device *plat_dev)
-@@ -1382,7 +1391,9 @@ static int pch_spi_pd_probe(struct platform_device *plat_dev)
- 
- 	if (use_dma) {
- 		dev_info(&plat_dev->dev, "Use DMA for data transfers\n");
--		pch_alloc_dma_buf(board_dat, data);
-+		ret = pch_alloc_dma_buf(board_dat, data);
-+		if (ret)
-+			goto err_spi_register_master;
+ 	tspi->clk = devm_clk_get(&pdev->dev, "spi");
+ 	if (IS_ERR(tspi->clk)) {
+ 		dev_err(&pdev->dev, "can not get clock\n");
+ 		ret = PTR_ERR(tspi->clk);
+-		goto exit_free_irq;
++		goto exit_free_master;
  	}
  
- 	ret = spi_register_master(master);
+ 	tspi->rst = devm_reset_control_get_exclusive(&pdev->dev, "spi");
+ 	if (IS_ERR(tspi->rst)) {
+ 		dev_err(&pdev->dev, "can not get reset\n");
+ 		ret = PTR_ERR(tspi->rst);
+-		goto exit_free_irq;
++		goto exit_free_master;
+ 	}
+ 
+ 	tspi->max_buf_size = SPI_FIFO_DEPTH << 2;
+@@ -1095,7 +1087,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 
+ 	ret = tegra_spi_init_dma_param(tspi, true);
+ 	if (ret < 0)
+-		goto exit_free_irq;
++		goto exit_free_master;
+ 	ret = tegra_spi_init_dma_param(tspi, false);
+ 	if (ret < 0)
+ 		goto exit_rx_dma_free;
+@@ -1117,18 +1109,32 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
+ 		goto exit_pm_disable;
+ 	}
++
++	reset_control_assert(tspi->rst);
++	udelay(2);
++	reset_control_deassert(tspi->rst);
+ 	tspi->def_command1_reg  = SPI_M_S;
+ 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
+ 	pm_runtime_put(&pdev->dev);
++	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
++				   tegra_spi_isr_thread, IRQF_ONESHOT,
++				   dev_name(&pdev->dev), tspi);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to register ISR for IRQ %d\n",
++			tspi->irq);
++		goto exit_pm_disable;
++	}
+ 
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "can not register to master err %d\n", ret);
+-		goto exit_pm_disable;
++		goto exit_free_irq;
+ 	}
+ 	return ret;
+ 
++exit_free_irq:
++	free_irq(spi_irq, tspi);
+ exit_pm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ 	if (!pm_runtime_status_suspended(&pdev->dev))
+@@ -1136,8 +1142,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 	tegra_spi_deinit_dma_param(tspi, false);
+ exit_rx_dma_free:
+ 	tegra_spi_deinit_dma_param(tspi, true);
+-exit_free_irq:
+-	free_irq(spi_irq, tspi);
+ exit_free_master:
+ 	spi_master_put(master);
+ 	return ret;
 -- 
 2.20.1
 
