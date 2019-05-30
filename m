@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1836EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69317C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E764F25316
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E62F25309
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190057;
-	bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+	s=default; t=1559190062;
+	bh=VXyRPV+AZqNbT4pLdeZ9aZNRbMmkTY9wRADnGD5Tbac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l98PXix9CL7CQSr41NEiJJweH/GtvSmhLLgQbtaYs14KmSWoYjXfFd1IJj6gJ4K7l
-	 D5q+q3FYSgusUWXozN+OfxHG0+mpKTeyRZ++I2R0UQi6S99saq/JU1+HUTm1mXWELb
-	 eApjChMPsafmLYl8L+Di4bZoSaNaTVlUWmi3002I=
+	b=hHyS3OhNmd+PARuD2BEvVQfnUzXuBMbzgx0bQIKCiovhmz50Lq40Iat6fY0ORDaXD
+	 9MT0u2O/ltU6nl0cXoDgxSvJmAT5ICunmxiS6qUypxY6YANkentX/nEE2arOFc+EFP
+	 ntgKmxjYzYBh1CCPEi5+m1TPMfwE+XgzTVVn8Xkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbfE3EU4 (ORCPT
+        id S1730850AbfE3EVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730202AbfE3DPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:17 -0400
+        id S1730194AbfE3DPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B56F24580;
-        Thu, 30 May 2019 03:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDBC2244EF;
+        Thu, 30 May 2019 03:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186116;
-        bh=i1++ugkGFy9cTN8Pw+YwfRoCFDrSB4l8XHeSdcQnPQ4=;
+        s=default; t=1559186115;
+        bh=VXyRPV+AZqNbT4pLdeZ9aZNRbMmkTY9wRADnGD5Tbac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M1AfVCcC6MGXwNCh5lxMBBMVR5Y4JifLjSnma36oDD+vZr/pHYfGfqJ7Ikiy0BeVz
-         pbzyX31wyuIDKVmpvr9Sb/AlcqL6kwU3VtoL0T35WVixtesFl63iSc4Q8qWuMFIXae
-         3VrZoPpjtKGbXO6xeRb4yFZhHAQx03UqEETU7QXc=
+        b=Wjxc0JgxEAXoiN+dtZwWgycStxqKAhUVH0Qhmm06n6apOedCAqB/4Az+oRqWptIgT
+         47b+yTCXuoRvc1HeV9jI2DAlzqvZ1Bx/qr7hl9DJ6Jo8nHDN//SfwUlyrzMxqtVdXU
+         qY31vtRY2G/2ffaz/cLHKMB+4kBXvbfkS9iTQv54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        George Hilliard <thirtythreeforty@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 269/346] overflow: Fix -Wtype-limits compilation warnings
-Date:   Wed, 29 May 2019 20:05:42 -0700
-Message-Id: <20190530030554.595619067@linuxfoundation.org>
+Subject: [PATCH 5.0 268/346] staging: mt7621-mmc: Initialize completions a single time during probe
+Date:   Wed, 29 May 2019 20:05:41 -0700
+Message-Id: <20190530030554.553156406@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,74 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc7fe518b0493faa0af0568d6d8c2a33c00f58d0 ]
+[ Upstream commit 7ca8c2c8bbeda2a2a2a9898cd35066bc1dc83836 ]
 
-Attempt to use check_shl_overflow() with inputs of unsigned type
-produces the following compilation warnings.
+The module was initializing completions whenever it was going to wait on
+them, and not when the completion was allocated.  This is incorrect
+according to the completion docs:
 
-drivers/infiniband/hw/mlx5/qp.c: In function _set_user_rq_size_:
-./include/linux/overflow.h:230:6: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
-   _s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;  \
-      ^~
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,
-&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:26: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                          ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift, &rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
-./include/linux/overflow.h:232:36: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-  (_to_shift != _s || *_d < 0 || _a < 0 ||   \
-                                    ^
-drivers/infiniband/hw/mlx5/qp.c:5820:6: note: in expansion of macro _check_shl_overflow_
-  if (check_shl_overflow(rwq->wqe_count, rwq->wqe_shift,&rwq->buf_size))
-      ^~~~~~~~~~~~~~~~~~
+    Calling init_completion() on the same completion object twice is
+    most likely a bug [...]
 
-Fixes: 0c66847793d1 ("overflow.h: Add arithmetic shift helper")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Re-initialization is also unnecessary because the module never uses
+complete_all().  Fix this by only ever initializing the completion a
+single time, and log if the completions are not consumed as intended
+(this is not a fatal problem, but should not go unnoticed).
+
+Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/overflow.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/staging/mt7621-mmc/sd.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 40b48e2133cb8..15eb85de92269 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -36,6 +36,12 @@
- #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
- #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
+index 4b26ec896a96f..74f0e57ad2f15 100644
+--- a/drivers/staging/mt7621-mmc/sd.c
++++ b/drivers/staging/mt7621-mmc/sd.c
+@@ -468,7 +468,11 @@ static unsigned int msdc_command_start(struct msdc_host   *host,
+ 	host->cmd     = cmd;
+ 	host->cmd_rsp = resp;
  
-+/*
-+ * Avoids triggering -Wtype-limits compilation warning,
-+ * while using unsigned data types to check a < 0.
-+ */
-+#define is_non_negative(a) ((a) > 0 || (a) == 0)
-+#define is_negative(a) (!(is_non_negative(a)))
+-	init_completion(&host->cmd_done);
++	// The completion should have been consumed by the previous command
++	// response handler, because the mmc requests should be serialized
++	if (completion_done(&host->cmd_done))
++		dev_err(mmc_dev(host->mmc),
++			"previous command was not handled\n");
  
- #ifdef COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW
- /*
-@@ -227,10 +233,10 @@
- 	typeof(d) _d = d;						\
- 	u64 _a_full = _a;						\
- 	unsigned int _to_shift =					\
--		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
-+		is_non_negative(_s) && _s < 8 * sizeof(*d) ? _s : 0;	\
- 	*_d = (_a_full << _to_shift);					\
--	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
--		(*_d >> _to_shift) != _a);				\
-+	(_to_shift != _s || is_negative(*_d) || is_negative(_a) ||	\
-+	(*_d >> _to_shift) != _a);					\
- })
+ 	sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 	sdc_send_cmd(rawcmd, cmd->arg);
+@@ -490,7 +494,6 @@ static unsigned int msdc_command_resp(struct msdc_host   *host,
+ 		    MSDC_INT_ACMD19_DONE;
  
- /**
+ 	BUG_ON(in_interrupt());
+-	//init_completion(&host->cmd_done);
+ 	//sdr_set_bits(host->base + MSDC_INTEN, wints);
+ 
+ 	spin_unlock(&host->lock);
+@@ -674,7 +677,13 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		//msdc_clr_fifo(host);  /* no need */
+ 
+ 		msdc_dma_on();  /* enable DMA mode first!! */
+-		init_completion(&host->xfer_done);
++
++		// The completion should have been consumed by the previous
++		// xfer response handler, because the mmc requests should be
++		// serialized
++		if (completion_done(&host->cmd_done))
++			dev_err(mmc_dev(host->mmc),
++				"previous transfer was not handled\n");
+ 
+ 		/* start the command first*/
+ 		if (msdc_command_start(host, cmd, CMD_TIMEOUT) != 0)
+@@ -693,7 +702,6 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		/* for read, the data coming too fast, then CRC error
+ 		 *  start DMA no business with CRC.
+ 		 */
+-		//init_completion(&host->xfer_done);
+ 		msdc_dma_start(host);
+ 
+ 		spin_unlock(&host->lock);
+@@ -1688,6 +1696,8 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 	}
+ 	msdc_init_gpd_bd(host, &host->dma);
+ 
++	init_completion(&host->cmd_done);
++	init_completion(&host->xfer_done);
+ 	INIT_DELAYED_WORK(&host->card_delaywork, msdc_tasklet_card);
+ 	spin_lock_init(&host->lock);
+ 	msdc_init_hw(host);
 -- 
 2.20.1
 
