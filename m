@@ -2,119 +2,96 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6518CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07525C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E9B24D58
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F1724D61
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559188210;
+	bh=RLTiq+lGe/TONivcXAkemCu/n92aFFinOfBl5ExwX0Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M+Hdz+BTyFq2EzleNvoCKuWFYsISqiUMJdomjH5G//tSUcnvFsiX/Bm7BkMvD1Am4
+	 6mVL5Q/x4HBZYLoZW8kRPj7i1l7TK+NsfCHImapC/60qa333N6sYMEvuaI1sTQFRf9
+	 pZw4uNJu/cE5xGr/uk605v0Dtnd8lfzfMNh0ofAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfE3Dtf (ORCPT
+        id S1733047AbfE3DuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18049 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387651AbfE3DtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:49:25 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B27A09DAB0CAA2FD2FCF;
-        Thu, 30 May 2019 11:49:22 +0800 (CST)
-Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 30 May 2019 11:49:16 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v8 4/7] powernv/iommu: add support for IOMMU default DMA mode build options
-Date:   Thu, 30 May 2019 11:48:28 +0800
-Message-ID: <20190530034831.4184-5-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20190530034831.4184-1-thunder.leizhen@huawei.com>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
+        Wed, 29 May 2019 23:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732104AbfE3DUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:00 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D62724908;
+        Thu, 30 May 2019 03:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186400;
+        bh=RLTiq+lGe/TONivcXAkemCu/n92aFFinOfBl5ExwX0Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=btIqwCtYGUA7ljFpiCWVssBX6iOXUSAPs1glgJtEZ0uUYL4RkOe9rN6EiWcZMMpjq
+         A6LiDTkD9VIt8Ow1MhlstK7nwcx4aUeWFYAfjBBeKsBSoXsXt40FKJB7pLu9GRk16U
+         Jjay+IAcBWYsrDXaHgjIYivAcB88EYZS/xNpgTwo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 182/193] scsi: lpfc: Fix FDMI manufacturer attribute value
+Date:   Wed, 29 May 2019 20:07:16 -0700
+Message-Id: <20190530030512.819414438@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default DMA mode is PASSTHROUGH on powernv, this patch make it can be
-set to STRICT at build time. It can be overridden by boot option.
+[ Upstream commit d67f935b79a76ac9d86dde1a27bdd413feb5d987 ]
 
-There is no functional change.
+The FDMI manufacturer value being reported on Linux is inconsistent with
+other OS's.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Set the value to "Emulex Corporation" for consistency.
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 3 ++-
- drivers/iommu/Kconfig                     | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 126602b4e39972d..40208b9019be890 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
- 	va_end(args);
- }
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 126723a5bc6f6..54664a07d92ec 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1734,6 +1734,9 @@ lpfc_fdmi_hba_attr_manufacturer(struct lpfc_vport *vport,
+ 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
+ 	memset(ae, 0, 256);
  
--static bool pnv_iommu_bypass_disabled __read_mostly;
-+static bool pnv_iommu_bypass_disabled __read_mostly =
-+			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
- static bool pci_reset_phbs __read_mostly;
- 
- static int __init iommu_setup(char *str)
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 9b48c2fc20e14d3..b5af859956c4fda 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -78,6 +78,7 @@ config IOMMU_DEBUGFS
- choice
- 	prompt "IOMMU default DMA mode"
- 	depends on IOMMU_API
-+	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
- 	default IOMMU_DEFAULT_LAZY if S390_IOMMU
- 	default IOMMU_DEFAULT_STRICT
- 	help
-@@ -98,6 +99,7 @@ config IOMMU_DEFAULT_PASSTHROUGH
- 
- config IOMMU_DEFAULT_LAZY
- 	bool "lazy"
-+	depends on !PPC_POWERNV
- 	help
- 	  Support lazy mode, where for every IOMMU DMA unmap operation, the
- 	  flush operation of IOTLB and the free operation of IOVA are deferred.
++	/* This string MUST be consistent with other FC platforms
++	 * supported by Broadcom.
++	 */
+ 	strncpy(ae->un.AttrString,
+ 		"Emulex Corporation",
+ 		       sizeof(ae->un.AttrString));
 -- 
-1.8.3
+2.20.1
+
 
 
