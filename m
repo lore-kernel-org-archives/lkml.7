@@ -2,137 +2,200 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A289C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61433C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3A256A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559202439;
-	bh=hWpD37PDXOnXEdML/G2vjzblUGY8O+YPp7LKTlvwt0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WMsDmtO+SkC5xDTOCDuFeER6tMRl0wJKOS7uv7Fc9wC8wtH+hMPTJlsqz78oGL/Me
-	 wsM/touKRoJLDhSIyhDDN7eddYxGNoYr9bXot5E1MhKn8Ipei3JDgP9Ag0jzogDXK+
-	 WZS54r76cTq2jZJSJZSzTUdDSa1M/2raxlvKzhIA=
+	by mail.kernel.org (Postfix) with ESMTP id 230A223AA3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SF70NN8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfE3HrT (ORCPT
+        id S1727740AbfE3HsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:47:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38476 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfE3HrP (ORCPT
+        Thu, 30 May 2019 03:48:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39778 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfE3HsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:47:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t5so3155289wmh.3;
-        Thu, 30 May 2019 00:47:14 -0700 (PDT)
+        Thu, 30 May 2019 03:48:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z23so3150161wma.4
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 00:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VWZxqIM6YJjq4geM4D8XBcvh6oQTYQMH93V0r0IefE4=;
-        b=dXuxDv5lfPx49gKTlUmwPG4nYYEqz9PjkHoZWPEZY43ybVrY0sa4rAP0D7eI3iJOAU
-         TVnsq7ursXJBrXz4rUlVabsqsbdDLMBtwmHCTA34kwwU0e8fQUIuLfk7BieXUf6n7seL
-         ai+iGIwW77t2EEUPKNUa8K2jbGNiIgPx+E388c6WPOmzcKP6P5jRtpmyilP/v1wI9LSz
-         7q3PVt1pLUifpG4BoGdMBmnE/QJCJWzse3iNkDXkgCmOJRhXYdm0Bb20/PtaqEwAFtM1
-         YK+75955JdDSQEdmGrAM9uxYasz/TL9WR4Apm77wNyBGX0FemZL0QdKX2W82gWoJlw+r
-         6X9g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nAwAx/liOGYAQLTsVb7XlFSKpMON54UDy15wdk0TQRw=;
+        b=SF70NN8rfUIW4qUEvoyZmVl4wfdYcUwXuDarGLjTQBEP4/ABX6fkDlSQM/Zj4S1kWg
+         B60j8gYxwsQ8ECQRmT0xgFDcL9L6j28aS8ULRu4rAuHGB1Zaj1mKVlhuiLGtERPQN4XV
+         vJG0ymdVPLghl9w1uuL6dJiYJ/hBHydBWmTb6r0WKDGgX4A94Q5b/yiJQM2aUkOf4Rt4
+         SNYcqM72tk7HOSkwZ0sBLo9HXPjJbNczybPX+Mqt7odSkkOMs1gDDaNWrqkeV83VsqvZ
+         VbKKHnzN9EXKKB7Px7Hxk1X70GQR1gzUCgmwsnb3GDouQCRbx09B2n3/u8M5PrwFSjQ3
+         9Dbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VWZxqIM6YJjq4geM4D8XBcvh6oQTYQMH93V0r0IefE4=;
-        b=kN+t7Oj7E5XbawARTz6ArgK06GVKV7UemjrMXR3Rf1j7CHE+Uo4dMP2mSQBTAoPXl4
-         2mHpAuSmZpNhFGQ0x3+0dW0OUBS0hna3Bh8L91F6x8enRy+tUDkt/Lqx4co4mhMSvSyM
-         NlKIqnubn0oSYl+YQKN/VwLrVN1IpZ6H4syrOa5k9Y/aKVXzW7e5eRPg2wsKutfE/M/M
-         q3h+dZ7dKt6BpgrQFKHnHHYTk+Hjd82NPNqQS9mpKZkOhWU5dLdre+vewHH0i0SYLKRo
-         o1+hhX5HEpJfx+mMRp0g3mcPRpQF0SPXCRui/rh1GJEOehtQ/TsBMJRJPogQHgCwdYDt
-         mpgQ==
-X-Gm-Message-State: APjAAAWdhkUa/yI/kSBvY5Mr6aVda+gjOf3eRU5JC6TFKhmrJqYpWSf9
-        w24iA6FI7ZqyLX+QM39txUI=
-X-Google-Smtp-Source: APXvYqyT9s47ZWFjibXPxSHF9pqMH9zinhcoZjXf/xLXKG5me1ok0iQyHkkryeozUYR16FXweTpdCw==
-X-Received: by 2002:a1c:40c6:: with SMTP id n189mr1313874wma.118.1559202433979;
-        Thu, 30 May 2019 00:47:13 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id u19sm5575133wmu.41.2019.05.30.00.47.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 00:47:13 -0700 (PDT)
-Date:   Thu, 30 May 2019 09:47:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     x86 <x86@kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
-        Ido Schimmel <idosch@idosch.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH] x86: intel_epb: Do not build when CONFIG_PM is unset
-Message-ID: <20190530074710.GA68696@gmail.com>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
- <1627338.1fd8ofggM8@kreacher>
- <20190509174338.GA24432@splinter>
- <3844875.YPkTDDlcrF@kreacher>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=nAwAx/liOGYAQLTsVb7XlFSKpMON54UDy15wdk0TQRw=;
+        b=DvXScoM5k9RohJzhwCpGN9kxlu5wTjU2YsuglQ85Pljis33E8MhG8jjVR8oA6GBu2J
+         Gi493dFOVz1W5uIJ+DVzDAPbh6iLUbdg2OkRSDU0oAeASysEX4DSGoeMBrBbB1bZNILI
+         Mz32qfCljM1Gf1pmt+Feyy1IDQIb/E9WThPYHQrkhaRtugCPfBhI7u1fEtZkQLX6Ce3A
+         2dgkoAREgYdpvolV0lM7YRc9Ez3yPk9B7Mdu5P2NsVniN9QrmMm+8rWODheLnIZUNzKH
+         0jbQcnIeWDiN05V4X5QSWIOZJ/kYSXxCq3h5V3TicLnfGIMAO4wzf7q7zeUJRNY4fE1i
+         cvGw==
+X-Gm-Message-State: APjAAAXR8zyMvO4bB+7miWrpANYXLNo7hciCvD2hruHfoYdcexvWkzc/
+        Ik5B6K96vIm1h0J0eKbHuh0Bqg==
+X-Google-Smtp-Source: APXvYqy8mBKNGmoJnuxHLttDrDyx8FXL0heHA3Cn4wXfHagGuEXthsgvniTVmC9uDZ19zIyPYZ6GfA==
+X-Received: by 2002:a05:600c:230a:: with SMTP id 10mr1362037wmo.13.1559202501928;
+        Thu, 30 May 2019 00:48:21 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id o20sm3801870wro.2.2019.05.30.00.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 00:48:21 -0700 (PDT)
+Date:   Thu, 30 May 2019 08:48:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     andy.shevchenko@gmail.com, Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel@collabora.com
+Subject: Re: [PATCH v5] mfd: cros_ec_dev: Register cros_ec_accel_legacy
+ driver as a subdevice
+Message-ID: <20190530074819.GM4574@dell>
+References: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
+ <20190228013541.76792-1-gwendal@chromium.org>
+ <20190402034610.GG4187@dell>
+ <CAPUE2usfB3i4J7P4e_XdsMLV+VK7s+nS-mrD=D_WMpOHiouG2w@mail.gmail.com>
+ <20190529114454.GJ4574@dell>
+ <CAPUE2usYa3z3mcxo6fGsBL-FXLcNy1-Pr+WoQsKmTjhNZCZwSA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3844875.YPkTDDlcrF@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPUE2usYa3z3mcxo6fGsBL-FXLcNy1-Pr+WoQsKmTjhNZCZwSA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 29 May 2019, Gwendal Grignou wrote:
 
-* Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Wed, May 29, 2019 at 4:44 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Tue, 28 May 2019, Gwendal Grignou wrote:
+> >
+> > > On Mon, Apr 1, 2019 at 8:46 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Wed, 27 Feb 2019, Gwendal Grignou wrote:
+> > > >
+> > > > > From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > >
+> > > > > With this patch, the cros_ec_ctl driver will register the legacy
+> > > > > accelerometer driver (named cros_ec_accel_legacy) if it fails to
+> > > > > register sensors through the usual path cros_ec_sensors_register().
+> > > > > This legacy device is present on Chromebook devices with older EC
+> > > > > firmware only supporting deprecated EC commands (Glimmer based devices).
+> > > > >
+> > > > > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > > ---
+> > > > > Changes in v5:
+> > > > > - Remove unnecessary white lines.
+> > > > >
+> > > > > Changes in v4:
+> > > > > - [5/8] Nit: EC -> ECs (Lee Jones)
+> > > > > - [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
+> > > > >
+> > > > > Changes in v3:
+> > > > > - [5/8] Add the Reviewed-by Andy Shevchenko.
+> > > > >
+> > > > > Changes in v2:
+> > > > > - [5/8] Add the Reviewed-by Gwendal.
+> > > > >
+> > > > >  drivers/mfd/cros_ec_dev.c | 66 +++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 66 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > > > > index d275deaecb12..64567bd0a081 100644
+> > > > > --- a/drivers/mfd/cros_ec_dev.c
+> > > > > +++ b/drivers/mfd/cros_ec_dev.c
+> > > > > @@ -376,6 +376,69 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+> > > > >       kfree(msg);
+> > > > >  }
+> > > > >
+> > > > > +static struct cros_ec_sensor_platform sensor_platforms[] = {
+> > > > > +     { .sensor_num = 0 },
+> > > > > +     { .sensor_num = 1 }
+> > > > > +};
+> > > >
+> > > > I'm still very uncomfortable with this struct.
+> > > >
+> > > > Other than these indices, the sensors have no other distinguishing
+> > > > features, thus there should be no need to identify or distinguish
+> > > > between them in this way.
+> > > When initializing the sensors, the IIO driver expect to find in the
+> > > data  structure pointed by dev_get_platdata(dev), in field sensor_num
+> > > is stored the index assigned by the embedded controller to talk to a
+> > > given sensor.
+> > > cros_ec_sensors_register() use the same mechanism; in that function,
+> > > the sensor_num field is populated from the output of an EC command
+> > > MOTIONSENSE_CMD_INFO. In case of legacy mode, that command may not be
+> > > available and in any case we know the EC has only either 2
+> > > accelerometers present or nothing.
+> > >
+> > > For instance, let's compare a legacy device with a more recent one:
+> > >
+> > > legacy:
+> > > type                  |   id          | sensor_num   | device name
+> > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > >
+> > > Modern:
+> > > type                  |   id          | sensor_num   | device name
+> > > accelerometer  |   0           |   0                  | cros-ec-accel.0
+> > > accelerometer  |   1           |   1                  | cros-ec-accel.1
+> > > gyroscope        |    0          |    2                 | cros-ec-gyro.0
+> > > magnetometer |    0          |   3                  | cros-ec-mag.0
+> > > light                  |    0          |   4                  | cros-ec-light.0
+> > > ...
+> >
+> > Why can't these numbers be assigned at runtime?
+> I assume you want to know why IIO drivers need to know "sensor_num"
+> ahead of time. It is because each IIO driver is independent from the
+> other.
+> Let assume there was 2 light sensors in the device:
+> type                  |   id          | sensor_num   | device name
+>  light                  |    0          |   4                  | cros-ec-light.0
+>  light                  |    1          |   5                  | cros-ec-light.1
+> 
+> In case of sensors of the same type without sensor_num, cros-ec-light
+> driver has no information at probe time if it should bind to sensors
+> named by the EC 4 or 5.
+> 
+> We could get away with cros-ec-accel, as EC always presents
+> accelerometers with sensor_num  0 and 1, but I don't want to rely on
+> this property in the general case.
+> Only cros_ec_dev MFD driver has the global view of all sensors available.
 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Commit 9ed0985332a6 ("x86: intel_epb: Take CONFIG_PM into account")
-> prevented the majority of the Performance and Energy Bias Hint (EPB)
-> handling code from being built when CONFIG_PM is unset to fix a
-> regression introduced by commit b9c273babce7 ("PM / arch: x86:
-> MSR_IA32_ENERGY_PERF_BIAS sysfs interface").
-> 
-> In hindsight, however, it would be better to skip all of the EPB
-> handling code for CONFIG_PM unset as there really is no reason for
-> it to be there in that case.  Namely, if the EPB is not touched
-> by the kernel at all with CONFIG_PM unset, there is no need to
-> worry about modifying the EPB inadvertently on CPU online and since
-> the system will not suspend or hibernate then, there is no need to
-> worry about possible modifications of the EPB by the platform
-> firmware during system-wide PM transitions.
-> 
-> For this reason, revert the changes made by commit 9ed0985332a6
-> and only allow intel_epb.o to be built when CONFIG_PM is set.
-> 
-> Note that this changes the behavior of the kernels built with
-> CONFIG_PM unset as they will not modify the EPB on boot if it is
-> zero initially any more, so it is not a fix strictly speaking, but
-> users building their kernels with CONFIG_PM unset really should not
-> expect them to take energy efficiency into account.  Moreover, if
-> CONFIG_PM is unset for performance reasons, leaving EPB as set
-> initially by the platform firmware will actually be consistent
-> with the user's expectations.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> This is complementary to the EPB handling changes made in the current
-> development cycle, so IMO it would be good to do it in this cycle too
-> if there are no technical concerns or objections regarding it.
+Well seeing as this implementation has already been accepted and you're
+only *using* it, rather than creating it, I think this conversation is
+moot.  It looks like the original implementation patch was not
+reviewed by me, which is frustrating since I would have NACKed it.
 
-Sure:
+Just so you know, pointlessly enumerating identical devices manually
+is not a good practice.  It is one we reject all the time.  This
+imp. should too have been rejected on submission.
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
