@@ -2,233 +2,122 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1463FC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A81C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E257924A35
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A87824DF1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSN84Nue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfE3MfP (ORCPT
+        id S1726450AbfE3Mh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:35:15 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45558 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfE3MfO (ORCPT
+        Thu, 30 May 2019 08:37:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38441 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfE3Mh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:35:14 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f20so8858009edt.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:35:13 -0700 (PDT)
+        Thu, 30 May 2019 08:37:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a186so3189909pfa.5;
+        Thu, 30 May 2019 05:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=p+DG2d0FvxKbWywBMoCSOvRR/YJEudwxtMY2Mp3L0uA=;
+        b=pSN84Nueu+mX5LVWf2d3ytDynzJ6AalNM7GRwoawN35iXT7uboqC26KRaN+2xnRfIQ
+         8zmRE5PLKAQ1NlF31XZdFT2YG8daPtcQU67NvQzhoQw2rFliJ6Tewd6uUkMmf5RbOgtn
+         dxaSsGXAdtKrGP42uTraxeodTJEsR8fZTWgB+r2xSChO/ZajN2F+ZbUcBXpibR2xnBBB
+         UFERLjWPzXQ3vJZZ/wGnYwo4eGiKMmPvSaCuKuL0C+4bKB/gvew6xRlh4jnK4p3EXIF+
+         tfd6Lx/zmXq/jC2JTnk9R2QR1zhtwZzyxLKDVzsP4xbb3R3lj1Vd80ilF39ZT8OeHwS0
+         5Sqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xPIgMrsDPU059Y3vze9kPfFnp36/EoKGG25nHsTs/Yw=;
-        b=Ekd5xYyYnO0hLi2x2jJHYIq7rwKy83GjzCu9gLgLajqqPPhf3/YqCF2QfAcGaslh31
-         2xjYsRMsXSCFvPWDNxT55C+DKByeER8Csbw5GGT0lmCPjYtVrnNFsagdiaJvYBVeIdz3
-         2a3SqkciHZVuHFdAan40T7209TMQinFGBqNUQ9+qsmoKqcTedyy1T4tp6ALimazLeNxa
-         QUlH/8nnb5P7rKjg4NB8MEJ5eh/GQ7sRR8cm1000qt4Ih0skpjA1A/JZYEJ50wdrbiAa
-         uduAmdT+Ys1vBJA8ywMCietQgcD8YERrei/vGu8YWV3/sJ0A7+nDKcGRPB0UjFLpzqZx
-         Lzkg==
-X-Gm-Message-State: APjAAAXtvDJqTyob6eFinFbldW8ebL7l0q9Mn/1Z9YcWlGy/17OBSBbx
-        T8ohKUCPdEV68VR7YT6+B/gkVZtGONU=
-X-Google-Smtp-Source: APXvYqyiiK1senMjy75Dno+02Gqym6f26u/x6/fAF2WQr2fSd2jSOzYrNvoVrZsrXQd+KznmuEB7nQ==
-X-Received: by 2002:a17:906:ecf0:: with SMTP id qt16mr3274518ejb.166.1559219712478;
-        Thu, 30 May 2019 05:35:12 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id d4sm699576edk.46.2019.05.30.05.35.10
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:35:11 -0700 (PDT)
-Subject: Re: [PATCH] iio: accel: add missing sensor for some 2-in-1 based
- ultrabooks
-To:     =?UTF-8?Q?Lu=c3=ads_Ferreira?= <luis@aurorafoss.org>
-Cc:     jic23@kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <c2f3c22c-d491-17e7-ede7-54f9df11e064@redhat.com>
- <20190402160433.15810-1-luis@aurorafoss.org>
- <55a52a4e-01d1-2f4c-25e3-0047537bef86@redhat.com>
- <CAPyOxm8DyFjRxeL9QFHGW084cg5vhsKrwqGFy5rp8MEEZ3AHEQ@mail.gmail.com>
- <c34e15ec4be9d783c7134491639eb176@_>
- <9d8458a1-fc47-0727-4dc8-1d1eb185886d@redhat.com>
- <CAPyOxm9Q0Chq+TVjyK1eFWXCSJb0d-pttnEFVRB0Sw4QZnMM+Q@mail.gmail.com>
- <96658776-bd09-4b2d-2049-f2b213d60f8a@redhat.com>
- <CAPyOxm-dA3BF-6oRJt-rcNMQSucfOHNtGgXj4=aZ7a7khfvhVw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e9a53afc-30de-134b-0454-869262aaa134@redhat.com>
-Date:   Thu, 30 May 2019 14:35:10 +0200
+        bh=p+DG2d0FvxKbWywBMoCSOvRR/YJEudwxtMY2Mp3L0uA=;
+        b=KyXG8Uv6rYHm9cpja427fjYQeU9Oq4cgl9RsH4c5xlNUgY4QzPxhimWL3NLoOO84vn
+         CSoVbdDzGwTxJyffuDo9bTJXRJWsBJBWGksA8OtqCz+58aPdHA3l5ZCh3xgS4OMuaPhM
+         647NZBOcuJuCL88XDdhTOQLikpMrCyGqodjCVuBelOLe+6OdQcBoiolAPlspNpmt8/PK
+         cBYN4DkefzPunV3qq55Cfs+yiQ0Hr7uqPecyh8soBFdkjreDVIROJqvgl7IK2hYSKx2V
+         gYmTETvG2TFsOZohT8UuzfZksbQv0KpUL6bfmsjSfqjP8R3KBX98F+yD0tmthnJAe6vR
+         uE/A==
+X-Gm-Message-State: APjAAAVMDCe3hIDa+weV2qZyxb3PpkuHL84faoTROvJdYTv3SoBFj+O5
+        2sZfRpthN3o1LN4N/RPg49Y=
+X-Google-Smtp-Source: APXvYqzCXnK5vZc38a1gg6xnBIWUu0AiECzfFdovLYSOjGz8ovpq8WBP+dm4jV/kz2CuxUB7Tw/cxg==
+X-Received: by 2002:a62:4e0c:: with SMTP id c12mr3461676pfb.17.1559219847373;
+        Thu, 30 May 2019 05:37:27 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q7sm2655251pjb.0.2019.05.30.05.37.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 05:37:26 -0700 (PDT)
+Subject: Re: [PATCH] IB/mlx5: Limit to 64-bit builds
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ariel Levkovich <lariel@mellanox.com>
+References: <1559216144-2085-1-git-send-email-linux@roeck-us.net>
+ <20190530122251.GD6251@mtr-leonro.mtl.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <2cfc38a3-33a9-5f22-6757-189ebbb93ce6@roeck-us.net>
+Date:   Thu, 30 May 2019 05:37:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAPyOxm-dA3BF-6oRJt-rcNMQSucfOHNtGgXj4=aZ7a7khfvhVw@mail.gmail.com>
+In-Reply-To: <20190530122251.GD6251@mtr-leonro.mtl.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 30-05-19 13:53, Luís Ferreira wrote:
-> Hi,
+On 5/30/19 5:22 AM, Leon Romanovsky wrote:
+> On Thu, May 30, 2019 at 04:35:44AM -0700, Guenter Roeck wrote:
+>> 32-bit builds fail with errors such as
+>>
+>> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
 > 
-> @poettering just merged the pull request. Is it ready to go now?
-
-You mean the kernel patch, yes merging that now is fine with me.
-
-Regards,
-
-Hans
-
-
-
+> It is fixed in rdma-rc.
+> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-rc&id=37eb86c4507abcb14fc346863e83aa8751aa4675
 > 
-> Sincerely,
-> Luís Ferreira
-> E2AB 2BF8 F3EC ABE2 E149 F2FD BC43 0831 9CE4 0B64
+
+Excellent, and sorry for the noise.
+
+Guenter
+
+> Thanks
 > 
-> On Wed, 29 May 2019 at 10:57, Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> Hi,
+>> Fixes: 25c13324d03d ("IB/mlx5: Add steering SW ICM device memory type")
+>> Cc: Ariel Levkovich <lariel@mellanox.com>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   drivers/infiniband/hw/mlx5/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> On 5/23/19 2:03 PM, Luís Ferreira wrote:
->>> Hi Hams,
->>>
->>> https://github.com/systemd/systemd/pull/12322
->>> https://github.com/hadess/iio-sensor-proxy/pull/262
->>>
->>> As all the pull requests to systemd and iio-sensor-proxy has already
->>> been merged, I just need your review on this:
->>> https://github.com/systemd/systemd/pull/12449
->>>
->>> Then, I guess this patch is ready to go. Please let me know if theres any issue.
+>> diff --git a/drivers/infiniband/hw/mlx5/Kconfig b/drivers/infiniband/hw/mlx5/Kconfig
+>> index ea248def4556..574b97da7a43 100644
+>> --- a/drivers/infiniband/hw/mlx5/Kconfig
+>> +++ b/drivers/infiniband/hw/mlx5/Kconfig
+>> @@ -1,7 +1,7 @@
+>>   # SPDX-License-Identifier: GPL-2.0-only
+>>   config MLX5_INFINIBAND
+>>   	tristate "Mellanox 5th generation network adapters (ConnectX series) support"
+>> -	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE
+>> +	depends on NETDEVICES && ETHERNET && PCI && MLX5_CORE && 64BIT
+>>   	---help---
+>>   	  This driver provides low-level InfiniBand support for
+>>   	  Mellanox Connect-IB PCI Express host channel adapters (HCAs).
+>> --
+>> 2.7.4
 >>
->> Thank you for your work on this. I've given a favorable review to the
->>
->> last systemd  pull-req.
->>
->> Regards,
->>
->> Hans
->>
->>
->>> On Wed, 17 Apr 2019 at 16:08, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 15-04-19 17:40, luis@aurorafoss.org wrote:
->>>>> April 6, 2019 10:36 AM, "Hans de Goede" <hdegoede@redhat.com> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>>> Yes that seems the best way forward with this.
->>>>>>
->>>>>> Note I think "base" is better then "keyboard" for the sensor which
->>>>>> is in the base/keyboard. But neither is perfect, so go which whatever
->>>>>> you prefer.
->>>>>
->>>>> Reference to:
->>>>> - https://github.com/hadess/iio-sensor-proxy/pull/262 > - https://github.com/systemd/systemd/pull/12322
->>>>
->>>> Thank you for your work on this, I see that Bastien has
->>>> already reviewed the iio-sensor-proxy changes.
->>>>
->>>> I've just added one small remark to the systemd changes,
->>>> except for that small remark the systemd changes look good to me.
->>>>
->>>> Regards,
->>>>
->>>> Hams
->>>>
->>>>
->>>>
->>>>
->>>>>> On 06-04-19 01:01, Luís Ferreira wrote:
->>>>>>
->>>>>>> Hi,
->>>>>>> Basically we need to come up with a convention to (optionally) indicate
->>>>>>
->>>>>> the sensors location with a udev attribute set by:
->>>>>> /lib/udev/hwdb.d/60-sensor.hwdb
->>>>>>> So should we start adding `ACCEL_LOCATION=display` and
->>>>>>> `ACCEL_LOCATION=keyboard` attributes to that file and patch
->>>>>>> iio-sensor-proxy to ignore the keyboard ones as a first step ?
->>>>>>
->>>>>> Yes that seems the best way forward with this.
->>>>>>
->>>>>> Note I think "base" is better then "keyboard" for the sensor which
->>>>>> is in the base/keyboard. But neither is perfect, so go which whatever
->>>>>> you prefer.
->>>>>>
->>>>>> Thanks & Regards,
->>>>>>
->>>>>> Hans
->>>>>>
->>>>>>> On Wed, 3 Apr 2019 at 10:10, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On 02-04-19 18:04, Luís Ferreira wrote:
->>>>>>> Some ultrabooks, like Teclast F6 Pro, use KIOX010A sensor on display
->>>>>>> and KIOX020A sensor on keyboard base, to detect tablet mode or screen
->>>>>>> orientation.
->>>>>>
->>>>>> I deliberately left out the KIOX020A id for now, because currently
->>>>>> userspace cannot really deal with having 2 sensors.
->>>>>>
->>>>>> See:
->>>>>> https://github.com/systemd/systemd/issues/6557
->>>>>> https://github.com/hadess/iio-sensor-proxy/issues/166
->>>>>>
->>>>>> Basically we need to come up with a convention to (optionally) indicate
->>>>>> the sensors location with a udev attribute set by:
->>>>>> /lib/udev/hwdb.d/60-sensor.hwdb
->>>>>>
->>>>>> And then patch iio-sensor-proxy to consume that attribute and ignore
->>>>>> the one which has e.g. ACCEL_LOCATION=keyboard in its udev properties
->>>>>>
->>>>>> Ignoring would be a first step, maybe later it can do something useful
->>>>>> with it, see e.g. : https://github.com/alesguzik/linux_detect_tablet_mode
->>>>>>
->>>>>> IMHO we really should minimally get code in place for iio-sensor-proxy
->>>>>> to ignore the keyboard accelerometer before merging this patch.
->>>>>>
->>>>>> I realize that having the code in place will not magically get it on
->>>>>> all users machines, but I believe this is the minimum which needs to
->>>>>> happen before we push this out and potentially breaks people screen
->>>>>> rotation.
->>>>>>
->>>>>> I've had working on this on my TODO list for a long long time now,
->>>>>> but -ENOTIME. If you have some time to work on this then that would
->>>>>> be great.
->>>>>>
->>>>>> Regards,
->>>>>>
->>>>>> Hans
->>>>>>> Signed-off-by: Luís Ferreira <luis@aurorafoss.org>
->>>>>>> ---
->>>>>>> drivers/iio/accel/kxcjk-1013.c | 1 +
->>>>>>> 1 file changed, 1 insertion(+)
->>>>>>>
->>>>>>> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
->>>>>>> index 7096e577b23f..9a5e445facc1 100644
->>>>>>> --- a/drivers/iio/accel/kxcjk-1013.c
->>>>>>> +++ b/drivers/iio/accel/kxcjk-1013.c
->>>>>>> @@ -1492,6 +1492,7 @@ static const struct acpi_device_id kx_acpi_match[] = {
->>>>>>> {"KIOX0009", KXTJ21009},
->>>>>>> {"KIOX000A", KXCJ91008},
->>>>>>> {"KIOX010A", KXCJ91008}, /* KXCJ91008 inside the display of a 2-in-1 */
->>>>>>> + {"KIOX020A", KXCJ91008},
->>>>>>> {"KXTJ1009", KXTJ21009},
->>>>>>> {"KXJ2109", KXTJ21009},
->>>>>>> {"SMO8500", KXCJ91008},
+> 
+
