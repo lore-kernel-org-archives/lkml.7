@@ -2,231 +2,126 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E100C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95129C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A66F243AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1A724CD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Bqih8YLn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LZC8KP36"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="W98FsN7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbfE3EC1 (ORCPT
+        id S2388186AbfE3EC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:02:27 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:57365 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726958AbfE3ECM (ORCPT
+        Thu, 30 May 2019 00:02:29 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:6226 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388150AbfE3ECW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 00:02:12 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id DAB2C21FA7;
-        Thu, 30 May 2019 00:02:10 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 30 May 2019 00:02:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=qyIi9G9ln+NMQWurPQHYWug6XmoD14N
-        6qzo4ZOFsaOY=; b=Bqih8YLnL2VC2g+8JAzRNlikdAjAGB7W19vPi3fcYrRVV7e
-        o/CrIuGMifez0eB8jpJNdT/3Ft6BTkjteYu/PwkWi01a8DKDkcxN1P3pn6oMKBFs
-        QRvzEDSWFKBrsCoa3SRTzrFKDibbndeWhntyz4zOaSlwIpq0ectk3a025ay5jSQT
-        IXXQO64v5jlt5iGoKPVKlIiiOZ4lbqqrmriyFTSQ0U+UvHVVzQFcBX0oatx8djiK
-        aiFoiK4XTJ0+WlhzIQIWgdlROF+y+cWorvXm6ky2NC8EEBB24O/kx6NDl1ihPd3n
-        1LqP34eLwfFJJKdtc2FrWTctonW4g1OYa3kQ7Sg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=qyIi9G
-        9ln+NMQWurPQHYWug6XmoD14N6qzo4ZOFsaOY=; b=LZC8KP36MjQNGAwMOKxclA
-        pMXHy4rTEv/bM4O19IlKlhkg9CFwS42Cx2e4A5D0hbprPIJbPeWhiNmWO5Otx2s/
-        aqemrxMMLW0cIC0iI+fsUjAEiacuz7Wm6SxDcUGaZZxjqYYObOHR7ziyUESY3io5
-        H1RMZP6OGTEjHBJLIF1gQ4q78rAzWB50aXrpJTDcqn+FWmmlGpUk3eszmyrvUlSA
-        xrpmD1q12nFIBQ8Fs6ZEt26rRxykBm0jnLLTmUJkvwaatyjkMX2BcDcycnU17kam
-        tTR+n0YwzNrDn+6ejRMleun6pKTb6oOosyUqte84SY+tThZ1MghWLd1mVFYJvp6w
-        ==
-X-ME-Sender: <xms:wVXvXLxY60qWGyq1NkgwT9ZIUo-I84eI-TfgQ3hHyPRM5wXt2YSXTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddvkedgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:wVXvXLFrjku1qhknIzEIpz4qiDiCkouHHrUfCykEWlCaNsp_vmcZKw>
-    <xmx:wVXvXAt51U9RjzmNfIFa_u7Y_fZHKFovUOxOk4pE4HNwTbv88Jlykg>
-    <xmx:wVXvXPXDjBNLjDSJDw3ZueJ9r8XapTg_fk_y9387Y9eiOVhV8gyJQQ>
-    <xmx:wlXvXA0uNKJw6-La1QmRmdQMkjtYDAyVdfVWexWCs1Ko-T3eNXa3TA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 33313E00A1; Thu, 30 May 2019 00:02:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-555-g49357e1-fmstable-20190528v2
-Mime-Version: 1.0
-Message-Id: <fe36fbac-e29c-4210-9af2-defca62e9c2a@www.fastmail.com>
-In-Reply-To: <20190529172103.1130525-1-vijaykhemka@fb.com>
-References: <20190529172103.1130525-1-vijaykhemka@fb.com>
-Date:   Thu, 30 May 2019 13:32:08 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Vijay Khemka" <vijaykhemka@fb.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Patrick Venture" <venture@google.com>,
-        "Olof Johansson" <olof@lixom.net>, "Arnd Bergmann" <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     "Sai Dasari" <sdasari@fb.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] soc: aspeed: lpc-ctrl: make parameter optional
-Content-Type: text/plain
+        Thu, 30 May 2019 00:02:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559188941; x=1590724941;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UkRYNR5hm0gc7X8fxqjNJQmr3n5Ab3tDm3l1W9pl4Bw=;
+  b=W98FsN7u+uCMaZmEJeuY//BVPO9DY4FRBfJ3Hx77kb2QEbdgKN1rMghY
+   bHjOg+WrOT69K23mYXqkh65CIom9I5wWqzYQpxoZW/kp8gxE+vEliyxBl
+   2zXW/jStey7QStRjvDC5ytNo2ft00BJDDHBZTYYDeA02PU9uV/hmO8wMz
+   s=;
+X-IronPort-AV: E=Sophos;i="5.60,529,1549929600"; 
+   d="scan'208";a="768214243"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 30 May 2019 04:02:19 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 0630FA2204;
+        Thu, 30 May 2019 04:02:18 +0000 (UTC)
+Received: from EX13D05UWB002.ant.amazon.com (10.43.161.50) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 30 May 2019 04:02:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D05UWB002.ant.amazon.com (10.43.161.50) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 30 May 2019 04:02:18 +0000
+Received: from localhost (10.94.220.85) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Thu, 30 May 2019 04:02:17 +0000
+Date:   Wed, 29 May 2019 21:02:17 -0700
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     "Wang, Haiyue" <haiyue.wang@linux.intel.com>
+CC:     Eduardo Valentin <eduval@amazon.com>, <wsa@the-dreams.de>,
+        <brendanhiggins@google.com>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+        <jarkko.nikula@linux.intel.com>, <andriy.shevchenko@intel.com>,
+        <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c/slave-mqueue v5] i2c: slave-mqueue: add a slave
+ backend to receive and queue messages
+Message-ID: <20190530040217.GB17772@u40b0340c692b58f6553c.ant.amazon.com>
+References: <1524503192-4176-1-git-send-email-haiyue.wang@linux.intel.com>
+ <20190523220345.GA3417@u40b0340c692b58f6553c.ant.amazon.com>
+ <35a9d066-c732-cb00-04a5-438c948915ae@linux.intel.com>
+ <20190524173353.GA6428@u40b0340c692b58f6553c.ant.amazon.com>
+ <bf1e8f0b-5bd0-fb43-c19b-9487603b9ee3@linux.intel.com>
+ <20190529231100.GA18339@u40b0340c692b58f6553c.ant.amazon.com>
+ <75cb9514-bb3a-9c3b-05df-0c3517bd775a@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75cb9514-bb3a-9c3b-05df-0c3517bd775a@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 30 May 2019, at 02:51, Vijay Khemka wrote:
-> Makiing
-
-Typo here, but I'd prefer to see this patch go in, so
-
-> memory-region and flash as optional parameter in device
-> tree if user needs to use these parameter through ioctl then
-> need to define in devicetree.
+On Thu, May 30, 2019 at 09:33:34AM +0800, Wang, Haiyue wrote:
 > 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-> ---
->  drivers/soc/aspeed/aspeed-lpc-ctrl.c | 58 +++++++++++++++++-----------
->  1 file changed, 36 insertions(+), 22 deletions(-)
+> 在 2019-05-30 07:11, Eduardo Valentin 写道:
+> >>>>>>+
+> >>>>>>+	case I2C_SLAVE_WRITE_RECEIVED:
+> >>>>>>+		if (msg->len < MQ_MSGBUF_SIZE) {
+> >>>>>>+			msg->buf[msg->len++] = *val;
+> >>>>>Do we need to lock the accesses to msg->buf? how about to msg->len?
+> >>>this code goes access and modify data here, e.g. msg->len and msg->buf.
+> >>>
+> >>>On this case (I2C_SLAVE_WRITE_RECEIVED), this code wont protect access.
+> >>>
+> >>>This can cause concurrence issues if you receive an IRQ when the user
+> >>>is on your bin_read().
+> >>User will not touch 'msg = mq->curr;', just touch 'msg =
+> >>&mq->queue[mq->out];'
+> >What happens if mq->curr == mq->queue[mq->out]?
+> >
+> 1. The Read will check.
 > 
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c 
-> b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> index a024f8042259..aca13779764a 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> @@ -68,6 +68,7 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, 
-> unsigned int cmd,
->  		unsigned long param)
->  {
->  	struct aspeed_lpc_ctrl *lpc_ctrl = file_aspeed_lpc_ctrl(file);
-> +	struct device *dev = file->private_data;
->  	void __user *p = (void __user *)param;
->  	struct aspeed_lpc_ctrl_mapping map;
->  	u32 addr;
-> @@ -90,6 +91,12 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, 
-> unsigned int cmd,
->  		if (map.window_id != 0)
->  			return -EINVAL;
->  
-> +		/* If memory-region is not described in device tree */
-> +		if (!lpc_ctrl->mem_size) {
-> +			dev_dbg(dev, "Didn't find reserved memory\n");
-> +			return -ENXIO;
-> +		}
+> +	spin_lock_irqsave(&mq->lock, flags);
+> +	if (mq->out != mq->in) {
+> +		msg = &mq->queue[mq->out];
+> 
+> 2. Flush the oldeast message. ^_^
+> 
+> +	case I2C_SLAVE_STOP:
+> +		if (unlikely(mq->truncated || msg->len < 2))
+> +			break;
 > +
->  		map.size = lpc_ctrl->mem_size;
->  
->  		return copy_to_user(p, &map, sizeof(map)) ? -EFAULT : 0;
-> @@ -126,9 +133,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file 
-> *file, unsigned int cmd,
->  			return -EINVAL;
->  
->  		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
-> +			if (!lpc_ctrl->pnor_size) {
-> +				dev_dbg(dev, "Didn't find host pnor flash\n");
-> +				return -ENXIO;
-> +			}
->  			addr = lpc_ctrl->pnor_base;
->  			size = lpc_ctrl->pnor_size;
->  		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
-> +			/* If memory-region is not described in device tree */
-> +			if (!lpc_ctrl->mem_size) {
-> +				dev_dbg(dev, "Didn't find reserved memory\n");
-> +				return -ENXIO;
-> +			}
->  			addr = lpc_ctrl->mem_base;
->  			size = lpc_ctrl->mem_size;
->  		} else {
-> @@ -196,17 +212,17 @@ static int aspeed_lpc_ctrl_probe(struct 
-> platform_device *pdev)
->  	if (!lpc_ctrl)
->  		return -ENOMEM;
->  
-> +	/* If flash is described in device tree then store */
->  	node = of_parse_phandle(dev->of_node, "flash", 0);
->  	if (!node) {
-> -		dev_err(dev, "Didn't find host pnor flash node\n");
-> -		return -ENODEV;
-> -	}
-> -
-> -	rc = of_address_to_resource(node, 1, &resm);
-> -	of_node_put(node);
-> -	if (rc) {
-> -		dev_err(dev, "Couldn't address to resource for flash\n");
-> -		return rc;
-> +		dev_dbg(dev, "Didn't find host pnor flash node\n");
-> +	} else {
-> +		rc = of_address_to_resource(node, 1, &resm);
-> +		of_node_put(node);
-> +		if (rc) {
-> +			dev_err(dev, "Couldn't address to resource for flash\n");
-> +			return rc;
-> +		}
->  	}
->  
->  	lpc_ctrl->pnor_size = resource_size(&resm);
-> @@ -214,22 +230,22 @@ static int aspeed_lpc_ctrl_probe(struct 
-> platform_device *pdev)
->  
->  	dev_set_drvdata(&pdev->dev, lpc_ctrl);
->  
-> +	/* If memory-region is described in device tree then store */
->  	node = of_parse_phandle(dev->of_node, "memory-region", 0);
->  	if (!node) {
-> -		dev_err(dev, "Didn't find reserved memory\n");
-> -		return -EINVAL;
-> -	}
-> +		dev_dbg(dev, "Didn't find reserved memory\n");
-> +	} else {
-> +		rc = of_address_to_resource(node, 0, &resm);
-> +		of_node_put(node);
-> +		if (rc) {
-> +			dev_err(dev, "Couldn't address to resource for reserved memory\n");
-> +			return -ENXIO;
-> +		}
->  
-> -	rc = of_address_to_resource(node, 0, &resm);
-> -	of_node_put(node);
-> -	if (rc) {
-> -		dev_err(dev, "Couldn't address to resource for reserved memory\n");
-> -		return -ENOMEM;
-> +		lpc_ctrl->mem_size = resource_size(&resm);
-> +		lpc_ctrl->mem_base = resm.start;
->  	}
->  
-> -	lpc_ctrl->mem_size = resource_size(&resm);
-> -	lpc_ctrl->mem_base = resm.start;
-> -
->  	lpc_ctrl->regmap = syscon_node_to_regmap(
->  			pdev->dev.parent->of_node);
->  	if (IS_ERR(lpc_ctrl->regmap)) {
-> @@ -258,8 +274,6 @@ static int aspeed_lpc_ctrl_probe(struct 
-> platform_device *pdev)
->  		goto err;
->  	}
->  
-> -	dev_info(dev, "Loaded at %pr\n", &resm);
-> -
->  	return 0;
->  
->  err:
-> -- 
-> 2.17.1
+> +		spin_lock(&mq->lock);
+> +		mq->in = MQ_QUEUE_NEXT(mq->in);
+> +		mq->curr = &mq->queue[mq->in];
+> +		mq->curr->len = 0;
+> +
+> +		/* Flush the oldest message */
+> +		if (mq->out == mq->in)
+> +			mq->out = MQ_QUEUE_NEXT(mq->out);
+
+Yeah, I see. We keep on dropping messages (old ones) when the queue is full...
+
+> +		spin_unlock(&mq->lock);
 > 
->
+
+-- 
+All the best,
+Eduardo Valentin
