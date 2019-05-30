@@ -2,202 +2,69 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464CEC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE56AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D8F25831
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFFA25836
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfE3LXg (ORCPT
+        id S1726858AbfE3LYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:23:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34546 "EHLO
+        Thu, 30 May 2019 07:24:49 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34574 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3LXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:23:35 -0400
+        id S1725440AbfE3LYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:24:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21CD1374;
-        Thu, 30 May 2019 04:23:35 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8FA03F5AF;
-        Thu, 30 May 2019 04:23:32 -0700 (PDT)
-Date:   Thu, 30 May 2019 12:23:29 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
-Message-ID: <20190530122329.235d13c7@donnerap.cambridge.arm.com>
-In-Reply-To: <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190523060437.11059-1-peng.fan@nxp.com>
-        <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
-        <AM0PR04MB4481C44F9B5EFCDD076EF728881D0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F33D6374;
+        Thu, 30 May 2019 04:24:48 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7343E3F5AF;
+        Thu, 30 May 2019 04:24:46 -0700 (PDT)
+Date:   Thu, 30 May 2019 12:24:44 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
+        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 2/3] thermal: cpu_cooling: Make the power-related code
+ depend on IPA
+Message-ID: <20190530112442.kywpbophjkv2j2tq@queper01-lin>
+References: <20190530092038.12020-1-quentin.perret@arm.com>
+ <20190530092038.12020-3-quentin.perret@arm.com>
+ <20190530110356.vet2exwowdbm4umq@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530110356.vet2exwowdbm4umq@vireshk-i7>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 05:19:41 +0000
-Peng Fan <peng.fan@nxp.com> wrote:
-
-Hi,
-
-> > Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+On Thursday 30 May 2019 at 16:33:56 (+0530), Viresh Kumar wrote:
+> On 30-05-19, 10:20, Quentin Perret wrote:
+> > The core CPU cooling infrastructure has power-related functions
+> > that have only one client: IPA. Since there can be no user of those
+> > functions if IPA is not compiled in, make sure to guard them with
+> > checks on CONFIG_THERMAL_GOV_POWER_ALLOCATOR to not waste space
+> > unnecessarily.
 > > 
-> > Hi,
-> > 
-> > On 5/22/19 10:50 PM, Peng Fan wrote:  
-> > > This is a modified version from Andre Przywara's patch series
-> > >  
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
-> > rnel.org%2Fpatchwork%2Fcover%2F812997%2F&amp;data=02%7C01%7Cpe
-> > ng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1d3b
-> > c2b4c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdat
-> > a=BbS5ZQtzMANSwaKRDJ62NKrPrAyaED1%2BvymQaT6Qr8E%3D&amp;rese
-> > rved=0.  
-> > > [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
-> > > use smc as mailbox, power/clk is included, but only part of clk has
-> > > been implemented to work with hardware, power domain only supports get
-> > > name for now.
-> > >
-> > > The traditional Linux mailbox mechanism uses some kind of dedicated
-> > > hardware IP to signal a condition to some other processing unit,
-> > > typically a dedicated management processor.
-> > > This mailbox feature is used for instance by the SCMI protocol to
-> > > signal a request for some action to be taken by the management processor.
-> > > However some SoCs does not have a dedicated management core to  
-> > provide  
-> > > those services. In order to service TEE and to avoid linux shutdown
-> > > power and clock that used by TEE, need let firmware to handle power
-> > > and clock, the firmware here is ARM Trusted Firmware that could also
-> > > run SCMI service.
-> > >
-> > > The existing SCMI implementation uses a rather flexible shared memory
-> > > region to communicate commands and their parameters, it still requires
-> > > a mailbox to actually trigger the action.  
-> > 
-> > We have had something similar done internally with a couple of minor
-> > differences:
-> > 
-> > - a SGI is used to send SCMI notifications/delayed replies to support
-> > asynchronism (patches are in the works to actually add that to the Linux SCMI
-> > framework). There is no good support for SGI in the kernel right now so we
-> > hacked up something from the existing SMP code and adding the ability to
-> > register our own IPI handlers (SHAME!). Using a PPI should work and should
-> > allow for using request_irq() AFAICT.  
+> > Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+> > ---
+> >  drivers/thermal/cpu_cooling.c | 214 +++++++++++++++++-----------------
+> >  1 file changed, 104 insertions(+), 110 deletions(-)
 > 
-> So you are also implementing a firmware inside ATF for SCMI usecase, right?
-> 
-> Introducing SGI in ATF to notify Linux will introduce complexity, there is
-> no good framework inside ATF for SCMI, and I use synchronization call for
-> simplicity for now.
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I think we don't disagree, but just to clarify on one thing:
-
-I think we should avoid tying this driver to specific protocol or software on the other end, be it ATF or SCMI. After all it's just a mailbox driver, meant to signal some event (and parameters) to some external entity. Yes, SCMI (or SCPI back then) was the reason to push for this, but it should be independent from that. I am not even sure we should mention it too much in the documentation.
-
-So whether the receiving end is ATF or something else it irrelevant, I think. For instance we have had discussions in Xen to provide guests some virtualised device management support, and using an HVC mailbox seems like a neat solution. This could be using the SCMI (or SCPI) protocol, but that's not a requirement. In this case the Xen hypervisor would be the one to pick up the mailbox trigger, probably forwarding the request to something else (Dom0 in this case).
-Also having a generic SMC mailbox could avoid having the actual hardware mailbox drivers in the kernel, so EL3 firmware could forward the request to an external management processor, and Linux would just work, without the need to describe the actual hardware mailbox device in some firmware tables. This might help ACPI on those devices.
-
-Cheers,
-Andre.
-
-> > 
-> > - the mailbox identifier is indicated as part of the SMC call such that we can
-> > have multiple SCMI mailboxes serving both standard protocols and
-> > non-standard (in the 0x80 and above) range, also they may have different
-> > throughput (in hindsight, these could simply be different channels)
-> > 
-> > Your patch series looks both good and useful to me, I would just put a
-> > provision in the binding to support an optional interrupt such that
-> > asynchronism gets reasonably easy to plug in when it is available (and
-> > desirable).  
-> 
-> Ok. Let me think about and add that in new version patch.
-> 
-> Thanks,
-> Peng.
-> 
-> >   
-> > >
-> > > This patch series provides a Linux mailbox compatible service which
-> > > uses smc calls to invoke firmware code, for instance taking care of SCMI  
-> > requests.  
-> > > The actual requests are still communicated using the standard SCMI way
-> > > of shared memory regions, but a dedicated mailbox hardware IP can be
-> > > replaced via this new driver.
-> > >
-> > > This simple driver uses the architected SMC calling convention to
-> > > trigger firmware services, also allows for using "HVC" calls to call
-> > > into hypervisors or firmware layers running in the EL2 exception level.
-> > >
-> > > Patch 1 contains the device tree binding documentation, patch 2
-> > > introduces the actual mailbox driver.
-> > >
-> > > Please note that this driver just provides a generic mailbox
-> > > mechanism, though this is synchronous and one-way only (triggered by
-> > > the OS only, without providing an asynchronous way of triggering
-> > > request from the firmware).
-> > > And while providing SCMI services was the reason for this exercise,
-> > > this driver is in no way bound to this use case, but can be used
-> > > generically where the OS wants to signal a mailbox condition to
-> > > firmware or a hypervisor.
-> > > Also the driver is in no way meant to replace any existing firmware
-> > > interface, but actually to complement existing interfaces.
-> > >
-> > > [1]
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgith
-> > >  
-> > ub.com%2FMrVan%2Farm-trusted-firmware%2Ftree%2Fscmi&amp;data=02
-> > %7C01%7  
-> > >  
-> > Cpeng.fan%40nxp.com%7C010c9ddd5df645c9c66b08d6dfa46cb2%7C686ea1
-> > d3bc2b4  
-> > >  
-> > c6fa92cd99c5c301635%7C0%7C0%7C636942294631442665&amp;sdata=kN
-> > 9bEFFcsZA  
-> > > 1ePeNLLfHmONpVaG6O5ajVQvKMuaBXyk%3D&amp;reserved=0
-> > >
-> > > Peng Fan (2):
-> > >   DT: mailbox: add binding doc for the ARM SMC mailbox
-> > >   mailbox: introduce ARM SMC based mailbox
-> > >
-> > >  .../devicetree/bindings/mailbox/arm-smc.txt        |  96  
-> > +++++++++++++  
-> > >  drivers/mailbox/Kconfig                            |   7 +
-> > >  drivers/mailbox/Makefile                           |   2 +
-> > >  drivers/mailbox/arm-smc-mailbox.c                  | 154  
-> > +++++++++++++++++++++  
-> > >  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
-> > >  5 files changed, 269 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/mailbox/arm-smc.txt
-> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
-> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
-> > >  
-> > 
-> > 
-> > --
-> > Florian  
-
+Thanks !
+Quentin
