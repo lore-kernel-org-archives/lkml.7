@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6619FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6ECC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3653623E29
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589E623E29
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185952;
-	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+	s=default; t=1559185955;
+	bh=KZyKSxQ5KrdEIWBcqojCwCgX/h/V1zXxE97Z7mqPKlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCeBUETk5mi5096fhkpni1QGhqwBXdrJ4jZnY0TDSeeEJ2EP3WtPhVJTCsvLIKrZj
-	 8JeL2K8thv+/VLx/1DHPc6dC3bBluotVzlvYQhKIhUSYhe52RuydQiSUI5Bn+srvM7
-	 Cxvt4V/+Kdj4o9fzp8ktsT8EFliUqdDcGqzMevqg=
+	b=B+sc12mQktT3kREWtbfZaIDAc+A4c89pVwl+uTcCwaNO2ZiQaESbbOCocLmc5LX9H
+	 cUdbheuZUqqXScxYfjTHKstfylQl6Br12drs/ktr7LAVxTM1U2TkqEM0duEXdHpS9T
+	 8FPUcaer4jszpB6xhm6JK0BYpPJXP35cWGm76Vgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfE3DMb (ORCPT
+        id S1728078AbfE3DMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbfE3DLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:02 -0400
+        id S1728349AbfE3DLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:05 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C006B244CB;
-        Thu, 30 May 2019 03:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755B1244E5;
+        Thu, 30 May 2019 03:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185861;
-        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+        s=default; t=1559185864;
+        bh=KZyKSxQ5KrdEIWBcqojCwCgX/h/V1zXxE97Z7mqPKlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x91+FJV1Xi5ThUsvnLqsSDD4mzoruo+YihywexjD76lgKU078NYyKtqz5zE0ZyeF0
-         ziUM69SGxIf6EF1rGQeti+B/ZU7S8yC4Y/dqPEo69IZWz8Sk4xGda9pums7pHc+f/k
-         WIJ5SN4mS+vLYpFrD/MUXeXEiqSMnRiWch/c7KkA=
+        b=SAe+sMjadhayEmeVXo3KSixE6crZbIMjkf9VxKB/kuyJqPjibNIY84fUe/P8IBDvg
+         foCCBtcDkV6VGyHxqOZm9ud+CwLySANgZAmHRSHzxa9FR8YL/D3GjD8jEboGf4/3/s
+         ik4WziL/gnqoFJNOz11/Vc/K7B5PY+29kJ1SqlAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 197/405] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:03:15 -0700
-Message-Id: <20190530030551.126064611@linuxfoundation.org>
+Subject: [PATCH 5.1 202/405] scsi: libsas: Do discovery on empty PHY to update PHY info
+Date:   Wed, 29 May 2019 20:03:20 -0700
+Message-Id: <20190530030551.392430763@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,68 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
+[ Upstream commit d8649fc1c5e40e691d589ed825998c36a947491c ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+When we discover the PHY is empty in sas_rediscover_dev(), the PHY
+information (like negotiated linkrate) is not updated.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
+As such, for a user examining sysfs for that PHY, they would see
+incorrect values:
 
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
+root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
+root@(none)$ more negotiated_linkrate
+3.0 Gbit
+root@(none)$ echo 0 > enable
+root@(none)$ more negotiated_linkrate
+3.0 Gbit
 
-Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+So fix this, simply discover the PHY again, even though we know it's empty;
+in the above example, this gives us:
+
+root@(none)$ more negotiated_linkrate
+Phy disabled
+
+We must do this after unregistering the device associated with the PHY
+(in sas_unregister_devs_sas_addr()).
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/vt1211.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
-index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
---- a/drivers/hwmon/vt1211.c
-+++ b/drivers/hwmon/vt1211.c
-@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
- 	outb(ldn, sio_cip + 1);
- }
- 
--static inline void superio_enter(int sio_cip)
-+static inline int superio_enter(int sio_cip)
- {
-+	if (!request_muxed_region(sio_cip, 2, DRVNAME))
-+		return -EBUSY;
-+
- 	outb(0x87, sio_cip);
- 	outb(0x87, sio_cip);
-+
-+	return 0;
- }
- 
- static inline void superio_exit(int sio_cip)
- {
- 	outb(0xaa, sio_cip);
-+	release_region(sio_cip, 2);
- }
- 
- /* ---------------------------------------------------------------------
-@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
- 
- static int __init vt1211_find(int sio_cip, unsigned short *address)
- {
--	int err = -ENODEV;
-+	int err;
- 	int devid;
- 
--	superio_enter(sio_cip);
-+	err = superio_enter(sio_cip);
-+	if (err)
-+		return err;
- 
-+	err = -ENODEV;
- 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
- 	if (devid != SIO_VT1211_ID)
- 		goto EXIT;
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 17b45a0c7bc38..3611a4ef0d150 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -2052,6 +2052,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
+ 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
+ 		phy->phy_state = PHY_EMPTY;
+ 		sas_unregister_devs_sas_addr(dev, phy_id, last);
++		/*
++		 * Even though the PHY is empty, for convenience we discover
++		 * the PHY to update the PHY info, like negotiated linkrate.
++		 */
++		sas_ex_phy_discover(dev, phy_id);
+ 		return res;
+ 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
+ 		   dev_type_flutter(type, phy->attached_dev_type)) {
 -- 
 2.20.1
 
