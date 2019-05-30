@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184ABC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E66C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD5C24D54
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1586924D6E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbfE3Dt2 (ORCPT
+        id S2387720AbfE3Dt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18050 "EHLO huawei.com"
+        Wed, 29 May 2019 23:49:29 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18048 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387653AbfE3DtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387647AbfE3DtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:49:25 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BDE66C3CFC5D45E96D5B;
+        by Forcepoint Email with ESMTP id A67C82750DE3F619EF3C;
         Thu, 30 May 2019 11:49:22 +0800 (CST)
 Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 30 May 2019 11:49:15 +0800
+ 14.3.439.0; Thu, 30 May 2019 11:49:13 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         John Garry <john.garry@huawei.com>,
@@ -53,9 +53,9 @@ To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>,
         Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v8 3/7] s390/pci: add support for IOMMU default DMA mode build options
-Date:   Thu, 30 May 2019 11:48:27 +0800
-Message-ID: <20190530034831.4184-4-thunder.leizhen@huawei.com>
+Subject: [PATCH v8 2/7] x86/dma: use IS_ENABLED() to simplify the code
+Date:   Thu, 30 May 2019 11:48:26 +0800
+Message-ID: <20190530034831.4184-3-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.21.0.windows.1
 In-Reply-To: <20190530034831.4184-1-thunder.leizhen@huawei.com>
 References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
@@ -69,50 +69,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default DMA mode is LAZY on s390, this patch make it can be set to
-STRICT at build time. It can be overridden by boot option.
-
-There is no functional change.
+This patch removes the ifdefs around CONFIG_IOMMU_DEFAULT_PASSTHROUGH to
+improve readablity.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/s390/pci/pci_dma.c | 2 +-
- drivers/iommu/Kconfig   | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/pci-dma.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 9e52d1527f71495..784ad1e0acecfb1 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -17,7 +17,7 @@
+diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
+index dcd272dbd0a9330..9f2b19c35a060df 100644
+--- a/arch/x86/kernel/pci-dma.c
++++ b/arch/x86/kernel/pci-dma.c
+@@ -43,11 +43,8 @@
+  * It is also possible to disable by default in kernel config, and enable with
+  * iommu=nopt at boot time.
+  */
+-#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+-int iommu_pass_through __read_mostly = 1;
+-#else
+-int iommu_pass_through __read_mostly;
+-#endif
++int iommu_pass_through __read_mostly =
++			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
  
- static struct kmem_cache *dma_region_table_cache;
- static struct kmem_cache *dma_page_table_cache;
--static int s390_iommu_strict;
-+static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+ extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
  
- static int zpci_refresh_global(struct zpci_dev *zdev)
- {
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index d6a1a45f80ffbf5..9b48c2fc20e14d3 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -78,6 +78,7 @@ config IOMMU_DEBUGFS
- choice
- 	prompt "IOMMU default DMA mode"
- 	depends on IOMMU_API
-+	default IOMMU_DEFAULT_LAZY if S390_IOMMU
- 	default IOMMU_DEFAULT_STRICT
- 	help
- 	  This option allows IOMMU DMA mode to be chose at build time, to
-@@ -87,6 +88,7 @@ choice
- 
- config IOMMU_DEFAULT_PASSTHROUGH
- 	bool "passthrough"
-+	depends on !S390_IOMMU
- 	help
- 	  In this mode, the DMA access through IOMMU without any addresses
- 	  translation. That means, the wrong or illegal DMA access can not
 -- 
 1.8.3
 
