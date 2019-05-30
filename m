@@ -2,101 +2,115 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E30C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1440BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E099262FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE872630C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 23:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KH3mYn0g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ROS5L4Ze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfE3XRS (ORCPT
+        id S1726701AbfE3XRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 19:17:18 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42149 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfE3XRS (ORCPT
+        Thu, 30 May 2019 19:17:44 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:50570 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfE3XRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 19:17:18 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g24so1902287eds.9;
-        Thu, 30 May 2019 16:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8OuX4xShfNASS1kU8dLb0K1y+qLHuVxh22K4Er6Vwk0=;
-        b=KH3mYn0gHZuJL8QRMPVXovnbxLJCVRy8MUXPWOmrRKKwPPnnhowfJE5JGNGY/iyBal
-         HCwmGbgbTOI8NEFztLRQdkL3RnniYglTXoKno2LF9LeBCaxSx/wP0ZoG0itMVKKRDPmk
-         5pdXTjEG+Ucq5Wzt3Anr27481Qk9gC/LYcwaLu5h3IrR9C1kv21ItqVs57zDvw9spHhd
-         sQsxehz03mTRPnjdN3jd1OKt56jNexDDmSylD2gbleX7twbJPKt6GjTANvPBn/RX2u2d
-         ane8D7xR6YgEmbuocDLkG8Zp7ySp6TgPNrq5Q06BaxkpW+61eS1LrzQSW8QCqPoGzyc7
-         HtSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8OuX4xShfNASS1kU8dLb0K1y+qLHuVxh22K4Er6Vwk0=;
-        b=o7uhhfYS0ByDPw4eQnqAHf/23DibfHb7G8vtWIzkc6Jwh2k2Fl8yhhcB6DHtwErGBm
-         sDkc4A6ty9RpSIMQ/fiv8sqsk9beiR2GXWzz9mnlAKhDIHqRa81rumv+Ki6e0AE90u5B
-         un/ITyn6yObvbEDf1Fmep6LK+UC7/aGUKmop47YbLBtQmeddBaFAzYtOW7btuUW+UQsr
-         2ZeHGm6/BE4MBbiziUhNz3ikU95EPuJo/jCwJlvZUQHpTdvDmaiVpkRlP3QORl5HPIKm
-         ALQvAXWNkDI+bHaeTxzpqEWpUcHk3sor3X9mvjHF/PL3zwpeX/abe6vlS/L8d6myM3IP
-         QolQ==
-X-Gm-Message-State: APjAAAVM/ZtQx9Kdcyksd4FSxLg+TRMgXb8I3QjzLv1+wfFZjgQHl4/w
-        4M9gOC1bhnoKQKiZr7/mlR/mxrpm
-X-Google-Smtp-Source: APXvYqyMC4qGSTVgdOQhe33bp8TEa1zZ1dv2k4qCdG/f2Fg+AjPD+O9YIaOKNrbTeHwIwRdh7GrO+Q==
-X-Received: by 2002:a50:e048:: with SMTP id g8mr7783570edl.26.1559258236714;
-        Thu, 30 May 2019 16:17:16 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f3sm656568ejo.90.2019.05.30.16.17.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 16:17:16 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: [PATCH] irqchip/bcm7038-l1: Fix build on ARM/ARM64
-Date:   Thu, 30 May 2019 16:16:58 -0700
-Message-Id: <20190530231658.23273-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 30 May 2019 19:17:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aEc6ykxVWtoFlsoR9RzSRB7dyu5aRF0W+qRG3bvM/DI=; b=ROS5L4ZeqWRKJITipcJ0uftDf
+        WOdDNP4RmpLF/2/UEnn+vuyDpTopw0+I19WAAqdLQkZ52Krg6KH4N8VxhjrQ/a5zwCfmG+xegBPP9
+        xucwVi5FbHesiYS6y2SfIM8jQ4bkr81etYxucwggDoDQVbCQ0BzuJ6MwzGSBhWGyXwObUN9hwBTDs
+        14QLSVXJ93ucjokginRWqBt1nyQlPtN+3sqEPTQNMekx+BcDtaAIp473a9JGeANdSrSV0c1rfwNPu
+        IgJAvf69klEWbeK4I7kMI9lBi6og64RQPu1rAFNFaxJFXkIr51zHufWCY8k81SxWVkeqr3wPj0O71
+        S99ARoxZA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52728)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hWUIk-0005eE-57; Fri, 31 May 2019 00:17:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hWUIh-0005n8-F3; Fri, 31 May 2019 00:17:35 +0100
+Date:   Fri, 31 May 2019 00:17:35 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+Subject: Re: [PATCH 0/2] arm64: smp: Include smp_plat.h from smp.h
+Message-ID: <20190530231735.n7so5mhec72xjmhm@shell.armlinux.org.uk>
+References: <20190530230518.4334-1-f.fainelli@gmail.com>
+ <c0492b62-0ad2-3dae-7a6d-06e89afd59fe@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0492b62-0ad2-3dae-7a6d-06e89afd59fe@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver uses cpu_logical_map[] which is defined under
-arch/{arm,arm64}/include/asm/smp_plat.h.
+On Thu, May 30, 2019 at 04:14:28PM -0700, Florian Fainelli wrote:
+> On 5/30/19 4:05 PM, Florian Fainelli wrote:
+> > Hi ARM64 maintainers,
+> > 
+> > This patch series aims at enabling irq-bcm7038-l1.c on
+> > ARM64/ARCH_BRCMSTB, this driver makes use of cpu_logical_map[] and in
+> > order to avoid adding a CONFIG_ARM64 conditional inclusion of
+> > smp_plat.h, instead smp.h includes smp_plat.h, which is in turn included
+> > by linux/smp.h.
+> > 
+> > If you like the approach, I would suggest to carry that through the
+> > Broadcom ARM64 SoC pull request for 5.3.
+> 
+> ARM (32-bit) needs the same thing kind of thing so a conditional include
+> may be appropriate after all...
 
-Fixes: 5f7f0317ed28 ("IRQCHIP: Add new driver for BCM7038-style level 1 interrupt controllers")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/irqchip/irq-bcm7038-l1.c | 3 +++
- 1 file changed, 3 insertions(+)
+The whole idea of the smp_plat.h vs smp.h separation is to avoid
+including lots of arch-private stuff in the rest of the kernel
+build, thereby exposing arch-private stuff to the world.  I'm be
+opposed to that.
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 0acebac1920b..970857a32508 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -30,6 +30,9 @@
- #include <linux/types.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/chained_irq.h>
-+#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
-+#include <asm/smp_plat.h>
-+#endif
- 
- #define IRQS_PER_WORD		32
- #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
+> 
+> > 
+> > Thank you!
+> > 
+> > Florian Fainelli (2):
+> >   arm64: smp: Include smp_plat.h from smp.h
+> >   arm64: Enable BCM7038_L1_IRQ for ARCH_BRCMSTB
+> > 
+> >  arch/arm64/Kconfig.platforms      | 1 +
+> >  arch/arm64/include/asm/smp.h      | 1 +
+> >  arch/arm64/include/asm/smp_plat.h | 1 +
+> >  3 files changed, 3 insertions(+)
+> > 
+> 
+> 
+> -- 
+> Florian
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
