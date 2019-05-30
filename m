@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9089C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C5B24CBD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D4C24CD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188033;
-	bh=kB/h9OSGZn7xh4Eb8ehn9ecumyzZ8ps3aIb2htEVavY=;
+	s=default; t=1559188039;
+	bh=/pDqDNEd+ZchBPS5nftXJWLhONyWci4VjpyUw20lDR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rzm4FHKXnwLqhX2wEmhXdL39XuI2NOJmu/taYSQyyc1JQucq6kEPWQRh/Cg8umIFU
-	 fM69/feaEIwYKQ3oBldHZDSSltvNBP2efu7YLZ5HQO6fhVNrxijkkpfRd6+TIONIAs
-	 o2o0O1MO6CNCFwKC7wrT1W3yo5Xjg1powfGtH2qY=
+	b=exoSaufcT7fG/GVxeImqRSUxNbRyjcA6Whfg/nFDyM1uQWERyZzxYBgdB2ekYMfz7
+	 7JYxhzWg3Q2XHbcIhgVELc8K9JQqMGgccx7bDYMaiMewmHXSknGU80fkWppKFTTbdr
+	 YmwfeSBaD7LzbbshilcmE1yv/SE7h1b2ImK5hI+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbfE3DrM (ORCPT
+        id S1732671AbfE3DrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732255AbfE3DUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:35 -0400
+        id S1732249AbfE3DUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B92524923;
-        Thu, 30 May 2019 03:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A901124943;
+        Thu, 30 May 2019 03:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186435;
-        bh=kB/h9OSGZn7xh4Eb8ehn9ecumyzZ8ps3aIb2htEVavY=;
+        s=default; t=1559186433;
+        bh=/pDqDNEd+ZchBPS5nftXJWLhONyWci4VjpyUw20lDR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdY0VFoj8f1lqnk2jPd6PuwaM4CdRR7acoHQUXrciX5KqegRmUg4Lcd487bem1PPA
-         Z9A/IvJ++wQ2f336GSbd2eEv4Nf12EybCHMojVIUBhJwsXgCWNTy5dQsrLVPG/kxaM
-         OtoP8ns3XniwdKGcr4L1Nkal/fy1VoIs5BspeBuE=
+        b=jnqRSaCuc0TYY7BpLQMdatXaij8yCnwCFsZdzCEiADtTWMFFhhJT/1B0/lUv7h+Ka
+         pKu9e4wryMCYWHMWJKh4bcwju+wOmdCse/uRooQ23bVue9ecxmJ+wVHCXAAkbuwCI7
+         sY2Ld8cHusU1flbt6OXP8AhbEnILkhm4Stof2pNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/128] ASoC: imx: fix fiq dependencies
-Date:   Wed, 29 May 2019 20:06:02 -0700
-Message-Id: <20190530030440.030167336@linuxfoundation.org>
+Subject: [PATCH 4.9 028/128] ASoC: hdmi-codec: unlock the device on startup errors
+Date:   Wed, 29 May 2019 20:06:00 -0700
+Message-Id: <20190530030439.734601548@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,65 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
+[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+If the hdmi codec startup fails, it should clear the current_substream
+pointer to free the device. This is properly done for the audio_startup()
+callback but for snd_pcm_hw_constraint_eld().
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+Make sure the pointer cleared if an error is reported.
 
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
-
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
-
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
-
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ sound/soc/codecs/hdmi-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index a732b3a065c92..8a2873a7899a7 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -172,16 +172,17 @@ config SND_MPC52xx_SOC_EFIKA
- 
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
-+
- if SND_IMX_SOC
- 
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
- 
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
- 
- config SND_MXC_SOC_WM1133_EV1
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 90b5948e0ff36..cba5b5a29da0f 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -137,8 +137,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 		if (!ret) {
+ 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
+ 							hcp->eld);
+-			if (ret)
++			if (ret) {
++				mutex_lock(&hcp->current_stream_lock);
++				hcp->current_stream = NULL;
++				mutex_unlock(&hcp->current_stream_lock);
+ 				return ret;
++			}
+ 		}
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
