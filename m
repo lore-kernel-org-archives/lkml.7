@@ -2,56 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5013C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E163BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD5125B19
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C0D25B5D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191533;
-	bh=s+z/gJhxjmW8lIyD8i5GL4QfR4bwz6CzFMZNJTSF6Yw=;
+	s=default; t=1559191537;
+	bh=nqfYF8dUGO4hkuMbiBjfoewqvUHFBm1r8Wi5bynYi2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eavdpqbC1gfxcT4upDaqUjFjzpFLUuAgx8EvlVU/jE6qwhUQskCJPWuHcNxQPpga1
-	 zpAVdACBMUSgquZ+SlBQRUgEBmM07KFz9VucNtn0UDEyTE3WFBEix0xCmvACstTozE
-	 sJraWexriMb31oax6bblC5G9mAJyM/uPGLhAtlic=
+	b=KMpJypmjJ9sQKyvzWgALDQ7emyFafkcnacWSa1gLu0PHvrL0LJfjTYmeMDQhAbT1s
+	 iVJG7tT3Ppi8GOsCRdU+5iDrnzGxFxeDOZtdzj42ao5YZV6N26QHy1zFK4/WWHPYhw
+	 /Hxpb6RVr/DB+sjf5iWPEDVh2l84YrcGproBQR6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbfE3Epd (ORCPT
+        id S2388729AbfE3Eph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:45:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbfE3DLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728707AbfE3DLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C0124510;
-        Thu, 30 May 2019 03:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF55244E8;
+        Thu, 30 May 2019 03:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185911;
-        bh=s+z/gJhxjmW8lIyD8i5GL4QfR4bwz6CzFMZNJTSF6Yw=;
+        s=default; t=1559185910;
+        bh=nqfYF8dUGO4hkuMbiBjfoewqvUHFBm1r8Wi5bynYi2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+jxB+ueRhFPopJ/bjzzCmLu6Ap/BCnmLilPKXjQ8XKNxQf3h853Q4lfiRRndWidH
-         liDclYt/SpWL2hdx6Hh5BQCtIZX5mhdPGWIvgJdJIPU0bhpox3OBF2zU8qN4wD3XnC
-         ITAVyc+NzgjyStNsr0K4RnCbnzs6CA5IIOHDuu9k=
+        b=HRH84d7Zm3kqRhSAd41DjoWPmtrDX4X7ZYHy6jIW9L63629K72OON3odCMWF+gnbk
+         nEjTQHUz9J6bKKtD8wUosTJnZAi5fQhaNAKYxYvKTQC8WmZtX7VJVf6LQQ/zLWkaNu
+         AoXTPoCftKTDHqWqUI2AxH1QZFl2OunY2Y87UI4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 235/405] x86/build: Keep local relocations with ld.lld
-Date:   Wed, 29 May 2019 20:03:53 -0700
-Message-Id: <20190530030552.901324962@linuxfoundation.org>
+Subject: [PATCH 5.1 243/405] iio: adc: ti-ads7950: Fix improper use of mlock
+Date:   Wed, 29 May 2019 20:04:01 -0700
+Message-Id: <20190530030553.280656819@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,42 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
+[ Upstream commit abbde2792999c9ad3514dd25d7f8d9a96034fe16 ]
 
-The LLVM linker (ld.lld) defaults to removing local relocations, which
-causes KASLR boot failures. ld.bfd and ld.gold already handle this
-correctly. This adds the explicit instruction "--discard-none" during
-the link phase. There is no change in output for ld.bfd and ld.gold,
-but ld.lld now produces an image with all the needed relocations.
+Indio->mlock is used for protecting the different iio device modes.
+It is currently not being used in this way. Replace the lock with
+an internal lock specifically used for protecting the SPI transfer
+buffer.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
-Link: https://github.com/ClangBuiltLinux/linux/issues/404
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index a587805c6687f..56e748a7679f4 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
- export BITS
+diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
+index 0ad63592cc3c9..1e47bef72bb79 100644
+--- a/drivers/iio/adc/ti-ads7950.c
++++ b/drivers/iio/adc/ti-ads7950.c
+@@ -56,6 +56,9 @@ struct ti_ads7950_state {
+ 	struct spi_message	ring_msg;
+ 	struct spi_message	scan_single_msg;
  
- ifdef CONFIG_X86_NEED_RELOCS
--        LDFLAGS_vmlinux := --emit-relocs
-+        LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
++	/* Lock to protect the spi xfer buffers */
++	struct mutex		slock;
++
+ 	struct regulator	*reg;
+ 	unsigned int		vref_mv;
  
- #
+@@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+ 	struct ti_ads7950_state *st = iio_priv(indio_dev);
+ 	int ret;
+ 
++	mutex_lock(&st->slock);
+ 	ret = spi_sync(st->spi, &st->ring_msg);
+ 	if (ret < 0)
+ 		goto out;
+@@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+ 					   iio_get_time_ns(indio_dev));
+ 
+ out:
++	mutex_unlock(&st->slock);
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
+ 	return IRQ_HANDLED;
+@@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
+ 	struct ti_ads7950_state *st = iio_priv(indio_dev);
+ 	int ret, cmd;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->slock);
+ 
+ 	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
+ 	st->single_tx = cmd;
+@@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
+ 	ret = st->single_rx;
+ 
+ out:
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->slock);
+ 
+ 	return ret;
+ }
+@@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
+ 	if (ACPI_COMPANION(&spi->dev))
+ 		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
+ 
++	mutex_init(&st->slock);
++
+ 	st->reg = devm_regulator_get(&spi->dev, "vref");
+ 	if (IS_ERR(st->reg)) {
+ 		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
+-		return PTR_ERR(st->reg);
++		ret = PTR_ERR(st->reg);
++		goto error_destroy_mutex;
+ 	}
+ 
+ 	ret = regulator_enable(st->reg);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
+-		return ret;
++		goto error_destroy_mutex;
+ 	}
+ 
+ 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+@@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
+ 	iio_triggered_buffer_cleanup(indio_dev);
+ error_disable_reg:
+ 	regulator_disable(st->reg);
++error_destroy_mutex:
++	mutex_destroy(&st->slock);
+ 
+ 	return ret;
+ }
+@@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
+ 	iio_device_unregister(indio_dev);
+ 	iio_triggered_buffer_cleanup(indio_dev);
+ 	regulator_disable(st->reg);
++	mutex_destroy(&st->slock);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
