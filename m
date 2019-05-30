@@ -2,96 +2,89 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E9DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157A8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7328243C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rR6DVP6i"
+	by mail.kernel.org (Postfix) with ESMTP id E3723243C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfE3A6i (ORCPT
+        id S1727223AbfE3A7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:58:38 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38534 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfE3A6i (ORCPT
+        Wed, 29 May 2019 20:59:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:56137 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfE3A7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:58:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so1802759plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+73xvdlcJ2eRJCM1UROZ+oXQ5VEB4CGineXnjJmLoCU=;
-        b=rR6DVP6iekA4Srk7Rc/isdvP+qxvJsUoGtrpYqRGyb91Nc7U1gGWmhu7cQP0uaz4tf
-         Rzj3J1AILdzyLJuSQN9qSJTwrdc6ww8s161DFllflfKdms/JJuj/yLYhp0kpbcniI8MV
-         FNN/p6wJ/ZzJg1tTeAvTIi7WROUBz+RHNd+8vU1o5N/VLF/6tcO1mA0dbMXxnAp641ut
-         AKvubsGEhalc5JY459/1Layiq4LibuWFqrnv6GOti10fgIJu5V//+PS/lnkx1Fp6ZSJp
-         kjqFKGxL2r+oJfrmLAAoyiwG7idmnGVHEqKghiAbtjHkxsvo7WFG4U/Ehl2NuBtjpBio
-         C22Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+73xvdlcJ2eRJCM1UROZ+oXQ5VEB4CGineXnjJmLoCU=;
-        b=UQJO7K24nWUsJEhvIsShBhGnol5oQy6c6JFO5/RQvLHja7+4W1pztNtTu0tkZ/gTQg
-         G4vyabtYBRpmp46S7wD4x6mt7YkQ2B+TqxihuJjF9qSvLXTuJkUPPpfLFbgKVxbR90pC
-         se2BSu5ioRVDsiRnksaHYSM5Adm2idsbh6CzoIAMoB518NOsnM5qAZChepmksgqNKhnH
-         HM/MSFvnqmt1equ0+TcMoKqdmO1jJVWbN2cs2GPcYo954dkthbG0E9upQAJccI6acjxN
-         eO+ZGrOWnv2Vbqt0mhjA5YX+f5mHrFNsONGn5r+OqcmOVzZWO4iKZ9zEinhGjzgKJfmK
-         YjTw==
-X-Gm-Message-State: APjAAAUlyMAab6Y5zOOzPj4tFQKlH/t48ikEwRmZlfDRmwCO93qHILnP
-        73nQsbLNQqy/adYBfPWTRmV+f64QbhM=
-X-Google-Smtp-Source: APXvYqyOEDUjVwZVh3I1SmKM6dFRgomEnU+HMaj4eKj9Hvhiu9AvpipD06Wl/aZe+Shq9nLaVW+Flw==
-X-Received: by 2002:a17:902:9348:: with SMTP id g8mr957256plp.174.1559177917778;
-        Wed, 29 May 2019 17:58:37 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id u3sm857766pfn.29.2019.05.29.17.58.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 May 2019 17:58:37 -0700 (PDT)
-Date:   Thu, 30 May 2019 08:58:22 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dlpar: Fix a missing-check bug in dlpar_parse_cc_property()
-Message-ID: <20190530005822.GA5942@zhanggen-UX430UQ>
+        Wed, 29 May 2019 20:59:03 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hW9PI-0002tg-TN; Thu, 30 May 2019 02:59:01 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Jan Luebbe <jlu@pengutronix.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCHv3] fs/proc: allow reporting eip/esp for all coredumping threads
+References: <20190522161614.628-1-jlu@pengutronix.de>
+        <875zpzif8v.fsf@linutronix.de>
+        <20190525143220.e771b7915d17f22dad1438fa@linux-foundation.org>
+        <87d0k5f1g7.fsf@linutronix.de> <87y32p7i7a.fsf@linutronix.de>
+Date:   Thu, 30 May 2019 02:58:59 +0200
+In-Reply-To: <87y32p7i7a.fsf@linutronix.de> (John Ogness's message of "Wed, 29
+        May 2019 10:55:53 +0200")
+Message-ID: <87pno0u59o.fsf_-_@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In dlpar_parse_cc_property(), 'prop->name' is allocated by kstrdup().
-kstrdup() may return NULL, so it should be checked and handle error.
-And prop should be freed if 'prop->name' is NULL.
+Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
+/proc/PID/stat") stopped reporting eip/esp and commit fd7d56270b52
+("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
+reintroduced the feature to fix a regression with userspace core dump
+handlers (such as minicoredumper).
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+Because PF_DUMPCORE is only set for the primary thread, this didn't fix
+the original problem for secondary threads. Allow reporting the eip/esp
+for all threads by checking for PF_EXITING as well. This is set for all
+the other threads when they are killed. coredump_wait() waits for all
+the tasks to become inactive before proceeding to invoke a core dumper.
+
+Fixes: fd7d56270b526ca3 ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
+Reported-by: Jan Luebbe <jlu@pengutronix.de>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index 1795804..c852024 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -61,6 +61,10 @@ static struct property *dlpar_parse_cc_property(struct cc_workarea *ccwa)
- 
- 	name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
- 	prop->name = kstrdup(name, GFP_KERNEL);
-+	if (!prop->name) {
-+		dlpar_free_cc_property(prop);
-+		return NULL;
-+	}
- 
- 	prop->length = be32_to_cpu(ccwa->prop_length);
- 	value = (char *)ccwa + be32_to_cpu(ccwa->prop_offset);
----
+ This is a rework of Jan's v1 patch that allows accessing eip/esp of all
+ the threads without risk of the task still executing on a CPU.
+
+ The code chagnes are the same as v2. With v3 I included a "Fixes" tag,
+ fixed a typo in the commit message, and Cc'd stable.
+
+ fs/proc/array.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/proc/array.c b/fs/proc/array.c
+index 2edbb657f859..55180501b915 100644
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -462,7 +462,7 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
+ 		 * a program is not able to use ptrace(2) in that case. It is
+ 		 * safe because the task has stopped executing permanently.
+ 		 */
+-		if (permitted && (task->flags & PF_DUMPCORE)) {
++		if (permitted && (task->flags & (PF_EXITING|PF_DUMPCORE))) {
+ 			if (try_get_task_stack(task)) {
+ 				eip = KSTK_EIP(task);
+ 				esp = KSTK_ESP(task);
+-- 
+2.11.0
