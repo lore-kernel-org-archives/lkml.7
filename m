@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A42C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6BAC28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8199244EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C89B244E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185940;
-	bh=YIEHj8k+muqmfN/iqJwk9JaVvzGTOFJmiRm/Ea1hqKw=;
+	s=default; t=1559185941;
+	bh=nJOC11LG61CeMscW6+L6k4s9ntWti32k6Lq/HMaFMLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIdJPWny1I+gYnzMy+QzgcHE4AeKIEqtkq4PArkR5HpHWqbA495xKsfxvo5lJNIHP
-	 cj5Is1W8q6GdhITDNt/QEkn4UsmbyP0ux54B4ne0BPIYzHHQIvl9lbsLPLp2Kp8B2D
-	 2VBnecm4041PjzRsiQcEblpMdb2alunPEI7Y74Qs=
+	b=YPyF67y0VZrrHmQLyTtzzMqfTJOBcRhuXUsPPlp7XcUYIk/xWPnwPd12cWcw54kC/
+	 tlHeV2OEZY0nD61ZE1E7XC1ItLpqDb2TXh+EdJeus/jowPKnvcFPPOZEalz/1nwhZX
+	 Djt4+JroxU6RFVm4heIDT82gjiEqSGTTfzQAxfQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfE3DMT (ORCPT
+        id S1728964AbfE3DMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:19 -0400
+        Wed, 29 May 2019 23:12:20 -0400
 Received: from mail.kernel.org ([198.145.29.99]:48586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbfE3DKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:46 -0400
+        id S1728229AbfE3DKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E2A24482;
-        Thu, 30 May 2019 03:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9287A244BE;
+        Thu, 30 May 2019 03:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185846;
-        bh=YIEHj8k+muqmfN/iqJwk9JaVvzGTOFJmiRm/Ea1hqKw=;
+        s=default; t=1559185847;
+        bh=nJOC11LG61CeMscW6+L6k4s9ntWti32k6Lq/HMaFMLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJ32upuNhs0bTKfpel/AJQM/0OzrysORqQ53iBQIcVTDjW6Mvr4Mv421XPSKwB78R
-         epifKuy2+7eFeBuOKr+H4JBFkJ+Vq3ezrO8IC2wNuEjD6Q8vJQMURM8c01c6pcD6QW
-         JPnBdUdJ+oziqgzx55J6+MQJKi5UGbeaOalGOQ/o=
+        b=Hs6rYYRQvClqij+JUxI16o5blaV5CGe8dQYERgK/b/tGd7GfIQsDqOaerAqK3Uj0j
+         R5koHtDaizpMWI7nbknAsyTJEAvHzL1O1qRBfSpJf+80cbejp2tQUZLf9JXcXlLXq7
+         vhxO5UawWmtmlNhENDuf1H67R7B4tHX8ODXZz3Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        stable@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 167/405] cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
-Date:   Wed, 29 May 2019 20:02:45 -0700
-Message-Id: <20190530030549.576219681@linuxfoundation.org>
+Subject: [PATCH 5.1 142/405] Bluetooth: hci_qca: Fix crash with non-serdev devices
+Date:   Wed, 29 May 2019 20:02:20 -0700
+Message-Id: <20190530030548.309635745@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,92 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4dcabece4c3a9f9522127be12cc12cc120399b2f ]
+[ Upstream commit ecf2b768bd11e2ff09ecbe621b387d0d58e970cf ]
 
-The number of descendant cgroups and the number of dying
-descendant cgroups are currently synchronized using the cgroup_mutex.
+qca_set_baudrate() calls serdev_device_wait_until_sent() assuming that
+the HCI is always associated with a serdev device. This isn't true for
+ROME controllers instantiated through ldisc, where the call causes a
+crash due to a NULL pointer dereferentiation. Only call the function
+when we have a serdev device. The timeout for ROME devices at the end
+of qca_set_baudrate() is long enough to be reasonably sure that the
+command was sent.
 
-The number of descendant cgroups will be required by the cgroup v2
-freezer, which will use it to determine if a cgroup is frozen
-(depending on total number of descendants and number of frozen
-descendants). It's not always acceptable to grab the cgroup_mutex,
-especially from quite hot paths (e.g. exit()).
-
-To avoid this, let's additionally synchronize these counters using
-the css_set_lock.
-
-So, it's safe to read these counters with either cgroup_mutex or
-css_set_lock locked, and for changing both locks should be acquired.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: kernel-team@fb.com
+Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
+Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reported-by: Rocky Liao <rjliao@codeaurora.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Rocky Liao <rjliao@codeaurora.org>
+Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cgroup-defs.h | 5 +++++
- kernel/cgroup/cgroup.c      | 6 ++++++
- 2 files changed, 11 insertions(+)
+ drivers/bluetooth/hci_qca.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 1c70803e9f770..7d57890cec671 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -349,6 +349,11 @@ struct cgroup {
- 	 * Dying cgroups are cgroups which were deleted by a user,
- 	 * but are still existing because someone else is holding a reference.
- 	 * max_descendants is a maximum allowed number of descent cgroups.
-+	 *
-+	 * nr_descendants and nr_dying_descendants are protected
-+	 * by cgroup_mutex and css_set_lock. It's fine to read them holding
-+	 * any of cgroup_mutex and css_set_lock; for writing both locks
-+	 * should be held.
- 	 */
- 	int nr_descendants;
- 	int nr_dying_descendants;
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 3f2b4bde0f9c3..9fcf6338ea5f9 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4781,9 +4781,11 @@ static void css_release_work_fn(struct work_struct *work)
- 		if (cgroup_on_dfl(cgrp))
- 			cgroup_rstat_flush(cgrp);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 237aea34b69f1..340c3c750b180 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -992,7 +992,8 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+ 	while (!skb_queue_empty(&qca->txq))
+ 		usleep_range(100, 200);
  
-+		spin_lock_irq(&css_set_lock);
- 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
- 		     tcgrp = cgroup_parent(tcgrp))
- 			tcgrp->nr_dying_descendants--;
-+		spin_unlock_irq(&css_set_lock);
+-	serdev_device_wait_until_sent(hu->serdev,
++	if (hu->serdev)
++		serdev_device_wait_until_sent(hu->serdev,
+ 		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
  
- 		cgroup_idr_remove(&cgrp->root->cgroup_idr, cgrp->id);
- 		cgrp->id = -1;
-@@ -5001,12 +5003,14 @@ static struct cgroup *cgroup_create(struct cgroup *parent)
- 	if (ret)
- 		goto out_psi_free;
- 
-+	spin_lock_irq(&css_set_lock);
- 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp)) {
- 		cgrp->ancestor_ids[tcgrp->level] = tcgrp->id;
- 
- 		if (tcgrp != cgrp)
- 			tcgrp->nr_descendants++;
- 	}
-+	spin_unlock_irq(&css_set_lock);
- 
- 	if (notify_on_release(parent))
- 		set_bit(CGRP_NOTIFY_ON_RELEASE, &cgrp->flags);
-@@ -5291,10 +5295,12 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
- 	if (parent && cgroup_is_threaded(cgrp))
- 		parent->nr_threaded_children--;
- 
-+	spin_lock_irq(&css_set_lock);
- 	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
- 		tcgrp->nr_descendants--;
- 		tcgrp->nr_dying_descendants++;
- 	}
-+	spin_unlock_irq(&css_set_lock);
- 
- 	cgroup1_check_for_release(parent);
- 
+ 	/* Give the controller time to process the request */
 -- 
 2.20.1
 
