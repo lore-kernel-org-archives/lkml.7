@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9AFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BCDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031EA25907
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2FE25909
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191163;
-	bh=bYeRNb566ivJGa6XUw7lhUgJLMTq33R8psS/bZAxKNQ=;
+	s=default; t=1559191166;
+	bh=bMiDibBi+bYCSvDNfDBkXb09Y2c9HQUcLe6JxwHH02k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/fbAH/d9pLjFuK4g2eYOP4g9dKVlW38T4j734FW61NV5tgPQIx1+qcXmObhCyr+j
-	 sLy7bTtYDnUfppWCWKQdFKlavZNn57ktnHHkvLMl/sWfaOTBS9GZkLQtZxz3Zz2mf0
-	 gCudakVXJpmiB8Nal48WssdW7PmJLBu5wODBcS+g=
+	b=gMy7IdNc6ejoRg76whbm76SmCIQtFt/+FzKncQphKAj1XJ4bUypIikGlZSVi3rLAB
+	 QEmTFX1J619DuMtTnL0Uh61WlCDNCyygTp1a7D5sA99oaNVBIYTtcl+RCUf/88LoO5
+	 jByf7C14L4FP4+9FnAxZas2u/K6ZCbPGGM/S8RQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388668AbfE3EjW (ORCPT
+        id S2388678AbfE3EjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:39:22 -0400
+        Thu, 30 May 2019 00:39:25 -0400
 Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfE3DMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:53 -0400
+        id S1729275AbfE3DMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D00CA2449A;
-        Thu, 30 May 2019 03:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE8C23E29;
+        Thu, 30 May 2019 03:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185972;
-        bh=bYeRNb566ivJGa6XUw7lhUgJLMTq33R8psS/bZAxKNQ=;
+        s=default; t=1559185971;
+        bh=bMiDibBi+bYCSvDNfDBkXb09Y2c9HQUcLe6JxwHH02k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAOL0aF/Rz3oeC646nG4xJ8rgzj0oMEGO4YOOQoAnBd4+IkzQAqQChXuNI0Dnb182
-         rCjk9Cj5xhHb3mdY++totuDyLNPcSF5YpeDpMVv0roX/NysWLo6ILAbRHbeisjAaax
-         87sC4WE1GbA/SibTeDyOPRBHFbeWAUy/WF/ooOu8=
+        b=xTnvGP7kCIw/6QK79U++LntjlS/jMazXETOkKh1PCuI+7M6mPJsSp+3Y4kwdJAJZH
+         lbcWDnjX6pqQ3CrRxxnmH/0F7WzMUldw5y3hWDEPPi9vE8DazjvcDXY+hORmoprHwc
+         b9EyNWeE5jXzbwBo3U7epCQKgp2Ab5IIwsdXqIhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 383/405] regulator: lp8755: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:21 -0700
-Message-Id: <20190530030600.104456668@linuxfoundation.org>
+Subject: [PATCH 5.1 404/405] drm/sun4i: dsi: Enforce boundaries on the start delay
+Date:   Wed, 29 May 2019 20:06:42 -0700
+Message-Id: <20190530030600.979431936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,72 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89b2758c192c35068b07766a6830433bfbdc1f44 ]
+[ Upstream commit efa31801203ac2f5c6a82a28cb991c7163ee0f1d ]
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+The Allwinner BSP makes sure that we don't end up with a null start delay
+or with a delay larger than vtotal.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
+The former condition is likely to happen now with the reworked start delay,
+so make sure we enforce the same boundaries.
 
-Fixes: b59320cc5a5e ("regulator: lp8755: new driver for LP8755")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/c9889cf5f7a3d101ef380905900b45a182596f56.1549896081.git-series.maxime.ripard@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/lp8755.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lp8755.c b/drivers/regulator/lp8755.c
-index 14fd388071349..2e16a6ab491d6 100644
---- a/drivers/regulator/lp8755.c
-+++ b/drivers/regulator/lp8755.c
-@@ -372,10 +372,13 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
- 		if ((flag0 & (0x4 << icnt))
- 		    && (pchip->irqmask & (0x04 << icnt))
--		    && (pchip->rdev[icnt] != NULL))
-+		    && (pchip->rdev[icnt] != NULL)) {
-+			regulator_lock(pchip->rdev[icnt]);
- 			regulator_notifier_call_chain(pchip->rdev[icnt],
- 						      LP8755_EVENT_PWR_FAULT,
- 						      NULL);
-+			regulator_unlock(pchip->rdev[icnt]);
-+		}
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 25d8cb9f92661..869e0aedf3434 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -359,8 +359,12 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
+ {
+ 	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
++	u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
  
- 	/* read flag1 register */
- 	ret = lp8755_read(pchip, 0x0E, &flag1);
-@@ -389,18 +392,24 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	/* send OCP event to all regulator devices */
- 	if ((flag1 & 0x01) && (pchip->irqmask & 0x01))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OCP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
+-	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
++	if (delay > mode->vtotal)
++		delay = delay % mode->vtotal;
++
++	return max_t(u16, delay, 1);
+ }
  
- 	/* send OVP event to all regulator devices */
- 	if ((flag1 & 0x02) && (pchip->irqmask & 0x02))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OVP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
- 	return IRQ_HANDLED;
- 
- err_i2c:
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
 -- 
 2.20.1
 
