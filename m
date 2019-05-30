@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85DDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119FBC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851E825EE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D531825F0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192141;
-	bh=BVZeyU1/iVIaE/V2LIymSSwYBEsq99mennyrdoguKtQ=;
+	s=default; t=1559192143;
+	bh=PD2AYPz817jElRbCQweCXOfi52cb+0RkBa5KHvCc86A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXmF7uPlwiVq7xQ/4jU6Cp2fsvRIEnKGm4WGPevleQ2mfsYtIZpN8oeg6AP4rIE8h
-	 /uUF74m/43ASmQTaRqPsd6OSBB6cTr5lWPw7lZG0g1AWER7E33MLIn9uymf784ody2
-	 ghwMiGMeGzlSDDkOH2lSsGlIAkzEuZyazZZF7vX8=
+	b=cq+viI1rbP36OAwlHhvZ13Xldo7HRMIHGUYmkvjHX4g2kD4ZHxLJr7SxzKRd7ohES
+	 1rg7KwijENfKqBEflewf8rhIDSuFamWDJZyURsK0HE1dgDr74wDC9VaHhHWMeqWBK/
+	 wEOyWXNi1WhGOKDUgEJC3ka2jwriaF4W+2eNcBoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389175AbfE3Ezj (ORCPT
+        id S2388966AbfE3Ezn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfE3DKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:15 -0400
+        id S1727996AbfE3DKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:14 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BED092446F;
-        Thu, 30 May 2019 03:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A17BC244BB;
+        Thu, 30 May 2019 03:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185814;
-        bh=BVZeyU1/iVIaE/V2LIymSSwYBEsq99mennyrdoguKtQ=;
+        s=default; t=1559185813;
+        bh=PD2AYPz817jElRbCQweCXOfi52cb+0RkBa5KHvCc86A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kY1j902DWZi+kCB76H/uYlTSTEGaWnUfCnmvMI61lggrWlTh8P/GFD5oMYWXV5iDf
-         kdrGz3Z94+3ejvTP+DDF+rcpnjZJlEP2wtLCTHEWgfDsSPAVZ25xfkGH5FEUbX17UI
-         xTp3YqY00dLbzbr9TJLc6JMIB5hlZO2PdcOxBu8U=
+        b=iPTIKL1oaW9V4hQUzux+TGY98ypv9w9wPjPqPFblQaDxuNZpdUYJnhZcOKeIGm+65
+         UxZsvqad3ofS4YUnyYdKVPYnVW/Ads2cyPFwbaeKTqKDB1lkdxhK/4WGsOVAxX3p+8
+         NLnQuAthaiL+hF46H/bnal/IjHPudTxB1zZgsUSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 106/405] net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
-Date:   Wed, 29 May 2019 20:01:44 -0700
-Message-Id: <20190530030546.366066429@linuxfoundation.org>
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 104/405] ALSA: hda: fix unregister device twice on ASoC driver
+Date:   Wed, 29 May 2019 20:01:42 -0700
+Message-Id: <20190530030546.277528476@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,121 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 06095f34f8a0a2c4c83a19514c272699edd5f80b ]
+[ Upstream commit 4d95c51776b2edb4d4ebcea00b6e5a1fe538ce66 ]
 
-Now CPSW ALE will set/clean Host port bit in Unregistered Multicast Flood
-Mask (UNREG_MCAST_FLOOD_MASK) for every VLAN without checking if this port
-belongs to VLAN or not when ALLMULTI mode flag is set for nedev. This is
-working in non dual_mac mode, but in dual_mac - it causes
-enabling/disabling ALLMULTI flag for both ports.
+snd_hda_codec_device_new() is used by both legacy HDA and ASoC
+driver. However, we will call snd_hdac_device_unregister() in
+snd_hdac_ext_bus_device_remove() for ASoC device. This patch uses
+the type flag in hdac_device struct to determine is it a ASoC device
+or legacy HDA device and call snd_hdac_device_unregister() in
+snd_hda_codec_dev_free() only if it is a legacy HDA device.
 
-Hence fix it by adding additional parameter to cpsw_ale_set_allmulti() to
-specify ALE port number for which ALLMULTI has to be enabled and check if
-port belongs to VLAN before modifying UNREG_MCAST_FLOOD_MASK.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c     | 12 +++++++++---
- drivers/net/ethernet/ti/cpsw_ale.c | 19 ++++++++++---------
- drivers/net/ethernet/ti/cpsw_ale.h |  3 +--
- 3 files changed, 20 insertions(+), 14 deletions(-)
+ sound/pci/hda/hda_codec.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index a591583d120e1..dd12b73a88530 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -800,12 +800,17 @@ static int cpsw_purge_all_mc(struct net_device *ndev, const u8 *addr, int num)
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 701a69d856f5f..b20eb7fc83eb2 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -832,7 +832,13 @@ static int snd_hda_codec_dev_free(struct snd_device *device)
+ 	struct hda_codec *codec = device->device_data;
  
- static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
- {
--	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
-+	struct cpsw_priv *priv = netdev_priv(ndev);
-+	struct cpsw_common *cpsw = priv->cpsw;
-+	int slave_port = -1;
-+
-+	if (cpsw->data.dual_emac)
-+		slave_port = priv->emac_port + 1;
- 
- 	if (ndev->flags & IFF_PROMISC) {
- 		/* Enable promiscuous mode */
- 		cpsw_set_promiscious(ndev, true);
--		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI);
-+		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI, slave_port);
- 		return;
- 	} else {
- 		/* Disable promiscuous mode */
-@@ -813,7 +818,8 @@ static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
- 	}
- 
- 	/* Restore allmulti on vlans if necessary */
--	cpsw_ale_set_allmulti(cpsw->ale, ndev->flags & IFF_ALLMULTI);
-+	cpsw_ale_set_allmulti(cpsw->ale,
-+			      ndev->flags & IFF_ALLMULTI, slave_port);
- 
- 	/* add/remove mcast address either for real netdev or for vlan */
- 	__hw_addr_ref_sync_dev(&ndev->mc, ndev, cpsw_add_mc_addr,
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 798c989d5d934..b3d9591b4824a 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -482,24 +482,25 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
- }
- EXPORT_SYMBOL_GPL(cpsw_ale_del_vlan);
- 
--void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti)
-+void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
- {
- 	u32 ale_entry[ALE_ENTRY_WORDS];
--	int type, idx;
- 	int unreg_mcast = 0;
--
--	/* Only bother doing the work if the setting is actually changing */
--	if (ale->allmulti == allmulti)
--		return;
--
--	/* Remember the new setting to check against next time */
--	ale->allmulti = allmulti;
-+	int type, idx;
- 
- 	for (idx = 0; idx < ale->params.ale_entries; idx++) {
-+		int vlan_members;
-+
- 		cpsw_ale_read(ale, idx, ale_entry);
- 		type = cpsw_ale_get_entry_type(ale_entry);
- 		if (type != ALE_TYPE_VLAN)
- 			continue;
-+		vlan_members =
-+			cpsw_ale_get_vlan_member_list(ale_entry,
-+						      ale->vlan_field_bits);
-+
-+		if (port != -1 && !(vlan_members & BIT(port)))
-+			continue;
- 
- 		unreg_mcast =
- 			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index cd07a3e96d576..1fe196d8a5e42 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -37,7 +37,6 @@ struct cpsw_ale {
- 	struct cpsw_ale_params	params;
- 	struct timer_list	timer;
- 	unsigned long		ageout;
--	int			allmulti;
- 	u32			version;
- 	/* These bits are different on NetCP NU Switch ALE */
- 	u32			port_mask_bits;
-@@ -116,7 +115,7 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
- int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 			int reg_mcast, int unreg_mcast);
- int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port);
--void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti);
-+void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port);
- 
- int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control);
- int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
+ 	codec->in_freeing = 1;
+-	snd_hdac_device_unregister(&codec->core);
++	/*
++	 * snd_hda_codec_device_new() is used by legacy HDA and ASoC driver.
++	 * We can't unregister ASoC device since it will be unregistered in
++	 * snd_hdac_ext_bus_device_remove().
++	 */
++	if (codec->core.type == HDA_DEV_LEGACY)
++		snd_hdac_device_unregister(&codec->core);
+ 	codec_display_power(codec, false);
+ 	put_device(hda_codec_dev(codec));
+ 	return 0;
 -- 
 2.20.1
 
