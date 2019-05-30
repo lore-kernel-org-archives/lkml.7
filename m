@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF954C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CADC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2266239B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CB02491E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187445;
-	bh=YiRpyNlzCzcEpWtS4gydfZ8A3XMZuET072msQe/H26k=;
+	s=default; t=1559187456;
+	bh=CORdcStFkjX1oyFVU9FuSam+RRAFqpTQpB8ocBBwANI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PTGTuJA1w2JG3qXRWSVG7G9uNHchLuqfSW7vM57Bpj0byFFN21lYMGgA9SKwp0SBg
-	 M9eHJrvuMpFXWBGLdqdQ7M28eShi5lc25B5gssL3VwFcb4zA1lIKaPQVKbdKS469tz
-	 IMtXV4LFrAQqs3BL05SETiEWTARU0ZgiT4e5/HXg=
+	b=2q07JeP/6IwM7M5B+8b2La1Hv3UNoaUA++4Y4x6KHmY10lqi7i6LSnmvS96TM8a8m
+	 GlOjzaUn20F1sJgCQVmBL3q3f7nsqFGK+G+5OyaGl3sj8da6grrS1H+AkdWMrJ08F+
+	 I1vYMerXXBfdw6H2ACRDgwnPwHffaZJQhLza0PZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbfE3DYQ (ORCPT
+        id S1732531AbfE3DXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731266AbfE3DRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:50 -0400
+        id S1731212AbfE3DRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343CB246A8;
-        Thu, 30 May 2019 03:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5D224703;
+        Thu, 30 May 2019 03:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186269;
-        bh=YiRpyNlzCzcEpWtS4gydfZ8A3XMZuET072msQe/H26k=;
+        s=default; t=1559186261;
+        bh=CORdcStFkjX1oyFVU9FuSam+RRAFqpTQpB8ocBBwANI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqiETahoJ7EKM9Xy7WxchgSOYVudwACG2D8UWsnC45xKLJXUMgTu6UE+xrC5tFXt7
-         ViPf39ac55tWM4jVSaXh6rCOfycVUkD235fpOI3fuxCX0vWGOUuqEfB4V05lfAWbPl
-         wzWilGVPdhrc/TP8rdGseMGaMuxOnqisi8w/Ifas=
+        b=EDKq5owO6rBPNErEG+ZhhdRS1ed1eSvrgBbAVgqJnjopFFBS4+bpraD46GNqBUda3
+         vK054az5s/MbCkwiLkOx4a6OTyP4Isu42BQhSd9GmkQfmvAZIAtdwxEkG93waRiPAH
+         LXyGpye0hTDR/gzDWLduC1ndOFB8NX48nmbaqpwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 207/276] x86/uaccess, signal: Fix AC=1 bloat
-Date:   Wed, 29 May 2019 20:06:05 -0700
-Message-Id: <20190530030538.076039362@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 193/276] brcmfmac: fix missing checks for kmemdup
+Date:   Wed, 29 May 2019 20:05:51 -0700
+Message-Id: <20190530030537.215775382@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -65,109 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88e4718275c1bddca6f61f300688b4553dc8584b ]
+[ Upstream commit 46953f97224d56a12ccbe9c6acaa84ca0dab2780 ]
 
-Occasionally GCC is less agressive with inlining and the following is
-observed:
+In case kmemdup fails, the fix sets conn_info->req_ie_len and
+conn_info->resp_ie_len to zero to avoid buffer overflows.
 
-  arch/x86/kernel/signal.o: warning: objtool: restore_sigcontext()+0x3cc: call to force_valid_ss.isra.5() with UACCESS enabled
-  arch/x86/kernel/signal.o: warning: objtool: do_signal()+0x384: call to frame_uc_flags.isra.0() with UACCESS enabled
-
-Cure this by moving this code out of the AC=1 region, since it really
-isn't needed for the user access.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/signal.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 92a3b312a53c4..44e647a65de88 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -132,16 +132,6 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		COPY_SEG_CPL3(cs);
- 		COPY_SEG_CPL3(ss);
- 
--#ifdef CONFIG_X86_64
--		/*
--		 * Fix up SS if needed for the benefit of old DOSEMU and
--		 * CRIU.
--		 */
--		if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) &&
--			     user_64bit_mode(regs)))
--			force_valid_ss(regs);
--#endif
--
- 		get_user_ex(tmpflags, &sc->flags);
- 		regs->flags = (regs->flags & ~FIX_EFLAGS) | (tmpflags & FIX_EFLAGS);
- 		regs->orig_ax = -1;		/* disable syscall checks */
-@@ -150,6 +140,15 @@ static int restore_sigcontext(struct pt_regs *regs,
- 		buf = (void __user *)buf_val;
- 	} get_user_catch(err);
- 
-+#ifdef CONFIG_X86_64
-+	/*
-+	 * Fix up SS if needed for the benefit of old DOSEMU and
-+	 * CRIU.
-+	 */
-+	if (unlikely(!(uc_flags & UC_STRICT_RESTORE_SS) && user_64bit_mode(regs)))
-+		force_valid_ss(regs);
-+#endif
-+
- 	err |= fpu__restore_sig(buf, IS_ENABLED(CONFIG_X86_32));
- 
- 	force_iret();
-@@ -461,6 +460,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- {
- 	struct rt_sigframe __user *frame;
- 	void __user *fp = NULL;
-+	unsigned long uc_flags;
- 	int err = 0;
- 
- 	frame = get_sigframe(&ksig->ka, regs, sizeof(struct rt_sigframe), &fp);
-@@ -473,9 +473,11 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
- 			return -EFAULT;
- 	}
- 
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 
-@@ -541,6 +543,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- {
- #ifdef CONFIG_X86_X32_ABI
- 	struct rt_sigframe_x32 __user *frame;
-+	unsigned long uc_flags;
- 	void __user *restorer;
- 	int err = 0;
- 	void __user *fpstate = NULL;
-@@ -555,9 +558,11 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
- 			return -EFAULT;
- 	}
- 
-+	uc_flags = frame_uc_flags(regs);
-+
- 	put_user_try {
- 		/* Create the ucontext.  */
--		put_user_ex(frame_uc_flags(regs), &frame->uc.uc_flags);
-+		put_user_ex(uc_flags, &frame->uc.uc_flags);
- 		put_user_ex(0, &frame->uc.uc_link);
- 		compat_save_altstack_ex(&frame->uc.uc_stack, regs->sp);
- 		put_user_ex(0, &frame->uc.uc__pad0);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index fa1a2e5ab03fb..c7c520f327f2b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -5368,6 +5368,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->req_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->req_ie)
++			conn_info->req_ie_len = 0;
+ 	} else {
+ 		conn_info->req_ie_len = 0;
+ 		conn_info->req_ie = NULL;
+@@ -5384,6 +5386,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->resp_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->resp_ie)
++			conn_info->resp_ie_len = 0;
+ 	} else {
+ 		conn_info->resp_ie_len = 0;
+ 		conn_info->resp_ie = NULL;
 -- 
 2.20.1
 
