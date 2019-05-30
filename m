@@ -2,94 +2,94 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB949C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBC2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891BC25663
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF42125664
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzF+DW8s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3Bb8oqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfE3JjH (ORCPT
+        id S1727648AbfE3Jjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:39:07 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:32833 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbfE3JjH (ORCPT
+        Thu, 30 May 2019 05:39:55 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43766 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfE3Jjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:39:07 -0400
-Received: by mail-wm1-f48.google.com with SMTP id v19so5649885wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:39:05 -0700 (PDT)
+        Thu, 30 May 2019 05:39:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn7so2320472plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 02:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=JwUIsqd459o226NuphV7ZoRoN1/Y+yAcPXTD37P/UA0=;
-        b=hzF+DW8s54OP7n03EIBYbHGiIWf5SysY90EfbriJhQAsi5vJDIfxzdAXJ/1Py+B4Au
-         auCJpdbcU76qHptLRr4kstSFW8DgoyFYVkAEdi2ADyQPTpG/d5k9P0tCDTioy3IjFslb
-         Dfo9wlRNyoA+18OZUyHkHCzfXGLuneIEx7nE4/8hnOV8RqYA5yhlviGSjI3W9KGlTtu5
-         2rjfb6ziHmEgfUt6mfyjY2NDLI9kVg825U/LlgXFwUFi3zM1OQoNxMZ1kiTcwhc1neMX
-         lSkV443d4+kEWXWHBDclteMw08mP4tVbx16eOo9miaB8s7PHpllRqCjllJF2Z/hLDAvx
-         GQ2A==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HcywUzafthk86hjeemS/uZ4aa4I/rB7ZSDQIqK7Pq20=;
+        b=c3Bb8oqw0+cZD/QgsmjCpekCRp/AVMOGqdApc4y9rNsgMnTcXMgz8tnBf3/+Cj7k6T
+         NIdNUTXwVKHigk5KtI0yg1j/9nuGiqfpNEDrZgTwdYLjNib0JOv/VNzalmvZhTogwQty
+         HtEYGpvaxGab60FTfcg+WTCzHSQbQPulUFyigo3P4R02UVIPIxXfTanPHDfFjQfFsaXF
+         Wdthl91xgfYRfyBkoi1ZGEvaeMZRrqxKAfGqtLaYBJcn/muKFm7XAQY6ABNxFkp+//fY
+         QgurnwIZfWDUbW0kKlL4G1a6YHfnYc0TIkIsqaTjHpmUJ7FNZ9tDanezN+7UiXpFQSSX
+         Dujg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=JwUIsqd459o226NuphV7ZoRoN1/Y+yAcPXTD37P/UA0=;
-        b=h89R9GnpbPTPtStyAVpZSKJzTAOTXqokZuEabklA5g9IHPGFp9mSIwZjqBKCn3UjZt
-         F6LS6kau/0d67mZb7pyBDBQUjS+1QUNTZUspJ11q5cfUZuu/MeNM1AhzXA0s+b39OmZs
-         a5yWyrJ1Qzt2HgAab1epWwkuTg7sp0WGaCTprtDPS9gLTfdR4QLZQVCF15lM1IlGRfNA
-         lJCZC0E6slKl/5ioQIPN40VQNwmSWTdxRGKi1CYsGssUyLZY5FBJPqzMszvLSGooyyOq
-         0E4lghlW4NIspH80R0YEKh6j1j713xxyA/GUe9Zgp/KI8c3+SkZf3gJyyGQayedY4cby
-         i5QA==
-X-Gm-Message-State: APjAAAWAVCOhQFI/evBPANbSo+BxxHeABjeXjEgn031GhbjyNYIGAWkR
-        ctZqvl06JA/NbVfL314ISCCYjW1O
-X-Google-Smtp-Source: APXvYqzqymi9mIlfYjDD4MzTUjzL5E3k8/lhzrnArC0FefuQ6+UuqCaRXEGGSZnzOWoGIgt3zhoDyg==
-X-Received: by 2002:a1c:9eca:: with SMTP id h193mr1640821wme.125.1559209144970;
-        Thu, 30 May 2019 02:39:04 -0700 (PDT)
-Received: from [192.168.1.51] (ip-78-45-105-225.net.upcbroadband.cz. [78.45.105.225])
-        by smtp.googlemail.com with ESMTPSA id k125sm4893663wmb.34.2019.05.30.02.39.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 02:39:04 -0700 (PDT)
-From:   Zdenek Kaspar <zkaspar82@gmail.com>
-Subject: MDS/SSB Mitigation for pre-Nehalem/Older Intel Hardware?
-To:     linux-kernel@vger.kernel.org
-Message-ID: <ca61553a-1334-17e8-bcbe-335705cc8215@gmail.com>
-Date:   Thu, 30 May 2019 11:39:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HcywUzafthk86hjeemS/uZ4aa4I/rB7ZSDQIqK7Pq20=;
+        b=Xa+hshz5QHxs76axez8qRa0P5APCC1Ta4XxGvnoAS8cs70agMXJYImg9DwnuHPXxjE
+         RsOLRCrNvIjur5m35rRwdQQ+0cBL7Xf/U5tLAnAVoHB1YGbcgKjAeY946k7MBG3uopbh
+         BBTRwX+MQXxL2y4Va61Tpss/a0qc1ZIb+ihK4e/9hli8zXPn95sLuRLipuUuq868dlk/
+         Zs+9+V719XkngOfstAkiXQo6hMfsPxFsRL9GpxQI08ccTy7+7nRGaT0CEB7ljZZLGBAi
+         6LKbpT3pKj3Vh4ogzxfm/sDfXg2L9a8VAp7h9TCK3vb0iI0dlDOdD0pxCrZrmobsHDy5
+         OtAw==
+X-Gm-Message-State: APjAAAX044F03XeBEx7LehorE0sqTqCy88Tc/Rh/0AuiS+j5yJOB9iGH
+        V4Gli/PlGYLn02Xdo1PFMTLa09xVH8g=
+X-Google-Smtp-Source: APXvYqz9qTW7HFwtEurjsKXEDx7+8ZY33bTeGh+bBCrgvKckAvm7+DzV5Qrg9l6S2quYD0qlNxZh0w==
+X-Received: by 2002:a17:902:868a:: with SMTP id g10mr2863971plo.205.1559209194197;
+        Thu, 30 May 2019 02:39:54 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id 4sm2605152pfj.111.2019.05.30.02.39.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 02:39:53 -0700 (PDT)
+Date:   Thu, 30 May 2019 17:39:37 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     inaky.perez-gonzalez@intel.com
+Cc:     linux-wimax@intel.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] wimax: debug: fix a missing-check bug in d_parse_params()
+Message-ID: <20190530093937.GA4457@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
+In d_parse_params(), 'params_orig' is allocated by kstrdup(). It returns
+NULL when fails. So 'params_orig' should be checked.
 
-on old CPU the current situation looks like this:
-
-l1tf:Mitigation: PTE Inversion; VMX: EPT disabled
-mds:Vulnerable: Clear CPU buffers attempted, no microcode; SMT disabled
-meltdown:Mitigation: PTI
-spec_store_bypass:Vulnerable
-spectre_v1:Mitigation: __user pointer sanitization
-spectre_v2:Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
-
-There's no way to mitigate some issues without microcode
-and Intel doesn't provide new updates for old hardware.
-
-The Deep Dive document for MDS includes: "software sequences
-to overwrite buffers" but it goes back only to Nehalem.
-
-Are there any plans for software fixes especially for older CPUs?
-
-TIA, Z.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/include/linux/wimax/debug.h b/include/linux/wimax/debug.h
+index aaf24ba..bacd6cb 100644
+--- a/include/linux/wimax/debug.h
++++ b/include/linux/wimax/debug.h
+@@ -496,6 +496,11 @@ void d_parse_params(struct d_level *d_level, size_t d_level_size,
+ 	if (_params == NULL)
+ 		return;
+ 	params_orig = kstrdup(_params, GFP_KERNEL);
++	if (!params_orig) {
++		printk(KERN_ERR "%s: can't duplicate string '%s'\n",
++		       tag, _params);
++		return;
++	}
+ 	params = params_orig;
+ 	while (1) {
+ 		token = strsep(&params, " ");
