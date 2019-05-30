@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37A1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C6C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930FF23A49
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828E5244A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186864;
-	bh=ZSX3Gwh1itRbtkQL+q70qtno/jtYzsy88krRLuFj1Zc=;
+	s=default; t=1559186866;
+	bh=ZCpNzldH/Rfxc3WhAb7MgQDI+1+hiRN60xxxARJvzmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofQpZi/sElb9DkY20JqZ8ZnYWtrp2nKUgOXePlagK9GiPbQINrcfQP34CR6Z2EDLN
-	 r0KBBbVhAcZUmzKIU/ZtbAM69kEt/6LA+NktX7My77u7lRH9DIcLudRYCVcxJytqeM
-	 002/I4Vlj/2g6zIsLmeYS1iFYP/el75RnqUonLN8=
+	b=e6L2k9w/GJqLWOgVdpSIzbEZd4DiCJUt2X5Dd8ywae4TxhElSKlYmpsa+dVYA+zXl
+	 PrhbidyP870UREmHPo3EskQJp5Q8euF9+IhzTsh8V6gJNA0uaik69wPmBrA74CteU4
+	 zeoVuG5T7boiUCCzzUp2dGdy6WzJ8kbS9eiB72WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbfE3D1o (ORCPT
+        id S2388082AbfE3D1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbfE3DTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:41 -0400
+        id S1732001AbfE3DTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDAD248B7;
-        Thu, 30 May 2019 03:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE48248C3;
+        Thu, 30 May 2019 03:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186380;
-        bh=ZSX3Gwh1itRbtkQL+q70qtno/jtYzsy88krRLuFj1Zc=;
+        s=default; t=1559186381;
+        bh=ZCpNzldH/Rfxc3WhAb7MgQDI+1+hiRN60xxxARJvzmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPZjWqVNCNYkchc7YFQvzU9EhU6OkQ3WrwPiXgiM1glHofKy/4LN81zfXB+jgqUHe
-         DCbTHPDJQAsyB5fsUKc2EZEYHFpFet7lpEAYj6iKNOIozVra3JQgGgHWL0Z4kT6Unw
-         a+FiGpsu9TTDze5FBd/QGqkaBED1W+Z9egh0Xl08=
+        b=vnyi4Qzb+nZvdbwGP2Bi/x7BpOd+qBKK3THG0/UYwoFbpo4aJNzCoX3PYjxjrOPZr
+         EeGcitad8uUpq6m7LXs5PjkdUcxs1RG17O+ZNpvcnEsL7/tE3zS16irtTpDOqTbjGb
+         AHvD3HtVaNvI7NWi7bZIknSy8GogEK/53FzW6zLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Piotr Figiel <p.figiel@camlintechnologies.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 144/193] brcmfmac: fix WARNING during USB disconnect in case of unempty psq
-Date:   Wed, 29 May 2019 20:06:38 -0700
-Message-Id: <20190530030508.420733248@linuxfoundation.org>
+Subject: [PATCH 4.14 147/193] rtc: xgene: fix possible race condition
+Date:   Wed, 29 May 2019 20:06:41 -0700
+Message-Id: <20190530030508.793590207@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,129 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c80d26e81ef1802f30364b4ad1955c1443a592b9 ]
+[ Upstream commit a652e00ee1233e251a337c28e18a1da59224e5ce ]
 
-brcmu_pkt_buf_free_skb emits WARNING when attempting to free a sk_buff
-which is part of any queue. After USB disconnect this may have happened
-when brcmf_fws_hanger_cleanup() is called as per-interface psq was never
-cleaned when removing the interface.
-Change brcmf_fws_macdesc_cleanup() in a way that it removes the
-corresponding packets from hanger table (to avoid double-free when
-brcmf_fws_hanger_cleanup() is called) and add a call to clean-up the
-interface specific packet queue.
+The IRQ is requested before the struct rtc is allocated and registered, but
+this struct is used in the IRQ handler. This may lead to a NULL pointer
+dereference.
 
-Below is a WARNING during USB disconnect with Raspberry Pi WiFi dongle
-running in AP mode. This was reproducible when the interface was
-transmitting during the disconnect and is fixed with this commit.
+Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
+struct before requesting the IRQ.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1171 at drivers/net/wireless/broadcom/brcm80211/brcmutil/utils.c:49 brcmu_pkt_buf_free_skb+0x3c/0x40
-Modules linked in: nf_log_ipv4 nf_log_common xt_LOG xt_limit iptable_mangle xt_connmark xt_tcpudp xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter ip_tables x_tables usb_f_mass_storage usb_f_rndis u_ether cdc_acm smsc95xx usbnet ci_hdrc_imx ci_hdrc ulpi usbmisc_imx 8250_exar 8250_pci 8250 8250_base libcomposite configfs udc_core
-CPU: 0 PID: 1171 Comm: kworker/0:0 Not tainted 4.19.23-00075-gde33ed8 #99
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Workqueue: usb_hub_wq hub_event
-[<8010ff84>] (unwind_backtrace) from [<8010bb64>] (show_stack+0x10/0x14)
-[<8010bb64>] (show_stack) from [<80840278>] (dump_stack+0x88/0x9c)
-[<80840278>] (dump_stack) from [<8011f5ec>] (__warn+0xfc/0x114)
-[<8011f5ec>] (__warn) from [<8011f71c>] (warn_slowpath_null+0x40/0x48)
-[<8011f71c>] (warn_slowpath_null) from [<805a476c>] (brcmu_pkt_buf_free_skb+0x3c/0x40)
-[<805a476c>] (brcmu_pkt_buf_free_skb) from [<805bb6c4>] (brcmf_fws_cleanup+0x1e4/0x22c)
-[<805bb6c4>] (brcmf_fws_cleanup) from [<805bc854>] (brcmf_fws_del_interface+0x58/0x68)
-[<805bc854>] (brcmf_fws_del_interface) from [<805b66ac>] (brcmf_remove_interface+0x40/0x150)
-[<805b66ac>] (brcmf_remove_interface) from [<805b6870>] (brcmf_detach+0x6c/0xb0)
-[<805b6870>] (brcmf_detach) from [<805bdbb8>] (brcmf_usb_disconnect+0x30/0x4c)
-[<805bdbb8>] (brcmf_usb_disconnect) from [<805e5d64>] (usb_unbind_interface+0x5c/0x1e0)
-[<805e5d64>] (usb_unbind_interface) from [<804aab10>] (device_release_driver_internal+0x154/0x1ec)
-[<804aab10>] (device_release_driver_internal) from [<804a97f4>] (bus_remove_device+0xcc/0xf8)
-[<804a97f4>] (bus_remove_device) from [<804a6fc0>] (device_del+0x118/0x308)
-[<804a6fc0>] (device_del) from [<805e488c>] (usb_disable_device+0xa0/0x1c8)
-[<805e488c>] (usb_disable_device) from [<805dcf98>] (usb_disconnect+0x70/0x1d8)
-[<805dcf98>] (usb_disconnect) from [<805ddd84>] (hub_event+0x464/0xf50)
-[<805ddd84>] (hub_event) from [<80135a70>] (process_one_work+0x138/0x3f8)
-[<80135a70>] (process_one_work) from [<80135d5c>] (worker_thread+0x2c/0x554)
-[<80135d5c>] (worker_thread) from [<8013b1a0>] (kthread+0x124/0x154)
-[<8013b1a0>] (kthread) from [<801010e8>] (ret_from_fork+0x14/0x2c)
-Exception stack(0xecf8dfb0 to 0xecf8dff8)
-dfa0:                                     00000000 00000000 00000000 00000000
-dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
----[ end trace 38d234018e9e2a90 ]---
-------------[ cut here ]------------
-
-Signed-off-by: Piotr Figiel <p.figiel@camlintechnologies.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../broadcom/brcm80211/brcmfmac/fwsignal.c    | 42 +++++++++++--------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ drivers/rtc/rtc-xgene.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-index f59642b2c935a..2370060ef980a 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
-@@ -579,24 +579,6 @@ static bool brcmf_fws_ifidx_match(struct sk_buff *skb, void *arg)
- 	return ifidx == *(int *)arg;
- }
+diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
+index 65b432a096fe2..f68f84205b48d 100644
+--- a/drivers/rtc/rtc-xgene.c
++++ b/drivers/rtc/rtc-xgene.c
+@@ -163,6 +163,10 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pdata->csr_base))
+ 		return PTR_ERR(pdata->csr_base);
  
--static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
--				int ifidx)
--{
--	bool (*matchfn)(struct sk_buff *, void *) = NULL;
--	struct sk_buff *skb;
--	int prec;
--
--	if (ifidx != -1)
--		matchfn = brcmf_fws_ifidx_match;
--	for (prec = 0; prec < q->num_prec; prec++) {
--		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
--		while (skb) {
--			brcmu_pkt_buf_free_skb(skb);
--			skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
--		}
++	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(pdata->rtc))
++		return PTR_ERR(pdata->rtc);
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "No IRQ resource\n");
+@@ -187,15 +191,15 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 
+-	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					 &xgene_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(pdata->rtc)) {
+-		clk_disable_unprepare(pdata->clk);
+-		return PTR_ERR(pdata->rtc);
 -	}
--}
 -
- static void brcmf_fws_hanger_init(struct brcmf_fws_hanger *hanger)
- {
- 	int i;
-@@ -668,6 +650,28 @@ static inline int brcmf_fws_hanger_poppkt(struct brcmf_fws_hanger *h,
+ 	/* HW does not support update faster than 1 seconds */
+ 	pdata->rtc->uie_unsupported = 1;
++	pdata->rtc->ops = &xgene_rtc_ops;
++
++	ret = rtc_register_device(pdata->rtc);
++	if (ret) {
++		clk_disable_unprepare(pdata->clk);
++		return ret;
++	}
+ 
  	return 0;
  }
- 
-+static void brcmf_fws_psq_flush(struct brcmf_fws_info *fws, struct pktq *q,
-+				int ifidx)
-+{
-+	bool (*matchfn)(struct sk_buff *, void *) = NULL;
-+	struct sk_buff *skb;
-+	int prec;
-+	u32 hslot;
-+
-+	if (ifidx != -1)
-+		matchfn = brcmf_fws_ifidx_match;
-+	for (prec = 0; prec < q->num_prec; prec++) {
-+		skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
-+		while (skb) {
-+			hslot = brcmf_skb_htod_tag_get_field(skb, HSLOT);
-+			brcmf_fws_hanger_poppkt(&fws->hanger, hslot, &skb,
-+						true);
-+			brcmu_pkt_buf_free_skb(skb);
-+			skb = brcmu_pktq_pdeq_match(q, prec, matchfn, &ifidx);
-+		}
-+	}
-+}
-+
- static int brcmf_fws_hanger_mark_suppressed(struct brcmf_fws_hanger *h,
- 					    u32 slot_id)
- {
-@@ -2168,6 +2172,8 @@ void brcmf_fws_del_interface(struct brcmf_if *ifp)
- 	brcmf_fws_lock(fws);
- 	ifp->fws_desc = NULL;
- 	brcmf_dbg(TRACE, "deleting %s\n", entry->name);
-+	brcmf_fws_macdesc_cleanup(fws, &fws->desc.iface[ifp->ifidx],
-+				  ifp->ifidx);
- 	brcmf_fws_macdesc_deinit(entry);
- 	brcmf_fws_cleanup(fws, ifp->ifidx);
- 	brcmf_fws_unlock(fws);
 -- 
 2.20.1
 
