@@ -2,58 +2,73 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D187DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582B6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26C425758
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4A725762
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfE3Kfh (ORCPT
+        id S1726761AbfE3Kfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:35:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53288 "EHLO mx1.redhat.com"
+        Thu, 30 May 2019 06:35:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:33934 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfE3Kfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:35:37 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5083EF9E85;
-        Thu, 30 May 2019 10:35:37 +0000 (UTC)
-Received: from ws (unknown [10.40.205.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EA0F19748;
-        Thu, 30 May 2019 10:35:36 +0000 (UTC)
-Date:   Thu, 30 May 2019 12:35:33 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.34-rc2
-Message-ID: <20190530103533.ttiwfhkv4nw7mokx@ws>
+        id S1725870AbfE3Kfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 06:35:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 153F2374;
+        Thu, 30 May 2019 03:35:42 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 429CB3F5AF;
+        Thu, 30 May 2019 03:35:39 -0700 (PDT)
+Date:   Thu, 30 May 2019 11:35:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kan.liang@linux.intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ravi.bangoria@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, acme@redhat.com, eranian@google.com,
+        fweisbec@gmail.com, jolsa@redhat.com
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+Message-ID: <20190530103536.GA56046@lakrids.cambridge.arm.com>
+References: <20190529101042.GN2623@hirez.programming.kicks-ass.net>
+ <20190529102022.GC4485@fuggles.cambridge.arm.com>
+ <20190529125557.GU2623@hirez.programming.kicks-ass.net>
+ <20190529130521.GA11023@fuggles.cambridge.arm.com>
+ <20190529132515.GW2623@hirez.programming.kicks-ass.net>
+ <20190529143510.GA11154@fuggles.cambridge.arm.com>
+ <20190529161955.GZ2623@hirez.programming.kicks-ass.net>
+ <20190529162435.GM31777@lakrids.cambridge.arm.com>
+ <20190529163854.GN31777@lakrids.cambridge.arm.com>
+ <20190529170313.GE2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716-1584-710bcd
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 30 May 2019 10:35:37 +0000 (UTC)
+In-Reply-To: <20190529170313.GE2623@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 29, 2019 at 07:03:13PM +0200, Peter Zijlstra wrote:
+> On Wed, May 29, 2019 at 05:38:54PM +0100, Mark Rutland wrote:
+> > Generally speaking though, if we ever task task_pt_regs() of an idle
+> > task we'll get junk, and user_mode() could be true.
+> 
+> Agreed, but we're not doing that.
 
-The util-linux release v2.34-rc2 is available at
+Sure.
 
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.34/
+I just think that might be an argument for having task_pt_regs() return
+NULL for kthreads, or having a WARN_ON_ONCE(t->flags & PF_KTHREAD) to
+catch missing checks elsewhere.
 
-Feedback and bug reports, as always, are welcomed.
-
-  Karel
-
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+Thanks,
+Mark.
