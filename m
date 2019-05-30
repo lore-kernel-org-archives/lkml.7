@@ -2,74 +2,102 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3ACC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8326247F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF602490D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 07:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfE3HBq (ORCPT
+        id S1727723AbfE3HCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 03:01:46 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:41139 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725862AbfE3HBp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 03:01:45 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x4U6tpgk061915;
-        Thu, 30 May 2019 14:55:51 +0800 (GMT-8)
-        (envelope-from nickhu@andestech.com)
-Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Thu, 30 May 2019
- 15:01:24 +0800
-From:   Nick Hu <nickhu@andestech.com>
-To:     <greentime@andestech.com>, <palmer@sifive.com>,
-        <albert@sifive.com>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hch@infradead.org>
-CC:     Nick Hu <nickhu@andestech.com>, <green.hu@gmail.com>
-Subject: [PATCH v3] riscv: Fix udelay in RV32.
-Date:   Thu, 30 May 2019 15:01:17 +0800
-Message-ID: <67bfbb11e64273427b125528a4e2bc83b5efe70b.1559199430.git.nickhu@andestech.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 May 2019 03:02:35 -0400
+Received: from muru.com ([72.249.23.125]:51880 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfE3HCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 03:02:34 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7128D803A;
+        Thu, 30 May 2019 07:02:53 +0000 (UTC)
+Date:   Thu, 30 May 2019 00:02:30 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv6 0/4] omapdrm: DSI command mode panel support
+Message-ID: <20190530070230.GR5447@atomide.com>
+References: <20190523200756.25314-1-sebastian.reichel@collabora.com>
+ <60c45d23-de2f-d94a-c3d7-146a2bee538f@ti.com>
+ <20190527112122.GJ5447@atomide.com>
+ <e507c415-38de-86fe-9265-4b0aed0d7224@ti.com>
+ <20190528093952.GM5447@atomide.com>
+ <14c6c702-844b-756d-2d97-44e8f5a169df@ti.com>
+ <20190528101847.GN5447@atomide.com>
+ <ac487765-01a3-2c82-d86e-db00451563a9@ti.com>
+ <20190529081038.GP5447@atomide.com>
+ <20190530054640.GQ5447@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x4U6tpgk061915
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530054640.GQ5447@atomide.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In RV32, udelay would delay the wrong cycle. When it shifts right
-"UDELAY_SHITFT" bits, it either delays 0 cycle or 1 cycle. It only works
-correctly in RV64. Because the 'ucycles' always needs to be 64 bits
-variable.
+* Tony Lindgren <tony@atomide.com> [190530 05:47]:
+> * Tony Lindgren <tony@atomide.com> [190529 08:11]:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [190529 07:06]:
+> > > On 28/05/2019 13:18, Tony Lindgren wrote:
+> > > 
+> > > > > My board is x15 rev A3, attached to AM5 EVM. I've also attached my kernel
+> > > > > config.
+> > > > 
+> > > > Strange that this is not affecting other x15? I think timer12 would
+> > > > be blocked on HS devices though?
+> > > 
+> > > Seems that the kernel config affects. omap2plus_defconfig boots ok.
+> > 
+> > OK, this line in your oops:
+> > 
+> > Unable to handle kernel paging request at virtual address 5a5a5a5a
+> > 
+> > Probably means we hit some slab poison with DEBUG_SLAB set.
+> > Looks like your config boots fine with DEBUG_SLAB disabled
+> > for me.
+> > 
+> > As this only happens for timer12, I wonder if we're again
+> > hitting some uncompress issue with corrupted dtb. Changing
+> > u-boot ftdaddr higher up might possibly make it go away.
+> > Or else there's a bug elsewhere :)
+> 
+> Oh but CM_WKUPAON_TIMER12_CLKCTRL has no CLKSEL option unlike
+> CM_WKUPAON_TIMER1_CLKCTRL. Below is one part of the fix, but
+> it seems like we're missing handling somewhere as trying to
+> get a non-existing clock should just produce -ENODEV type error.
+> 
+> And the clksel should be just handled with assigned-clocks
+> in general, but I think we still need it there until we
+> have drivers/clocksource/ timer drivers updated to boot
+> using early_platform_device.
 
-Signed-off-by: Nick Hu <nickhu@andestech.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
----
- arch/riscv/lib/delay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK found it, we have the clkctrl clock potentially return
+uninitialized data. I posted two fixes for the issue:
 
-diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
-index dce8ae24c6d3..ee6853c1e341 100644
---- a/arch/riscv/lib/delay.c
-+++ b/arch/riscv/lib/delay.c
-@@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
- 
- void udelay(unsigned long usecs)
- {
--	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
-+	u64 ucycles = (u64)usecs * lpj_fine * UDELAY_MULT;
- 
- 	if (unlikely(usecs > MAX_UDELAY_US)) {
- 		__delay((u64)usecs * riscv_timebase / 1000000ULL);
--- 
-2.17.0
+[PATCH] clk: ti: clkctrl: Fix returning uninitialized data
+[PATCH] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
 
+Regards,
+
+Tony
