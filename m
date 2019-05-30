@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F695C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD299C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792CE24B44
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D9724B53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187287;
-	bh=X4oh5b0sq6P97AQ/irYKNhAaCFn2Vb2y2FN1gN+gQKs=;
+	s=default; t=1559187291;
+	bh=+Gt3yha4H/+lKvAWpUCj6MTamW/nP7rXy47C+174hdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mSp5ZX+W58yQBoitEKPv0vmAYgLYTL9Paxxxqh7JhooFCZDMbw+OIQS1dy0/lwMz4
-	 QP6vYPVsj4l1X2W3EOrCNHrhXppirQBhXjuJtip6R+e1A8matLGpbtz2OD1vKcYL49
-	 kgV7Rl4eRKy54uuYAwPyF6+Y8eDd2zyzkPo+/utQ=
+	b=eJZOZIBTbnAI3m7xXe3WEpUfELxAK6ZWzLlLTKvTJ0FsETu6Y7aJOLU/RRQ6uI4oY
+	 uFU6CjOUuYaPZtBg+nparErA0ytyUXcrb2X6gEdzSzn0fezrGiUByBlsWG6tXleMTX
+	 Qa9KUZbP5GTRlv2EUv9HwOF00na/QsJgsbueHFNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfE3D1M (ORCPT
+        id S2387851AbfE3D1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:27:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731838AbfE3DTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:14 -0400
+        id S1731831AbfE3DTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:12 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C7AC24844;
-        Thu, 30 May 2019 03:19:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CD792484B;
+        Thu, 30 May 2019 03:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186353;
-        bh=X4oh5b0sq6P97AQ/irYKNhAaCFn2Vb2y2FN1gN+gQKs=;
+        s=default; t=1559186351;
+        bh=+Gt3yha4H/+lKvAWpUCj6MTamW/nP7rXy47C+174hdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FSes2h/c5GZ0cTw/fbfHgVc8rBTN3B/np+k0WGe7bDdnKtUBtnDSgWChAsLBMWGzH
-         sJlPpE/AYk8wnVjsfM8ABEJP2DHDN4BNXvlvPOkzlSqrdWs2/eiJyDOjjGy2FsINlg
-         2gZIhDTsMIKE+dRPOIYD7S7dnu6BoRNPYnRishkI=
+        b=nEhb9IixDPGc1t7i0ubZN6p7rBcCO/d4M+Ok22u9V7HiUEtk7muHnLPsHCSD0s/nW
+         PuqjOTq4j/RoqYqjRkNhoai8wWw2poH7J3Aup8ufgfvPp/wtZe4S3Nm41U8mDBD/pf
+         fUz6bNYjz4K3Z18q/b9hKJRaKf1fAGkR7eaS6RsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 094/193] media: au0828: Fix NULL pointer dereference in au0828_analog_stream_enable()
-Date:   Wed, 29 May 2019 20:05:48 -0700
-Message-Id: <20190530030502.100827162@linuxfoundation.org>
+Subject: [PATCH 4.14 090/193] media: au0828: stop video streaming only when last user stops
+Date:   Wed, 29 May 2019 20:05:44 -0700
+Message-Id: <20190530030501.529087638@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,75 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 898bc40bfcc26abb6e06e960d6d4754c36c58b50 ]
+[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
 
-Fix au0828_analog_stream_enable() to check if device is in the right
-state first. When unbind happens while bind is in progress, usbdev
-pointer could be invalid in au0828_analog_stream_enable() and a call
-to usb_ifnum_to_if() will result in the null pointer dereference.
+If the application was streaming from both videoX and vbiX, and streaming
+from videoX was stopped, then the vbi streaming also stopped.
 
-This problem is found with the new media_dev_allocator.sh test.
+The cause being that stop_streaming for video stopped the subdevs as well,
+instead of only doing that if dev->streaming_users reached 0.
 
-kernel: [  590.359623] BUG: unable to handle kernel NULL pointer dereference at 00000000000004e8
-kernel: [  590.359627] #PF error: [normal kernel read fault]
-kernel: [  590.359629] PGD 0 P4D 0
-kernel: [  590.359632] Oops: 0000 [#1] SMP PTI
-kernel: [  590.359634] CPU: 3 PID: 1458 Comm: v4l_id Not tainted 5.1.0-rc2+ #30
-kernel: [  590.359636] Hardware name: Dell Inc. OptiPlex 7 90/0HY9JP, BIOS A18 09/24/2013
-kernel: [  590.359641] RIP: 0010:usb_ifnum_to_if+0x6/0x60
-kernel: [  590.359643] Code: 5d 41 5e 41 5f 5d c3 48 83 c4
- 10 b8 fa ff ff ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 b8 fa ff ff ff c3 0f 1f 00 6
-6 66 66 66 90 55 <48> 8b 97 e8 04 00 00 48 89 e5 48 85 d2 74 41 0f b6 4a 04 84 c
-9 74
-kernel: [  590.359645] RSP: 0018:ffffad3cc3c1fc00 EFLAGS: 00010246
-kernel: [  590.359646] RAX: 0000000000000000 RBX: ffff8ded b1f3c000 RCX: 1f377e4500000000
-kernel: [  590.359648] RDX: ffff8dedfa3a6b50 RSI: 00000000 00000000 RDI: 0000000000000000
-kernel: [  590.359649] RBP: ffffad3cc3c1fc28 R08: 00000000 8574acc2 R09: ffff8dedfa3a6b50
-kernel: [  590.359650] R10: 0000000000000001 R11: 00000000 00000000 R12: 0000000000000000
-kernel: [  590.359652] R13: ffff8dedb1f3f0f0 R14: ffffffff adcf7ec0 R15: 0000000000000000
-kernel: [  590.359654] FS:  00007f7917198540(0000) GS:ffff 8dee258c0000(0000) knlGS:0000000000000000
-kernel: [  590.359655] CS:  0010 DS: 0000 ES: 0000 CR0: 00 00000080050033
-kernel: [  590.359657] CR2: 00000000000004e8 CR3: 00000001 a388e002 CR4: 00000000000606e0
-kernel: [  590.359658] Call Trace:
-kernel: [  590.359664]  ? au0828_analog_stream_enable+0x2c/0x180
-kernel: [  590.359666]  au0828_v4l2_open+0xa4/0x110
-kernel: [  590.359670]  v4l2_open+0x8b/0x120
-kernel: [  590.359674]  chrdev_open+0xa6/0x1c0
-kernel: [  590.359676]  ? cdev_put.part.3+0x20/0x20
-kernel: [  590.359678]  do_dentry_open+0x1f6/0x360
-kernel: [  590.359681]  vfs_open+0x2f/0x40
-kernel: [  590.359684]  path_openat+0x299/0xc20
-kernel: [  590.359688]  do_filp_open+0x9b/0x110
-kernel: [  590.359695]  ? _raw_spin_unlock+0x27/0x40
-kernel: [  590.359697]  ? __alloc_fd+0xb2/0x160
-kernel: [  590.359700]  do_sys_open+0x1ba/0x260
-kernel: [  590.359702]  ? do_sys_open+0x1ba/0x260
-kernel: [  590.359712]  __x64_sys_openat+0x20/0x30
-kernel: [  590.359715]  do_syscall_64+0x5a/0x120
-kernel: [  590.359718]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
+at all when dev->streaming_users reached 0.
 
-Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tested-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-video.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
-index 7cd2daf869895..067f46c4f61a7 100644
+index 9342402b92f76..7cd2daf869895 100644
 --- a/drivers/media/usb/au0828/au0828-video.c
 +++ b/drivers/media/usb/au0828/au0828-video.c
-@@ -758,6 +758,9 @@ static int au0828_analog_stream_enable(struct au0828_dev *d)
+@@ -839,9 +839,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
+ 			return rc;
+ 		}
  
- 	dprintk(1, "au0828_analog_stream_enable called\n");
- 
-+	if (test_bit(DEV_DISCONNECTED, &d->dev_state))
-+		return -ENODEV;
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
 +
- 	iface = usb_ifnum_to_if(d->usbdev, 0);
- 	if (iface && iface->cur_altsetting->desc.bAlternateSetting != 5) {
- 		dprintk(1, "Changing intf#0 to alt 5\n");
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+-			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
+-						s_stream, 1);
+ 			dev->vid_timeout_running = 1;
+ 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
+ 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
+@@ -861,10 +861,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
+ 
+ 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+-	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
+ 	dev->vid_timeout_running = 0;
+ 	del_timer_sync(&dev->vid_timeout);
+ 
+@@ -893,8 +894,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
+ 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
+ 		dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+ 	spin_lock_irqsave(&dev->slock, flags);
+ 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
