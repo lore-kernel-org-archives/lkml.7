@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272A0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D645C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E883E25D6A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA05325D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191903;
-	bh=11eoCVyjHUvZ4VuOsBnLJjZ55ivTqJg/YMhx7s9WbFA=;
+	s=default; t=1559191906;
+	bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q7CWgjKCdXysk/My8OXCjksOKR6IbwIxLKzR/fwofcw5EQna27LY5dpuViX++o6Dc
-	 oSAGyXWokBJcZXifl5535fvbjgdsBDrNhDI/fzzpn9AHIuVKZ+ljDH2lxmFzPHpWp/
-	 U+7xCU0BG+Dq+ELDWOyng1+5XQCRpPRVFG6oSmEA=
+	b=xlzWOlQMZ9vYPK3I4WZTkSc2dTvDpdy0vUhd4HyryFzvlUzuW4M1idm1dWrQf5cno
+	 R21koPLxRe3qilpP0cfQzdK6tJIXCe5znLPafrxS+HEO7FXvcl9Y9D+4rfZwbzRTno
+	 MMq9akONGZmzeU86Ri5qzb9lSSI2VnC0PfDbun+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389020AbfE3Evm (ORCPT
+        id S1729013AbfE3Evq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfE3DKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728276AbfE3DKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:10:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B6D24481;
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F3D24476;
         Thu, 30 May 2019 03:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185854;
-        bh=11eoCVyjHUvZ4VuOsBnLJjZ55ivTqJg/YMhx7s9WbFA=;
+        bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2OisHip0DI7xotH/AWgrKMHKBhSCgMp1Hm9/bjOquiq2WHSAS7wpt34Y3OoTZlmP2
-         X73Qsk26I6RrY7+a1yZyiCKxaKoM295aLtDSABYZ7b2PWWiTcG+FBCCoFTAd0voWOg
-         V2uCr6UN6Atd5ULCPYay/CRUH95i/HgOi/38G/Ek=
+        b=B0aGR8TgqoXmINLQBJ9AMZaN+OJvSGD85mSm0aR5SyNXtO29mPZFE6ixkVfDdEdRn
+         PgSoR/szFU69skcu83rQW4HuPMBHt6/AKhPeElwKej2mryU7C28zMXSfjXwLAGTbz4
+         npZnxj7czbt9LjGWRNYsWCThKlp1l0sWT8uJfvFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 181/405] drm: etnaviv: avoid DMA API warning when importing buffers
-Date:   Wed, 29 May 2019 20:02:59 -0700
-Message-Id: <20190530030550.240685566@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 180/405] x86/irq/64: Limit IST stack overflow check to #DB stack
+Date:   Wed, 29 May 2019 20:02:58 -0700
+Message-Id: <20190530030550.194242069@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,90 +66,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1262cc8893ecb0eb2c21e042d0d268cc180edb61 ]
+[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
 
-During boot, I get this kernel warning:
+Commit
 
-WARNING: CPU: 0 PID: 19001 at kernel/dma/debug.c:1301 debug_dma_map_sg+0x284/0x3dc
-etnaviv etnaviv: DMA-API: mapping sg segment longer than device claims to support [len=3145728] [max=65536]
-Modules linked in: ip6t_REJECT nf_reject_ipv6 ip6t_rpfilter xt_tcpudp ipt_REJECT nf_reject_ipv4 xt_conntrack ip_set nfnetlink ebtable_broute ebtable_nat ip6table_raw ip6table_nat nf_nat_ipv6 ip6table_mangle iptable_raw iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv4 nf_defrag_ipv6 libcrc32c iptable_mangle ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter caam_jr error snd_soc_imx_spdif imx_thermal snd_soc_imx_audmux nvmem_imx_ocotp snd_soc_sgtl5000
-caam imx_sdma virt_dma coda rc_cec v4l2_mem2mem snd_soc_fsl_ssi snd_soc_fsl_spdif imx_vdoa imx_pcm_dma videobuf2_dma_contig etnaviv dw_hdmi_cec gpu_sched dw_hdmi_ahb_audio imx6q_cpufreq nfsd sch_fq_codel ip_tables x_tables
-CPU: 0 PID: 19001 Comm: Xorg Not tainted 4.20.0+ #307
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[<c0019658>] (unwind_backtrace) from [<c001489c>] (show_stack+0x10/0x14)
-[<c001489c>] (show_stack) from [<c07fb420>] (dump_stack+0x9c/0xd4)
-[<c07fb420>] (dump_stack) from [<c00312dc>] (__warn+0xf8/0x124)
-[<c00312dc>] (__warn) from [<c00313d0>] (warn_slowpath_fmt+0x38/0x48)
-[<c00313d0>] (warn_slowpath_fmt) from [<c00b14e8>] (debug_dma_map_sg+0x284/0x3dc)
-[<c00b14e8>] (debug_dma_map_sg) from [<c046eb40>] (drm_gem_map_dma_buf+0xc4/0x13c)
-[<c046eb40>] (drm_gem_map_dma_buf) from [<c04c3314>] (dma_buf_map_attachment+0x38/0x5c)
-[<c04c3314>] (dma_buf_map_attachment) from [<c046e728>] (drm_gem_prime_import_dev+0x74/0x104)
-[<c046e728>] (drm_gem_prime_import_dev) from [<c046e5bc>] (drm_gem_prime_fd_to_handle+0x84/0x17c)
-[<c046e5bc>] (drm_gem_prime_fd_to_handle) from [<c046edd0>] (drm_prime_fd_to_handle_ioctl+0x38/0x4c)
-[<c046edd0>] (drm_prime_fd_to_handle_ioctl) from [<c0460efc>] (drm_ioctl_kernel+0x90/0xc8)
-[<c0460efc>] (drm_ioctl_kernel) from [<c0461114>] (drm_ioctl+0x1e0/0x3b0)
-[<c0461114>] (drm_ioctl) from [<c01cae20>] (do_vfs_ioctl+0x90/0xa48)
-[<c01cae20>] (do_vfs_ioctl) from [<c01cb80c>] (ksys_ioctl+0x34/0x60)
-[<c01cb80c>] (ksys_ioctl) from [<c0009000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd81a9fa8 to 0xd81a9ff0)
-9fa0:                   b6c69c88 bec613f8 00000009 c00c642e bec613f8 b86c4600
-9fc0: b6c69c88 bec613f8 c00c642e 00000036 012762e0 01276348 00000300 012d91f8
-9fe0: b6989f18 bec613dc b697185c b667be5c
-irq event stamp: 47905
-hardirqs last  enabled at (47913): [<c0098824>] console_unlock+0x46c/0x680
-hardirqs last disabled at (47922): [<c0098470>] console_unlock+0xb8/0x680
-softirqs last  enabled at (47754): [<c000a484>] __do_softirq+0x344/0x540
-softirqs last disabled at (47701): [<c0038700>] irq_exit+0x124/0x144
----[ end trace af477747acbcc642 ]---
+  37fe6a42b343 ("x86: Check stack overflow in detail")
 
-The reason is the contiguous buffer exceeds the default maximum segment
-size of 64K as specified by dma_get_max_seg_size() in
-linux/dma-mapping.h.  Fix this by providing our own segment size, which
-is set to 2GiB to cover the window found in MMUv1 GPUs.
+added a broad check for the full exception stack area, i.e. it considers
+the full exception stack area as valid.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+That's wrong in two aspects:
+
+ 1) It does not check the individual areas one by one
+
+ 2) #DF, NMI and #MCE are not enabling interrupts which means that a
+    regular device interrupt cannot happen in their context. In fact if a
+    device interrupt hits one of those IST stacks that's a bug because some
+    code path enabled interrupts while handling the exception.
+
+Limit the check to the #DB stack and consider all other IST stacks as
+'overflow' or invalid.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_drv.c | 5 +++++
- drivers/gpu/drm/etnaviv/etnaviv_drv.h | 1 +
- 2 files changed, 6 insertions(+)
+ arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 18c27f795cf61..3156450723bad 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -515,6 +515,9 @@ static int etnaviv_bind(struct device *dev)
- 	}
- 	drm->dev_private = priv;
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index 0469cd078db15..b50ac9c7397bb 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
+ /*
+  * Probabilistic stack overflow check:
+  *
+- * Only check the stack in process context, because everything else
+- * runs on the big interrupt stacks. Checking reliably is too expensive,
+- * so we just check from interrupts.
++ * Regular device interrupts can enter on the following stacks:
++ *
++ * - User stack
++ *
++ * - Kernel task stack
++ *
++ * - Interrupt stack if a device driver reenables interrupts
++ *   which should only happen in really old drivers.
++ *
++ * - Debug IST stack
++ *
++ * All other contexts are invalid.
+  */
+ static inline void stack_overflow_check(struct pt_regs *regs)
+ {
+@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
+ 		return;
  
-+	dev->dma_parms = &priv->dma_parms;
-+	dma_set_max_seg_size(dev, SZ_2G);
-+
- 	mutex_init(&priv->gem_lock);
- 	INIT_LIST_HEAD(&priv->gem_list);
- 	priv->num_gpus = 0;
-@@ -552,6 +555,8 @@ static void etnaviv_unbind(struct device *dev)
+ 	oist = this_cpu_ptr(&orig_ist);
+-	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
+-	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
++	estack_bottom = (u64)oist->ist[DEBUG_STACK];
++	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
+ 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
+ 		return;
  
- 	component_unbind_all(dev, drm);
- 
-+	dev->dma_parms = NULL;
-+
- 	drm->dev_private = NULL;
- 	kfree(priv);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index a6a7ded37ef1d..6a4ea127c4f1a 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -42,6 +42,7 @@ struct etnaviv_file_private {
- 
- struct etnaviv_drm_private {
- 	int num_gpus;
-+	struct device_dma_parameters dma_parms;
- 	struct etnaviv_gpu *gpu[ETNA_MAX_PIPES];
- 
- 	/* list of GEM objects: */
 -- 
 2.20.1
 
