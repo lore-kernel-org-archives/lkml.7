@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471E9C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D90225184
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205D225182
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189508;
-	bh=IxlLU21AYF8lNGgu0aEl00aZGtBAT2KobApAnq5506E=;
+	s=default; t=1559189512;
+	bh=2RNUE2oqUXk6JbDIODB3geUggqhl72IDzXKXwwzFYTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LR2vadsa6AiMMIMOM0GXxFIHa9x8EDmdNFoFe5FR/lUaQ5+7vftRLWafP2U9gMxAT
-	 9nHTSlimixzDh03nD5CHHD1qhje4TCy2iEWFvNBxJPo+bmckzGCT9utq8U7sM5MznZ
-	 I9X2JD9WvOBi8F/eFaLW1VFsIISjD4lhq0EyjcX0=
+	b=AKCbkbWTxwp+famYybBTRBzPy6qiDIq/HJrir6cY3EqBmucT+9+q5JQFAKsDfIdBY
+	 ENVxM4ouMkTf3es3LWb+9Y7ZrptsiF+St0nFm9bot7TODnGyDD9tNBeCWv4QuKdOUj
+	 9BzUGzrPZXaKPBcq4F75pdLS8k0n5hd5FIZpAFt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfE3ELr (ORCPT
+        id S1730798AbfE3DQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbfE3DQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:47 -0400
+        id S1729495AbfE3DNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA450245AB;
-        Thu, 30 May 2019 03:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCA024523;
+        Thu, 30 May 2019 03:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186207;
-        bh=IxlLU21AYF8lNGgu0aEl00aZGtBAT2KobApAnq5506E=;
+        s=default; t=1559186011;
+        bh=2RNUE2oqUXk6JbDIODB3geUggqhl72IDzXKXwwzFYTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzoDiR/KIS/j5gyHs9vsBd9C8ksfeAtLv9nQCSmbFiALSdaN5zTK5RsR/DbQW+sTw
-         19slcSYVazPOcCaa+18g7O1TIfe9gXDND2c6RAlgEtzfCkrQxeLfMFGI5b9OxHecf8
-         9hg7oORL3I2dm9+NWaGgggKnd4I+ewpE5G+BYwcI=
+        b=pjgxJWc0u11dVjvIPsuSSbcUkhHLnMXsLtn23sa8qVSQRJxFoV0SOsDArhralTVVC
+         mTVd74Gq/4K5Lg+Qf3j1y9N+jpVuzp29MY/IL/GpDKbp4UCvE3UzMiVGg5889Wcd9a
+         Ymbg870q8AaFm2/8UYVgXKkF9v9xD1WqHIGxAQow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/276] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 29 May 2019 20:04:13 -0700
-Message-Id: <20190530030532.100483140@linuxfoundation.org>
+Subject: [PATCH 5.0 074/346] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+Date:   Wed, 29 May 2019 20:02:27 -0700
+Message-Id: <20190530030544.829547280@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,45 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+When the DSDT tables expose devices with subdevices and a set of
+hierarchical _DSD properties, the data returned by
+acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+pointer assignment. The parser works fine with device_nodes or
+data_nodes, but not with a combination of the two.
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
+The problem is traced to an invalid pointer used when jumping from
+handling device_nodes to data nodes. The existing code looks for data
+nodes below the last subdevice found instead of the common root. Fix
+by forcing the acpi_device pointer to be derived from the same fwnode
+for the two types of subnodes.
 
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
+This same problem of handling device and data nodes was already fixed
+in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+this should probably go to linux-stable all the way to 4.12
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/property.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 4163f2cfc06fc..bfc5b21d0c3f9 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -268,12 +268,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 77abe0ec40431..bd533f68b1dec 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1031,6 +1031,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
+ 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+ 		struct acpi_data_node *dn;
+ 
++		/*
++		 * We can have a combination of device and data nodes, e.g. with
++		 * hierarchical _DSD properties. Make sure the adev pointer is
++		 * restored before going through data nodes, otherwise we will
++		 * be looking for data_nodes below the last device found instead
++		 * of the common fwnode shared by device_nodes and data_nodes.
++		 */
++		adev = to_acpi_device_node(fwnode);
+ 		if (adev)
+ 			head = &adev->data.subnodes;
+ 		else if (data)
 -- 
 2.20.1
 
