@@ -2,191 +2,138 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A9AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352F8C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D75025637
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D2625637
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfE3JeZ (ORCPT
+        id S1727566AbfE3Je5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:34:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6637 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726454AbfE3JeZ (ORCPT
+        Thu, 30 May 2019 05:34:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34844 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727402AbfE3Je4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:34:25 -0400
-X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
-X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <long.cheng@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 189638788; Thu, 30 May 2019 17:34:21 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n2.mediatek.inc
- (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 30 May
- 2019 17:34:17 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 17:34:16 +0800
-Message-ID: <1559208856.14150.35.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
-From:   Long Cheng <long.cheng@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <Long.cheng@mediatek.com>,
-        "Changqi Hu" <changqi.hu@mediatek.com>
-Date:   Thu, 30 May 2019 17:34:16 +0800
-In-Reply-To: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
-References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
-         <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 30 May 2019 05:34:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-43-7gh7PonmMjqzmTiRGe_CfA-1; Thu, 30 May 2019 10:34:54 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 May 2019 10:34:53 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 May 2019 10:34:53 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Wong' <e@80x24.org>
+CC:     'Oleg Nesterov' <oleg@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error codes
+ according to restore_user_sigmask())
+Thread-Topic: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error
+ codes according to restore_user_sigmask())
+Thread-Index: AQHVFjlRjDlHH6TU60ajIVKPNNmjrqaCR7xwgAAZvgCAAP1NYA==
+Date:   Thu, 30 May 2019 09:34:53 +0000
+Message-ID: <a703239f468d44d3b3e7d71b40289072@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com>
+ <b05cec7f9e8f457281e689576a7a360f@AcuMS.aculab.com>
+ <20190529185012.qqeqq4fsolprknrz@dcvr>
+In-Reply-To: <20190529185012.qqeqq4fsolprknrz@dcvr>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B27139AB2F1BB9957CAE9332638E0C210155CD5265085DED026FD2DB4FE943502000:8
-X-MTK:  N
+X-MC-Unique: 7gh7PonmMjqzmTiRGe_CfA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-23 at 15:35 +0800, Long Cheng wrote:
-
-
-Hi Greg,
-
-Just a gentle ping!
-
-thanks.
-
-> Modify uart rx and complete for DMA
-> 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  drivers/tty/serial/8250/8250_mtk.c |   49 +++++++++++++++---------------------
->  1 file changed, 20 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index 417c7c8..f470ded 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -47,7 +47,6 @@
->  #define MTK_UART_DMA_EN_RX	0x5
->  
->  #define MTK_UART_ESCAPE_CHAR	0x77	/* Escape char added under sw fc */
-> -#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
->  #define MTK_UART_RX_SIZE	0x8000
->  #define MTK_UART_TX_TRIGGER	1
->  #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
-> @@ -89,28 +88,30 @@ static void mtk8250_dma_rx_complete(void *param)
->  	struct mtk8250_data *data = up->port.private_data;
->  	struct tty_port *tty_port = &up->port.state->port;
->  	struct dma_tx_state state;
-> +	int copied, total, cnt;
->  	unsigned char *ptr;
-> -	int copied;
->  
-> -	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> -				dma->rx_size, DMA_FROM_DEVICE);
-> +	if (data->rx_status == DMA_RX_SHUTDOWN)
-> +		return;
->  
->  	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> +	total = dma->rx_size - state.residue;
-> +	cnt = total;
->  
-> -	if (data->rx_status == DMA_RX_SHUTDOWN)
-> -		return;
-> +	if ((data->rx_pos + cnt) > dma->rx_size)
-> +		cnt = dma->rx_size - data->rx_pos;
->  
-> -	if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> -	} else {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr,
-> -						dma->rx_size - data->rx_pos);
-> +	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> +	copied = tty_insert_flip_string(tty_port, ptr, cnt);
-> +	data->rx_pos += cnt;
-> +
-> +	if (total > cnt) {
->  		ptr = (unsigned char *)(dma->rx_buf);
-> -		copied += tty_insert_flip_string(tty_port, ptr,
-> -				data->rx_pos + state.residue - dma->rx_size);
-> +		cnt = total - cnt;
-> +		copied += tty_insert_flip_string(tty_port, ptr, cnt);
-> +		data->rx_pos = cnt;
->  	}
-> +
->  	up->port.icount.rx += copied;
->  
->  	tty_flip_buffer_push(tty_port);
-> @@ -121,9 +122,7 @@ static void mtk8250_dma_rx_complete(void *param)
->  static void mtk8250_rx_dma(struct uart_8250_port *up)
->  {
->  	struct uart_8250_dma *dma = up->dma;
-> -	struct mtk8250_data *data = up->port.private_data;
->  	struct dma_async_tx_descriptor	*desc;
-> -	struct dma_tx_state	 state;
->  
->  	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
->  					   dma->rx_size, DMA_DEV_TO_MEM,
-> @@ -138,12 +137,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
->  
->  	dma->rx_cookie = dmaengine_submit(desc);
->  
-> -	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> -	data->rx_pos = state.residue;
-> -
-> -	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> -				   dma->rx_size, DMA_FROM_DEVICE);
-> -
->  	dma_async_issue_pending(dma->rxchan);
->  }
->  
-> @@ -156,13 +149,11 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
->  	if (data->rx_status != DMA_RX_START)
->  		return;
->  
-> -	dma->rxconf.direction		= DMA_DEV_TO_MEM;
-> -	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
-> -	dma->rxconf.src_addr		= dma->rx_addr;
-> +	dma->rxconf.src_port_window_size	= dma->rx_size;
-> +	dma->rxconf.src_addr				= dma->rx_addr;
->  
-> -	dma->txconf.direction		= DMA_MEM_TO_DEV;
-> -	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
-> -	dma->txconf.dst_addr		= dma->tx_addr;
-> +	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
-> +	dma->txconf.dst_addr				= dma->tx_addr;
->  
->  	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
->  		UART_FCR_CLEAR_XMIT);
-
+RnJvbTogRXJpYyBXb25nDQo+IFNlbnQ6IDI5IE1heSAyMDE5IDE5OjUwDQouLi4NCj4gPiBQZXJz
+b25hbGx5IEkgdGhpbmsgdGhhdCBpcyB3cm9uZy4NCj4gPiBHaXZlbiBjb2RlIGxpa2UgdGhlIGFi
+b3ZlIHRoYXQgaGFzOg0KPiA+IAkJd2hpbGUgKCFpbnRlcnJ1cHRlZCkgew0KPiA+IAkJCXBzZWxl
+Y3QoLi4uLCAmc2lnaW50KTsNCj4gPiAJCQkvLyBwcm9jZXNzIGF2YWlsYWJsZSBkYXRhDQo+ID4g
+CQl9DQo+ID4NCj4gPiBZb3Ugd2FudCB0aGUgc2lnbmFsIGhhbmRsZXIgdG8gYmUgZXhlY3V0ZWQg
+ZXZlbiBpZiBvbmUgb2YgdGhlIGZkcw0KPiA+IGFsd2F5cyBoYXMgYXZhaWxhYmxlIGRhdGEuDQo+
+ID4gT3RoZXJ3aXNlIHlvdSBjYW4ndCBpbnRlcnJ1cHQgYSBwcm9jZXNzIHRoYXQgaXMgYWx3YXlz
+IGJ1c3kuDQoNCkZXSVcgaW4gdGhlIHBhc3QgSSd2ZSBzZWVuIGEgcHJvY2VzcyB0aGF0IGxvb3Bz
+IHNlbGVjdC1hY2NlcHQtZm9yay1leGVjDQpnZXQgaXRzIHByaW9yaXR5IHJlZHVjZWQgdG8gdGhl
+IHBvaW50IHdoZXJlIGl0IG5ldmVyIGJsb2NrZWQNCmluIHNlbGVjdC4gVGhlIGNsaWVudCBzaWRl
+IHJldHJpZXMgbWFkZSBpdCBnbyBiYWRseSB3cm9uZyENCklmIGl0IGhhZCBsaW1pdGVkIHdoZW4g
+U0lHX0lOVCB3YXMgZGV0ZWN0ZWQgaXQgd291bGQgaGF2ZSBiZWVuDQphIGxpdHRsZSBtb3JlIGRp
+ZmZpY3VsdCB0byBraWxsLg0KDQo+IEFncmVlZC4uLiAgSSBiZWxpZXZlIGNtb2dzdG9yZWQgaGFz
+IGFsd2F5cyBoYWQgYSBidWcgaW4gdGhlIHdheQ0KPiBpdCB1c2VzIGVwb2xsX3B3YWl0IGJlY2F1
+c2UgaXQgZmFpbGVkIHRvIGNoZWNrIGludGVycnVwdHMgaWY6DQo+IA0KPiBhKSBhbiBGRCBpcyBy
+ZWFkeSArIGludGVycnVwdA0KPiBiKSBlcG9sbF9wd2FpdCByZXR1cm5zIDAgb24gaW50ZXJydXB0
+DQoNCkJ1dCB0aGUga2VybmVsIGNvZGUgc2VlbXMgdG8gb25seSBjYWxsIHRoZSBzaWduYWwgaGFu
+ZGxlcg0KKGZvciBzaWduYWxzIHRoYXQgYXJlIGVuYWJsZWQgZHVyaW5nIHBzZWxlY3QoKSAoZXRj
+KSkgaWYNCnRoZSB1bmRlcmx5aW5nIHdhaXQgaXMgaW50ZXJydXB0ZWQuDQoNCj4gVGhlIGJ1ZyBy
+ZW1haW5zIGluIHVzZXJzcGFjZSBmb3IgYSksIHdoaWNoIEkgd2lsbCBmaXggYnkgYWRkaW5nDQo+
+IGFuIGludGVycnVwdCBjaGVjayB3aGVuIGFuIEZEIGlzIHJlYWR5LiAgVGhlIHdpbmRvdyBpcyB2
+ZXJ5DQo+IHNtYWxsIGZvciBhKSBhbmQgZGlmZmljdWx0IHRvIHRyaWdnZXIsIGFuZCBhbHNvIGlu
+IGEgcmFyZSBjb2RlDQo+IHBhdGguDQo+IA0KPiBUaGUgYikgY2FzZSBpcyB0aGUga2VybmVsIGJ1
+ZyBpbnRyb2R1Y2VkIGluIDg1NGE2ZWQ1NjgzOWE0MGYNCj4gKCJzaWduYWw6IEFkZCByZXN0b3Jl
+X3VzZXJfc2lnbWFzaygpIikuDQo+IA0KPiBJIGRvbid0IHRoaW5rIHRoZXJlJ3MgYW55IGRpc2Fn
+cmVlbWVudCB0aGF0IGIpIGlzIGEga2VybmVsIGJ1Zy4NCg0KSWYgdGhlIHNpZ25hbCBpcyByYWlz
+ZWQgYWZ0ZXIgdGhlIHdhaXQgaGFzIHRpbWVkIG91dCBidXQgYmVmb3JlDQp0aGUgc2lnbmFsIG1h
+c2sgaXMgcmVzdG9yZWQuDQoNCj4gU28gdGhlIGNvbmZ1c2lvbiBpcyBmb3IgYSksIGFuZCBQT1NJ
+WCBpcyBub3QgY2xlYXIgdy5yLnQuIGhvdw0KPiBwc2VsZWN0L3BvbGwgd29ya3Mgd2hlbiB0aGVy
+ZSdzIGJvdGggRkQgcmVhZGluZXNzIGFuZCBhbg0KPiBpbnRlcnJ1cHQuDQo+IA0KPiBUaHVzIEkn
+bSBpbmNsaW5lZCB0byBiZWxpZXZlICpzZWxlY3QvKnBvbGwvZXBvbGxfKndhaXQgc2hvdWxkDQo+
+IGZvbGxvdyBQT1NJWCByZWFkKCkgc2VtYW50aWNzOg0KPiANCj4gICAgICAgIElmIGEgcmVhZCgp
+IGlzIGludGVycnVwdGVkIGJ5IGEgc2lnbmFsIGJlZm9yZSBpdCByZWFkcyBhbnkgZGF0YSwgaXQg
+c2hhbGwNCj4gICAgICAgIHJldHVybiDiiJIxIHdpdGggZXJybm8gc2V0IHRvIFtFSU5UUl0uDQo+
+IA0KPiAgICAgICAgSWYgIGEgIHJlYWQoKSAgaXMgIGludGVycnVwdGVkIGJ5IGEgc2lnbmFsIGFm
+dGVyIGl0IGhhcyBzdWNjZXNzZnVsbHkgcmVhZA0KPiAgICAgICAgc29tZSBkYXRhLCBpdCBzaGFs
+bCByZXR1cm4gdGhlIG51bWJlciBvZiBieXRlcyByZWFkLg0KDQpFeGNlcHQgdGhhdCBhYm92ZSB5
+b3Ugd2FudCBkaWZmZXJlbnQgc2VtYW50aWNzIDotKQ0KRm9yIHJlYWQoKSBhbnkgc2lnbmFsIGhh
+bmRsZXIgaXMgYWx3YXlzIGNhbGxlZC4NCkFuZCB0aGUgcmV0dXJuIHZhbHVlIG9mIGEgbm9uLWJs
+b2NraW5nIHJlYWQgdGhhdCByZXR1cm5zIG5vIGRhdGENCmlzIG5vdCBhZmZlY3RlZCBieSBhbnkg
+cGVuZGluZyBzaWduYWxzLg0KDQpGb3IgcHNlbGVjdCgpIHRoYXQgd291bGQgbWVhbiB0aGF0IGlm
+IHRoZSB3YWl0IHRpbWVkIG91dCAocmVzdWx0IDApDQphbmQgdGhlbiBhIHNpZ25hbCB3YXMgcmFp
+c2VkIChiZWZvcmUgdGhlIG1hc2sgZ290IGNoYW5nZWQgYmFjaykgdGhlbg0KdGhlIHJldHVybiB2
+YWx1ZSB3b3VsZCBiZSB6ZXJvIGFuZCB0aGUgc2lnbmFsIGhhbmRsZXIgd291bGQgYmUgY2FsbGVk
+Lg0KU28geW91ciAoYikgYWJvdmUgaXMgbm90IGEgYnVnLg0KRXZlbiBzZWxlY3QoKSBjYW4gcmV0
+dXJuICd0aW1lb3V0JyBhbmQgaGF2ZSBhIHNpZ25hbCBoYW5kbGVyIGNhbGxlZC4NCg0KVGhlcmUg
+YXJlIHJlYWxseSB0d28gc2VwYXJhdGUgaXNzdWVzOg0KMSkgU2lnbmFscyB0aGF0IGFyZSBwZW5k
+aW5nIHdoZW4gdGhlIG5ldyBtYXNrIGlzIGFwcGxpZWQuDQoyKSBTaWduYWxzIHRoYXQgYXJlIHJh
+aXNlZCBhZnRlciB0aGUgd2FpdCB0ZXJtaW5hdGVzIChzdWNjZXNzIG9yIHRpbWVvdXQpLg0KSWYg
+dGhlIHNpZ25hbCBoYW5kbGVycyBmb3IgKDIpIGFyZSBub3QgY2FsbGVkIHRoZW4gdGhleSBiZWNv
+bWUgKDEpDQpuZXh0IHRpbWUgYXJvdW5kIHRoZSBhcHBsaWNhdGlvbiBsb29wLg0KDQpNYXliZSB0
+aGUgJ3Jlc3RvcmUgc2lnbWFzaycgZnVuY3Rpb24gc2hvdWxkIGJlIHBhc3NlZCBhbiBpbmRpY2F0
+aW9uDQpvZiB3aGV0aGVyIGl0IGlzIGFsbG93ZWQgdG8gbGV0IHNpZ25hbCBoYW5kbGVyIGJlIGNh
+bGxlZCBhbmQgcmV0dXJuDQp3aGV0aGVyIHRoZXkgd291bGQgYmUgY2FsbGVkIChpZSB3aGV0aGVy
+IGl0IHJlc3RvcmVkIHRoZSBzaWduYWwgbWFzaw0Kb3IgbGVmdCBpdCBmb3IgdGhlIHN5c2NhbGwg
+ZXhpdCBjb2RlIHRvIGRvIGFmdGVyIGNhbGxpbmcgdGhlIHNpZ25hbA0KaGFuZGxlcnMpLg0KDQpU
+aGF0IHdvdWxkIGFsbG93IGVwb2xsKCkgdG8gY29udmVydCB0aW1lb3V0K3BlbmRpbmcgc2lnbmFs
+IHRvIEVJTlRSLA0Kb3IgdG8gYWxsb3cgYWxsIGhhbmRsZXJzIGJlIGNhbGxlZCByZWdhcmRsZXNz
+IG9mIHRoZSByZXR1cm4gdmFsdWUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
+TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
+VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
