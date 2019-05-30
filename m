@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F97C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701DCC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C6423E30
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A1424851
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188047;
-	bh=0Z11osrJPDVUTFcHjQOPdOwtQXp2VYNINeIfJT/Bcgw=;
+	s=default; t=1559188050;
+	bh=+PtwMYjRY5kxwt8B2xbSM9suEv28wE8SBO9UdnqszsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KewKlvnUFz8Vtekz0Iai2yXQqy/wP6oJEVC1EM/M7oBeg1gBwR7+4gmdBIFUztswL
-	 f1lWiN1z4LAMYnguon4ki9KVPspmsIKtjdjShqCgafanBtEh0l9iTj5c5LZQGBocTV
-	 7fTu9pDDhub5YBRilYXaTRrTlcTKcQPWHy6+urxc=
+	b=wjxkUNcfu6tOwSrUqHtKSB1qxKvvjLRbG+ny9i+6S1CSP0WaLZWeBZLOtMO8NeRXv
+	 XYGGmp/TtAsCOeR+nfO9ZzSbCYzu5IrssiQoOioaCUDMwy+S4psNA4dHSMhRnKwytl
+	 jTFGX85tpjScCf5ntWp4mNIlA4OgN6lb3notmsec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfE3DUc (ORCPT
+        id S1732865AbfE3Dr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40602 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbfE3DPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:55 -0400
+        id S1732225AbfE3DUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:32 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE3FC2458A;
-        Thu, 30 May 2019 03:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A4724923;
+        Thu, 30 May 2019 03:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186154;
-        bh=0Z11osrJPDVUTFcHjQOPdOwtQXp2VYNINeIfJT/Bcgw=;
+        s=default; t=1559186431;
+        bh=+PtwMYjRY5kxwt8B2xbSM9suEv28wE8SBO9UdnqszsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzr65Uk5Ams9NDXIsubQFVAIy91qdaNM4tc6uG38KBhY3Rd57F6S1pwkB8FzuK13F
-         +1p6bBWvceK8IrUGt6ZgAvAneE/PeQQkMckf3W+M9gH/fkgR9lqWSAvPN9yu8SLhFE
-         +pQlUNqofaMsCbFTIlJFSSVhUaC3qcl83aspDg18=
+        b=oQPrSsn0njT6xwiDCvtZaWbj/ltDTw8LElnqf4DD+oDzV403/vGle+bvwmK/WnEUu
+         IciuPc56Yr21BcOfeIXBkfeFJB5rK941Xu812iqZy6Sy33iiPp2+pD6dA6bywBqw3v
+         8n34/3VzXVOBIV91AI096rRC6eRIKt9nAUTDjzMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 341/346] drm: Wake up next in drm_read() chain if we are forced to putback the event
-Date:   Wed, 29 May 2019 20:06:54 -0700
-Message-Id: <20190530030558.004800089@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 024/128] cxgb4: Fix error path in cxgb4_init_module
+Date:   Wed, 29 May 2019 20:05:56 -0700
+Message-Id: <20190530030439.126379476@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,36 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
+[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
 
-After an event is sent, we try to copy it into the user buffer of the
-first waiter in drm_read() and if the user buffer doesn't have enough
-room we put it back onto the list. However, we didn't wake up any
-subsequent waiter, so that event may sit on the list until either a new
-vblank event is sent or a new waiter appears. Rare, but in the worst
-case may lead to a stuck process.
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Testcase: igt/drm_read/short-buffer-wakeup
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
+
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_file.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index 3f20f598cd7cf..9c5bc0121ff99 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -567,6 +567,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
- 				file_priv->event_space -= length;
- 				list_add(&e->link, &file_priv->event_list);
- 				spin_unlock_irq(&dev->event_lock);
-+				wake_up_interruptible(&file_priv->event_wait);
- 				break;
- 			}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index c71a52a2f8017..5478a2ab45c4c 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5203,15 +5203,24 @@ static int __init cxgb4_init_module(void)
+ 
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
+ 	}
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
+ }
  
 -- 
 2.20.1
