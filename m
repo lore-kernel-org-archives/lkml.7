@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E06C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07951C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DEF257C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C2225813
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190951;
-	bh=V/AOaJf7WQlhxpyHlSb0eV/TBH8k2t15up+5rVcIvO0=;
+	s=default; t=1559190954;
+	bh=iYBZAM86OS7sJphh+w2os+mRE+9+QibDBnFo8TrVdMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3ZkZGOnT+hnI0qPVslrrQjB6td1PvL7gI4Uv5C5F/nVEQwAk4Db5+ZaayG0dG39g
-	 QfRGWpmvicJWTaOAYUyPBZ0VqvIFElrh6v7jpJwq841/6tRpWsh6USNEvmqX9IrGe+
-	 Sl67D9kwRQtQErwvXOoK8BloiECwr6TQqWC8kSM0=
+	b=UW6YKVfxNAESoSZ41l0NV/Z5SXcNFJF/HPUz7yItevkOfZx+sUTvRgQ5pLowAqEHC
+	 zNXS+ftNZQGIzNITj80P54K+YKgiKlehe9MEBI31Rx4XK6XqsYTk1zEO8MDmfQ7vEG
+	 bsRbXBjjzCnWNsQtimIjnZTRBBiGWudzvcFTrHKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfE3Efv (ORCPT
+        id S2388472AbfE3Efu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfE3DNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:06 -0400
+        id S1727566AbfE3DNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368832449A;
-        Thu, 30 May 2019 03:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CED124526;
+        Thu, 30 May 2019 03:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185985;
-        bh=V/AOaJf7WQlhxpyHlSb0eV/TBH8k2t15up+5rVcIvO0=;
+        s=default; t=1559185987;
+        bh=iYBZAM86OS7sJphh+w2os+mRE+9+QibDBnFo8TrVdMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEdSSkunnfnG3jtiIbXxE9iroz5xB/OLoR7HRc61PP5/B0TvFD+qDciiABAyiDf+E
-         Y2dfcsItZXqdNIrUV7BYqv/7GEXF0k3CMYVlE9OCFvzgcT7VfgbBkUDZTjMSz6u6a0
-         G8tib/apCv6FQEJTToKlj3zCW/+pYDGC0/OjliME=
+        b=QhlHcRilnvNhJT63UKgbDoQG8AwawMPXzut1V6x1G4GLP82O6S69ejXt2UZRHbgh/
+         jJlneMWPfm1plCkJcYtESzxe25zKFOlmkv5ttpL5swV69o4pQTj1kwFuDf1lwJNnqf
+         CNhq00lfq28yzROFzfX29h6K9DV/Mo4eBDTRI4aM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 5.0 025/346] brcmfmac: assure SSID length from firmware is limited
-Date:   Wed, 29 May 2019 20:01:38 -0700
-Message-Id: <20190530030542.015985894@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 028/346] btrfs: honor path->skip_locking in backref code
+Date:   Wed, 29 May 2019 20:01:41 -0700
+Message-Id: <20190530030542.182651394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -64,35 +60,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 1b5e2423164b3670e8bc9174e4762d297990deff upstream.
+commit 38e3eebff643db725633657d1d87a3be019d1018 upstream.
 
-The SSID length as received from firmware should not exceed
-IEEE80211_MAX_SSID_LEN as that would result in heap overflow.
+Qgroups will do the old roots lookup at delayed ref time, which could be
+while walking down the extent root while running a delayed ref.  This
+should be fine, except we specifically lock eb's in the backref walking
+code irrespective of path->skip_locking, which deadlocks the system.
+Fix up the backref code to honor path->skip_locking, nobody will be
+modifying the commit_root when we're searching so it's completely safe
+to do.
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+This happens since fb235dc06fac ("btrfs: qgroup: Move half of the qgroup
+accounting time out of commit trans"), kernel may lockup with quota
+enabled.
+
+There is one backref trace triggered by snapshot dropping along with
+write operation in the source subvolume.  The example can be reliably
+reproduced:
+
+  btrfs-cleaner   D    0  4062      2 0x80000000
+  Call Trace:
+   schedule+0x32/0x90
+   btrfs_tree_read_lock+0x93/0x130 [btrfs]
+   find_parent_nodes+0x29b/0x1170 [btrfs]
+   btrfs_find_all_roots_safe+0xa8/0x120 [btrfs]
+   btrfs_find_all_roots+0x57/0x70 [btrfs]
+   btrfs_qgroup_trace_extent_post+0x37/0x70 [btrfs]
+   btrfs_qgroup_trace_leaf_items+0x10b/0x140 [btrfs]
+   btrfs_qgroup_trace_subtree+0xc8/0xe0 [btrfs]
+   do_walk_down+0x541/0x5e3 [btrfs]
+   walk_down_tree+0xab/0xe7 [btrfs]
+   btrfs_drop_snapshot+0x356/0x71a [btrfs]
+   btrfs_clean_one_deleted_snapshot+0xb8/0xf0 [btrfs]
+   cleaner_kthread+0x12b/0x160 [btrfs]
+   kthread+0x112/0x130
+   ret_from_fork+0x27/0x50
+
+When dropping snapshots with qgroup enabled, we will trigger backref
+walk.
+
+However such backref walk at that timing is pretty dangerous, as if one
+of the parent nodes get WRITE locked by other thread, we could cause a
+dead lock.
+
+For example:
+
+           FS 260     FS 261 (Dropped)
+            node A        node B
+           /      \      /      \
+       node C      node D      node E
+      /   \         /  \        /     \
+  leaf F|leaf G|leaf H|leaf I|leaf J|leaf K
+
+The lock sequence would be:
+
+      Thread A (cleaner)             |       Thread B (other writer)
+-----------------------------------------------------------------------
+write_lock(B)                        |
+write_lock(D)                        |
+^^^ called by walk_down_tree()       |
+                                     |       write_lock(A)
+                                     |       write_lock(D) << Stall
+read_lock(H) << for backref walk     |
+read_lock(D) << lock owner is        |
+                the same thread A    |
+                so read lock is OK   |
+read_lock(A) << Stall                |
+
+So thread A hold write lock D, and needs read lock A to unlock.
+While thread B holds write lock A, while needs lock D to unlock.
+
+This will cause a deadlock.
+
+This is not only limited to snapshot dropping case.  As the backref
+walk, even only happens on commit trees, is breaking the normal top-down
+locking order, makes it deadlock prone.
+
+Fixes: fb235dc06fac ("btrfs: qgroup: Move half of the qgroup accounting time out of commit trans")
+CC: stable@vger.kernel.org # 4.14+
+Reported-and-tested-by: David Sterba <dsterba@suse.com>
+Reported-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+[ rebase to latest branch and fix lock assert bug in btrfs/007 ]
+[ solve conflicts and backport to linux-5.0.y ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+[ copy logs and deadlock analysis from Qu's patch ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/backref.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -3474,6 +3474,8 @@ brcmf_wowl_nd_results(struct brcmf_if *i
- 	}
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -712,7 +712,7 @@ out:
+  * read tree blocks and add keys where required.
+  */
+ static int add_missing_keys(struct btrfs_fs_info *fs_info,
+-			    struct preftrees *preftrees)
++			    struct preftrees *preftrees, bool lock)
+ {
+ 	struct prelim_ref *ref;
+ 	struct extent_buffer *eb;
+@@ -737,12 +737,14 @@ static int add_missing_keys(struct btrfs
+ 			free_extent_buffer(eb);
+ 			return -EIO;
+ 		}
+-		btrfs_tree_read_lock(eb);
++		if (lock)
++			btrfs_tree_read_lock(eb);
+ 		if (btrfs_header_level(eb) == 0)
+ 			btrfs_item_key_to_cpu(eb, &ref->key_for_search, 0);
+ 		else
+ 			btrfs_node_key_to_cpu(eb, &ref->key_for_search, 0);
+-		btrfs_tree_read_unlock(eb);
++		if (lock)
++			btrfs_tree_read_unlock(eb);
+ 		free_extent_buffer(eb);
+ 		prelim_ref_insert(fs_info, &preftrees->indirect, ref, NULL);
+ 		cond_resched();
+@@ -1227,7 +1229,7 @@ again:
  
- 	netinfo = brcmf_get_netinfo_array(pfn_result);
-+	if (netinfo->SSID_len > IEEE80211_MAX_SSID_LEN)
-+		netinfo->SSID_len = IEEE80211_MAX_SSID_LEN;
- 	memcpy(cfg->wowl.nd->ssid.ssid, netinfo->SSID, netinfo->SSID_len);
- 	cfg->wowl.nd->ssid.ssid_len = netinfo->SSID_len;
- 	cfg->wowl.nd->n_channels = 1;
+ 	btrfs_release_path(path);
+ 
+-	ret = add_missing_keys(fs_info, &preftrees);
++	ret = add_missing_keys(fs_info, &preftrees, path->skip_locking == 0);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1288,11 +1290,14 @@ again:
+ 					ret = -EIO;
+ 					goto out;
+ 				}
+-				btrfs_tree_read_lock(eb);
+-				btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
++				if (!path->skip_locking) {
++					btrfs_tree_read_lock(eb);
++					btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
++				}
+ 				ret = find_extent_in_eb(eb, bytenr,
+ 							*extent_item_pos, &eie, ignore_offset);
+-				btrfs_tree_read_unlock_blocking(eb);
++				if (!path->skip_locking)
++					btrfs_tree_read_unlock_blocking(eb);
+ 				free_extent_buffer(eb);
+ 				if (ret < 0)
+ 					goto out;
 
 
