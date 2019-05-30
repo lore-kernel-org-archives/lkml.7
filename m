@@ -4,317 +4,211 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94111C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5488726172
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C822617B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MVfYyapC"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GRpnYPs/";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Z6ZAVcsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfE3Upf (ORCPT
+        id S1726666AbfE3Upj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:45:35 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46030 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbfE3Upf (ORCPT
+        Thu, 30 May 2019 16:45:39 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44454 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726225AbfE3Upi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:45:35 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t1so8702710qtc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gWieCtH2yIUBG5LWs9OEX59nD7DlvSQy6nQ6THrqLpQ=;
-        b=MVfYyapCMJ3LatqnyKDs+2vpLg9MtdQ6eIUIapTUApTID2TcLQ0zGLd1PRJdlGCyX1
-         bNDECPJiTcFJ6RgaNyW5qC1fFq+gd310kusmYNxUucmmRT1PxF0j1vQLmo33XvWLYl9/
-         k21lyFySdRC9fu5ciEyARhp5fKwuXC0/YaC/M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gWieCtH2yIUBG5LWs9OEX59nD7DlvSQy6nQ6THrqLpQ=;
-        b=YTC7GO5YkCM1a8qGQFV3J4/6JX191mz+4wWuC/AKzqKjj8+LMseu6kLzcbS1gMxEPo
-         IkShbiZwjcxOJgBsc0NPjptFpt9nq2t6UAzAch+Qqyhijg+8qSm9FLMHIpzz71MwNQIm
-         RB3SEMJIx7B43y/o6pXunMQNLMPRJ+00AWuZkkxwWNxMIVxewPs3BQ/2VhLO08egFsgX
-         JGbj+yjQq7ALr3mNJIgoQ8A9wSi2yCT6d4IwATS8xa0+JfYRtOoFZ1tgIbpgs7unmUa9
-         BOLS1nw1uckoF3lV8KyeKkFlhXJW612duTszzqGj4Cd70u3hfFnfNUqaXxOj511UAWyK
-         bN6A==
-X-Gm-Message-State: APjAAAUnk5uNEgSQ3huorXtWld4dSNTQ+7jk8fmPxePkCVoD1rkZ60zJ
-        95a3T3cPb8PFBzSAoU5kJ3B9HkqG1RMc5+on+6t81g==
-X-Google-Smtp-Source: APXvYqwNLwP00A8U2czycL+eEwL5OUMXo5jNJuA8YWPXcRQvTPdJRTYAmeu3ErcrzQbw0KQSEmCrt5YH4A64vrPlTC8=
-X-Received: by 2002:ac8:2fce:: with SMTP id m14mr5717317qta.22.1559249133671;
- Thu, 30 May 2019 13:45:33 -0700 (PDT)
+        Thu, 30 May 2019 16:45:38 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UKhZYC023782;
+        Thu, 30 May 2019 13:44:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=M4DTDdc5EtSB4MWLN5A8sLi/yej7GFaj8nbWz7b/auM=;
+ b=GRpnYPs/1g+PYzzbk1vQDseihimBmXEU53A74arUFf+IVzUCF+ALMj/TbBjgkhRWIBGY
+ DelsJDuIyTk7b0fmPboxXP3hoiInuV3muhcdW2R/jbb6LZseIDvD3E89DwNvuWPi7z27
+ GApr6CfdnbY+zo/a5W+RfXMuZsNGjMOFz2E= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2stj9w8xyp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 30 May 2019 13:44:43 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 30 May 2019 13:44:42 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 30 May 2019 13:44:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4DTDdc5EtSB4MWLN5A8sLi/yej7GFaj8nbWz7b/auM=;
+ b=Z6ZAVcsntHrkW61uhP/qykrLZEk8bKMAQGYQqccKQjmTiBue4oC+DXEPjmHOiFkBD70AHInFKN3p4UWXl1Ym55vcesbsMijSVrboBx2bZqb6gKtQcd7SYlFT8VwH6j081Faj3P9RC0+z3a3q/CvYNwoOktZoJ+LVaSKYVNpxGbA=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1829.namprd15.prod.outlook.com (10.172.76.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 30 May 2019 20:44:41 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::c026:bca5:3f4e:9b1f]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::c026:bca5:3f4e:9b1f%3]) with mapi id 15.20.1922.021; Thu, 30 May 2019
+ 20:44:41 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
+Thread-Topic: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
+Thread-Index: AQHVFm7e3AOrc7hTMUGa4T8fWo+OPKaC2pWAgAC0sQCAAIQbgP//m2kA
+Date:   Thu, 30 May 2019 20:44:40 +0000
+Message-ID: <5E506871-5361-47CD-9BE7-A0A9708F12A7@fb.com>
+References: <20190529223511.4059120-1-vijaykhemka@fb.com>
+ <20190529223511.4059120-2-vijaykhemka@fb.com>
+ <0a94e784-41a0-4f2d-f9f8-6b365a1e755e@roeck-us.net>
+ <27E78CF3-FAE7-4B6F-ABD7-77F4AE1CD633@fb.com>
+ <20190530194441.GA12310@roeck-us.net>
+In-Reply-To: <20190530194441.GA12310@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::2:3b87]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23c31084-fcb5-47c8-f44d-08d6e53fa3b1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1829;
+x-ms-traffictypediagnostic: CY4PR15MB1829:
+x-microsoft-antispam-prvs: <CY4PR15MB1829D1C39D3D1BD53E75B3F8DD180@CY4PR15MB1829.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00531FAC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(136003)(396003)(39860400002)(376002)(199004)(189003)(6436002)(68736007)(4326008)(14454004)(478600001)(53936002)(66476007)(6116002)(76116006)(91956017)(66556008)(64756008)(66446008)(36756003)(6246003)(6512007)(71200400001)(25786009)(256004)(33656002)(83716004)(71190400001)(66946007)(229853002)(73956011)(82746002)(54906003)(2616005)(2906002)(102836004)(486006)(446003)(316002)(99286004)(53546011)(6506007)(6486002)(186003)(6916009)(86362001)(7736002)(46003)(8936002)(8676002)(81156014)(81166006)(5660300002)(11346002)(476003)(305945005)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1829;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iVxs0LPqMQiTM8MSEl5DXPwWZpawhGa6C4Vj0xTr++JzQM0DTKGdkDPz+x20jFHaGrfWGBeg3i8kuH0vUoEcArGTfI19SWmQW/7VF9nY4gIJdOLr7zCNzdfpu9wPj97ZbseDxQwEsjl2gzGuPti9OR5zstbZMw74oOH77E6Zr6pQq84E2xMzNTLPXPumEqKE9iWMEkYVWXQawJq9nkXWxB51LC8q4oqhdXBm7Nj01JvVUXV4MKJZQ1JaPj875J9/Cotkql4FqQOm4XpzbC0iH92UI+rfBYZkgtJlG07ZdYK9Dj7/5oTC82xmZdmG0UVbSA4SdgdonK0egrDepb5ZqEd6DxemczJruNUYp5clzjuA8KIpqBu4X5PCqH9Cpv/rgtAOVIQfW4xISn7qlxgitViGHzMwDd8ejFOMwS5rYUs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2C3731AD91F76A41B1E20FA5303C1E34@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190519092537.69053-1-jitao.shi@mediatek.com> <20190519092537.69053-7-jitao.shi@mediatek.com>
-In-Reply-To: <20190519092537.69053-7-jitao.shi@mediatek.com>
-From:   Ryan Case <ryandcase@chromium.org>
-Date:   Thu, 30 May 2019 13:45:23 -0700
-Message-ID: <CACjz--m7X13XShZ4ST+54jF_K6=Cfzj1DNBduyVdVsVd2dpULw@mail.gmail.com>
-Subject: Re: [v3 6/7] drm/mediatek: change the dsi phytiming calculate method
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Inki Dae <inki.dae@samsung.com>,
-        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c31084-fcb5-47c8-f44d-08d6e53fa3b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 20:44:40.9641
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vijaykhemka@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1829
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300147
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao,
-
-On Sun, May 19, 2019 at 2:27 AM Jitao Shi <jitao.shi@mediatek.com> wrote:
->
-> Change the method of frame rate calc which can get more accurate
-> frame rate.
->
-> data rate = pixel_clock * bit_per_pixel / lanes
-> Adjust hfp_wc to adapt the additional phy_data
->
-> if MIPI_DSI_MODE_VIDEO_BURST
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
-> else
->         hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
->
-> Note:
-> //(2: 1 for sync, 1 for phy idle)
-> data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
->
-> bpp: bit per pixel
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 119 +++++++++++++++++++++--------
->  1 file changed, 86 insertions(+), 33 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 1165ff944889..3f51b2000c68 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -158,6 +158,25 @@
->         (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
->         (type == MIPI_DSI_DCS_READ))
->
-> +struct mtk_phy_timing {
-> +       u32 lpx;
-> +       u32 da_hs_prepare;
-> +       u32 da_hs_zero;
-> +       u32 da_hs_trail;
-> +
-> +       u32 ta_go;
-> +       u32 ta_sure;
-> +       u32 ta_get;
-> +       u32 da_hs_exit;
-> +
-> +       u32 clk_hs_zero;
-> +       u32 clk_hs_trail;
-> +
-> +       u32 clk_hs_prepare;
-> +       u32 clk_hs_post;
-> +       u32 clk_hs_exit;
-> +};
-> +
->  struct phy;
->
->  struct mtk_dsi_driver_data {
-> @@ -182,12 +201,13 @@ struct mtk_dsi {
->         struct clk *digital_clk;
->         struct clk *hs_clk;
->
-> -       u32 data_rate;
-> +       u64 data_rate;
->
->         unsigned long mode_flags;
->         enum mipi_dsi_pixel_format format;
->         unsigned int lanes;
->         struct videomode vm;
-> +       struct mtk_phy_timing phy_timing;
->         int refcount;
->         bool enabled;
->         u32 irq_data;
-> @@ -221,17 +241,39 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
->  {
->         u32 timcon0, timcon1, timcon2, timcon3;
->         u32 ui, cycle_time;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
-> +
-> +       ui = 1000000000 / dsi->data_rate;
-> +       cycle_time = 8000000000 / dsi->data_rate;
-> +
-> +       timing->lpx = NS_TO_CYCLE(60, cycle_time);
-> +       timing->da_hs_prepare = NS_TO_CYCLE((40 + 5 * ui), cycle_time);
-> +       timing->da_hs_zero = NS_TO_CYCLE((110 + 6 * ui), cycle_time);
-> +       timing->da_hs_trail = NS_TO_CYCLE(((0x4 * ui) + 80), cycle_time);
-> +
-> +       if (timing->da_hs_zero > timing->da_hs_prepare)
-> +               timing->da_hs_zero -= timing->da_hs_prepare;
-
-I don't follow why the above comparison and subtraction is necessary
-when the values are being explicitly set immediately prior and it
-seems to introduce a bug. Leftover from an early revision?
-
-It looks like you've tuned the values such that hs_prepare+hs_zero are
-just above the minimum requirements for that sum, however due to this
-comparison and subtraction we wind up with a value of
-hs_prepare+hs_zero-hs_prepare and fall below spec. Either boosting the
-initial value set for hs_zero or removing the comparison makes display
-happy again. Since I don't see any reason for the compare and subtract
-I'd just drop that.
-
-> +
-> +       timing->ta_go = 4 * timing->lpx;
-> +       timing->ta_sure = 3 * timing->lpx / 2;
-> +       timing->ta_get = 5 * timing->lpx;
-> +       timing->da_hs_exit = 2 * timing->lpx;
-> +
-> +       timing->clk_hs_zero = NS_TO_CYCLE(0x150, cycle_time);
-> +       timing->clk_hs_trail = NS_TO_CYCLE(0x64, cycle_time) + 0xa;
->
-> -       ui = 1000 / dsi->data_rate + 0x01;
-> -       cycle_time = 8000 / dsi->data_rate + 0x01;
-> +       timing->clk_hs_prepare = NS_TO_CYCLE(0x40, cycle_time);
-> +       timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
-> +       timing->clk_hs_exit = 2 * timing->lpx;
-
-There is a lot of alternating between hex and decimal values in this
-function which makes it a little hard to follow. Would be nice to
-stick to one or the other.
-
->
-> -       timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
-> -       timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
-> -                 T_HS_EXIT << 24;
-> -       timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
-> -                 (NS_TO_CYCLE(0x150, cycle_time) << 16);
-> -       timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
-> -                 NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
-> +       timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
-> +                 timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
-> +       timcon1 = timing->ta_go | timing->ta_sure << 8 |
-> +                 timing->ta_get << 16 | timing->da_hs_exit << 24;
-> +       timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
-> +                 timing->clk_hs_trail << 24;
-> +       timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
-> +                 timing->clk_hs_exit << 16;
->
->         writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
->         writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
-> @@ -418,7 +460,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         u32 horizontal_sync_active_byte;
->         u32 horizontal_backporch_byte;
->         u32 horizontal_frontporch_byte;
-> -       u32 dsi_tmp_buf_bpp;
-> +       u32 dsi_tmp_buf_bpp, data_phy_cycles;
-> +       struct mtk_phy_timing *timing = &dsi->phy_timing;
->
->         struct videomode *vm = &dsi->vm;
->
-> @@ -433,7 +476,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->         writel(vm->vactive, dsi->regs + DSI_VACT_NL);
->
->         if (dsi->driver_data->has_size_ctl)
-> -               writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
-> +               writel(vm->vactive << 16 | vm->hactive,
-> +                      dsi->regs + DSI_SIZE_CON);
->
->         horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
->
-> @@ -444,7 +488,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
->                 horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
->                         dsi_tmp_buf_bpp - 10);
->
-> -       horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
-> +       data_phy_cycles = timing->lpx + timing->da_hs_prepare +
-> +                                 timing->da_hs_zero + timing->da_hs_exit + 2;
-> +
-> +       if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 18) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 18;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
-> +       } else {
-> +               if (vm->hfront_porch * dsi_tmp_buf_bpp >
-> +                   data_phy_cycles * dsi->lanes + 12) {
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp -
-> +                                                    data_phy_cycles *
-> +                                                    dsi->lanes - 12;
-> +               } else {
-> +                       DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
-> +                       horizontal_frontporch_byte = vm->hfront_porch *
-> +                                                    dsi_tmp_buf_bpp;
-> +               }
-> +       }
->
->         writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
->         writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
-> @@ -544,8 +615,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->  {
->         struct device *dev = dsi->dev;
->         int ret;
-> -       u64 pixel_clock, total_bits;
-> -       u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
-> +       u32 bit_per_pixel;
->
->         if (++dsi->refcount != 1)
->                 return 0;
-> @@ -564,24 +634,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
->                 break;
->         }
->
-> -       /**
-> -        * htotal_time = htotal * byte_per_pixel / num_lanes
-> -        * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
-> -        * mipi_ratio = (htotal_time + overhead_time) / htotal_time
-> -        * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
-> -        */
-> -       pixel_clock = dsi->vm.pixelclock;
-> -       htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
-> -                       dsi->vm.hsync_len;
-> -       htotal_bits = htotal * bit_per_pixel;
-> -
-> -       overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
-> -                       T_HS_EXIT;
-> -       overhead_bits = overhead_cycles * dsi->lanes * 8;
-> -       total_bits = htotal_bits + overhead_bits;
-> -
-> -       dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
-> -                                         htotal * dsi->lanes);
-> +       dsi->data_rate = dsi->vm.pixelclock * bit_per_pixel / dsi->lanes;
->
->         ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
->         if (ret < 0) {
-
-
-With the earlier fix feel free to add to the next revision
-Tested-by: Ryan Case <ryandcase@chromium.org>
+DQoNCu+7v09uIDUvMzAvMTksIDEyOjQ1IFBNLCAiR3VlbnRlciBSb2VjayIgPGdyb2VjazdAZ21h
+aWwuY29tIG9uIGJlaGFsZiBvZiBsaW51eEByb2Vjay11cy5uZXQ+IHdyb3RlOg0KDQogICAgT24g
+VGh1LCBNYXkgMzAsIDIwMTkgYXQgMDY6NTE6NTJQTSArMDAwMCwgVmlqYXkgS2hlbWthIHdyb3Rl
+Og0KICAgID4gDQogICAgPiANCiAgICA+IE9uIDUvMjkvMTksIDY6MDUgUE0sICJHdWVudGVyIFJv
+ZWNrIiA8Z3JvZWNrN0BnbWFpbC5jb20gb24gYmVoYWxmIG9mIGxpbnV4QHJvZWNrLXVzLm5ldD4g
+d3JvdGU6DQogICAgPiANCiAgICA+ICAgICBPbiA1LzI5LzE5IDM6MzUgUE0sIFZpamF5IEtoZW1r
+YSB3cm90ZToNCiAgICA+ICAgICA+IEFkZGVkIHN1cHBvcnQgZm9yIEluZmVuaW9uIFBYRTE2MTAg
+ZHJpdmVyDQogICAgPiAgICAgPiANCiAgICA+ICAgICA+IFNpZ25lZC1vZmYtYnk6IFZpamF5IEto
+ZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgID4gICAgID4gLS0tDQogICAgPiAgICAgPiAg
+IERvY3VtZW50YXRpb24vaHdtb24vcHhlMTYxMCB8IDg0ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCiAgICA+ICAgICA+ICAgMSBmaWxlIGNoYW5nZWQsIDg0IGluc2VydGlv
+bnMoKykNCiAgICA+ICAgICA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vaHdt
+b24vcHhlMTYxMA0KICAgID4gICAgID4gDQogICAgPiAgICAgPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9od21vbi9weGUxNjEwIGIvRG9jdW1lbnRhdGlvbi9od21vbi9weGUxNjEwDQogICAg
+PiAgICAgPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KICAgID4gICAgID4gaW5kZXggMDAwMDAwMDAw
+MDAwLi5iNWM4M2VkZjAyN2ENCiAgICA+ICAgICA+IC0tLSAvZGV2L251bGwNCiAgICA+ICAgICA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vaHdtb24vcHhlMTYxMA0KICAgID4gICAgID4gQEAgLTAsMCAr
+MSw4NCBAQA0KICAgID4gICAgID4gK0tlcm5lbCBkcml2ZXIgcHhlMTYxMA0KICAgID4gICAgID4g
+Kz09PT09PT09PT09PT09PT09PT09PQ0KICAgID4gICAgID4gKw0KICAgID4gICAgID4gK1N1cHBv
+cnRlZCBjaGlwczoNCiAgICA+ICAgICA+ICsgICogSW5maW5pb24gUFhFMTYxMA0KICAgID4gICAg
+ID4gKyAgICBQcmVmaXg6ICdweGUxNjEwJw0KICAgID4gICAgID4gKyAgICBBZGRyZXNzZXMgc2Nh
+bm5lZDogLQ0KICAgID4gICAgID4gKyAgICBEYXRhc2hlZXQ6IERhdGFzaGVldCBpcyBub3QgcHVi
+bGljbHkgYXZhaWxhYmxlLg0KICAgID4gICAgID4gKw0KICAgID4gICAgID4gKyAgKiBJbmZpbmlv
+biBQWEUxMTEwDQogICAgPiAgICAgPiArICAgIFByZWZpeDogJ3B4ZTExMTAnDQogICAgPiAgICAg
+PiArICAgIEFkZHJlc3NlcyBzY2FubmVkOiAtDQogICAgPiAgICAgPiArICAgIERhdGFzaGVldDog
+RGF0YXNoZWV0IGlzIG5vdCBwdWJsaWNseSBhdmFpbGFibGUuDQogICAgPiAgICAgPiArDQogICAg
+PiAgICAgPiArICAqIEluZmluaW9uIFBYTTEzMTANCiAgICA+ICAgICA+ICsgICAgUHJlZml4OiAn
+cHhtMTMxMCcNCiAgICA+ICAgICA+ICsgICAgQWRkcmVzc2VzIHNjYW5uZWQ6IC0NCiAgICA+ICAg
+ICA+ICsgICAgRGF0YXNoZWV0OiBEYXRhc2hlZXQgaXMgbm90IHB1YmxpY2x5IGF2YWlsYWJsZS4N
+CiAgICA+ICAgICA+ICsNCiAgICA+ICAgICA+ICtBdXRob3I6IFZpamF5IEtoZW1rYSA8dmlqYXlr
+aGVta2FAZmIuY29tPg0KICAgID4gICAgID4gKw0KICAgID4gICAgID4gKw0KICAgID4gICAgID4g
+K0Rlc2NyaXB0aW9uDQogICAgPiAgICAgPiArLS0tLS0tLS0tLS0NCiAgICA+ICAgICA+ICsNCiAg
+ICA+ICAgICA+ICtQWEUxNjEwIGlzIGEgTXVsdGktcmFpbC9NdWx0aXBoYXNlIERpZ2l0YWwgQ29u
+dHJvbGxlcnMgYW5kDQogICAgPiAgICAgPiAraXQgaXMgY29tcGxpYW50IHRvIEludGVsIFZSMTMg
+REMtREMgY29udmVydGVyIHNwZWNpZmljYXRpb25zLg0KICAgID4gICAgID4gKw0KICAgID4gICAg
+IA0KICAgID4gICAgIEFuZCB0aGUgb3RoZXJzID8NCiAgICA+IFRoaXMgc3VwcG9ydHMgVlIxMiBh
+cyB3ZWxsIGFuZCBJIGRvbid0IHNlZSB0aGlzIGNvbnRyb2xsZXIgc3VwcG9ydHMgYW55IG90aGVy
+IFZSIHZlcnNpb25zLg0KICAgID4gICAgIA0KICAgIFRoZSBwb2ludCBoZXJlIGlzIHRoYXQgdGhl
+cmUgaXMgbm8gZGVzY3JpcHRpb24gb2YgdGhlIG90aGVyIGNvbnRyb2xsZXJzLg0KT2ssIEkgZ2V0
+IGl0LCBtYWlubHkgYWxsIDMgY29udHJvbGxlcnMgYXJlIGZyb20gc2FtZSBmYW1pbHkgb2YgSW5m
+aW5lb24gY29udHJvbGxlciBidXQgSSB3aWxsIGFkZCBkZXRhaWxzIGhlcmUuDQogICAgDQogICAg
+PiAgICAgPiArDQogICAgPiAgICAgPiArVXNhZ2UgTm90ZXMNCiAgICA+ICAgICA+ICstLS0tLS0t
+LS0tLQ0KICAgID4gICAgID4gKw0KICAgID4gICAgID4gK1RoaXMgZHJpdmVyIGNhbiBiZSBlbmFi
+bGVkIHdpdGgga2VybmVsIGNvbmZpZyBDT05GSUdfU0VOU09SU19QWEUxNjEwDQogICAgPiAgICAg
+PiArc2V0IHRvICd5JyBvciAnbScoZm9yIG1vZHVsZSkuDQogICAgPiAgICAgPiArDQogICAgPiAg
+ICAgVGhlIGFib3ZlIGRvZXMgbm90IHJlYWxseSBhZGQgdmFsdWUuDQogICAgPiBPaywgSSB3aWxs
+IHJlbW92ZSBpdC4NCiAgICA+ICAgICANCiAgICA+ICAgICA+ICtUaGlzIGRyaXZlciBkb2VzIG5v
+dCBwcm9iZSBmb3IgUE1CdXMgZGV2aWNlcy4gWW91IHdpbGwgaGF2ZQ0KICAgID4gICAgID4gK3Rv
+IGluc3RhbnRpYXRlIGRldmljZXMgZXhwbGljaXRseS4NCiAgICA+ICAgICA+ICsNCiAgICA+ICAg
+ICA+ICtFeGFtcGxlOiB0aGUgZm9sbG93aW5nIGNvbW1hbmRzIHdpbGwgbG9hZCB0aGUgZHJpdmVy
+IGZvciBhbiBQWEUxNjEwDQogICAgPiAgICAgPiArYXQgYWRkcmVzcyAweDcwIG9uIEkyQyBidXMg
+IzQ6DQogICAgPiAgICAgPiArDQogICAgPiAgICAgPiArIyBtb2Rwcm9iZSBweGUxNjEwDQogICAg
+PiAgICAgPiArIyBlY2hvIHB4ZTE2MTAgMHg3MCA+IC9zeXMvYnVzL2kyYy9kZXZpY2VzL2kyYy00
+L25ld19kZXZpY2UNCiAgICA+ICAgICA+ICsNCiAgICA+ICAgICA+ICtJdCBjYW4gYWxzbyBiZSBp
+bnN0YW50aWF0ZWQgYnkgZGVjbGFyaW5nIGluIGRldmljZSB0cmVlIGlmIGl0IGlzDQogICAgPiAg
+ICAgPiArYnVpbHQgYXMgYSBrZXJuZWwgbm90IGFzIGEgbW9kdWxlLg0KICAgID4gICAgID4gKw0K
+ICAgID4gICAgIA0KICAgID4gICAgIEkgYXNzdW1lIHlvdSBtZWFuICJidWlsdCBpbnRvIHRoZSBr
+ZXJuZWwiLg0KICAgID4gICAgIFdoeSB3b3VsZCBkZXZpY2V0cmVlIGJhc2VkIGluc3RhbnRpYXRp
+b24gbm90IHdvcmsgaWYgdGhlIGRyaXZlciBpcyBidWlsdA0KICAgID4gICAgIGFzIG1vZHVsZSA/
+DQogICAgPiBXaWxsIGNvcnJlY3Qgc3RhdGVtZW50IGhlcmUuDQogICAgPiAgICAgDQogICAgPiAg
+ICAgPiArDQogICAgPiAgICAgPiArU3lzZnMgYXR0cmlidXRlcw0KICAgID4gICAgID4gKy0tLS0t
+LS0tLS0tLS0tLS0NCiAgICA+ICAgICA+ICsNCiAgICA+ICAgICA+ICtjdXJyMV9sYWJlbAkJImlp
+biINCiAgICA+ICAgICA+ICtjdXJyMV9pbnB1dAkJTWVhc3VyZWQgaW5wdXQgY3VycmVudA0KICAg
+ID4gICAgID4gK2N1cnIxX2FsYXJtCQlDdXJyZW50IGhpZ2ggYWxhcm0NCiAgICA+ICAgICA+ICsN
+CiAgICA+ICAgICA+ICtjdXJyWzItNF1fbGFiZWwJCSJpb3V0WzEtM10iDQogICAgPiAgICAgPiAr
+Y3VyclsyLTRdX2lucHV0CQlNZWFzdXJlZCBvdXRwdXQgY3VycmVudA0KICAgID4gICAgID4gK2N1
+cnJbMi00XV9jcml0CQlDcml0aWNhbCBtYXhpbXVtIGN1cnJlbnQNCiAgICA+ICAgICA+ICtjdXJy
+WzItNF1fY3JpdF9hbGFybQlDdXJyZW50IGNyaXRpY2FsIGhpZ2ggYWxhcm0NCiAgICA+ICAgICA+
+ICsNCiAgICA+ICAgICA+ICtpbjFfbGFiZWwJCSJ2aW4iDQogICAgPiAgICAgPiAraW4xX2lucHV0
+CQlNZWFzdXJlZCBpbnB1dCB2b2x0YWdlDQogICAgPiAgICAgPiAraW4xX2NyaXQJCUNyaXRpY2Fs
+IG1heGltdW0gaW5wdXQgdm9sdGFnZQ0KICAgID4gICAgID4gK2luMV9jcml0X2FsYXJtCQlJbnB1
+dCB2b2x0YWdlIGNyaXRpY2FsIGhpZ2ggYWxhcm0NCiAgICA+ICAgICA+ICsNCiAgICA+ICAgICA+
+ICtpblsyLTRdX2xhYmVsCQkidm91dFsxLTNdIg0KICAgID4gICAgID4gK2luWzItNF1faW5wdXQJ
+CU1lYXN1cmVkIG91dHB1dCB2b2x0YWdlDQogICAgPiAgICAgPiAraW5bMi00XV9sY3JpdAkJQ3Jp
+dGljYWwgbWluaW11bSBvdXRwdXQgdm9sdGFnZQ0KICAgID4gICAgID4gK2luWzItNF1fbGNyaXRf
+YWxhcm0JT3V0cHV0IHZvbHRhZ2UgY3JpdGljYWwgbG93IGFsYXJtDQogICAgPiAgICAgPiAraW5b
+Mi00XV9jcml0CQlDcml0aWNhbCBtYXhpbXVtIG91dHB1dCB2b2x0YWdlDQogICAgPiAgICAgPiAr
+aW5bMi00XV9jcml0X2FsYXJtCU91dHB1dCB2b2x0YWdlIGNyaXRpY2FsIGhpZ2ggYWxhcm0NCiAg
+ICA+ICAgICA+ICsNCiAgICA+ICAgICA+ICtwb3dlcjFfbGFiZWwJCSJwaW4iDQogICAgPiAgICAg
+PiArcG93ZXIxX2lucHV0CQlNZWFzdXJlZCBpbnB1dCBwb3dlcg0KICAgID4gICAgID4gK3Bvd2Vy
+MV9hbGFybQkJSW5wdXQgcG93ZXIgaGlnaCBhbGFybQ0KICAgID4gICAgID4gKw0KICAgID4gICAg
+ID4gK3Bvd2VyWzItNF1fbGFiZWwJInBvdXRbMS0zXSINCiAgICA+ICAgICA+ICtwb3dlclsyLTRd
+X2lucHV0CU1lYXN1cmVkIG91dHB1dCBwb3dlcg0KICAgID4gICAgID4gKw0KICAgID4gICAgID4g
+K3RlbXBbMS0zXV9pbnB1dAkJTWVhc3VyZWQgdGVtcGVyYXR1cmUNCiAgICA+ICAgICA+ICt0ZW1w
+WzEtM11fY3JpdAkJQ3JpdGljYWwgaGlnaCB0ZW1wZXJhdHVyZQ0KICAgID4gICAgID4gK3RlbXBb
+MS0zXV9jcml0X2FsYXJtCUNoaXAgdGVtcGVyYXR1cmUgY3JpdGljYWwgaGlnaCBhbGFybQ0KICAg
+ID4gICAgID4gK3RlbXBbMS0zXV9tYXgJCU1heGltdW0gdGVtcGVyYXR1cmUNCiAgICA+ICAgICA+
+ICt0ZW1wWzEtM11fbWF4X2FsYXJtCUNoaXAgdGVtcGVyYXR1cmUgaGlnaCBhbGFybQ0KICAgID4g
+ICAgID4gDQogICAgPiAgICAgDQogICAgPiAgICAgDQogICAgPiANCiAgICANCg0K
