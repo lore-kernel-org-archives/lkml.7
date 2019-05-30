@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E8BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D09C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16812456F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7484E24586
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186091;
-	bh=Ux4iU9NMy5l3YIqvdhdoJ0rRWPRxf2Q1ouyCQdxHfqY=;
+	s=default; t=1559186093;
+	bh=nee2vrOmQ4okfHpD3mzELlBwcqL/4NjdOs0zA3n8Yhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fh40zCgIQ4SFjeiLrUsawHJZBbpJS+kOoWaU3YXE5n7GSVztOHA8K7VtDX7G1CkHJ
-	 GYg24k4XJyNCgN5vP//nFX92CCYJueqF640h+K5Xym8Fb+CTCVdK4MZMsuMMNX3xw4
-	 WQ1LtK2jWFUBoHad4ndWpb2LZj7VM0wV9ObZejG8=
+	b=v8lN7oNkjZuVqRIzcu6AXgL7xFcec7L8vxHoTJdDfsahE7ciV2iEBTQjPOcNswvY/
+	 nZPp/5zodNJGaXmurJW+AdpROitzR/3GAaH74I53Df1mn9qMLBI9cR+g0SgtsfqgiF
+	 EOqeCTFcHz3MBF39xjylTv5TbB6qv+a3gbhjTu5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfE3DOu (ORCPT
+        id S1730029AbfE3DOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbfE3DMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728910AbfE3DMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BACC244EF;
+        by mail.kernel.org (Postfix) with ESMTPSA id C80642446F;
         Thu, 30 May 2019 03:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185935;
-        bh=Ux4iU9NMy5l3YIqvdhdoJ0rRWPRxf2Q1ouyCQdxHfqY=;
+        bh=nee2vrOmQ4okfHpD3mzELlBwcqL/4NjdOs0zA3n8Yhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gY67FwwSYjCQ5i4o8B9GqQxGGQo//D4S9dheVgAi2joKq9DBf8oZyZuUD+Wd54hj8
-         F4IGQS98XvwnAwwG3GhMgyYbZkYLFvlbd0lLBWKYr+rGn1UK4Pzb+CtFtQ8pO9s/mH
-         FhpntAXWH0NSviNEsnYWxg0H4hHX+spvdj1ScCkc=
+        b=ogDvhqfQnLanwno68Ca4rmQ0McjeyHz3nAY/d68QtOaDBpYjHqP069w8QbcwpHXLj
+         mRPdN9QHGR4IASL81ekXIQs78T/CaNLFLs+Y75S1XBH+uOOwxGnP43Ah1PoFMw8B8J
+         VCkRiEAC9Zx5RanuPhJCerYicvHHPIU+gIwBN47Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 290/405] media: mtk-vcodec: fix access to incorrect planes member
-Date:   Wed, 29 May 2019 20:04:48 -0700
-Message-Id: <20190530030555.531409844@linuxfoundation.org>
+Subject: [PATCH 5.1 291/405] thunderbolt: property: Fix a missing check of kzalloc
+Date:   Wed, 29 May 2019 20:04:49 -0700
+Message-Id: <20190530030555.577875115@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,99 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 52fafc58c3535c9f4f53864686dbaee3bcbadcb4 ]
+[ Upstream commit 6183d5a51866f3acdeeb66b75e87d44025b01a55 ]
 
-Commit 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem
-buffer helpers") fixed the return types for mem2mem buffer helper
-functions by changing a few local variables from vb2_buffer to
-vb2_v4l2_buffer. However, it left a few accesses to vb2_buffer::planes
-as-is, accidentally turning them into accesses to
-vb2_v4l2_buffer::planes and resulting in values being read from/written
-to the wrong place.
+No check is enforced for the return value of kzalloc,
+which may lead to NULL-pointer dereference.
 
-Fix this by inserting vb2_buf into these accesses so they mimic their
-original behavior.
+The patch fixes this issue.
 
-Fixes: 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem buffer helpers")
-
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |  4 ++--
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/thunderbolt/property.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index d022c65bb34c2..49babf994cb75 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -388,7 +388,7 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	}
- 	buf.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
- 	buf.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
--	buf.size = (size_t)src_buf->planes[0].bytesused;
-+	buf.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
- 	if (!buf.va) {
- 		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
- 		mtk_v4l2_err("[%d] id=%d src_addr is NULL!!",
-@@ -1155,7 +1155,7 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
+index b2f0d6386ceea..ead18c532b53d 100644
+--- a/drivers/thunderbolt/property.c
++++ b/drivers/thunderbolt/property.c
+@@ -578,7 +578,12 @@ int tb_property_add_text(struct tb_property_dir *parent, const char *key,
+ 		return -ENOMEM;
  
- 	src_mem.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
- 	src_mem.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
--	src_mem.size = (size_t)src_buf->planes[0].bytesused;
-+	src_mem.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
- 	mtk_v4l2_debug(2,
- 			"[%d] buf id=%d va=%p dma=%pad size=%zx",
- 			ctx->id, src_buf->index,
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index c6b48b5925fbe..50351adafc470 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -894,7 +894,7 @@ static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
+ 	property->length = size / 4;
+-	property->value.data = kzalloc(size, GFP_KERNEL);
++	property->value.text = kzalloc(size, GFP_KERNEL);
++	if (!property->value.text) {
++		kfree(property);
++		return -ENOMEM;
++	}
++
+ 	strcpy(property->value.text, text);
  
- 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		while ((dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx))) {
--			dst_buf->planes[0].bytesused = 0;
-+			dst_buf->vb2_buf.planes[0].bytesused = 0;
- 			v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
- 		}
- 	} else {
-@@ -947,7 +947,7 @@ static int mtk_venc_encode_header(void *priv)
- 
- 	bs_buf.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
- 	bs_buf.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
--	bs_buf.size = (size_t)dst_buf->planes[0].length;
-+	bs_buf.size = (size_t)dst_buf->vb2_buf.planes[0].length;
- 
- 	mtk_v4l2_debug(1,
- 			"[%d] buf id=%d va=0x%p dma_addr=0x%llx size=%zu",
-@@ -976,7 +976,7 @@ static int mtk_venc_encode_header(void *priv)
- 	}
- 
- 	ctx->state = MTK_STATE_HEADER;
--	dst_buf->planes[0].bytesused = enc_result.bs_size;
-+	dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
- 	v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
- 
- 	return 0;
-@@ -1107,12 +1107,12 @@ static void mtk_venc_worker(struct work_struct *work)
- 
- 	if (ret) {
- 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_ERROR);
--		dst_buf->planes[0].bytesused = 0;
-+		dst_buf->vb2_buf.planes[0].bytesused = 0;
- 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
- 		mtk_v4l2_err("venc_if_encode failed=%d", ret);
- 	} else {
- 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_DONE);
--		dst_buf->planes[0].bytesused = enc_result.bs_size;
-+		dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
- 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
- 		mtk_v4l2_debug(2, "venc_if_encode bs size=%d",
- 				 enc_result.bs_size);
+ 	list_add_tail(&property->list, &parent->properties);
 -- 
 2.20.1
 
