@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CCFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B4EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5708325266
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C471F25270
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189803;
-	bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
+	s=default; t=1559189807;
+	bh=veMxMigceTlUS8pLalrLar0Xh3MhnseaAOb7bVHQTNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kO6BfiQA0ewqUkiHrZ4ao8d5oN2rGr+2briwxdaVEQw/qq28aVQyz0q6hRWsf4NaG
-	 /YmXV/wdpW63TqZTonN5zZ1qm+OFNkJdnox+85L60S9GbYk4M5uf5TBV9kFXNl+TPc
-	 5Nvy1jgyKp81oHyZZtfDMgmGso70I7yjlVQs6YqE=
+	b=Tpk49z2L+qf/z3BQf4QR0i7rpIICfdmphw1G0MnJIDnXCtSBnwKXH6Aiy4Gx4TpAv
+	 bN9hl91gKtPFhLuAVLudv2DPml8OKDcRXqWzR0ppG5v867qFhWQP3gmo0K/BGyxWt3
+	 xt3UNPjfKTx/BdCUjrfTt9Hs6W77a8cV7/yuSyZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfE3EQm (ORCPT
+        id S1731315AbfE3EQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbfE3DPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:46 -0400
+        id S1729489AbfE3DPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84DE245A7;
+        by mail.kernel.org (Postfix) with ESMTPSA id 106E623D83;
         Thu, 30 May 2019 03:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186145;
-        bh=nQZYqrwWCpdbUbQ16wM+a+UtsLY3q9D6MPb3TEL2vLM=;
+        bh=veMxMigceTlUS8pLalrLar0Xh3MhnseaAOb7bVHQTNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHv4iU1KNsGGqS3GaDRJIAWD2iALfOVXTXmt6vD8xQqnffde4sWZWbdzGNgfTcjCy
-         Y+Z95BQnA9aQxpmi3gagR0hYmhg3v70bC5TaOe3xoxBCjEVXvH62MlocEt1w8kEOzR
-         JYyOVUlNrAjUqR9WyfB5N1JHoFtO01k8QZMAYvfo=
+        b=0eUmdIKeQGId3uH1bT25yR9hqNIOS6UvjyM8wfZL4v0ju6jHxoNDAI7gkfSZc08xw
+         QbGY/pKgK+YjHmZvH96oC2G5FDYXbbqBsUxYMfOxw9hTe8WlVzCJh7UY750tf1vbkj
+         d3+8n2nb10WF0xUDumlI3Mv4MexFh2EdG7r4UG8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         Steve Twiss <stwiss.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 325/346] regulator: ltc3589: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:38 -0700
-Message-Id: <20190530030557.244463807@linuxfoundation.org>
+Subject: [PATCH 5.0 323/346] regulator: wm831x isink: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:36 -0700
+Message-Id: <20190530030557.147016739@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f132da2534ec6599c78c4adcef15340cff2e9dd9 ]
+[ Upstream commit f7a621728a6a23bfd2c6ac4d3e42e1303aefde0f ]
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -73,44 +74,32 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: 3eb2c7ecb7ea ("regulator: Add LTC3589 support")
+Fixes: d4d6b722e780 ("regulator: Add WM831x ISINK support")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/ltc3589.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/regulator/wm831x-isink.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
-index 63f724f260ef7..75089b037b723 100644
---- a/drivers/regulator/ltc3589.c
-+++ b/drivers/regulator/ltc3589.c
-@@ -419,16 +419,22 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
+diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
+index 6dd891d7eee3b..11f351191dba9 100644
+--- a/drivers/regulator/wm831x-isink.c
++++ b/drivers/regulator/wm831x-isink.c
+@@ -140,9 +140,11 @@ static irqreturn_t wm831x_isink_irq(int irq, void *data)
+ {
+ 	struct wm831x_isink *isink = data;
  
- 	if (irqstat & LTC3589_IRQSTAT_THERMAL_WARN) {
- 		event = REGULATOR_EVENT_OVER_TEMP;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
++	regulator_lock(isink->regulator);
+ 	regulator_notifier_call_chain(isink->regulator,
+ 				      REGULATOR_EVENT_OVER_CURRENT,
+ 				      NULL);
++	regulator_unlock(isink->regulator);
  
- 	if (irqstat & LTC3589_IRQSTAT_UNDERVOLT_WARN) {
- 		event = REGULATOR_EVENT_UNDER_VOLTAGE;
--		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
-+		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
-+		        regulator_lock(ltc3589->regulators[i]);
- 			regulator_notifier_call_chain(ltc3589->regulators[i],
- 						      event, NULL);
-+		        regulator_unlock(ltc3589->regulators[i]);
-+		}
- 	}
- 
- 	/* Clear warning condition */
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.20.1
 
