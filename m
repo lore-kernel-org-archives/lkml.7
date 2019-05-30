@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152EEC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AE4C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE46725925
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC9F25925
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191192;
-	bh=i7eLbFAQAjCbfhNZt6Bf5Nr83J9BFysTNOqwNOwg3kk=;
+	s=default; t=1559191196;
+	bh=jQeLfbc24WqIqBDon1czJa4L8rIcHQyFNvuEV7UatyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OLa4gyWuVEk+uYTX51E5ntKknbxxEVB1yQ8ciDq82gyT5mQrqpBIN0kuFASEAiIKg
-	 9dTBOB7ql28vijJB95RjwMYttVaMFsnSNnQAtkvIMzCUtsC5Ov6/E5G//Jyn4bWmBa
-	 B3Sk9MoEP0yn5YwV2Xehdq7cUfthTxuopMXIsjxU=
+	b=IBZ8FCN1V8jfOVc9whHQnE6mBYzD+j1sBWCofGcsgbw035aTMVV/DdmaU0/hF9HS8
+	 il/dDJsEFBeaODAyKt+6Xv8ikLxubdcHMzrx036CGS8S2EacjSDgQupEzOciq7MvFw
+	 uGR2DtLTfNZrOGdJO2GAy9pYKJdy4iHR9PSovgyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388595AbfE3Ejw (ORCPT
+        id S2388604AbfE3Ejy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbfE3DMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:37 -0400
+        id S1729120AbfE3DMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949A923DE3;
-        Thu, 30 May 2019 03:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AEB21BE2;
+        Thu, 30 May 2019 03:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185955;
-        bh=i7eLbFAQAjCbfhNZt6Bf5Nr83J9BFysTNOqwNOwg3kk=;
+        s=default; t=1559185956;
+        bh=jQeLfbc24WqIqBDon1czJa4L8rIcHQyFNvuEV7UatyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+eSmScZe4DE8C+gnSe7skD2tqoBDeSgIT90rQzVlCObdUYZ3dhG0bqCeYAoAupiW
-         m/2DLgiPuayPQnmyvZWU2i0O+GMo7J6VEz81Eal1CvB6pbnNicGnoM18MwP3hUsQXG
-         ceohP3xjpsUN6IiwsADFGu3au+K9VQBdYgqOAxb0=
+        b=ImRkrb3nPwdFAdyX9KwLizZI1+RmSk86hVd4XoP05dVD7MQWbbBFLiKyvXd1dMMII
+         dHONF58Vh1khXso24IkhjhwClqkb017vm139zVt9htEpIiF0jCkecTbPXnbkQ/RmYW
+         Dns9urN//p8+mI9i9cRdo47Ig31PVpXASmxBLVhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Yu <zhangyu31@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 371/405] audit: fix a memleak caused by auditing load module
-Date:   Wed, 29 May 2019 20:06:09 -0700
-Message-Id: <20190530030559.497448759@linuxfoundation.org>
+Subject: [PATCH 5.1 372/405] spi : spi-topcliff-pch: Fix to handle empty DMA buffers
+Date:   Wed, 29 May 2019 20:06:10 -0700
+Message-Id: <20190530030559.549780257@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,78 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 95e0b46fcebd7dbf6850dee96046e4c4ddc7f69c ]
+[ Upstream commit f37d8e67f39e6d3eaf4cc5471e8a3d21209843c6 ]
 
-module.name will be allocated unconditionally when auditing load
-module, and audit_log_start() can fail with other reasons, or
-audit_log_exit maybe not called, caused module.name is not freed
+pch_alloc_dma_buf allocated tx, rx DMA buffers which can fail. Further,
+these buffers are used without a check. The patch checks for these
+failures and sends the error upstream.
 
-so free module.name in audit_free_context and __audit_syscall_exit
-
-unreferenced object 0xffff88af90837d20 (size 8):
-  comm "modprobe", pid 1036, jiffies 4294704867 (age 3069.138s)
-  hex dump (first 8 bytes):
-    69 78 67 62 65 00 ff ff                          ixgbe...
-  backtrace:
-    [<0000000008da28fe>] __audit_log_kern_module+0x33/0x80
-    [<00000000c1491e61>] load_module+0x64f/0x3850
-    [<000000007fc9ae3f>] __do_sys_init_module+0x218/0x250
-    [<0000000000d4a478>] do_syscall_64+0x117/0x400
-    [<000000004924ded8>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<000000007dc331dd>] 0xffffffffffffffff
-
-Fixes: ca86cad7380e3 ("audit: log module name on init_module")
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-[PM: manual merge fixup in __audit_syscall_exit()]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/auditsc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/spi/spi-topcliff-pch.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index d1eab1d4a930e..fa7b8047aab89 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -840,6 +840,13 @@ static inline void audit_proctitle_free(struct audit_context *context)
- 	context->proctitle.len = 0;
+diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
+index fba3f180f233b..8a5966963834c 100644
+--- a/drivers/spi/spi-topcliff-pch.c
++++ b/drivers/spi/spi-topcliff-pch.c
+@@ -1299,18 +1299,27 @@ static void pch_free_dma_buf(struct pch_spi_board_data *board_dat,
+ 				  dma->rx_buf_virt, dma->rx_buf_dma);
  }
  
-+static inline void audit_free_module(struct audit_context *context)
-+{
-+	if (context->type == AUDIT_KERN_MODULE) {
-+		kfree(context->module.name);
-+		context->module.name = NULL;
-+	}
-+}
- static inline void audit_free_names(struct audit_context *context)
+-static void pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
++static int pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
+ 			      struct pch_spi_data *data)
  {
- 	struct audit_names *n, *next;
-@@ -923,6 +930,7 @@ int audit_alloc(struct task_struct *tsk)
+ 	struct pch_spi_dma_ctrl *dma;
++	int ret;
  
- static inline void audit_free_context(struct audit_context *context)
- {
-+	audit_free_module(context);
- 	audit_free_names(context);
- 	unroll_tree_refs(context, NULL, 0);
- 	free_tree_refs(context);
-@@ -1266,7 +1274,6 @@ static void show_special(struct audit_context *context, int *call_panic)
- 		audit_log_format(ab, "name=");
- 		if (context->module.name) {
- 			audit_log_untrustedstring(ab, context->module.name);
--			kfree(context->module.name);
- 		} else
- 			audit_log_format(ab, "(null)");
+ 	dma = &data->dma;
++	ret = 0;
+ 	/* Get Consistent memory for Tx DMA */
+ 	dma->tx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
+ 				PCH_BUF_SIZE, &dma->tx_buf_dma, GFP_KERNEL);
++	if (!dma->tx_buf_virt)
++		ret = -ENOMEM;
++
+ 	/* Get Consistent memory for Rx DMA */
+ 	dma->rx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
+ 				PCH_BUF_SIZE, &dma->rx_buf_dma, GFP_KERNEL);
++	if (!dma->rx_buf_virt)
++		ret = -ENOMEM;
++
++	return ret;
+ }
  
-@@ -1697,6 +1704,7 @@ void __audit_syscall_exit(int success, long return_code)
- 	context->in_syscall = 0;
- 	context->prio = context->state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+ static int pch_spi_pd_probe(struct platform_device *plat_dev)
+@@ -1387,7 +1396,9 @@ static int pch_spi_pd_probe(struct platform_device *plat_dev)
  
-+	audit_free_module(context);
- 	audit_free_names(context);
- 	unroll_tree_refs(context, NULL, 0);
- 	audit_free_aux(context);
+ 	if (use_dma) {
+ 		dev_info(&plat_dev->dev, "Use DMA for data transfers\n");
+-		pch_alloc_dma_buf(board_dat, data);
++		ret = pch_alloc_dma_buf(board_dat, data);
++		if (ret)
++			goto err_spi_register_master;
+ 	}
+ 
+ 	ret = spi_register_master(master);
 -- 
 2.20.1
 
