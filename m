@@ -2,53 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC6CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB52DC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0030D25FF7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A51E2602D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192339;
-	bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
+	s=default; t=1559192340;
+	bh=Tsc5FwJGUz0dv4SN6BzokhMd9N97hCzCII9G86hIxm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVyZIv6D9SxFxHapTlNEUOiqEwpn2BD5SIR85IVx8kU83AiWcZwXVlS7Hevcmq9Fs
-	 JxDF9hQdETFRurZo2V33BorlCJxvVg31WoMNZyQOwuxT+vsASdl6IuxNLqOtUJ6Fxx
-	 GQrFfN6J09PxnOZDs0U9n4SSwuWKiKVPhrULZaa0=
+	b=JqmwYX1pkekNZwHv0j/eEI95gGWcjn5/eqsQ/W2McIq/3SujZBE8JsPk9zicAvF+S
+	 u01Y9i9Mp6CE4Ljc27Fj/ZKgOXAKMezKfnRcfs9NmVg9iQ5MgfM8ynKKJCSWA1aaaB
+	 /n56Be2xQlu8+b9xamQBnJt/sGznA3jVGx1K3SQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389354AbfE3E65 (ORCPT
+        id S2389345AbfE3E6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727745AbfE3DJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:46 -0400
+        id S1727761AbfE3DJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FADE2447C;
-        Thu, 30 May 2019 03:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90FB624493;
+        Thu, 30 May 2019 03:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185784;
-        bh=jRbH94i8EEbsYSk00/p/DOZAUYbkLLbNDdJOKu9f+1Y=;
+        s=default; t=1559185786;
+        bh=Tsc5FwJGUz0dv4SN6BzokhMd9N97hCzCII9G86hIxm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGdYiR8iOWjuRslxAGYtV4xXyLOHEVZIaonIeEK/aCT2D/I9l0uogCzSJQCyZXI5v
-         A/w8xdaX85GBVLlABwhx7IiRZSD3fJuyUfJK0eo9E01wOtEQOscxOuknBfAmwvAGs4
-         e2ds9YmBM/M8TkEAhp5cPsBKDlQ89HPBwkSXyUqU=
+        b=BFGJMvZnPP3jllGUEmuBGsyHZB6mxNw+0qXxfUTgGVglNZ3KP7CRMSktGO4DT4Lxc
+         6BEdnD1Nqf8PJEyoiYZGDHdTHqG1kbANRMeFSM6M/64bYxGJJpneH4/AzlwELPnVza
+         kpBWC3PlHGO7sdscEhoXOsDSWipuaar7jUlHO5bg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 009/405] crypto: hash - fix incorrect HASH_MAX_DESCSIZE
-Date:   Wed, 29 May 2019 20:00:07 -0700
-Message-Id: <20190530030540.874518385@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 054/405] tools/bpf: fix perf build error with uClibc (seen on ARC)
+Date:   Wed, 29 May 2019 20:00:52 -0700
+Message-Id: <20190530030543.590431276@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,102 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit ca31ca8247e2d3807ff5fa1d1760616a2292001c ]
 
-commit e1354400b25da645c4764ed6844d12f1582c3b66 upstream.
+When build perf for ARC recently, there was a build failure due to lack
+of __NR_bpf.
 
-The "hmac(sha3-224-generic)" algorithm has a descsize of 368 bytes,
-which is greater than HASH_MAX_DESCSIZE (360) which is only enough for
-sha3-224-generic.  The check in shash_prepare_alg() doesn't catch this
-because the HMAC template doesn't set descsize on the algorithms, but
-rather sets it on each individual HMAC transform.
+| Auto-detecting system features:
+|
+| ...                     get_cpuid: [ OFF ]
+| ...                           bpf: [ on  ]
+|
+| #  error __NR_bpf not defined. libbpf does not support your arch.
+    ^~~~~
+| bpf.c: In function 'sys_bpf':
+| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
+|  return syscall(__NR_bpf, cmd, attr, size);
+|                 ^~~~~~~~
+|                 sys_bpf
 
-This causes a stack buffer overflow when SHASH_DESC_ON_STACK() is used
-with hmac(sha3-224-generic).
-
-Fix it by increasing HASH_MAX_DESCSIZE to the real maximum.  Also add a
-sanity check to hmac_init().
-
-This was detected by the improved crypto self-tests in v5.2, by loading
-the tcrypt module with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y enabled.  I
-didn't notice this bug when I ran the self-tests by requesting the
-algorithms via AF_ALG (i.e., not using tcrypt), probably because the
-stack layout differs in the two cases and that made a difference here.
-
-KASAN report:
-
-    BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:359 [inline]
-    BUG: KASAN: stack-out-of-bounds in shash_default_import+0x52/0x80 crypto/shash.c:223
-    Write of size 360 at addr ffff8880651defc8 by task insmod/3689
-
-    CPU: 2 PID: 3689 Comm: insmod Tainted: G            E     5.1.0-10741-g35c99ffa20edd #11
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-    Call Trace:
-     __dump_stack lib/dump_stack.c:77 [inline]
-     dump_stack+0x86/0xc5 lib/dump_stack.c:113
-     print_address_description+0x7f/0x260 mm/kasan/report.c:188
-     __kasan_report+0x144/0x187 mm/kasan/report.c:317
-     kasan_report+0x12/0x20 mm/kasan/common.c:614
-     check_memory_region_inline mm/kasan/generic.c:185 [inline]
-     check_memory_region+0x137/0x190 mm/kasan/generic.c:191
-     memcpy+0x37/0x50 mm/kasan/common.c:125
-     memcpy include/linux/string.h:359 [inline]
-     shash_default_import+0x52/0x80 crypto/shash.c:223
-     crypto_shash_import include/crypto/hash.h:880 [inline]
-     hmac_import+0x184/0x240 crypto/hmac.c:102
-     hmac_init+0x96/0xc0 crypto/hmac.c:107
-     crypto_shash_init include/crypto/hash.h:902 [inline]
-     shash_digest_unaligned+0x9f/0xf0 crypto/shash.c:194
-     crypto_shash_digest+0xe9/0x1b0 crypto/shash.c:211
-     generate_random_hash_testvec.constprop.11+0x1ec/0x5b0 crypto/testmgr.c:1331
-     test_hash_vs_generic_impl+0x3f7/0x5c0 crypto/testmgr.c:1420
-     __alg_test_hash+0x26d/0x340 crypto/testmgr.c:1502
-     alg_test_hash+0x22e/0x330 crypto/testmgr.c:1552
-     alg_test.part.7+0x132/0x610 crypto/testmgr.c:4931
-     alg_test+0x1f/0x40 crypto/testmgr.c:4952
-
-Fixes: b68a7ec1e9a3 ("crypto: hash - Remove VLA usage")
-Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/hmac.c         |    2 ++
- include/crypto/hash.h |    8 +++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ tools/lib/bpf/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/crypto/hmac.c
-+++ b/crypto/hmac.c
-@@ -168,6 +168,8 @@ static int hmac_init_tfm(struct crypto_t
- 
- 	parent->descsize = sizeof(struct shash_desc) +
- 			   crypto_shash_descsize(hash);
-+	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE))
-+		return -EINVAL;
- 
- 	ctx->hash = hash;
- 	return 0;
---- a/include/crypto/hash.h
-+++ b/include/crypto/hash.h
-@@ -152,7 +152,13 @@ struct shash_desc {
- };
- 
- #define HASH_MAX_DIGESTSIZE	 64
--#define HASH_MAX_DESCSIZE	360
-+
-+/*
-+ * Worst case is hmac(sha3-224-generic).  Its context is a nested 'shash_desc'
-+ * containing a 'struct sha3_state'.
-+ */
-+#define HASH_MAX_DESCSIZE	(sizeof(struct shash_desc) + 360)
-+
- #define HASH_MAX_STATESIZE	512
- 
- #define SHASH_DESC_ON_STACK(shash, ctx)				  \
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 9cd015574e838..d82edadf75893 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -46,6 +46,8 @@
+ #  define __NR_bpf 349
+ # elif defined(__s390__)
+ #  define __NR_bpf 351
++# elif defined(__arc__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+-- 
+2.20.1
+
 
 
