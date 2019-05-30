@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77A5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A15725E1E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0F325DF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192006;
-	bh=RENOjVEFjiCntOy06c0lzxelXW0npR/E5wJKKONC29g=;
+	s=default; t=1559192010;
+	bh=v5bitYYz81CeiEo0mIMs0qgwoUQvc+2tND4SCh3gwtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6Ex9adA8ZYmtsWYOkZFjaiGj8ERXcMbjHfgw3jMIBL/WmL/OOglbYRREEtwYoX6U
-	 P+eTHyybic+akVTCINVDSr5wzSJDF7RycrjBgc/sA4quRhtjCdJheWf6GII+augRTa
-	 xvEQf0xcG58gHMMcUVYy3xVtEK6i+dcgWnfTPpwg=
+	b=xaA9HdBAtnyphaQOu/8uSMlYe/TJHX6TT3fDVXwDm0NoVBKOMWJ+MRMhVEIFMwivB
+	 k/4PKlY1WNuFlK3NePBRofzVLgJZWgrfZTSxUNiB6vFr9utu6FTJAAixWGlpahnUzZ
+	 jihzVU6SlZ8lgJ0k4HMjWY4slI6kmeYWQhlEPYEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389073AbfE3ExZ (ORCPT
+        id S2388711AbfE3Ex3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfE3DKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:38 -0400
+        id S1728174AbfE3DKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:39 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9DC2447F;
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E9C24482;
         Thu, 30 May 2019 03:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185838;
-        bh=RENOjVEFjiCntOy06c0lzxelXW0npR/E5wJKKONC29g=;
+        bh=v5bitYYz81CeiEo0mIMs0qgwoUQvc+2tND4SCh3gwtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RgSBRfdxIKgTs3ahzi5JS3iFK0EZZrBc+4kMZ1XOM5Pjvdyb/Dd2TiXkQ7qCkZaeT
-         fzqIKDobtgkK3XeX5+86oKgiGEn3B7J5wuY7+Edy1H5sOqA+noxhO5q+WE+iE5pDPx
-         lLr6QD47+iFdW5d0jXQm/QfbS++RNaQuhkap8Z7I=
+        b=ZJMeL7GHesGRYKFqN8PyOBmIq3lEw1oRQ5I3eIGGPLfJi3CCcx27jwE7jMxJ44Eur
+         zDYsP3n4QgJuMBjGEnjpYaBPcsFeWawVgr/6p0SKsQ6Zng1dSR5+v5CxWeqdOp1Gp8
+         uQwgUqafYUm6dYx55a6G7b2SntVzx0qECBxXD21I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 152/405] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-Date:   Wed, 29 May 2019 20:02:30 -0700
-Message-Id: <20190530030548.836708047@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 153/405] media: coda: clear error return value before picture run
+Date:   Wed, 29 May 2019 20:02:31 -0700
+Message-Id: <20190530030548.891333041@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
+[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
 
-Even if this case shouldn't happen when controller is properly programmed,
-it's still better to avoid dumping a kernel Oops for this.
-As the sequence may happen only for debugging purposes, log the error and
-just finish the tasklet call.
+The error return value is not written by some firmware codecs, such as
+MPEG-2 decode on CodaHx4. Clear the error return value before starting
+the picture run to avoid misinterpreting unrelated values returned by
+sequence initialization as error return value.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-bit.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index fe69dccfa0c05..37a2694204351 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1606,7 +1606,11 @@ static void at_xdmac_tasklet(unsigned long data)
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
--		BUG_ON(!desc->active_xfer);
-+		if (!desc->active_xfer) {
-+			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
-+			spin_unlock_bh(&atchan->lock);
-+			return;
-+		}
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index b4f396c2e72c7..eaa86737fa04e 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -2010,6 +2010,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
+ 	/* Clear decode success flag */
+ 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
  
- 		txd = &desc->tx_dma_desc;
++	/* Clear error return value */
++	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
++
+ 	trace_coda_dec_pic_run(ctx, meta);
  
+ 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
 -- 
 2.20.1
 
