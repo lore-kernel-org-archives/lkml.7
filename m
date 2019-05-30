@@ -2,174 +2,109 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75EAC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF54C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B944425E5D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IIt0PtrH";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FMiOBCG6"
+	by mail.kernel.org (Postfix) with ESMTP id 75A2E25E5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfE3RZf (ORCPT
+        id S1726817AbfE3RZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:25:35 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36744 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726735AbfE3RZe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:25:34 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UHJeVi031730;
-        Thu, 30 May 2019 10:23:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=p/Ukfbxd3jQZ8Ife0hv45+W30kQmJn7dbk2U+rff9fY=;
- b=IIt0PtrHITx553H2RKghWXYX3nFZW4lKRIUuEpTkrpqNQHFFxhh3RK5iZ1aBz7TfQfv7
- LF2azEdh4J1KTm74RgXnSLBCVkd1RS6+gOZ4mm6goElxfiRi8KxHQefwCGeKfrlVHJUV
- yhORulLNPq4COlKCHHMa6NkhB8bJfNlkE1s= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2stf3x8ymu-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 30 May 2019 10:23:22 -0700
-Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 May 2019 10:23:17 -0700
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 30 May 2019 10:23:17 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 30 May 2019 10:23:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/Ukfbxd3jQZ8Ife0hv45+W30kQmJn7dbk2U+rff9fY=;
- b=FMiOBCG6TWm/uLxLhqhWBXEOe2NpCo/+RgJzT8xkPmWIb6fvvHRW6xcvA9z8ifG9vyuc3L12RusbvS8Jjag8hzF2tzi4DcVtfrfm+WDcbtGmguFyvBWMGok08TYXdF4aQsPBDz4kNFoDWCtQGXMfQ5Uxaho3EIZIOnjtMiqLg0M=
-Received: from BN6PR15MB1154.namprd15.prod.outlook.com (10.172.208.137) by
- BN6PR15MB1539.namprd15.prod.outlook.com (10.172.151.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.16; Thu, 30 May 2019 17:23:15 +0000
-Received: from BN6PR15MB1154.namprd15.prod.outlook.com
- ([fe80::adc0:9bbf:9292:27bd]) by BN6PR15MB1154.namprd15.prod.outlook.com
- ([fe80::adc0:9bbf:9292:27bd%2]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 17:23:15 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "chad.mynhier@oracle.com" <chad.mynhier@oracle.com>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>
-Subject: Re: [PATCH uprobe, thp 1/4] mm, thp: allow preallocate pgtable for
- split_huge_pmd_address()
-Thread-Topic: [PATCH uprobe, thp 1/4] mm, thp: allow preallocate pgtable for
- split_huge_pmd_address()
-Thread-Index: AQHVFma9gbzZ2z2z40KErGQDdtT9DaaDg7aAgAABHwCAAGcWAA==
-Date:   Thu, 30 May 2019 17:23:15 +0000
-Message-ID: <DCC3D689-2E11-44CE-A74E-0ACC4E5067C9@fb.com>
-References: <20190529212049.2413886-1-songliubraving@fb.com>
- <20190529212049.2413886-2-songliubraving@fb.com>
- <20190530111015.bz2om5aelsmwphwa@box> <20190530111416.ph6xqd4anjlm54i6@box>
-In-Reply-To: <20190530111416.ph6xqd4anjlm54i6@box>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::3:bc80]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c81fb8be-ffc4-4034-1ee9-08d6e5238005
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR15MB1539;
-x-ms-traffictypediagnostic: BN6PR15MB1539:
-x-microsoft-antispam-prvs: <BN6PR15MB15394A3351EF975C4641EF1BB3180@BN6PR15MB1539.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1417;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(376002)(39860400002)(346002)(199004)(189003)(51914003)(476003)(256004)(71200400001)(71190400001)(2906002)(25786009)(54906003)(2616005)(57306001)(76176011)(66556008)(50226002)(7736002)(76116006)(486006)(46003)(91956017)(6506007)(99286004)(102836004)(73956011)(316002)(53546011)(33656002)(66476007)(66946007)(6116002)(7416002)(186003)(14444005)(305945005)(11346002)(6916009)(6246003)(66446008)(81166006)(83716004)(81156014)(478600001)(36756003)(8676002)(82746002)(68736007)(6436002)(6512007)(53936002)(86362001)(4326008)(14454004)(229853002)(6486002)(8936002)(5660300002)(64756008)(446003)(14583001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR15MB1539;H:BN6PR15MB1154.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6976WPZ4NMq/RLvEQNBXsJG5dgGt/lKAsMXQWoZw45AvGM6JlkVOjkyCIpbH7hDN4hX5eIbAkD1SmnwBYKjeI3ArbAta2rgIffAZ5WqHL9tF2q54UxFcJqFwtPmWKVzgCTY90BRevumN+Mhf+yuAax0wyOc42ec4zBJPJIMH92e5P8xzvbj9WBjhyadPdBVSibs0nhwWNvWPwSFO0DccB+tOQtf4oXnX5nkuJuW80ffd70bTmv5QYc9Zua/uHs0i0DlviksuVSoeGIZZ/MTyadIuadFeCPoYEwEpX8rWbIIza5KV4bb6ZcDIWVy0/QMbl07DnqLUxmwAhy4KZ5/uTjHwYoGg7nwSeF6zQr79w51ecDW4PIoDqUp+kUy6q1BGb7JSYYyIkc+IohcM9tEjHL55Hn1JOxNpI8J9wAOzxpQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DBFB0013CC21944CA6D386A2D1C35A2B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 30 May 2019 13:25:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54754 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726546AbfE3RZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 13:25:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EE2E3003A5A;
+        Thu, 30 May 2019 17:25:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3B3460C43;
+        Thu, 30 May 2019 17:25:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 03/10] keys: sparse: Fix kdoc mismatches [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     keyrings@vger.kernel.org
+Cc:     James Morris <jamorris@linux.microsoft.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ebiggers@kernel.org
+Date:   Thu, 30 May 2019 18:25:34 +0100
+Message-ID: <155923713411.949.11422022582308560167.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155923711088.949.14909672457214372214.stgit@warthog.procyon.org.uk>
+References: <155923711088.949.14909672457214372214.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c81fb8be-ffc4-4034-1ee9-08d6e5238005
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 17:23:15.2457
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR15MB1539
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300122
-X-FB-Internal: deliver
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 30 May 2019 17:25:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix some kdoc argument description mismatches reported by sparse and give
+keyring_restrict() a description.
 
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
+---
 
-> On May 30, 2019, at 4:14 AM, Kirill A. Shutemov <kirill@shutemov.name> wr=
-ote:
->=20
-> On Thu, May 30, 2019 at 02:10:15PM +0300, Kirill A. Shutemov wrote:
->> On Wed, May 29, 2019 at 02:20:46PM -0700, Song Liu wrote:
->>> @@ -2133,10 +2133,15 @@ static void __split_huge_pmd_locked(struct vm_a=
-rea_struct *vma, pmd_t *pmd,
->>> 	VM_BUG_ON_VMA(vma->vm_end < haddr + HPAGE_PMD_SIZE, vma);
->>> 	VM_BUG_ON(!is_pmd_migration_entry(*pmd) && !pmd_trans_huge(*pmd)
->>> 				&& !pmd_devmap(*pmd));
->>> +	/* only file backed vma need preallocate pgtable*/
->>> +	VM_BUG_ON(vma_is_anonymous(vma) && prealloc_pgtable);
->>>=20
->>> 	count_vm_event(THP_SPLIT_PMD);
->>>=20
->>> -	if (!vma_is_anonymous(vma)) {
->>> +	if (prealloc_pgtable) {
->>> +		pgtable_trans_huge_deposit(mm, pmd, prealloc_pgtable);
->>> +		mm_inc_nr_pmds(mm);
->>> +	} else if (!vma_is_anonymous(vma)) {
->>> 		_pmd =3D pmdp_huge_clear_flush_notify(vma, haddr, pmd);
->>> 		/*
->>> 		 * We are going to unmap this huge page. So
->>=20
->> Nope. This going to leak a page table for architectures where
->> arch_needs_pgtable_deposit() is true.
->=20
-> And I don't there's correct handling of dirty bit.
->=20
-> And what about DAX? Will it blow up? I think so.
->=20
+ security/keys/keyring.c     |   10 +++++++---
+ security/keys/request_key.c |    2 +-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-Let me look into these cases. Thanks for the feedback!
-
-Song
-
-> --=20
-> Kirill A. Shutemov
+diff --git a/security/keys/keyring.c b/security/keys/keyring.c
+index e14f09e3a4b0..5b218b270598 100644
+--- a/security/keys/keyring.c
++++ b/security/keys/keyring.c
+@@ -520,7 +520,7 @@ EXPORT_SYMBOL(keyring_alloc);
+  * @keyring: The keyring being added to.
+  * @type: The type of key being added.
+  * @payload: The payload of the key intended to be added.
+- * @data: Additional data for evaluating restriction.
++ * @restriction_key: Keys providing additional data for evaluating restriction.
+  *
+  * Reject the addition of any links to a keyring.  It can be overridden by
+  * passing KEY_ALLOC_BYPASS_RESTRICTION to key_instantiate_and_link() when
+@@ -976,9 +976,13 @@ static bool keyring_detect_restriction_cycle(const struct key *dest_keyring,
+ 
+ /**
+  * keyring_restrict - Look up and apply a restriction to a keyring
+- *
+- * @keyring: The keyring to be restricted
++ * @keyring_ref: The keyring to be restricted
++ * @type: The key type that will provide the restriction checker.
+  * @restriction: The restriction options to apply to the keyring
++ *
++ * Look up a keyring and apply a restriction to it.  The restriction is managed
++ * by the specific key type, but can be configured by the options specified in
++ * the restriction string.
+  */
+ int keyring_restrict(key_ref_t keyring_ref, const char *type,
+ 		     const char *restriction)
+diff --git a/security/keys/request_key.c b/security/keys/request_key.c
+index 75d87f9e0f49..1f234b019437 100644
+--- a/security/keys/request_key.c
++++ b/security/keys/request_key.c
+@@ -24,7 +24,7 @@
+ 
+ /**
+  * complete_request_key - Complete the construction of a key.
+- * @auth_key: The authorisation key.
++ * @authkey: The authorisation key.
+  * @error: The success or failute of the construction.
+  *
+  * Complete the attempt to construct a key.  The key will be negated
 
