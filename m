@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82BFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253B6C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945082554A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F32556A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190519;
-	bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
+	s=default; t=1559190526;
+	bh=ZG+gGJa5XSfWrsj1TIcoEimwk3uKazq99BvcQZRP5wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+e6VarQY7deNJ5gsncYzf/kRAmcdGG+t2910wkvv5SkcITFOcjg6XMBkQE3xbmWJ
-	 yvNxxAKSTbWSQt7wL/rY/VynbN9iFI5Rm8m9+LDA41gdpvXin8JF0y99VM2cu7zFfc
-	 0wpXCSsno8FThnzjpO8oxsLhLbDxPxi0eegQyg3w=
+	b=rdkFemPUPj9cmf/sRV3XLC6c+/POWMFz+A6JGxoFJzcj/Tf00MIadxpYq6AqBIy5x
+	 T5bXtUpTMZeNybbd6bdb0CyGh5pUOBkVwvfkpcYJBBrAEfH54Jcd/dflmW/kVt+0wq
+	 c9mSM5HFceGBj+dZ2Bdjl1PlBCgQz4C7hLXY8mks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfE3E2i (ORCPT
+        id S2387748AbfE3E2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbfE3DON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:13 -0400
+        id S1729748AbfE3DOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:10 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC83D24547;
-        Thu, 30 May 2019 03:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5306624561;
+        Thu, 30 May 2019 03:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186052;
-        bh=aQJcM1cVq7gWa9y+IphsuHHAkoXxn9PEzhVxGMJBiBo=;
+        s=default; t=1559186050;
+        bh=ZG+gGJa5XSfWrsj1TIcoEimwk3uKazq99BvcQZRP5wY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjHIaF3siB6ZcjBX0G3gj9L5Cs3OymV3/1r1BHJEK30jx/9eXUtXN6Z5IfA9iAene
-         5Dgc1oAb3PnNOV7tcWdyaMy7O4OqV+yyGSWaAiwd2rb7Shh/57QepuLWaTCAbL3pZb
-         sBP7SuphmvKhzmRgOAtdn8Gu5sDQ4t05L95nx/qo=
+        b=gblkR/+ncUk55rj5IcL7aGXrkYNipe1t+2GRY3tedaixP0Asdp6rLsF03p4ubbqqV
+         iebeFrBtXOX3fQecTymIQgK+b/yx5/gWSRedCqqThImyuIORzRZNsYQETRMTZsCyRg
+         E6i52TZQeia3AJ6X4pTAX8q1TBM3fBlBTvAtwrU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 149/346] powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX
-Date:   Wed, 29 May 2019 20:03:42 -0700
-Message-Id: <20190530030548.730027230@linuxfoundation.org>
+Subject: [PATCH 5.0 146/346] iio: adc: stm32-dfsdm: fix unmet direct dependencies detected
+Date:   Wed, 29 May 2019 20:03:39 -0700
+Message-Id: <20190530030548.565604367@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56c46bba9bbfe229b4472a5be313c44c5b714a39 ]
+[ Upstream commit ba7ecfe43d6bf12e2aa76705c45f7d187ae3d7c0 ]
 
-With STRICT_KERNEL_RWX enabled anything marked __init is placed at a 16M
-boundary.  This is necessary so that it can be repurposed later with
-different permissions.  However, in kernels with text larger than 16M,
-this pushes early_setup past 32M, incapable of being reached by the
-branch instruction.
+This fixes unmet direct dependencies seen when CONFIG_STM32_DFSDM_ADC
+is selected:
 
-Fix this by setting the CTR and branching there instead.
+WARNING: unmet direct dependencies detected for IIO_BUFFER_HW_CONSUMER
+  Depends on [n]: IIO [=y] && IIO_BUFFER [=n]
+  Selected by [y]:
+  - STM32_DFSDM_ADC [=y] && IIO [=y] && (ARCH_STM32 [=y] && OF [=y] ||
+    COMPILE_TEST [=n])
 
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-[mpe: Fix it to work on BE by using DOTSYM()]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/head_64.S | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index 4898e9491a1cd..9168a247e24ff 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -970,7 +970,9 @@ start_here_multiplatform:
- 
- 	/* Restore parameters passed from prom_init/kexec */
- 	mr	r3,r31
--	bl	early_setup		/* also sets r13 and SPRG_PACA */
-+	LOAD_REG_ADDR(r12, DOTSYM(early_setup))
-+	mtctr	r12
-+	bctrl		/* also sets r13 and SPRG_PACA */
- 
- 	LOAD_REG_ADDR(r3, start_here_common)
- 	ld	r4,PACAKMSR(r13)
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 7a3ca4ec0cb78..0a11f6cbc91af 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -747,6 +747,7 @@ config STM32_DFSDM_ADC
+ 	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+ 	select STM32_DFSDM_CORE
+ 	select REGMAP_MMIO
++	select IIO_BUFFER
+ 	select IIO_BUFFER_HW_CONSUMER
+ 	help
+ 	  Select this option to support ADCSigma delta modulator for
 -- 
 2.20.1
 
