@@ -7,56 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC2C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921C7C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BB225E12
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDFE25B12
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191990;
-	bh=BCc15NeOx4Irdj+ofRsABC8wNfwE3dbtR0v/5IB/peg=;
+	s=default; t=1559191992;
+	bh=TafnwVeoyIB5+u24332Q6fviaSBWjMIlnE3OTxLsJO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wj2FBc3y7fuTHhUnw2C2cHWYCbFw6SocOdWKzkGlUXj0ul4hwiJuSyc+xAMDGOLEp
-	 YuIkHlWeOJSE/drWa4FnKQ//QKez8rd4L4/sZqgm5ZtRdrIupeB/Z5pF+Q0Vki8836
-	 fVXnPG6tTmoSGzBm8ERn3eLyuObEwZAjYzgGuxBQ=
+	b=HE8lxm7UbGdM8TNMe27mHfWKpVr//gZ5j+VjfNQKE8JpkRL2YSgwtH8pWlk3iZqOW
+	 A/1vWbfT7tv+Sbqtp5FiQ570G54fmqL3LCnQy8Y5Qnr+E9W+EccSJMbPTGXl9luET3
+	 dG/aaIGpLl/JreBafMgkL+jJMJTkGguOfm+9IjFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbfE3EwI (ORCPT
+        id S2387559AbfE3ExL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48950 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:53:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbfE3DKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:51 -0400
+        id S1728181AbfE3DKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:40 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0576244BE;
-        Thu, 30 May 2019 03:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0FBA2446F;
+        Thu, 30 May 2019 03:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185849;
-        bh=BCc15NeOx4Irdj+ofRsABC8wNfwE3dbtR0v/5IB/peg=;
+        s=default; t=1559185839;
+        bh=TafnwVeoyIB5+u24332Q6fviaSBWjMIlnE3OTxLsJO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KB5JZSVBQo2XTHxckMIuR4EZbwtczB6bwCQw06Id74W4dFnAfWIgssi2Bd2GgtAOo
-         3RovPNRNIeCZXiDEC72nog11URoAkZMIgvFz206Je9mztvbLq+aA0MiQhtaF+sAo8A
-         RhZR7fzWDTnNfaDwl5XpG9Q7uZtabyh8ujWk4lxk=
+        b=bnkMHkFTi1E2Sy2Uc25UBFNSjtl/JO1OY9gPtfLd6eByhw+jZ/H2rtawSoDDJibzg
+         Uw+TBWoIasWpeChsFg/ImrnPWczkzUoGuCfIwwtYTIW7KztuWFEIpBUD14O7rSOH/6
+         KPg7JGSzdePdlkljFE0I5v+aEvovRzdjd+SSl2NA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 173/405] drm/msm: a5xx: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:02:51 -0700
-Message-Id: <20190530030549.873012064@linuxfoundation.org>
+Subject: [PATCH 5.1 155/405] media: au0828: stop video streaming only when last user stops
+Date:   Wed, 29 May 2019 20:02:33 -0700
+Message-Id: <20190530030548.985796924@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -69,71 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6cd5235c3135ea84b32469ea51b2aae384eda8af ]
+[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+If the application was streaming from both videoX and vbiX, and streaming
+from videoX was stopped, then the vbi streaming also stopped.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
-drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
+The cause being that stop_streaming for video stopped the subdevs as well,
+instead of only doing that if dev->streaming_users reached 0.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Mamta Shukla <mamtashukla555@gmail.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Sharat Masetty <smasetty@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org (open list)
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
+at all when dev->streaming_users reached 0.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tested-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index d5f5e56422f57..270da14cba673 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -34,7 +34,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
- {
- 	struct device *dev = &gpu->pdev->dev;
- 	const struct firmware *fw;
--	struct device_node *np;
-+	struct device_node *np, *mem_np;
- 	struct resource r;
- 	phys_addr_t mem_phys;
- 	ssize_t mem_size;
-@@ -48,11 +48,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
- 	if (!np)
- 		return -ENODEV;
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 7876c897cc1d6..ad2b1b7ecea4d 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -839,9 +839,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
+ 			return rc;
+ 		}
  
--	np = of_parse_phandle(np, "memory-region", 0);
--	if (!np)
-+	mem_np = of_parse_phandle(np, "memory-region", 0);
-+	of_node_put(np);
-+	if (!mem_np)
- 		return -EINVAL;
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
++
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+-			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
+-						s_stream, 1);
+ 			dev->vid_timeout_running = 1;
+ 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
+ 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
+@@ -861,10 +861,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
  
--	ret = of_address_to_resource(np, 0, &r);
-+	ret = of_address_to_resource(mem_np, 0, &r);
-+	of_node_put(mem_np);
- 	if (ret)
- 		return ret;
+ 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
  
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+-	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
+ 	dev->vid_timeout_running = 0;
+ 	del_timer_sync(&dev->vid_timeout);
+ 
+@@ -893,8 +894,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
+ 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
+ 		dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+ 	spin_lock_irqsave(&dev->slock, flags);
+ 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
