@@ -2,50 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E50C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CFEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD90246F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8829F246F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186953;
-	bh=WSxZ+l1zBLcw8xp+9tZaF07YU4YOYkgUrHg+LBoNN3A=;
+	s=default; t=1559186958;
+	bh=NfFwaTi1sajFBOIP7jvW4jDdAcBFgDsACAKmImr0RPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhHNBOYLH+/fvd/nBMsqPzcWLhxZjTDHZ3kx7V1/WXYkyud16rHqqTyzhotXXtNU7
-	 NX/le51lDNx9uv0qz+KqlPK7qvmf1gLkM7rrhnmS8icgZuahckTgSjk/46Z0dtG3Et
-	 mtPaiZqtwZCVjHuGBaOxvKCXOU8ETb3BrF6vDiuA=
+	b=tkOyYx9MK/IPnikKLyVr1MBbhGbAX3KjBA8K1U7LfaeC2YryeC95e8IIKsmbkD5OX
+	 zKa0XZ3l9SqwYzA+VBeBA/dIo9VvahF42/DEQ2SkqvGUPaNj/+OoWhLboqMvz4jvf7
+	 bQL1RpvSfk2/M8QRFGLtoFEmNkTaAWdZ9fyH0/ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388323AbfE3D3M (ORCPT
+        id S2388338AbfE3D3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbfE3DUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:31 -0400
+        id S1732237AbfE3DUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44CCA2493A;
-        Thu, 30 May 2019 03:20:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C712493B;
+        Thu, 30 May 2019 03:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186430;
-        bh=WSxZ+l1zBLcw8xp+9tZaF07YU4YOYkgUrHg+LBoNN3A=;
+        s=default; t=1559186432;
+        bh=NfFwaTi1sajFBOIP7jvW4jDdAcBFgDsACAKmImr0RPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pVmNO/UijO9E+3FXlabeEEndPck3SBpHT+2/fR5hWH8jgHAvWbYXxbpGGBGgtXP4t
-         Npu17+Dmu2ja58SVJ6u52yX/ZwzSiaGnC3hzkSTGiN9jenSHH2gRor3AfJRsatxPsv
-         mPa6u0qQUsqrk2l7LtPAgSPQBxqU25xFEznjZ7+w=
+        b=H/E+LkGQMOKJ2GyslIEE2RO2cBGjQkpsefbje27RTv0sKGonEs/6rtnNgOy2SLB2n
+         oeX/+mWmIMbcVjU3U2apSRjvNBnNtlwcFuk/VrtCbjDObDFL85LiGTgx98Z7XtaT4g
+         ZQ8MrLLDfsGO97ZaekK4qAYZv0ZE+Xc3ZTVPcI5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 022/128] Revert "btrfs: Honour FITRIM range constraints during free space trim"
-Date:   Wed, 29 May 2019 20:05:54 -0700
-Message-Id: <20190530030438.866703877@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 026/128] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 29 May 2019 20:05:58 -0700
+Message-Id: <20190530030439.434608356@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -58,93 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-This reverts commit 038ec2c13e0d1f7b9d45a081786f18f75b65f11b.
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-There is currently no corresponding patch in master due to additional
-changes that would be significantly different from plain revert in the
-respective stable branch.
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-The range argument was not handled correctly and could cause trim to
-overlap allocated areas or reach beyond the end of the device. The
-address space that fitrim normally operates on is in logical
-coordinates, while the discards are done on the physical device extents.
-This distinction cannot be made with the current ioctl interface and
-caused the confusion.
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
 
-The bug depends on the layout of block groups and does not always
-happen. The whole-fs trim (run by default by the fstrim tool) is not
-affected.
-
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c |   25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11150,9 +11150,9 @@ int btrfs_error_unpin_extent_range(struc
-  * transaction.
-  */
- static int btrfs_trim_free_extents(struct btrfs_device *device,
--				   struct fstrim_range *range, u64 *trimmed)
-+				   u64 minlen, u64 *trimmed)
- {
--	u64 start = range->start, len = 0;
-+	u64 start = 0, len = 0;
- 	int ret;
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b10cbaa82ff53..af3487538c191 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
- 	*trimmed = 0;
-@@ -11188,8 +11188,8 @@ static int btrfs_trim_free_extents(struc
- 			atomic_inc(&trans->use_count);
- 		spin_unlock(&fs_info->trans_lock);
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
  
--		ret = find_free_dev_extent_start(trans, device, range->minlen,
--						 start, &start, &len);
-+		ret = find_free_dev_extent_start(trans, device, minlen, start,
-+						 &start, &len);
- 		if (trans)
- 			btrfs_put_transaction(trans);
- 
-@@ -11201,16 +11201,6 @@ static int btrfs_trim_free_extents(struc
- 			break;
- 		}
- 
--		/* If we are out of the passed range break */
--		if (start > range->start + range->len - 1) {
--			mutex_unlock(&fs_info->chunk_mutex);
--			ret = 0;
--			break;
--		}
--
--		start = max(range->start, start);
--		len = min(range->len, len);
--
- 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
- 		up_read(&fs_info->commit_root_sem);
- 		mutex_unlock(&fs_info->chunk_mutex);
-@@ -11221,10 +11211,6 @@ static int btrfs_trim_free_extents(struc
- 		start += len;
- 		*trimmed += bytes;
- 
--		/* We've trimmed enough */
--		if (*trimmed >= range->len)
--			break;
--
- 		if (fatal_signal_pending(current)) {
- 			ret = -ERESTARTSYS;
- 			break;
-@@ -11309,7 +11295,8 @@ int btrfs_trim_fs(struct btrfs_root *roo
- 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
- 	devices = &fs_info->fs_devices->devices;
- 	list_for_each_entry(device, devices, dev_list) {
--		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
-+		ret = btrfs_trim_free_extents(device, range->minlen,
-+					      &group_trimmed);
- 		if (ret) {
- 			dev_failed++;
- 			dev_ret = ret;
+ 	for (i = 0; i < tdma->nr_channels; ++i)
+-- 
+2.20.1
+
 
 
