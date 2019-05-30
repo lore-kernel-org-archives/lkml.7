@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F82EC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE13C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8C925642
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4222566C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190682;
-	bh=rGYkPEUNxSrzRwyQUAHdYE0cJaWGG91Py/JCKHHZwno=;
+	s=default; t=1559190684;
+	bh=F60ovf0n5l2kPM8Qyh6dLDCgATr4YEityKsVWQ5te1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePYH3mhsEgT8NFmRZSPV9Mp3E9wktFAHsmvz+vR9IZep1cEW6hZdPJ+CxvV87QCzB
-	 /AiFICqeQ2XawVVP4pLVFgAvSEc7xB3XITPscH2wq3Tqs5/GCGa9+fCo6l4Jyd99Gq
-	 RAJksCHg2GkLEy7KUBsFSu492g6M2c2vAgwPzx64=
+	b=lP+44LXguAkBK4KZrYGfk7EPrNuupNwWmoe8inJtnI1P1rpm0nFBWPcw+fSzhNRnD
+	 +orJg5n04RjvhsiIJLSI9eTIwpH7Qe5UPck42/n/1Po2vD8sHmT7PsueVMNC35KANH
+	 At32rrL/LEzUG/d8WCSoBep3jMRwkcewCclMhqIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbfE3EbV (ORCPT
+        id S1729663AbfE3EbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729586AbfE3DNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:47 -0400
+        id S1729592AbfE3DNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB0A124526;
-        Thu, 30 May 2019 03:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F19C24526;
+        Thu, 30 May 2019 03:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186027;
-        bh=rGYkPEUNxSrzRwyQUAHdYE0cJaWGG91Py/JCKHHZwno=;
+        s=default; t=1559186028;
+        bh=F60ovf0n5l2kPM8Qyh6dLDCgATr4YEityKsVWQ5te1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZrXoh0W/qLNd2NDTTTUh1jJXbwGRBUr2gRLjyt1oDKLaxH3FRF08R5Y6brTVnF1m
-         N9zMo8gLaY2XyLjQHLL9+y01MYo8+LeVyuK8fIrIK5kywIk1PzbcqezG+7nk5o6HtU
-         Hv4U7XDP21ny0raK195A5yF/c4rfOA2WQJWPpBOk=
+        b=qnCDeBP9z1BSy4tS38gy6ubafZYmvneyodWB1KSBxwiLk+aS2rbtHWiFySscksJsj
+         5jfJ3AGVxpAiZmz8DJdt5aRcb5V1fNn32LpnIcXH1IBCFBYFtdshwiMyIZjykRKbQB
+         D6m7ap74yAGB1hnpZ4vaHEDE+kOCvvHd6f0bSvFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 066/346] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 29 May 2019 20:02:19 -0700
-Message-Id: <20190530030544.403256857@linuxfoundation.org>
+        stable@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 103/346] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 29 May 2019 20:02:56 -0700
+Message-Id: <20190530030546.355562064@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,39 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-Make sure the pointer cleared if an error is reported.
+we can reporduce the problem as follows:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
+
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
+
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index d5f73c8372817..7994e8ddc7d21 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index cff1b143fff5d..9b7a49fc76971 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -966,6 +966,7 @@ static void _stop(struct pl330_thread *thrd)
+ {
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
+ 
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -978,10 +979,13 @@ static void _stop(struct pl330_thread *thrd)
+ 
+ 	_emit_KILL(0, insn);
+ 
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
++
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+ }
+ 
+ /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
