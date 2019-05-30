@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3A6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A42C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777D7244E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8199244EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185936;
-	bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
+	s=default; t=1559185940;
+	bh=YIEHj8k+muqmfN/iqJwk9JaVvzGTOFJmiRm/Ea1hqKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCDURsMUK78QSfTMl6FctUuHJPQ2YGdl3We9fC+6T/H5JPNbkBKCkLqb/jTU73fIi
-	 rULzzmc1IO+/RrJfZ85xmf1xm6NIYIsmkag13AFLmlMo1oKRg+wQpcDey5KhdDoSPP
-	 IgM9sxa/K4rETGogpou3ZM8rebkz9zeJ2Oadz/Us=
+	b=MIdJPWny1I+gYnzMy+QzgcHE4AeKIEqtkq4PArkR5HpHWqbA495xKsfxvo5lJNIHP
+	 cj5Is1W8q6GdhITDNt/QEkn4UsmbyP0ux54B4ne0BPIYzHHQIvl9lbsLPLp2Kp8B2D
+	 2VBnecm4041PjzRsiQcEblpMdb2alunPEI7Y74Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfE3DMP (ORCPT
+        id S1728100AbfE3DMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48628 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbfE3DKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:45 -0400
+        id S1728222AbfE3DKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D37244B2;
-        Thu, 30 May 2019 03:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E2A24482;
+        Thu, 30 May 2019 03:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185845;
-        bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
+        s=default; t=1559185846;
+        bh=YIEHj8k+muqmfN/iqJwk9JaVvzGTOFJmiRm/Ea1hqKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J28QRjhCOcDNlraqf4iKPKD4T2itTKej0QpRhBT9hxADIerf15BTBUWzLb1r1SW2f
-         IGWtns1bH+wsTIVVme8JNJ88xh8ndgK4/xOlBwxmra5aeJb/k3wekmRR4uVAwYzWTW
-         uiuXobEWLeWiHijzhgHw7OzvSpGQD/YYVrAZWbP0=
+        b=wJ32upuNhs0bTKfpel/AJQM/0OzrysORqQ53iBQIcVTDjW6Mvr4Mv421XPSKwB78R
+         epifKuy2+7eFeBuOKr+H4JBFkJ+Vq3ezrO8IC2wNuEjD6Q8vJQMURM8c01c6pcD6QW
+         JPnBdUdJ+oziqgzx55J6+MQJKi5UGbeaOalGOQ/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon DeVree <nuxi@vault24.org>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 165/405] random: fix CRNG initialization when random.trust_cpu=1
-Date:   Wed, 29 May 2019 20:02:43 -0700
-Message-Id: <20190530030549.478535388@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 167/405] cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
+Date:   Wed, 29 May 2019 20:02:45 -0700
+Message-Id: <20190530030549.576219681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,63 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe6f1a6a8eedc1aa538fee0baa612b6a59639cf8 ]
+[ Upstream commit 4dcabece4c3a9f9522127be12cc12cc120399b2f ]
 
-When the system boots with random.trust_cpu=1 it doesn't initialize the
-per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
-means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
-for silly userspace programs") is not used when random.trust_cpu=1.
+The number of descendant cgroups and the number of dying
+descendant cgroups are currently synchronized using the cgroup_mutex.
 
-crash> dmesg | grep random:
-[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-[    0.314029] random: crng done (trusting CPU's manufacturer)
-crash> print crng_node_pool
-$6 = (struct crng_state **) 0x0
+The number of descendant cgroups will be required by the cgroup v2
+freezer, which will use it to determine if a cgroup is frozen
+(depending on total number of descendants and number of frozen
+descendants). It's not always acceptable to grab the cgroup_mutex,
+especially from quite hot paths (e.g. exit()).
 
-After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
-initialized again:
+To avoid this, let's additionally synchronize these counters using
+the css_set_lock.
 
-crash> dmesg | grep random:
-[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
-[    0.314031] random: crng done (trusting CPU's manufacturer)
-crash> print crng_node_pool
-$1 = (struct crng_state **) 0xffff9a915f4014a0
+So, it's safe to read these counters with either cgroup_mutex or
+css_set_lock locked, and for changing both locks should be acquired.
 
-The call to invalidate_batched_entropy() was also missing. This is
-important for architectures like PPC and S390 which only have the
-arch_get_random_seed_* functions.
-
-Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
-Signed-off-by: Jon DeVree <nuxi@vault24.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: kernel-team@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/random.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/cgroup-defs.h | 5 +++++
+ kernel/cgroup/cgroup.c      | 6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38c6d1af6d1c0..d4d45ccfeefc0 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -777,6 +777,7 @@ static struct crng_state **crng_node_pool __read_mostly;
- #endif
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 1c70803e9f770..7d57890cec671 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -349,6 +349,11 @@ struct cgroup {
+ 	 * Dying cgroups are cgroups which were deleted by a user,
+ 	 * but are still existing because someone else is holding a reference.
+ 	 * max_descendants is a maximum allowed number of descent cgroups.
++	 *
++	 * nr_descendants and nr_dying_descendants are protected
++	 * by cgroup_mutex and css_set_lock. It's fine to read them holding
++	 * any of cgroup_mutex and css_set_lock; for writing both locks
++	 * should be held.
+ 	 */
+ 	int nr_descendants;
+ 	int nr_dying_descendants;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 3f2b4bde0f9c3..9fcf6338ea5f9 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4781,9 +4781,11 @@ static void css_release_work_fn(struct work_struct *work)
+ 		if (cgroup_on_dfl(cgrp))
+ 			cgroup_rstat_flush(cgrp);
  
- static void invalidate_batched_entropy(void);
-+static void numa_crng_init(void);
++		spin_lock_irq(&css_set_lock);
+ 		for (tcgrp = cgroup_parent(cgrp); tcgrp;
+ 		     tcgrp = cgroup_parent(tcgrp))
+ 			tcgrp->nr_dying_descendants--;
++		spin_unlock_irq(&css_set_lock);
  
- static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
- static int __init parse_trust_cpu(char *arg)
-@@ -805,7 +806,9 @@ static void crng_initialize(struct crng_state *crng)
- 		}
- 		crng->state[i] ^= rv;
+ 		cgroup_idr_remove(&cgrp->root->cgroup_idr, cgrp->id);
+ 		cgrp->id = -1;
+@@ -5001,12 +5003,14 @@ static struct cgroup *cgroup_create(struct cgroup *parent)
+ 	if (ret)
+ 		goto out_psi_free;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgrp; tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		cgrp->ancestor_ids[tcgrp->level] = tcgrp->id;
+ 
+ 		if (tcgrp != cgrp)
+ 			tcgrp->nr_descendants++;
  	}
--	if (trust_cpu && arch_init) {
-+	if (trust_cpu && arch_init && crng == &primary_crng) {
-+		invalidate_batched_entropy();
-+		numa_crng_init();
- 		crng_init = 2;
- 		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	if (notify_on_release(parent))
+ 		set_bit(CGRP_NOTIFY_ON_RELEASE, &cgrp->flags);
+@@ -5291,10 +5295,12 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 	if (parent && cgroup_is_threaded(cgrp))
+ 		parent->nr_threaded_children--;
+ 
++	spin_lock_irq(&css_set_lock);
+ 	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
+ 		tcgrp->nr_descendants--;
+ 		tcgrp->nr_dying_descendants++;
  	}
++	spin_unlock_irq(&css_set_lock);
+ 
+ 	cgroup1_check_for_release(parent);
+ 
 -- 
 2.20.1
 
