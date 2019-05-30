@@ -2,127 +2,93 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A67DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7405C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A922589C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AFF258A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfE3MBL (ORCPT
+        id S1727218AbfE3MBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:01:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34990 "EHLO
+        Thu, 30 May 2019 08:01:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35048 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfE3MBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:01:10 -0400
+        id S1726997AbfE3MBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 08:01:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3F10374;
-        Thu, 30 May 2019 05:01:09 -0700 (PDT)
-Received: from [10.162.40.143] (p8cg001049571a15.blr.arm.com [10.162.40.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2F953F5AF;
-        Thu, 30 May 2019 05:01:02 -0700 (PDT)
-Subject: Re: [RFC] mm: Generalize notify_page_fault()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>
-References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
- <20190530110639.GC23461@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
-Date:   Thu, 30 May 2019 17:31:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2154374;
+        Thu, 30 May 2019 05:01:33 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2086D3F5AF;
+        Thu, 30 May 2019 05:01:31 -0700 (PDT)
+Date:   Thu, 30 May 2019 13:01:29 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
+        rostedt@goodmis.org, bigeasy@linutronix.de, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, dave.martin@arm.com
+Subject: Re: [PATCH] arm64/cpufeature: Convert hook_lock to raw_spin_lock_t
+ in cpu_enable_ssbs()
+Message-ID: <20190530120129.GD13751@fuggles.cambridge.arm.com>
+References: <20190530113058.1988-1-julien.grall@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530110639.GC23461@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530113058.1988-1-julien.grall@arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
-> On Thu, May 30, 2019 at 11:25:13AM +0530, Anshuman Khandual wrote:
->> Similar notify_page_fault() definitions are being used by architectures
->> duplicating much of the same code. This attempts to unify them into a
->> single implementation, generalize it and then move it to a common place.
->> kprobes_built_in() can detect CONFIG_KPROBES, hence notify_page_fault()
->> must not be wrapped again within CONFIG_KPROBES. Trap number argument can
+On Thu, May 30, 2019 at 12:30:58PM +0100, Julien Grall wrote:
+> cpu_enable_ssbs() is called via stop_machine() as part of the cpu_enable
+> callback. A spin lock is used to ensure the hook is registered before
+> the rest of the callback is executed.
 > 
-> This is a funny quirk of the English language.  "must not" means "is not
-> allowed to be", not "does not have to be".
+> On -RT spin_lock() may sleep. However, all the callees in stop_machine()
+> are expected to not sleep. Therefore a raw_spin_lock() is required here.
+> 
+> Given this is already done under stop_machine() and the work done under
+> the lock is quite small, the latency should not increase too much.
+> 
+> Signed-off-by: Julien Grall <julien.grall@arm.com>
+> 
+> ---
+> 
+> It was noticed when looking at the current use of spin_lock in
+> arch/arm64. I don't have a platform calling that callback, so I have
+> hacked the code to reproduce the error and check it is now fixed.
+> ---
+>  arch/arm64/kernel/cpufeature.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index ca27e08e3d8a..2a7159fda3ce 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1194,14 +1194,14 @@ static struct undef_hook ssbs_emulation_hook = {
+>  static void cpu_enable_ssbs(const struct arm64_cpu_capabilities *__unused)
+>  {
+>  	static bool undef_hook_registered = false;
+> -	static DEFINE_SPINLOCK(hook_lock);
+> +	static DEFINE_RAW_SPINLOCK(hook_lock);
+>  
+> -	spin_lock(&hook_lock);
+> +	raw_spin_lock(&hook_lock);
+>  	if (!undef_hook_registered) {
+>  		register_undef_hook(&ssbs_emulation_hook);
+>  		undef_hook_registered = true;
+>  	}
+> -	spin_unlock(&hook_lock);
+> +	raw_spin_unlock(&hook_lock);
 
-You are right. Noted for future. Thanks !
+Makes sense to me. We could probably avoid the lock entirely if we wanted
+to (via atomic_dec_if_positive), but I'm not sure it's really worth it.
 
-> 
->> @@ -141,6 +142,19 @@ static int __init init_zero_pfn(void)
->>  core_initcall(init_zero_pfn);
->>  
->>  
->> +int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
->> +{
->> +	int ret = 0;
->> +
->> +	if (kprobes_built_in() && !user_mode(regs)) {
->> +		preempt_disable();
->> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
->> +			ret = 1;
->> +		preempt_enable();
->> +	}
->> +	return ret;
->> +}
->> +
->>  #if defined(SPLIT_RSS_COUNTING)
-> 
-> Comparing this to the canonical implementation (ie x86), it looks similar.
-> 
-> static nokprobe_inline int kprobes_fault(struct pt_regs *regs)
-> {
->         if (!kprobes_built_in())
->                 return 0;
->         if (user_mode(regs))
->                 return 0;
->         /*
->          * To be potentially processing a kprobe fault and to be allowed to call
->          * kprobe_running(), we have to be non-preemptible.
->          */
->         if (preemptible())
->                 return 0;
->         if (!kprobe_running())
->                 return 0;
->         return kprobe_fault_handler(regs, X86_TRAP_PF);
-> }
-> 
-> The two handle preemption differently.  Why is x86 wrong and this one
-> correct?
-
-Here it expects context to be already non-preemptible where as the proposed
-generic function makes it non-preemptible with a preempt_[disable|enable]()
-pair for the required code section, irrespective of it's present state. Is
-not this better ?
+Will
