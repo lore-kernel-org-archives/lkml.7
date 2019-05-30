@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F68C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15ECC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0116B25354
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB54B25381
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190194;
-	bh=tJgKCQQ4e+hKu6kHOlcUTPcrbDVhyOcD4y2tBCRwQuA=;
+	s=default; t=1559190195;
+	bh=URk/Z5WthB030trRMhOTnxrT+1vudptnqpjgPCOjSps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DkatMlpLbdQWm+yy3Srp03pngD+IYpwT84QqvDsbknOUuAfIJ1PnZUvPGaJVzO9ih
-	 PaTjEc1lxJAtZ8+vSLOtqrxyU45q3+nZH6gvogqF8igZ1XGmgoPTfXjjjphcsi04mM
-	 2L8WTiVQOlZz0Z1s4Lpd3xJK5zsmigy2fopU3LCU=
+	b=xTwjX/cxTJ8N8rHemyvYKhAj/1upsi1deT7axYGFbQI2xn5ptiioO7F1reyZtNh7O
+	 fb8fKVYpMKbrdcaB4r45c1UQnkTeTCjNInhvw4NlvPPeOSIe2FT1gg06jkUYmGQj6S
+	 7PZSs3/AwphqjAczcylTd2+w4+soAzyXrWZZLuaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732587AbfE3EXN (ORCPT
+        id S1730146AbfE3EXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730062AbfE3DPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:02 -0400
+        id S1729345AbfE3DPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96F5724555;
-        Thu, 30 May 2019 03:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A465245A6;
+        Thu, 30 May 2019 03:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186101;
-        bh=tJgKCQQ4e+hKu6kHOlcUTPcrbDVhyOcD4y2tBCRwQuA=;
+        s=default; t=1559186108;
+        bh=URk/Z5WthB030trRMhOTnxrT+1vudptnqpjgPCOjSps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pibrLhr3aY2sZEzDIAEz672kgM5rp2v6i6eny0Idl6kWHN2C6I4sfLR8KoeFYXauq
-         3phiuhWIwtvoyC6k0TsbRHve5aTX/0kgR7mHvZMY+XS0hswaedwvfGnKyeffaoXDgB
-         ZPoQfs7OZ1sSOzm2TnPlZTp9O2H6asYpWeW7oho0=
+        b=W50wyMRI/UIIthmCXZ7xMVD5QrzzGbdBTQxEd2AyK/CwU4jZts5zxYR8XU01zz2Mu
+         y4Om/oU93V1QCXtgGd/XxEvfEROiyZi7pO6K+b6Bjb3l3+uptlhmb3r8bRRhVrpu8+
+         AH4B0HtU1OOJfKgl5XKfwEaltn1xiFD96hzh1ovY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lior David <liord@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 239/346] wil6210: fix return code of wmi_mgmt_tx and wmi_mgmt_tx_ext
-Date:   Wed, 29 May 2019 20:05:12 -0700
-Message-Id: <20190530030553.141076483@linuxfoundation.org>
+Subject: [PATCH 5.0 251/346] clk: renesas: rcar-gen3: Correct parent clock of SYS-DMAC
+Date:   Wed, 29 May 2019 20:05:24 -0700
+Message-Id: <20190530030553.727443475@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,69 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 49122ec42634f73babb1dc96f170023e5228d080 ]
+[ Upstream commit 3c772f71a552d343a96868ed9a809f9047be94f5 ]
 
-The functions that send management TX frame have 3 possible
-results: success and other side acknowledged receive (ACK=1),
-success and other side did not acknowledge receive(ACK=0) and
-failure to send the frame. The current implementation
-incorrectly reports the ACK=0 case as failure.
+The clock sources of the AXI BUS clock (266.66 MHz) used for SYS-DMAC
+DMA transfers are:
 
-Signed-off-by: Lior David <liord@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+    Channel      R-Car H3    R-Car M3-W    R-Car M3-N
+    -------------------------------------------------
+    SYS-DMAC0    S0D3        S0D3          S0D3
+    SYS-DMAC1    S3D1        S3D1          S3D1
+    SYS-DMAC2    S3D1        S3D1          S3D1
+
+As a result, change the parent clocks of the SYS-DMAC{1,2} module clocks
+on R-Car H3, R-Car M3-W, and R-Car M3-N to S3D1.
+
+NOTE: This information will be reflected in a future revision of the
+      R-Car Gen3 Hardware Manual.
+
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[geert: Update RZ/G2M]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/cfg80211.c |  5 +++++
- drivers/net/wireless/ath/wil6210/wmi.c      | 11 ++++++-----
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/clk/renesas/r8a774a1-cpg-mssr.c | 4 ++--
+ drivers/clk/renesas/r8a7795-cpg-mssr.c  | 4 ++--
+ drivers/clk/renesas/r8a7796-cpg-mssr.c  | 4 ++--
+ drivers/clk/renesas/r8a77965-cpg-mssr.c | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
-index 5a44f9d0ff029..c7b5a7786e38d 100644
---- a/drivers/net/wireless/ath/wil6210/cfg80211.c
-+++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
-@@ -1274,7 +1274,12 @@ int wil_cfg80211_mgmt_tx(struct wiphy *wiphy, struct wireless_dev *wdev,
- 			     params->wait);
+diff --git a/drivers/clk/renesas/r8a774a1-cpg-mssr.c b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
+index 10e852518870c..ddde2a7a24273 100644
+--- a/drivers/clk/renesas/r8a774a1-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a774a1-cpg-mssr.c
+@@ -122,8 +122,8 @@ static const struct mssr_mod_clk r8a774a1_mod_clks[] __initconst = {
+ 	DEF_MOD("msiof2",		 209,	R8A774A1_CLK_MSO),
+ 	DEF_MOD("msiof1",		 210,	R8A774A1_CLK_MSO),
+ 	DEF_MOD("msiof0",		 211,	R8A774A1_CLK_MSO),
+-	DEF_MOD("sys-dmac2",		 217,	R8A774A1_CLK_S0D3),
+-	DEF_MOD("sys-dmac1",		 218,	R8A774A1_CLK_S0D3),
++	DEF_MOD("sys-dmac2",		 217,	R8A774A1_CLK_S3D1),
++	DEF_MOD("sys-dmac1",		 218,	R8A774A1_CLK_S3D1),
+ 	DEF_MOD("sys-dmac0",		 219,	R8A774A1_CLK_S0D3),
+ 	DEF_MOD("cmt3",			 300,	R8A774A1_CLK_R),
+ 	DEF_MOD("cmt2",			 301,	R8A774A1_CLK_R),
+diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+index 86842c9fd314e..eade38e9ed36b 100644
+--- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+@@ -129,8 +129,8 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
+ 	DEF_MOD("msiof2",		 209,	R8A7795_CLK_MSO),
+ 	DEF_MOD("msiof1",		 210,	R8A7795_CLK_MSO),
+ 	DEF_MOD("msiof0",		 211,	R8A7795_CLK_MSO),
+-	DEF_MOD("sys-dmac2",		 217,	R8A7795_CLK_S0D3),
+-	DEF_MOD("sys-dmac1",		 218,	R8A7795_CLK_S0D3),
++	DEF_MOD("sys-dmac2",		 217,	R8A7795_CLK_S3D1),
++	DEF_MOD("sys-dmac1",		 218,	R8A7795_CLK_S3D1),
+ 	DEF_MOD("sys-dmac0",		 219,	R8A7795_CLK_S0D3),
+ 	DEF_MOD("sceg-pub",		 229,	R8A7795_CLK_CR),
+ 	DEF_MOD("cmt3",			 300,	R8A7795_CLK_R),
+diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+index 12c455859f2c2..654f3ea88f335 100644
+--- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+@@ -126,8 +126,8 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
+ 	DEF_MOD("msiof2",		 209,	R8A7796_CLK_MSO),
+ 	DEF_MOD("msiof1",		 210,	R8A7796_CLK_MSO),
+ 	DEF_MOD("msiof0",		 211,	R8A7796_CLK_MSO),
+-	DEF_MOD("sys-dmac2",		 217,	R8A7796_CLK_S0D3),
+-	DEF_MOD("sys-dmac1",		 218,	R8A7796_CLK_S0D3),
++	DEF_MOD("sys-dmac2",		 217,	R8A7796_CLK_S3D1),
++	DEF_MOD("sys-dmac1",		 218,	R8A7796_CLK_S3D1),
+ 	DEF_MOD("sys-dmac0",		 219,	R8A7796_CLK_S0D3),
+ 	DEF_MOD("cmt3",			 300,	R8A7796_CLK_R),
+ 	DEF_MOD("cmt2",			 301,	R8A7796_CLK_R),
+diff --git a/drivers/clk/renesas/r8a77965-cpg-mssr.c b/drivers/clk/renesas/r8a77965-cpg-mssr.c
+index eb1cca58a1e1f..13d1f88be04a5 100644
+--- a/drivers/clk/renesas/r8a77965-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
+@@ -123,8 +123,8 @@ static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
+ 	DEF_MOD("msiof2",		209,	R8A77965_CLK_MSO),
+ 	DEF_MOD("msiof1",		210,	R8A77965_CLK_MSO),
+ 	DEF_MOD("msiof0",		211,	R8A77965_CLK_MSO),
+-	DEF_MOD("sys-dmac2",		217,	R8A77965_CLK_S0D3),
+-	DEF_MOD("sys-dmac1",		218,	R8A77965_CLK_S0D3),
++	DEF_MOD("sys-dmac2",		217,	R8A77965_CLK_S3D1),
++	DEF_MOD("sys-dmac1",		218,	R8A77965_CLK_S3D1),
+ 	DEF_MOD("sys-dmac0",		219,	R8A77965_CLK_S0D3),
  
- out:
-+	/* when the sent packet was not acked by receiver(ACK=0), rc will
-+	 * be -EAGAIN. In this case this function needs to return success,
-+	 * the ACK=0 will be reflected in tx_status.
-+	 */
- 	tx_status = (rc == 0);
-+	rc = (rc == -EAGAIN) ? 0 : rc;
- 	cfg80211_mgmt_tx_status(wdev, cookie ? *cookie : 0, buf, len,
- 				tx_status, GFP_KERNEL);
- 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 345f059691900..fc1b4b897cb83 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -3455,8 +3455,9 @@ int wmi_mgmt_tx(struct wil6210_vif *vif, const u8 *buf, size_t len)
- 	rc = wmi_call(wil, WMI_SW_TX_REQ_CMDID, vif->mid, cmd, total,
- 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
- 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
--		wil_err(wil, "mgmt_tx failed with status %d\n", evt.evt.status);
--		rc = -EINVAL;
-+		wil_dbg_wmi(wil, "mgmt_tx failed with status %d\n",
-+			    evt.evt.status);
-+		rc = -EAGAIN;
- 	}
- 
- 	kfree(cmd);
-@@ -3508,9 +3509,9 @@ int wmi_mgmt_tx_ext(struct wil6210_vif *vif, const u8 *buf, size_t len,
- 	rc = wmi_call(wil, WMI_SW_TX_REQ_EXT_CMDID, vif->mid, cmd, total,
- 		      WMI_SW_TX_COMPLETE_EVENTID, &evt, sizeof(evt), 2000);
- 	if (!rc && evt.evt.status != WMI_FW_STATUS_SUCCESS) {
--		wil_err(wil, "mgmt_tx_ext failed with status %d\n",
--			evt.evt.status);
--		rc = -EINVAL;
-+		wil_dbg_wmi(wil, "mgmt_tx_ext failed with status %d\n",
-+			    evt.evt.status);
-+		rc = -EAGAIN;
- 	}
- 
- 	kfree(cmd);
+ 	DEF_MOD("cmt3",			300,	R8A77965_CLK_R),
 -- 
 2.20.1
 
