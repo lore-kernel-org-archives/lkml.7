@@ -2,46 +2,70 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6F0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAE5C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67412547F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494CD254E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtLbf2Hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfE3JZI (ORCPT
+        id S1727428AbfE3J2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:25:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12824 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfE3JZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:25:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 02:25:06 -0700
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 02:25:03 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Michal Wajdeczko <michal.wajdeczko@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Subject: [RFC PATCH 1/1] drm/i915: Split off pci_driver.remove() tail to drm_driver.release()
-Date:   Thu, 30 May 2019 11:24:26 +0200
-Message-Id: <20190530092426.23880-2-janusz.krzysztofik@linux.intel.com>
+        Thu, 30 May 2019 05:28:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38462 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfE3J2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:28:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so3705997wrs.5;
+        Thu, 30 May 2019 02:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V9uS1keBW3VpEfdw8YbBt35z4e82IzpdzTkrruky1E8=;
+        b=QtLbf2HmeJA14Jf1AcY7WgDdWbr0B/C84z9/ERtg1Ea1H9PTS7kqNhnGKZY+dPDjPC
+         KbeOi8QpjT2t0+jlvl05Jq58LCsRl6NXwYmKRMqm8AAsQqi/VENdBGl0EZJ2mpl1nHRR
+         QibgPIATXT/RCX7UeeCr5m7mPYg+ih/oV9mwM1UXYkokeIoQCqhLRSlhCDQ87MxU4r6v
+         HtRYiITzXvN1mLjGpneqU5cAIEVRoxDLlvtFFHlIY0iDXjG3QP00tVAKZUf93GH+HQ5n
+         iOKumKG/s83Lb1HPwNeapI2hCHj1xk/HotATLvhC7rJbvJTD/ajL9rfERTfhO0OPqSsr
+         m8ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V9uS1keBW3VpEfdw8YbBt35z4e82IzpdzTkrruky1E8=;
+        b=VAuPRknRfwLoPuavE7DF9XI97OhYOa0Ep41HUoOkO5NeddUyBVw/SQRZmps0lBzP7d
+         P/LdzhUE1+aXHyV1b1vpJJwiS6kuJ6VdqklsWmQ1/POxM/9u28NbzkuSMu6gBMev6jT0
+         M+b+LZVM6XJJuy648f/AWNKy5Xwg/Cd2Co4nLJJteXxK34Nth7IIee2H4OsLXuLYFiF/
+         srPEwA55/7xlJ3goDQtSSn6vwfxAMw8bbsjctNCzXlIX6aMGhFkxBuj3eIUlKVZ1WtfC
+         BYd81E7zKRdhgAI6SI35bR89aaA/Ke2kmyM0Oup69zL8BR6g2bpttXAa98cNNXVw61AW
+         yf7A==
+X-Gm-Message-State: APjAAAUipeuswXVT2C6y3XyKHNr0IjTO+P/4fVahDO7W0XoRkAH6Mp4g
+        oMat//FNHXi5LckzBQxNn24=
+X-Google-Smtp-Source: APXvYqwAYe7240hTlEiIsSSbTkHNnMmocCkj0k5gjshu065TwpUUnlDOU/rPhN+bZXP3GcvjnesCAQ==
+X-Received: by 2002:adf:fd09:: with SMTP id e9mr1920656wrr.292.1559208479457;
+        Thu, 30 May 2019 02:27:59 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.142.5])
+        by smtp.gmail.com with ESMTPSA id u25sm147605wmc.3.2019.05.30.02.27.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 02:27:58 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     osandov@fb.com, ming.lei@redhat.com, Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH v2 1/1] blk-mq: Fix disabled hybrid polling
+Date:   Thu, 30 May 2019 12:27:08 +0300
+Message-Id: <71c31759a882e00f156a8434caed7064ec93d3da.1559208134.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530092426.23880-1-janusz.krzysztofik@linux.intel.com>
-References: <20190530092426.23880-1-janusz.krzysztofik@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,125 +73,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support driver hot unbind, some cleanup operations, now
-performed on PCI driver remove, must be called later, after all device
-file descriptors are closed.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-Split out those operations from the tail of pci_driver.remove()
-callback and put them into drm_driver.release() which is called as soon
-as all references to the driver are put.  As a result, those cleanups
-will be now run on last drm_dev_put(), either still called from
-pci_driver.remove() if all device file descriptors are already closed,
-or on last drm_release() file operation.
+Commit 4bc6339a583cec650b05 ("block: move blk_stat_add() to
+__blk_mq_end_request()") moved blk_stat_add() to reuse ktime_get_ns(),
+so now it's called after blk_update_request(), which zeroes
+rq->__data_len. Without length, blk_stat_add() can't calculate stat
+bucket and returns error, effectively disabling hybrid polling.
 
-Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+v2: Hybrid polling needs pure io time for precision, but according to
+the feedback from Omar Sandoval other components require end-to-end
+time. So, it can't be reused, and should be sampled twice insted.
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- drivers/gpu/drm/i915/i915_drv.c | 17 +++++++++++++----
- drivers/gpu/drm/i915/i915_drv.h |  1 +
- drivers/gpu/drm/i915/i915_gem.c | 10 +++++++++-
- 3 files changed, 23 insertions(+), 5 deletions(-)
+ block/blk-mq.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index 83d2eb9e74cb..8be69f84eb6d 100644
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -738,6 +738,7 @@ static int i915_load_modeset_init(struct drm_device *dev)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 32b8ad3d341b..907799282d57 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -537,11 +537,6 @@ inline void __blk_mq_end_request(struct request *rq, blk_status_t error)
+ 	if (blk_mq_need_time_stamp(rq))
+ 		now = ktime_get_ns();
  
- cleanup_gem:
- 	i915_gem_suspend(dev_priv);
-+	i915_gem_fini_hw(dev_priv);
- 	i915_gem_fini(dev_priv);
- cleanup_modeset:
- 	intel_modeset_cleanup(dev);
-@@ -1685,7 +1686,6 @@ static void i915_driver_cleanup_hw(struct drm_i915_private *dev_priv)
- 		pci_disable_msi(pdev);
+-	if (rq->rq_flags & RQF_STATS) {
+-		blk_mq_poll_stats_start(rq->q);
+-		blk_stat_add(rq, now);
+-	}
+-
+ 	if (rq->internal_tag != -1)
+ 		blk_mq_sched_completed_request(rq, now);
  
- 	pm_qos_remove_request(&dev_priv->pm_qos);
--	i915_ggtt_cleanup_hw(dev_priv);
- }
+@@ -580,6 +575,11 @@ static void __blk_mq_complete_request(struct request *rq)
+ 	int cpu;
  
- /**
-@@ -1909,6 +1909,7 @@ int i915_driver_load(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- out_cleanup_hw:
- 	i915_driver_cleanup_hw(dev_priv);
-+	i915_ggtt_cleanup_hw(dev_priv);
- out_cleanup_mmio:
- 	i915_driver_cleanup_mmio(dev_priv);
- out_runtime_pm_put:
-@@ -1960,21 +1961,29 @@ void i915_driver_unload(struct drm_device *dev)
- 	cancel_delayed_work_sync(&dev_priv->gpu_error.hangcheck_work);
- 	i915_reset_error_state(dev_priv);
- 
--	i915_gem_fini(dev_priv);
-+	i915_gem_fini_hw(dev_priv);
- 
- 	intel_power_domains_fini_hw(dev_priv);
- 
- 	i915_driver_cleanup_hw(dev_priv);
--	i915_driver_cleanup_mmio(dev_priv);
- 
- 	enable_rpm_wakeref_asserts(dev_priv);
--	intel_runtime_pm_cleanup(dev_priv);
- }
- 
- static void i915_driver_release(struct drm_device *dev)
- {
- 	struct drm_i915_private *dev_priv = to_i915(dev);
- 
-+	disable_rpm_wakeref_asserts(dev_priv);
+ 	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
 +
-+	i915_gem_fini(dev_priv);
-+
-+	i915_ggtt_cleanup_hw(dev_priv);
-+	i915_driver_cleanup_mmio(dev_priv);
-+
-+	enable_rpm_wakeref_asserts(dev_priv);
-+	intel_runtime_pm_cleanup(dev_priv);
-+
- 	i915_driver_cleanup_early(dev_priv);
- 	i915_driver_destroy(dev_priv);
- }
-diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
-index a2664ea1395b..d08e7bd83544 100644
---- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -3047,6 +3047,7 @@ void i915_gem_init_mmio(struct drm_i915_private *i915);
- int __must_check i915_gem_init(struct drm_i915_private *dev_priv);
- int __must_check i915_gem_init_hw(struct drm_i915_private *dev_priv);
- void i915_gem_init_swizzling(struct drm_i915_private *dev_priv);
-+void i915_gem_fini_hw(struct drm_i915_private *dev_priv);
- void i915_gem_fini(struct drm_i915_private *dev_priv);
- int i915_gem_wait_for_idle(struct drm_i915_private *dev_priv,
- 			   unsigned int flags, long timeout);
-diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index 7cafd5612f71..c6a8e665a6ba 100644
---- a/drivers/gpu/drm/i915/i915_gem.c
-+++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -4667,7 +4667,7 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
- 	return ret;
- }
- 
--void i915_gem_fini(struct drm_i915_private *dev_priv)
-+void i915_gem_fini_hw(struct drm_i915_private *dev_priv)
- {
- 	GEM_BUG_ON(dev_priv->gt.awake);
- 
-@@ -4681,6 +4681,14 @@ void i915_gem_fini(struct drm_i915_private *dev_priv)
- 	intel_uc_fini_hw(dev_priv);
- 	intel_uc_fini(dev_priv);
- 	intel_engines_cleanup(dev_priv);
-+	mutex_unlock(&dev_priv->drm.struct_mutex);
-+
-+	i915_gem_drain_freed_objects(dev_priv);
-+}
-+
-+void i915_gem_fini(struct drm_i915_private *dev_priv)
-+{
-+	mutex_lock(&dev_priv->drm.struct_mutex);
- 	i915_gem_contexts_fini(dev_priv);
- 	i915_gem_fini_scratch(dev_priv);
- 	mutex_unlock(&dev_priv->drm.struct_mutex);
++	if (rq->rq_flags & RQF_STATS) {
++		blk_mq_poll_stats_start(rq->q);
++		blk_stat_add(rq, ktime_get_ns());
++	}
+ 	/*
+ 	 * Most of single queue controllers, there is only one irq vector
+ 	 * for handling IO completion, and the only irq's affinity is set
 -- 
 2.21.0
 
