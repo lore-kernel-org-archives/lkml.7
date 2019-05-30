@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105EDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0879C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC0B248F3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBB425521
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190482;
-	bh=4JtowR7rR6MkcUqA8TLKs76CuClBze5Yn3jNnZd+7hM=;
+	s=default; t=1559190489;
+	bh=oydYdC0NqSDUA9GLPTTmL9wL9pNRkReA8vZR24mINLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtUUIi0AYiJncE7cRmk9SLyMyixTj24LHwHuMYbev3CtbVbzYzyqjWHq3MUkE3MWq
-	 F3tPgDqYNu7vqZLHCyqvHzHb8x0Vqa+Bro6dDbhqsVkuYGGZyWqjFA3ILsFGJO/TuY
-	 fVMPgqFUhCVLR/XN5qnESYxDznGiLsmlOq1IdnGk=
+	b=USe2CzRJQOblj4ajjqMFK81QzZoWRqvVqgZwLtI3+9R8XXpahf4svxoVouN1l9wiO
+	 m8lXYD0/1d971RRFDOm43SrebgcbK9yGxpDtGYQRmcr60TvqnzwY0o5ieqsAwv4QOm
+	 jnRT+bJFSxN01cf0ovcVlMqjA4g2vl5rQPYl0Gfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbfE3E2C (ORCPT
+        id S1729888AbfE3E2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbfE3DOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:17 -0400
+        id S1728145AbfE3DOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:16 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DEDE24561;
-        Thu, 30 May 2019 03:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A8C2455E;
+        Thu, 30 May 2019 03:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186057;
-        bh=4JtowR7rR6MkcUqA8TLKs76CuClBze5Yn3jNnZd+7hM=;
+        s=default; t=1559186056;
+        bh=oydYdC0NqSDUA9GLPTTmL9wL9pNRkReA8vZR24mINLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtRefm1uz2PXZCk6m/zlFmjNI9eezGUkoNPHjAtmQaUcRG/swCvfr34B4HdOr4/eN
-         1ATuwfJej1AVQ2wPR3sTIqUnBdtS0boYX84UTRrs5XTKWy/zvppxleAljn1HqgooFn
-         IOps+cy/oUf4OrXiPjwYMPbXGtGH8BPn+D73gIPo=
+        b=nhQ3uw8X+aDe50OohTGQGsTtDMQjT67QxzvPrpWK6y24wYIr2x9CIcFpwzZ31uo0q
+         Hx/liBhNeuW89d713VigJEHZytjB7Fswc1N7Xa/bZfC4XLCDzKbr/QaW3/mZU5yVxW
+         ahWL8VoR9b/qf/hEv2BKUJmzVt0CS6xjcMLnt9cY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 114/346] nvme-tcp: fix a NULL deref when an admin connect times out
-Date:   Wed, 29 May 2019 20:03:07 -0700
-Message-Id: <20190530030546.868214849@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 155/346] sched/core: Handle overflow in cpu_shares_write_u64
+Date:   Wed, 29 May 2019 20:03:48 -0700
+Message-Id: <20190530030549.030446153@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,47 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7a42589654ae79e1177f0d74306a02d6cef7bddf ]
+[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
 
-If we timeout the admin startup sequence we might not yet have
-an I/O tagset allocated which causes the teardown sequence to crash.
-Make nvme_tcp_teardown_io_queues safe by not iterating inflight tags
-if the tagset wasn't allocated.
+Bit shift in scale_load() could overflow shares. This patch saturates
+it to MAX_SHARES like following sched_group_set_shares().
 
-Fixes: 39d57757467b ("nvme-tcp: fix timeout handler")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Example:
+
+ # echo 9223372036854776832 > cpu.shares
+ # cat cpu.shares
+
+Before patch: 1024
+After pattch: 262144
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 5f0a004252422..e71b0058c57bd 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1686,7 +1686,9 @@ static void nvme_tcp_teardown_admin_queue(struct nvme_ctrl *ctrl,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 55c1061b5aeb1..9346e2ce0ac03 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6503,6 +6503,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+ static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
+ 				struct cftype *cftype, u64 shareval)
  {
- 	blk_mq_quiesce_queue(ctrl->admin_q);
- 	nvme_tcp_stop_queue(ctrl, 0);
--	blk_mq_tagset_busy_iter(ctrl->admin_tagset, nvme_cancel_request, ctrl);
-+	if (ctrl->admin_tagset)
-+		blk_mq_tagset_busy_iter(ctrl->admin_tagset,
-+			nvme_cancel_request, ctrl);
- 	blk_mq_unquiesce_queue(ctrl->admin_q);
- 	nvme_tcp_destroy_admin_queue(ctrl, remove);
++	if (shareval > scale_load_down(ULONG_MAX))
++		shareval = MAX_SHARES;
+ 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
  }
-@@ -1698,7 +1700,9 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
- 		return;
- 	nvme_stop_queues(ctrl);
- 	nvme_tcp_stop_io_queues(ctrl);
--	blk_mq_tagset_busy_iter(ctrl->tagset, nvme_cancel_request, ctrl);
-+	if (ctrl->tagset)
-+		blk_mq_tagset_busy_iter(ctrl->tagset,
-+			nvme_cancel_request, ctrl);
- 	if (remove)
- 		nvme_start_queues(ctrl);
- 	nvme_tcp_destroy_io_queues(ctrl, remove);
+ 
 -- 
 2.20.1
 
