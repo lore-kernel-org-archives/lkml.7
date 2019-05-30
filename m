@@ -2,53 +2,51 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC9CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F075AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE7224F54
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C678624F54
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189881;
-	bh=9hq0++QxrdKZauVmyZY7B4QP8K+XhmxC67cf+KjhLRo=;
+	s=default; t=1559189883;
+	bh=s9nAbxXhx0OfYa9n7VHi49AdWW/fvxIXefqFeauvzgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugkL8F3UaevgIqUBXTc6KYkqVCTk5iRbBNimyOgCEK5gikclo2/DCHYxFUunz8SmD
-	 dYfHvooCNb0dgLjWBc1XhVzP8lEQLGsuXmb4X2pylVA2UZh+7m8kprmT0mxgPU0Oq6
-	 gMoXYUr1peuAphZI7e5ShiOO2gTdjk31u7LoQ2qM=
+	b=zqFr3dhvk1tfHjRmdjrNh93RxfOLa3KAxBi142CL8JDYvv1UkkTso1uGeF1Xhalkd
+	 bcSOdv5OxZ6uFvIxddCZ83ZqaYr2Wg+oXCCTeKwtgLaq4LfKgnR1jLQGwUUDC7XoId
+	 7Tch9GlVGVDscFjue7bBgWZbGXp9mzM9JdPUE3WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbfE3ESA (ORCPT
+        id S1730391AbfE3DPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbfE3DPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:37 -0400
+        id S1729315AbfE3DNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9083424547;
-        Thu, 30 May 2019 03:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662E521BE2;
+        Thu, 30 May 2019 03:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186136;
-        bh=9hq0++QxrdKZauVmyZY7B4QP8K+XhmxC67cf+KjhLRo=;
+        s=default; t=1559185980;
+        bh=s9nAbxXhx0OfYa9n7VHi49AdWW/fvxIXefqFeauvzgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ij9x3NJcwU3+i904QxMpbkLcinBhaVvtcSJKf9sz24cIZZU5PVFOF+Dl86JxkaUi+
-         6admwtyY8URBXOFGqmCwt32vprd0SD6Ixom2oQ1L13Bg/lrTnIlg/gvxM2WtoT11Fi
-         Duyr5udO6km8wyOp1AwXCM1WSDKzMHhuXpHk5ONE=
+        b=vK+BBf6RojGeoUdqwF6Sjuqx+yCu3y3LbmjmUdGKIjoG84jIFflzH5ETT98HVNbTn
+         /yTgeM029q3qV81I9GBwehmzhLN02TZXvyLQzd4ywtjqzhaIZULbPgkDNJPjjK7uiA
+         oeqrsSXxBr6APYqhjf7M62gcraqiJJM1Yghdpgyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 259/346] media: gspca: Kill URBs on USB device disconnect
-Date:   Wed, 29 May 2019 20:05:32 -0700
-Message-Id: <20190530030554.101934368@linuxfoundation.org>
+        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.0 003/346] ext4: wait for outstanding dio during truncate in nojournal mode
+Date:   Wed, 29 May 2019 20:01:16 -0700
+Message-Id: <20190530030540.580600723@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,49 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9b9ea7c2b57a0c9c3341fc6db039d1f7971a432e ]
+From: Jan Kara <jack@suse.cz>
 
-In order to prevent ISOC URBs from being infinitely resubmitted,
-the driver's USB disconnect handler must kill all the in-flight URBs.
+commit 82a25b027ca48d7ef197295846b352345853dfa8 upstream.
 
-While here, change the URB packet status message to a debug level,
-to avoid spamming the console too much.
+We didn't wait for outstanding direct IO during truncate in nojournal
+mode (as we skip orphan handling in that case). This can lead to fs
+corruption or stale data exposure if truncate ends up freeing blocks
+and these get reallocated before direct IO finishes. Fix the condition
+determining whether the wait is necessary.
 
-This commit fixes a lockup caused by an interrupt storm coming
-from the URB completion handler.
+CC: stable@vger.kernel.org
+Fixes: 1c9114f9c0f1 ("ext4: serialize unlocked dio reads with truncate")
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/gspca/gspca.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
-index 3137f5d89d803..cac8e5f0543be 100644
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -294,7 +294,7 @@ static void fill_frame(struct gspca_dev *gspca_dev,
- 		/* check the packet status and length */
- 		st = urb->iso_frame_desc[i].status;
- 		if (st) {
--			pr_err("ISOC data error: [%d] len=%d, status=%d\n",
-+			gspca_dbg(gspca_dev, D_PACK, "ISOC data error: [%d] len=%d, status=%d\n",
- 			       i, len, st);
- 			gspca_dev->last_packet_type = DISCARD_PACKET;
- 			continue;
-@@ -1630,6 +1630,8 @@ void gspca_disconnect(struct usb_interface *intf)
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5632,20 +5632,17 @@ int ext4_setattr(struct dentry *dentry,
+ 				goto err_out;
+ 			}
+ 		}
+-		if (!shrink)
++		if (!shrink) {
+ 			pagecache_isize_extended(inode, oldsize, inode->i_size);
+-
+-		/*
+-		 * Blocks are going to be removed from the inode. Wait
+-		 * for dio in flight.  Temporarily disable
+-		 * dioread_nolock to prevent livelock.
+-		 */
+-		if (orphan) {
+-			if (!ext4_should_journal_data(inode)) {
+-				inode_dio_wait(inode);
+-			} else
+-				ext4_wait_for_tail_page_commit(inode);
++		} else {
++			/*
++			 * Blocks are going to be removed from the inode. Wait
++			 * for dio in flight.
++			 */
++			inode_dio_wait(inode);
+ 		}
++		if (orphan && ext4_should_journal_data(inode))
++			ext4_wait_for_tail_page_commit(inode);
+ 		down_write(&EXT4_I(inode)->i_mmap_sem);
  
- 	mutex_lock(&gspca_dev->usb_lock);
- 	gspca_dev->present = false;
-+	destroy_urbs(gspca_dev);
-+	gspca_input_destroy_urb(gspca_dev);
- 
- 	vb2_queue_error(&gspca_dev->queue);
- 
--- 
-2.20.1
-
+ 		rc = ext4_break_layouts(inode);
 
 
