@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF60AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D63C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E36260D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5878D260B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 05:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192467;
-	bh=4x2xJprLyEwIVselG35r/ELOEy28J98nCA1XrwvMMVc=;
+	s=default; t=1559192475;
+	bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EZUJyjNaZtcUBGj5FF3jWf4VuutCyWZb6GDFf3Judg3Vhkt2k/apl5D384P+SypO2
-	 j69LkGAB0o0Xu8VRZrUHGm1FeE9hEMARuBmS/EHgxRRuzuOzlxgm+nRXAFykfvunE1
-	 ZishRdNfI0cvDLVqieYugC1TcQizyk8LoKAX6bzY=
+	b=oSdRa5sCNfkcWMMOFaaq7TUX8Zbh5+jk+hw8zoZB7iEzyQPTn01JMdh0ikvIkGxTE
+	 7/7UW2Ou2EKUyaxU0LBSjAsmRDCAP1g6YvdnMIELPuw1vVdz72EDlcxAPPOPgoqXl5
+	 EvWbkOQxRtJm4Dm7RuIxo/AhTCTo98GcWmMFucjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389388AbfE3FBC (ORCPT
+        id S1731639AbfE3FBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 01:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 01:01:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbfE3DJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:28 -0400
+        id S1726744AbfE3DJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:25 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F952447D;
-        Thu, 30 May 2019 03:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8FD24472;
+        Thu, 30 May 2019 03:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185767;
-        bh=4x2xJprLyEwIVselG35r/ELOEy28J98nCA1XrwvMMVc=;
+        s=default; t=1559185764;
+        bh=6RPWTBSids8jpnfkiKL3ALT3grkFLg/V1aA0rerayp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chmih2Ch/VbmcVNCELkJFLwMGKAC6svk/8IuLRQJYwIgdK5YeS4nGIEQq9qfUShSe
-         AwDPPzkMdxYCqesBTdKsMxI67piXcImulkN0W+ESsmkEKFQK1giWhfiqNO+iWrJ+BO
-         Daia5678VkcHuws8ix9cnDLe+/uqbYuov0NMmsfU=
+        b=AncUOUExMHa/FZdDL7bY3yQ81jSDRy3Jz+FckllVbmGkjU79EudM4Qz3LQERe0Rxe
+         b8EtvCo9FvJZ9H0ohFmEMGz/v9FWjrmTXk8rV3n1a7u1/rPyHGZOxZi1LftODAjQ21
+         zBta5rFYS9O1YzGTWY/2144+aZywJ/kBfFkgElD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 016/405] kvm: svm/avic: fix off-by-one in checking host APIC ID
-Date:   Wed, 29 May 2019 20:00:14 -0700
-Message-Id: <20190530030541.341082386@linuxfoundation.org>
+        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.1 011/405] mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix HS50 data hold time problem
+Date:   Wed, 29 May 2019 20:00:09 -0700
+Message-Id: <20190530030540.997387425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suthikulpanit, Suravee <Suravee.Suthikulpanit@amd.com>
+From: Trac Hoang <trac.hoang@broadcom.com>
 
-commit c9bcd3e3335d0a29d89fabd2c385e1b989e6f1b0 upstream.
+commit b7dfa695afc40d5396ed84b9f25aa3754de23e39 upstream.
 
-Current logic does not allow VCPU to be loaded onto CPU with
-APIC ID 255. This should be allowed since the host physical APIC ID
-field in the AVIC Physical APIC table entry is an 8-bit value,
-and APIC ID 255 is valid in system with x2APIC enabled.
-Instead, do not allow VCPU load if the host APIC ID cannot be
-represented by an 8-bit value.
+The iproc host eMMC/SD controller hold time does not meet the
+specification in the HS50 mode. This problem can be mitigated
+by disabling the HISPD bit; thus forcing the controller output
+data to be driven on the falling clock edges rather than the
+rising clock edges.
 
-Also, use the more appropriate AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK
-instead of AVIC_MAX_PHYSICAL_ID_COUNT.
+This change applies only to the Cygnus platform.
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
+the change does not produce merge conflicts backporting to older kernel
+versions. In reality, the timing bug existed since the driver was first
+introduced but there is no need for this driver to be supported in kernel
+versions that old.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-iproc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2024,7 +2024,11 @@ static void avic_vcpu_load(struct kvm_vc
- 	if (!kvm_vcpu_apicv_active(vcpu))
- 		return;
+--- a/drivers/mmc/host/sdhci-iproc.c
++++ b/drivers/mmc/host/sdhci-iproc.c
+@@ -196,7 +196,8 @@ static const struct sdhci_ops sdhci_ipro
+ };
  
--	if (WARN_ON(h_physical_id >= AVIC_MAX_PHYSICAL_ID_COUNT))
-+	/*
-+	 * Since the host physical APIC id is 8 bits,
-+	 * we can support host APIC ID upto 255.
-+	 */
-+	if (WARN_ON(h_physical_id > AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK))
- 		return;
- 
- 	entry = READ_ONCE(*(svm->avic_physical_id_cache));
+ static const struct sdhci_pltfm_data sdhci_iproc_cygnus_pltfm_data = {
+-	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
++	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
++		  SDHCI_QUIRK_NO_HISPD_BIT,
+ 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN | SDHCI_QUIRK2_HOST_OFF_CARD_ON,
+ 	.ops = &sdhci_iproc_32only_ops,
+ };
 
 
