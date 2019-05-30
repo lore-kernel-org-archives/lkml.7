@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538E6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55646C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A081243B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2D4243B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 00:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ax2EXMsd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tq0C+xLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfE3AxZ (ORCPT
+        id S1727272AbfE3Axa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 20:53:25 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:47712 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfE3AxY (ORCPT
+        Wed, 29 May 2019 20:53:30 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:36101 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbfE3Ax0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 20:53:24 -0400
-Received: by mail-yw1-f73.google.com with SMTP id y18so3911915ywy.14
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:53:23 -0700 (PDT)
+        Wed, 29 May 2019 20:53:26 -0400
+Received: by mail-qk1-f201.google.com with SMTP id a12so3504786qkb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 17:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=d6X4/k5B5WeQgyIvpn8Af86NqovFLF22qTA1Y2V4Fe8=;
-        b=Ax2EXMsdAnoEHIrqzhP0Cv23VlEaDoSoO1OWqhvxtcuBXmnYYLbiiBAZQlVXUUtGgA
-         i6w+G4d54N8mfV0D6KY3vURUd55d8xA1pwqYEpTzjK68EmxEOCRJVDhq648b4GXT1jGV
-         3YrMacqCMm6wtkWM9ach4dG7xfETTseNfVw9UM/pxIHth0Ji7tonp1P9tLbqoqqtynbi
-         DiENSJNzIdEipIykCMGLgC1Nz8YKxon3Gno9T6HkP2TBj6bY9GFxNm0etPi64anLqTnl
-         aFpqLIUEQL5Pswsuq9dgOrW+1PKzioUiwtMYbgzR/a96OB4IOOCPkunrKKKeoQnMXWxu
-         4Y7A==
+        bh=pFDT61UYE6+362eUPJJuMi+49iBrHpoUZVksNkDJA2o=;
+        b=tq0C+xLpxnScJrE7KGvLRNW1EvyW7w8fxZLYhMG38iqb6B65iu+pJNUwkSmSw9Wsl3
+         /9PNywbClVW9JA9DR/Dh1tSwsF6mMdgLrRvRMdWic+A+8I5sxRkeLEB1Ob2MAWWJm9jL
+         6ev53ORFgvokwK4cHk17Y7Ckh2RQmG74ba2tYgemlhSg7VkheKlADWDbsqwFIwOUSizD
+         ZYBWe2VO+7gH+pPgHLcdOlhkOX4cS9lzTtfup83L3evOB0ATtVcM/T1mPq4hDcSUF5Uc
+         u/Y86bsvfsu8KvdNmkA/2KSKxTBI0UsTGqIlC4MAGZr2YM/9PfAUtAnGcsXxF7iTVQkS
+         YuCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=d6X4/k5B5WeQgyIvpn8Af86NqovFLF22qTA1Y2V4Fe8=;
-        b=iCZLoMm3fldiREIbpjBtJgpUI1Jqfcg/DZ7zcI/0cgdpUy/sPL1N8aewvaxzGnxAcX
-         W9oXnDluKoZC0K8hIBELKAI/6JxQT9prPXL5M8klXcNfO9aF48c5UfK9DFsOZ1WStPWf
-         1hh8nsysnffjNFqq4FddUYH505Etx1g4xFN0HN+ht+OT9tz3ABfpABEBPM8Z2it9+ca6
-         c7+lc1xHkOFqNy7nFi4C/1vxOgGiaNoxSd9KviMZ7ujweOAR313q84dw2r7fJ1CyI5QE
-         dywo5IR0w6i4XDjBjTzGq3MYrxJmIbbthzIbtB9xqH3buT1xaxlEJMpS5qvpUFJY/ZOb
-         AnQg==
-X-Gm-Message-State: APjAAAVSBz/8b0YkaN2OLiPCnj1J3+akNFTeNdvKTLW+/bxZHDv/Kt3t
-        XfuzN5g422rMrIeTKtO4wsStJdwD4Tw=
-X-Google-Smtp-Source: APXvYqzY+oI/v3047+rLfAdqlDZ9Z79kMZvQRPmWfGPVRdyfWVyQ3mLlfGRyfTAwrOQom+6CDZKVd7elYDo=
-X-Received: by 2002:a81:300c:: with SMTP id w12mr555304yww.57.1559177603199;
- Wed, 29 May 2019 17:53:23 -0700 (PDT)
-Date:   Wed, 29 May 2019 17:49:04 -0700
+        bh=pFDT61UYE6+362eUPJJuMi+49iBrHpoUZVksNkDJA2o=;
+        b=CicrLPPkhtqWT71Tm2ePAYq3Gmu5inF1gFKYJYK9J9dJ3pg4aSBpvE+LK0n59XBWri
+         JXPCAHxyiFXlwxV2cpTs/8OqXsCj6iINes+P9Ija2980mYSEX9xhXAMU3ytNxh09wSlg
+         hKlwYOtb9DZ5RiqyN4eHC6tiJcRox+lgGl16FqoIQJc6xqye3N62W5uQIR29lDlABt2m
+         B/IX20Vqcv0YbdR3LtyfSsskkzeZAc0TlobZN48Plo+EdM49ZyDlt5w3KQ81b8IL5rtp
+         xNZJ/wdU52hi08GAe76dsykCdDYiC9AMuFEJxMfx8CoXxn4DtR7Uqz9uLHAkLWvp+OMw
+         LOgg==
+X-Gm-Message-State: APjAAAUQRBHZdsBVxkfoGsjcUIcnbiOg/l3FlkKcPvbP+H+C8mnd6UQj
+        dd/RlCTrdzhrTK/WXbvR45gxEAHQMDg=
+X-Google-Smtp-Source: APXvYqzdUz6c4pIj7GBI7bppXtBGbR717H7HlhysYDM55NbncVD1VFEeIv2JijSIJKEof8AzW57Fcs/wZys=
+X-Received: by 2002:a37:660b:: with SMTP id a11mr723548qkc.342.1559177606029;
+ Wed, 29 May 2019 17:53:26 -0700 (PDT)
+Date:   Wed, 29 May 2019 17:49:05 -0700
 In-Reply-To: <20190530004906.261170-1-drosen@google.com>
-Message-Id: <20190530004906.261170-3-drosen@google.com>
+Message-Id: <20190530004906.261170-4-drosen@google.com>
 Mime-Version: 1.0
 References: <20190530004906.261170-1-drosen@google.com>
 X-Mailer: git-send-email 2.22.0.rc1.257.g3120a18244-goog
-Subject: [PATCH v3 2/4] f2fs: Fix root reserved on remount
+Subject: [PATCH v3 3/4] f2fs: Fix accounting for unusable blocks
 From:   Daniel Rosenberg <drosen@google.com>
 To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -72,31 +72,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a remount, you can currently set root reserved if it was not
-previously set. This can cause an underflow if reserved has been set to
-a very high value, since then root reserved + current reserved could be
-greater than user_block_count. inc_valid_block_count later subtracts out
-these values from user_block_count, causing an underflow.
+Fixes possible underflows when dealing with unusable blocks.
 
 Signed-off-by: Daniel Rosenberg <drosen@google.com>
 ---
- fs/f2fs/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/f2fs.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 912e2619d581b..359fd68509d16 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -213,7 +213,8 @@ void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9b3d9977cd1ef..a39cc4ffeb4b1 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1769,8 +1769,12 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
  
- static inline void limit_reserve_root(struct f2fs_sb_info *sbi)
+ 	if (!__allow_reserved_blocks(sbi, inode, true))
+ 		avail_user_block_count -= F2FS_OPTION(sbi).root_reserved_blocks;
+-	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+-		avail_user_block_count -= sbi->unusable_block_count;
++	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
++		if (avail_user_block_count > sbi->unusable_block_count)
++			avail_user_block_count = 0;
++		else
++			avail_user_block_count -= sbi->unusable_block_count;
++	}
+ 	if (unlikely(sbi->total_valid_block_count > avail_user_block_count)) {
+ 		diff = sbi->total_valid_block_count - avail_user_block_count;
+ 		if (diff > *count)
+@@ -1970,7 +1974,7 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
+ 					struct inode *inode, bool is_inode)
  {
--	block_t limit = (sbi->user_block_count << 1) / 1000;
-+	block_t limit = min((sbi->user_block_count << 1) / 1000,
-+			sbi->user_block_count - sbi->reserved_blocks);
+ 	block_t	valid_block_count;
+-	unsigned int valid_node_count;
++	unsigned int valid_node_count, user_block_count;
+ 	int err;
  
- 	/* limit is 0.2% */
- 	if (test_opt(sbi, RESERVE_ROOT) &&
+ 	if (is_inode) {
+@@ -1997,10 +2001,11 @@ static inline int inc_valid_node_count(struct f2fs_sb_info *sbi,
+ 
+ 	if (!__allow_reserved_blocks(sbi, inode, false))
+ 		valid_block_count += F2FS_OPTION(sbi).root_reserved_blocks;
++	user_block_count = sbi->user_block_count;
+ 	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+-		valid_block_count += sbi->unusable_block_count;
++		user_block_count -= sbi->unusable_block_count;
+ 
+-	if (unlikely(valid_block_count > sbi->user_block_count)) {
++	if (unlikely(valid_block_count > user_block_count)) {
+ 		spin_unlock(&sbi->stat_lock);
+ 		goto enospc;
+ 	}
 -- 
 2.22.0.rc1.257.g3120a18244-goog
 
