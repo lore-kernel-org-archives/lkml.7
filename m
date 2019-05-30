@@ -6,121 +6,143 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7CBC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A95C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA8625B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E640025B3C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 14:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfE3Ok6 (ORCPT
+        id S1726832AbfE3OmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 10:40:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbfE3Ok6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 10:40:58 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AF0D5C04FFF6;
-        Thu, 30 May 2019 14:40:51 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 655AE611A1;
-        Thu, 30 May 2019 14:40:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 30 May 2019 16:40:51 +0200 (CEST)
-Date:   Thu, 30 May 2019 16:40:45 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
-        Jens Axboe <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, e@80x24.org,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, omar.kilani@gmail.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: pselect/etc semantics (Was: [PATCH v2] signal: Adjust error
- codes according to restore_user_sigmask())
-Message-ID: <20190530144044.GG22536@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
+        Thu, 30 May 2019 10:42:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726079AbfE3OmJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 10:42:09 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UEdQwH024028
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:08 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2stepvgdnr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:42:08 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 30 May 2019 15:42:07 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 15:42:01 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4UEg0Zq30278116
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 14:42:01 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E02B0B2066;
+        Thu, 30 May 2019 14:42:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2366B2064;
+        Thu, 30 May 2019 14:42:00 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 14:42:00 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 83ADB16C09D5; Thu, 30 May 2019 07:42:02 -0700 (PDT)
+Date:   Thu, 30 May 2019 07:42:02 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org
+Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
+        will.deacon@arm.com, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: [PATCH RFC memory-model 0/33] LKMM updates for review
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a1fsrz6kAB1z-mqcaNvXL4Hf3XMiN=Q5rzAJ3rLGPK_Yg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 30 May 2019 14:40:57 +0000 (UTC)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19053014-2213-0000-0000-00000397F31A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011185; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01210779; UDB=6.00636154; IPR=6.00991814;
+ MB=3.00027120; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-30 14:42:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053014-2214-0000-0000-00005EA2F2BB
+Message-Id: <20190530144202.GA26201@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=890 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/30, Arnd Bergmann wrote:
->
-> I think this is a nice simplification, but it would help not to mix up the
-> minimal regression fix with the rewrite of those functions.
+Hello!
 
-Yes, yes, agreed.
+This series contains LKMM updates:
 
-Plus every file touched by this patch asks for more cleanups. Say, do_poll()
-should return -ERESTARTNOHAND, not -EINTR, after that we can remove the ugly
-EINTR->ERESTARTNOHAND in its callers. And more.
+1-3.	Add plain C-language accesses to the model, including data-race
+	detection, courtesy of Alan Stern.
 
-> For the stable
-> kernels, I think we want just the addition of the 'bool interrupted' argument
-> to restore_user_sigmask()
+4.	Make scripts be executable.
 
-or simply revert this patch. I will check if this is possible today... At first
-glance 854a6ed56839a40f6 fixed another bug by accident, do_pselect() did
-"ret == -ERESTARTNOHAND" after "ret = poll_select_copy_remaining()" which can
-turn ERESTARTNOHAND into EINTR, but this is simple. I'll check tomorrow.
+5.	Explain ordering provided by smp_mb__{before,after}_atomic(),
+	courtesy of Alan Stern.
 
+6.	Fix comment in MP+poonceonces.litmus, courtesy of Andrea Parri.
 
-> > -       ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-> > +       ret = set_xxx(ksig.sigmask, ksig.sigsetsize);
-> >         if (ret)
-> >                 return ret;
-> >
-> >         ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
-> > -       restore_user_sigmask(ksig.sigmask, &sigsaved);
-> > -       if (signal_pending(current) && !ret)
-> > +
-> > +       interrupted = signal_pending(current);
-> > +       update_xxx(interrupted);
->
-> Maybe name this
->
->            restore_saved_sigmask_if(!interrupted);
+7.	Make documentation referencing "herd" instead reference the
+	actual name of the command, "herd7", courtesy of Andrea Parri.
 
-Yes, I thought about restore_if(), but to me
+8-9.	Make LKMM scripts note timeouts instead of just saying that
+	the validation was bad.
 
-		restore_saved_sigmask_if(ret != -EINTR);
+10.	Make LKMM scripts identify litmus-test typos and use of
+	unsupported primitives instead of just saying that the validation
+	was bad.
 
-doesn't look readable... May be
+11.	Make LKMM scripts detect unconditional deadlocks.
 
-		restore_saved_sigmask_unless(ret == -EINTR);
+12.	Fix email address on LKMM scripts.
 
-? but actually I agree with any naming.
+13-33.	Leverage Boqun Feng's C-to-assembly litmus-test-translation
+	capability to allow verifying LKMM against hardware models for
+	checkalllitmus.sh.  This is a work in progress.
 
-> and make restore_saved_sigmask_if() an inline function
-> next to restore_saved_sigmask()?
+							Thanx, Paul
 
-agreed,
+------------------------------------------------------------------------
 
-> With some of the recent discussions about compat syscall handling,
-> I now think that we want to just fold set_compat_user_sigmask()
-> into set_user_sigmask()
-
-agreed, and I thought about this too. But again, I'd prefer to do this
-and other cleanups later, on top of this patch.
-
-Oleg.
+ Documentation/atomic_t.txt                            |   17 +-
+ tools/memory-model/linux-kernel.bell                  |    6 
+ tools/memory-model/linux-kernel.cat                   |   82 ++++++++--
+ tools/memory-model/linux-kernel.def                   |    1 
+ tools/memory-model/litmus-tests/.gitignore            |    4 
+ tools/memory-model/litmus-tests/MP+poonceonces.litmus |    2 
+ tools/memory-model/litmus-tests/README                |    2 
+ tools/memory-model/lock.cat                           |    2 
+ tools/memory-model/scripts/README                     |   20 +-
+ tools/memory-model/scripts/checkalllitmus.sh          |   31 +--
+ tools/memory-model/scripts/checkghlitmus.sh           |   11 -
+ tools/memory-model/scripts/checklitmus.sh             |  103 +++++--------
+ tools/memory-model/scripts/checklitmushist.sh         |    2 
+ tools/memory-model/scripts/checktheselitmus.sh        |   43 +++++
+ tools/memory-model/scripts/cmplitmushist.sh           |   53 ++++++
+ tools/memory-model/scripts/hwfnseg.sh                 |   20 ++
+ tools/memory-model/scripts/initlitmushist.sh          |    2 
+ tools/memory-model/scripts/judgelitmus.sh             |  136 +++++++++++++----
+ tools/memory-model/scripts/newlitmushist.sh           |    4 
+ tools/memory-model/scripts/parseargs.sh               |   23 ++
+ tools/memory-model/scripts/runlitmus.sh               |  142 ++++++++++++++----
+ tools/memory-model/scripts/runlitmushist.sh           |   32 ++--
+ tools/memory-model/scripts/simpletest.sh              |   35 ++++
+ 23 files changed, 573 insertions(+), 200 deletions(-)
 
