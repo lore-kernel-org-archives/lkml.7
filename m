@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE539C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A24C46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FFA24DDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D94424DCD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188326;
-	bh=IJXDKlfnr9qQDmVN4oIdOTfuIqwwVs2SIw5sO4hk4Zc=;
+	s=default; t=1559188330;
+	bh=D15HQzt/gFInZPdaZ219sAc+1IU88ZyBC5dXpV86zog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bj+x0zdGfY3HHZCOVs1HGPTYZdupNu9+VGmFhECkDszHxe7DdRqQMLuhSnIot35zH
-	 S7etmpexYlPUbxC/u6WvBv5ISeMMhjAOkCotv2fSe0is+NlIbqQ6hvqkETqbGvS79A
-	 i5bdfOzYPStyawgTxzPXiq0ENajkWxv0xzkOvCw4=
+	b=xe104g7I+RFPFuQsXi8S2ytkKXE3JpBU++Xcc1Mw4l/zS0jORDMyOaWCsRY9QEzwe
+	 +uxnrXqke+/0CEipXpjVp183PMwBIrP20DJNitmb9AEB/yS+OCa7tDYLhkukfKFtt+
+	 ulYE86Yt75xUfH7GXPBpA4aLDDdczw+yQqIhoLZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbfE3DwF (ORCPT
+        id S1731126AbfE3DTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731987AbfE3DTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:41 -0400
+        id S1730372AbfE3DPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:34 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F05F5248BA;
-        Thu, 30 May 2019 03:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50EBD24580;
+        Thu, 30 May 2019 03:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186380;
-        bh=IJXDKlfnr9qQDmVN4oIdOTfuIqwwVs2SIw5sO4hk4Zc=;
+        s=default; t=1559186134;
+        bh=D15HQzt/gFInZPdaZ219sAc+1IU88ZyBC5dXpV86zog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OE4MeCh9qbpy1AHF/TtrFAw69yQoQzCTneYMPPZqwMolTJKfzwC4o9QAnFENhKe4U
-         vCuVLtp00JeO4RoXHBGbNLbs2H8Y6ON7GYCrdArM4FGIk/CxVDAfhrK5+mBzw/0HY4
-         YdNt3MFvcs1F77QHKuwVsCFKfrLTWzd3s1FXo60w=
+        b=wSuGQmwNuNdFZqLgsRLWLXuj4SWzj33XVtqfy9cG0HyHJQuS2J9Pp4tIgSZnS8ED4
+         5l8fmLKcLIdfpnQS1gUucg1DWKXj8UYISGtKjbMGMSYrmspGdEWc4LE4PgaIzBUiEC
+         FNvrNl1XirXR1nf3B/czK+lZP9d1KpJx5gFf8/ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Piotr Figiel <p.figiel@camlintechnologies.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        James Hutchinson <jahutchinson99@googlemail.com>,
+        Antti Palosaari <crope@iki.fi>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 143/193] brcmfmac: convert dev_init_lock mutex to completion
-Date:   Wed, 29 May 2019 20:06:37 -0700
-Message-Id: <20190530030508.294993038@linuxfoundation.org>
+Subject: [PATCH 5.0 299/346] media: m88ds3103: serialize reset messages in m88ds3103_set_frontend
+Date:   Wed, 29 May 2019 20:06:12 -0700
+Message-Id: <20190530030556.000868235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,188 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9fd0953fa4a62887306be28641b4b0809f3b2fd ]
+[ Upstream commit 981fbe3da20a6f35f17977453bce7dfc1664d74f ]
 
-Leaving dev_init_lock mutex locked in probe causes BUG and a WARNING when
-kernel is compiled with CONFIG_PROVE_LOCKING. Convert mutex to completion
-which silences those warnings and improves code readability.
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=199323
 
-Fix below errors when connecting the USB WiFi dongle:
+Users are experiencing problems with the DVBSky S960/S960C USB devices
+since the following commit:
 
-brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43143 for chip BCM43143/2
-BUG: workqueue leaked lock or atomic: kworker/0:2/0x00000000/434
-     last function: hub_event
-1 lock held by kworker/0:2/434:
- #0: 18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
-CPU: 0 PID: 434 Comm: kworker/0:2 Not tainted 4.19.23-00084-g454a789-dirty #123
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Workqueue: usb_hub_wq hub_event
-[<8011237c>] (unwind_backtrace) from [<8010d74c>] (show_stack+0x10/0x14)
-[<8010d74c>] (show_stack) from [<809c4324>] (dump_stack+0xa8/0xd4)
-[<809c4324>] (dump_stack) from [<8014195c>] (process_one_work+0x710/0x808)
-[<8014195c>] (process_one_work) from [<80141a80>] (worker_thread+0x2c/0x564)
-[<80141a80>] (worker_thread) from [<80147bcc>] (kthread+0x13c/0x16c)
-[<80147bcc>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-Exception stack(0xed1d9fb0 to 0xed1d9ff8)
-9fa0:                                     00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+9d659ae: ("locking/mutex: Add lock handoff to avoid starvation")
 
-======================================================
-WARNING: possible circular locking dependency detected
-4.19.23-00084-g454a789-dirty #123 Not tainted
-------------------------------------------------------
-kworker/0:2/434 is trying to acquire lock:
-e29cf799 ((wq_completion)"events"){+.+.}, at: process_one_work+0x174/0x808
+The device malfunctions after running for an indeterminable period of
+time, and the problem can only be cleared by rebooting the machine.
 
-but task is already holding lock:
-18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
+It is possible to encourage the problem to surface by blocking the
+signal to the LNB.
 
-which lock already depends on the new lock.
+Further debugging revealed the cause of the problem.
 
-the existing dependency chain (in reverse order) is:
+In the following capture:
+- thread #1325 is running m88ds3103_set_frontend
+- thread #42 is running ts2020_stat_work
 
--> #2 (&devinfo->dev_init_lock){+.+.}:
-       mutex_lock_nested+0x1c/0x24
-       brcmf_usb_probe+0x78/0x550 [brcmfmac]
-       usb_probe_interface+0xc0/0x1bc
-       really_probe+0x228/0x2c0
-       __driver_attach+0xe4/0xe8
-       bus_for_each_dev+0x68/0xb4
-       bus_add_driver+0x19c/0x214
-       driver_register+0x78/0x110
-       usb_register_driver+0x84/0x148
-       process_one_work+0x228/0x808
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
+a> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 80
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 08
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 68 3f
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 08 ff
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 3d
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+b> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 00
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 21
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 66
+   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
+   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
+   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 60 02 10 0b
+   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
 
--> #1 (brcmf_driver_work){+.+.}:
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
+Two i2c messages are sent to perform a reset in m88ds3103_set_frontend:
 
--> #0 ((wq_completion)"events"){+.+.}:
-       process_one_work+0x1b8/0x808
-       worker_thread+0x2c/0x564
-       kthread+0x13c/0x16c
-       ret_from_fork+0x14/0x20
-         (null)
+  a. 0x07, 0x80
+  b. 0x07, 0x00
 
-other info that might help us debug this:
+However, as shown in the capture, the regmap mutex is being handed over
+to another thread (ts2020_stat_work) in between these two messages.
 
-Chain exists of:
-  (wq_completion)"events" --> brcmf_driver_work --> &devinfo->dev_init_lock
+>From here, the device responds to every i2c message with an 07 message,
+and will only return to normal operation following a power cycle.
 
- Possible unsafe locking scenario:
+Use regmap_multi_reg_write to group the two reset messages, ensuring
+both are processed before the regmap mutex is unlocked.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&devinfo->dev_init_lock);
-                               lock(brcmf_driver_work);
-                               lock(&devinfo->dev_init_lock);
-  lock((wq_completion)"events");
-
- *** DEADLOCK ***
-
-1 lock held by kworker/0:2/434:
- #0: 18d5dcdf (&devinfo->dev_init_lock){+.+.}, at: brcmf_usb_probe+0x78/0x550 [brcmfmac]
-
-stack backtrace:
-CPU: 0 PID: 434 Comm: kworker/0:2 Not tainted 4.19.23-00084-g454a789-dirty #123
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Workqueue: events request_firmware_work_func
-[<8011237c>] (unwind_backtrace) from [<8010d74c>] (show_stack+0x10/0x14)
-[<8010d74c>] (show_stack) from [<809c4324>] (dump_stack+0xa8/0xd4)
-[<809c4324>] (dump_stack) from [<80172838>] (print_circular_bug+0x210/0x330)
-[<80172838>] (print_circular_bug) from [<80175940>] (__lock_acquire+0x160c/0x1a30)
-[<80175940>] (__lock_acquire) from [<8017671c>] (lock_acquire+0xe0/0x268)
-[<8017671c>] (lock_acquire) from [<80141404>] (process_one_work+0x1b8/0x808)
-[<80141404>] (process_one_work) from [<80141a80>] (worker_thread+0x2c/0x564)
-[<80141a80>] (worker_thread) from [<80147bcc>] (kthread+0x13c/0x16c)
-[<80147bcc>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-Exception stack(0xed1d9fb0 to 0xed1d9ff8)
-9fa0:                                     00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-
-Signed-off-by: Piotr Figiel <p.figiel@camlintechnologies.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: James Hutchinson <jahutchinson99@googlemail.com>
+Reviewed-by: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/usb.c  | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/media/dvb-frontends/m88ds3103.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 11ffaa01599eb..267dcefdacb29 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -160,7 +160,7 @@ struct brcmf_usbdev_info {
+diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
+index 123f2a33738b0..403f42806455e 100644
+--- a/drivers/media/dvb-frontends/m88ds3103.c
++++ b/drivers/media/dvb-frontends/m88ds3103.c
+@@ -309,6 +309,9 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
+ 	u16 u16tmp;
+ 	u32 tuner_frequency_khz, target_mclk;
+ 	s32 s32tmp;
++	static const struct reg_sequence reset_buf[] = {
++		{0x07, 0x80}, {0x07, 0x00}
++	};
  
- 	struct usb_device *usbdev;
- 	struct device *dev;
--	struct mutex dev_init_lock;
-+	struct completion dev_init_done;
- 
- 	int ctl_in_pipe, ctl_out_pipe;
- 	struct urb *ctl_urb; /* URB for control endpoint */
-@@ -1192,11 +1192,11 @@ static void brcmf_usb_probe_phase2(struct device *dev, int ret,
- 	if (ret)
- 		goto error;
- 
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	return;
- error:
- 	brcmf_dbg(TRACE, "failed: dev=%s, err=%d\n", dev_name(dev), ret);
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	device_release_driver(dev);
- }
- 
-@@ -1242,7 +1242,7 @@ static int brcmf_usb_probe_cb(struct brcmf_usbdev_info *devinfo)
- 		if (ret)
- 			goto fail;
- 		/* we are done */
--		mutex_unlock(&devinfo->dev_init_lock);
-+		complete(&devinfo->dev_init_done);
- 		return 0;
+ 	dev_dbg(&client->dev,
+ 		"delivery_system=%d modulation=%d frequency=%u symbol_rate=%d inversion=%d pilot=%d rolloff=%d\n",
+@@ -321,11 +324,7 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
  	}
- 	bus->chip = bus_pub->devid;
-@@ -1303,11 +1303,10 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
  
- 	devinfo->usbdev = usb;
- 	devinfo->dev = &usb->dev;
--	/* Take an init lock, to protect for disconnect while still loading.
-+	/* Init completion, to protect for disconnect while still loading.
- 	 * Necessary because of the asynchronous firmware load construction
- 	 */
--	mutex_init(&devinfo->dev_init_lock);
--	mutex_lock(&devinfo->dev_init_lock);
-+	init_completion(&devinfo->dev_init_done);
+ 	/* reset */
+-	ret = regmap_write(dev->regmap, 0x07, 0x80);
+-	if (ret)
+-		goto err;
+-
+-	ret = regmap_write(dev->regmap, 0x07, 0x00);
++	ret = regmap_multi_reg_write(dev->regmap, reset_buf, 2);
+ 	if (ret)
+ 		goto err;
  
- 	usb_set_intfdata(intf, devinfo);
- 
-@@ -1385,7 +1384,7 @@ brcmf_usb_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	return 0;
- 
- fail:
--	mutex_unlock(&devinfo->dev_init_lock);
-+	complete(&devinfo->dev_init_done);
- 	kfree(devinfo);
- 	usb_set_intfdata(intf, NULL);
- 	return ret;
-@@ -1400,7 +1399,7 @@ brcmf_usb_disconnect(struct usb_interface *intf)
- 	devinfo = (struct brcmf_usbdev_info *)usb_get_intfdata(intf);
- 
- 	if (devinfo) {
--		mutex_lock(&devinfo->dev_init_lock);
-+		wait_for_completion(&devinfo->dev_init_done);
- 		/* Make sure that devinfo still exists. Firmware probe routines
- 		 * may have released the device and cleared the intfdata.
- 		 */
 -- 
 2.20.1
 
