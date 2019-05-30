@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349E0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7535AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C8F251B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B9823A1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189596;
-	bh=j0dlAoLur82D1+YxWJZQYbmS/2yzEpnrSLMWWUIoKIQ=;
+	s=default; t=1559189606;
+	bh=zlZgQwUFqEhwCYujErGBFbJRbquV21Z9/rRQGPoQ0UU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQHUW6gToEoeBTW/G52w46uLVz1jriZxNkrLeZkdZAYnojJyT95jEhW411ebGI0nG
-	 zPCpoqbCUfMRadUdwehoBPJAbvDnCh8rlvNCfME+aQ+LnNyEE3qdRXm6HrRqMhVbwS
-	 sWSF3igNlbPOkD5fXTV3cEVm9PwrM82WODHfAQaY=
+	b=VRCljcYxP/2P0m744ekXhssgb5PQEcJ16LgtalCtmxafecGhD9QqQtMQmxCVg5CPW
+	 7z4krektPOTgohWSIi7ge9O+Er8lVT40qpgGk3I1kbWnnnVipb15gP0cYS+i7fL299
+	 RVzKNag57m7U3VcbFqsQL4tpHZqvbAkxtwczMAss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbfE3ENO (ORCPT
+        id S1731148AbfE3ENZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbfE3DQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:23 -0400
+        id S1730753AbfE3DQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF6E2449A;
-        Thu, 30 May 2019 03:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1A1E2460A;
+        Thu, 30 May 2019 03:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186182;
-        bh=j0dlAoLur82D1+YxWJZQYbmS/2yzEpnrSLMWWUIoKIQ=;
+        s=default; t=1559186200;
+        bh=zlZgQwUFqEhwCYujErGBFbJRbquV21Z9/rRQGPoQ0UU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wACgOgQev+iAhBCuWxoPhkJZ559wvNHsED2MmNweSW0YpwmWbL9xOAWky2fHJRYvf
-         GN2FnEejAbbfZOKCNEQbBjzMUGy5ugJcx7KqSwQ9mdPxQBCwjdRMl0qjGWW4NX1Fh4
-         oL3sAl43NZgux2lf/Tx8R0mVYXRtkva3183Rfj6w=
+        b=TuOxdHThTXGMs9jxr+A6NgNnaqtil74Am/m9fJ3AuIt75xhOSVIpTpPOFX4sSGRwE
+         K35PP0dl7q9h9plDe2sod2KUBvfV+YA5/wOKkoF+R6v1WK/1rp0KkTQ5iXtA03hVyX
+         1/6mGjTxLivKkUpKYnt8AKKcUO/nkhXC/XYvv3Vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 030/276] arm64: errata: Add workaround for Cortex-A76 erratum #1463225
-Date:   Wed, 29 May 2019 20:03:08 -0700
-Message-Id: <20190530030526.033339430@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 034/276] media: cpia2: Fix use-after-free in cpia2_exit
+Date:   Wed, 29 May 2019 20:03:12 -0700
+Message-Id: <20190530030526.353702154@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -60,245 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 969f5ea627570e91c9d54403287ee3ed657f58fe upstream.
+commit dea37a97265588da604c6ba80160a287b72c7bfd upstream.
 
-Revisions of the Cortex-A76 CPU prior to r4p0 are affected by an erratum
-that can prevent interrupts from being taken when single-stepping.
+Syzkaller report this:
 
-This patch implements a software workaround to prevent userspace from
-effectively being able to disable interrupts.
+BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+Read of size 8 at addr ffff8881f59a6b70 by task syz-executor.0/8363
 
-Cc: <stable@vger.kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+CPU: 0 PID: 8363 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
+ sysfs_remove_file include/linux/sysfs.h:519 [inline]
+ driver_remove_file+0x40/0x50 drivers/base/driver.c:122
+ usb_remove_newid_files drivers/usb/core/driver.c:212 [inline]
+ usb_deregister+0x12a/0x3b0 drivers/usb/core/driver.c:1005
+ cpia2_exit+0xa/0x16 [cpia2]
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f86f3754c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f86f37556bc
+R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+
+Allocated by task 8363:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
+ driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
+ usb_register_driver+0x267/0x520 drivers/usb/core/driver.c:965
+ 0xffffffffc1b4817c
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8363:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
+ slab_free_hook mm/slub.c:1430 [inline]
+ slab_free_freelist_hook mm/slub.c:1457 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3957
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
+ driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
+ usb_register_driver+0x341/0x520 drivers/usb/core/driver.c:980
+ 0xffffffffc1b4817c
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f59a6b40
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 48 bytes inside of
+ 256-byte region [ffff8881f59a6b40, ffff8881f59a6c40)
+The buggy address belongs to the page:
+page:ffffea0007d66980 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6c02e00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f59a6a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881f59a6a80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+>ffff8881f59a6b00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff8881f59a6b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881f59a6c00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+
+cpia2_init does not check return value of cpia2_init, if it failed
+in usb_register_driver, there is already cleanup using driver_unregister.
+No need call cpia2_usb_cleanup on module exit.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- Documentation/arm64/silicon-errata.txt |    1 
- arch/arm64/Kconfig                     |   18 ++++++++++++++++
- arch/arm64/include/asm/cpucaps.h       |    3 +-
- arch/arm64/include/asm/cputype.h       |    2 +
- arch/arm64/kernel/cpu_errata.c         |   24 +++++++++++++++++++++
- arch/arm64/kernel/syscall.c            |   31 +++++++++++++++++++++++++++
- arch/arm64/mm/fault.c                  |   37 +++++++++++++++++++++++++++++++--
- 7 files changed, 113 insertions(+), 3 deletions(-)
+ drivers/media/usb/cpia2/cpia2_v4l.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -58,6 +58,7 @@ stable kernels.
- | ARM            | Cortex-A72      | #853709         | N/A                         |
- | ARM            | Cortex-A73      | #858921         | ARM64_ERRATUM_858921        |
- | ARM            | Cortex-A55      | #1024718        | ARM64_ERRATUM_1024718       |
-+| ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
- | ARM            | MMU-500         | #841119,#826419 | N/A                         |
- |                |                 |                 |                             |
- | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375        |
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -479,6 +479,24 @@ config ARM64_ERRATUM_1024718
- 
- 	  If unsure, say Y.
- 
-+config ARM64_ERRATUM_1463225
-+	bool "Cortex-A76: Software Step might prevent interrupt recognition"
-+	default y
-+	help
-+	  This option adds a workaround for Arm Cortex-A76 erratum 1463225.
-+
-+	  On the affected Cortex-A76 cores (r0p0 to r3p1), software stepping
-+	  of a system call instruction (SVC) can prevent recognition of
-+	  subsequent interrupts when software stepping is disabled in the
-+	  exception handler of the system call and either kernel debugging
-+	  is enabled or VHE is in use.
-+
-+	  Work around the erratum by triggering a dummy step exception
-+	  when handling a system call from a task that is being stepped
-+	  in a VHE configuration of the kernel.
-+
-+	  If unsure, say Y.
-+
- config CAVIUM_ERRATUM_22375
- 	bool "Cavium erratum 22375, 24313"
- 	default y
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -51,7 +51,8 @@
- #define ARM64_SSBD				30
- #define ARM64_MISMATCHED_CACHE_TYPE		31
- #define ARM64_HAS_STAGE2_FWB			32
-+#define ARM64_WORKAROUND_1463225		33
- 
--#define ARM64_NCAPS				33
-+#define ARM64_NCAPS				34
- 
- #endif /* __ASM_CPUCAPS_H */
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -86,6 +86,7 @@
- #define ARM_CPU_PART_CORTEX_A75		0xD0A
- #define ARM_CPU_PART_CORTEX_A35		0xD04
- #define ARM_CPU_PART_CORTEX_A55		0xD05
-+#define ARM_CPU_PART_CORTEX_A76		0xD0B
- 
- #define APM_CPU_PART_POTENZA		0x000
- 
-@@ -110,6 +111,7 @@
- #define MIDR_CORTEX_A75 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A75)
- #define MIDR_CORTEX_A35 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A35)
- #define MIDR_CORTEX_A55 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A55)
-+#define MIDR_CORTEX_A76 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A76)
- #define MIDR_THUNDERX	MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX)
- #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
- #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -411,6 +411,22 @@ static bool has_ssbd_mitigation(const st
- }
- #endif	/* CONFIG_ARM64_SSBD */
- 
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static bool
-+has_cortex_a76_erratum_1463225(const struct arm64_cpu_capabilities *entry,
-+			       int scope)
-+{
-+	u32 midr = read_cpuid_id();
-+	/* Cortex-A76 r0p0 - r3p1 */
-+	struct midr_range range = MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1);
-+
-+	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
-+	return is_midr_in_range(midr, &range) && is_kernel_in_hyp_mode();
-+}
-+#endif
-+
- #define CAP_MIDR_RANGE(model, v_min, r_min, v_max, r_max)	\
- 	.matches = is_affected_midr_range,			\
- 	.midr_range = MIDR_RANGE(model, v_min, r_min, v_max, r_max)
-@@ -680,6 +696,14 @@ const struct arm64_cpu_capabilities arm6
- 		.matches = has_ssbd_mitigation,
- 	},
- #endif
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+	{
-+		.desc = "ARM erratum 1463225",
-+		.capability = ARM64_WORKAROUND_1463225,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
-+		.matches = has_cortex_a76_erratum_1463225,
-+	},
-+#endif
- 	{
- 	}
- };
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- 
- #include <asm/daifflags.h>
-+#include <asm/debug-monitors.h>
- #include <asm/fpsimd.h>
- #include <asm/syscall.h>
- #include <asm/thread_info.h>
-@@ -60,6 +61,35 @@ static inline bool has_syscall_work(unsi
- int syscall_trace_enter(struct pt_regs *regs);
- void syscall_trace_exit(struct pt_regs *regs);
- 
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static void cortex_a76_erratum_1463225_svc_handler(void)
-+{
-+	u32 reg, val;
-+
-+	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
-+		return;
-+
-+	if (!unlikely(this_cpu_has_cap(ARM64_WORKAROUND_1463225)))
-+		return;
-+
-+	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
-+	reg = read_sysreg(mdscr_el1);
-+	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-+	write_sysreg(val, mdscr_el1);
-+	asm volatile("msr daifclr, #8");
-+	isb();
-+
-+	/* We will have taken a single-step exception by this point */
-+
-+	write_sysreg(reg, mdscr_el1);
-+	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 0);
-+}
-+#else
-+static void cortex_a76_erratum_1463225_svc_handler(void) { }
-+#endif /* CONFIG_ARM64_ERRATUM_1463225 */
-+
- static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
- 			   const syscall_fn_t syscall_table[])
- {
-@@ -68,6 +98,7 @@ static void el0_svc_common(struct pt_reg
- 	regs->orig_x0 = regs->regs[0];
- 	regs->syscallno = scno;
- 
-+	cortex_a76_erratum_1463225_svc_handler();
- 	local_daif_restore(DAIF_PROCCTX);
- 	user_exit();
- 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -827,14 +827,47 @@ void __init hook_debug_fault_code(int nr
- 	debug_fault_info[nr].name	= name;
+--- a/drivers/media/usb/cpia2/cpia2_v4l.c
++++ b/drivers/media/usb/cpia2/cpia2_v4l.c
+@@ -1244,8 +1244,7 @@ static int __init cpia2_init(void)
+ 	LOG("%s v%s\n",
+ 	    ABOUT, CPIA_VERSION);
+ 	check_parameters();
+-	cpia2_usb_init();
+-	return 0;
++	return cpia2_usb_init();
  }
  
-+#ifdef CONFIG_ARM64_ERRATUM_1463225
-+DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-+
-+static int __exception
-+cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
-+{
-+	if (user_mode(regs))
-+		return 0;
-+
-+	if (!__this_cpu_read(__in_cortex_a76_erratum_1463225_wa))
-+		return 0;
-+
-+	/*
-+	 * We've taken a dummy step exception from the kernel to ensure
-+	 * that interrupts are re-enabled on the syscall path. Return back
-+	 * to cortex_a76_erratum_1463225_svc_handler() with debug exceptions
-+	 * masked so that we can safely restore the mdscr and get on with
-+	 * handling the syscall.
-+	 */
-+	regs->pstate |= PSR_D_BIT;
-+	return 1;
-+}
-+#else
-+static int __exception
-+cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_ARM64_ERRATUM_1463225 */
-+
- asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
--					      unsigned int esr,
--					      struct pt_regs *regs)
-+					       unsigned int esr,
-+					       struct pt_regs *regs)
- {
- 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
- 	unsigned long pc = instruction_pointer(regs);
- 	int rv;
  
-+	if (cortex_a76_erratum_1463225_debug_handler(regs))
-+		return 0;
-+
- 	/*
- 	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
- 	 * already disabled to preserve the last enabled/disabled addresses.
 
 
