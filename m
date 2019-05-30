@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F8CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C47DC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5622B24C61
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E6D24C53
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187808;
-	bh=yrLqvuy0Gi+/mqgwgslP0CMc1UikWllpQo7pWoDrmus=;
+	s=default; t=1559187811;
+	bh=bppTzBxoO9Ue7WR8F4rWlFuDGJvLkjrVlQGw2T/vVjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IY4qfiFo5kJodgy/eDCagHMDAveLKIa4a7U8HJ8NOH+gUrvPaUIb/VXD+LzTQZr0C
-	 trzUr2sshA6kMxkSSMxb2kac3emDs9OGBgG1660a9C3S2P4uetdUwTxMB/QfvGNfVA
-	 vigt1Hu9QyEuYis367jM5KHzFSHJk2Nz4RI9hJmo=
+	b=p7vzNvyx+kifVzKEKpDKb8G7QtPZiigIZcfBvfwaUW7D2Sl8/QuLgzOFIGAzMElcX
+	 oHiEKxDnih8QW6n+cYutjMTGnSKIHRjrYmaEycbZekmdKnYWBIk/c5qWu8JUUpLuLp
+	 dbxqipTxi7q2M80rHFXaXGH0oXBUgiwk0u599kA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732730AbfE3Dn1 (ORCPT
+        id S1732860AbfE3Dna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:43:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731802AbfE3DVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:11 -0400
+        id S1732469AbfE3DVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908F0249CE;
-        Thu, 30 May 2019 03:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A711249A9;
+        Thu, 30 May 2019 03:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186470;
-        bh=yrLqvuy0Gi+/mqgwgslP0CMc1UikWllpQo7pWoDrmus=;
+        s=default; t=1559186468;
+        bh=bppTzBxoO9Ue7WR8F4rWlFuDGJvLkjrVlQGw2T/vVjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rOAzmesRWINBLlv4LX3fsrW1MIL8ttEiFIY37mAMx9xt8Xdh6QtpCbqotPFPN4rJ0
-         xD+kOcuRoxOruBzWIY0h6xhJ9VrmCkmBMkzbKEWlZGvFLMFc6bDL6ajGgOUc0vFaFp
-         B6ZcZHAiDTLQNgSqTo6h0f7Yo546+jTxXg9VvLgM=
+        b=ZW+7SGMosHbrqzOdj/ZS3WUGfPt464BY71E+5/AW1nvUDYA3zY+CrF0jFtJ7agIJF
+         hSwcXIJJJb9nxVOnZsPTnlhH7FinFad8FzYF4olKYUHrZ/fokuIWIgoS8CNTJGb1Oi
+         kINirgvbvBd2zc3iYDVyp3030pWrlIooTTTIW8Sw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 099/128] scsi: ufs: Fix regulator load and icc-level configuration
-Date:   Wed, 29 May 2019 20:07:11 -0700
-Message-Id: <20190530030452.380736501@linuxfoundation.org>
+Subject: [PATCH 4.9 094/128] brcmfmac: fix missing checks for kmemdup
+Date:   Wed, 29 May 2019 20:07:06 -0700
+Message-Id: <20190530030451.578660109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -62,74 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
+[ Upstream commit 46953f97224d56a12ccbe9c6acaa84ca0dab2780 ]
 
-Currently if a regulator has "<name>-fixed-regulator" property in device
-tree, it will skip current limit initialization.  This lead to a zero
-"max_uA" value in struct ufs_vreg.
+In case kmemdup fails, the fix sets conn_info->req_ie_len and
+conn_info->resp_ie_len to zero to avoid buffer overflows.
 
-However, "regulator_set_load" operation shall be required on regulators
-which have valid current limits, otherwise a zero "max_uA" set by
-"regulator_set_load" may cause unexpected behavior when this regulator is
-enabled or set as high power mode.
-
-Similarly, in device's icc_level configuration flow, the target icc_level
-shall be updated if regulator also has valid current limit, otherwise a
-wrong icc_level will be calculated by zero "max_uA" and thus causes
-unexpected results after it is written to device.
-
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0b858414c558b..8869c666d458c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4875,19 +4875,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 		goto out;
- 	}
- 
--	if (hba->vreg_info.vcc)
-+	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vcc->max_uA,
- 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
- 
--	if (hba->vreg_info.vccq)
-+	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq->max_uA,
- 				icc_level,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
- 
--	if (hba->vreg_info.vccq2)
-+	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq2->max_uA,
- 				icc_level,
-@@ -5449,6 +5449,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
- 	if (!vreg)
- 		return 0;
- 
-+	/*
-+	 * "set_load" operation shall be required on those regulators
-+	 * which specifically configured current limitation. Otherwise
-+	 * zero max_uA may cause unexpected behavior when regulator is
-+	 * enabled or set as high power mode.
-+	 */
-+	if (!vreg->max_uA)
-+		return 0;
-+
- 	ret = regulator_set_load(vreg->reg, ua);
- 	if (ret < 0) {
- 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index 530f521209728..8f8fe6f2af5b0 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -5374,6 +5374,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->req_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->req_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->req_ie)
++			conn_info->req_ie_len = 0;
+ 	} else {
+ 		conn_info->req_ie_len = 0;
+ 		conn_info->req_ie = NULL;
+@@ -5390,6 +5392,8 @@ static s32 brcmf_get_assoc_ies(struct brcmf_cfg80211_info *cfg,
+ 		conn_info->resp_ie =
+ 		    kmemdup(cfg->extra_buf, conn_info->resp_ie_len,
+ 			    GFP_KERNEL);
++		if (!conn_info->resp_ie)
++			conn_info->resp_ie_len = 0;
+ 	} else {
+ 		conn_info->resp_ie_len = 0;
+ 		conn_info->resp_ie = NULL;
 -- 
 2.20.1
 
