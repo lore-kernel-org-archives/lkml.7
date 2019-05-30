@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C6C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC74C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707E325671
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B56256A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190722;
-	bh=Yr1NWBa2ygGEK+iU7YFpXLjJuhvl7ZvsAVvfPbvqE5A=;
+	s=default; t=1559190724;
+	bh=Shq45Vq6oU9Ve/3vEgTzy2/SzMWVgy3qgxHsxsFH5hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ryk8cNsd3KTUkVEs3XJRV2McABHyhQHGQbJ7LCKsd8wMvJMwdKIRRva7v0zGyeT5
-	 odvb5LgZKIa3k73K6MjGTtmPx44w5SvvFCkcgSVuc+CdRi3nD/j5WUIBtiulYgEWCz
-	 yqAxELOnn5dZ3QbujrmPNkBLyskSOTy8hHZCYVVA=
+	b=lKKTLujFh4BDjoQQi85f78UmLM+n2xjLaAWrX5348znPW5yxS3p/2Sr4SF4BCg8MX
+	 ew04YKOUQIPGTNBdYRrF6izacGyot9Z4pybjgGOtyZB55liEQboAFdIIFxZvITQ6Lg
+	 sJarD/4lYdPhvE9756MKpjLNAsZB6mbcTc5sOrkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388227AbfE3Eb5 (ORCPT
+        id S2388216AbfE3Eby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:31:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbfE3DNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:42 -0400
+        id S1729554AbfE3DNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:43 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BDAB2455A;
-        Thu, 30 May 2019 03:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E768E244EF;
+        Thu, 30 May 2019 03:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186022;
-        bh=Yr1NWBa2ygGEK+iU7YFpXLjJuhvl7ZvsAVvfPbvqE5A=;
+        bh=Shq45Vq6oU9Ve/3vEgTzy2/SzMWVgy3qgxHsxsFH5hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lDHe5be6jPxbfgLmJ49R4KKcKQq3ckUtgANyoxYHr73evxDQUlSKG8BCfTbKhEtxa
-         DADtC7ceotrJ1kE0gpg3RnEUeqKUqqkv74O/SEaA0VMCYTeSPz+NXxb3YkBRIzbQWK
-         R0q+TYsS+ZP0WlUU2CLFTO/8lsw+JCL+A9OXUjqk=
+        b=PeE/c1co0JJ+n6WGDLXQoq7EPlx0jNMSzRZi3mK5M0ZLBuP5NB/ug+5Vwp9R+JE6Z
+         /cbRP1IFLG/zD/ZxbvOgzCTDftujKeEOzec8rwAQCIAmZMctsGEPixn6YGN0d3BxMy
+         N1ytO7QJOtW3DtBsVNHZahBpI6w3chqe1XrZGY6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Fei Yang <fei.yang@intel.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 092/346] rtc: stm32: manage the get_irq probe defer case
-Date:   Wed, 29 May 2019 20:02:45 -0700
-Message-Id: <20190530030545.823746287@linuxfoundation.org>
+Subject: [PATCH 5.0 065/346] usb: gadget: f_fs: dont free buffer prematurely
+Date:   Wed, 29 May 2019 20:02:18 -0700
+Message-Id: <20190530030544.358131235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,40 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf612c5949aca2bd81a1e28688957c8149ea2693 ]
+[ Upstream commit 73103c7f958b99561555c3bd1bc1a0809e0b7d61 ]
 
-Manage the -EPROBE_DEFER error case for the wake IRQ.
+The following kernel panic happens due to the io_data buffer gets deallocated
+before the async io is completed. Add a check for the case where io_data buffer
+should be deallocated by ffs_user_copy_worker.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+[   41.672099] #PF error: [normal kernel read fault]
+[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
+[   41.683687] Oops: 0000 [#1] PREEMPT SMP
+[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
+[   41.705309] Workqueue: adb ffs_user_copy_worker
+[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.705331] Call Trace:
+[   41.705338]  vfree+0x50/0xb0
+[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
+[   41.705344]  process_one_work+0x19f/0x3e0
+[   41.705348]  worker_thread+0x3f/0x3b0
+[   41.829766]  kthread+0x12b/0x150
+[   41.833371]  ? process_one_work+0x3e0/0x3e0
+[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
+[   41.843695]  ret_from_fork+0x3a/0x50
+[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
+[   41.876880] CR2: 0000000000000048
+[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
+[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.985930] Kernel panic - not syncing: Fatal exception
+[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[   42.009525] Rebooting in 10 seconds..
+[   52.014376] ACPI MEMORY or I/O RESET_REG.
+
+Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+Signed-off-by: Fei Yang <fei.yang@intel.com>
+Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-stm32.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index c5908cfea2340..8e6c9b3bcc29a 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -788,11 +788,14 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 	ret = device_init_wakeup(&pdev->dev, true);
- 	if (rtc->data->has_wakeirq) {
- 		rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
--		if (rtc->wakeirq_alarm <= 0)
--			ret = rtc->wakeirq_alarm;
--		else
-+		if (rtc->wakeirq_alarm > 0) {
- 			ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
- 							    rtc->wakeirq_alarm);
-+		} else {
-+			ret = rtc->wakeirq_alarm;
-+			if (rtc->wakeirq_alarm == -EPROBE_DEFER)
-+				goto err;
-+		}
- 	}
- 	if (ret)
- 		dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 0f8d16de7a37f..768230795bb2a 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ error_mutex:
+ 	mutex_unlock(&epfile->mutex);
+ error:
+-	ffs_free_buffer(io_data);
++	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
++		ffs_free_buffer(io_data);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
