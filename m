@@ -2,96 +2,113 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446DCC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA5CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD4C25453
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C7F25481
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li64GW8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfE3JYa (ORCPT
+        id S1727412AbfE3JYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:24:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:17627 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbfE3JYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:24:30 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9FE9EAEEAA03EE4475B0;
-        Thu, 30 May 2019 17:24:27 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 30 May 2019
- 17:24:23 +0800
-Subject: Re: [PATCH] kernel/module: Fix mem leak in module_add_modinfo_attrs
-To:     <jeyu@kernel.org>, <gregkh@linuxfoundation.org>
-References: <20190515161212.28040-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <paulmck@linux.ibm.com>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <60ececa2-2741-c4e5-c028-35d95cbeb731@huawei.com>
-Date:   Thu, 30 May 2019 17:24:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 30 May 2019 05:24:53 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33768 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfE3JYw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:24:52 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g21so2330876plq.0;
+        Thu, 30 May 2019 02:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TSm5If1axkhBC10X4aY5pi8UcYtCt09qdX35aB2u9qg=;
+        b=li64GW8H/Ah9ummMZPe0UV7DeHLl81MSAqn6hmQWhVa7fZU6yQvi5/bq4u9Jn9wMpa
+         PEuA4XBpY7QV6+xUS+AJ1YX34wfX439gDnv+huhpnrXlUxutkpFolQnyS87ZAO1aGtBM
+         IbBW/8w8OKBoicfI0SryiJsGfBOtfVzW9E1dx56/uGN25l5Qv8S2iYeqJ6TPJToVawIY
+         0Z/8ELvdOBIiwfRlmTEnvf9y/2/nmLVQRYZOMsAkZCns0OVtaL/I/5Dk/PPq6Kz/g/Ay
+         /xNblYyz9ucpT0K9FZRcyHboUlJHN04oyHGU3qNMpcjwNErf9seS15pKohce/0ekSg5r
+         0+bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TSm5If1axkhBC10X4aY5pi8UcYtCt09qdX35aB2u9qg=;
+        b=qO/mQRosNZ3qBYQ0PVMeorYifpLjlG5kHqlISLXCI+9a8Iq2ElnXa+n6sZcWfGfb/g
+         YfbXZ1zS1B+svLTHlB6QUgaXMKzrJROhluLd5ZwbyqQJDAe4fTjYnrelGQVgmSatpKEN
+         CfbLT3dVTiBmcndAKBi2eLbwv0JgNEmdFT+rvlRAcmTIcDDl6+744sZjBAwBVcQyVivv
+         w7ot0dZzr2VY0tW3wvOyLROwT7f7hyw6RQPcBiFhYjb+oOwXQC9YMIv3fwSE26OZ68bS
+         vGCDv65BJc2GQY+2JOkL56s7MbmPAlJ1jptvD/4k+tnSP6VRkS6uEXmTsJoLt/pvEfNO
+         ZP/A==
+X-Gm-Message-State: APjAAAWlgLV5V0/tAiLDhNiJMgGva8ht5PQvHWi8yG/TJyTzSrf5ZEU6
+        x8H7Ld7AqImWPQ76hMBo/qw=
+X-Google-Smtp-Source: APXvYqwWpiD1XEzg5ZgrnUus/WfE9ll8IA/MMoH9m33b0L8Vx7WSs0yomD12CgzCoKsRLXkE7aQmYQ==
+X-Received: by 2002:a17:902:20e2:: with SMTP id v31mr2826387plg.138.1559208291700;
+        Thu, 30 May 2019 02:24:51 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id n2sm1822040pgp.27.2019.05.30.02.24.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 02:24:51 -0700 (PDT)
+Date:   Thu, 30 May 2019 17:24:26 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org,
+        ccross@android.com, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] hooks: fix a missing-check bug in selinux_add_mnt_opt()
+Message-ID: <20190530092426.GA3666@zhanggen-UX430UQ>
+References: <20190530080602.GA3600@zhanggen-UX430UQ>
+ <e92b727a-bf5f-669a-18d8-7518a248c04c@cogentembedded.com>
+ <20190530091848.GA3499@zhanggen-UX430UQ>
+ <236195a3-b607-5cf6-ac60-8c5ea2e95b41@cogentembedded.com>
 MIME-Version: 1.0
-In-Reply-To: <20190515161212.28040-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <236195a3-b607-5cf6-ac60-8c5ea2e95b41@cogentembedded.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping...
+On Thu, May 30, 2019 at 12:22:15PM +0300, Sergei Shtylyov wrote:
+> On 30.05.2019 12:18, Gen Zhang wrote:
+> 
+> >>On 30.05.2019 11:06, Gen Zhang wrote:
+> >>
+> >>>In selinux_add_mnt_opt(), 'val' is allcoted by kmemdup_nul(). It returns
+> >>
+> >>    Allocated?
+> 
+> >Thanks for your reply, Sergei. I used 'allocated' because kmemdup_nul()
+> >does some allocation in its implementation. And its docs descrips:
+> 
+>    Describes?
+> 
+> >"Return: newly allocated copy of @s with NUL-termination or %NULL in
+> >case of error". I think it is proper to use 'allocated' here. But it
+> >could be 'assigned', which is better, right?
+> 
+>    I was only trying to point out the typos in this word. :-)
+> 
+> >Thanks
+> >Gen
+> >>
+> >>>NULL when fails. So 'val' should be checked.
+> >>>
+> >>>Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> >>[...]
+> 
+> MBR, Sergei
+Well, my mistake. Thanks for your comments, Sergei!
 
-On 2019/5/16 0:12, YueHaibing wrote:
-> In module_add_modinfo_attrs if sysfs_create_file
-> fails, we forget to free allocated modinfo_attrs
-> and roll back the sysfs files.
-> 
-> Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  kernel/module.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 0b9aa8a..7da73c4 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -1714,15 +1714,29 @@ static int module_add_modinfo_attrs(struct module *mod)
->  		return -ENOMEM;
->  
->  	temp_attr = mod->modinfo_attrs;
-> -	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
-> +	for (i = 0; (attr = modinfo_attrs[i]); i++) {
->  		if (!attr->test || attr->test(mod)) {
->  			memcpy(temp_attr, attr, sizeof(*temp_attr));
->  			sysfs_attr_init(&temp_attr->attr);
->  			error = sysfs_create_file(&mod->mkobj.kobj,
->  					&temp_attr->attr);
-> +			if (error)
-> +				goto error_out;
->  			++temp_attr;
->  		}
->  	}
-> +
-> +	return 0;
-> +
-> +error_out:
-> +	for (; (attr = &mod->modinfo_attrs[i]) && i >= 0; i--) {
-> +		if (!attr->attr.name)
-> +			break;
-> +		sysfs_remove_file(&mod->mkobj.kobj, &attr->attr);
-> +		if (attr->free)
-> +			attr->free(mod);
-> +	}
-> +	kfree(mod->modinfo_attrs);
->  	return error;
->  }
->  
-> 
-
+Thanks
+Gen
