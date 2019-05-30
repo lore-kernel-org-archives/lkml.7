@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1C3C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D164FC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA22250ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B4F25115
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfE3EJY (ORCPT
+        id S1728873AbfE3EJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:09:24 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38809 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfE3EJU (ORCPT
+        Thu, 30 May 2019 00:09:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42476 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbfE3EJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 00:09:20 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f97so1979322plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 21:09:20 -0700 (PDT)
+        Thu, 30 May 2019 00:09:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r22so3047870pfh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 21:09:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=pgMA0Wfc76ibrLZDaqEAp0iESFpifKaHVOBOP4rz25s=;
-        b=GZXUQS6xnZMeSgYPU7yTlk08Z4KF1uhmo/2RKiQPBb2Fz7KiuPt1XmN/71KsZqygdr
-         7fOiTjrOOz9A2eN462PpqW55OX12N3UsLiZDKBWuU4lFjuinbzlBlVz87QrROT8EKvQO
-         NzlC3WnnlmR/FAWbCUvyqgeyQpk7Vx4yvMNb50Jduber6Mrc27YEhHJyz/3+cuUjhUpQ
-         y6WFe7RWuEa65bA4ywcvCd+SSAJR3WORR8UFWkb3mv8F6RNsCGaCAYIvfy+HznkRIdQE
-         ck86PSwm/comkAqjPua6vmyCj9dXEIVsFqdhJcfXLbE28hqM5XAowlcuBHK7yGiZsV+8
-         QNEg==
-X-Gm-Message-State: APjAAAVShlRHlAzJ5vNwPNKdxXi/HtL9bPh5+9YuMatqOYAUeHSPWwQ2
-        mady2IXSNrch74Hu6/XEcgqtyjbg6IV6jw==
-X-Google-Smtp-Source: APXvYqynAVNJiWMosj39mGO5m4j4CaYHyiDZKp97BOYFMAtBAQuLZMgN27bxN/yqwZ4YwNPWI+pRWQ==
-X-Received: by 2002:a17:902:a405:: with SMTP id p5mr1741551plq.51.1559189359758;
-        Wed, 29 May 2019 21:09:19 -0700 (PDT)
+        bh=RgBvtow3SG/L3onZEkvF3GT1l11iLnZpHBpHe6+yVVA=;
+        b=SigOXi6vok01p/DElvycZ2DP261VnH9DpaGGk5REMSbPepOBj/LeSAdm9gG4pxFx9V
+         jC1u4EERcEcCnkpuvcglK9mFxhW6N0rJBt35bk+IBoMxBOF6GKLVdveevIupSnPDiu+I
+         m8rphBeXiDsi9Cy5ZwyzT0Tr3XyS5Zl+7N2xolgvLEQvNFpT3mY0wvVt1eGJjZkXcAq+
+         mZT/hCC/DsBWWOxUqEEL5bWmhDgtqabJ1opGzpnVaiOJXcRLyBr2Juo/2xnj6oIKg00b
+         E4icAxQrF/eKxBMmU2TjJhcWCslBqk/eLNqc1444ZkEFgxB6zlNEkPtYGPpBdy+F/5VD
+         Gnkg==
+X-Gm-Message-State: APjAAAXLnYzE9bUdjLVYFrUX16m+UV4bJ15McXmj2VjpBMSuc83F1Oag
+        qyjxtqV7x0wpt2ch9vQLdIqHLA==
+X-Google-Smtp-Source: APXvYqxL7nHH1tWDIGiRjh1quoIV4ZyKReZOGaf2heGTQIPnVWf6k8qKr5CbyLKzE+36RS6bp4/Rng==
+X-Received: by 2002:aa7:8e46:: with SMTP id d6mr1664198pfr.91.1559189358490;
+        Wed, 29 May 2019 21:09:18 -0700 (PDT)
 Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id s80sm1464910pfs.117.2019.05.29.21.09.19
+        by smtp.gmail.com with ESMTPSA id v93sm1035350pjb.6.2019.05.29.21.09.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 21:09:19 -0700 (PDT)
-Date:   Wed, 29 May 2019 21:09:19 -0700 (PDT)
-X-Google-Original-Date: Wed, 29 May 2019 20:53:09 PDT (-0700)
-Subject:     Re: [PATCH RESEND 5/7] RISC-V: entry: Remove unneeded need_resched() loop
-In-Reply-To: <20190528104848.13160-6-valentin.schneider@arm.com>
-CC:     linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org
+        Wed, 29 May 2019 21:09:17 -0700 (PDT)
+Date:   Wed, 29 May 2019 21:09:17 -0700 (PDT)
+X-Google-Original-Date: Wed, 29 May 2019 20:42:12 PDT (-0700)
+Subject:     Re: [PATCH] riscv: Fix udelay in RV32.
+In-Reply-To: <381ee6950c84b868ca6a3c676eb981a1980889a3.1559035050.git.nickhu@andestech.com>
+CC:     greentime@andestech.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nickhu@andestech.com,
+        green.hu@gmail.com
 From:   Palmer Dabbelt <palmer@sifive.com>
-To:     valentin.schneider@arm.com
-Message-ID: <mhng-066fe6a6-4d0a-4286-bc01-faaf21ff2698@palmer-si-x1e>
+To:     nickhu@andestech.com
+Message-ID: <mhng-681a0d18-f477-4e76-ae16-b64fe7265ec4@palmer-si-x1e>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -59,40 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 May 2019 03:48:46 PDT (-0700), valentin.schneider@arm.com wrote:
-> Since the enabling and disabling of IRQs within preempt_schedule_irq()
-> is contained in a need_resched() loop, we don't need the outer arch
-> code loop.
+On Tue, 28 May 2019 02:26:49 PDT (-0700), nickhu@andestech.com wrote:
+> In RV32, udelay would delay the wrong cycle.
+> When it shifts right "UDELAY_SHITFT" bits, it
+> either delays 0 cycle or 1 cycle. It only works
+> correctly in RV64. Because the 'ucycles' always
+> needs to be 64 bits variable.
 >
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Nick Hu <nickhu@andestech.com>
 > ---
->  arch/riscv/kernel/entry.S | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/riscv/lib/delay.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 1c1ecc238cfa..d0b1b9660283 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -258,12 +258,11 @@ restore_all:
->  resume_kernel:
->  	REG_L s0, TASK_TI_PREEMPT_COUNT(tp)
->  	bnez s0, restore_all
-> -need_resched:
->  	REG_L s0, TASK_TI_FLAGS(tp)
->  	andi s0, s0, _TIF_NEED_RESCHED
->  	beqz s0, restore_all
->  	call preempt_schedule_irq
-> -	j need_resched
-> +	j restore_all
->  #endif
+> diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
+> index dce8ae24c6d3..da847f49fb74 100644
+> --- a/arch/riscv/lib/delay.c
+> +++ b/arch/riscv/lib/delay.c
+> @@ -88,7 +88,7 @@ EXPORT_SYMBOL(__delay);
 >
->  work_pending:
-
-Sorry I missed this the first time around.
+>  void udelay(unsigned long usecs)
+>  {
+> -	unsigned long ucycles = usecs * lpj_fine * UDELAY_MULT;
+> +	unsigned long long ucycles = (unsigned long long)usecs * lpj_fine * UDELAY_MULT;
+>
+>  	if (unlikely(usecs > MAX_UDELAY_US)) {
+>  		__delay((u64)usecs * riscv_timebase / 1000000ULL);
 
 Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-
-Do you want this through the RISC-V tree, or are you going to take it?
