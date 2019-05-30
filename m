@@ -2,118 +2,143 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F263BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567F7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F1425948
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A6625959
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfE3NIl (ORCPT
+        id S1726797AbfE3NMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:08:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38660 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfE3NIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:08:40 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8FD0B30C120A;
-        Thu, 30 May 2019 13:08:34 +0000 (UTC)
-Received: from x2.localnet (ovpn-122-132.rdu2.redhat.com [10.10.122.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 437A15F9BA;
-        Thu, 30 May 2019 13:08:25 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH ghak90 V6 00/10] audit: implement container identifier
-Date:   Thu, 30 May 2019 09:08:22 -0400
-Message-ID: <1674888.6UpDe63hFX@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhTQ0gDZoWUh1QB4b7h3AgbpkhS40jrPVpCfJb11GT_FzQ@mail.gmail.com>
-References: <cover.1554732921.git.rgb@redhat.com> <CAHC9VhQYPF2ma_W+hySbQtfTztf=K1LTFnxnyVK0y9VYxj-K=w@mail.gmail.com> <CAHC9VhTQ0gDZoWUh1QB4b7h3AgbpkhS40jrPVpCfJb11GT_FzQ@mail.gmail.com>
+        Thu, 30 May 2019 09:12:49 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35670 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbfE3NMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:12:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E194A78;
+        Thu, 30 May 2019 06:12:48 -0700 (PDT)
+Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C29753F59C;
+        Thu, 30 May 2019 06:12:43 -0700 (PDT)
+Date:   Thu, 30 May 2019 14:12:41 +0100
+From:   Morten Rasmussen <morten.rasmussen@arm.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-riscv@lists.infradead.org, Ingo Molnar <mingo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Anup Patel <anup@brainfault.org>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+Message-ID: <20190530131241.GB10919@e105550-lin.cambridge.arm.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-2-atish.patra@wdc.com>
+ <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
+ <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
+ <70639181-09d1-4644-f062-b19e06db7471@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 30 May 2019 13:08:40 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70639181-09d1-4644-f062-b19e06db7471@ti.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, May 29, 2019 6:26:12 PM EDT Paul Moore wrote:
-> On Mon, Apr 22, 2019 at 9:49 AM Paul Moore <paul@paul-moore.com> wrote:
-> > On Mon, Apr 22, 2019 at 7:38 AM Neil Horman <nhorman@tuxdriver.com> 
-wrote:
-> > > On Mon, Apr 08, 2019 at 11:39:07PM -0400, Richard Guy Briggs wrote:
-> > > > Implement kernel audit container identifier.
-> > > 
-> > > I'm sorry, I've lost track of this, where have we landed on it? Are we
-> > > good for inclusion?
-> > 
-> > I haven't finished going through this latest revision, but unless
-> > Richard made any significant changes outside of the feedback from the
-> > v5 patchset I'm guessing we are "close".
-> > 
-> > Based on discussions Richard and I had some time ago, I have always
-> > envisioned the plan as being get the kernel patchset, tests, docs
-> > ready (which Richard has been doing) and then run the actual
-> > implemented API by the userland container folks, e.g. cri-o/lxc/etc.,
-> > to make sure the actual implementation is sane from their perspective.
-> > They've already seen the design, so I'm not expecting any real
-> > surprises here, but sometimes opinions change when they have actual
-> > code in front of them to play with and review.
-> > 
-> > Beyond that, while the cri-o/lxc/etc. folks are looking it over,
-> > whatever additional testing we can do would be a big win.  I'm
-> > thinking I'll pull it into a separate branch in the audit tree
-> > (audit/working-container ?) and include that in my secnext kernels
-> > that I build/test on a regular basis; this is also a handy way to keep
-> > it based against the current audit/next branch.  If any changes are
-> > needed Richard can either chose to base those changes on audit/next or
-> > the separate audit container ID branch; that's up to him.  I've done
-> > this with other big changes in other trees, e.g. SELinux, and it has
-> > worked well to get some extra testing in and keep the patchset "merge
-> > ready" while others outside the subsystem look things over.
+On Thu, May 30, 2019 at 08:56:03AM -0400, Andrew F. Davis wrote:
+> On 5/30/19 7:51 AM, Morten Rasmussen wrote:
+> >On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
+> >>On 5/29/19 5:13 PM, Atish Patra wrote:
+> >>>From: Sudeep Holla <sudeep.holla@arm.com>
+> >>>
+> >>>The current ARM DT topology description provides the operating system
+> >>>with a topological view of the system that is based on leaf nodes
+> >>>representing either cores or threads (in an SMT system) and a
+> >>>hierarchical set of cluster nodes that creates a hierarchical topology
+> >>>view of how those cores and threads are grouped.
+> >>>
+> >>>However this hierarchical representation of clusters does not allow to
+> >>>describe what topology level actually represents the physical package or
+> >>>the socket boundary, which is a key piece of information to be used by
+> >>>an operating system to optimize resource allocation and scheduling.
+> >>>
+> >>
+> >>Are physical package descriptions really needed? What does "socket" imply
+> >>that a higher layer "cluster" node grouping does not? It doesn't imply a
+> >>different NUMA distance and the definition of "socket" is already not well
+> >>defined, is a dual chiplet processor not just a fancy dual "socket" or are
+> >>dual "sockets" on a server board "slotket" card, will we need new names for
+> >>those too..
+> >
+> >Socket (or package) just implies what you suggest, a grouping of CPUs
+> >based on the physical socket (or package). Some resources might be
+> >associated with packages and more importantly socket information is
+> >exposed to user-space. At the moment clusters are being exposed to
+> >user-space as sockets which is less than ideal for some topologies.
+> >
 > 
-> I just sent my feedback on the v6 patchset, and it's small: basically
-> three patches with "one-liner" changes needed.
+> I see the benefit of reporting the physical layout and packaging information
+> to user-space for tracking reasons, but from software perspective this
+> doesn't matter, and the resource partitioning should be described elsewhere
+> (NUMA nodes being the go to example).
+
+That would make defining a NUMA node mandatory even for non-NUMA
+systems?
+
+> >At the moment user-space is only told about hw threads, cores, and
+> >sockets. In the very near future it is going to be told about dies too
+> >(look for Len Brown's multi-die patch set).
+> >
 > 
-> Richard, it's your call on how you want to proceed from here.  You can
-> post a v7 incorporating the feedback, or since the tweaks are so
-> minor, you can post fixup patches; the former being more
-> comprehensive, the later being quicker to review and digest.
-> Regardless of that, while we are waiting on a prototype from the
-> container folks, I think it would be good to pull this into a working
-> branch in the audit repo (as mentioned above), unless you would prefer
-> to keep it as a patchset on the mailing list?
+> Seems my hypothetical case is already in the works :(
 
-Personally, I'd like to see this on a branch so that it's easier to build a 
-kernel locally for testing.
+Indeed. IIUC, the reasoning behind it is related to actual multi-die
+x86 packages and some rapl stuff being per-die or per-core.
 
--Steve
+> 
+> >I don't see how we can provide correct information to user-space based
+> >on the current information in DT. I'm not convinced it was a good idea
+> >to expose this information to user-space to begin with but that is
+> >another discussion.
+> >
+> 
+> Fair enough, it's a little late now to un-expose this info to userspace so
+> we should at least present it correctly. My worry was this getting out of
+> hand with layering, for instance what happens when we need to add die nodes
+> in-between cluster and socket?
 
+If we want the die mask to be correct for arm/arm64/riscv we need die
+information from somewhere. I'm not in favour of adding more topology
+layers to the user-space visible topology description, but others might
+have a valid reason and if it is exposed I would prefer if we try to
+expose the right information.
 
-> If you want to go with
-> the working branch approach, I'll keep the branch fresh and (re)based
-> against audit/next and if we notice any problems you can just submit
-> fixes against that branch (depending on the issue they can be fixup
-> patches, or proper patches).  My hope is that this will enable the
-> process to move quicker as we get near the finish line.
+Btw, for packages, we already have that information in ACPI/PPTT so it
+would be nice if we could have that for DT based systems too.
 
-
-
-
+Morten
