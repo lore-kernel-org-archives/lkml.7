@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0D0C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6909C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED0124B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A4424B64
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187364;
-	bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
+	s=default; t=1559187367;
+	bh=LAJXpkRKKZdaqI33F52nGjF/SAynE/Sw/WCxWOSgagw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QsLQqWqNdkqepfeDglEnwGNbzIDsUDegZWI6LlHcED4dQv6lxf09N0WSom9WxTBM1
-	 iEuE1kAmD2UPfT3sDmZv3/vIl9h4I3gmCA1i74C0CVmz6SKDyed2faUyGS79ou66xU
-	 wEr8GR/0Vt5tnT4yk21VHOvBGyRfvh6DBXxhDqT0=
+	b=L/40fd2Xl5gREBktklCH/qO5XV5InPvmykJXDd1jOrL1VtL9tjgBz5Qd2iPDI491W
+	 wyDzV1V2GQ44HArTKrEXQVSOpHu90vq/q8atDmi6v66SzxKtgkijkH1IPIeoY77NIi
+	 H4gLsSkzbcFAOiyCeLtmQryTX6DVknsao2I8sTu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387580AbfE3DZe (ORCPT
+        id S2387569AbfE3DZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:25:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbfE3DSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:31 -0400
+        id S1731570AbfE3DSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8559424790;
+        by mail.kernel.org (Postfix) with ESMTPSA id 23CAF247DB;
         Thu, 30 May 2019 03:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186310;
-        bh=08yPMXvX6Vggu36cK+hjFz+G6AYDSqGXrMEMxqNi2Ac=;
+        bh=LAJXpkRKKZdaqI33F52nGjF/SAynE/Sw/WCxWOSgagw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIaWTc/56qE4vXjzvprByRMOPxKCaAHkrR8WGQioRAIdB3fB1oWAkp/XMLI48ukSF
-         5CIUlyS6Q4blhPbRihcZj5OFqBu6s+dChMvjJDerAZaA3Ta6YXc1Fii9rRdE58/7HP
-         extZWm02Wfq8M4ollFIzIqzV8VOKj07eRwS1QQYA=
+        b=FkYyUDFQ77wtdX9aAz6vtYMYqn3youYGvf571OQeWuM5BWGIkbnJiip0W6NORZoH4
+         hs6f0itKcAxnqEZQP4aF7YEEAMbFJ5oQURS1y7Iv6tzXLy1YzADI4rkRoBDexbSPB7
+         eroUetU9qopdtJbYr77HQJaYysJp8CasTh/xRbbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 010/193] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
-Date:   Wed, 29 May 2019 20:04:24 -0700
-Message-Id: <20190530030448.838388806@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 001/193] x86: Hide the int3_emulate_call/jmp functions from UML
+Date:   Wed, 29 May 2019 20:04:15 -0700
+Message-Id: <20190530030447.114638092@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trac Hoang <trac.hoang@broadcom.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit ec0970e0a1b2c807c908d459641a9f9a1be3e130 upstream.
+commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
 
-The iproc host eMMC/SD controller hold time does not meet the
-specification in the HS50 mode.  This problem can be mitigated
-by disabling the HISPD bit; thus forcing the controller output
-data to be driven on the falling clock edges rather than the
-rising clock edges.
+User Mode Linux does not have access to the ip or sp fields of the pt_regs,
+and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
+and int3_emulate_call() instructions from UML, as it doesn't need them
+anyway.
 
-Stable tag (v4.12+) chosen to assist stable kernel maintainers so that
-the change does not produce merge conflicts backporting to older kernel
-versions. In reality, the timing bug existed since the driver was first
-introduced but there is no need for this driver to be supported in kernel
-versions that old.
-
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-iproc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/text-patching.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-iproc.c
-+++ b/drivers/mmc/host/sdhci-iproc.c
-@@ -209,7 +209,8 @@ static const struct sdhci_iproc_data ipr
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -38,6 +38,7 @@ extern void *text_poke(void *addr, const
+ extern int poke_int3_handler(struct pt_regs *regs);
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
  
- static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
- 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
--		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
-+		  SDHCI_QUIRK_NO_HISPD_BIT,
- 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
- 	.ops = &sdhci_iproc_ops,
- };
++#ifndef CONFIG_UML_X86
+ static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
+ {
+ 	regs->ip = ip;
+@@ -64,6 +65,7 @@ static inline void int3_emulate_call(str
+ 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
+ 	int3_emulate_jmp(regs, func);
+ }
+-#endif
++#endif /* CONFIG_X86_64 */
++#endif /* !CONFIG_UML_X86 */
+ 
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
 
 
