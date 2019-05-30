@@ -2,201 +2,155 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B1AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E28C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2228724EEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hZeQYIyv"
+	by mail.kernel.org (Postfix) with ESMTP id 1A05924EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfE3Uh0 (ORCPT
+        id S1726593AbfE3Uhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:37:26 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37490 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725961AbfE3UhZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:37:25 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4UKbOtm006139
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:37:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=r4Qpn8cnh88goheDtWDkPpFd0tMwCo7HBNs6UQb5yRU=;
- b=hZeQYIyveDN5K+aGapgdyS92iD0giXsPsWos+Dpt0ErkU1zzE6zCwbcSet46NybvghjP
- iBiNRAYxQ6qt6+vxxoT30TSUyWX+J2Ocxho8t5DAmXpxJ5VTgtsNgcbegdu7kjozOErn
- ItABEUKAoZBxJZI2JFc+LRqgILrDZyoKOGI= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2stj9ygxe0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:37:22 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 30 May 2019 13:36:56 -0700
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id 131DBE9149D2; Thu, 30 May 2019 13:36:55 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        Patrick Venture <venture@google.com>,
-        Vijay Khemka <vijaykhemka@fb.com>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <sdasari@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] soc: aspeed: lpc-ctrl: make parameter optional
-Date:   Thu, 30 May 2019 13:36:51 -0700
-Message-ID: <20190530203654.3860925-1-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 30 May 2019 16:37:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47968 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbfE3Uhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 16:37:32 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E6910FA8C6;
+        Thu, 30 May 2019 20:37:17 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F87A7E329;
+        Thu, 30 May 2019 20:37:04 +0000 (UTC)
+Date:   Thu, 30 May 2019 16:37:02 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V6 08/10] audit: add containerid filtering
+Message-ID: <20190530203702.fibsrazabbiifjvf@madcap2.tricolour.ca>
+References: <cover.1554732921.git.rgb@redhat.com>
+ <0785ee2644804f3ec6af1243cc0dcf89709c1fd4.1554732921.git.rgb@redhat.com>
+ <CAHC9VhRV-0LSEcRvPO1uXtKdpEQsaLZnBV3T=zcMTZPN5ugz5w@mail.gmail.com>
+ <20190530141951.iofimovrndap4npq@madcap2.tricolour.ca>
+ <CAHC9VhQhkzCtVOXhPL7BzaqvF0y+8gBQwhOo1EQDS2OUyZbV5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300146
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQhkzCtVOXhPL7BzaqvF0y+8gBQwhOo1EQDS2OUyZbV5g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 30 May 2019 20:37:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Making memory-region and flash as optional parameter in device
-tree if user needs to use these parameter through ioctl then
-need to define in devicetree.
+On 2019-05-30 10:34, Paul Moore wrote:
+> On Thu, May 30, 2019 at 10:20 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > On 2019-05-29 18:16, Paul Moore wrote:
+> > > On Mon, Apr 8, 2019 at 11:41 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > Implement audit container identifier filtering using the AUDIT_CONTID
+> > > > field name to send an 8-character string representing a u64 since the
+> > > > value field is only u32.
+> > > >
+> > > > Sending it as two u32 was considered, but gathering and comparing two
+> > > > fields was more complex.
+> > > >
+> > > > The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
+> > > >
+> > > > Please see the github audit kernel issue for the contid filter feature:
+> > > >   https://github.com/linux-audit/audit-kernel/issues/91
+> > > > Please see the github audit userspace issue for filter additions:
+> > > >   https://github.com/linux-audit/audit-userspace/issues/40
+> > > > Please see the github audit testsuiite issue for the test case:
+> > > >   https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > Please see the github audit wiki for the feature overview:
+> > > >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> > > > Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> > > > ---
+> > > >  include/linux/audit.h      |  1 +
+> > > >  include/uapi/linux/audit.h |  5 ++++-
+> > > >  kernel/audit.h             |  1 +
+> > > >  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  kernel/auditsc.c           |  4 ++++
+> > > >  5 files changed, 57 insertions(+), 1 deletion(-)
+> > >
+> > > ...
+> > >
+> > > > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> > > > index 63f8b3f26fab..407b5bb3b4c6 100644
+> > > > --- a/kernel/auditfilter.c
+> > > > +++ b/kernel/auditfilter.c
+> > > > @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
+> > > >         }
+> > > >  }
+> > > >
+> > > > +int audit_comparator64(u64 left, u32 op, u64 right)
+> > > > +{
+> > > > +       switch (op) {
+> > > > +       case Audit_equal:
+> > > > +               return (left == right);
+> > > > +       case Audit_not_equal:
+> > > > +               return (left != right);
+> > > > +       case Audit_lt:
+> > > > +               return (left < right);
+> > > > +       case Audit_le:
+> > > > +               return (left <= right);
+> > > > +       case Audit_gt:
+> > > > +               return (left > right);
+> > > > +       case Audit_ge:
+> > > > +               return (left >= right);
+> > > > +       case Audit_bitmask:
+> > > > +               return (left & right);
+> > > > +       case Audit_bittest:
+> > > > +               return ((left & right) == right);
+> > > > +       default:
+> > > > +               BUG();
+> > >
+> > > A little birdy mentioned the BUG() here as a potential issue and while
+> > > I had ignored it in earlier patches because this is likely a
+> > > cut-n-paste from another audit comparator function, I took a closer
+> > > look this time.  It appears as though we will never have an invalid op
+> > > value as audit_data_to_entry()/audit_to_op() ensure that the op value
+> > > is a a known good value.  Removing the BUG() from all the audit
+> > > comparators is a separate issue, but I think it would be good to
+> > > remove it from this newly added comparator; keeping it so that we
+> > > return "0" in the default case seems reasoanble.
+> >
+> > Fair enough.  That BUG(); can be removed.
+> 
+> Please send a fixup patch for this.
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/soc/aspeed/aspeed-lpc-ctrl.c | 58 +++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 22 deletions(-)
+The fixup patch is trivial.  The rebase to v5.2-rc1 audit/next had merge
+conflicts with four recent patchsets.  It may be simpler to submit a new
+patchset and look at a diff of the two sets.  I'm testing the rebase
+now.
 
-diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-index a024f8042259..aca13779764a 100644
---- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-+++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-@@ -68,6 +68,7 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		unsigned long param)
- {
- 	struct aspeed_lpc_ctrl *lpc_ctrl = file_aspeed_lpc_ctrl(file);
-+	struct device *dev = file->private_data;
- 	void __user *p = (void __user *)param;
- 	struct aspeed_lpc_ctrl_mapping map;
- 	u32 addr;
-@@ -90,6 +91,12 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		if (map.window_id != 0)
- 			return -EINVAL;
- 
-+		/* If memory-region is not described in device tree */
-+		if (!lpc_ctrl->mem_size) {
-+			dev_dbg(dev, "Didn't find reserved memory\n");
-+			return -ENXIO;
-+		}
-+
- 		map.size = lpc_ctrl->mem_size;
- 
- 		return copy_to_user(p, &map, sizeof(map)) ? -EFAULT : 0;
-@@ -126,9 +133,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 			return -EINVAL;
- 
- 		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
-+			if (!lpc_ctrl->pnor_size) {
-+				dev_dbg(dev, "Didn't find host pnor flash\n");
-+				return -ENXIO;
-+			}
- 			addr = lpc_ctrl->pnor_base;
- 			size = lpc_ctrl->pnor_size;
- 		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
-+			/* If memory-region is not described in device tree */
-+			if (!lpc_ctrl->mem_size) {
-+				dev_dbg(dev, "Didn't find reserved memory\n");
-+				return -ENXIO;
-+			}
- 			addr = lpc_ctrl->mem_base;
- 			size = lpc_ctrl->mem_size;
- 		} else {
-@@ -196,17 +212,17 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 	if (!lpc_ctrl)
- 		return -ENOMEM;
- 
-+	/* If flash is described in device tree then store */
- 	node = of_parse_phandle(dev->of_node, "flash", 0);
- 	if (!node) {
--		dev_err(dev, "Didn't find host pnor flash node\n");
--		return -ENODEV;
--	}
--
--	rc = of_address_to_resource(node, 1, &resm);
--	of_node_put(node);
--	if (rc) {
--		dev_err(dev, "Couldn't address to resource for flash\n");
--		return rc;
-+		dev_dbg(dev, "Didn't find host pnor flash node\n");
-+	} else {
-+		rc = of_address_to_resource(node, 1, &resm);
-+		of_node_put(node);
-+		if (rc) {
-+			dev_err(dev, "Couldn't address to resource for flash\n");
-+			return rc;
-+		}
- 	}
- 
- 	lpc_ctrl->pnor_size = resource_size(&resm);
-@@ -214,22 +230,22 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, lpc_ctrl);
- 
-+	/* If memory-region is described in device tree then store */
- 	node = of_parse_phandle(dev->of_node, "memory-region", 0);
- 	if (!node) {
--		dev_err(dev, "Didn't find reserved memory\n");
--		return -EINVAL;
--	}
-+		dev_dbg(dev, "Didn't find reserved memory\n");
-+	} else {
-+		rc = of_address_to_resource(node, 0, &resm);
-+		of_node_put(node);
-+		if (rc) {
-+			dev_err(dev, "Couldn't address to resource for reserved memory\n");
-+			return -ENXIO;
-+		}
- 
--	rc = of_address_to_resource(node, 0, &resm);
--	of_node_put(node);
--	if (rc) {
--		dev_err(dev, "Couldn't address to resource for reserved memory\n");
--		return -ENOMEM;
-+		lpc_ctrl->mem_size = resource_size(&resm);
-+		lpc_ctrl->mem_base = resm.start;
- 	}
- 
--	lpc_ctrl->mem_size = resource_size(&resm);
--	lpc_ctrl->mem_base = resm.start;
--
- 	lpc_ctrl->regmap = syscon_node_to_regmap(
- 			pdev->dev.parent->of_node);
- 	if (IS_ERR(lpc_ctrl->regmap)) {
-@@ -258,8 +274,6 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	dev_info(dev, "Loaded at %pr\n", &resm);
--
- 	return 0;
- 
- err:
--- 
-2.17.1
+> paul moore www.paul-moore.com
 
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
