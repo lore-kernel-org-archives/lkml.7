@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD00C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CABEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A37823C5A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA0523C5A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187195;
-	bh=+AqCDIM5UC3xb9nQVemPcQpfm/wHfY8NsDn9rFRZ2h0=;
+	s=default; t=1559187197;
+	bh=y0k9iqj8A4GuHqMLHdiiRWKOxCV0ojJjvEX1tuxDsY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3GH0i+oQ0gi//LlnZucJ1wLpAcaRGJxXEkjKFToZ1yA5jb+y4U5J9lfO3lughG3m
-	 T5/OyQO3S+WDD5Zh/ofSquekCxJgwj/3P8rtDSwOBHnId66CAD8RP9Tmv45nbEY+XR
-	 tVmcwLxtVPez0QdsPduyAO4zY3SaxJeqmzfKT1S0=
+	b=VNJnLRHsKmx8J+EiHWmx0pnwJZsd49GUz6KIYqu6RKjOrillQrSKejjPrtTrfVWYh
+	 MQqaVudWDfOM8OGn2XyQ+hdNiKW1fTH0cqbgz+ZwJB4NkNdN6rptOP2vbe1/Y294cD
+	 ocC91PfB6C2vx1vge5UYSsdWlz97bGRTJpo30I5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388236AbfE3D2u (ORCPT
+        id S2387584AbfE3D2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57984 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730532AbfE3DUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:16 -0400
+        id S1730776AbfE3DUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:15 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205DD24918;
-        Thu, 30 May 2019 03:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1898524820;
+        Thu, 30 May 2019 03:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186416;
-        bh=+AqCDIM5UC3xb9nQVemPcQpfm/wHfY8NsDn9rFRZ2h0=;
+        s=default; t=1559186415;
+        bh=y0k9iqj8A4GuHqMLHdiiRWKOxCV0ojJjvEX1tuxDsY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uu/LPoSu0p6tUpZBm4+cVXEMnOwRcaYYA2ZHn28a9w2RPUTJDxDlsf5Yopr6ZqBDG
-         ZS/IDKdluHxjh/GS2EbizHPebxb7xa6bCRyskyY36hYCGE0LcZIUSgckGEYhmmXllD
-         sVW5DG8mitWd3E83QtfAgYImGI7uO3L+2jlwo3sE=
+        b=QA3bGEqFgJl1radU1T9Bp5g1VpMD1kBTxN2kPWof++iURiZM48mFdoklyG8YXy5Cg
+         mBGC6nEjL0MWdieeZF3i5qvCFA4gK4hN3ctgW82m/BV4CfDe5rQHQaBvWjQ9I8KWD7
+         BzPwXi175/02J9QLlJgE76n9Sz1OAn+XEgIZJ5tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 189/193] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
-Date:   Wed, 29 May 2019 20:07:23 -0700
-Message-Id: <20190530030513.204147560@linuxfoundation.org>
+Subject: [PATCH 4.14 187/193] spi: rspi: Fix sequencer reset during initialization
+Date:   Wed, 29 May 2019 20:07:21 -0700
+Message-Id: <20190530030513.089499756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,47 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
+[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
+While the sequencer is reset after each SPI message since commit
+880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
+Transfers on QSPI"), it was never reset for the first message, thus
+relying on reset state or bootloader settings.
 
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
+Fix this by initializing it explicitly during configuration.
 
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
-
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/davinci/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-rspi.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index f395bbc7c3545..9aa741d272798 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -43,6 +43,7 @@
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 20981e08ee975..f4a797a9d76e9 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -279,7 +279,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets parity, interrupt mask */
+ 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
  
- #define MCASP_MAX_AFIFO_DEPTH	64
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
  
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -65,6 +66,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
- };
-+#endif
+@@ -323,7 +324,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
+ 	rspi_write8(rspi, 0x00, RSPI_SSLND);
+ 	rspi_write8(rspi, 0x00, RSPI_SPND);
  
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+@@ -374,7 +376,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets buffer to allow normal operation */
+ 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
+ 
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+ 	/* Enables SPI function in master mode */
 -- 
 2.20.1
 
