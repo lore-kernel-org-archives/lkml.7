@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06792C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421FFC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E76251A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19224251A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189522;
-	bh=Q7httw4GMtbhRVDmW0NF83OeHyB4FnlwhHmUY1vI1OM=;
+	s=default; t=1559189525;
+	bh=W3deDqBV973O01uZLmx5KBYNQkKfVaEZ3DxcfVjdSI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tciQmiLQJQSC3uU1L0Gpe+Ucz1yAxSYvUCjBmM9uCe0ddioYsxTI4gV+DGdBNPlrO
-	 GMNL86zhBiCFp+hs54hsNOQ5NfCRfbY3uCBoQxUv4E0zn+u3tNVC9RMUv5/iSeMRdy
-	 m3GgPmn7LecU3OBamqWUmMZeuiICnfh5UO1KFsqU=
+	b=VkLqbPQ7NzA9+pFhuj8J3eOzdIlJNCtMAytzQb+voiJ+zeKRyNCtkOKSr5wuPYanr
+	 cisIYRrXLlYLKEGcMGsFMF9/2rLYFrlH1ZuiGdGNOp6MaSYSEnaZgCURkVPkvau5tK
+	 /Ahs8KKe9y2aj9vw9dAgaFeFlxOo4mjY1YA0dy3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfE3EMB (ORCPT
+        id S1730354AbfE3EME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:12:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbfE3DQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730784AbfE3DQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:16:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F62C245AB;
-        Thu, 30 May 2019 03:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C801D24628;
+        Thu, 30 May 2019 03:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186204;
-        bh=Q7httw4GMtbhRVDmW0NF83OeHyB4FnlwhHmUY1vI1OM=;
+        s=default; t=1559186203;
+        bh=W3deDqBV973O01uZLmx5KBYNQkKfVaEZ3DxcfVjdSI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yuV1NHY6a8iOogoFm2Mn2CTnUqJKAgdkY9Ep/01WaUyAWanL6lC4/7XsFlWpf1UKS
-         sKan8BY1VMIhG+5wzXII18gFVydl1rZaUrktHGbJn/6hPpVmEkDbV2QnzGwsKhDuig
-         Jm2TfFTdmqMm39B3npW+WfX4Etu9ZroiWaQUEoIA=
+        b=lX7Ja1IKI+WR+qvtuTeKLWTFwpwsugk3xBxB0O9ZdXg9KuDQhHF4GEyLthGtyF61r
+         fmdSeXmRRUB+36c5K9asHSwDNRhLW4Ug+u5+UP77+rpjIvAvQGK0btClbcwnbGgX+9
+         zj4nZXxAGJPcVOoyPwydACVEnpSwVChDLKrZl//8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Mariusz Bialonczyk <manio@skyboo.net>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/276] s390: qeth: address type mismatch warning
-Date:   Wed, 29 May 2019 20:04:08 -0700
-Message-Id: <20190530030531.850004089@linuxfoundation.org>
+Subject: [PATCH 4.19 089/276] w1: fix the resume command API
+Date:   Wed, 29 May 2019 20:04:07 -0700
+Message-Id: <20190530030531.802190504@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -63,60 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
+[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
 
-clang produces a harmless warning for each use for the qeth_adp_supported
-macro:
+>From the DS2408 datasheet [1]:
+"Resume Command function checks the status of the RC flag and, if it is set,
+ directly transfers control to the control functions, similar to a Skip ROM
+ command. The only way to set the RC flag is through successfully executing
+ the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
+ command"
 
-drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
-      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
-        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
-            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
-        qeth_is_ipa_supported(&c->options.adp, f)
-        ~~~~~~~~~~~~~~~~~~~~~                  ^
+The function currently works perfectly fine in a multidrop bus, but when we
+have only a single slave connected, then only a Skip ROM is used and Match
+ROM is not called at all. This is leading to problems e.g. with single one
+DS2408 connected, as the Resume Command is not working properly and the
+device is responding with failing results after the Resume Command.
 
-Add a version of this macro that uses the correct types, and
-remove the unused qeth_adp_enabled() macro that has the same
-problem.
+This commit is fixing this by using a Skip ROM instead in those cases.
+The bandwidth / performance advantage is exactly the same.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Refs:
+[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/w1/w1_io.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 2d1f6a583641b..b2657582cfcfd 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -201,6 +201,12 @@ struct qeth_vnicc_info {
- 	bool rx_bcast_enabled;
- };
+diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
+index 0364d3329c526..3516ce6718d94 100644
+--- a/drivers/w1/w1_io.c
++++ b/drivers/w1/w1_io.c
+@@ -432,8 +432,7 @@ int w1_reset_resume_command(struct w1_master *dev)
+ 	if (w1_reset_bus(dev))
+ 		return -1;
  
-+static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
-+		enum qeth_ipa_setadp_cmd func)
-+{
-+	return (ipa->supported_funcs & func);
-+}
-+
- static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
- 		enum qeth_ipa_funcs func)
- {
-@@ -214,9 +220,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
+-	/* This will make only the last matched slave perform a skip ROM. */
+-	w1_write_8(dev, W1_RESUME_CMD);
++	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
+ 	return 0;
  }
- 
- #define qeth_adp_supported(c, f) \
--	qeth_is_ipa_supported(&c->options.adp, f)
--#define qeth_adp_enabled(c, f) \
--	qeth_is_ipa_enabled(&c->options.adp, f)
-+	qeth_is_adp_supported(&c->options.adp, f)
- #define qeth_is_supported(c, f) \
- 	qeth_is_ipa_supported(&c->options.ipa4, f)
- #define qeth_is_enabled(c, f) \
+ EXPORT_SYMBOL_GPL(w1_reset_resume_command);
 -- 
 2.20.1
 
