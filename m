@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F89AC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FC7C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590E925D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8247525CF4
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191798;
-	bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
+	s=default; t=1559191800;
+	bh=ttyaVWXUCIofDnZ8ANFP4mUX6Z1sdKzoLhquqTO014g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kinYw3hGU0/JDW31sto5h1NstltH5t/2BJQa9TxeADlGvSBsH0toqztNT57+pEXAY
-	 xStQ+QPBbsqr7xxZ4XHYrB//XAzGBUPaTg/ctzxW1bb/u0uyVDSxg3SQdhlwn3aNby
-	 zv4m9QPYWm0Lbqn074ZffTSSv7VNYlw4R7L03WAA=
+	b=FtOj0NLha9b8F8zoKSsDM9f1GaoE2U0INuHTRiXOrrx0BGKNuwxIjb7d3VPaFq4p9
+	 sa1QRDUPzd+x3PojFpaVr40kdWWnOFxAGxPtrNvlYdwd3nb/nGI7+jeAp1Ab8OcXt+
+	 GMmJYq3rZ9uSQMlRbAHhgTb6wNkIIvf3zrNRERr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388863AbfE3Et5 (ORCPT
+        id S1728378AbfE3DLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbfE3DLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727971AbfE3DKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:09 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7CBB244A0;
-        Thu, 30 May 2019 03:11:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 263982449C;
+        Thu, 30 May 2019 03:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185867;
-        bh=8keJriZsw9Y8ar9fdjBf2O42zokZWeaUYjGcDFk/UWA=;
+        s=default; t=1559185809;
+        bh=ttyaVWXUCIofDnZ8ANFP4mUX6Z1sdKzoLhquqTO014g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVrtnM9EOfn9ZAwdhrWNeXK3K1L/NxD/x43r5WThBxXsxYbqSfu9zL5tc6+WL0u3d
-         4FYrYzDo5x/UfqxKXIGs2n6YMRii0w6+7pjuwq1cvgfz8tzZB2qPesb4KpCS2/tWAs
-         exKFphSH7jAcOovF3VBMIytT92PK/Amn1ShZ19Qg=
+        b=QLcxpToUxWS8xnuIVHnYLpIJP6STlPoAx5uQg1ttnshE6X/RApGwV51hr48H3gxRZ
+         dtxEcV4uOES/ymgj/+KfqgRnrmy5TGDHlrNRb/5xa2c6XljR2ocjXqkmKjmlFRHGRC
+         WKB3+UYRxaDBj5Of8pGzWHIQNGPKiMcPyDEZDcuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 207/405] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
-Date:   Wed, 29 May 2019 20:03:25 -0700
-Message-Id: <20190530030551.606966990@linuxfoundation.org>
+Subject: [PATCH 5.1 051/405] IB/hfi1: Fix WQ_MEM_RECLAIM warning
+Date:   Wed, 29 May 2019 20:00:49 -0700
+Message-Id: <20190530030543.422716646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,45 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
+[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
 
-eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
-reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
-and 0xC(2^25 SD clock). The data timeout counter can count from
-2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
-counter counts for only 2^13 SD clocks.
-A-008358: The data timeout counter value loaded into the timeout
-counter is less than expected and can result into early timeout
-error in case of eSDHC data transactions. The table below shows
-the expected vs actual timeout period for different values of
-SYSCTL[DTOCV]:
-these two erratum has the same quirk to control it, and set
-SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
+The work_item cancels that occur when a QP is destroyed can elicit the
+following trace:
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+ workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
+ WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
+ Call Trace:
+  __flush_work.isra.29+0x8c/0x1a0
+  ? __switch_to_asm+0x40/0x70
+  __cancel_work_timer+0x103/0x190
+  ? schedule+0x32/0x80
+  iowait_cancel_work+0x15/0x30 [hfi1]
+  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
+  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
+  ? _cond_resched+0x15/0x30
+  ib_destroy_qp+0xe9/0x230 [ib_core]
+  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
+  process_one_work+0x171/0x370
+  worker_thread+0x49/0x3f0
+  kthread+0xf8/0x130
+  ? max_active_store+0x80/0x80
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x35/0x40
+
+Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
+
+The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
+entangled with memory reclaim, so this flag is appropriate.
+
+Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index 4fc4d2c7643c5..7e0eae8dafae0 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -1077,8 +1077,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
- 
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
- 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-+	}
- 
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+index faaaac8fbc553..3af5eb10a5ffb 100644
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -805,7 +805,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
+ 			ppd->hfi1_wq =
+ 				alloc_workqueue(
+ 				    "hfi%d_%d",
+-				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
++				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
++				    WQ_MEM_RECLAIM,
+ 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
+ 				    dd->unit, pidx);
+ 			if (!ppd->hfi1_wq)
 -- 
 2.20.1
 
