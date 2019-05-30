@@ -2,132 +2,155 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9BCC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA5AC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BEE25919
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6848925920
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 12:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="U3p0Rwbu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ddAoZJV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfE3M4Q (ORCPT
+        id S1726722AbfE3M4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 08:56:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34036 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3M4Q (ORCPT
+        Thu, 30 May 2019 08:56:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48380 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3M4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 08:56:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h1so6779227qtp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 05:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=m11j/gNOc1w/3oqxOsmN4bOzC/13TvTUCwPbj99AGq4=;
-        b=U3p0Rwbu3DOqRwv1KFoktsVBmhSaEGhbclQX96bGWiPXbTevw90DCpH9+C8OhcOg5c
-         R2T0jNdN85kqdEv5h294CX8GDP0nJTdflA2WkjQ6nQoCndHvsDebT5oRxUwQP2rkNm/N
-         cZlKArDW975ct+mpI/fb3R0ncTV3ePAs8qu6PBxwkZne1JhNKhw6Kr6oGHUKEDg4RTP4
-         vk+xQJw4z19QtHG5f3MRgfFR5p5ZQaRIVkb6fDP+djOPO3lrL+8Kh6ROez/+xtrEMvv6
-         ybBxxg6zuZvy7co5sNwvy03NtCoZ0CYjMaln3YfYQX9hrJEm0AfnV1dS4+1xyi9gKNgm
-         nyig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=m11j/gNOc1w/3oqxOsmN4bOzC/13TvTUCwPbj99AGq4=;
-        b=S3g89mHiju7qtqzX4bFaMzR84Q7SMkfwSWYWdObUNJUFULCf4h96MCkTauJT+qfCqy
-         f74I6aqYAK69y1qvB1l1DXwq8p5V5lZTa1xH16eEBDILRrZUW6W6uyM573yrpsgPEQDq
-         0qUxSRjpDEOZw+e+GtWBYWhE/58rvWOXax/t7S3NjfnNLHL8zRQGBABz2k0UVk9JY+By
-         UVwG70rN9b38Aic6T++KOf3B4CLvarteW9f/qWJMrdts3sxCBv3fzWeIc1rlLKXs6cae
-         S9QyVeKxnDrTvIgi86sm2sqt6673GOL7T34s4RA9U12IO18tlxHjcP6bCbnjbMKaRq1z
-         ljIA==
-X-Gm-Message-State: APjAAAW8AhEY5jGn0rWRzkT3tV34f6xx9sBbCG8cCt6xDFgaPyshqttZ
-        6UYs9tHE2cobuGRunCcguFL9qw==
-X-Google-Smtp-Source: APXvYqw/80cpKy1geLrXhFGd8uOHZgCtfnZyLJaTqr/FkVp7JyBWsQ16MRrRQMC9MgVB5/OPyuItfQ==
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr2011877qvo.173.1559220975275;
-        Thu, 30 May 2019 05:56:15 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 22sm1532601qto.92.2019.05.30.05.56.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 05:56:14 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     vitalywool@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/z3fold: fix variable set but not used warnings
-Date:   Thu, 30 May 2019 08:55:52 -0400
-Message-Id: <1559220952-21081-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 30 May 2019 08:56:47 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4UCu5DC038584;
+        Thu, 30 May 2019 07:56:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559220965;
+        bh=yfsOyzA/w0iHAo88Lim+9pYU3sP+lTVSj1gMoRm+IRc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ddAoZJV3O3SjnGH9+ATpox3dT93TWhxKCISRrbGLs9LFAbRLHysUrElN6YWYLT8QE
+         d8Q7Fh7/cXQj9fMmUMZWZ+4Uzr2PLcvs60tHreblxsFmBWdfc88CcdNMTAqqPz+ifd
+         +udj9djsPUutSwb+jbCQ+7rKnozfTLt8EKp4wIIQ=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4UCu5Kg096915
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 May 2019 07:56:05 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 30
+ May 2019 07:56:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 30 May 2019 07:56:05 -0500
+Received: from [10.250.93.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4UCu3Dt070901;
+        Thu, 30 May 2019 07:56:03 -0500
+Subject: Re: [PATCH v6 1/7] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+To:     Morten Rasmussen <morten.rasmussen@arm.com>
+CC:     Atish Patra <atish.patra@wdc.com>, <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-2-atish.patra@wdc.com>
+ <49f41e62-5354-a674-d95f-5f63851a0ca6@ti.com>
+ <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <70639181-09d1-4644-f062-b19e06db7471@ti.com>
+Date:   Thu, 30 May 2019 08:56:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190530115103.GA10919@e105550-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit f41a586ddc2d ("z3fold: add inter-page compaction")
-introduced a few new compilation warnings.
+On 5/30/19 7:51 AM, Morten Rasmussen wrote:
+> On Wed, May 29, 2019 at 07:39:17PM -0400, Andrew F. Davis wrote:
+>> On 5/29/19 5:13 PM, Atish Patra wrote:
+>>> From: Sudeep Holla <sudeep.holla@arm.com>
+>>>
+>>> The current ARM DT topology description provides the operating system
+>>> with a topological view of the system that is based on leaf nodes
+>>> representing either cores or threads (in an SMT system) and a
+>>> hierarchical set of cluster nodes that creates a hierarchical topology
+>>> view of how those cores and threads are grouped.
+>>>
+>>> However this hierarchical representation of clusters does not allow to
+>>> describe what topology level actually represents the physical package or
+>>> the socket boundary, which is a key piece of information to be used by
+>>> an operating system to optimize resource allocation and scheduling.
+>>>
+>>
+>> Are physical package descriptions really needed? What does "socket" imply
+>> that a higher layer "cluster" node grouping does not? It doesn't imply a
+>> different NUMA distance and the definition of "socket" is already not well
+>> defined, is a dual chiplet processor not just a fancy dual "socket" or are
+>> dual "sockets" on a server board "slotket" card, will we need new names for
+>> those too..
+> 
+> Socket (or package) just implies what you suggest, a grouping of CPUs
+> based on the physical socket (or package). Some resources might be
+> associated with packages and more importantly socket information is
+> exposed to user-space. At the moment clusters are being exposed to
+> user-space as sockets which is less than ideal for some topologies.
+> 
 
-mm/z3fold.c: In function 'compact_single_buddy':
-mm/z3fold.c:781:16: warning: variable 'newpage' set but not used
-[-Wunused-but-set-variable]
-mm/z3fold.c:752:13: warning: variable 'bud' set but not used
-[-Wunused-but-set-variable]
+I see the benefit of reporting the physical layout and packaging 
+information to user-space for tracking reasons, but from software 
+perspective this doesn't matter, and the resource partitioning should be 
+described elsewhere (NUMA nodes being the go to example).
 
-It does not seem those variables are actually used, so just remove them.
+> At the moment user-space is only told about hw threads, cores, and
+> sockets. In the very near future it is going to be told about dies too
+> (look for Len Brown's multi-die patch set).
+> 
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/z3fold.c | 6 ------
- 1 file changed, 6 deletions(-)
+Seems my hypothetical case is already in the works :(
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 2bc3dbde6255..67c29101ffc5 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -749,7 +749,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
- 	void *p = zhdr;
- 	unsigned long old_handle = 0;
--	enum buddy bud;
- 	size_t sz = 0;
- 	struct z3fold_header *new_zhdr = NULL;
- 	int first_idx = __idx(zhdr, FIRST);
-@@ -761,24 +760,20 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 	 * the page lock is already taken
- 	 */
- 	if (zhdr->first_chunks && zhdr->slots->slot[first_idx]) {
--		bud = FIRST;
- 		p += ZHDR_SIZE_ALIGNED;
- 		sz = zhdr->first_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[first_idx];
- 	} else if (zhdr->middle_chunks && zhdr->slots->slot[middle_idx]) {
--		bud = MIDDLE;
- 		p += zhdr->start_middle << CHUNK_SHIFT;
- 		sz = zhdr->middle_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[middle_idx];
- 	} else if (zhdr->last_chunks && zhdr->slots->slot[last_idx]) {
--		bud = LAST;
- 		p += PAGE_SIZE - (zhdr->last_chunks << CHUNK_SHIFT);
- 		sz = zhdr->last_chunks << CHUNK_SHIFT;
- 		old_handle = (unsigned long)&zhdr->slots->slot[last_idx];
- 	}
- 
- 	if (sz > 0) {
--		struct page *newpage;
- 		enum buddy new_bud = HEADLESS;
- 		short chunks = size_to_chunks(sz);
- 		void *q;
-@@ -787,7 +782,6 @@ static struct z3fold_header *compact_single_buddy(struct z3fold_header *zhdr)
- 		if (!new_zhdr)
- 			return NULL;
- 
--		newpage = virt_to_page(new_zhdr);
- 		if (WARN_ON(new_zhdr == zhdr))
- 			goto out_fail;
- 
--- 
-1.8.3.1
+> I don't see how we can provide correct information to user-space based
+> on the current information in DT. I'm not convinced it was a good idea
+> to expose this information to user-space to begin with but that is
+> another discussion.
+> 
 
+Fair enough, it's a little late now to un-expose this info to userspace 
+so we should at least present it correctly. My worry was this getting 
+out of hand with layering, for instance what happens when we need to add 
+die nodes in-between cluster and socket?
+
+Andrew
+
+> Morten
+> 
