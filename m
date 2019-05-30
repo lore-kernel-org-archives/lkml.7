@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22353C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9B224B3E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B545E24B3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187218;
-	bh=1l+uLQ5PpwC1pRKuZh+AeJdYqL965Z1CZfsnWZkPdWs=;
+	s=default; t=1559187222;
+	bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGtcTjC2rDYGSmRNNEc/rTghEwfxlZQwTMP1tkIjXj7k+lEIm36pF6VZsq1pc+BSZ
-	 pA7csSgvDMx1UIKthJHCTqV1iOsBht3Vwp94g+4lclS4ddRzAiOscn1p4U3kFD906/
-	 cI3H4k2VQwogWDi+cwQ22MMRYz9nr72v73Cbz4Uw=
+	b=YAI/KMhS9UBDoU8svo3h2nY94/Jfwcw8LaVWzThH+uiFtgXf0J+FImJBjVNB7hKoD
+	 TP+kGHMebwVfuwXNUaK23WlL8Qs7hqHYjuJTd07Mj4zoxrDDr+rO3vE33sNVkXeO6V
+	 7Dyql2mjbYLGp5oABtdFLfGDN6yS6qj316tT2ICU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbfE3D2V (ORCPT
+        id S2388136AbfE3D2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57060 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732060AbfE3DTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:53 -0400
+        id S1732046AbfE3DTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:19:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1E55248DD;
-        Thu, 30 May 2019 03:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91FC248E0;
+        Thu, 30 May 2019 03:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186393;
-        bh=1l+uLQ5PpwC1pRKuZh+AeJdYqL965Z1CZfsnWZkPdWs=;
+        s=default; t=1559186390;
+        bh=DVF2BsjhTgYxFfpTkGy6e03bpwNSrsgVjaDEudMpCwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IitRkRem5Os5XyY1T8oxfBGN4c9wL9gXrQMfVKuhHFfsPcvncAeaVd5n/jVeKGC3p
-         FQoaHlcDxVqtsAfJ0n9/wL+jtLCsP2AZgyfgbtySpOoXM0mytm5QNR7cLUgnl1cJjP
-         0GKddm5vvcF6UyJXRItLxYXpBvAWA8lQ4Mgt9C5o=
+        b=nVm4ZFYKf3v0AHXbFiS6QIt+wJrXsLRfIv7nM2Py2q5di2ooNvR7z5hGnD9uoYXd5
+         1fIsoUvIE9XeIkkDRBFI/zRM25ytotk4p5gjQGwCIBcJiaq4Wwexemuis173bn3cx1
+         kcoyHXmlC/XNOLFGr8yqSBR68/x+CCaZUKIRVvQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 165/193] media: wl128x: prevent two potential buffer overflows
-Date:   Wed, 29 May 2019 20:06:59 -0700
-Message-Id: <20190530030511.012969660@linuxfoundation.org>
+Subject: [PATCH 4.14 160/193] cxgb3/l2t: Fix undefined behaviour
+Date:   Wed, 29 May 2019 20:06:54 -0700
+Message-Id: <20190530030510.392048626@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -61,60 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c2ccc324b3a6cbc865ab8b3e1a09e93d3c8ade9 ]
+[ Upstream commit 76497732932f15e7323dc805e8ea8dc11bb587cf ]
 
-Smatch marks skb->data as untrusted so it warns that "evt_hdr->dlen"
-can copy up to 255 bytes and we only have room for two bytes.  Even
-if this comes from the firmware and we trust it, the new policy
-generally is just to fix it as kernel hardenning.
+The use of zero-sized array causes undefined behaviour when it is not
+the last member in a structure. As it happens to be in this case.
 
-I can't test this code so I tried to be very conservative.  I considered
-not allowing "evt_hdr->dlen == 1" because it doesn't initialize the
-whole variable but in the end I decided to allow it and manually
-initialized "asic_id" and "asic_ver" to zero.
+Also, the current code makes use of a language extension to the C90
+standard, but the preferred mechanism to declare variable-length
+types such as this one is a flexible array member, introduced in
+C99:
 
-Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last. Which is beneficial
+to cultivate a high-quality code.
+
+Fixes: e48f129c2f20 ("[SCSI] cxgb3i: convert cdev->l2opt to use rcu to prevent NULL dereference")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
-index ab3428bf63fee..26895ae42fcf4 100644
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -489,7 +489,8 @@ int fmc_send_cmd(struct fmdev *fmdev, u8 fm_op, u16 type, void *payload,
- 		return -EIO;
- 	}
- 	/* Send response data to caller */
--	if (response != NULL && response_len != NULL && evt_hdr->dlen) {
-+	if (response != NULL && response_len != NULL && evt_hdr->dlen &&
-+	    evt_hdr->dlen <= payload_len) {
- 		/* Skip header info and copy only response data */
- 		skb_pull(skb, sizeof(struct fm_event_msg_hdr));
- 		memcpy(response, skb->data, evt_hdr->dlen);
-@@ -583,6 +584,8 @@ static void fm_irq_handle_flag_getcmd_resp(struct fmdev *fmdev)
- 		return;
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+index c2fd323c40782..ea75f275023ff 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+@@ -75,8 +75,8 @@ struct l2t_data {
+ 	struct l2t_entry *rover;	/* starting point for next allocation */
+ 	atomic_t nfree;		/* number of free entries */
+ 	rwlock_t lock;
+-	struct l2t_entry l2tab[0];
+ 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
++	struct l2t_entry l2tab[];
+ };
  
- 	fm_evt_hdr = (void *)skb->data;
-+	if (fm_evt_hdr->dlen > sizeof(fmdev->irq_info.flag))
-+		return;
- 
- 	/* Skip header info and copy only response data */
- 	skb_pull(skb, sizeof(struct fm_event_msg_hdr));
-@@ -1308,7 +1311,7 @@ static int load_default_rx_configuration(struct fmdev *fmdev)
- static int fm_power_up(struct fmdev *fmdev, u8 mode)
- {
- 	u16 payload;
--	__be16 asic_id, asic_ver;
-+	__be16 asic_id = 0, asic_ver = 0;
- 	int resp_len, ret;
- 	u8 fw_name[50];
- 
+ typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
 -- 
 2.20.1
 
