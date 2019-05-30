@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6015C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02797C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8732457F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CEB24563
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186124;
-	bh=64YVpBKbQ6cl3JEdzie9z2NZtDnvSDmVNbTanJeWREI=;
+	s=default; t=1559186130;
+	bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q2Yd+xo4P9cpWjPNq8c4rIFfRqPh9Yo88maa1KLugdKJCDEoeZKzLfeJRAfBkBaUv
-	 VbfYa14JFRHviblYvvvjjE93Swr+93bvinazoGQvl61ovm6eOckpdWolDGCxccKKrx
-	 BeRBdS6xFq3cwsqw6Oo77gqQ9tu6XUwHri/u+wFc=
+	b=ehdYwYvc9T1n6EVKCECl2aKvjfI6brJEhRBN6BgDGyro4KJhHZGG/Tnv4H/0MhH23
+	 0UWlIVquH8AK3qWsw0uJGoSlO98VhwJDNQlQIEcHujUTaQUjUp5YdZPAFBhJWxLr5Q
+	 s6sGiPGUH7kPWoKaDr3nRQMONmU5Ngcow6V3Wxro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfE3DPY (ORCPT
+        id S1730321AbfE3DPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbfE3DMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:47 -0400
+        id S1729282AbfE3DMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17CBE21BE2;
-        Thu, 30 May 2019 03:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2D521BE2;
+        Thu, 30 May 2019 03:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185967;
-        bh=64YVpBKbQ6cl3JEdzie9z2NZtDnvSDmVNbTanJeWREI=;
+        s=default; t=1559185972;
+        bh=2HFrA1Syu5LHtOeNK0QxU2MnJ/8ZxGAovQXoZHNkB6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zvj2VTacL34Xst7InSkxE/21qHNRSXh82Nk9yDMmMwIU+PHJrNw/OKKT3uRoH5yMA
-         yJXYEPuSiYp8w8bHsZgcQdJv8h94HRYFQNXm2cWjaCiEmeVRfbCDSVbP7T1XJTG42J
-         ycIH12ygEpQKd/CNrJ48LR9EN1O4aGiXe8TfxXjc=
+        b=sErnmPBZiHV+R/GWr2NwDccq2eupqocwlMiU40S6H0LK3NHM8xliNZ5pPvuwBW4qx
+         DNbHRFM3UweZ7eF/O+cE/+GUMvcveWkZe8IXCuOzVgWq51sFsRfscJlss6Z9mtfE7u
+         HEZNr3QbS3ky2BWRjoJgSR6pY82hL6VsHRPT7eKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 396/405] drm/amd/display: Reset planes that were disabled in init_pipes
-Date:   Wed, 29 May 2019 20:06:34 -0700
-Message-Id: <20190530030600.624638663@linuxfoundation.org>
+Subject: [PATCH 5.1 405/405] NFS: Fix a double unlock from nfs_match,get_client
+Date:   Wed, 29 May 2019 20:06:43 -0700
+Message-Id: <20190530030601.022642520@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -64,70 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4bc46da4a3aeeb4d55e83dd276cf72756e908286 ]
+[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
 
-[Why]
-Seamless boot tries to reuse planes that were enabled for the first
-commit applied.
+Now that nfs_match_client drops the nfs_client_lock, we should be
+careful
+to always return it in the same condition: locked.
 
-In the case where Raven is booting with two monitors connected and the
-first commit contains two streams the screen corruption would occur
-because the second stream was trying to re-use a tg and plane that
-weren't previously enabled.
-
-The state on the first commit looks something like the following:
-
-TG0: enabled=1
-TG1: enabled=0
-TG2: enabled=0
-TG3: enabled=0
-
-New state: pipe=0, stream=0,    plane=0,       new_tg=0
-New state: pipe=1, stream=1,    plane=1,       new_tg=1
-New state: pipe=2, stream=NULL, plane=NULL,    new_tg=NULL
-New state: pipe=3, stream=NULL, plane=NULL,    new_tg=NULL
-
-Only one plane/tg is setup before we enter accelerated mode so
-we really want to disabling everything but that first plane.
-
-[How]
-
-Check if the stream is not NULL and if the tg is enabled before
-deciding whether to skip the plane disable.
-
-Also ensure we're also disabling on the current state's pipe_ctx so
-we don't overwrite the fields in the new pending state.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Harry Wentland <Harry.Wentland@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
+Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/nfs/client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 401ea9561618e..5b551a544e82d 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1008,9 +1008,14 @@ static void dcn10_init_pipes(struct dc *dc, struct dc_state *context)
- 		 * to non-preferred front end. If pipe_ctx->stream is not NULL,
- 		 * we will use the pipe, so don't disable
- 		 */
--		if (pipe_ctx->stream != NULL)
-+		if (pipe_ctx->stream != NULL &&
-+		    pipe_ctx->stream_res.tg->funcs->is_tg_enabled(
-+			    pipe_ctx->stream_res.tg))
- 			continue;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 350cfa561e0e8..dfb796eab9121 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -299,9 +299,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 			spin_unlock(&nn->nfs_client_lock);
+ 			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			spin_lock(&nn->nfs_client_lock);
+ 			if (error < 0)
+ 				return ERR_PTR(error);
+-			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
  
-+		/* Disable on the current state so the new one isn't cleared. */
-+		pipe_ctx = &dc->current_state->res_ctx.pipe_ctx[i];
-+
- 		dpp->funcs->dpp_reset(dpp);
- 
- 		pipe_ctx->stream_res.tg = tg;
 -- 
 2.20.1
 
