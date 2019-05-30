@@ -2,51 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829BDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3404AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5128D25743
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A82125721
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190835;
-	bh=bSW/zRakr983HeDe9R0FmG/hQdxqR93bcJ1wDX6JWcM=;
+	s=default; t=1559190841;
+	bh=aFulq45jcbmOE+rmTiPFUcS+ut7sv6MMNvhjK8ujpNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N67ybENnk9iZnPYUgfR5/17ms13LMcI/hb/w+Tzj7spGdDSZjDpHT2NRIF0SoeJzr
-	 qG6ExYXm8TAg/SLez3ZNLeP5+AIYcsH5IsvTVxYEsGGjdHoPEpWlLKvDBjMFvR5QUb
-	 kFpqPkZn8DAWkv+L6OjFWkrbnOBAHvBQlGGN9iv0=
+	b=Q7JYb4IRWFXb24/F4pf0nzX+qievDX+VYTF7m4lPmzSG3nHk7GjtvMs9eArtDGCnJ
+	 rojptuFmNWbyVeTekLCCA7LW0eHEe9joDV8an+fCSFoSqK4MNsDqARK0UVF8VQI4+w
+	 /s2KrpXKDZ5fFgfoRt61/n/bgIrfDvEqV4DI06Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfE3Edy (ORCPT
+        id S2388209AbfE3EeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729465AbfE3DN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:28 -0400
+        id S1729455AbfE3DN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C28124544;
-        Thu, 30 May 2019 03:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D32A2449A;
+        Thu, 30 May 2019 03:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186007;
-        bh=bSW/zRakr983HeDe9R0FmG/hQdxqR93bcJ1wDX6JWcM=;
+        s=default; t=1559186006;
+        bh=aFulq45jcbmOE+rmTiPFUcS+ut7sv6MMNvhjK8ujpNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ccJCcSFlMWwswZRM168gicN8SKln76Fe0HLlmeDexyrfkfre/xkz1qDZ3t8CXrvi9
-         PuztnAm7qU9K1MDdiQ/tMA4/4xPbr8XvkgejzMa3GA82wTSY0kjPdm7vv8JThHUP6D
-         trCEdE4w2mIxE+fN/nJ/nmQzMTcLE+Lz4SyMd9dQ=
+        b=HtbDNkmAQCrugU/l6NLmCTXa1j5t7XV8zfwq3byiHkJUGtx+4VKJVgKGWO3I/1Vy3
+         +NCSudbGRMjyLWF7pu9c0UmxLZ+n4c2jWWO7N1cqmukS1zvXvjOXHXceZr9p4e45Fg
+         rjs6v/EgQtdtTOtbNxgDVPc8dBLrFeepzrnSW0Po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 021/346] btrfs: sysfs: Fix error path kobject memory leak
-Date:   Wed, 29 May 2019 20:01:34 -0700
-Message-Id: <20190530030541.780803446@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 061/346] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:02:14 -0700
+Message-Id: <20190530030544.157167473@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -59,42 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+[ Upstream commit 02d15f0d80720545f1f4922a1550ea4aaad4e152 ]
 
-commit 450ff8348808a89cc27436771aa05c2b90c0eef1 upstream.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-If a call to kobject_init_and_add() fails we must call kobject_put()
-otherwise we leak memory.
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
 
-Calling kobject_put() when kobject_init_and_add() fails drops the
-refcount back to 0 and calls the ktype release method (which in turn
-calls the percpu destroy and kfree).
-
-Add call to kobject_put() in the error path of call to
-kobject_init_and_add().
-
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/zte/pinctrl-zx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -3985,8 +3985,7 @@ static int create_space_info(struct btrf
- 				    info->space_info_kobj, "%s",
- 				    alloc_name(space_info->flags));
- 	if (ret) {
--		percpu_counter_destroy(&space_info->total_bytes_pinned);
--		kfree(space_info);
-+		kobject_put(&space_info->kobj);
- 		return ret;
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index caa44dd2880a8..3cb69309912ba 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
  	}
  
+ 	zpctl->aux_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!zpctl->aux_base)
+ 		return -ENOMEM;
+ 
+-- 
+2.20.1
+
 
 
