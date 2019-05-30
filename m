@@ -2,108 +2,72 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E2C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6168C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42B025866
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:36:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEU1+Nez"
+	by mail.kernel.org (Postfix) with ESMTP id 959DA25853
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfE3Lgn (ORCPT
+        id S1726958AbfE3Lhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:36:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41109 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfE3Lgm (ORCPT
+        Thu, 30 May 2019 07:37:48 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39561 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726065AbfE3Lhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:36:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 136so4750029lfa.8;
-        Thu, 30 May 2019 04:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oEF/ywkpwzyXdp32mRceU7ioagbppOL/tUNLr/bCKp8=;
-        b=QEU1+NezxGHtIr28TVARywmZg9hUS3PGpriHim+cVtRwL/W2XtNppYGgfYoMHF72zJ
-         h3LOJqrQMP770oWHxrfVYn2RmwqNe/N6stwVIf58U3m1Lu7S1SBIcBdhZlPE6faZbKXZ
-         LwEBeHn/nMpfA/3cuPklxecot2loPcfSMJlXSSj/kE73Jc+i3uJhA7+2jLXKd5zrm3YM
-         ckUeT9huzoAnDSyUyT2RrJhnUUWNk29CbhwE7XuWWuD/fvU+90gtmY6O8GWOfw9eOFTh
-         0M9a7Hv97z4xfD8NrjYx4cu3W1YQTLCTOYmYM/Cid8bPv/Oetxscp4mxx4Y9kqv/Kgm8
-         lEsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oEF/ywkpwzyXdp32mRceU7ioagbppOL/tUNLr/bCKp8=;
-        b=W4qy+RAQn8iwgwzNSsr5kpKuZPzS5RAIrrMoSAQgQ2SKOnVt0Co9AiYw1XpH1ds4Cc
-         YuUNelpKvdlmJiFcaF9/cHG7camBRpPzoMQ+Zu22SQw45QWu8tMOQ1PNkVsKRKbXltzD
-         oFl+FrIn0UvLfuRH9r+zHYVwGeKwmj8PtNGRRSlmzSxAcCuL9XC/R4KM6I28qOjFyPq3
-         SWjhIxtpYSsG7OIUq+5qjCtrFiGX7cc1vGFeoEuOUzklYvkSWQLHhFZYYqAf3t9MoMMd
-         QdUa7qkkJ3lsKLeHc4xP5gAFH9Aig0o81NTRr1glOpCDLqosGbC86XTLFGG6tgIYAwHM
-         tkfA==
-X-Gm-Message-State: APjAAAXGtMQdqXNKc4uQ5ToAYjEqL5/ijhnRmKGKN3zTESC0U5WRAdvb
-        53UMvCOzmFGkZOgCVjp28QzNRKUj
-X-Google-Smtp-Source: APXvYqxVnboaMVCWDp5xI2htvEZX2PPYC8bvapApOlk4UlewjeaslCV/Rmb5lhl1/WrzSjVrW3pprQ==
-X-Received: by 2002:ac2:5310:: with SMTP id c16mr1850010lfh.119.1559216200941;
-        Thu, 30 May 2019 04:36:40 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id l25sm444919lfk.57.2019.05.30.04.36.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 04:36:40 -0700 (PDT)
-Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
-Date:   Thu, 30 May 2019 14:36:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 30 May 2019 07:37:48 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-68-XcXpo9w1PbC4Usz7fk1Iyw-1; Thu, 30 May 2019 12:37:43 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 30 May 2019 12:37:42 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 30 May 2019 12:37:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alexey Dobriyan' <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] add typeof_member() macro
+Thread-Topic: [PATCH 1/2] add typeof_member() macro
+Thread-Index: AQHVFlHCTxfMtSMsnEGvjLdiCN8dJ6aDiwCw
+Date:   Thu, 30 May 2019 11:37:42 +0000
+Message-ID: <a32bb1376821422fa3c647c01f3f1a95@AcuMS.aculab.com>
+References: <20190529190720.GA5703@avx2>
+In-Reply-To: <20190529190720.GA5703@avx2>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: XcXpo9w1PbC4Usz7fk1Iyw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.05.2019 9:14, Bitan Biswas пишет:
-> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
-> except for BUG/BUG_ON checks
+RnJvbTogQWxleGV5IERvYnJpeWFuDQo+IFNlbnQ6IDI5IE1heSAyMDE5IDIwOjA3DQo+IA0KPiBB
+ZGQgdHlwZW9mX21lbWJlcigpIG1hY3JvIHNvIHRoYXQgdHlwZXMgY2FuIGJlIGV4Y3RyYWN0ZWQg
+d2l0aG91dA0KPiBpbnRyb2R1Y2luZyBkdW1teSB2YXJpYWJsZXMuDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiBBbGV4ZXkgRG9icml5YW4gPGFkb2JyaXlhbkBnbWFpbC5jb20+DQo+IC0tLQ0KPiANCj4g
+IGluY2x1ZGUvbGludXgva2VybmVsLmggfCAgICAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBp
+bnNlcnRpb25zKCspDQo+IA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2tlcm5lbC5oDQo+ICsrKyBi
+L2luY2x1ZGUvbGludXgva2VybmVsLmgNCj4gQEAgLTg4LDYgKzg4LDggQEANCj4gICAqLw0KPiAg
+I2RlZmluZSBGSUVMRF9TSVpFT0YodCwgZikgKHNpemVvZigoKHQqKTApLT5mKSkNCj4gDQo+ICsj
+ZGVmaW5lIHR5cGVvZl9tZW1iZXIoVCwgbSkJdHlwZW9mKCgoVCopMCktPm0pDQoNClNob3VsZCBw
+cm9iYWJseSBiZSAndCcgKG5vdCAnVCcpIGFuZCB1cHBlciBjYXNlID8NCg0KSG1tbS4uLi4gdGhl
+ICNkZWZpbmUgaXMgbG9uZ2VyIHRoYXQgd2hhdCBpdCBleHBhbmRzIHRvIC4uLg0KDQoJRGF2aWQN
+Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
+cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
+KFdhbGVzKQ0K
 
-Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
-hence there is absolutely no good reason in making system unusable on a
-software bug. BUG_ON may be more useful for development, but not for a
-casual daily usage.
-
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
-
-> @@ -1034,7 +1038,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->  	u32 *buffer = NULL;
->  	int err = 0;
->  	bool dma;
-> -	u16 xfer_time = 100;
-> +	u16 xfer_tm = 100;
-
-What's wrong with the "time"? I'm finding the "xfer_tm" as a very
-unintuitive naming.
-
--- 
-Dmitry
