@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1D7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF8C28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398DA249BD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE8024923
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187494;
-	bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
+	s=default; t=1559187496;
+	bh=72OU6/E9r+R3S7kGaNCtbOCaNYutmfAb+PEzWF0SBPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEHE/467D9QYi54v5fcgRhA4o/pJuAVtk/lixlS4l6feP4w693s6AXKtQXawT7MoN
-	 hv3GUzmkoN9rZ+IQ1H7JOdiNDi9bUWH8RpPuG2ZCjPhrYe5kX12VxO9HnDe3BGy3yk
-	 raevq/eqjPAZchnyAfeCCV+96eP69fIJrJ5KUxgU=
+	b=wpDx7T+bGk0ycYjp/6UAYxnuEO9V4taZiG1nqzDj7OrwTjXMf+j3qNaCBjYIHoL1k
+	 QaiJ8RRvijoOlNkx98R7crbj0TllQrrgtP7VjSQe44SKjv2tuOoVilBOXvbpqL5JOl
+	 ulVARzfUfA0lHrR5ccHxaCcREZgEg4dYJ/kzTWBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfE3DXH (ORCPT
+        id S1733008AbfE3DXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731002AbfE3DRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:15 -0400
+        id S1730972AbfE3DRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 038F224688;
-        Thu, 30 May 2019 03:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7035124692;
+        Thu, 30 May 2019 03:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186234;
-        bh=lZqlFI5rRdNdBUUDFTiQ61znwPK0+JBPzKezX7TVJFQ=;
+        s=default; t=1559186233;
+        bh=72OU6/E9r+R3S7kGaNCtbOCaNYutmfAb+PEzWF0SBPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJR8+yoS3Xss3HyUyY7RiAYGZPXihnef/kQ4sY9UmqqHjTxB4dwt3rgtkhvHVLAkT
-         bmNbZHfYlEwCQ83ujapPD8zuFevrX+lvqXqeRuzDPdTvEVg0Jkdeb0PnPJBEE8IlEc
-         ZiO3YCso/eZ97OoBtW3+yz6J7CV9PZLXbapYi7KY=
+        b=1lTsoB/B32VQbatIQ88quU6ft530uisTiWNcB0mjtaPYBmWzVAedfw9UE3f2CSCbo
+         sVN67yJMVlWsyh5uN4sxgf5i8ZyQ0uYwmW+IESk3iJYADQPKa/SM7BCrZ4B+wO1Z73
+         vQsm6OvhpsHykgKtHASvYTfF0bNlI/TY/NKPOOvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 141/276] irq_work: Do not raise an IPI when queueing work on the local CPU
-Date:   Wed, 29 May 2019 20:04:59 -0700
-Message-Id: <20190530030534.501329077@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 140/276] drm/msm: a5xx: fix possible object reference leak
+Date:   Wed, 29 May 2019 20:04:58 -0700
+Message-Id: <20190530030534.446007552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -68,142 +69,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 471ba0e686cb13752bc1ff3216c54b69a2d250ea ]
+[ Upstream commit 6cd5235c3135ea84b32469ea51b2aae384eda8af ]
 
-The QEMU PowerPC/PSeries machine model was not expecting a self-IPI,
-and it may be a bit surprising thing to do, so have irq_work_queue_on
-do local queueing when target is the current CPU.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190409093403.20994-1-npiggin@gmail.com
-[ Simplified the preprocessor comments.
-  Fixed unbalanced curly brackets pointed out by Thomas. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 47, but without a corresponding object release within this function.
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:57:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:66:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
+drivers/gpu/drm/msm/adreno/a5xx_gpu.c:118:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 51, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Mamta Shukla <mamtashukla555@gmail.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Sharat Masetty <smasetty@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org (open list)
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq_work.c | 75 ++++++++++++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 33 deletions(-)
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 6b7cdf17ccf89..73288914ed5e7 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -56,61 +56,70 @@ void __weak arch_irq_work_raise(void)
- 	 */
- }
- 
--/*
-- * Enqueue the irq_work @work on @cpu unless it's already pending
-- * somewhere.
-- *
-- * Can be re-enqueued while the callback is still in progress.
-- */
--bool irq_work_queue_on(struct irq_work *work, int cpu)
-+/* Enqueue on current CPU, work must already be claimed and preempt disabled */
-+static void __irq_work_queue_local(struct irq_work *work)
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+index ab1d9308c3114..ba6f3c14495c0 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+@@ -35,7 +35,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
  {
--	/* All work should have been flushed before going offline */
--	WARN_ON_ONCE(cpu_is_offline(cpu));
--
--#ifdef CONFIG_SMP
--
--	/* Arch remote IPI send/receive backend aren't NMI safe */
--	WARN_ON_ONCE(in_nmi());
-+	/* If the work is "lazy", handle it from next tick if any */
-+	if (work->flags & IRQ_WORK_LAZY) {
-+		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
-+		    tick_nohz_tick_stopped())
-+			arch_irq_work_raise();
-+	} else {
-+		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
-+			arch_irq_work_raise();
-+	}
-+}
+ 	struct device *dev = &gpu->pdev->dev;
+ 	const struct firmware *fw;
+-	struct device_node *np;
++	struct device_node *np, *mem_np;
+ 	struct resource r;
+ 	phys_addr_t mem_phys;
+ 	ssize_t mem_size;
+@@ -49,11 +49,13 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname)
+ 	if (!np)
+ 		return -ENODEV;
  
-+/* Enqueue the irq work @work on the current CPU */
-+bool irq_work_queue(struct irq_work *work)
-+{
- 	/* Only queue if not already pending */
- 	if (!irq_work_claim(work))
- 		return false;
+-	np = of_parse_phandle(np, "memory-region", 0);
+-	if (!np)
++	mem_np = of_parse_phandle(np, "memory-region", 0);
++	of_node_put(np);
++	if (!mem_np)
+ 		return -EINVAL;
  
--	if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
--		arch_send_call_function_single_ipi(cpu);
--
--#else /* #ifdef CONFIG_SMP */
--	irq_work_queue(work);
--#endif /* #else #ifdef CONFIG_SMP */
-+	/* Queue the entry and raise the IPI if needed. */
-+	preempt_disable();
-+	__irq_work_queue_local(work);
-+	preempt_enable();
+-	ret = of_address_to_resource(np, 0, &r);
++	ret = of_address_to_resource(mem_np, 0, &r);
++	of_node_put(mem_np);
+ 	if (ret)
+ 		return ret;
  
- 	return true;
- }
-+EXPORT_SYMBOL_GPL(irq_work_queue);
- 
--/* Enqueue the irq work @work on the current CPU */
--bool irq_work_queue(struct irq_work *work)
-+/*
-+ * Enqueue the irq_work @work on @cpu unless it's already pending
-+ * somewhere.
-+ *
-+ * Can be re-enqueued while the callback is still in progress.
-+ */
-+bool irq_work_queue_on(struct irq_work *work, int cpu)
- {
-+#ifndef CONFIG_SMP
-+	return irq_work_queue(work);
-+
-+#else /* CONFIG_SMP: */
-+	/* All work should have been flushed before going offline */
-+	WARN_ON_ONCE(cpu_is_offline(cpu));
-+
- 	/* Only queue if not already pending */
- 	if (!irq_work_claim(work))
- 		return false;
- 
--	/* Queue the entry and raise the IPI if needed. */
- 	preempt_disable();
--
--	/* If the work is "lazy", handle it from next tick if any */
--	if (work->flags & IRQ_WORK_LAZY) {
--		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
--		    tick_nohz_tick_stopped())
--			arch_irq_work_raise();
-+	if (cpu != smp_processor_id()) {
-+		/* Arch remote IPI send/receive backend aren't NMI safe */
-+		WARN_ON_ONCE(in_nmi());
-+		if (llist_add(&work->llnode, &per_cpu(raised_list, cpu)))
-+			arch_send_call_function_single_ipi(cpu);
- 	} else {
--		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
--			arch_irq_work_raise();
-+		__irq_work_queue_local(work);
- 	}
--
- 	preempt_enable();
- 
- 	return true;
-+#endif /* CONFIG_SMP */
- }
--EXPORT_SYMBOL_GPL(irq_work_queue);
-+
- 
- bool irq_work_needs_cpu(void)
- {
 -- 
 2.20.1
 
