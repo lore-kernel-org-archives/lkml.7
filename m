@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB576C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC219C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA324481
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96868244E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185916;
-	bh=/Z5gzOrsT4Paiv5XfMaVUi3xgeFVJYQCmqkeqLGRBls=;
+	s=default; t=1559185918;
+	bh=gSCqpRSwWR9itNPa8ZOffy3svP0Zw3PUJv+UrAYcSqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxWAOpRmFTc1NvKtiAvhg728Gg8/xO1SAPlsm6j+bGpEOIQ8bvryVr9zvlrl/nCu2
-	 GClwBQ4ZpB1ZlSOXcICayf93vKeo7gJZi9ZmJ2WU09IUD5v6bhrovgTQZGko2cmls3
-	 NSvtbOzJLvuOkJlwxZ4ljSdVf4bdcGodqVa2ZaJo=
+	b=qd3vjme8Ejyp5xkL43hed3JeUaeHP5Yi42N836Ag+/m9USoGlK3oZN5SzVXGRpSDh
+	 AI5n8v2LyTNJeDRU20/fBHpjDWU5cpazeobci6y0HyfbddGjnAaE82kAq+/gqrwW/1
+	 D7Lh5RpUUGj7lsHHyQpMWzS0pL/LObLb5lA2r0F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfE3DLz (ORCPT
+        id S1728759AbfE3DL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:55 -0400
+        Wed, 29 May 2019 23:11:57 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbfE3DKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:35 -0400
+        id S1728154AbfE3DKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7258A244A9;
-        Thu, 30 May 2019 03:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ECE0244A9;
+        Thu, 30 May 2019 03:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185834;
-        bh=/Z5gzOrsT4Paiv5XfMaVUi3xgeFVJYQCmqkeqLGRBls=;
+        s=default; t=1559185836;
+        bh=gSCqpRSwWR9itNPa8ZOffy3svP0Zw3PUJv+UrAYcSqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fFklSO46LxRNlRztRtg+XfAFf1mNKSt0r2CSQGjLvRDtQBWAj2a/28Ji4BfAarp/l
-         I4gAyEiYoATX5sL+akESahcMr3RwCTPZVy7cQeQHFwHJwvmeVTcnCJg0s4Lmw4YInc
-         Zk0OmigQFUzX/EIdUvuEi5/Ow9UORFUb6U8KS1co=
+        b=oXrBL8hPWCk0KETUMmnJ5vph8dl+rmF6o0GIc/PUhaSUQoTHBL3e6pEYIntY90xe8
+         u7M361/qfFUgRkcC05jizD/ceDYBLt7Rs83a/VJS0wnETi5dhmR2btLlcsX2plYI6J
+         C5e1jUo3F6gK8rr4Pz3P9n8S6Gzh4U7OBRJ9Bgp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 099/405] iwlwifi: pcie: dont crash on invalid RX interrupt
-Date:   Wed, 29 May 2019 20:01:37 -0700
-Message-Id: <20190530030546.033363175@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 140/405] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
+Date:   Wed, 29 May 2019 20:02:18 -0700
+Message-Id: <20190530030548.194188273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,43 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
+[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
 
-If for some reason the device gives us an RX interrupt before we're
-ready for it, perhaps during device power-on with misconfigured IRQ
-causes mapping or so, we can crash trying to access the queues.
+In-NMI warnings have been added to vmalloc_fault() via:
 
-Prevent that by checking that we actually have RXQs and that they
-were properly allocated.
+  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+back in the time when our NMI entry code could not cope with nested NMIs.
+
+These days, it's perfectly fine to take a fault in NMI context and we
+don't have to care about the fact that IRET from the fault handler might
+cause NMI nesting.
+
+This warning has already been removed from 32-bit implementation of
+vmalloc_fault() in:
+
+  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+
+but the 64-bit version was omitted.
+
+Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
+
+Reported-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/mm/fault.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index 8d4f0628622bb..12f02aaf923ed 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1434,10 +1434,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
--	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
-+	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 667f1da36208e..5eaf67e8314f1 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -359,8 +359,6 @@ static noinline int vmalloc_fault(unsigned long address)
+ 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
+ 		return -1;
  
-+	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
-+		return;
-+
-+	rxq = &trans_pcie->rxq[queue];
-+
- restart:
- 	spin_lock(&rxq->lock);
- 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
+-	WARN_ON_ONCE(in_nmi());
+-
+ 	/*
+ 	 * Copy kernel mappings over when needed. This can also
+ 	 * happen within a race in page table update. In the later
 -- 
 2.20.1
 
