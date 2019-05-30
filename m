@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14531C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADEC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E48252F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2F3252E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190003;
-	bh=p+vAPlUq3BhdDdI6PDbqlqpe5x/stIK25vssRkh1rBo=;
+	s=default; t=1559190007;
+	bh=Z9anbQd/siXILZd3R/mi5TSR9HtA3TXq3b/rWwdRsLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zk3pO/+RtZvD0KeNmuugOTcEADzAdKzpee7RV1R9C1T4noTn2DQLqGwF9NHAw2o3Y
-	 rGC3CzVpkhV+Ar2dljyuJ+7OtTfgrqfiHAZywJJpEb2N8D+oStNoWHqeiJXdReol12
-	 3KzswElM7QYm5YD6S0N+u2HHeGlS+P8ZZhA/6qlI=
+	b=O4yvYVFcds1LxzFA1M2GrRGkZ6AvMmrXCHdbJ967WEUTU1qBu9FwNgDvm46JD1sLm
+	 xz/95qmZqA39DVFiYNeLRfmeRxFElssTiAfJPAq7NXZ+haQk1HFYjYrI7OSKnSNn4h
+	 wnXBbjIhUfwSMxu4Pj+e999k1JBf9qx+I0iz0yTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfE3DPW (ORCPT
+        id S1730541AbfE3EUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbfE3DMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:45 -0400
+        id S1727599AbfE3DPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46775244E8;
-        Thu, 30 May 2019 03:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF07D245AF;
+        Thu, 30 May 2019 03:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185965;
-        bh=p+vAPlUq3BhdDdI6PDbqlqpe5x/stIK25vssRkh1rBo=;
+        s=default; t=1559186121;
+        bh=Z9anbQd/siXILZd3R/mi5TSR9HtA3TXq3b/rWwdRsLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SUpESecLVvumcpSJG9Buz1HlEgLwwTPngazxZAvxwU95gyRQjZ8ydbwUvmRN/YiGS
-         KQS2Ug2W3zoex6SrCpzUEtCGwU31tGa9MHdqRCSQxbEU5P17S0YlJo9+SUmR5R53B5
-         JUTyDjHc7twM9hIaJC/OffI9Sh+vyj6PQxrywn1w=
+        b=hq/nouIdCVXFXrQQxxqQRs2DjvaL1HKaw/bY7SIKmPUtXKGPKr1STibnDQH+1AOvo
+         PgFdu/Q3MKH35qj1eRQ0bZ4TnVpYZO6TErRJ95EP+IXj3xDQOkKIo/Wl4Q2GHuLJSv
+         YDwo/14AhCfAQmQOUlXec4nq7NVkT7u0LXMXa1Fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        James Smart <james.smart@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 392/405] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
-Date:   Wed, 29 May 2019 20:06:30 -0700
-Message-Id: <20190530030600.453182033@linuxfoundation.org>
+Subject: [PATCH 5.0 278/346] scsi: lpfc: avoid uninitialized variable warning
+Date:   Wed, 29 May 2019 20:05:51 -0700
+Message-Id: <20190530030555.013326270@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,47 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
+[ Upstream commit faf5a744f4f8d76e7c03912b5cd381ac8045f6ec ]
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
+clang -Wuninitialized incorrectly sees a variable being used without
+initialization:
 
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
+drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                lport = (struct lpfc_nvme_lport *)localport->private;
+                                                  ^~~~~~~~~
+drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
+        struct nvme_fc_local_port *localport;
+                                            ^
+                                             = NULL
+1 error generated.
 
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
+This is clearly in dead code, as the condition leading up to it is always
+false when CONFIG_NVME_FC is disabled, and the variable is always
+initialized when nvme_fc_register_localport() got called successfully.
 
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
+Change the preprocessor conditional to the equivalent C construct, which
+makes the code more readable and gets rid of the warning.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index a3a67a8f0f543..9fbc759fdefe1 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -45,6 +45,7 @@
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index 8c9f790422288..56df8b510186b 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -2471,15 +2471,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
+ 	if (!cstat)
+ 		return -ENOMEM;
  
- #define MCASP_MAX_AFIFO_DEPTH	64
- 
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
- };
-+#endif
- 
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
++	if (!IS_ENABLED(CONFIG_NVME_FC))
++		return ret;
++
+ 	/* localport is allocated from the stack, but the registration
+ 	 * call allocates heap memory as well as the private area.
+ 	 */
+-#if (IS_ENABLED(CONFIG_NVME_FC))
++
+ 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
+ 					 &vport->phba->pcidev->dev, &localport);
+-#else
+-	ret = -ENOMEM;
+-#endif
+ 	if (!ret) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
+ 				 "6005 Successfully registered local "
 -- 
 2.20.1
 
