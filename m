@@ -2,106 +2,100 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E1C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE65BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEEE2578B
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16A624CEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfE3KmK (ORCPT
+        id S1726574AbfE3KnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:42:10 -0400
-Received: from foss.arm.com ([217.140.101.70]:34096 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3KmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:42:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10609374;
-        Thu, 30 May 2019 03:42:09 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E85343F5AF;
-        Thu, 30 May 2019 03:42:05 -0700 (PDT)
-Date:   Thu, 30 May 2019 11:42:03 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, james.morse@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com
-Subject: Re: [PATCH V5 2/3] arm64/mm: Hold memory hotplug lock while walking
- for kernel page table dump
-Message-ID: <20190530104203.GC56046@lakrids.cambridge.arm.com>
-References: <1559121387-674-1-git-send-email-anshuman.khandual@arm.com>
- <1559121387-674-3-git-send-email-anshuman.khandual@arm.com>
+        Thu, 30 May 2019 06:43:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725440AbfE3KnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 06:43:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E8B3ACEE;
+        Thu, 30 May 2019 10:43:13 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 04DA8DA85E; Thu, 30 May 2019 12:44:06 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.2-rc3
+Date:   Thu, 30 May 2019 12:44:01 +0200
+Message-Id: <cover.1559167316.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559121387-674-3-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 02:46:26PM +0530, Anshuman Khandual wrote:
-> The arm64 page table dump code can race with concurrent modification of the
-> kernel page tables. When a leaf entries are modified concurrently, the dump
-> code may log stale or inconsistent information for a VA range, but this is
-> otherwise not harmful.
-> 
-> When intermediate levels of table are freed, the dump code will continue to
-> use memory which has been freed and potentially reallocated for another
-> purpose. In such cases, the dump code may dereference bogus addresses,
-> leading to a number of potential problems.
-> 
-> Intermediate levels of table may by freed during memory hot-remove,
-> which will be enabled by a subsequent patch. To avoid racing with
-> this, take the memory hotplug lock when walking the kernel page table.
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/mm/ptdump_debugfs.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-> index 064163f..80171d1 100644
-> --- a/arch/arm64/mm/ptdump_debugfs.c
-> +++ b/arch/arm64/mm/ptdump_debugfs.c
-> @@ -7,7 +7,10 @@
->  static int ptdump_show(struct seq_file *m, void *v)
->  {
->  	struct ptdump_info *info = m->private;
-> +
-> +	get_online_mems();
->  	ptdump_walk_pgd(m, info);
-> +	put_online_mems();
+Hi,
 
-We need to explicitly include <linux/memory_hotplug.h> to get the
-prototypes of {get,put}_online_mems().
+a few more fixes for bugs reported by users, fuzzing tools and
+regressions:
 
-With that fixed up:
+* fix crashes in relocation
+  * resuming interrupted balance operation does not properly clean up
+    orphan trees
+  * with enabled qgroups, resuming needs to be more careful about
+    block groups due to limited context when updating qgroups
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+* fsync and logging fixes found by fuzzing
 
-I understand from [1] that Michal is ok with using these here, and we're
-open to reworking this if/when the hotplug locking is changed.
+* incremental send fixes for no-holes and clone
 
-Mark.
+* fix spin lock type used in timer function for zstd
 
-[1] https://lkml.kernel.org/r/20190527072001.GB1658@dhcp22.suse.cz
+No merge conflicts, please pull. Thanks.
 
->  	return 0;
->  }
->  DEFINE_SHOW_ATTRIBUTE(ptdump);
-> -- 
-> 2.7.4
-> 
+----------------------------------------------------------------
+The following changes since commit 4e9845eff5a8027b5181d5bff56a02991fe46d48:
+
+  Btrfs: tree-checker: detect file extent items with overlapping ranges (2019-05-16 14:33:51 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc2-tag
+
+for you to fetch changes up to 06989c799f04810f6876900d4760c0edda369cf7:
+
+  Btrfs: fix race updating log root item during fsync (2019-05-28 19:26:46 +0200)
+
+----------------------------------------------------------------
+Dennis Zhou (1):
+      btrfs: correct zstd workspace manager lock to use spin_lock_bh()
+
+Filipe Manana (5):
+      Btrfs: incremental send, fix file corruption when no-holes feature is enabled
+      Btrfs: incremental send, fix emission of invalid clone operations
+      Btrfs: fix fsync not persisting changed attributes of a directory
+      Btrfs: fix wrong ctime and mtime of a directory after log replay
+      Btrfs: fix race updating log root item during fsync
+
+Nikolay Borisov (1):
+      btrfs: Ensure replaced device doesn't have pending chunk allocation
+
+Qu Wenruo (2):
+      btrfs: reloc: Also queue orphan reloc tree for cleanup to avoid BUG_ON()
+      btrfs: qgroup: Check bg while resuming relocation to avoid NULL pointer dereference
+
+ fs/btrfs/dev-replace.c | 35 +++++++++++++++++++++++----------
+ fs/btrfs/inode.c       | 14 ++++++++++++--
+ fs/btrfs/qgroup.c      |  8 +++++++-
+ fs/btrfs/relocation.c  | 27 ++++++++++++++++++--------
+ fs/btrfs/send.c        | 52 +++++++++++++++++++++++++++++++++++++++++++++++---
+ fs/btrfs/tree-log.c    | 20 ++++++-------------
+ fs/btrfs/zstd.c        | 20 +++++++++----------
+ 7 files changed, 128 insertions(+), 48 deletions(-)
