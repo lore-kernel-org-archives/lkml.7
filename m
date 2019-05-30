@@ -2,130 +2,248 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE0AC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F54C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B2725F58
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D3E25F5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9/E6LUY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcysaYWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfE3SVK (ORCPT
+        id S1726863AbfE3SVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:21:10 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43148 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfE3SVH (ORCPT
+        Thu, 30 May 2019 14:21:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39258 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfE3SU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:21:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so2471692pgv.10;
-        Thu, 30 May 2019 11:21:07 -0700 (PDT)
+        Thu, 30 May 2019 14:20:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a10so3791444ljf.6
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 11:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=UBdHo+2366MDlEoeBRVocLtq/sBDv973ycyrjE7aJxY=;
-        b=E9/E6LUYd4D0dAqav89AsTQRFk4R1QQPe/2zZVQ1sMKi/zbT8bCNF/4M9bO28+HJIT
-         q0yzcUXDCxtVeNzPZ7VKJMhpBjg2Q6Lu1qr3Ckh8oml4xO5W+UjxRqcYp4i1Z+B0IdJ6
-         tTh8MGPWzycRuZvWMRNZA0bK++6I2FM9cysX2JG3zReSYiNsEqLokRRXF8hRhBbu37VD
-         zwZ/8hD0oPvtj6PuRPlVebNsUHXIEl0cmVq1lsFJWSMedtOh2Nmgy6SmDn91m0gczDYC
-         0jr11Wpg6iwP1Q/UD8Og/95UsOzVthnfeMY+xXlDoO6792WVztBqn3OlH6vADw+K5IJF
-         Mbjg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ExBErmLKvAHAcEzB9N5VayIpTNJEe2yiC9dz/BkkizE=;
+        b=DcysaYWnCA1gnUMQaWDrdM5fQsKXmvdSPN7uBZWkhioCiDLFa/PZca+gwzO2ODZUGu
+         BeqQ+XolNN1zZDMTBmlKogUA2ykS1A4uAec4bRAsZhEtEMqU59dDLFjPagim1uxmY0lL
+         mYZK46TUMEvcTcJPNwOjwXTifyAGBy+Sf6AWebORVwLTh5xL5ZEd8YUB1gdlmYUz/HUN
+         hrG5hxWv80I9c88FHZtuPOuKMIQY+GL7Pf5NNtewzWkmUTEa/0ufXtD0h/glN9glpD6N
+         KvdKGzssnzlj4lACSGsq3eQP9WVFBfMKqdFZIwUMep/1p/kimoUqfozrxCBUHF9SNaD+
+         WadQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=UBdHo+2366MDlEoeBRVocLtq/sBDv973ycyrjE7aJxY=;
-        b=bB96MK96w5+scM9p5gOlso+sYXFWMRLovu3tJCNLJZ8qbTfgY4YMF+BcVkmSfWOvhs
-         13M7hUiPHxHnFvUYMNToOuEw3Xt42jkZap4U/BEuMWtBTk3C2BcpgwGcDTkGoSTm0Lj/
-         heltmI3Ir5SZd8mEgpcgcJADesi7I+5ycdTLNodYCotWp2+EACd75a+X4IDSX/SxHghu
-         raktI6iwBEwxc4dd4JHOMHC6jY61F0rMP3tLeaMwyYljPj7aA1t5+I3+zri0ARsQhech
-         LDEG676N+nKY+46F6p0cymqNpPyVt4lKCl0YZOWJQ/mk01wnXp34sY4nZrZSm8O8SJGJ
-         ksyQ==
-X-Gm-Message-State: APjAAAXql8NlMYLBmKQOnQVhpG8rHw520N9Dq4SFtKVqqc417SJ+DWBl
-        /YlVv5an4DGRl8qCF760BW0=
-X-Google-Smtp-Source: APXvYqwI/dOtmxmOjPbR8FshFhAOZ0ab7pn9JQXRzgbKq1I1gC2KkVRR+g8hGqFnge93QOnLy87pAw==
-X-Received: by 2002:a63:dd17:: with SMTP id t23mr4921994pgg.57.1559240467368;
-        Thu, 30 May 2019 11:21:07 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id e4sm3141399pgi.80.2019.05.30.11.21.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ExBErmLKvAHAcEzB9N5VayIpTNJEe2yiC9dz/BkkizE=;
+        b=hKlhWbYA5ACpOl6qC0ZP0FSbUwuQQrELx6Ljcj4ZCAsYq1QeXFVFWquR+08vwgczw/
+         kehu4YvFvpKhqFmz+jMHtnkNF0GcTQbQWAGfWiaQeKHJON7oi8bWxBEYf9kqAH/3I56G
+         R5Ovsz6ENNXIiG9BtKBizSFPby/3u1CdjoPx1kgcmoyxW5IV8OJlLsG5QOLCODpADdET
+         fuhxTbIjoxyujQdT1CgoecgKhlf5/x0u2p09SYQLk7dGbuKXKTjbqAVdORQl9fARmR+G
+         uJRONx4r7HcFKQC7fE4KIGlvDNFiynDHxAEXmodrREZrH1PvcEet4Sl/JRIx4AUvnWTx
+         4bAg==
+X-Gm-Message-State: APjAAAVuvHfur/iLQUKC1T5zVh3d1+6cxntKbQM5fOTrV5T/CGwZRSBv
+        5lJ06W4bZLpaP5LsLCkClYMtkA==
+X-Google-Smtp-Source: APXvYqybCMzLDu/j6u6rw70BPBf8lJXbao7SvLBHv4ExBZ/aAFxGO8ulZf+NzRyoc28S/5OHUWX0yg==
+X-Received: by 2002:a2e:8555:: with SMTP id u21mr2920911ljj.133.1559240456396;
+        Thu, 30 May 2019 11:20:56 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id v7sm388946lfe.11.2019.05.30.11.20.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 11:21:06 -0700 (PDT)
-Date:   Thu, 30 May 2019 23:51:02 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: dpt_i2o: Remove call memset after dma_alloc_coherent
-Message-ID: <20190530182102.GA8140@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 30 May 2019 11:20:55 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
+Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v2 net-next 5/7] net: ethernet: ti: davinci_cpdma: add dma mapped submit
+Date:   Thu, 30 May 2019 21:20:37 +0300
+Message-Id: <20190530182039.4945-6-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warning reported by coccicheck
+In case if dma mapped packet needs to be sent, like with XDP
+page pool, the "mapped" submit can be used. This patch adds dma
+mapped submit based on regular one.
 
-/drivers/scsi/dpt_i2o.c:3092:11-29: WARNING: dma_alloc_coherent use in
-sys_tbl already zeroes out memory,  so memset is not needed
-./drivers/scsi/dpt_i2o.c:2802:10-28: WARNING: dma_alloc_coherent use in
-status already zeroes out memory,  so memset is not needed
-./drivers/scsi/dpt_i2o.c:2856:20-38: WARNING: dma_alloc_coherent use in
-pHba -> reply_pool already zeroes out memory,  so memset is not needed
-./drivers/scsi/dpt_i2o.c:1331:10-28: WARNING: dma_alloc_coherent use in
-status already zeroes out memory,  so memset is not needed
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/scsi/dpt_i2o.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/ethernet/ti/davinci_cpdma.c | 88 ++++++++++++++++++++-----
+ drivers/net/ethernet/ti/davinci_cpdma.h |  2 +
+ 2 files changed, 75 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index a3afd14..128d4f9 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -1334,7 +1334,6 @@ static s32 adpt_i2o_reset_hba(adpt_hba* pHba)
- 		printk(KERN_ERR"IOP reset failed - no free memory.\n");
- 		return -ENOMEM;
- 	}
--	memset(status,0,4);
+diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
+index 35bf14d8e7af..7f89b2299f05 100644
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -125,6 +125,15 @@ struct cpdma_chan {
+ 	u32				rate;
+ };
  
- 	msg[0]=EIGHT_WORD_MSG_SIZE|SGL_OFFSET_0;
- 	msg[1]=I2O_CMD_ADAPTER_RESET<<24|HOST_TID<<12|ADAPTER_TID;
-@@ -2806,7 +2805,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 			pHba->name);
- 		return -ENOMEM;
- 	}
--	memset(status, 0, 4);
++struct submit_info {
++	struct cpdma_chan *chan;
++	int directed;
++	void *token;
++	void *data;
++	int flags;
++	int len;
++};
++
+ struct cpdma_control_info {
+ 	u32		reg;
+ 	u32		shift, mask;
+@@ -176,6 +185,8 @@ static struct cpdma_control_info controls[] = {
+ 				 (directed << CPDMA_TO_PORT_SHIFT));	\
+ 	} while (0)
  
- 	writel(EIGHT_WORD_MSG_SIZE| SGL_OFFSET_6, &msg[0]);
- 	writel(I2O_CMD_OUTBOUND_INIT<<24 | HOST_TID<<12 | ADAPTER_TID, &msg[1]);
-@@ -2860,7 +2858,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 		printk(KERN_ERR "%s: Could not allocate reply pool\n", pHba->name);
- 		return -ENOMEM;
++#define CPDMA_DMA_EXT_MAP		BIT(16)
++
+ static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
+ {
+ 	struct cpdma_desc_pool *pool = ctlr->pool;
+@@ -1002,10 +1013,12 @@ static void __cpdma_chan_submit(struct cpdma_chan *chan,
  	}
--	memset(pHba->reply_pool, 0 , pHba->reply_fifo_size * REPLY_FRAME_SIZE * 4);
+ }
  
- 	for(i = 0; i < pHba->reply_fifo_size; i++) {
- 		writel(pHba->reply_pool_pa + (i * REPLY_FRAME_SIZE * 4),
-@@ -3095,7 +3092,6 @@ static int adpt_i2o_build_sys_table(void)
- 		printk(KERN_WARNING "SysTab Set failed. Out of memory.\n");	
- 		return -ENOMEM;
+-int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+-		      int len, int directed)
++static int cpdma_chan_submit_si(struct submit_info *si)
+ {
++	struct cpdma_chan		*chan = si->chan;
+ 	struct cpdma_ctlr		*ctlr = chan->ctlr;
++	int				len = si->len;
++	int				swlen = len;
+ 	struct cpdma_desc __iomem	*desc;
+ 	dma_addr_t			buffer;
+ 	unsigned long			flags;
+@@ -1037,16 +1050,22 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 		chan->stats.runt_transmit_buff++;
  	}
--	memset(sys_tbl, 0, sys_tbl_len);
  
- 	sys_tbl->num_entries = hba_count;
- 	sys_tbl->version = I2OVERSION;
+-	buffer = dma_map_single(ctlr->dev, data, len, chan->dir);
+-	ret = dma_mapping_error(ctlr->dev, buffer);
+-	if (ret) {
+-		cpdma_desc_free(ctlr->pool, desc, 1);
+-		ret = -EINVAL;
+-		goto unlock_ret;
+-	}
+-
+ 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
+-	cpdma_desc_to_port(chan, mode, directed);
++	cpdma_desc_to_port(chan, mode, si->directed);
++
++	if (si->flags & CPDMA_DMA_EXT_MAP) {
++		buffer = (dma_addr_t)si->data;
++		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
++		swlen |= CPDMA_DMA_EXT_MAP;
++	} else {
++		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
++		ret = dma_mapping_error(ctlr->dev, buffer);
++		if (ret) {
++			cpdma_desc_free(ctlr->pool, desc, 1);
++			ret = -EINVAL;
++			goto unlock_ret;
++		}
++	}
+ 
+ 	/* Relaxed IO accessors can be used here as there is read barrier
+ 	 * at the end of write sequence.
+@@ -1055,9 +1074,9 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	writel_relaxed(buffer, &desc->hw_buffer);
+ 	writel_relaxed(len, &desc->hw_len);
+ 	writel_relaxed(mode | len, &desc->hw_mode);
+-	writel_relaxed((uintptr_t)token, &desc->sw_token);
++	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
+ 	writel_relaxed(buffer, &desc->sw_buffer);
+-	writel_relaxed(len, &desc->sw_len);
++	writel_relaxed(swlen, &desc->sw_len);
+ 	desc_read(desc, sw_len);
+ 
+ 	__cpdma_chan_submit(chan, desc);
+@@ -1072,6 +1091,38 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	return ret;
+ }
+ 
++int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data, int len,
++		      int directed)
++{
++	struct submit_info si;
++
++	si.chan = chan;
++	si.token = token;
++	si.data = data;
++	si.len = len;
++	si.directed = directed;
++	si.flags = 0;
++
++	return cpdma_chan_submit_si(&si);
++}
++EXPORT_SYMBOL_GPL(cpdma_chan_submit);
++
++int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
++			     dma_addr_t data, int len, int directed)
++{
++	struct submit_info si;
++
++	si.chan = chan;
++	si.token = token;
++	si.data = (void *)data;
++	si.len = len;
++	si.directed = directed;
++	si.flags = CPDMA_DMA_EXT_MAP;
++
++	return cpdma_chan_submit_si(&si);
++}
++EXPORT_SYMBOL_GPL(cpdma_chan_submit_mapped);
++
+ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
+ {
+ 	struct cpdma_ctlr	*ctlr = chan->ctlr;
+@@ -1097,10 +1148,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ 	uintptr_t			token;
+ 
+ 	token      = desc_read(desc, sw_token);
+-	buff_dma   = desc_read(desc, sw_buffer);
+ 	origlen    = desc_read(desc, sw_len);
+ 
+-	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
++	buff_dma   = desc_read(desc, sw_buffer);
++	if (origlen & CPDMA_DMA_EXT_MAP) {
++		origlen &= ~CPDMA_DMA_EXT_MAP;
++		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
++					chan->dir);
++	} else {
++		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
++	}
++
+ 	cpdma_desc_free(pool, desc, 1);
+ 	(*chan->handler)((void *)token, outlen, status);
+ }
+diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
+index 10376062dafa..8f6f27185c63 100644
+--- a/drivers/net/ethernet/ti/davinci_cpdma.h
++++ b/drivers/net/ethernet/ti/davinci_cpdma.h
+@@ -77,6 +77,8 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
+ 
+ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 			 struct cpdma_chan_stats *stats);
++int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
++			     dma_addr_t data, int len, int directed);
+ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 		      int len, int directed);
+ int cpdma_chan_process(struct cpdma_chan *chan, int quota);
 -- 
-2.7.4
+2.17.1
 
