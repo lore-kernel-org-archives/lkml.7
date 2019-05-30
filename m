@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3097C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A60B25BC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5A225B8F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191605;
-	bh=qSGAm3ySwwe1r1Jo0mKGE3uXUctJ7VgWT9hCHmPXyjk=;
+	s=default; t=1559191608;
+	bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+kR0aa5Mpg/cIykHLrO7VSHpiPF+M2IbeGO+TZIXCiKHhqR7M20HCCjITqOZ+KmQ
-	 MTC9/082zxGqBzry9d7V6DjKcKiRdtra8VQcO4OI4Hv6fh2xJ3U4zL9aiSaXwzaj5I
-	 pB14kGRM9qV4KCcQL9vWLpd6IBfgndhvQ5sqn7/c=
+	b=t7v/WiPHsGyRkLpgsqER1usK/I/66V/OLH6d2l7HCEvZy2VafDkOycqWOXEQjr5dB
+	 exRyHsORGMMWDbBZJQZye6D1TlETfZ3gYHGaNq/dRGgqc+oT/7it/8MWhBz9gZx6RY
+	 uZ00R0n/62lbZOum06tHq2omSjsI7Dck8++ZCHV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388853AbfE3Eqp (ORCPT
+        id S1729197AbfE3Eqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbfE3DLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:40 -0400
+        id S1728646AbfE3DLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61EE6244A6;
-        Thu, 30 May 2019 03:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D8424508;
+        Thu, 30 May 2019 03:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185899;
-        bh=qSGAm3ySwwe1r1Jo0mKGE3uXUctJ7VgWT9hCHmPXyjk=;
+        s=default; t=1559185901;
+        bh=dCVDXips007izB5sZEkFSjcUty+mk+m6uZJDYn5+XbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxZwNhYkcHzPLK1g+WNCcobcA/B7UgZtlJh0VqgG13aLdqaKcPYSKKOLir/l/uiqs
-         UdpU+V1nAEvsviWRjdCZ6OgXEGLm+JPb9p3DA7OXdnU2SS2Bh69TNX7QvCjWmODdNZ
-         cxa2J/YBffJD6rdOMvJMa5ZiYXJdCmgzQDN0w1i8=
+        b=yj9v8sioykoumAB+eSIOXR/Mlu8jgSMGcv5NiHMLBL+LgQkMzJxA6j2FasGCFm96m
+         EnQQ8Ul8pYqBp/7NfOjyN5++C9K46iJ56+y2xJKIYiF4aqezNXrP3lqHdUrkX6qDkH
+         /O5um5iHm1JxzD4Psp9k2/hlor8IvSq93203AXmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 266/405] iwlwifi: mvm: IBSS: use BE FIFO for multicast
-Date:   Wed, 29 May 2019 20:04:24 -0700
-Message-Id: <20190530030554.385469838@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 269/405] x86/uaccess: Fix up the fixup
+Date:   Wed, 29 May 2019 20:04:27 -0700
+Message-Id: <20190530030554.526258149@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,64 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 192a7e1f731fd9a64216cce35287eb23360437f6 ]
+[ Upstream commit b69656fa7ea2f75e47d7bd5b9430359fa46488af ]
 
-Back in commit 4d339989acd7 ("iwlwifi: mvm: support ibss in dqa mode")
-we changed queue selection for IBSS to be:
+New tooling got confused about this:
 
-    if (ieee80211_is_probe_resp(fc) || ieee80211_is_auth(fc) ||
-        ieee80211_is_deauth(fc))
-            return IWL_MVM_DQA_AP_PROBE_RESP_QUEUE;
-    if (info->hw_queue == info->control.vif->cab_queue)
-            return info->hw_queue;
-    return IWL_MVM_DQA_AP_PROBE_RESP_QUEUE;
+  arch/x86/lib/memcpy_64.o: warning: objtool: .fixup+0x7: return with UACCESS enabled
 
-Clearly, the thought at the time must've been that mac80211 will
-select the hw_queue as the cab_queue, so that we'll return and use
-that, where we store the multicast queue for IBSS. This, however,
-isn't true because mac80211 doesn't implement powersave for IBSS
-and thus selects the normal IBSS interface AC queue (best effort).
+While the code isn't wrong, it is tedious (if at all possible) to
+figure out what function a particular chunk of .fixup belongs to.
 
-This therefore always used the probe response queue, which maps to
-the BE FIFO.
+This then confuses the objtool uaccess validation. Instead of
+returning directly from the .fixup, jump back into the right function.
 
-In commit cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
-we rethought this code, and as a consequence now started mapping the
-multicast traffic to the multicast hardware queue since we no longer
-relied on mac80211 selecting the queue, doing it ourselves instead.
-This queue is mapped to the MCAST FIFO. however, this isn't actually
-enabled/controlled by the firmware in IBSS mode because we don't
-implement powersave, and frames from this queue can never go out in
-this case.
-
-Therefore, we got queue hang reports such as
-https://bugzilla.kernel.org/show_bug.cgi?id=201707
-
-Fix this by mapping the multicast queue to the BE FIFO in IBSS so
-that all the frames can go out.
-
-Fixes: cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 3 ++-
+ arch/x86/lib/memcpy_64.S | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index 98d123dd71778..eb452e9dce057 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2277,7 +2277,8 @@ int iwl_mvm_add_mcast_sta(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
- 	static const u8 _maddr[] = {0x03, 0x00, 0x00, 0x00, 0x00, 0x00};
- 	const u8 *maddr = _maddr;
- 	struct iwl_trans_txq_scd_cfg cfg = {
--		.fifo = IWL_MVM_TX_FIFO_MCAST,
-+		.fifo = vif->type == NL80211_IFTYPE_AP ?
-+			IWL_MVM_TX_FIFO_MCAST : IWL_MVM_TX_FIFO_BE,
- 		.sta_id = msta->sta_id,
- 		.tid = 0,
- 		.aggregate = false,
+diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
+index 3b24dc05251c7..9d05572370edc 100644
+--- a/arch/x86/lib/memcpy_64.S
++++ b/arch/x86/lib/memcpy_64.S
+@@ -257,6 +257,7 @@ ENTRY(__memcpy_mcsafe)
+ 	/* Copy successful. Return zero */
+ .L_done_memcpy_trap:
+ 	xorl %eax, %eax
++.L_done:
+ 	ret
+ ENDPROC(__memcpy_mcsafe)
+ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
+@@ -273,7 +274,7 @@ EXPORT_SYMBOL_GPL(__memcpy_mcsafe)
+ 	addl	%edx, %ecx
+ .E_trailing_bytes:
+ 	mov	%ecx, %eax
+-	ret
++	jmp	.L_done
+ 
+ 	/*
+ 	 * For write fault handling, given the destination is unaligned,
 -- 
 2.20.1
 
