@@ -2,381 +2,177 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A44C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75649C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AC224B0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdnNnPkl"
+	by mail.kernel.org (Postfix) with ESMTP id 4B32A24B6B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 18:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfE3Sxa (ORCPT
+        id S1726688AbfE3Sx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 14:53:30 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45456 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3Sxa (ORCPT
+        Thu, 30 May 2019 14:53:57 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:52827 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3Sx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 14:53:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t1so8261300qtc.12;
-        Thu, 30 May 2019 11:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3lpSw4A7vcWTO2q/bCUo06/BZoiQqjvQo8KcCK27ZDs=;
-        b=qdnNnPklN2i3zKFxEo31/RBLkG/+vgtcOA9xKNijRar0ngQ/T427e+EiE1HdbFbPZU
-         k0Nc6vdy3MqSoEeeISRzSQUmhQo+/E1jjkcwQ8imCzvaC4UNMm2PUPq6aY9DPcytCec1
-         lP1N6dJBn3TWcBJ5Z1fsg463SYsl1JWnT08l7v5NJXnGvi14MTZ4CZPWYXVNjPA1Zrha
-         RBOEpSthwmHt+sDkYCF7GTEhhr47vHKbBYapfuX4A9S2QgYRJ5XmeKqUq5JbZxCyvO7n
-         2B44S6Ff/FV+je4LZtbvpfqqH5DliQghRVTC4DLuMS+k+YTvXKPxVlO3dHxHK74IJD1X
-         dMQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3lpSw4A7vcWTO2q/bCUo06/BZoiQqjvQo8KcCK27ZDs=;
-        b=dHidc0TC+tNGidERHcjz30fVeb3EL3JIsTkt+6B/I0WhMrC3aM4CYI5+b99riS0DU0
-         d/pbjdEFvrwwUIV8lp7d8sbPpoPEhh6mqL5GMPM5kGDqPMgCN3U1941tptDsW17GMW/X
-         Uk/cG+oEBclfXs7KqX3crAVf43suH2/GXKl5sjQuReYhNsFvQBk1Ti2x+f8my9yhaA8o
-         XT7GhEef7Vey8r09YivVhBxD5FuaR4wtX8b6A5P52g6muM9JIk3FASGFfcWr4Oi+oKVp
-         UcAiwizp6eOkwAKcVbwzSp/bxKbA9BlniEtiCUJ2u2suMHE/JLq3ktui3XAwrEfSuW6H
-         ZjHg==
-X-Gm-Message-State: APjAAAWtllngq+VvbJ4MTd/M8Cgreh8UhvvfjDVbypXn+juVhVvdKsFx
-        R9omU9QtENLhHUgPZRAjp/ul3nwcAFPHD6EwF3E=
-X-Google-Smtp-Source: APXvYqzaEJXI1/iTC2G5t10lrf8RsLSrP72esy17LggkwvpNYBc9rQk5WmNqmjHEkPaQoVR4zrmX4tEa0qNv4Nhp3dU=
-X-Received: by 2002:ac8:4107:: with SMTP id q7mr2274328qtl.139.1559242408748;
- Thu, 30 May 2019 11:53:28 -0700 (PDT)
+        Thu, 30 May 2019 14:53:57 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id F15C2240003;
+        Thu, 30 May 2019 18:53:48 +0000 (UTC)
+Date:   Thu, 30 May 2019 12:42:42 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?utf-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v10 02/11] drm/sun4i: dsi: Update start value in video
+ start delay
+Message-ID: <20190530104242.d6ktwv7lip27vc3x@flea>
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-3-jagan@amarulasolutions.com>
+ <20190523203754.2lhi37veeh4rwiy3@flea>
+ <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190530010359.2499670-1-guro@fb.com> <20190530010359.2499670-4-guro@fb.com>
-In-Reply-To: <20190530010359.2499670-4-guro@fb.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 30 May 2019 11:53:17 -0700
-Message-ID: <CAPhsuW4V++8+=VBBTifHDMOeHx1CBu60K2ZAgZ02YS2RpTJyoQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/5] bpf: group memory related fields in struct bpf_map_memory
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 6:04 PM Roman Gushchin <guro@fb.com> wrote:
+On Fri, May 24, 2019 at 03:55:42PM +0530, Jagan Teki wrote:
+> On Fri, May 24, 2019 at 2:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Mon, May 20, 2019 at 02:33:09PM +0530, Jagan Teki wrote:
+> > > start value in video start delay computation done in below commit
+> > > is as per the legacy bsp drivers/video/sunxi/legacy..
+> > > "drm/sun4i: dsi: Change the start delay calculation"
+> > > (sha1: da676c6aa6413d59ab0a80c97bbc273025e640b2)
+> > >
+> > > This existing start delay computation gives start value of 35,
+> > > for "bananapi,s070wv20-ct16" panel timings which indeed trigger
+> > > panel flip_done timed out as:
+> > >
+> > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > >  [CRTC:46:crtc-0] vblank wait timed out
+> > >  Modules linked in:
+> > >  CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W         5.1.0-next-20190514-00025-gf928bc7cc146 #15
+> > >  Hardware name: Allwinner sun8i Family
+> > >  Workqueue: events deferred_probe_work_func
+> > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > >  [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
+> > >  [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>] (drm_fb_helper_pan_display+0xac/0x1d0)
+> > >  [<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>] (fb_pan_display+0xcc/0x134)
+> > >  [<c03a4e84>] (fb_pan_display) from [<c03b1214>] (bit_update_start+0x14/0x30)
+> > >  [<c03b1214>] (bit_update_start) from [<c03afe94>] (fbcon_switch+0x3d8/0x4e0)
+> > >  [<c03afe94>] (fbcon_switch) from [<c03ec930>] (redraw_screen+0x174/0x238)
+> > >  [<c03ec930>] (redraw_screen) from [<c03aceb4>] (fbcon_prepare_logo+0x3c4/0x400)
+> > >  [<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>] (fbcon_init+0x3c8/0x5ac)
+> > >  [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > >  [<c043f060>] (sun4i_drv_bind) from [<c044b5b0>] (try_to_bring_up_master+0x164/0x1a0)
+> > >  [<c044b5b0>] (try_to_bring_up_master) from [<c044b680>] (__component_add+0x94/0x140)
+> > >  [<c044b680>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>] (platform_drv_probe+0x48/0x9c)
+> > >  [<c0452f0c>] (platform_drv_probe) from [<c04512e4>] (really_probe+0x1dc/0x2c8)
+> > >  [<c04512e4>] (really_probe) from [<c0451530>] (driver_probe_device+0x60/0x160)
+> > >  [<c0451530>] (driver_probe_device) from [<c044f7bc>] (bus_for_each_drv+0x74/0xb8)
+> > >  [<c044f7bc>] (bus_for_each_drv) from [<c0451094>] (__device_attach+0xd0/0x13c)
+> > >  [<c0451094>] (__device_attach) from [<c045048c>] (bus_probe_device+0x84/0x8c)
+> > >  [<c045048c>] (bus_probe_device) from [<c0450918>] (deferred_probe_work_func+0x64/0x90)
+> > >  [<c0450918>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > >  ---[ end trace 755e10f62b83f396 ]---
+> > >  Console: switching to colour frame buffer device 100x30
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > >
+> > > But the expected start delay value is 1 which is confirmed from
+> > > new bsp [2].
+> >
+> > If you're saying that the "legacy" link (second one) is the new BSP.
 >
-> Group "user" and "pages" fields of bpf_map into the bpf_map_memory
-> structure. Later it can be extended with "memcg" and other related
-> information.
+> Will update, thanks.
 >
-> The main reason for a such change (beside cosmetics) is to pass
-> bpf_map_memory structure to charging functions before the actual
-> allocation of bpf_map.
+> >
+> > > The important and unclear note on legacy and new bsp codes [1] [2]
+> > > is both use similar start computation initially but it later reassign
+> > > it to 1 in new bsp.
+> >
+> > Then start_delay is never reassigned to 1 in that link, and is clamped
+> > between 8 and 100 as the code that you are removing is doing.
 >
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Please see the link one more please
+> https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
+>
+> >
+> > > Unfortunately we don't have any evidence or documentation for this
+> > > reassignment to 1 in new bsp, but it is working with all supported
+> > > panels in A33, A64.
+> >
+> > No, it's not. That was added to fix a panel that is supported today.
+>
+> No, I have see this in A33, A64. and these are controller drivers
+> right, if it panel fix and it should be part of panel driver isn't
+> it?
 
-Acked-by: Song Liu <songliubraving@fb.com>
+I'm not sure to follow that argument. You're submitting that fix to
+allow other panels to work, right? So surely, some issues that can be
+found using a given panel might not be solely fixed in the panel driver.
 
-> ---
->  include/linux/bpf.h           | 10 +++++++---
->  kernel/bpf/arraymap.c         |  2 +-
->  kernel/bpf/cpumap.c           |  4 ++--
->  kernel/bpf/devmap.c           |  4 ++--
->  kernel/bpf/hashtab.c          |  4 ++--
->  kernel/bpf/local_storage.c    |  2 +-
->  kernel/bpf/lpm_trie.c         |  4 ++--
->  kernel/bpf/queue_stack_maps.c |  2 +-
->  kernel/bpf/reuseport_array.c  |  2 +-
->  kernel/bpf/stackmap.c         |  4 ++--
->  kernel/bpf/syscall.c          | 19 ++++++++++---------
->  kernel/bpf/xskmap.c           |  4 ++--
->  net/core/bpf_sk_storage.c     |  2 +-
->  net/core/sock_map.c           |  4 ++--
->  14 files changed, 36 insertions(+), 31 deletions(-)
+> We can even see the same in pin64 longsleep kernel and others.
 >
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index ff3e00ff84d2..980b7a9bdd21 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -66,6 +66,11 @@ struct bpf_map_ops {
->                                      u64 imm, u32 *off);
->  };
->
-> +struct bpf_map_memory {
-> +       u32 pages;
-> +       struct user_struct *user;
-> +};
-> +
->  struct bpf_map {
->         /* The first two cachelines with read-mostly members of which some
->          * are also accessed in fast-path (e.g. ops, max_entries).
-> @@ -86,7 +91,7 @@ struct bpf_map {
->         u32 btf_key_type_id;
->         u32 btf_value_type_id;
->         struct btf *btf;
-> -       u32 pages;
-> +       struct bpf_map_memory memory;
->         bool unpriv_array;
->         bool frozen; /* write-once */
->         /* 48 bytes hole */
-> @@ -94,8 +99,7 @@ struct bpf_map {
->         /* The 3rd and 4th cacheline with misc members to avoid false sharing
->          * particularly with refcounting.
->          */
-> -       struct user_struct *user ____cacheline_aligned;
-> -       atomic_t refcnt;
-> +       atomic_t refcnt ____cacheline_aligned;
->         atomic_t usercnt;
->         struct work_struct work;
->         char name[BPF_OBJ_NAME_LEN];
-> diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-> index 584636c9e2eb..8fda24e78193 100644
-> --- a/kernel/bpf/arraymap.c
-> +++ b/kernel/bpf/arraymap.c
-> @@ -138,7 +138,7 @@ static struct bpf_map *array_map_alloc(union bpf_attr *attr)
->
->         /* copy mandatory map attributes */
->         bpf_map_init_from_attr(&array->map, attr);
-> -       array->map.pages = cost;
-> +       array->map.memory.pages = cost;
->         array->elem_size = elem_size;
->
->         if (percpu && bpf_array_alloc_percpu(array)) {
-> diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-> index cf727d77c6c6..035268add724 100644
-> --- a/kernel/bpf/cpumap.c
-> +++ b/kernel/bpf/cpumap.c
-> @@ -108,10 +108,10 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
->         cost += cpu_map_bitmap_size(attr) * num_possible_cpus();
->         if (cost >= U32_MAX - PAGE_SIZE)
->                 goto free_cmap;
-> -       cmap->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       cmap->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
->         /* Notice returns -EPERM on if map size is larger than memlock limit */
-> -       ret = bpf_map_precharge_memlock(cmap->map.pages);
-> +       ret = bpf_map_precharge_memlock(cmap->map.memory.pages);
->         if (ret) {
->                 err = ret;
->                 goto free_cmap;
-> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-> index 1e525d70f833..f6c57efb1d0d 100644
-> --- a/kernel/bpf/devmap.c
-> +++ b/kernel/bpf/devmap.c
-> @@ -111,10 +111,10 @@ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
->         if (cost >= U32_MAX - PAGE_SIZE)
->                 goto free_dtab;
->
-> -       dtab->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       dtab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
->         /* if map size is larger than memlock limit, reject it early */
-> -       err = bpf_map_precharge_memlock(dtab->map.pages);
-> +       err = bpf_map_precharge_memlock(dtab->map.memory.pages);
->         if (err)
->                 goto free_dtab;
->
-> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-> index 0f2708fde5f7..15bf228d2e98 100644
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -364,10 +364,10 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
->                 /* make sure page count doesn't overflow */
->                 goto free_htab;
->
-> -       htab->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       htab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
->         /* if map size is larger than memlock limit, reject it early */
-> -       err = bpf_map_precharge_memlock(htab->map.pages);
-> +       err = bpf_map_precharge_memlock(htab->map.memory.pages);
->         if (err)
->                 goto free_htab;
->
-> diff --git a/kernel/bpf/local_storage.c b/kernel/bpf/local_storage.c
-> index e48302ecb389..574325276650 100644
-> --- a/kernel/bpf/local_storage.c
-> +++ b/kernel/bpf/local_storage.c
-> @@ -303,7 +303,7 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
->         if (!map)
->                 return ERR_PTR(-ENOMEM);
->
-> -       map->map.pages = pages;
-> +       map->map.memory.pages = pages;
->
->         /* copy mandatory map attributes */
->         bpf_map_init_from_attr(&map->map, attr);
-> diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-> index e61630c2e50b..8e423a582760 100644
-> --- a/kernel/bpf/lpm_trie.c
-> +++ b/kernel/bpf/lpm_trie.c
-> @@ -578,9 +578,9 @@ static struct bpf_map *trie_alloc(union bpf_attr *attr)
->                 goto out_err;
->         }
->
-> -       trie->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       trie->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
-> -       ret = bpf_map_precharge_memlock(trie->map.pages);
-> +       ret = bpf_map_precharge_memlock(trie->map.memory.pages);
->         if (ret)
->                 goto out_err;
->
-> diff --git a/kernel/bpf/queue_stack_maps.c b/kernel/bpf/queue_stack_maps.c
-> index 0b140d236889..8a510e71d486 100644
-> --- a/kernel/bpf/queue_stack_maps.c
-> +++ b/kernel/bpf/queue_stack_maps.c
-> @@ -89,7 +89,7 @@ static struct bpf_map *queue_stack_map_alloc(union bpf_attr *attr)
->
->         bpf_map_init_from_attr(&qs->map, attr);
->
-> -       qs->map.pages = cost;
-> +       qs->map.memory.pages = cost;
->         qs->size = size;
->
->         raw_spin_lock_init(&qs->lock);
-> diff --git a/kernel/bpf/reuseport_array.c b/kernel/bpf/reuseport_array.c
-> index 18e225de80ff..819515242739 100644
-> --- a/kernel/bpf/reuseport_array.c
-> +++ b/kernel/bpf/reuseport_array.c
-> @@ -176,7 +176,7 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
->
->         /* copy mandatory map attributes */
->         bpf_map_init_from_attr(&array->map, attr);
-> -       array->map.pages = cost;
-> +       array->map.memory.pages = cost;
->
->         return &array->map;
->  }
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 950ab2f28922..08d4efff73ac 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -131,9 +131,9 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
->         bpf_map_init_from_attr(&smap->map, attr);
->         smap->map.value_size = value_size;
->         smap->n_buckets = n_buckets;
-> -       smap->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       smap->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
-> -       err = bpf_map_precharge_memlock(smap->map.pages);
-> +       err = bpf_map_precharge_memlock(smap->map.memory.pages);
->         if (err)
->                 goto free_smap;
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 3d546b6f4646..df14e63806c8 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -222,19 +222,20 @@ static int bpf_map_init_memlock(struct bpf_map *map)
->         struct user_struct *user = get_current_user();
->         int ret;
->
-> -       ret = bpf_charge_memlock(user, map->pages);
-> +       ret = bpf_charge_memlock(user, map->memory.pages);
->         if (ret) {
->                 free_uid(user);
->                 return ret;
->         }
-> -       map->user = user;
-> +       map->memory.user = user;
->         return ret;
->  }
->
->  static void bpf_map_release_memlock(struct bpf_map *map)
->  {
-> -       struct user_struct *user = map->user;
-> -       bpf_uncharge_memlock(user, map->pages);
-> +       struct user_struct *user = map->memory.user;
-> +
-> +       bpf_uncharge_memlock(user, map->memory.pages);
->         free_uid(user);
->  }
->
-> @@ -242,17 +243,17 @@ int bpf_map_charge_memlock(struct bpf_map *map, u32 pages)
->  {
->         int ret;
->
-> -       ret = bpf_charge_memlock(map->user, pages);
-> +       ret = bpf_charge_memlock(map->memory.user, pages);
->         if (ret)
->                 return ret;
-> -       map->pages += pages;
-> +       map->memory.pages += pages;
->         return ret;
->  }
->
->  void bpf_map_uncharge_memlock(struct bpf_map *map, u32 pages)
->  {
-> -       bpf_uncharge_memlock(map->user, pages);
-> -       map->pages -= pages;
-> +       bpf_uncharge_memlock(map->memory.user, pages);
-> +       map->memory.pages -= pages;
->  }
->
->  static int bpf_map_alloc_id(struct bpf_map *map)
-> @@ -395,7 +396,7 @@ static void bpf_map_show_fdinfo(struct seq_file *m, struct file *filp)
->                    map->value_size,
->                    map->max_entries,
->                    map->map_flags,
-> -                  map->pages * 1ULL << PAGE_SHIFT,
-> +                  map->memory.pages * 1ULL << PAGE_SHIFT,
->                    map->id,
->                    READ_ONCE(map->frozen));
->
-> diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
-> index 686d244e798d..f816ee1a0fa0 100644
-> --- a/kernel/bpf/xskmap.c
-> +++ b/kernel/bpf/xskmap.c
-> @@ -40,10 +40,10 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
->         if (cost >= U32_MAX - PAGE_SIZE)
->                 goto free_m;
->
-> -       m->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       m->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
->
->         /* Notice returns -EPERM on if map size is larger than memlock limit */
-> -       err = bpf_map_precharge_memlock(m->map.pages);
-> +       err = bpf_map_precharge_memlock(m->map.memory.pages);
->         if (err)
->                 goto free_m;
->
-> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-> index 9a8aaf8e235d..92581c3ff220 100644
-> --- a/net/core/bpf_sk_storage.c
-> +++ b/net/core/bpf_sk_storage.c
-> @@ -659,7 +659,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
->         smap->elem_size = sizeof(struct bpf_sk_storage_elem) + attr->value_size;
->         smap->cache_idx = (unsigned int)atomic_inc_return(&cache_idx) %
->                 BPF_SK_STORAGE_CACHE_SIZE;
-> -       smap->map.pages = pages;
-> +       smap->map.memory.pages = pages;
->
->         return &smap->map;
->  }
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index be6092ac69f8..4eb5b6a1b29f 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -49,8 +49,8 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
->                 goto free_stab;
->         }
->
-> -       stab->map.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> -       err = bpf_map_precharge_memlock(stab->map.pages);
-> +       stab->map.memory.pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
-> +       err = bpf_map_precharge_memlock(stab->map.memory.pages);
->         if (err)
->                 goto free_stab;
->
-> --
-> 2.20.1
->
+> https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
+> https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
+
+Yeah, and both of these have the legacy driver part with the clamping
+too.
+
+I'll test these patches again some time next week
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
