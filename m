@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F513C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D8CC28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4314D250DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA99250EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189331;
-	bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+	s=default; t=1559189334;
+	bh=gax3MfaSwfiYA6qdvLN2qDcIcWd8QKT8FjHPxYZr8pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6Vj4WBT792FNshYRcsnXHP//3UD+3PcrlbWc7wkYwXxaeK1c5t0dNYggAu92l90F
-	 2XTs7GUx/CWHU74d4JbyJ/rHjy/XBFRzmd90YNiQ5QNi8eGdlQRfaG6sMsPS6Vn4iI
-	 6A2eEGlrws1RBIXpMXLwIKIFEOfdbjasLy76xuPY=
+	b=cB1plzfq4iOOr0TYE5tVj/fA8s9nkCh46atTWAdqcM78Lci3wmqviNKJ0lqIGZlRN
+	 Dmq21AkolQgDAsiZjLj3khd4bTo6l9TmnTqe6uU9OHrPxitRWBqDZ7I67K0kZjDqit
+	 QmBpEIhxV4eIb/Fr23PLSbZTIE742mCePmW0qpXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfE3EIu (ORCPT
+        id S1727654AbfE3EIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfE3DRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729927AbfE3DRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF42824694;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8032469D;
         Thu, 30 May 2019 03:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186236;
-        bh=OxCAIHPoH18e4bJyXWJl8c54vD7RQRBMGt1OQmZG0A4=;
+        bh=gax3MfaSwfiYA6qdvLN2qDcIcWd8QKT8FjHPxYZr8pE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wSaAiOOaK8BkP6OffpnGjmWaNkIwOU/7IsahveTHl4S+SHsViIQRdevXIN48IYypN
-         GLT2ACdO0lSFfd0tiBYZ7apoUzQWPgbZxOtKbqlfazoxAddBWNt6wC6x86ytb+GWAr
-         y1Z/tYY98RAdOKV8zLLqz8NE++gYvcbBkopc/HcM=
+        b=Yk+sXNAYn+ixTploTzMZuRo/q+j0tpxy+yDuNv/0Thc2tDbwJ+lQ5s66ZxJ36idaz
+         /pzpMQWu7dS3ofYXVWdO0T+WiAxn3iDbLfYoESd08VLUmELa1EoN4W57d2udGK0sle
+         daMAemJVmip8xJ1BG34CqCOeug2NiKVQmhow2Uhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 145/276] x86/irq/64: Limit IST stack overflow check to #DB stack
-Date:   Wed, 29 May 2019 20:05:03 -0700
-Message-Id: <20190530030534.711574134@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 127/276] media: au0828: Fix NULL pointer dereference in au0828_analog_stream_enable()
+Date:   Wed, 29 May 2019 20:04:45 -0700
+Message-Id: <20190530030533.748197804@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -66,80 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40 ]
+[ Upstream commit 898bc40bfcc26abb6e06e960d6d4754c36c58b50 ]
 
-Commit
+Fix au0828_analog_stream_enable() to check if device is in the right
+state first. When unbind happens while bind is in progress, usbdev
+pointer could be invalid in au0828_analog_stream_enable() and a call
+to usb_ifnum_to_if() will result in the null pointer dereference.
 
-  37fe6a42b343 ("x86: Check stack overflow in detail")
+This problem is found with the new media_dev_allocator.sh test.
 
-added a broad check for the full exception stack area, i.e. it considers
-the full exception stack area as valid.
+kernel: [  590.359623] BUG: unable to handle kernel NULL pointer dereference at 00000000000004e8
+kernel: [  590.359627] #PF error: [normal kernel read fault]
+kernel: [  590.359629] PGD 0 P4D 0
+kernel: [  590.359632] Oops: 0000 [#1] SMP PTI
+kernel: [  590.359634] CPU: 3 PID: 1458 Comm: v4l_id Not tainted 5.1.0-rc2+ #30
+kernel: [  590.359636] Hardware name: Dell Inc. OptiPlex 7 90/0HY9JP, BIOS A18 09/24/2013
+kernel: [  590.359641] RIP: 0010:usb_ifnum_to_if+0x6/0x60
+kernel: [  590.359643] Code: 5d 41 5e 41 5f 5d c3 48 83 c4
+ 10 b8 fa ff ff ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 b8 fa ff ff ff c3 0f 1f 00 6
+6 66 66 66 90 55 <48> 8b 97 e8 04 00 00 48 89 e5 48 85 d2 74 41 0f b6 4a 04 84 c
+9 74
+kernel: [  590.359645] RSP: 0018:ffffad3cc3c1fc00 EFLAGS: 00010246
+kernel: [  590.359646] RAX: 0000000000000000 RBX: ffff8ded b1f3c000 RCX: 1f377e4500000000
+kernel: [  590.359648] RDX: ffff8dedfa3a6b50 RSI: 00000000 00000000 RDI: 0000000000000000
+kernel: [  590.359649] RBP: ffffad3cc3c1fc28 R08: 00000000 8574acc2 R09: ffff8dedfa3a6b50
+kernel: [  590.359650] R10: 0000000000000001 R11: 00000000 00000000 R12: 0000000000000000
+kernel: [  590.359652] R13: ffff8dedb1f3f0f0 R14: ffffffff adcf7ec0 R15: 0000000000000000
+kernel: [  590.359654] FS:  00007f7917198540(0000) GS:ffff 8dee258c0000(0000) knlGS:0000000000000000
+kernel: [  590.359655] CS:  0010 DS: 0000 ES: 0000 CR0: 00 00000080050033
+kernel: [  590.359657] CR2: 00000000000004e8 CR3: 00000001 a388e002 CR4: 00000000000606e0
+kernel: [  590.359658] Call Trace:
+kernel: [  590.359664]  ? au0828_analog_stream_enable+0x2c/0x180
+kernel: [  590.359666]  au0828_v4l2_open+0xa4/0x110
+kernel: [  590.359670]  v4l2_open+0x8b/0x120
+kernel: [  590.359674]  chrdev_open+0xa6/0x1c0
+kernel: [  590.359676]  ? cdev_put.part.3+0x20/0x20
+kernel: [  590.359678]  do_dentry_open+0x1f6/0x360
+kernel: [  590.359681]  vfs_open+0x2f/0x40
+kernel: [  590.359684]  path_openat+0x299/0xc20
+kernel: [  590.359688]  do_filp_open+0x9b/0x110
+kernel: [  590.359695]  ? _raw_spin_unlock+0x27/0x40
+kernel: [  590.359697]  ? __alloc_fd+0xb2/0x160
+kernel: [  590.359700]  do_sys_open+0x1ba/0x260
+kernel: [  590.359702]  ? do_sys_open+0x1ba/0x260
+kernel: [  590.359712]  __x64_sys_openat+0x20/0x30
+kernel: [  590.359715]  do_syscall_64+0x5a/0x120
+kernel: [  590.359718]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-That's wrong in two aspects:
-
- 1) It does not check the individual areas one by one
-
- 2) #DF, NMI and #MCE are not enabling interrupts which means that a
-    regular device interrupt cannot happen in their context. In fact if a
-    device interrupt hits one of those IST stacks that's a bug because some
-    code path enabled interrupts while handling the exception.
-
-Limit the check to the #DB stack and consider all other IST stacks as
-'overflow' or invalid.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/media/usb/au0828/au0828-video.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 0469cd078db15..b50ac9c7397bb 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
- /*
-  * Probabilistic stack overflow check:
-  *
-- * Only check the stack in process context, because everything else
-- * runs on the big interrupt stacks. Checking reliably is too expensive,
-- * so we just check from interrupts.
-+ * Regular device interrupts can enter on the following stacks:
-+ *
-+ * - User stack
-+ *
-+ * - Kernel task stack
-+ *
-+ * - Interrupt stack if a device driver reenables interrupts
-+ *   which should only happen in really old drivers.
-+ *
-+ * - Debug IST stack
-+ *
-+ * All other contexts are invalid.
-  */
- static inline void stack_overflow_check(struct pt_regs *regs)
- {
-@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 		return;
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 72095465856a2..3e111f7f56dfe 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -758,6 +758,9 @@ static int au0828_analog_stream_enable(struct au0828_dev *d)
  
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
--	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
-+	estack_bottom = (u64)oist->ist[DEBUG_STACK];
-+	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
- 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
- 		return;
+ 	dprintk(1, "au0828_analog_stream_enable called\n");
  
++	if (test_bit(DEV_DISCONNECTED, &d->dev_state))
++		return -ENODEV;
++
+ 	iface = usb_ifnum_to_if(d->usbdev, 0);
+ 	if (iface && iface->cur_altsetting->desc.bAlternateSetting != 5) {
+ 		dprintk(1, "Changing intf#0 to alt 5\n");
 -- 
 2.20.1
 
