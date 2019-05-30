@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EF9C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18105C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E4724BB5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61A924923
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187532;
-	bh=ktULjbtGiu6USQiIsLXH9WoJV2uliWLQyEHGbCjaLcs=;
+	s=default; t=1559187537;
+	bh=Doz9nPlWGUNpWvla7mOSYN9TlcKDSLcUbeMO3iDwmz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOKoXHu0ekAIOmLAacDgNEslbazO3CYs/6nfqcRiGcdNdZeY4cHRH2hFQW3rIKvpe
-	 ySNH1WUmRaBzuN9fbEwUl4amLApL9pg3kNRDOK50vrgESyDSiiTVk5HKIANKOVj5Sv
-	 NfiINks2626D2T9sQ6b1bnr4wJfoVrsyse2nuyh0=
+	b=y+72RbE5RLVr+E0wLFA4k+V44yy+hp8Q6d1PQEGniF98AR/kub3xH520DgEnKD0MV
+	 5Iiiy98+9t42iA8ffjHOpeVv9iDXqJ5Ra4B+DBX7Oq+es2XeJzZ6khRCkTW12vJbey
+	 lnrqmoPecttrBSQIP1fs4fTxtHje3yiwxx3hjnIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfE3DWp (ORCPT
+        id S1731843AbfE3DWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730892AbfE3DRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:02 -0400
+        id S1730870AbfE3DQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D35924657;
-        Thu, 30 May 2019 03:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C04C24643;
+        Thu, 30 May 2019 03:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186221;
-        bh=ktULjbtGiu6USQiIsLXH9WoJV2uliWLQyEHGbCjaLcs=;
+        s=default; t=1559186216;
+        bh=Doz9nPlWGUNpWvla7mOSYN9TlcKDSLcUbeMO3iDwmz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAK52jHNiuWS/jsEdnKXTuEnlvvzAZEDAOP4XYY07j4OFyEB3udHbwexK04pCzdlN
-         SG98bPJEOEDnzZ20URSQEAxcLbImnq9emfkAHA46tV8Rzh4Y6uko10D7jBWlCgt6IO
-         DkvpTT92xTs5z/2nBYrlgxvyqTlEuNiQXJZP5cIs=
+        b=IZ8Etljh9QvaE7jgvC6YPnjLmtluHPtbgMupQlEPLethbihCv5TgQ46pZKR4RfFuL
+         RKqkBNb439mLGW8p3n6V4OjReAD/qlzMVySzTZWlONs2+J0Hfg5grShj+3xFizNxfu
+         c0+aBHnC04bPTygIT6cyRGeSwoIyMmuDHBR15ZYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/276] mm/uaccess: Use unsigned long to placate UBSAN warnings on older GCC versions
-Date:   Wed, 29 May 2019 20:04:31 -0700
-Message-Id: <20190530030533.017771519@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
+        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 104/276] bcache: fix failure in journal relplay
+Date:   Wed, 29 May 2019 20:04:22 -0700
+Message-Id: <20190530030532.557672049@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,74 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
+[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
 
-Randy reported objtool triggered on his (GCC-7.4) build:
+journal replay failed with messages:
+Sep 10 19:10:43 ceph kernel: bcache: error on
+bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
+2057493-2057567 missing! (replaying 2057493-2076601), disabling
+caching
 
-  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
-  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+The reason is in journal_reclaim(), when discard is enabled, we send
+discard command and reclaim those journal buckets whose seq is old
+than the last_seq_now, but before we write a journal with last_seq_now,
+the machine is restarted, so the journal with the last_seq_now is not
+written to the journal bucket, and the last_seq_wrote in the newest
+journal is old than last_seq_now which we expect to be, so when we doing
+replay, journals from last_seq_wrote to last_seq_now are missing.
 
-This is due to UBSAN generating signed-overflow-UB warnings where it
-should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
-uses through -fno-strict-overflow).
+It's hard to write a journal immediately after journal_reclaim(),
+and it harmless if those missed journal are caused by discarding
+since those journals are already wrote to btree node. So, if miss
+seqs are started from the beginning journal, we treat it as normal,
+and only print a message to show the miss journal, and point out
+it maybe caused by discarding.
 
-Make the functions use 'unsigned long' throughout.
+Patch v2 add a judgement condition to ignore the missed journal
+only when discard enabled as Coly suggested.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+(Coly Li: rebase the patch with other changes in bch_journal_replay())
+
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Tested-by: Dennis Schridde <devurandom@gmx.net>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/strncpy_from_user.c | 5 +++--
- lib/strnlen_user.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index b53e1b5d80f42..e304b54c9c7dd 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -23,10 +23,11 @@
-  * hit it), 'max' is the address space maximum (and we return
-  * -EFAULT if we hit it).
-  */
--static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
-+static inline long do_strncpy_from_user(char *dst, const char __user *src,
-+					unsigned long count, unsigned long max)
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 07da39ac2d110..f880e5eba8dd9 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -317,6 +317,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
+ 	}
+ }
+ 
++bool is_discard_enabled(struct cache_set *s)
++{
++	struct cache *ca;
++	unsigned int i;
++
++	for_each_cache(ca, s, i)
++		if (ca->discard)
++			return true;
++
++	return false;
++}
++
+ int bch_journal_replay(struct cache_set *s, struct list_head *list)
  {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long res = 0;
-+	unsigned long res = 0;
+ 	int ret = 0, keys = 0, entries = 0;
+@@ -331,10 +343,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
  
- 	/*
- 	 * Truncate 'max' to the user-specified limit, so that
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 60d0bbda8f5e5..184f80f7bacfa 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -28,7 +28,7 @@
- static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long align, res = 0;
-+	unsigned long align, res = 0;
- 	unsigned long c;
+ 		if (n != i->j.seq) {
+-			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-			n, i->j.seq - 1, start, end);
+-			ret = -EIO;
+-			goto err;
++			if (n == start && is_discard_enabled(s))
++				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++			else {
++				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++				ret = -EIO;
++				goto err;
++			}
+ 		}
  
- 	/*
-@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
- 	 */
--	align = (sizeof(long) - 1) & (unsigned long)src;
-+	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
- 	src -= align;
- 	max += align;
- 
+ 		for (k = i->j.start;
 -- 
 2.20.1
 
