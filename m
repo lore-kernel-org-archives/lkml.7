@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F483C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD768C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7497224B7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9133524B78
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187376;
-	bh=U7oWFLa6HNlYuQfr8/qAu4JkFtkS0PlMnRCeytKEJq8=;
+	s=default; t=1559187382;
+	bh=bB6jC1Dmpqr111bwzyRwcfMB0pV1fnZ4gBFTnhP25eI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMQQPa3pW3rBgVUunjTITVtFxtm6NlDg3Bv8CMnJoJ9yDyiyRTPcby8wRDnn3qAVd
-	 unNp11yfvDi1LN0Mq6gDKK5KofCdrG0RKCbXUhIiP4kvvOKSDbLJoYUvLL8AiClr+w
-	 QvVzvkU7ASFZn6Cppng8hGE+CwkJMtREDKjMQqQY=
+	b=S3X8rhe4Kzixr4Vw749HgvkDhtMBHKkilO0VFOIaWy8O3FgSf6fxEZthQLuX2VKTO
+	 I8nT6szB8tCgAvCFL8Q8JwzYzc1KQRBquaWrxL2qL0bzY6UMOJDMi9G8z5nPror/GV
+	 NOY9hOD7t0UuQGzQmWWPuyG/qeAFP8pLL8Jj62GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfE3DZ3 (ORCPT
+        id S1733037AbfE3DZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:25:29 -0400
+        Wed, 29 May 2019 23:25:22 -0400
 Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731562AbfE3DS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:28 -0400
+        id S1730064AbfE3DS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:27 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A73A247CF;
-        Thu, 30 May 2019 03:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB35247C8;
+        Thu, 30 May 2019 03:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186308;
-        bh=U7oWFLa6HNlYuQfr8/qAu4JkFtkS0PlMnRCeytKEJq8=;
+        s=default; t=1559186306;
+        bh=bB6jC1Dmpqr111bwzyRwcfMB0pV1fnZ4gBFTnhP25eI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkcHYf2f0I2/f27i9Do4XHZA2qdW98aDDpPxwGVy+EhVXwcWahs3zWES4pJnOIhpR
-         1SiT1kWl3qxaAiyHc/BKJw3gmknch1Jre59LSec8k8lY3c1ZPYzbE/nz27nqIgcSdO
-         5ZruABRyzlAWHvwuiBfMCr4o2I3P/4m+wHI/QGA8=
+        b=HeEX4owEoIRIKNU4TGsV3qgQ/kwBJm+7i72NJov/3iKjV/rND3loh2OW4wXdZ8s5m
+         rt8IZZ7d4FbnEb1LcOglex/xDSNXRCEwcNUr54l2g7Zz0tFKmLfNmfQ8NlSqMB05Bm
+         4CgN2G7uLDR5mvSGFgj9VBBfDSx0OfSm4IXqbKvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 274/276] vfio-ccw: Prevent quiesce function going into an infinite loop
-Date:   Wed, 29 May 2019 20:07:12 -0700
-Message-Id: <20190530030542.325522714@linuxfoundation.org>
+Subject: [PATCH 4.19 271/276] drm/drv: Hold ref on parent device during drm_device lifetime
+Date:   Wed, 29 May 2019 20:07:09 -0700
+Message-Id: <20190530030542.146504255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,87 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d1ffa760d22aa1d8190478e5ef555c59a771db27 ]
+[ Upstream commit 56be6503aab2bc3a30beae408071b9be5e1bae51 ]
 
-The quiesce function calls cio_cancel_halt_clear() and if we
-get an -EBUSY we go into a loop where we:
-	- wait for any interrupts
-	- flush all I/O in the workqueue
-	- retry cio_cancel_halt_clear
+This makes it safe to access drm_device->dev after the parent device has
+been removed/unplugged.
 
-During the period where we are waiting for interrupts or
-flushing all I/O, the channel subsystem could have completed
-a halt/clear action and turned off the corresponding activity
-control bits in the subchannel status word. This means the next
-time we call cio_cancel_halt_clear(), we will again start by
-calling cancel subchannel and so we can be stuck between calling
-cancel and halt forever.
-
-Rather than calling cio_cancel_halt_clear() immediately after
-waiting, let's try to disable the subchannel. If we succeed in
-disabling the subchannel then we know nothing else can happen
-with the device.
-
-Suggested-by: Eric Farman <farman@linux.ibm.com>
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Message-Id: <4d5a4b98ab1b41ac6131b5c36de18b76c5d66898.1555449329.git.alifm@linux.ibm.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Acked-by: Halil Pasic <pasic@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Gerd Hoffmann <kraxel@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190225144232.20761-2-noralf@tronnes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_drv.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/drm_drv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 0e0a743aeaf69..7a06cdff6572d 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -40,26 +40,30 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
- 	if (ret != -EBUSY)
- 		goto out_unlock;
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 0201ccb22f4ca..d8ae4ca129c70 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -499,7 +499,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	}
  
-+	iretry = 255;
- 	do {
--		iretry = 255;
+ 	kref_init(&dev->ref);
+-	dev->dev = parent;
++	dev->dev = get_device(parent);
+ 	dev->driver = driver;
  
- 		ret = cio_cancel_halt_clear(sch, &iretry);
--		while (ret == -EBUSY) {
--			/*
--			 * Flush all I/O and wait for
--			 * cancel/halt/clear completion.
--			 */
--			private->completion = &completion;
--			spin_unlock_irq(sch->lock);
+ 	INIT_LIST_HEAD(&dev->filelist);
+@@ -568,6 +568,7 @@ int drm_dev_init(struct drm_device *dev,
+ 	drm_minor_free(dev, DRM_MINOR_RENDER);
+ 	drm_fs_inode_free(dev->anon_inode);
+ err_free:
++	put_device(dev->dev);
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->clientlist_mutex);
+@@ -603,6 +604,8 @@ void drm_dev_fini(struct drm_device *dev)
+ 	drm_minor_free(dev, DRM_MINOR_PRIMARY);
+ 	drm_minor_free(dev, DRM_MINOR_RENDER);
  
--			wait_for_completion_timeout(&completion, 3*HZ);
-+		if (ret == -EIO) {
-+			pr_err("vfio_ccw: could not quiesce subchannel 0.%x.%04x!\n",
-+			       sch->schid.ssid, sch->schid.sch_no);
-+			break;
-+		}
++	put_device(dev->dev);
 +
-+		/*
-+		 * Flush all I/O and wait for
-+		 * cancel/halt/clear completion.
-+		 */
-+		private->completion = &completion;
-+		spin_unlock_irq(sch->lock);
- 
--			private->completion = NULL;
--			flush_workqueue(vfio_ccw_work_q);
--			spin_lock_irq(sch->lock);
--			ret = cio_cancel_halt_clear(sch, &iretry);
--		};
-+		if (ret == -EBUSY)
-+			wait_for_completion_timeout(&completion, 3*HZ);
- 
-+		private->completion = NULL;
-+		flush_workqueue(vfio_ccw_work_q);
-+		spin_lock_irq(sch->lock);
- 		ret = cio_disable_subchannel(sch);
- 	} while (ret == -EBUSY);
- out_unlock:
+ 	mutex_destroy(&dev->master_mutex);
+ 	mutex_destroy(&dev->ctxlist_mutex);
+ 	mutex_destroy(&dev->clientlist_mutex);
 -- 
 2.20.1
 
