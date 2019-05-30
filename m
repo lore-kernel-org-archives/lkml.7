@@ -2,146 +2,96 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C4DC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34B1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6497124408
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DBA24410
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GCImXz4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfE3B6M (ORCPT
+        id S1727256AbfE3CBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:58:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15272 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726527AbfE3B6M (ORCPT
+        Wed, 29 May 2019 22:01:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38450 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfE3CBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:58:12 -0400
-X-UUID: 06101ce5e0844a43a15a98856ac9e508-20190530
-X-UUID: 06101ce5e0844a43a15a98856ac9e508-20190530
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 117967436; Thu, 30 May 2019 09:58:03 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 30 May 2019 09:58:02 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 09:58:02 +0800
-Message-ID: <1559181482.24427.18.camel@mtksdccf07>
-Subject: Re: [PATCH] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Miles Chen" <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        "Catalin Marinas" <catalin.marinas@arm.com>
-Date:   Thu, 30 May 2019 09:58:02 +0800
-In-Reply-To: <CACT4Y+ZwXsBk8VqvDOJGMqrbVjuZ-HfC9RG4LpgRC-9WqmQJVw@mail.gmail.com>
-References: <1559027797-30303-1-git-send-email-walter-zh.wu@mediatek.com>
-         <CACT4Y+aCnODuffR7PafyYispp_U+ZdY1Dr0XQYvmghkogLJzSw@mail.gmail.com>
-         <1559122529.17186.24.camel@mtksdccf07>
-         <CACT4Y+ZwXsBk8VqvDOJGMqrbVjuZ-HfC9RG4LpgRC-9WqmQJVw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 29 May 2019 22:01:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U1rru3172668;
+        Thu, 30 May 2019 02:00:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=B8QTSyLX9eqIs9dUClhnq3SvLDKzFdLYXPMlBG7SlbQ=;
+ b=GCImXz4cyR0yB3TyHuuazXlgylu7jBVqdDVf/vHZh1UlMwxhT1usQvB1NuZlJvGHn+Fv
+ gA69AQbdQlnsl3y2XU8snLU3/otV1k9AJ7MFbPGYJAVUD7c0+XBgliiLgRundKErxI4o
+ xe7E63TVgbroACOH+x9BnsMMmg1TMVkHv3xTih3NwKrYsZSl8hiDaj9xqsFUEfpIPitv
+ PiylH0G2L7ixMPyNlymDmWtIgbGP8leqPOS/O5B/4iP6pEaCjSxafOoXOtqjAISCRM1U
+ 4ju65cFkS2qcEwGsj16bBD5ABGTsAl1fFwVMvj6Ok3uMGDzHCCJITitugctDigpRp/nh 1Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2spw4tnams-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:00:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U203fs183118;
+        Thu, 30 May 2019 02:00:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sr31vkfd9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 02:00:15 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4U20E8l030781;
+        Thu, 30 May 2019 02:00:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 29 May 2019 19:00:14 -0700
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, don.brace@microsemi.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        Thomas.Lendacky@amd.com, dyoung@redhat.com
+Subject: Re: [PATCH v2] scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask in pqi_pci_init()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190527005934.1493-1-lijiang@redhat.com>
+Date:   Wed, 29 May 2019 22:00:11 -0400
+In-Reply-To: <20190527005934.1493-1-lijiang@redhat.com> (Lianbo Jiang's
+        message of "Mon, 27 May 2019 08:59:34 +0800")
+Message-ID: <yq14l5czopg.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=754
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905300013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=807 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905300013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-29 at 12:00 +0200, Dmitry Vyukov wrote:
-> > > There can be multiple qobjects in the quarantine associated with the
-> > > address, right? If so, we need to find the last one rather then a
-> > > random one.
-> > >
-> > The qobject includes the address which has tag and range, corruption
-> > address must be satisfied with the same tag and within object address
-> > range, then it is found in the quarantine.
-> > It should not easy to get multiple qobjects have the same tag and within
-> > object address range.
-> 
-> Yes, using the tag for matching (which I missed) makes the match less likely.
-> 
-> But I think we should at least try to find the newest object in
-> best-effort manner.
-We hope it, too.
 
-> Consider, both slab and slub reallocate objects in LIFO manner and we
-> don't have a quarantine for objects themselves. So if we have a loop
-> that allocates and frees an object of same size a dozen of times.
-> That's enough to get a duplicate pointer+tag qobject.
-> This includes:
-> 1. walking the global quarantine from quarantine_tail backwards.
-It is ok.
+Lianbo,
 
-> 2. walking per-cpu lists in the opposite direction: from tail rather
-> then from head. I guess we don't have links, so we could change the
-> order and prepend new objects from head.
-> This way we significantly increase chances of finding the right
-> object. This also deserves a comment mentioning that we can find a
-> wrong objects.
-> 
-The current walking per-cpu list direction is from head to trail. we
-will modify the direction and find the newest object.
+> When SME is enabled, the smartpqi driver won't work on the HP DL385
+> G10 machine, which causes the failure of kernel boot because it fails
+> to allocate pqi error buffer. Please refer to the kernel log:
 
+Applied to 5.2/scsi-fixes, thanks!
 
-> > > Why don't we allocate qlist_object and qlist_node in a single
-> > > allocation? Doing 2 allocations is both unnecessary slow and leads to
-> > > more complex code. We need to allocate them with a single allocations.
-> > > Also I think they should be allocated from a dedicated cache that opts
-> > > out of quarantine?
-> > >
-> > Single allocation is good suggestion, if we only has one allocation.
-> > then we need to move all member of qlist_object to qlist_node?
-> >
-> > struct qlist_object {
-> >     unsigned long addr;
-> >     unsigned int size;
-> >     struct kasan_alloc_meta free_track;
-> > };
-> > struct qlist_node {
-> >     struct qlist_object *qobject;
-> >     struct qlist_node *next;
-> > };
-> 
-> I see 2 options:
-> 1. add addr/size/free_track to qlist_node under ifdef CONFIG_KASAN_SW_TAGS
-> 2. or probably better would be to include qlist_node into qlist_object
-> as first field, then allocate qlist_object and cast it to qlist_node
-> when adding to quarantine, and then as we iterate quarantine, we cast
-> qlist_node back to qlist_object and can access size/addr.
-> 
-Choice 2 looks better, We first try it.
-
-> 
-> > We call call ___cache_free() to free the qobject and qnode, it should be
-> > out of quarantine?
-> 
-> This should work.
-
-Thanks your good suggestion.
-We will implement those solution which you suggested to the second
-edition.
-
-
-Thanks,
-Walter
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
