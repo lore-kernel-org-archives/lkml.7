@@ -4,50 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80046C28CC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BFEC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BC2244AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D99244A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185849;
-	bh=KKm8tQobGgirNLVNYlyF73ua17hZpMFCc1GhanWrZdE=;
+	s=default; t=1559185851;
+	bh=c7mEp2bWb7xo/WCjfGs/ZqOnDbMz3eb9yp1e7zhHQMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Knr4+tJrcBq1x60hRQ8agWZfL+FL2a7IaYuuZfHnkzZDZ268SVQyR0M1MLmqAUrC
-	 +PPS0A08r2lgexYgDNwWoBsvkMrkkzGTr9rymo0vp5W0Z4JHwZ3/SXV19aK9JSxQGb
-	 /et6i6e+Fd3COFOyk5FOBImBXXbeGIs5bnP0Jcfw=
+	b=DTZxkUGCzZ1BcnjmpAEhqdpeKkAalBWaMkQQsbI3HIaA/JHhfvrbGX8SrHzPz1MpO
+	 E9/Vd4Ebm2R75MDEuV3AQb/R4D6bUhdBFixyWQgCo2FdpSl3FSknuQbjmEiM7nagfJ
+	 RXc4i0K/o+KB37eB2jM8AS+BmrYo2HN2Q5lRX2Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfE3DKs (ORCPT
+        id S1728251AbfE3DKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46300 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbfE3DKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:06 -0400
+        id S1727938AbfE3DKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:07 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B4B724492;
-        Thu, 30 May 2019 03:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67B862448B;
+        Thu, 30 May 2019 03:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185805;
-        bh=KKm8tQobGgirNLVNYlyF73ua17hZpMFCc1GhanWrZdE=;
+        s=default; t=1559185806;
+        bh=c7mEp2bWb7xo/WCjfGs/ZqOnDbMz3eb9yp1e7zhHQMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpmOXfHnUquKemzLTHyuybKiKbanqFSotNM+hD3FhshUCujNOPZ2pP7WFLpHCZreP
-         0BHvEpyl/zrJm19FyogzTxLj6hLLyqGANdi+COEfio2xn2owt0CpkFo7H1fw3bWRSc
-         buVcWGv/VNlOOY8s59SQaSTqpF7NgegGhtSfrMLQ=
+        b=2a3w+8cvn5CX3FfIaLdAWUevswoxPScOvzzFM+hCPq7IpynKqhQSUDokwL/fXrWOO
+         Pe3bVESme86AHyOPA9PgZXZ6S7GNwUF8T6AZvcb2QN2FmPOurp2bgFvKC5hPmYETMR
+         sJyadSjrj0/m7phJLeXHI1cs7Kaj/E329JqXRtuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 086/405] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
-Date:   Wed, 29 May 2019 20:01:24 -0700
-Message-Id: <20190530030545.384841195@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
+        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
+        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 088/405] x86/ftrace: Set trampoline pages as executable
+Date:   Wed, 29 May 2019 20:01:26 -0700
+Message-Id: <20190530030545.478406255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,59 +72,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
+[ Upstream commit 3c0dab44e22782359a0a706cbce72de99a22aa75 ]
 
-When building with -Wunused-but-set-variable, the compiler shouts about
-a number of pte_unmap() users, since this expands to an empty macro on
-arm64:
+Since alloc_module() will not set the pages as executable soon, set
+ftrace trampoline pages as executable after they are allocated.
 
-  | mm/gup.c: In function 'gup_pte_range':
-  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/gup.c: At top level:
-  | mm/memory.c: In function 'copy_pte_range':
-  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/swap_state.c: In function 'swap_ra_info':
-  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/madvise.c: In function 'madvise_free_pte_range':
-  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
+For the time being, do not change ftrace to use the text_poke()
+interface. As a result, ftrace still breaks W^X.
 
-Rewrite pte_unmap() as a static inline function, which silences the
-warnings.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <akpm@linux-foundation.org>
+Cc: <ard.biesheuvel@linaro.org>
+Cc: <deneen.t.dock@intel.com>
+Cc: <kernel-hardening@lists.openwall.com>
+Cc: <kristen@linux.intel.com>
+Cc: <linux_dti@icloud.com>
+Cc: <will.deacon@arm.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190426001143.4983-10-namit@vmware.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/ftrace.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index de70c1eabf336..74ebe96937141 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -478,6 +478,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 	return __pmd_to_phys(pmd);
- }
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index bd553b3af22e9..6e0c0ed8e4bf4 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -749,6 +749,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	unsigned long end_offset;
+ 	unsigned long op_offset;
+ 	unsigned long offset;
++	unsigned long npages;
+ 	unsigned long size;
+ 	unsigned long retq;
+ 	unsigned long *ptr;
+@@ -781,6 +782,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 		return 0;
  
-+static inline void pte_unmap(pte_t *pte) { }
-+
- /* Find an entry in the third-level page table. */
- #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+ 	*tramp_size = size + RET_SIZE + sizeof(void *);
++	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
  
-@@ -486,7 +488,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 	/* Copy ftrace_caller onto the trampoline memory */
+ 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
+@@ -825,6 +827,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	/* ALLOC_TRAMP flags lets us know we created it */
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
  
- #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
- #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
--#define pte_unmap(pte)			do { } while (0)
- #define pte_unmap_nested(pte)		do { } while (0)
- 
- #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
++	/*
++	 * Module allocation needs to be completed by making the page
++	 * executable. The page is still writable, which is a security hazard,
++	 * but anyhow ftrace breaks W^X completely.
++	 */
++	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+ 	tramp_free(trampoline, *tramp_size);
 -- 
 2.20.1
 
