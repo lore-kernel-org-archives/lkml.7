@@ -7,55 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2192FC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496F5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7B424EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBA624ECF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188621;
-	bh=cYj6tGVRkcCfyzn1WMPn2V4eRoSHbAJSj6gDIu0hjcw=;
+	s=default; t=1559188624;
+	bh=vraa4DO0CKAQ0cePnddNicGGHZfeaTl86+HfTCh+TJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNcN4H5OZVK97thIDDhnQ1WfbhEP1lK+uUeLGonjI44SX+HAeQHYtvJUBzlCk5TAx
-	 NOaD8OH2KNxoPpbejNR7dpWxmIbXeRXMcZho6hZiM97815tdwAG7PX7bg9MQQWYflc
-	 7XOq2Acg8eKXvhDRVE/VXwC8/cRe0b22FDvYezWI=
+	b=ZaSLyQ3VCvn+eYh2QInS/8ONWv107uANN5BK4AZ+mBwa7J/JINo6WJjrRGB2+Xc8P
+	 7d3iI7YnR8I9GVu6yUiF6J/h4NkV5LJALjMFUTw/561RGRMEsPY5by9Uxk2JX58GPj
+	 ieRbBI3gPvRGAf5E6u2U8ZYe9pKB6n0qqcium9tU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbfE3DSx (ORCPT
+        id S2387918AbfE3D5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbfE3DPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:00 -0400
+        id S1731738AbfE3DSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:53 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5693E24579;
-        Thu, 30 May 2019 03:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B300B2480D;
+        Thu, 30 May 2019 03:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186099;
-        bh=cYj6tGVRkcCfyzn1WMPn2V4eRoSHbAJSj6gDIu0hjcw=;
+        s=default; t=1559186332;
+        bh=vraa4DO0CKAQ0cePnddNicGGHZfeaTl86+HfTCh+TJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVXqANYtI6cG03JA8u8S0PI/qxZ2fWsE+xsh8JaEnitfZ7NYjgQy+ehT1h6wYk+sM
-         b5Yjv78X9AnBJ0IQIxw53hR/rE/KMNuKJN02HkVnT7prlgJmUpKtHOan31D3sTpVBR
-         5bemLGJWEPkP+nQliBZDhqXpmvxbEB5YmhJv/4sg=
+        b=DYJDZcL++IUImmAe8pLxgZKOfkrvm6/6kWf9NnBZ49GeuICSBpiyNi7llIIBQ41gl
+         fPm2cti1py0qpMWq3H/nD38vSNHV6PVaAboRjwyyUG0gugGtVYyxedlGPklH8IZho9
+         SGJJSJQb+N8YEh4DavgLfuwnqogE/VHNi03a0ZLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 208/346] cpufreq: pmac32: fix possible object reference leak
-Date:   Wed, 29 May 2019 20:04:41 -0700
-Message-Id: <20190530030551.670288965@linuxfoundation.org>
+Subject: [PATCH 4.14 052/193] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+Date:   Wed, 29 May 2019 20:05:06 -0700
+Message-Id: <20190530030456.821909111@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,52 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8d10dc28a9ea6e8c02e825dab28699f3c72b02d9 ]
+[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
 
-The call to of_find_node_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When the DSDT tables expose devices with subdevices and a set of
+hierarchical _DSD properties, the data returned by
+acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+pointer assignment. The parser works fine with device_nodes or
+data_nodes, but not with a combination of the two.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pmac32-cpufreq.c:557:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:569:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 552, but without a corresponding object release within this function.
-./drivers/cpufreq/pmac32-cpufreq.c:598:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 587, but without a corresponding object release within this function.
+The problem is traced to an invalid pointer used when jumping from
+handling device_nodes to data nodes. The existing code looks for data
+nodes below the last subdevice found instead of the common root. Fix
+by forcing the acpi_device pointer to be derived from the same fwnode
+for the two types of subnodes.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-pm@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+This same problem of handling device and data nodes was already fixed
+in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+this should probably go to linux-stable all the way to 4.12
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pmac32-cpufreq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/property.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/cpufreq/pmac32-cpufreq.c b/drivers/cpufreq/pmac32-cpufreq.c
-index 52f0d91d30c17..9b4ce2eb8222c 100644
---- a/drivers/cpufreq/pmac32-cpufreq.c
-+++ b/drivers/cpufreq/pmac32-cpufreq.c
-@@ -552,6 +552,7 @@ static int pmac_cpufreq_init_7447A(struct device_node *cpunode)
- 	volt_gpio_np = of_find_node_by_name(NULL, "cpu-vcore-select");
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
-+	of_node_put(volt_gpio_np);
- 	if (!voltage_gpio){
- 		pr_err("missing cpu-vcore-select gpio\n");
- 		return 1;
-@@ -588,6 +589,7 @@ static int pmac_cpufreq_init_750FX(struct device_node *cpunode)
- 	if (volt_gpio_np)
- 		voltage_gpio = read_gpio(volt_gpio_np);
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index e26ea209b63ef..7a3194e2e0906 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -943,6 +943,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
+ 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+ 		struct acpi_data_node *dn;
  
-+	of_node_put(volt_gpio_np);
- 	pvr = mfspr(SPRN_PVR);
- 	has_cpu_l2lve = !((pvr & 0xf00) == 0x100);
- 
++		/*
++		 * We can have a combination of device and data nodes, e.g. with
++		 * hierarchical _DSD properties. Make sure the adev pointer is
++		 * restored before going through data nodes, otherwise we will
++		 * be looking for data_nodes below the last device found instead
++		 * of the common fwnode shared by device_nodes and data_nodes.
++		 */
++		adev = to_acpi_device_node(fwnode);
+ 		if (adev)
+ 			head = &adev->data.subnodes;
+ 		else if (data)
 -- 
 2.20.1
 
