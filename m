@@ -2,53 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20514C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1413249CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C7F249CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186502;
-	bh=0fhmFRimn8eOjBRietxxwWBOu7Lo478PhD4c+RCWILg=;
+	s=default; t=1559186510;
+	bh=3QVzWclzo9H5FqhP9I14efu6cVzIX/VK2e7Ulx5gLJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNF/QN6Ivdl9v47ZRHLyN/ATx7sYoZ/1VjPI70W+gBnZ/ZKKFvtl4WjiVmGjTEmJN
-	 1g8I2EgPTKhBSGjZ4aoHy1pl/IL3QXHkj9ZZkWmOGbVBbQL2yvHuwC2Ppy/o0mcMvo
-	 oAb/WN3WPD3dghBazZ9ujq7MlTl7mTKqbPc3Qz6Y=
+	b=Hr7Wved2z2e1pokXOTfckTewqvs/SzrIrYbFS9ERSGNcPbFIS7EwGzso8KL6WIeJt
+	 57VD9YQhQTbG6NT6QyAmukeOg+GHLed2VN8p2jqdZSScR5+krj6UVt3bHL8oiVNkvi
+	 cAsfgIdQadBhjgzgjm5VnLrP2vCtxQ4nR0b+m+V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfE3DVl (ORCPT
+        id S1732644AbfE3DVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbfE3DQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:28 -0400
+        id S1730700AbfE3DQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:30 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927BA245C4;
-        Thu, 30 May 2019 03:16:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED56245E2;
+        Thu, 30 May 2019 03:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186187;
-        bh=0fhmFRimn8eOjBRietxxwWBOu7Lo478PhD4c+RCWILg=;
+        s=default; t=1559186190;
+        bh=3QVzWclzo9H5FqhP9I14efu6cVzIX/VK2e7Ulx5gLJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJnsyfPxjNWnPudQiRMokYOl+VuQfVt6nQxgkNT4NSNPQIWqqRDgBujQEO1aSIvXC
-         9keto4R4BA1W5i/qVTpUG5Fb+y2dSazk3eelepeFRrutUdEIOXN1Lz6Fv2wLDhWmPA
-         A3cl2p+tPt+3sjFuV6QXc2n4+DY/7KaR5QvWiZo4=
+        b=hiNF2Eqamx76WtdK+a5q6cq3hmh70tJsaTSbZauaELf9sXvqz9Dvxu+eneNu/Fqlj
+         TRLNMh59lXVImrNFV8QH7k6KmZuSdb89/s7722o5HhT0kf2THzyFaVM1nsq1PEAtGU
+         4ZDN8xjrXBhTwDLCuFz+bjYgp9c9x+5aW3WRaFWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/276] Bluetooth: Ignore CC events not matching the last HCI command
-Date:   Wed, 29 May 2019 20:03:34 -0700
-Message-Id: <20190530030528.863524474@linuxfoundation.org>
+Subject: [PATCH 4.19 059/276] usb: dwc2: gadget: Increase descriptors count for ISOCs
+Date:   Wed, 29 May 2019 20:03:37 -0700
+Message-Id: <20190530030529.237507288@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,190 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f80c5dad7b6467b884c445ffea45985793b4b2d0 ]
+[ Upstream commit 54f37f56631747075f1f9a2f0edf6ba405e3e66c ]
 
-This commit makes the kernel not send the next queued HCI command until
-a command complete arrives for the last HCI command sent to the
-controller. This change avoids a problem with some buggy controllers
-(seen on two SKUs of QCA9377) that send an extra command complete event
-for the previous command after the kernel had already sent a new HCI
-command to the controller.
+Some function drivers queueing more than 128 ISOC requests at a time.
+To avoid "descriptor chain full" cases, increasing descriptors count
+from MAX_DMA_DESC_NUM_GENERIC to MAX_DMA_DESC_NUM_HS_ISOC for ISOC's
+only.
 
-The problem was reproduced when starting an active scanning procedure,
-where an extra command complete event arrives for the LE_SET_RANDOM_ADDR
-command. When this happends the kernel ends up not processing the
-command complete for the following commmand, LE_SET_SCAN_PARAM, and
-ultimately behaving as if a passive scanning procedure was being
-performed, when in fact controller is performing an active scanning
-procedure. This makes it impossible to discover BLE devices as no device
-found events are sent to userspace.
-
-This problem is reproducible on 100% of the attempts on the affected
-controllers. The extra command complete event can be seen at timestamp
-27.420131 on the btmon logs bellow.
-
-Bluetooth monitor ver 5.50
-= Note: Linux version 5.0.0+ (x86_64)                                  0.352340
-= Note: Bluetooth subsystem version 2.22                               0.352343
-= New Index: 80:C5:F2:8F:87:84 (Primary,USB,hci0)               [hci0] 0.352344
-= Open Index: 80:C5:F2:8F:87:84                                 [hci0] 0.352345
-= Index Info: 80:C5:F2:8F:87:84 (Qualcomm)                      [hci0] 0.352346
-@ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.352347
-@ MGMT Open: btmon (privileged) version 1.14                  {0x0002} 0.352366
-@ MGMT Open: btmgmt (privileged) version 1.14                {0x0003} 27.302164
-@ MGMT Command: Start Discovery (0x0023) plen 1       {0x0003} [hci0] 27.302310
-        Address type: 0x06
-          LE Public
-          LE Random
-< HCI Command: LE Set Random Address (0x08|0x0005) plen 6   #1 [hci0] 27.302496
-        Address: 15:60:F2:91:B2:24 (Non-Resolvable)
-> HCI Event: Command Complete (0x0e) plen 4                 #2 [hci0] 27.419117
-      LE Set Random Address (0x08|0x0005) ncmd 1
-        Status: Success (0x00)
-< HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7  #3 [hci0] 27.419244
-        Type: Active (0x01)
-        Interval: 11.250 msec (0x0012)
-        Window: 11.250 msec (0x0012)
-        Own address type: Random (0x01)
-        Filter policy: Accept all advertisement (0x00)
-> HCI Event: Command Complete (0x0e) plen 4                 #4 [hci0] 27.420131
-      LE Set Random Address (0x08|0x0005) ncmd 1
-        Status: Success (0x00)
-< HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2      #5 [hci0] 27.420259
-        Scanning: Enabled (0x01)
-        Filter duplicates: Enabled (0x01)
-> HCI Event: Command Complete (0x0e) plen 4                 #6 [hci0] 27.420969
-      LE Set Scan Parameters (0x08|0x000b) ncmd 1
-        Status: Success (0x00)
-> HCI Event: Command Complete (0x0e) plen 4                 #7 [hci0] 27.421983
-      LE Set Scan Enable (0x08|0x000c) ncmd 1
-        Status: Success (0x00)
-@ MGMT Event: Command Complete (0x0001) plen 4        {0x0003} [hci0] 27.422059
-      Start Discovery (0x0023) plen 1
-        Status: Success (0x00)
-        Address type: 0x06
-          LE Public
-          LE Random
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0003} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0002} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-@ MGMT Event: Discovering (0x0013) plen 2             {0x0001} [hci0] 27.422067
-        Address type: 0x06
-          LE Public
-          LE Random
-        Discovery: Enabled (0x01)
-
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/bluetooth/hci.h |  1 +
- net/bluetooth/hci_core.c    |  5 +++++
- net/bluetooth/hci_event.c   | 12 ++++++++++++
- net/bluetooth/hci_request.c |  5 +++++
- net/bluetooth/hci_request.h |  1 +
- 5 files changed, 24 insertions(+)
+ drivers/usb/dwc2/gadget.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index cdd9f1fe7cfa9..845d947dbae82 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -270,6 +270,7 @@ enum {
- 	HCI_FORCE_BREDR_SMP,
- 	HCI_FORCE_STATIC_ADDR,
- 	HCI_LL_RPA_RESOLUTION,
-+	HCI_CMD_PENDING,
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 220c0f9b89b0b..03614ef64ca47 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -675,13 +675,11 @@ static unsigned int dwc2_gadget_get_chain_limit(struct dwc2_hsotg_ep *hs_ep)
+ 	unsigned int maxsize;
  
- 	__HCI_NUM_FLAGS,
- };
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index a06f030477173..5afd67ef797a6 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4274,6 +4274,9 @@ void hci_req_cmd_complete(struct hci_dev *hdev, u16 opcode, u8 status,
- 		return;
+ 	if (is_isoc)
+-		maxsize = hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
+-					   DEV_DMA_ISOC_RX_NBYTES_LIMIT;
++		maxsize = (hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
++					   DEV_DMA_ISOC_RX_NBYTES_LIMIT) *
++					   MAX_DMA_DESC_NUM_HS_ISOC;
+ 	else
+-		maxsize = DEV_DMA_NBYTES_LIMIT;
+-
+-	/* Above size of one descriptor was chosen, multiple it */
+-	maxsize *= MAX_DMA_DESC_NUM_GENERIC;
++		maxsize = DEV_DMA_NBYTES_LIMIT * MAX_DMA_DESC_NUM_GENERIC;
+ 
+ 	return maxsize;
+ }
+@@ -864,7 +862,7 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
+ 
+ 	/* Update index of last configured entry in the chain */
+ 	hs_ep->next_desc++;
+-	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_GENERIC)
++	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_HS_ISOC)
+ 		hs_ep->next_desc = 0;
+ 
+ 	return 0;
+@@ -896,7 +894,7 @@ static void dwc2_gadget_start_isoc_ddma(struct dwc2_hsotg_ep *hs_ep)
  	}
  
-+	/* If we reach this point this event matches the last command sent */
-+	hci_dev_clear_flag(hdev, HCI_CMD_PENDING);
+ 	/* Initialize descriptor chain by Host Busy status */
+-	for (i = 0; i < MAX_DMA_DESC_NUM_GENERIC; i++) {
++	for (i = 0; i < MAX_DMA_DESC_NUM_HS_ISOC; i++) {
+ 		desc = &hs_ep->desc_list[i];
+ 		desc->status = 0;
+ 		desc->status |= (DEV_DMA_BUFF_STS_HBUSY
+@@ -2083,7 +2081,7 @@ static void dwc2_gadget_complete_isoc_request_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 		dwc2_hsotg_complete_request(hsotg, hs_ep, hs_req, 0);
+ 
+ 		hs_ep->compl_desc++;
+-		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_GENERIC - 1))
++		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_HS_ISOC - 1))
+ 			hs_ep->compl_desc = 0;
+ 		desc_sts = hs_ep->desc_list[hs_ep->compl_desc].status;
+ 	}
+@@ -3779,6 +3777,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	unsigned int i, val, size;
+ 	int ret = 0;
+ 	unsigned char ep_type;
++	int desc_num;
+ 
+ 	dev_dbg(hsotg->dev,
+ 		"%s: ep %s: a 0x%02x, attr 0x%02x, mps 0x%04x, intr %d\n",
+@@ -3825,11 +3824,15 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	dev_dbg(hsotg->dev, "%s: read DxEPCTL=0x%08x from 0x%08x\n",
+ 		__func__, epctrl, epctrl_reg);
+ 
++	if (using_desc_dma(hsotg) && ep_type == USB_ENDPOINT_XFER_ISOC)
++		desc_num = MAX_DMA_DESC_NUM_HS_ISOC;
++	else
++		desc_num = MAX_DMA_DESC_NUM_GENERIC;
 +
- 	/* If the command succeeded and there's still more commands in
- 	 * this request the request is not yet complete.
- 	 */
-@@ -4384,6 +4387,8 @@ static void hci_cmd_work(struct work_struct *work)
+ 	/* Allocate DMA descriptor chain for non-ctrl endpoints */
+ 	if (using_desc_dma(hsotg) && !hs_ep->desc_list) {
+ 		hs_ep->desc_list = dmam_alloc_coherent(hsotg->dev,
+-			MAX_DMA_DESC_NUM_GENERIC *
+-			sizeof(struct dwc2_dma_desc),
++			desc_num * sizeof(struct dwc2_dma_desc),
+ 			&hs_ep->desc_list_dma, GFP_ATOMIC);
+ 		if (!hs_ep->desc_list) {
+ 			ret = -ENOMEM;
+@@ -3971,7 +3974,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
  
- 		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
- 		if (hdev->sent_cmd) {
-+			if (hci_req_status_pend(hdev))
-+				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
- 			atomic_dec(&hdev->cmd_cnt);
- 			hci_send_frame(hdev, skb);
- 			if (test_bit(HCI_RESET, &hdev->flags))
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 7f800c3480f7a..3e7badb3ac2d5 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3357,6 +3357,12 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
- 	hci_req_cmd_complete(hdev, *opcode, *status, req_complete,
- 			     req_complete_skb);
- 
-+	if (hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
-+		bt_dev_err(hdev,
-+			   "unexpected event for opcode 0x%4.4x", *opcode);
-+		return;
-+	}
-+
- 	if (atomic_read(&hdev->cmd_cnt) && !skb_queue_empty(&hdev->cmd_q))
- 		queue_work(hdev->workqueue, &hdev->cmd_work);
- }
-@@ -3464,6 +3470,12 @@ static void hci_cmd_status_evt(struct hci_dev *hdev, struct sk_buff *skb,
- 		hci_req_cmd_complete(hdev, *opcode, ev->status, req_complete,
- 				     req_complete_skb);
- 
-+	if (hci_dev_test_flag(hdev, HCI_CMD_PENDING)) {
-+		bt_dev_err(hdev,
-+			   "unexpected event for opcode 0x%4.4x", *opcode);
-+		return;
-+	}
-+
- 	if (atomic_read(&hdev->cmd_cnt) && !skb_queue_empty(&hdev->cmd_q))
- 		queue_work(hdev->workqueue, &hdev->cmd_work);
- }
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index e8c9ef1e19227..9448ebd3780a3 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -46,6 +46,11 @@ void hci_req_purge(struct hci_request *req)
- 	skb_queue_purge(&req->cmd_q);
- }
- 
-+bool hci_req_status_pend(struct hci_dev *hdev)
-+{
-+	return hdev->req_status == HCI_REQ_PEND;
-+}
-+
- static int req_run(struct hci_request *req, hci_req_complete_t complete,
- 		   hci_req_complete_skb_t complete_skb)
- {
-diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
-index 692cc8b133682..55b2050cc9ff0 100644
---- a/net/bluetooth/hci_request.h
-+++ b/net/bluetooth/hci_request.h
-@@ -37,6 +37,7 @@ struct hci_request {
- 
- void hci_req_init(struct hci_request *req, struct hci_dev *hdev);
- void hci_req_purge(struct hci_request *req);
-+bool hci_req_status_pend(struct hci_dev *hdev);
- int hci_req_run(struct hci_request *req, hci_req_complete_t complete);
- int hci_req_run_skb(struct hci_request *req, hci_req_complete_skb_t complete);
- void hci_req_add(struct hci_request *req, u16 opcode, u32 plen,
+ error2:
+ 	if (ret && using_desc_dma(hsotg) && hs_ep->desc_list) {
+-		dmam_free_coherent(hsotg->dev, MAX_DMA_DESC_NUM_GENERIC *
++		dmam_free_coherent(hsotg->dev, desc_num *
+ 			sizeof(struct dwc2_dma_desc),
+ 			hs_ep->desc_list, hs_ep->desc_list_dma);
+ 		hs_ep->desc_list = NULL;
 -- 
 2.20.1
 
