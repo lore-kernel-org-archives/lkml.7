@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A58C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEB1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1267C25680
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5CC25680
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190695;
-	bh=W3deDqBV973O01uZLmx5KBYNQkKfVaEZ3DxcfVjdSI0=;
+	s=default; t=1559190696;
+	bh=/kLmBVMxFpAriClWkkeu8iy/W+s8mtaNI/CH14jc+v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knCeNsLggM4w8qGRHIwJ4+2HzgAlLO2sbTqOG3LL4T8nIWZU0P+qk4veqDiUmHtDT
-	 WV0nq7R2SSj/BCT6ff3RHWlQduyuHkAxtXkjvMtGaJDVJAw1QkABFIauBmR9Gu563I
-	 S6rTTqIJgALerosBtSgzs3zzVc/n6NMdp8IcPH9k=
+	b=bnwKqdeSmOEWg/oey3RpEWR2XDrd228bBFEELPSnFpknjvF8L3jIbF0nmD18reR5F
+	 oGkcNpoKPcv58vyhWw5+8J/WfvEsxHUte3ibbgBjFaDbluh6uwWaM0aKDva2jka9SH
+	 PYyH2Qn/UAHzpUoCrnoLOf/ZM0rHNKGug8wADyuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbfE3Ebe (ORCPT
+        id S2388191AbfE3Ebg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbfE3DNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:45 -0400
+        id S1729567AbfE3DNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:44 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1977A2455E;
-        Thu, 30 May 2019 03:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1B324534;
+        Thu, 30 May 2019 03:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186025;
-        bh=W3deDqBV973O01uZLmx5KBYNQkKfVaEZ3DxcfVjdSI0=;
+        s=default; t=1559186024;
+        bh=/kLmBVMxFpAriClWkkeu8iy/W+s8mtaNI/CH14jc+v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQXMdmL4o9gQNdKmNimESmSMqIngHTRDbLa8DlZvaCNT6oibKhuoRVhqRcvebIIUL
-         C003cLwm0p1hiqUz4cElCwEX0YtHvq+c8TJ4nzm/Jfz6394u/duQJUXS9c0QCW72ST
-         IfaREuLSveaGe9jNtGZasBgwB7NORHEIP1FXH8xY=
+        b=RqKd2K1rhNxuvuN+ucB1Za0VWB+sR3TkdEdJhy7TOHDIqXE5hvprl8IghiCSf84Yd
+         njofGkkftJcdg1gQr5qr/joeg14Z05PVK7W3ONL1uLrw7CVuvrr+uPqz6wlW3257yU
+         hArKUa7Y8ZOjv4coiRDC4/AHWlQlEbrCFr5zAJNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mariusz Bialonczyk <manio@skyboo.net>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 098/346] w1: fix the resume command API
-Date:   Wed, 29 May 2019 20:02:51 -0700
-Message-Id: <20190530030546.128270003@linuxfoundation.org>
+        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 096/346] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
+Date:   Wed, 29 May 2019 20:02:49 -0700
+Message-Id: <20190530030546.030068434@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,49 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
+[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
 
->From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
+The NOHZ idle balancer runs on the lowest idle CPU. This can
+interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+housekeeping CPUs.
 
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
+HK_FLAG_SCHED is not used for this because it is not set anywhere
+at the moment. This could be folded into HK_FLAG_SCHED once that
+option is fixed.
 
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
+The problem was observed with increased jitter on an application
+running on CPU0, caused by NOHZ idle load balancing being run on
+CPU1 (an SMT sibling).
 
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
-
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/sched/fair.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index 0364d3329c526..3516ce6718d94 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -432,8 +432,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index be55a64748ba3..d905c443e10e5 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9456,22 +9456,26 @@ static inline int on_null_domain(struct rq *rq)
+  * - When one of the busy CPUs notice that there may be an idle rebalancing
+  *   needed, they will kick the idle load balancer, which then does idle
+  *   load balancing for all the idle CPUs.
++ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
++ *   anywhere yet.
+  */
  
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
+ static inline int find_new_ilb(void)
+ {
+-	int ilb = cpumask_first(nohz.idle_cpus_mask);
++	int ilb;
+ 
+-	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+-		return ilb;
++	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
++			      housekeeping_cpumask(HK_FLAG_MISC)) {
++		if (idle_cpu(ilb))
++			return ilb;
++	}
+ 
+ 	return nr_cpu_ids;
  }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
+ 
+ /*
+- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+- * CPU (if there is one).
++ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
++ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+  */
+ static void kick_ilb(unsigned int flags)
+ {
 -- 
 2.20.1
 
