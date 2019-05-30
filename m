@@ -2,175 +2,165 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2F7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39C6C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4338A25792
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B962B25792
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 10:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nRvz2Cb7"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wDt2SGJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfE3KvD (ORCPT
+        id S1726816AbfE3KvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 06:51:03 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53708 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbfE3KvD (ORCPT
+        Thu, 30 May 2019 06:51:24 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:57319 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfE3KvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 06:51:03 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190530105100euoutp029f34ca3e430f3c5ce8a929a0d98fd5ec~jcGGqgilx2661026610euoutp02T
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 10:51:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190530105100euoutp029f34ca3e430f3c5ce8a929a0d98fd5ec~jcGGqgilx2661026610euoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559213460;
-        bh=vdaZS4yfBCb1935LeDCfNjU3VfSTXBG/EFyAbIYcM8o=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=nRvz2Cb7/dcltK7xJZcAnGH/ZzI0UIVgK6O78CF42QfZcpDMA41XP3azVl5Em2qwl
-         S+F1bYESlQox7eOf1x7PacnsSIFBL7mL5xWqHJLKQ3K24ZNUO2t8EISfhBimL1V8GB
-         7COTo8KOGcLxC24GFhoxAWgyUStB05capfo4yn9g=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190530105100eucas1p113f0aa31e8140ba1803e60ee56578bea~jcGGNiEyi1817318173eucas1p1r;
-        Thu, 30 May 2019 10:51:00 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id B0.E5.04377.395BFEC5; Thu, 30
-        May 2019 11:50:59 +0100 (BST)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190530105059eucas1p1d9c911a5ba2ae412166cd8866deb725e~jcGFcTsbr1065610656eucas1p1y;
-        Thu, 30 May 2019 10:50:59 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-39-5cefb5934d0e
-Received: from eusync3.samsung.com ( [203.254.199.213]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id AF.3B.04140.395BFEC5; Thu, 30
-        May 2019 11:50:59 +0100 (BST)
-Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
-        eusync3.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
-        (built May  5 2014)) with ESMTPA id <0PSB003AECSQ2880@eusync3.samsung.com>;
-        Thu, 30 May 2019 11:50:59 +0100 (BST)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v3] clocksource: exynos_mct: Increase priority over ARM arch
- timer
-Date:   Thu, 30 May 2019 12:50:43 +0200
-Message-id: <20190530105043.29965-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7djP87qTt76PMdgzwcxi44z1rBbXvzxn
-        tZj3Wdbi/PkN7BabHl9jtbi8aw6bxYzz+5gs1h65y26xedNUZgdOj02rOtk87lzbw+bx7tw5
-        do/NS+o9+rasYvT4vEkugC2KyyYlNSezLLVI3y6BK+PD08PsBUvFK553/GJuYLwj3MXIySEh
-        YCLx/8M9xi5GLg4hgRWMEqduf2eHcD4zSszetJ8Vpmr//xtsEIlljBLbb6xjhnD+M0o8uLGa
-        HaSKTcBQouttFxuILSKQLfHs+00mkCJmgS4midsLD4AVCQuESOw6dY0FxGYRUJXYseY0I4jN
-        K2Ar8f3bIxaIdfISqzccANsgIfCXVaL9/jWgSRxAjovEvS/BEDUyEpcnd7NA1DQzSjw8t5Yd
-        wulhlLjcNIMRospa4vDxi2BPMAvwSUzaNp0ZYhCvREebEESJh8TmS5/BwkICsRKXD8VOYBRf
-        wMiwilE8tbQ4Nz212CgvtVyvODG3uDQvXS85P3cTIzDWTv87/mUH464/SYcYBTgYlXh4J+S/
-        ixFiTSwrrsw9xCjBwawkwvtzOVCINyWxsiq1KD++qDQntfgQozQHi5I4bzXDg2ghgfTEktTs
-        1NSC1CKYLBMHp1QDI3tNJLcRw7aFt35PWPM3VPH21BdHb52vn/I0T0qp827KrP+HQnQPfA5U
-        nrz/+G67VTKPuB52sNT+K4o+zG4f/j//a/Shz7PWv1j733epqbXdQo4gl8lKR/4IifXH2lSl
-        Nfxg13L68X6dBKO+unW8o+/rTlvF+0dKTuxnOJDTtmOHp/X2TRMuFyqxFGckGmoxFxUnAgC9
-        6d8OsQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLJMWRmVeSWpSXmKPExsVy+t/xq7qTt76PMXj1kdti44z1rBbXvzxn
-        tZj3Wdbi/PkN7BabHl9jtbi8aw6bxYzz+5gs1h65y26xedNUZgdOj02rOtk87lzbw+bx7tw5
-        do/NS+o9+rasYvT4vEkugC2KyyYlNSezLLVI3y6BK+PD08PsBUvFK553/GJuYLwj3MXIySEh
-        YCKx//8Nti5GLg4hgSWMEl+3zmKBcBqZJFa/WckCUsUmYCjR9baLDcQWEciWmLz2EVgRs0AP
-        k0T71d/sIAlhgRCJXaeugTWwCKhK7FhzmhHE5hWwlfj+7RELxDp5idUbDjBPYORawMiwilEk
-        tbQ4Nz232EivODG3uDQvXS85P3cTIzBQth37uWUHY9e74EOMAhyMSjy8E/LfxQixJpYVV+Ye
-        YpTgYFYS4f25HCjEm5JYWZValB9fVJqTWnyIUZqDRUmct0PgYIyQQHpiSWp2ampBahFMlomD
-        U6qBcX/u07sturUvxT8f0GRSXWJ9++eNbu39ep+Loi709v46fSJHfL3LjfwnTGGKAeZtIZHL
-        ewRvuaY+S6rjct3XVqVsIV8o52i+atfa+Tfv1S1pX6JpztRbuPvjcuMYnmcb9s7dIZvQ7L2n
-        MWb6kf97kw29s0NVLll2rVy88I7AM2vXyfH7JoktVGIpzkg01GIuKk4EAGaE5QsQAgAA
-X-CMS-MailID: 20190530105059eucas1p1d9c911a5ba2ae412166cd8866deb725e
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190530105059eucas1p1d9c911a5ba2ae412166cd8866deb725e
-References: <CGME20190530105059eucas1p1d9c911a5ba2ae412166cd8866deb725e@eucas1p1.samsung.com>
+        Thu, 30 May 2019 06:51:24 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x4UApGno018683;
+        Thu, 30 May 2019 19:51:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4UApGno018683
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559213477;
+        bh=j5xMXtzlfJmtrDOpctpofJ+GhwQ4JC0Tahjh8T6hfJo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wDt2SGJoCbR8lZkqChfL+ohh3godb14CBnYHfsR842blEZ9HJtzhaG5JRuXHzPW0H
+         HuS/tqXXZRS0f6xuTiICGO4Jgu4+fjAcUYFpphsCf/aWsTLfQn/kelbj03rwpcFsow
+         E4zKd4JCdjdskMOMLi2GN+OY/XvYc5moE5pVZe6MlZVSE0mv/nxvdP/rGZ3ig05Ugx
+         tbgq7G/aziCXuWhXMDa+2IUFGlmEHdxS7nuGTmJf89G/ulL4KYhkSCSfExuJ/aDJeZ
+         3+Zp4a9GIm/MgIzg6BXdXxy7bRqJEDZRVn+Ov5re91eDUeQnJDBw2kprTbkkFaG75W
+         Ii/kpd8Xj+fgw==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id q64so4094769vsd.1;
+        Thu, 30 May 2019 03:51:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAWisKc3pbbkYoBUSlPMxQ6oX2uEbGJun76NCmSvcWhTWxj+TW8N
+        cFAryo/YUtJkEa6D1aW+qjzKpaT3w82eeJJvRTU=
+X-Google-Smtp-Source: APXvYqz1eQpgy1klSJRUBat0BPbDkemKQMZQlg44UME+WzfyPZ3ATsQu01dDSjF1W1pCCB66UyAzAWUE0x86MfG9NnE=
+X-Received: by 2002:a67:1783:: with SMTP id 125mr1567738vsx.54.1559213476461;
+ Thu, 30 May 2019 03:51:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <1556887064-12882-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1556887064-12882-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 30 May 2019 19:50:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATKCRqcDWg4X_e2N3TuxTmfr34ZYJOJU=SbubE-+S4eTQ@mail.gmail.com>
+Message-ID: <CAK7LNATKCRqcDWg4X_e2N3TuxTmfr34ZYJOJU=SbubE-+S4eTQ@mail.gmail.com>
+Subject: Re: [PATCH] x86,sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     X86 ML <x86@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exynos SoCs based on CA7/CA15 have 2 timer interfaces: custom Exynos MCT
-(Multi Core Timer) and standard ARM Architected Timers.
+Hi Andrew,
 
-There are use cases, where both timer interfaces are used simultanously.
-One of such examples is using Exynos MCT for the main system timer and
-ARM Architected Timers for the KVM and virtualized guests (KVM requires
-arch timers).
+On Fri, May 3, 2019 at 9:48 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> __builtin_constant_p(nr) is used everywhere now. It does not make
+> much sense to define IS_IMMEDIATE() as its alias.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Exynos Multi-Core Timer driver (exynos_mct) must be however started
-before ARM Architected Timers (arch_timer), because they both share some
-common hardware blocks (global system counter) and turning on MCT is
-needed to get ARM Architected Timer working properly.
+Ping. Is this a good clean-up?
 
-To ensure selecting Exynos MCT as the main system timer, increase MCT
-timer rating. To ensure proper starting order of both timers during
-suspend/resume cycle, increase MCT hotplug priority over ARM Archictected
-Timers.
+Thanks.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-v3: rephrased commit message, rebased onto v5.2-rc1
+> ---
+>
+>  arch/sh/include/asm/bitops-op32.h | 8 +++-----
+>  arch/x86/include/asm/bitops.h     | 7 +++----
+>  2 files changed, 6 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
+> index 4668803..cfe5465 100644
+> --- a/arch/sh/include/asm/bitops-op32.h
+> +++ b/arch/sh/include/asm/bitops-op32.h
+> @@ -16,11 +16,9 @@
+>  #define BYTE_OFFSET(nr)                ((nr) % BITS_PER_BYTE)
+>  #endif
+>
+> -#define IS_IMMEDIATE(nr)       (__builtin_constant_p(nr))
+> -
+>  static inline void __set_bit(int nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 __asm__ __volatile__ (
+>                         "bset.b %1, @(%O2,%0)           ! __set_bit\n\t"
+>                         : "+r" (addr)
+> @@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
+>
+>  static inline void __clear_bit(int nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 __asm__ __volatile__ (
+>                         "bclr.b %1, @(%O2,%0)           ! __clear_bit\n\t"
+>                         : "+r" (addr)
+> @@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
+>   */
+>  static inline void __change_bit(int nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 __asm__ __volatile__ (
+>                         "bxor.b %1, @(%O2,%0)           ! __change_bit\n\t"
+>                         : "+r" (addr)
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index 8e790ec..2621438 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -45,7 +45,6 @@
+>   * We do the locked ops that don't return the old value as
+>   * a mask operation on a byte.
+>   */
+> -#define IS_IMMEDIATE(nr)               (__builtin_constant_p(nr))
+>  #define CONST_MASK_ADDR(nr, addr)      WBYTE_ADDR((void *)(addr) + ((nr)>>3))
+>  #define CONST_MASK(nr)                 (1 << ((nr) & 7))
+>
+> @@ -67,7 +66,7 @@
+>  static __always_inline void
+>  set_bit(long nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+>                         : "iq" ((u8)CONST_MASK(nr))
+> @@ -105,7 +104,7 @@ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
+>  static __always_inline void
+>  clear_bit(long nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "andb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+>                         : "iq" ((u8)~CONST_MASK(nr)));
+> @@ -186,7 +185,7 @@ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
+>   */
+>  static __always_inline void change_bit(long nr, volatile unsigned long *addr)
+>  {
+> -       if (IS_IMMEDIATE(nr)) {
+> +       if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "xorb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+>                         : "iq" ((u8)CONST_MASK(nr)));
+> --
+> 2.7.4
+>
 
-v2: https://patchwork.kernel.org/patch/10863101/
-   added comments about the relation to ARM architected timer
-    rebased onto v5.1-rc1
 
-v1: https://patchwork.kernel.org/patch/10814921/
----
- drivers/clocksource/exynos_mct.c | 4 ++--
- include/linux/cpuhotplug.h       | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index 34bd250d46c6..6aa10cbc1d59 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -209,7 +209,7 @@ static void exynos4_frc_resume(struct clocksource *cs)
- 
- static struct clocksource mct_frc = {
- 	.name		= "mct-frc",
--	.rating		= 400,
-+	.rating		= 450,	/* use value higher than ARM arch timer */
- 	.read		= exynos4_frc_read,
- 	.mask		= CLOCKSOURCE_MASK(32),
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -464,7 +464,7 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
- 	evt->set_state_oneshot_stopped = set_state_shutdown;
- 	evt->tick_resume = set_state_shutdown;
- 	evt->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
--	evt->rating = 450;
-+	evt->rating = 500;	/* use value higher than ARM arch timer */
- 
- 	exynos4_mct_write(TICK_BASE_CNT, mevt->base + MCT_L_TCNTB_OFFSET);
- 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index e78281d07b70..53fb48de9589 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -115,10 +115,10 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_ARM_ACPI_STARTING,
- 	CPUHP_AP_PERF_ARM_STARTING,
- 	CPUHP_AP_ARM_L2X0_STARTING,
-+	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
- 	CPUHP_AP_JCORE_TIMER_STARTING,
--	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_TWD_STARTING,
- 	CPUHP_AP_QCOM_TIMER_STARTING,
- 	CPUHP_AP_TEGRA_TIMER_STARTING,
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
