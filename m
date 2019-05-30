@@ -5,56 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18B2C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D337C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B546025284
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E664025374
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190205;
-	bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
+	s=default; t=1559190210;
+	bh=T4dd8ApveJOaVaQZYHfqP1ICixbz55uiW5XkeUbLFtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9MjaapGtYbJ5ecnADuHI0WY3BI2XbQkNrJLroR4Ijh62XpsE4DbmzYvXlTWZOFYS
-	 AQyQOMrluXy8EWGC8cU8deHA9ARp+0WKX9w5Kjn79ULP+bbzR/777rG/ketVOvsFCP
-	 4n80m7u/bhqyy0qM3geXCSVWlLqwitleJ33Ewmv8=
+	b=kbDBfEzpKz5fVjcy0ZpKWfIZL6HcS96Y2aYqKXG7d5Pq2wpwTqjbOQGfzPgyBXbB4
+	 59HFHXOt9gD+dY/xr9kpZhLQMfexma5EFz8ieVJ2pq3Eu9J3o5OP/fiNxbm+JatR8j
+	 eiIkZYir7zR+7ZveANRyT1nEInwzfRfLnHcF6ozY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbfE3EXY (ORCPT
+        id S1732067AbfE3EX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbfE3DPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:02 -0400
+        id S1728641AbfE3DPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:01 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33608244EF;
-        Thu, 30 May 2019 03:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50B2424586;
+        Thu, 30 May 2019 03:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186101;
-        bh=P3JTk7xVOJNuPEoVcNeajWlhbZPMJjIyXv67yz0Vxn8=;
+        s=default; t=1559186100;
+        bh=T4dd8ApveJOaVaQZYHfqP1ICixbz55uiW5XkeUbLFtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKnfivbfpdYz8zLlG2jMVyqJn+GeFRoCP+Cg5h2ThZvXub3F2nG0Uihz2CfEe801f
-         i88N8cGdCay/58mFAWuvC3QwMTq3+LCrsRVcKQBsLsMLzsPFtGQl/rv7uozt4I+TUO
-         w+s6l7ddrCq8gi9wsURtnQ5DBUOZA42Pu/0/Af2o=
+        b=KId+aGUTkdoeUgcjNBjXwev5F3/ZH92mhLldOLmvVzoUlQn6Zr/KRUavooKqCnq9W
+         D9zrtZpfDXxi6m+uQZjh5xFpjbkyGpu7EwySRuHnYJEyBknCiLpC5jphSxSR4EeFy6
+         rrueFF39NNwhXVUzhv0ppbiwe3QsgPQF0hhcCH5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, ard.biesheuvel@linaro.org,
-        oss-drivers@netronome.com, pbonzini@redhat.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 238/346] locking/static_key: Fix false positive warnings on concurrent dec/inc
-Date:   Wed, 29 May 2019 20:05:11 -0700
-Message-Id: <20190530030553.094255091@linuxfoundation.org>
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 236/346] drm/amd/display: Prevent cursor hotspot overflow for RV overlay planes
+Date:   Wed, 29 May 2019 20:05:09 -0700
+Message-Id: <20190530030552.998746142@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -67,89 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a1247d06d01045d7ab2882a9c074fbf21137c690 ]
+[ Upstream commit 6752bea8b03e77c98be7d8d25b0a9d86a00b3cf7 ]
 
-Even though the atomic_dec_and_mutex_lock() in
-__static_key_slow_dec_cpuslocked() can never see a negative value in
-key->enabled the subsequent sanity check is re-reading key->enabled, which may
-have been set to -1 in the meantime by static_key_slow_inc_cpuslocked().
+[Why]
+The actual position for the cursor on the screen is essentially:
 
-                CPU  A                               CPU B
+x_out = x - x_plane - x_hotspot
+y_out = y - y_plane - y_hotspot
 
- __static_key_slow_dec_cpuslocked():          static_key_slow_inc_cpuslocked():
-                               # enabled = 1
-   atomic_dec_and_mutex_lock()
-                               # enabled = 0
-                                              atomic_read() == 0
-                                              atomic_set(-1)
-                               # enabled = -1
-   val = atomic_read()
-   # Oops - val == -1!
+The register values for cursor position and cursor hotspot need to be
+greater than zero when programmed, but we also need to subtract off
+the plane position to display the cursor at the correct position.
 
-The test case is TCP's clean_acked_data_enable() / clean_acked_data_disable()
-as tickled by KTLS (net/ktls).
+Since we don't want x or y to be less than zero, we add the plane
+position as a positive value to x_hotspot or y_hotspot. However, what
+this doesn't take into account is that the hotspot registers are limited
+by the maximum cursor size.
 
-Suggested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Tested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: ard.biesheuvel@linaro.org
-Cc: oss-drivers@netronome.com
-Cc: pbonzini@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+On DCN10 the cursor hotspot regitsers are masked to 0xFF, so they have
+a maximum value of 0-255. Values greater this will wrap, causing the
+cursor to display in the wrong position.
+
+In practice this means that for sufficiently large plane positions, the
+cursor will be drawn twice on the screen, and can cause screen flashes
+or p-state WARNS depending on what the wrapped value is.
+
+So we need a way to remove the value from x_plane and y_plane without
+exceeding the maximum cursor size.
+
+[How]
+Subtract as much as x_plane/y_plane as possible from x and y and place
+the remainder in the cursor hotspot register.
+
+The value for x_hotspot and y_hotspot can still wrap around but it
+won't happen in a case where the cursor is actually enabled.
+
+The cursor plane needs to intersect at least one pixel of the plane's
+rectangle to be enabled, so the cursor position + hotspot provided by
+userspace must always be strictly less than the maximum cursor size for
+the cursor to actually be enabled.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/jump_label.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ .../drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c    | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index bad96b476eb6e..a799b1ac6b2fe 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -206,6 +206,8 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
- 					   unsigned long rate_limit,
- 					   struct delayed_work *work)
- {
-+	int val;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index a684b38332ac3..2ab05a4e8ed4a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2658,9 +2658,15 @@ static void dcn10_set_cursor_position(struct pipe_ctx *pipe_ctx)
+ 		.rotation = pipe_ctx->plane_state->rotation,
+ 		.mirror = pipe_ctx->plane_state->horizontal_mirror
+ 	};
+-
+-	pos_cpy.x_hotspot += pipe_ctx->plane_state->dst_rect.x;
+-	pos_cpy.y_hotspot += pipe_ctx->plane_state->dst_rect.y;
++	uint32_t x_plane = pipe_ctx->plane_state->dst_rect.x;
++	uint32_t y_plane = pipe_ctx->plane_state->dst_rect.y;
++	uint32_t x_offset = min(x_plane, pos_cpy.x);
++	uint32_t y_offset = min(y_plane, pos_cpy.y);
 +
- 	lockdep_assert_cpus_held();
++	pos_cpy.x -= x_offset;
++	pos_cpy.y -= y_offset;
++	pos_cpy.x_hotspot += (x_plane - x_offset);
++	pos_cpy.y_hotspot += (y_plane - y_offset);
  
- 	/*
-@@ -215,17 +217,20 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key,
- 	 * returns is unbalanced, because all other static_key_slow_inc()
- 	 * instances block while the update is in progress.
- 	 */
--	if (!atomic_dec_and_mutex_lock(&key->enabled, &jump_label_mutex)) {
--		WARN(atomic_read(&key->enabled) < 0,
--		     "jump label: negative count!\n");
-+	val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-+	if (val != 1) {
-+		WARN(val < 0, "jump label: negative count!\n");
- 		return;
- 	}
- 
--	if (rate_limit) {
--		atomic_inc(&key->enabled);
--		schedule_delayed_work(work, rate_limit);
--	} else {
--		jump_label_update(key);
-+	jump_label_lock();
-+	if (atomic_dec_and_test(&key->enabled)) {
-+		if (rate_limit) {
-+			atomic_inc(&key->enabled);
-+			schedule_delayed_work(work, rate_limit);
-+		} else {
-+			jump_label_update(key);
-+		}
- 	}
- 	jump_label_unlock();
- }
+ 	if (pipe_ctx->plane_state->address.type
+ 			== PLN_ADDR_TYPE_VIDEO_PROGRESSIVE)
 -- 
 2.20.1
 
