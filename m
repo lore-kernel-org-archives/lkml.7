@@ -2,69 +2,142 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1238EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A4CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAEE25E7D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E5122CD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 17:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="gvl402Oz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5+bc6Y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfE3R3w (ORCPT
+        id S1726699AbfE3RcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 13:29:52 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:45235 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfE3R3w (ORCPT
+        Thu, 30 May 2019 13:32:24 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39201 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfE3RcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 13:29:52 -0400
-Date:   Thu, 30 May 2019 17:29:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1559237390;
-        bh=M8YyTOkgVMTajh8KGkpA9X36l6Wgi1U0JaasE6Ezk6I=;
-        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
-        b=gvl402OznC1mp1iITEqh9zggYvtgCL+z3e21E5YcX89R3rsg7Li06WeOPFDdAJ2de
-         FwafvUmYTKclEaBdM9X1IGFLvWQ5DzSiuBFmfdPkyM9m32Qu1CeDg+2oPLbDa+5VW8
-         Aqy8shkOLp3kPTnD7mpCD+kcUmLzbl/U3SM/DEow=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   zvuln <zvuln@protonmail.com>
-Reply-To: zvuln <zvuln@protonmail.com>
-Subject: Question about mitigating Zombieload
-Message-ID: <0YYNF4UDAi1NJOBtzDhwqt1FJ_3NzTYIvtu2ApVMMPsEH0cfm9OMgYJpVHd8w0pfmeQCScYO5x-PlvdbNnnERNKiYMhEw1z3hQPaFRwvVOM=@protonmail.com>
-Feedback-ID: 349QC9di8fDcOs3pJ4oYTiFYdRqFoOjDYGmPCPnc1iXIhR0GW-SA3Emdze7698kkP1aBvTGF5giegN950lNFYA==:Ext:ProtonMail
+        Thu, 30 May 2019 13:32:23 -0400
+Received: by mail-it1-f195.google.com with SMTP id j204so5398557ite.4;
+        Thu, 30 May 2019 10:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pKmEOfA6jUQ1ifSdiSIAMrHcs6zqoAn0Gtn6sTHRPiI=;
+        b=d5+bc6Y5akW+fa5Hoke6kWvu0vyu03vP7dRu+bOGz73qJuRyVu9QnRTkOHMTdsgYXL
+         ms6OwHAdLUDdDPWSnUkm3ozAED44zbHWVawtoLZBcDlTI4Tws1rgeHR33XOmM8KWopeo
+         hdafFIbtsThw3r2n4FXQAHb8Dymne82HIl172SRhHYn7laekt+ogvoTJmtllAhWyj0dN
+         AMqDwIH2yqqc2l02dNQlH47gozMl0atPCtRtF0Gd15bUe9NQ0aL3X3MD4luqN3wf037I
+         +df1+uWNKf+sKMZi1dnZCC/wnGKCsASIn3mC6K1OXer9F/B2oNcJdj1dbpQVvWpnXUzj
+         7h1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pKmEOfA6jUQ1ifSdiSIAMrHcs6zqoAn0Gtn6sTHRPiI=;
+        b=SkCrbSh2gIYVySn3K/WIVZHX5K4hKPJP291qfPwXOUFW1KbN6Yr37AwcHtVflcNckv
+         gjrzzdwf8FYcm7yBU3fsjlEvdB+IjQTRZKIpu8VpL+rQIWs04ZNInBK0Cmwd433fCon1
+         Y7ViFxKM5Fi5uc73WM74PTJc600QSYAS1cPeUWkM92TD471xkYEXM65aMqOGMoFggWQ0
+         FxVqdPbRMvshTnUTgkkzGmObzmeWmVlMQJiIoP9Zgk2ZEsa+4z2AHPXgm6YdQLlfl2S8
+         QARLfWSQyBPAc7TCZgAIX5LlGPGeEpdm//Mb/aJ/Z3tfYr8I+082kaltabyjoJRDZtiQ
+         EhtQ==
+X-Gm-Message-State: APjAAAVy71rHmyOTtO7vpVpLnZNlrxxzlZTlw2730ms0wOGsTnUWLZyj
+        TEDQC1keyjW2qKsLBikHTPQJ7Sl3
+X-Google-Smtp-Source: APXvYqzWalcDXeau3RDQT3d7nz3EyiT/OOhQOLICDbi9RNEmdsp2lSwPMxnZ4oViDzGHPI0E8NF1BA==
+X-Received: by 2002:a24:fcc7:: with SMTP id b190mr4049196ith.122.1559237542407;
+        Thu, 30 May 2019 10:32:22 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id a7sm574793iok.19.2019.05.30.10.32.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2019 10:32:21 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT
+ flag is unset
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190529214355.15339-1-digetx@gmail.com>
+ <9b0e0d20-6386-a38a-1347-4264d249cb44@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <359abcbb-b3bd-ad32-9f35-15bb9b25f3b0@gmail.com>
+Date:   Thu, 30 May 2019 20:32:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9b0e0d20-6386-a38a-1347-4264d249cb44@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems the x86 architecture is once again
-afflicted with a flaw that arises out of
-unsafely implemented accelerations, namely
-the just-releaved Zombieload vulnerability.
+30.05.2019 15:01, Jon Hunter пишет:
+> 
+> On 29/05/2019 22:43, Dmitry Osipenko wrote:
+>> Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
+>> unset since it completely disables interrupt handling instead of skipping
+>> the callbacks invocations, hence putting channel into unusable state.
+>>
+>> The flag is always set by all of kernel drivers that use APB DMA, so let's
+>> error out in otherwise case for consistency. It won't be difficult to
+>> support that case properly if ever will be needed.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/dma/tegra20-apb-dma.c | 12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index cf462b1abc0b..2c84a660ba36 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -988,8 +988,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+>>  	}
+>>  
+>> -	if (flags & DMA_PREP_INTERRUPT)
+>> +	if (flags & DMA_PREP_INTERRUPT) {
+>>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+>> +	} else {
+>> +		WARN_ON_ONCE(1);
+>> +		return NULL;
+>> +	}
+>>  
+>>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+>>  
+>> @@ -1131,8 +1135,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+>>  	}
+>>  
+>> -	if (flags & DMA_PREP_INTERRUPT)
+>> +	if (flags & DMA_PREP_INTERRUPT) {
+>>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+>> +	} else {
+>> +		WARN_ON_ONCE(1);
+>> +		return NULL;
+>> +	}
+>>  
+>>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+> 
+> Looks good to me.
+> 
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> Cheers
+> Jon
+> 
 
-We know that Zombieload is possible when
-Hyperthreading is enabled. Here is a question:
-
-Is it possible to disable Hyperthreading
-not for all cores in the BIOS but rather
-on a per-core basis programmatically from
-the OS or from the bootloader?
-
-I ask because if this were possible, then
-it would be reasonable to segregate the sensitive
-code i.e. the kernel and the major daemons
-into one core that has Hyperthreading enabled,
-and then run all other (risky) user processes
-on the other cores, which have Hyperthreading
-disabled.
-
-Cheers.
-
+Thanks
