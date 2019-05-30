@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442E8C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14531C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0D8252CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E48252F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189999;
-	bh=xEQL8cLkJontcf8UKMDxuTMBWccBYxd86576sMJ/CxU=;
+	s=default; t=1559190003;
+	bh=p+vAPlUq3BhdDdI6PDbqlqpe5x/stIK25vssRkh1rBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYRoXPuB5+t0n+nzXzc+iHOw4GN7+IKLhJ9z+wKeJ8M4bhyOHBGTTE4sn9vGhFWAk
-	 wpte0flVvPqFnrFx6+8b2Vyt1VZNtH0JS16cpjPOL+mbtQAbNstwxugsbnR0trhtAy
-	 A2VpfThdgcPF6mFv1HK8R8kqdzLaQYN0clvA79L8=
+	b=zk3pO/+RtZvD0KeNmuugOTcEADzAdKzpee7RV1R9C1T4noTn2DQLqGwF9NHAw2o3Y
+	 rGC3CzVpkhV+Ar2dljyuJ+7OtTfgrqfiHAZywJJpEb2N8D+oStNoWHqeiJXdReol12
+	 3KzswElM7QYm5YD6S0N+u2HHeGlS+P8ZZhA/6qlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbfE3DPX (ORCPT
+        id S1730250AbfE3DPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbfE3DMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:46 -0400
+        id S1729206AbfE3DMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD86244B0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 46775244E8;
         Thu, 30 May 2019 03:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185965;
-        bh=xEQL8cLkJontcf8UKMDxuTMBWccBYxd86576sMJ/CxU=;
+        bh=p+vAPlUq3BhdDdI6PDbqlqpe5x/stIK25vssRkh1rBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wdFH3qHpEIgMcJGyv4aSKSDeJ9guBnl9VKcMzA/g0GS+QnfH1/q85YG5RrK1wcD83
-         mPfy6Nt2H07fhwpsJZrugmylaecwoXOu5MwRvaoBsK96+hWYvvVfHTTSZjv6B/+NKF
-         6cT2q6AIf1kFZgngnS2Cr09GnlQjwUkDYXjGcuSk=
+        b=SUpESecLVvumcpSJG9Buz1HlEgLwwTPngazxZAvxwU95gyRQjZ8ydbwUvmRN/YiGS
+         KQS2Ug2W3zoex6SrCpzUEtCGwU31tGa9MHdqRCSQxbEU5P17S0YlJo9+SUmR5R53B5
+         JUTyDjHc7twM9hIaJC/OffI9Sh+vyj6PQxrywn1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 393/405] ASoC: ti: fix davinci_mcasp_probe dependencies
-Date:   Wed, 29 May 2019 20:06:31 -0700
-Message-Id: <20190530030600.490522223@linuxfoundation.org>
+Subject: [PATCH 5.1 392/405] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+Date:   Wed, 29 May 2019 20:06:30 -0700
+Message-Id: <20190530030600.453182033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,52 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7d7b25d05ef1c5a1a9320190e1eeb55534847558 ]
+[ Upstream commit 8ca5104715cfd14254ea5aecc390ae583b707607 ]
 
-The SND_SOC_DAVINCI_MCASP driver can use either edma or sdma as
-a back-end, and it takes the presence of the respective dma engine
-drivers in the configuration as an indication to which ones should be
-built. However, this is flawed in multiple ways:
+Building with clang shows a variable that is only used by the
+suspend/resume functions but defined outside of their #ifdef block:
 
-- With CONFIG_TI_EDMA=m and CONFIG_SND_SOC_DAVINCI_MCASP=y,
-  is enabled as =m, and we get a link error:
-  sound/soc/ti/davinci-mcasp.o: In function `davinci_mcasp_probe':
-  davinci-mcasp.c:(.text+0x930): undefined reference to `edma_pcm_platform_register'
+sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
 
-- When CONFIG_SND_SOC_DAVINCI_MCASP=m has already been selected by
-  another driver, the same link error appears even if CONFIG_TI_EDMA
-  is disabled
+We commonly fix these by marking the PM functions as __maybe_unused,
+but here that would grow the davinci_mcasp structure, so instead
+add another #ifdef here.
 
-There are possibly other issues here, but it seems that the only reasonable
-solution is to always build both SND_SOC_TI_EDMA_PCM and
-SND_SOC_TI_SDMA_PCM as a dependency here. Both are fairly small and
-do not have any other compile-time dependencies, so the cost is
-very small, and makes the configuration stage much more consistent.
-
-Fixes: f2055e145f29 ("ASoC: ti: Merge davinci and omap directories")
+Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/ti/davinci-mcasp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
-index 4bf3c15d4e514..ee7c202c69b77 100644
---- a/sound/soc/ti/Kconfig
-+++ b/sound/soc/ti/Kconfig
-@@ -21,8 +21,8 @@ config SND_SOC_DAVINCI_ASP
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index a3a67a8f0f543..9fbc759fdefe1 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -45,6 +45,7 @@
  
- config SND_SOC_DAVINCI_MCASP
- 	tristate "Multichannel Audio Serial Port (McASP) support"
--	select SND_SOC_TI_EDMA_PCM if TI_EDMA
--	select SND_SOC_TI_SDMA_PCM if DMA_OMAP
-+	select SND_SOC_TI_EDMA_PCM
-+	select SND_SOC_TI_SDMA_PCM
- 	help
- 	  Say Y or M here if you want to have support for McASP IP found in
- 	  various Texas Instruments SoCs like:
+ #define MCASP_MAX_AFIFO_DEPTH	64
+ 
++#ifdef CONFIG_PM
+ static u32 context_regs[] = {
+ 	DAVINCI_MCASP_TXFMCTL_REG,
+ 	DAVINCI_MCASP_RXFMCTL_REG,
+@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
+ 	u32	*xrsr_regs; /* for serializer configuration */
+ 	bool	pm_state;
+ };
++#endif
+ 
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
 -- 
 2.20.1
 
