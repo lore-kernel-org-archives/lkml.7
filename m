@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4DFC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF1BC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6F324BCF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15B424BE0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187658;
-	bh=y+QVevoWSrUtVrRTvLyLfCQ6Dh4RSIzpeH/Mzlvj7Rs=;
+	s=default; t=1559187661;
+	bh=Fp+7aUbF1D0lC5iS9T91xccEwGSLKcrbLj5HiBvAS/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q7A1SON6ZyOpJurVJKTPp0y3Y8FK8Yx09lGh8nxh63MoFDFQrT9fOpPRQD0VidPmt
-	 Q7nYTAK2fZQiCUd6RrDNAhvOer2wwUObnLKVIwhV1EteDRAp5QMjwRaiE6DaVhqtJ+
-	 lOHPsG+A2qQ3rwsfIEdaGLc9rR17VlCFOX1Wub60=
+	b=P4Ae+WfPK7ciMzsPQReoiS9xbjoaaTsPZ/32I68C+zbx3CNcL2SxmVTI5sM3RTG0k
+	 WwdQ8U+DXNT5xG2WHVWJ36mtx2TRx4zqa0JyzNboe4BzdwTCsKilbOIGMrJahX57cx
+	 zVDaE5Y+VjlvpUf/4WFTd5RB8Hfi1UKd7e/HIiL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732389AbfE3Dk4 (ORCPT
+        id S1732545AbfE3DVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34666 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732555AbfE3DVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:25 -0400
+        id S1729638AbfE3DQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2518C249BA;
-        Thu, 30 May 2019 03:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC472449A;
+        Thu, 30 May 2019 03:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186485;
-        bh=y+QVevoWSrUtVrRTvLyLfCQ6Dh4RSIzpeH/Mzlvj7Rs=;
+        s=default; t=1559186180;
+        bh=Fp+7aUbF1D0lC5iS9T91xccEwGSLKcrbLj5HiBvAS/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiblfbTwescWsgFEPObfADAHuC3vllzw0Fp+tvjR0yBC7XNDGpxmcokM9zTHlpA8h
-         +OQbp9J0LJOui2nwHYspnAOBt6omCkT5PdgLfiBpLXBSa0UEsLgjAr3bDUWLyh6i6O
-         dMEjZ3T01SxCKGeg6JpiUsXOXdrd6fuu0V93Ulxo=
+        b=SQqw7nmoC0IXFxCxrD51zZNIY1Z0bY6lX8ZGJWvRcaiC1wW0JFoub5u8ciB9RgTcO
+         AqAc9BSadOYQc9ldylNyfVtKsKs+diL+LJPm6wCgLHkXDelPXcPDHzMX0q3FPiSTiE
+         cZZpuFbwL/8BzBHy8E/stCDTfLUP8X2BFcogHHoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 124/128] spi : spi-topcliff-pch: Fix to handle empty DMA buffers
-Date:   Wed, 29 May 2019 20:07:36 -0700
-Message-Id: <20190530030456.658384263@linuxfoundation.org>
+Subject: [PATCH 4.19 044/276] gfs2: Fix lru_count going negative
+Date:   Wed, 29 May 2019 20:03:22 -0700
+Message-Id: <20190530030527.354324148@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
-References: <20190530030432.977908967@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,63 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f37d8e67f39e6d3eaf4cc5471e8a3d21209843c6 ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-pch_alloc_dma_buf allocated tx, rx DMA buffers which can fail. Further,
-these buffers are used without a check. The patch checks for these
-failures and sends the error upstream.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
+
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-topcliff-pch.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
-index c54ee66744710..fe707440f8c3b 100644
---- a/drivers/spi/spi-topcliff-pch.c
-+++ b/drivers/spi/spi-topcliff-pch.c
-@@ -1306,18 +1306,27 @@ static void pch_free_dma_buf(struct pch_spi_board_data *board_dat,
- 	return;
- }
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 9d566e62684c2..775256141e9fb 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
  
--static void pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
-+static int pch_alloc_dma_buf(struct pch_spi_board_data *board_dat,
- 			      struct pch_spi_data *data)
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
  {
- 	struct pch_spi_dma_ctrl *dma;
-+	int ret;
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
++
+ 	spin_lock(&lru_lock);
  
- 	dma = &data->dma;
-+	ret = 0;
- 	/* Get Consistent memory for Tx DMA */
- 	dma->tx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->tx_buf_dma, GFP_KERNEL);
-+	if (!dma->tx_buf_virt)
-+		ret = -ENOMEM;
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
 +
- 	/* Get Consistent memory for Rx DMA */
- 	dma->rx_buf_virt = dma_alloc_coherent(&board_dat->pdev->dev,
- 				PCH_BUF_SIZE, &dma->rx_buf_dma, GFP_KERNEL);
-+	if (!dma->rx_buf_virt)
-+		ret = -ENOMEM;
-+
-+	return ret;
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
+ 
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
  }
  
- static int pch_spi_pd_probe(struct platform_device *plat_dev)
-@@ -1394,7 +1403,9 @@ static int pch_spi_pd_probe(struct platform_device *plat_dev)
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
  
- 	if (use_dma) {
- 		dev_info(&plat_dev->dev, "Use DMA for data transfers\n");
--		pch_alloc_dma_buf(board_dat, data);
-+		ret = pch_alloc_dma_buf(board_dat, data);
-+		if (ret)
-+			goto err_spi_register_master;
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1158,8 +1162,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
  	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
  
- 	ret = spi_register_master(master);
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1455,6 +1458,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1462,7 +1466,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1497,6 +1500,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
