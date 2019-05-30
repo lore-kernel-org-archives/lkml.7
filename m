@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33D8C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B270724B5F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9430924B61
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187340;
-	bh=ZSBRYXs6BLV95DKMWtK0RFqtoKDqjum16PCiFGF5YyQ=;
+	s=default; t=1559187345;
+	bh=IlB1S4Tay3XsNKO9BgkUIFJkZjRYXTnPP85jayngyYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yb448ftFDNzXBaLlR5qzZwfG8/bCWq19BACkBg94s5JF5l2Gx1EXK7ae/3R26rT3w
-	 d13WXZfXSK4ECyT3C20hqUb9GumiXGl6bCH8z7+zKplBc+FAkCoAtEYSjDpg/IwC5V
-	 GLbgAGrGwus5Arx49alrfaSQsaANFNnXN0oOV1EM=
+	b=dgXrziTS/YFJ/LsNShsNyHu+WU4vJL3Dl3Jpp9TZNQM3WRnvnxxW7ziOeHLE7sZcX
+	 5Yf3YUkuEuAyqyxyB9ogMYqXb8dflvSamHCww3eXmqV7tUq7YoqAAiMmTbewwUySCI
+	 6aMbmo84RQ6DLN8Z2F4eV+jqLGwAb8gXTJmwyloA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387682AbfE3D0P (ORCPT
+        id S2387660AbfE3D0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:26:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbfE3DSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:50 -0400
+        id S1730327AbfE3DSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:45 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7879247F3;
-        Thu, 30 May 2019 03:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6262247EF;
+        Thu, 30 May 2019 03:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186329;
-        bh=ZSBRYXs6BLV95DKMWtK0RFqtoKDqjum16PCiFGF5YyQ=;
+        s=default; t=1559186325;
+        bh=IlB1S4Tay3XsNKO9BgkUIFJkZjRYXTnPP85jayngyYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwFVLsMiOOSY4asLsCT9H2gJ9PSp3vHbbFy0fQ+nfIPAtEQcbMnmbFeXepCDapbuz
-         EfaBq3lTU2uDNPiZ826gFCiTKEBxKaT4IUW6M59E/54MDbxwU318IBAEgt1DsakO4E
-         IKR+EUqAlDhyZXNxdAMcRXyViS1e9dE5Jxc2ENw0=
+        b=h8EKs3VtQh9oRLI/R66MYlSdyUfyPjOODjBCSv6n0Mit36k8p+Au7ZLSK5+E+c1xS
+         AGa3d0GlFepP+pzSWO1xOX31aVF5pDVvi2D6525EKqdQzW+mtqRUoS9bLa+tsc9F9p
+         abvKPUJ0dyVONZJcX0wNwckAhljsDNNEiz/m9o68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/193] powerpc/perf: Return accordingly on invalid chip-id in
-Date:   Wed, 29 May 2019 20:05:01 -0700
-Message-Id: <20190530030456.199610028@linuxfoundation.org>
+Subject: [PATCH 4.14 038/193] NFS: make nfs_match_client killable
+Date:   Wed, 29 May 2019 20:04:52 -0700
+Message-Id: <20190530030454.763133741@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,39 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a913e5e8b43be1d3897a141ce61c1ec071cad89c ]
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-Nest hardware counter memory resides in a per-chip reserve-memory.
-During nest_imc_event_init(), chip-id of the event-cpu is considered to
-calculate the base memory addresss for that cpu. Return, proper error
-condition if the chip_id calculated is invalid.
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
+
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/imc-pmu.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index b73961b95c345..994e4392cac5c 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -481,6 +481,11 @@ static int nest_imc_event_init(struct perf_event *event)
- 	 * Get the base memory addresss for this cpu.
- 	 */
- 	chip_id = cpu_to_chip_id(event->cpu);
-+
-+	/* Return, if chip_id is not valid */
-+	if (chip_id < 0)
-+		return -ENODEV;
-+
- 	pcni = pmu->mem_info;
- 	do {
- 		if (pcni->id == chip_id) {
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index a98d64a6eda5c..65da2c105f434 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -290,6 +290,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
+ 
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -302,8 +303,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			atomic_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -413,6 +416,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
