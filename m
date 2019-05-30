@@ -2,56 +2,56 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB39C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F48C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD14C252A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251B8252CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189949;
-	bh=D1WUO/bKEhiRZhw3889DuMCeutgmEahz8bEKLcuAOAU=;
+	s=default; t=1559189951;
+	bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYrMNJrfY/75GLSVR2fIfWUNAXqUGz+cl0OmRHCad/2VKcPFcEXiiVExTQPliOqti
-	 r0iveufihL3YaDViRFZkbQt+PxErcqGMwaiGBPCIvVpwZ2asyvek1RLks3juZY954d
-	 0keRVRa+gqEfqm5geufz1VTxvHv+X6YFVZhTEA0U=
+	b=AAfYbueYhp3+bF9hmDGUTZuGCJsXO3al94GMm+t22I3rDALGb658dgUVX39U7nuLW
+	 cj7NuOB4Ok3gro4W22fjdW0GjJQgtrOr8k24YiRPOKVHEwgcTxjgQZ58xEv2w3iux4
+	 Lny4gw5ZUrRggCHzGkmNUC6GG+HCJUA+bG9Hm4P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfE3DP1 (ORCPT
+        id S1730435AbfE3DPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56442 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbfE3DMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:49 -0400
+        id S1727563AbfE3DNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99FD21BE2;
-        Thu, 30 May 2019 03:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83E4244EA;
+        Thu, 30 May 2019 03:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185968;
-        bh=D1WUO/bKEhiRZhw3889DuMCeutgmEahz8bEKLcuAOAU=;
+        s=default; t=1559185987;
+        bh=nGAUJRbLvnG4RZXmH6VU4fSaW9467h2MfLvkpldJnBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/5imLcBE9vbxcMwFj1MjrvuUcWAeDXTPhY4CKK1LA1xqob0Bdk6ewcOEPFSHAH1Y
-         /FMQ/VgM7o7tD3O8du3DCWtdSaroNphf3MXZkvLsqu7fqAIpZsSKIjkvck2DdQd4y1
-         rOIAr0/xnJlJzfOb4gieHOtQQYkK9J/5lr2dBqPY=
+        b=u3KPifvDIPdZCSgoBOL8zuUqBHtHhmz5w4fP53T7XAZw7KH/YqVLHEBB8OiNVEG0+
+         onnF0u2UIDYDH5hWyqM2jQm4F7whcfszu9YhQFo8sx0gpQgQko2Xui9DGCll1gcG8V
+         ntXgk7tJnY0LcDLVHhuuBWVZBf3O/XBDzkA61AuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 399/405] drm/sun4i: dsi: Change the start delay calculation
-Date:   Wed, 29 May 2019 20:06:37 -0700
-Message-Id: <20190530030600.752387180@linuxfoundation.org>
+        syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.0 029/346] ovl: relax WARN_ON() for overlapping layers use case
+Date:   Wed, 29 May 2019 20:01:42 -0700
+Message-Id: <20190530030542.244955863@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,46 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit da676c6aa6413d59ab0a80c97bbc273025e640b2 ]
+From: Amir Goldstein <amir73il@gmail.com>
 
-The current calculation for the video start delay in the current DSI driver
-is that it is the total vertical size, minus the front porch and sync length,
-plus 1. This equals to the active vertical size plus the back porch plus 1.
+commit acf3062a7e1ccf67c6f7e7c28671a6708fde63b0 upstream.
 
-That 1 is coming in the Allwinner BSP from an variable that is set to 1.
-However, if we look at the Allwinner BSP more closely, and especially in
-the "legacy" code for the display (in drivers/video/sunxi/legacy/), we can
-see that this variable is actually computed from the porches and the sync
-minus 10, clamped between 8 and 100.
+This nasty little syzbot repro:
+https://syzkaller.appspot.com/x/repro.syz?x=12c7a94f400000
 
-This fixes the start delay symptom we've seen on some panels (vblank
-timeouts with vertical white stripes at the bottom of the panel).
+Creates overlay mounts where the same directory is both in upper and lower
+layers. Simplified example:
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/6e5f72e68f47ca0223877464bf12f0c3f3978de8.1549896081.git-series.maxime.ripard@bootlin.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  mkdir foo work
+  mount -t overlay none foo -o"lowerdir=.,upperdir=foo,workdir=work"
+
+The repro runs several threads in parallel that attempt to chdir into foo
+and attempt to symlink/rename/exec/mkdir the file bar.
+
+The repro hits a WARN_ON() I placed in ovl_instantiate(), which suggests
+that an overlay inode already exists in cache and is hashed by the pointer
+of the real upper dentry that ovl_create_real() has just created. At the
+point of the WARN_ON(), for overlay dir inode lock is held and upper dir
+inode lock, so at first, I did not see how this was possible.
+
+On a closer look, I see that after ovl_create_real(), because of the
+overlapping upper and lower layers, a lookup by another thread can find the
+file foo/bar that was just created in upper layer, at overlay path
+foo/foo/bar and hash the an overlay inode with the new real dentry as lower
+dentry. This is possible because the overlay directory foo/foo is not
+locked and the upper dentry foo/bar is in dcache, so ovl_lookup() can find
+it without taking upper dir inode shared lock.
+
+Overlapping layers is considered a wrong setup which would result in
+unexpected behavior, but it shouldn't crash the kernel and it shouldn't
+trigger WARN_ON() either, so relax this WARN_ON() and leave a pr_warn()
+instead to cover all cases of failure to get an overlay inode.
+
+The error returned from failure to insert new inode to cache with
+inode_insert5() was changed to -EEXIST, to distinguish from the error
+-ENOMEM returned on failure to get/allocate inode with iget5_locked().
+
+Reported-by: syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com
+Fixes: 01b39dcc9568 ("ovl: use inode_insert5() to hash a newly...")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/overlayfs/dir.c   |    2 +-
+ fs/overlayfs/inode.c |    3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 318994cd1b851..25d8cb9f92661 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -358,7 +358,9 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
- {
--	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
-+	u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
-+
-+	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
- }
+--- a/fs/overlayfs/dir.c
++++ b/fs/overlayfs/dir.c
+@@ -260,7 +260,7 @@ static int ovl_instantiate(struct dentry
+ 		 * hashed directory inode aliases.
+ 		 */
+ 		inode = ovl_get_inode(dentry->d_sb, &oip);
+-		if (WARN_ON(IS_ERR(inode)))
++		if (IS_ERR(inode))
+ 			return PTR_ERR(inode);
+ 	} else {
+ 		WARN_ON(ovl_inode_real(inode) != d_inode(newdentry));
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -832,7 +832,7 @@ struct inode *ovl_get_inode(struct super
+ 	int fsid = bylower ? oip->lowerpath->layer->fsid : 0;
+ 	bool is_dir, metacopy = false;
+ 	unsigned long ino = 0;
+-	int err = -ENOMEM;
++	int err = oip->newinode ? -EEXIST : -ENOMEM;
  
- static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
--- 
-2.20.1
-
+ 	if (!realinode)
+ 		realinode = d_inode(lowerdentry);
+@@ -917,6 +917,7 @@ out:
+ 	return inode;
+ 
+ out_err:
++	pr_warn_ratelimited("overlayfs: failed to get inode (%i)\n", err);
+ 	inode = ERR_PTR(err);
+ 	goto out;
+ }
 
 
