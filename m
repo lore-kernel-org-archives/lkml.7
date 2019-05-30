@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E531DC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09C8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB1C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F40229EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192275;
-	bh=oddKV1yeYzoI5BnCJbnLiq9Kkmk8WXXws4bnaRGvVLM=;
+	s=default; t=1559192278;
+	bh=2lL2AAseHZKVdtgWO29XLWOxL9dLpWAGdkuCIEIeyiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8LGnMssrQBGqgQyJJkJNAaCUL2+FyI93a/GdRmVd3qW2zM2vJw13GxjNI5Jd82v4
-	 2JqeYtsAMZDXPnAWPU1e88HzkNa8omp6ZXav4ge2VuMv8IrBKCPJ1FS+UsIBlGs3Y/
-	 O7hj5E8NdrD+HCVRsA+Wm0OHLg0NrG+aE8iO6YUk=
+	b=qLP5mVwSExKOT3pxsTNnDBeCAF4VNSLvt2zOwzI0FeC4AIYHKa6/J6CVUoiqMuFpk
+	 gKkGcG9RBeFjukDb1oJUdTrHr+M+/AfYYD7IDF5BKoTffOILGRt6eAIlQiyUoNqcru
+	 okdp1ECDS5pGBlsYgFdQ1q+ITGsXfP2DDewZW7+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389179AbfE3E5y (ORCPT
+        id S2389322AbfE3E55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:57:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbfE3DJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:53 -0400
+        id S1727835AbfE3DJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:52 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D50A2449C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1175A24494;
         Thu, 30 May 2019 03:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185792;
-        bh=oddKV1yeYzoI5BnCJbnLiq9Kkmk8WXXws4bnaRGvVLM=;
+        bh=2lL2AAseHZKVdtgWO29XLWOxL9dLpWAGdkuCIEIeyiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKw86/bshhVvJ2xJKzc2EUO7YtzMDJhyxUVlRaDGUxsheBQIi3DHwyhP51jBB4BKm
-         BEfXzrxkhrnp4+z9DCHvSMkGp6vJaIsqnNJRnaFwY7OneYJzyb0ZSfL4v5z5Nyzh1f
-         0i9y2KF2IWcgVoiGBw5QvP3svwWQQxCRBHOnoHWc=
+        b=punz6eAgO9TGsRdfx4g1TeHSSgUf5JJmFZAxwGyuZQZNO9HOwatND+CM43SpGikb1
+         zT43gWn5zAuqAS1Dac+266nwZPeu0s1yTB+sfRSflAj6gnDoZcuJZWOtnEwiUPpEbh
+         MORaDXUBXTYH6BTA05NGrj/c19a8HlxfXiUJoNxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 065/405] net: ena: fix: set freed objects to NULL to avoid failing future allocations
-Date:   Wed, 29 May 2019 20:01:03 -0700
-Message-Id: <20190530030544.235021351@linuxfoundation.org>
+Subject: [PATCH 5.1 064/405] net: ena: gcc 8: fix compilation warning
+Date:   Wed, 29 May 2019 20:01:02 -0700
+Message-Id: <20190530030544.187954449@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,93 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ee8ee7fe87bf64738ab4e31be036a7165608b27 ]
+[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
 
-In some cases when a queue related allocation fails, successful past
-allocations are freed but the pointer that pointed to them is not
-set to NULL. This is a problem for 2 reasons:
-1. This is generally a bad practice since this pointer might be
-accidentally accessed in the future.
-2. Future allocations using the same pointer check if the pointer
-is NULL and fail if it is not.
+GCC 8 contains a number of new warnings as well as enhancements to existing
+checkers. The warning - Wstringop-truncation - warns for calls to bounded
+string manipulation functions such as strncat, strncpy, and stpncpy that
+may either truncate the copied string or leave the destination unchanged.
 
-Fixed this by setting such pointers to NULL in the allocation of
-queue related objects.
+In our case the destination string length (32 bytes) is much shorter than
+the source string (64 bytes) which causes this warning to show up. In
+general the destination has to be at least a byte larger than the length
+of the source string with strncpy for this warning not to showup.
 
-Also refactored the code of ena_setup_tx_resources() to goto-style
-error handling to avoid code duplication of resource freeing.
+This can be easily fixed by using strlcpy instead which already does the
+truncation to the string. Documentation for this function can be
+found here:
+
+https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 25 ++++++++++++--------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 41c1c9acb3246..9b03d7e404f83 100644
+index a6eacf2099c30..41c1c9acb3246 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -224,28 +224,23 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
- 	if (!tx_ring->tx_buffer_info) {
- 		tx_ring->tx_buffer_info = vzalloc(size);
- 		if (!tx_ring->tx_buffer_info)
--			return -ENOMEM;
-+			goto err_tx_buffer_info;
- 	}
- 
- 	size = sizeof(u16) * tx_ring->ring_size;
- 	tx_ring->free_tx_ids = vzalloc_node(size, node);
- 	if (!tx_ring->free_tx_ids) {
- 		tx_ring->free_tx_ids = vzalloc(size);
--		if (!tx_ring->free_tx_ids) {
--			vfree(tx_ring->tx_buffer_info);
--			return -ENOMEM;
--		}
-+		if (!tx_ring->free_tx_ids)
-+			goto err_free_tx_ids;
- 	}
- 
- 	size = tx_ring->tx_max_header_size;
- 	tx_ring->push_buf_intermediate_buf = vzalloc_node(size, node);
- 	if (!tx_ring->push_buf_intermediate_buf) {
- 		tx_ring->push_buf_intermediate_buf = vzalloc(size);
--		if (!tx_ring->push_buf_intermediate_buf) {
--			vfree(tx_ring->tx_buffer_info);
--			vfree(tx_ring->free_tx_ids);
--			return -ENOMEM;
--		}
-+		if (!tx_ring->push_buf_intermediate_buf)
-+			goto err_push_buf_intermediate_buf;
- 	}
- 
- 	/* Req id ring for TX out of order completions */
-@@ -259,6 +254,15 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
- 	tx_ring->next_to_clean = 0;
- 	tx_ring->cpu = ena_irq->cpu;
- 	return 0;
-+
-+err_push_buf_intermediate_buf:
-+	vfree(tx_ring->free_tx_ids);
-+	tx_ring->free_tx_ids = NULL;
-+err_free_tx_ids:
-+	vfree(tx_ring->tx_buffer_info);
-+	tx_ring->tx_buffer_info = NULL;
-+err_tx_buffer_info:
-+	return -ENOMEM;
- }
- 
- /* ena_free_tx_resources - Free I/O Tx Resources per Queue
-@@ -378,6 +382,7 @@ static int ena_setup_rx_resources(struct ena_adapter *adapter,
- 		rx_ring->free_rx_ids = vzalloc(size);
- 		if (!rx_ring->free_rx_ids) {
- 			vfree(rx_ring->rx_buffer_info);
-+			rx_ring->rx_buffer_info = NULL;
- 			return -ENOMEM;
- 		}
- 	}
+@@ -2292,7 +2292,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev,
+ 	host_info->bdf = (pdev->bus->number << 8) | pdev->devfn;
+ 	host_info->os_type = ENA_ADMIN_OS_LINUX;
+ 	host_info->kernel_ver = LINUX_VERSION_CODE;
+-	strncpy(host_info->kernel_ver_str, utsname()->version,
++	strlcpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+ 	strncpy(host_info->os_dist_str, utsname()->release,
 -- 
 2.20.1
 
