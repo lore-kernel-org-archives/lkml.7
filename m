@@ -2,145 +2,106 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC475C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D967C28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6392255CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559224050;
-	bh=A92l+U2UOxsuYqmLO7ARav2xbj2vY8rqGFS+l5tOKqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AwPIKMdrKexzztaNQIzY5cfenHMa79GHlkyVy0TXaOUP9iKjaWkzSLtGj4g+X/X8z
-	 m+HzNQgUdpg9NIreoas7KigJIkF9jmRMHlgJvdahnvcWImR91VYRJnwhFRu+Z/Fhou
-	 voyezxWaolhy48Wux1Uvu/3CYR6qRAY/iOVB844Y=
+	by mail.kernel.org (Postfix) with ESMTP id 7014925618
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfE3Nr3 (ORCPT
+        id S1726876AbfE3NvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfE3Nr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:47:29 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F55224D63;
-        Thu, 30 May 2019 13:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559224048;
-        bh=A92l+U2UOxsuYqmLO7ARav2xbj2vY8rqGFS+l5tOKqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JEQOI6VMjjOTypef8/fdAzWHo0LQkUqsjccwMbVHLb/Zb68gI2R3YuCsHMo5E8qFQ
-         D6CH8s56YAGHWAnDK1olI/J5jLwSV6zgbrl0S61zemvxi49hYYQG9mbiDdvlamVKFV
-         XYokg6bD8XMjiMuLUKik4RqRT1ob68yRl22lVej4=
-Date:   Thu, 30 May 2019 08:47:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
-        laine@redhat.com
-Subject: Re: [PATCH] PCI: Return error if cannot probe VF
-Message-ID: <20190530134727.GM28250@google.com>
-References: <155672991496.20698.4279330795743262888.stgit@gimli.home>
+        Thu, 30 May 2019 09:51:09 -0400
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:53180 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfE3NvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:51:09 -0400
+Received: by mail-wm1-f52.google.com with SMTP id y3so4034570wmm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:51:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=VJdacDVHBRo3cqkBw/isPcHDnC2ea++G9bD0r1ee6oo=;
+        b=a1zAZOE49fO48si2ZAbWC63sV3B3kVsryhVVR/s/OAq2ZOySbyP1P6qjNUniujtksk
+         gZdDJtfDl43bKUfgtwYwRsELTp+QTzMgXDCB8gMITtqOyBj4ZjH33waWQdlUyzQXoJrF
+         LGLgbCz0964O6BSsdHiAH45lxCtpIya2ifNK7MFOOK3DeJdKjhBnKkrGpE/x1WDSxFwZ
+         F5+Ft9vuZ4G+XB2sGKIiYbpjYvzAdkxaIsygxDnms4ShwmwJvNl1incVUuNXDFYt0GF0
+         r9ccQ2pM31UqPmgPAxgF1lq38lUC7Mwg+tWlXF9q6Tob4XmBEswx9O4vOf7ddpTAVm7h
+         nLgg==
+X-Gm-Message-State: APjAAAUDGWWPs61+z0Xcs/+gGsY3WKsZ17q1VPLxaerUunfD424GYcmp
+        MYUZ06ts0ZuuGx64y/pqmatFZw==
+X-Google-Smtp-Source: APXvYqwclqccELRhv/Sc7m1LCuXJUri8+5XDjrijQ5Xip1CQhdaXGUvUnmQqjXffUiL+V6d2OnkrVg==
+X-Received: by 2002:a1c:f50a:: with SMTP id t10mr2421566wmh.86.1559224267185;
+        Thu, 30 May 2019 06:51:07 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f2sm3815143wrq.48.2019.05.30.06.51.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 30 May 2019 06:51:06 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "will.deacon\@arm.com" <will.deacon@arm.com>,
+        "marc.zyngier\@arm.com" <marc.zyngier@arm.com>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "olaf\@aepfle.de" <olaf@aepfle.de>,
+        "apw\@canonical.com" <apw@canonical.com>,
+        "jasowang\@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH v3 2/2] Drivers: hv: Move Hyper-V clocksource code to new clocksource driver
+In-Reply-To: <BYAPR21MB122115920E78B7897FDC7BE9D7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com> <1558969089-13204-3-git-send-email-mikelley@microsoft.com> <87r28gl1d1.fsf@vitty.brq.redhat.com> <BYAPR21MB122115920E78B7897FDC7BE9D7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+Date:   Thu, 30 May 2019 15:51:05 +0200
+Message-ID: <87imtskq46.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155672991496.20698.4279330795743262888.stgit@gimli.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 11:00:16AM -0600, Alex Williamson wrote:
-> Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-> VF driver binding") allows the user to specify that drivers for VFs of
-> a PF should not be probed, but it actually causes pci_device_probe() to
-> return success back to the driver core in this case.  Therefore by all
-> sysfs appearances the device is bound to a driver, the driver link from
-> the device exists as does the device link back from the driver, yet the
-> driver's probe function is never called on the device.  We also fail to
-> do any sort of cleanup when we're prohibited from probing the device,
-> the irq setup remains in place and we even hold a device reference.
-> 
-> Instead, abort with errno before any setup or references are taken when
-> pci_device_can_probe() prevents us from trying to probe the device.
-> 
-> Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Michael Kelley <mikelley@microsoft.com> writes:
 
-Applied to pci/enumeration for v5.3, thanks!
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, May 30, 2019 2:48 AM
+>> > +		/*
+>> > +		 * sched_clock_register is needed on ARM64 but
+>> > +		 * is a no-op on x86
+>> > +		 */
+>> > +		sched_clock_register(read_hv_sched_clock_msr,
+>> > +						64, HV_CLOCK_HZ);
+>> 
+>> I'm not sure about ARM, but MSR-based clocksource would be a really bad
+>> choice for sched clock on x86, this will slow things down
+>> significantly. Luckily, as you're validly stating above,
+>> sched_clock_register() is a no-op on x86 as we don't define
+>> CONFIG_GENERIC_SCHED_CLOCK.
+>> 
+>> Can we actually *not* do sched_clock_register() in case
+>> TSC page is unavailable (and revert to counting jiffies or whatever)?
+>> 
+>
+> We can't skip the sched_clock_register() on ARM64 because it
+> does define CONFIG_GENERIC_SCHED_CLOCK.  However, Hyper-V
+> should always provide REFERENCE_TSC_AVAILALBE on ARM64,
+> so we should never end up in the MSR-based code on ARM64.
+> Arguably that means the call to sched_clock_register() could be
+> removed since it's a no-op on x86.  But I'd like to keep it for symmetry
+> and in case there's a testing/debugging situation on ARM64 where
+> we want to clear REFERENCE_TSC_AVAILABLE and go down the
+> MSR-based code path.
 
-The scenario you describe, Laine, indeed sounds cumbersome.  If you
-want to propose an alternate or additional patch to address that, or
-if you think Alex's patch will make it harder to clean up that
-scenario, I'm all ears.  But it seems like Alex's patch is an
-improvement even if it leaves some problems unsolved.
+Ok, so it is just a fall-back and not going to be actively used. Thanks!
 
-> ---
-> 
-> This issue is easily tested by disabling sriov_drivers_autoprobe and
-> creating VFs:
-> 
-> # echo 0 > sriov_drivers_autoprobe
-> # echo 3 > sriov_numvfs
-> # readlink -f virtfn*/driver
-> /sys/bus/pci/drivers/iavf
-> /sys/bus/pci/drivers/iavf
-> /sys/bus/pci/drivers/iavf
-> (yet no netdevs exist for these VFs)
-> 
-> The semantics of this autoprobe disabling are a bit strange for the
-> user as well, I suppose it works if we force a bind through a driver's
-> bind attribute, but tools like libvirt and driverctl expect to bind
-> devices by setting the driver_override and then pushing the device
-> through driver_probe on the bus.  Is the intention of disabling
-> "autoprobe" that a driver_override should still work?  Otherwise the
-> user needs to set the driver_override for each VF, re-enable
-> sriov_drivers_autoprobe on the PF, and then probe the VFs.  Thus maybe
-> pci_device_can_probe() should allow probes of the driver_override
-> driver?  Thanks,
-> 
-> Alex
-> 
->  drivers/pci/pci-driver.c |   13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 71853befd435..da7b82e56c83 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -414,6 +414,9 @@ static int pci_device_probe(struct device *dev)
->  	struct pci_dev *pci_dev = to_pci_dev(dev);
->  	struct pci_driver *drv = to_pci_driver(dev->driver);
->  
-> +	if (!pci_device_can_probe(pci_dev))
-> +		return -ENODEV;
-> +
->  	pci_assign_irq(pci_dev);
->  
->  	error = pcibios_alloc_irq(pci_dev);
-> @@ -421,12 +424,10 @@ static int pci_device_probe(struct device *dev)
->  		return error;
->  
->  	pci_dev_get(pci_dev);
-> -	if (pci_device_can_probe(pci_dev)) {
-> -		error = __pci_device_probe(drv, pci_dev);
-> -		if (error) {
-> -			pcibios_free_irq(pci_dev);
-> -			pci_dev_put(pci_dev);
-> -		}
-> +	error = __pci_device_probe(drv, pci_dev);
-> +	if (error) {
-> +		pcibios_free_irq(pci_dev);
-> +		pci_dev_put(pci_dev);
->  	}
->  
->  	return error;
-> 
+-- 
+Vitaly
