@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51084C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FC2C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111DA24968
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3996A2497E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186445;
-	bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+	s=default; t=1559186450;
+	bh=7RcEOH/HE3JXRnzDunkFCAZCXEfpzCP3ZZnCtC8r6qM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wm1tI679oqOP6tdfdrnDbZTY27fxVMIYTnMWY13DTVw8/pPpsOxAVvLxvf8SQQj4A
-	 kNwdk+KAMmJI2EriUEJIglTS6czbasE+HL+LDQYw8oM9/rrj/s6WpgoPmcUv2CizCo
-	 v8aHB1169qZt6cDuKwWFI7EAG4HYfLTKf5SvtjdA=
+	b=LRB/UwKjBHvTkKouwbaBUBL1K+e55fjLYG/Tz/cKCvhYCt7A1adbWZYxX4VD9mnLo
+	 NQl6jcueAuDiA7NPT80sbulXZivtN3bAubPH/813qgelhtwT5qIAAe49JkvcbrQjFy
+	 S5HBIoQICwLy3WyI/t6cCkYxL4JgrougkyxNL1+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbfE3DUo (ORCPT
+        id S1732355AbfE3DUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbfE3DQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:16:02 -0400
+        id S1730576AbfE3DQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84F39245C4;
-        Thu, 30 May 2019 03:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765DB24595;
+        Thu, 30 May 2019 03:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186161;
-        bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+        s=default; t=1559186163;
+        bh=7RcEOH/HE3JXRnzDunkFCAZCXEfpzCP3ZZnCtC8r6qM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qtTn2FDPtUpo/7YMD8wo2asV0DTGtZlBJjOv2hyjkbXSae7mdhvywpP//4iJh0KiT
-         VfFWupNX2HrPtOy6kT+V1uiLKI8epcyU8Zt+1/fuUt2ANZXhhzQbODeinX06+jVp4J
-         AXD030tct8tI2LbIZcY1Gnazm0OJ57UZzg+SgU9g=
+        b=OCcHcFyapajxI1bQZjIwpsLhKHTl9oH/tzemVrk1z66OR+61cchTJnynY6e33ibSg
+         gKadIq3HmsNjHwu61WKU0D2uwIddCu1/rAfi/WF6+J4EC9cSecEP3iv3HiVU8eZhZP
+         PbL0sbayhD9UKhyrYZUr85mya3a6OHE/JDuXI8u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 001/276] x86: Hide the int3_emulate_call/jmp functions from UML
-Date:   Wed, 29 May 2019 20:02:39 -0700
-Message-Id: <20190530030523.290639899@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jeff Smits <jeff.smits@intel.com>
+Subject: [PATCH 4.19 013/276] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Date:   Wed, 29 May 2019 20:02:51 -0700
+Message-Id: <20190530030524.620870608@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +65,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Dan Williams <dan.j.williams@intel.com>
 
-commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
+commit 52f476a323f9efc959be1c890d0cdcf12e1582e0 upstream.
 
-User Mode Linux does not have access to the ip or sp fields of the pt_regs,
-and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
-and int3_emulate_call() instructions from UML, as it doesn't need them
-anyway.
+Jeff discovered that performance improves from ~375K iops to ~519K iops
+on a simple psync-write fio workload when moving the location of 'struct
+page' from the default PMEM location to DRAM. This result is surprising
+because the expectation is that 'struct page' for dax is only needed for
+third party references to dax mappings. For example, a dax-mapped buffer
+passed to another system call for direct-I/O requires 'struct page' for
+sending the request down the driver stack and pinning the page. There is
+no usage of 'struct page' for first party access to a file via
+read(2)/write(2) and friends.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+However, this "no page needed" expectation is violated by
+CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
+copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
+check_heap_object() helper routine assumes the buffer is backed by a
+slab allocator (DRAM) page and applies some checks.  Those checks are
+invalid, dax pages do not originate from the slab, and redundant,
+dax_iomap_actor() has already validated that the I/O is within bounds.
+Specifically that routine validates that the logical file offset is
+within bounds of the file, then it does a sector-to-pfn translation
+which validates that the physical mapping is within bounds of the block
+device.
+
+Bypass additional hardened usercopy overhead and call the 'no check'
+versions of the copy_{to,from}_iter operations directly.
+
+Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache...")
+Cc: <stable@vger.kernel.org>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Reported-and-tested-by: Jeff Smits <jeff.smits@intel.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/text-patching.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvdimm/pmem.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_r
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
- 
-+#ifndef CONFIG_UML_X86
- static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->ip = ip;
-@@ -65,6 +66,7 @@ static inline void int3_emulate_call(str
- 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
- 	int3_emulate_jmp(regs, func);
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -281,16 +281,22 @@ static long pmem_dax_direct_access(struc
+ 	return __pmem_direct_access(pmem, pgoff, nr_pages, kaddr, pfn);
  }
--#endif
-+#endif /* CONFIG_X86_64 */
-+#endif /* !CONFIG_UML_X86 */
  
- #endif /* _ASM_X86_TEXT_PATCHING_H */
++/*
++ * Use the 'no check' versions of copy_from_iter_flushcache() and
++ * copy_to_iter_mcsafe() to bypass HARDENED_USERCOPY overhead. Bounds
++ * checking, both file offset and device offset, is handled by
++ * dax_iomap_actor()
++ */
+ static size_t pmem_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	return copy_from_iter_flushcache(addr, bytes, i);
++	return _copy_from_iter_flushcache(addr, bytes, i);
+ }
+ 
+ static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	return copy_to_iter_mcsafe(addr, bytes, i);
++	return _copy_to_iter_mcsafe(addr, bytes, i);
+ }
+ 
+ static const struct dax_operations pmem_dax_ops = {
 
 
