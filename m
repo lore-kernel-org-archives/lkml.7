@@ -2,51 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E47C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F16C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B2225F36
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFACE25F40
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192171;
-	bh=BTwjII6Wd+SwyBvRtmFt2MY9N4RyqCEHuN3z/WsuiMw=;
+	s=default; t=1559192173;
+	bh=X5au7f96IOi/d7xdbcCMJXSy7yjvbMLDW17izV5+LAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fkQnqO6bt5YBdGkyfYm59ym1bnyNiI0fQlMn2+x2BpBp8EVsUDmMGCV0dw7ULc6z5
-	 uoEavfP5ycIDnlZwjvCD1tnIEincqhasTc7W96WFHHUoPmY0+A5cu7LKN5m36UnLI3
-	 LHR9ZWCgTT/LMnDDyk2jDQrpZ8WzxdjyiEsiwQA8=
+	b=Ls1vhpXN+lPIlku2VN+teXiBogAZgBlsYABb2HwYUBddDo1/lQSVshCq/Gcto3EFi
+	 NjFDL/UAkVMZFGg8RgA0JPvaJfLyiZi4ug+5AnUlS50acGaJdPnzcTm80V7sjLfOfO
+	 /FfxXjI7FB0yUuTaGwkV5uCRfZY+R6J9gUZlH3xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfE3DKI (ORCPT
+        id S2389058AbfE3E4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45142 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:56:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbfE3DJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:44 -0400
+        id S1727951AbfE3DKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:08 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD82F24490;
-        Thu, 30 May 2019 03:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFAC2244A9;
+        Thu, 30 May 2019 03:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185783;
-        bh=BTwjII6Wd+SwyBvRtmFt2MY9N4RyqCEHuN3z/WsuiMw=;
+        s=default; t=1559185807;
+        bh=X5au7f96IOi/d7xdbcCMJXSy7yjvbMLDW17izV5+LAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TR2RFtctA3kl4C3UrfqrgRVtA/jBe/F1Yv8wYsYKfTSm58xle3e+aMOyoVQyU/3MK
-         iolSbWOo7JnoDV2haALLM5GUzts91MdYk6F5IS47qk1RkcqfqCh4NXpmeCskNlV+/m
-         1qz6HGkRSbcxbNk+G+ZasCaZyBN66+NfWlYLDd0U=
+        b=r1rEWovjY9D3DAZC9UT9lwJJ14oCdcYgJtZQxC0f7qIue/Sf+KyGircMAWhISWl1B
+         o+mssh1aRhcJVHnTcr/VjLqBVmbIMKE4CaZVG9v1bcsT5RyT/un3+IRDzs49dgUy56
+         XTrwEFJblnjouzvPvh3RVPM5nL2a1roNnhaFkggs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 008/405] Revert "scsi: sd: Keep disk read-only when re-reading partition"
-Date:   Wed, 29 May 2019 20:00:06 -0700
-Message-Id: <20190530030540.816673121@linuxfoundation.org>
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 048/405] NFS: make nfs_match_client killable
+Date:   Wed, 29 May 2019 20:00:46 -0700
+Message-Id: <20190530030543.254016422@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -59,51 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-commit 8acf608e602f6ec38b7cc37b04c80f1ce9a1a6cc upstream.
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-This reverts commit 20bd1d026aacc5399464f8328f305985c493cde3.
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
 
-This patch introduced regressions for devices that come online in
-read-only state and subsequently switch to read-write.
-
-Given how the partition code is currently implemented it is not
-possible to persist the read-only flag across a device revalidate
-call. This may need to get addressed in the future since it is common
-for user applications to proactively call BLKRRPART.
-
-Reverting this commit will re-introduce a regression where a
-device-initiated revalidate event will cause the admin state to be
-forgotten. A separate patch will address this issue.
-
-Fixes: 20bd1d026aac ("scsi: sd: Keep disk read-only when re-reading partition")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sd.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -2603,7 +2603,6 @@ sd_read_write_protect_flag(struct scsi_d
- 	int res;
- 	struct scsi_device *sdp = sdkp->device;
- 	struct scsi_mode_data data;
--	int disk_ro = get_disk_ro(sdkp->disk);
- 	int old_wp = sdkp->write_prot;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 90d71fda65cec..350cfa561e0e8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
  
- 	set_disk_ro(sdkp->disk, 0);
-@@ -2644,7 +2643,7 @@ sd_read_write_protect_flag(struct scsi_d
- 			  "Test WP failed, assume Write Enabled\n");
- 	} else {
- 		sdkp->write_prot = ((data.device_specific & 0x80) != 0);
--		set_disk_ro(sdkp->disk, sdkp->write_prot || disk_ro);
-+		set_disk_ro(sdkp->disk, sdkp->write_prot);
- 		if (sdkp->first_scan || old_wp != sdkp->write_prot) {
- 			sd_printk(KERN_NOTICE, sdkp, "Write Protect is %s\n",
- 				  sdkp->write_prot ? "on" : "off");
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
+-- 
+2.20.1
+
 
 
