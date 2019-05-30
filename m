@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA568C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFBAC28CC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A499224592
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CDA24592
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186072;
-	bh=+n9P5jighs7ry8zd1sXze259asg1PsT25vC4Zi044LI=;
+	s=default; t=1559186074;
+	bh=SUFJuD+RDYPxBfqqjk3NPnFPFwKFjx2pBoPwu0iY4Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YgSS47w1vbHmBUU0N95iiMHh0NV98gN14YEIRAp02KylstED3N4Hb6cowqUY5/PQq
-	 RNPXwLlh+qkAPuOgUqa61jRmrRafP2VaV6DFOf0W2lPSaem3sqdvZGl0hTD3HwhIq6
-	 WfC7bq3Cq6eqCZF+azEr0yxlDeaAxWKCgMAsSs+o=
+	b=ehZkCmWZXFteFR2jLid48qBKEw9xWO34iDjA6TQdSb/a5r73XrgKNZmahl9hEnCrk
+	 cjBB1GOXKDEHfegY2aRg1OWALUstE9eixoWO6TokWF7gAZJoYf302KFXUV9awGsynS
+	 7CPV0tzIWUPTfFN9s9DZbLCoxdLG3rGqAAaZRrIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbfE3DOb (ORCPT
+        id S1729906AbfE3DOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:14:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbfE3DME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728807AbfE3DME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:04 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AECC24481;
-        Thu, 30 May 2019 03:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A229F24519;
+        Thu, 30 May 2019 03:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185923;
-        bh=+n9P5jighs7ry8zd1sXze259asg1PsT25vC4Zi044LI=;
+        s=default; t=1559185922;
+        bh=SUFJuD+RDYPxBfqqjk3NPnFPFwKFjx2pBoPwu0iY4Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeqzIPI0l++P7b5AU1Pso/lPL0gHkx9iqWw9cR0Y7GZOSJF5ajVzd0SXjWid+ilBx
-         R62+kkBXdRwON+6RjnHfzAZI7X+Fkd5r7LAc3U4BPCgpp1F55CkHN4MCTijy7zCQKr
-         dcBz6LhKuVkLaX/uuYAE8gpg8WnZDsJ1+klm/XT0=
+        b=sR+5ylZeZmDO2LZtdqnlTlsPPDUOaBXc5AxGHKO5emnY8PT3JzTc9IcTRZ0YNG+tv
+         Q4TOeTJgz28Kjzmc5y0PRddigmXGnARHv0Y9EOtUPwC6gq/iC0s+xOgnxWK7Bim0Md
+         vVkXQcNPEQ2emeFEPt4EQkZ18zTUXOEqLmfkbtOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 312/405] spi: stm32-qspi: add spi_master_put in release function
-Date:   Wed, 29 May 2019 20:05:10 -0700
-Message-Id: <20190530030556.583338115@linuxfoundation.org>
+Subject: [PATCH 5.1 311/405] RDMA/rxe: Fix slab-out-bounds access which lead to kernel crash later
+Date:   Wed, 29 May 2019 20:05:09 -0700
+Message-Id: <20190530030556.534697522@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,122 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a88eceb17ac7e8dc4ad9995681af61c8371668f4 ]
+[ Upstream commit a4b7013db23e93824ac53083eeb3e4efdef4b5b0 ]
 
-This patch adds spi_master_put in release function
-to drop the controller's refcount.
+BUG: KASAN: slab-out-of-bounds in rxe_mem_init_user+0x6c1/0x740 [rdma_rxe]
+Read of size 8 at addr ffff88805c01a608 by task ib_send_bw/573
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+CPU: 24 PID: 573 Comm: ib_send_bw Not tainted 5.0.0-rc5+ #189
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+Call Trace:
+ rxe_mem_init_user+0x6c1/0x740 [rdma_rxe]
+ rxe_reg_user_mr+0x9b/0x110 [rdma_rxe]
+ ib_uverbs_reg_mr+0x428/0x9c0 [ib_uverbs]
+ ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x2b0/0x410 [ib_uverbs]
+ ib_uverbs_run_method+0x79c/0x1da0 [ib_uverbs]
+ rxe_mem_init_user+0x6c1/0x740 [rdma_rxe]
+ rxe_reg_user_mr+0x9b/0x110 [rdma_rxe]
+ ib_uverbs_reg_mr+0x428/0x9c0 [ib_uverbs]
+ ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x2b0/0x410 [ib_uverbs]
+ ib_uverbs_run_method+0x79c/0x1da0 [ib_uverbs]
+ ib_uverbs_cmd_verbs+0x5f2/0xf20 [ib_uverbs]
+ ib_uverbs_ioctl+0x202/0x310 [ib_uverbs]
+ do_vfs_ioctl+0x193/0x1440
+ ksys_ioctl+0x3a/0x70
+ __x64_sys_ioctl+0x6f/0xb0
+ do_syscall_64+0x13f/0x570
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Allocated by task 573:
+ __kasan_kmalloc.constprop.5+0xc1/0xd0
+ __kmalloc+0x161/0x310
+ rxe_mem_alloc+0x52/0x470 [rdma_rxe]
+ rxe_mem_init_user+0x113/0x740 [rdma_rxe]
+ rxe_reg_user_mr+0x9b/0x110 [rdma_rxe]
+ ib_uverbs_reg_mr+0x428/0x9c0 [ib_uverbs]
+ ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x2b0/0x410 [ib_uverbs]
+ ib_uverbs_run_method+0x79c/0x1da0 [ib_uverbs]
+ ib_uverbs_cmd_verbs+0x5f2/0xf20 [ib_uverbs]
+ ib_uverbs_ioctl+0x202/0x310 [ib_uverbs]
+ do_vfs_ioctl+0x193/0x1440
+ ksys_ioctl+0x3a/0x70
+ __x64_sys_ioctl+0x6f/0xb0
+ do_syscall_64+0x13f/0x570
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 0:
+ __kasan_slab_free+0x12e/0x180
+ kfree+0x10a/0x2c0
+ rcu_process_callbacks+0xa77/0x1260
+ __do_softirq+0x2ad/0xacb
+
+Test scenario:
+ ib_send_bw -x 1 -d rxe0 -a &
+ ib_send_bw -x 1 -d rxe0 -a localhost
+
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Reported-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Tested-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32-qspi.c | 46 ++++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 18 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_mr.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 3b2a9a6b990da..0b9a8bddb939d 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -93,6 +93,7 @@ struct stm32_qspi_flash {
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
+index 42f0f25e396c3..ec89fbd06c53c 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -199,6 +199,12 @@ int rxe_mem_init_user(struct rxe_pd *pd, u64 start,
+ 		buf = map[0]->buf;
  
- struct stm32_qspi {
- 	struct device *dev;
-+	struct spi_controller *ctrl;
- 	void __iomem *io_base;
- 	void __iomem *mm_base;
- 	resource_size_t mm_size;
-@@ -397,6 +398,7 @@ static void stm32_qspi_release(struct stm32_qspi *qspi)
- 	writel_relaxed(0, qspi->io_base + QSPI_CR);
- 	mutex_destroy(&qspi->lock);
- 	clk_disable_unprepare(qspi->clk);
-+	spi_master_put(qspi->ctrl);
- }
+ 		for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->nmap, 0) {
++			if (num_buf >= RXE_BUF_PER_MAP) {
++				map++;
++				buf = map[0]->buf;
++				num_buf = 0;
++			}
++
+ 			vaddr = page_address(sg_page_iter_page(&sg_iter));
+ 			if (!vaddr) {
+ 				pr_warn("null vaddr\n");
+@@ -211,11 +217,6 @@ int rxe_mem_init_user(struct rxe_pd *pd, u64 start,
+ 			num_buf++;
+ 			buf++;
  
- static int stm32_qspi_probe(struct platform_device *pdev)
-@@ -413,43 +415,54 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	qspi = spi_controller_get_devdata(ctrl);
-+	qspi->ctrl = ctrl;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi");
- 	qspi->io_base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(qspi->io_base))
--		return PTR_ERR(qspi->io_base);
-+	if (IS_ERR(qspi->io_base)) {
-+		ret = PTR_ERR(qspi->io_base);
-+		goto err;
-+	}
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qspi_mm");
- 	qspi->mm_base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(qspi->mm_base))
--		return PTR_ERR(qspi->mm_base);
-+	if (IS_ERR(qspi->mm_base)) {
-+		ret = PTR_ERR(qspi->mm_base);
-+		goto err;
-+	}
- 
- 	qspi->mm_size = resource_size(res);
--	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ)
--		return -EINVAL;
-+	if (qspi->mm_size > STM32_QSPI_MAX_MMAP_SZ) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	irq = platform_get_irq(pdev, 0);
- 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
- 			       dev_name(dev), qspi);
- 	if (ret) {
- 		dev_err(dev, "failed to request irq\n");
--		return ret;
-+		goto err;
+-			if (num_buf >= RXE_BUF_PER_MAP) {
+-				map++;
+-				buf = map[0]->buf;
+-				num_buf = 0;
+-			}
+ 		}
  	}
- 
- 	init_completion(&qspi->data_completion);
- 
- 	qspi->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(qspi->clk))
--		return PTR_ERR(qspi->clk);
-+	if (IS_ERR(qspi->clk)) {
-+		ret = PTR_ERR(qspi->clk);
-+		goto err;
-+	}
- 
- 	qspi->clk_rate = clk_get_rate(qspi->clk);
--	if (!qspi->clk_rate)
--		return -EINVAL;
-+	if (!qspi->clk_rate) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	ret = clk_prepare_enable(qspi->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
--		return ret;
-+		goto err;
- 	}
- 
- 	rstc = devm_reset_control_get_exclusive(dev, NULL);
-@@ -472,14 +485,11 @@ static int stm32_qspi_probe(struct platform_device *pdev)
- 	ctrl->dev.of_node = dev->of_node;
- 
- 	ret = devm_spi_register_master(dev, ctrl);
--	if (ret)
--		goto err_spi_register;
--
--	return 0;
-+	if (!ret)
-+		return 0;
- 
--err_spi_register:
-+err:
- 	stm32_qspi_release(qspi);
--
- 	return ret;
- }
  
 -- 
 2.20.1
