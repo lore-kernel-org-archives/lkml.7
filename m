@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D2C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9855624EA0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404C524EC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188613;
-	bh=jCWnGsAAbuluNuNPeEC/tiHdJn5qmn0z9MOTxt9bhV4=;
+	s=default; t=1559188616;
+	bh=d3APMd7TTVqTkW4j5fr550un6EOSjUWvgOA518wW/2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNAF3u4mdDqqOpPMRanCTo6/xhYJQbm/2cEVuugMngSdQR77uRxZsV8v1EiKfzEkm
-	 3sq+3b5ZHlj+xxbFiBDvwtFT5E9OqUfnUynZOWa7y3t8MR5stqStRBZW8y184uhP7T
-	 iQMizMmizAD0rkj23Ta/KZ8OIqfI6gTKXD69p1Ds=
+	b=khEiBTwKt1B/qWYh8G44QUOMAyBEHyP19JPYhmPrJiKqtAVhmFvjXPPxIS1N9Vi/4
+	 NQtfZD0AMEzMsTXGWzXS2Ggk56m6maQnEpNt/0ZEkgc8wE85WPipPRIS85d1JO94VJ
+	 Ztu2x6UQC35J3pgmE4aHb/HJ6x4prG1F+UNPvabo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbfE3DS4 (ORCPT
+        id S2387897AbfE3D4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:56:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbfE3DO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:59 -0400
+        id S1730380AbfE3DSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:55 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F672456F;
-        Thu, 30 May 2019 03:14:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F98324807;
+        Thu, 30 May 2019 03:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186098;
-        bh=jCWnGsAAbuluNuNPeEC/tiHdJn5qmn0z9MOTxt9bhV4=;
+        s=default; t=1559186335;
+        bh=d3APMd7TTVqTkW4j5fr550un6EOSjUWvgOA518wW/2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2xFpfKQd2mdFacyPqSm933rgrXe15IHyreTj4KBXYoTKQUanQJG7ZS4CJYUW1NhO
-         j78UB1/x/qvmgrztBjwiW/6C0V+j5h1MB2bdEkZOmIUV4j/SAzH+6BTwaIh0puOSsJ
-         Wvn0SrlRscO7DLoXPJzgAeBOF31a4IZTNwC9Q0GU=
+        b=nmUhwVsAxE+1bM/JnyQCRJEg1Xnyt9366Dv/gzoadoH+jFKiNkeQERonowgtsxZ0/
+         yJHKpKxKy5PVLs+QJN3noDuTHWLrKQdgeZLXC5gBAvgntSaBlIH3JWRVIxq3g+tXBs
+         S4lp00wQFxsOBTKFuB5b7+pdLgj9b9lEtdb3WWqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 233/346] scsi: ufs: Fix regulator load and icc-level configuration
-Date:   Wed, 29 May 2019 20:05:06 -0700
-Message-Id: <20190530030552.848943898@linuxfoundation.org>
+Subject: [PATCH 4.14 056/193] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 29 May 2019 20:05:10 -0700
+Message-Id: <20190530030457.316700634@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
+References: <20190530030446.953835040@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,74 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0487fff76632ec023d394a05b82e87a971db8c03 ]
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-Currently if a regulator has "<name>-fixed-regulator" property in device
-tree, it will skip current limit initialization.  This lead to a zero
-"max_uA" value in struct ufs_vreg.
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-However, "regulator_set_load" operation shall be required on regulators
-which have valid current limits, otherwise a zero "max_uA" set by
-"regulator_set_load" may cause unexpected behavior when this regulator is
-enabled or set as high power mode.
-
-Similarly, in device's icc_level configuration flow, the target icc_level
-shall be updated if regulator also has valid current limit, otherwise a
-wrong icc_level will be calculated by zero "max_uA" and thus causes
-unexpected results after it is written to device.
-
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2ddf24466a62e..75d7267b73879 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6286,19 +6286,19 @@ static u32 ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
- 		goto out;
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index e073eb16f8a4a..df94ef816826b 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3395,7 +3395,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
  	}
+ 	ha->flags.msix_enabled = 1;
  
--	if (hba->vreg_info.vcc)
-+	if (hba->vreg_info.vcc && hba->vreg_info.vcc->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vcc->max_uA,
- 				POWER_DESC_MAX_ACTV_ICC_LVLS - 1,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCC_0]);
+@@ -3477,6 +3477,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
  
--	if (hba->vreg_info.vccq)
-+	if (hba->vreg_info.vccq && hba->vreg_info.vccq->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq->max_uA,
- 				icc_level,
- 				&desc_buf[PWR_DESC_ACTIVE_LVLS_VCCQ_0]);
- 
--	if (hba->vreg_info.vccq2)
-+	if (hba->vreg_info.vccq2 && hba->vreg_info.vccq2->max_uA)
- 		icc_level = ufshcd_get_max_icc_level(
- 				hba->vreg_info.vccq2->max_uA,
- 				icc_level,
-@@ -7001,6 +7001,15 @@ static int ufshcd_config_vreg_load(struct device *dev, struct ufs_vreg *vreg,
- 	if (!vreg)
- 		return 0;
- 
-+	/*
-+	 * "set_load" operation shall be required on those regulators
-+	 * which specifically configured current limitation. Otherwise
-+	 * zero max_uA may cause unexpected behavior when regulator is
-+	 * enabled or set as high power mode.
-+	 */
-+	if (!vreg->max_uA)
-+		return 0;
+ msix_out:
+ 	return ret;
 +
- 	ret = regulator_set_load(vreg->reg, ua);
- 	if (ret < 0) {
- 		dev_err(dev, "%s: %s set load (ua=%d) failed, err=%d\n",
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
+ }
+ 
+ int
 -- 
 2.20.1
 
