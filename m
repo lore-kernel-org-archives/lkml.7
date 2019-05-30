@@ -2,50 +2,54 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B473FC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379E4C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A10424A84
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1178D24AAD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186964;
-	bh=IjFoK8ZdpvU3DOtmGug9aWyvX1orNxR6b+IkPJBg1OU=;
+	s=default; t=1559186967;
+	bh=mJ3WEGFWJdMmxHdtIJV7q75kzWy9rOu8DeMkV6y1NIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Q5MZjJuhSf4V4sKiJ8w0oZ0CXWCSn9tm1XfU/jOqn6lhxAYjdxBdJrJQpr4ebGx+
-	 pXaTLWmIKuHQYmGSl0jfgl0z/lRcvi4wwghUD41uj84pk1rZOaT4yI0kA5vr9/H5Dg
-	 H2SwvPkoKvPJHmAg9WeGvV57unrEJWufzhpJEk+U=
+	b=QIndHlwn+Sb+nKhXfzjU6iOrhBXM0jVPuyaFWJSwSRDA4tPAhbuOqwNkNuMYj6TMo
+	 bx3XEa0XEgo9V5KYDH+WJ21RiliMbdAPHEVUftWqv5j/p8iUi6Cq5+mbiGUBLOKsWU
+	 iHTQnhOSDuSoYzxEVX5/9PmnYnD3Lt8dR/kw/nII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388005AbfE3D3X (ORCPT
+        id S2387646AbfE3D30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:29:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732279AbfE3DUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732289AbfE3DUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:20:41 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5978224934;
-        Thu, 30 May 2019 03:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D5AA24934;
+        Thu, 30 May 2019 03:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186440;
-        bh=IjFoK8ZdpvU3DOtmGug9aWyvX1orNxR6b+IkPJBg1OU=;
+        s=default; t=1559186441;
+        bh=mJ3WEGFWJdMmxHdtIJV7q75kzWy9rOu8DeMkV6y1NIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtB4UXwjkqoQdd3vZyAxkQ2t2dW/+mOOI9zaua7Dcg3EcLH44WZTgj+NO0+rDUHKy
-         T8vJUFYazLp2TYHY6oTBhrBTKptzxDCEhDeQWiaM+U6QsbGFXwOjVRqcRJ1bHmHOdx
-         qTLNmGvzaxQRrSLoLtvvo0T8E1NUJq6n8FPzLi3w=
+        b=bHmeseG9+iF/MxIp6XcI0+ABBpYDak1ujqULuha5T58jIobcuWmd5Xg1/SSNwwswT
+         M+BEFJMzVMsn5US+CroB1O86zzs3Jqa/hvYzlKC0YvMKuZkU5THeM8sVkl1O32rdTn
+         MGJ1aTIMqnkRte0nPFG9Zwhqjla4/ZVhBzhFSyEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 4.9 009/128] gfs2: Fix sign extension bug in gfs2_update_stats
-Date:   Wed, 29 May 2019 20:05:41 -0700
-Message-Id: <20190530030435.201038082@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 036/128] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 29 May 2019 20:06:08 -0700
+Message-Id: <20190530030440.746493565@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -58,49 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-commit 5a5ec83d6ac974b12085cd99b196795f14079037 upstream.
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-Commit 4d207133e9c3 changed the types of the statistic values in struct
-gfs2_lkstats from s64 to u64.  Because of that, what should be a signed
-value in gfs2_update_stats turned into an unsigned value.  When shifted
-right, we end up with a large positive value instead of a small negative
-value, which results in an incorrect variance estimate.
-
-Fixes: 4d207133e9c3 ("gfs2: Make statistics unsigned, suitable for use with do_div()")
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/lock_dlm.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/gfs2/lock_dlm.c
-+++ b/fs/gfs2/lock_dlm.c
-@@ -32,9 +32,10 @@ extern struct workqueue_struct *gfs2_con
-  * @delta is the difference between the current rtt sample and the
-  * running average srtt. We add 1/8 of that to the srtt in order to
-  * update the current srtt estimate. The variance estimate is a bit
-- * more complicated. We subtract the abs value of the @delta from
-- * the current variance estimate and add 1/4 of that to the running
-- * total.
-+ * more complicated. We subtract the current variance estimate from
-+ * the abs value of the @delta and add 1/4 of that to the running
-+ * total.  That's equivalent to 3/4 of the current variance
-+ * estimate plus 1/4 of the abs of @delta.
-  *
-  * Note that the index points at the array entry containing the smoothed
-  * mean value, and the variance is always in the following entry
-@@ -50,7 +51,7 @@ static inline void gfs2_update_stats(str
- 	s64 delta = sample - s->stats[index];
- 	s->stats[index] += (delta >> 3);
- 	index++;
--	s->stats[index] += ((abs(delta) - s->stats[index]) >> 2);
-+	s->stats[index] += (s64)(abs(delta) - s->stats[index]) >> 2;
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 73c99f237b10c..f0fcff032f8ac 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3089,7 +3089,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
+ 	}
+ 	ha->flags.msix_enabled = 1;
+ 
+@@ -3177,6 +3177,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ msix_out:
+ 	kfree(entries);
+ 	return ret;
++
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
  }
  
- /**
+ int
+-- 
+2.20.1
+
 
 
