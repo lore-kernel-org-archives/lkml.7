@@ -2,186 +2,191 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAD4C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3886FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E7F2596C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmNA5Ppf"
+	by mail.kernel.org (Postfix) with ESMTP id 1204F2596F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 13:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559222262;
+	bh=/8naYiZk1zWUHlRZ2Zk7467h0WzUbi/3GqU0INsdl/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qyLdXcLGPopQs0hM4UL6eIgjN8DeXzrJ1MjcKDVeTuz64xuTITKsLf23uXQc322xh
+	 IBGAvGiipEEgX/l09+RM3YsvD+rrTm/iWhW5vPQAKXW1P4Mwb+EaBhWQuJQygarGoV
+	 19Uv3eUJVV7EaxofjuOwUZFy8F1zL76OmhHer6eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfE3NNm (ORCPT
+        id S1726548AbfE3NRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 09:13:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44283 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfE3NNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 09:13:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so3431684qtk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 06:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sF5nMRjKdOWU4XpRCkyuji3hWyyX9u+t9j/V5Jt3lMA=;
-        b=GmNA5Ppf0vdzs480aG9sTJwq119t8xTalA61+BEkj6N0vUXE36bQV25qA1rPL7CMRf
-         Xv85j3ljanKRRcHKE9i4f86pothGJ4WaVIBY1q+QQev53ui+7nK6qMMYjXZvG/txU4oh
-         T/BPsgMaMkWfu7oZC4pR5xFk+d+4v1gK1wjfFdmljj5nB6mzXzBKEbGjWyrcOO7NYxEj
-         invQ5tgADT8fwqCdqH0ljJFnyQ95vMalxZ0MeuOf1AxtYtac8mcG/UaF+GUdIl+Kqy7X
-         NhS0uBz5WenDWry0P+SdviHWOMgjMlMzLThQB8n0zyP2QZnLMYhgD5Y0vPZohOBtgZxM
-         xxMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sF5nMRjKdOWU4XpRCkyuji3hWyyX9u+t9j/V5Jt3lMA=;
-        b=dQRDEhibAv92NKdFTr2X44b0W3rAHXY+hmfhYfzap74s61gmBnRRVmZCBt9iONPIkX
-         xQ3U+22maBDMD+FqfqtORdEoFeNJ4t5hA3DtWzaYFlXAOIJVHZH8v2vyfCz56OP1RJ3B
-         v2nX5qscstwFFtGNtWWqAx4Hl8OP4lcE7cDRjIpTpl/ehoRUPzxKaVmFVWTULxCBDt4h
-         TnAQrEzMInHMKKOmUUktOBmL7txf2KTf8B9Ciuf5vlLe4nLtpWY3VJOOLzRuBW1iQ42g
-         YN1Gtekfx+4fLp78ZMmtauf+VYXLuO65rW5ukcCE3ubfPJdWsR6cB+NmceOi1qag148/
-         MUYA==
-X-Gm-Message-State: APjAAAUUeJ4Cid5UWHqpCMhkpU9iYrSTWsLa5PdtQHy/HxOLA26mHzmr
-        4KKeVJnUSYyg66kNhv/MOvw=
-X-Google-Smtp-Source: APXvYqyVRLvIwLuhckg/+kMunfdIlPVbMEIXDDUf6OvOWBlyL6a5zAgNfsnCdci+2ejH05C83oUY7g==
-X-Received: by 2002:a0c:b98d:: with SMTP id v13mr3261358qvf.11.1559222020724;
-        Thu, 30 May 2019 06:13:40 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id f67sm1509551qtb.68.2019.05.30.06.13.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 30 May 2019 06:13:39 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3E55841149; Thu, 30 May 2019 10:13:37 -0300 (-03)
-Date:   Thu, 30 May 2019 10:13:37 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] perf record: collect user registers set jointly with
- dwarf stacks
-Message-ID: <20190530131337.GB21962@kernel.org>
-References: <01a322ee-c99d-0bb7-b7cf-bc1fa8064d75@linux.intel.com>
- <20190529192506.GB5553@kernel.org>
- <378b81a7-b7db-c60f-134d-0c0f7cd6c0a1@linux.intel.com>
+        Thu, 30 May 2019 09:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfE3NRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 09:17:41 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74A202596C;
+        Thu, 30 May 2019 13:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559222259;
+        bh=/8naYiZk1zWUHlRZ2Zk7467h0WzUbi/3GqU0INsdl/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c5Q9xj5I0ZGYLKMCHnjAl/kGmdwdB8l9vg29wprx/rJWtXMAIDv0DWLsvOdIKpKY+
+         qW6gVW9amMwkT3YlnO6Ln5s7zQMxgP32W5JQsAGuXYuedkImsdSrS1GdWpIDJN0QCp
+         AsBeuB6xhI0raSrOrcrQ3pvaa8snWIH2dbXgrueM=
+Date:   Thu, 30 May 2019 08:17:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com
+Subject: Re: [PATCH v2 1/5] PCI/ATS: Add PRI support for PCIe VF devices
+Message-ID: <20190530131738.GK28250@google.com>
+References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f773440c0eee2a8d4e5d6e2856717404ac836458.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190529225714.GE28250@google.com>
+ <20190529230426.GB5108@araj-mobl1.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <378b81a7-b7db-c60f-134d-0c0f7cd6c0a1@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190529230426.GB5108@araj-mobl1.jf.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 30, 2019 at 11:24:49AM +0300, Alexey Budankov escreveu:
-> On 29.05.2019 22:25, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 29, 2019 at 05:30:49PM +0300, Alexey Budankov escreveu:
-> <SNIP>
-> >> +++ b/tools/perf/util/evsel.c
-> >> +#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
-> >> +			 (1ULL << PERF_REG_SP))
-> >> +
-> >>  static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
-> >>  					   struct record_opts *opts,
-> >>  					   struct callchain_param *param)
-> >> @@ -702,7 +705,13 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
-> >>  		if (!function) {
-> >>  			perf_evsel__set_sample_bit(evsel, REGS_USER);
-> >>  			perf_evsel__set_sample_bit(evsel, STACK_USER);
-> >> -			attr->sample_regs_user |= PERF_REGS_MASK;
-> >> +			if (opts->sample_user_regs) {
+On Wed, May 29, 2019 at 04:04:27PM -0700, Raj, Ashok wrote:
+> On Wed, May 29, 2019 at 05:57:14PM -0500, Bjorn Helgaas wrote:
+> > On Mon, May 06, 2019 at 10:20:03AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > When IOMMU tries to enable PRI for VF device in
+> > > iommu_enable_dev_iotlb(), it always fails because PRI support for PCIe
+> > > VF device is currently broken in PCIE driver. Current implementation
+> > > expects the given PCIe device (PF & VF) to implement PRI capability
+> > > before enabling the PRI support. But this assumption is incorrect. As
+> > > per PCIe spec r4.0, sec 9.3.7.11, all VFs associated with PF can only
+> > > use the Page Request Interface (PRI) of the PF and not implement it.
+> > > Hence we need to create exception for handling the PRI support for PCIe
+> > > VF device.
+> > > 
+> > > Since PRI is shared between PF/VF devices, following rules should apply.
+> > > 
+> > > 1. Enable PRI in VF only if its already enabled in PF.
+> > > 2. When enabling/disabling PRI for VF, instead of configuring the
+> > > registers just increase/decrease the usage count (pri_ref_cnt) of PF.
+> > > 3. Disable PRI in PF only if pr_ref_cnt is zero.
 > > 
-> > Where are you checking that opts->sample_user_regs doesn't have either
-> > IP or SP?
+> > s/pr_ref_cnt/pri_ref_cnt/
+> > 
+> > > Cc: Ashok Raj <ashok.raj@intel.com>
+> > > Cc: Keith Busch <keith.busch@intel.com>
+> > > Suggested-by: Ashok Raj <ashok.raj@intel.com>
+> > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > ---
+> > >  drivers/pci/ats.c   | 53 +++++++++++++++++++++++++++++++++++++++++++--
+> > >  include/linux/pci.h |  1 +
+> > >  2 files changed, 52 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> > > index 97c08146534a..5582e5d83a3f 100644
+> > > --- a/drivers/pci/ats.c
+> > > +++ b/drivers/pci/ats.c
+> > > @@ -181,12 +181,39 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> > >  	u16 control, status;
+> > >  	u32 max_requests;
+> > >  	int pos;
+> > > +	struct pci_dev *pf;
+> > >  
+> > >  	if (WARN_ON(pdev->pri_enabled))
+> > >  		return -EBUSY;
+> > >  
+> > >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> > > -	if (!pos)
+> > > +
+> > > +	if (pdev->is_virtfn) {
+> > > +		/*
+> > > +		 * Per PCIe r4.0, sec 9.3.7.11, VF must not implement PRI
+> > > +		 * Capability.
+> > > +		 */
+> > > +		if (pos) {
+> > > +			dev_err(&pdev->dev, "VF must not implement PRI");
+> > > +			return -EINVAL;
+> > > +		}
+> > 
+> > This seems gratuitous.  It finds implementation errors, but since we
+> > correctly use the PF here anyway, it doesn't *need* to prevent PRI on
+> > the VF from working.
+> > 
+> > I think you should just have:
+> > 
+> >   if (pdev->is_virtfn) {
+> >     pf = pci_physfn(pdev);
+> >     if (!pf->pri_enabled)
+> >       return -EINVAL;
 > 
-> Sure. The the intention was to avoid such a complication, merge two 
-> masks and provide explicit warning that the resulting mask is extended.
+> This would be incorrect. Since if we never did any bind_mm to the PF
+> PRI would not have been enabled. Currently this is done in the IOMMU 
+> driver, and not in the device driver. 
 
-s/is/may be/g
- 
-> If you still see the checking and auto detection of the exact mask 
-> extension as essential it can be implemented.
+This is functionally the same as the original patch, only omitting the
+"VF must not implement PRI" check.
 
-perf, tracing, systems internals, etc are super complicated, full of
-details, the more precise we can make the messages, the better.
- 
-> > So, __perf_evsel__config_callchain its the routine that sets up the
-> > attr->sample_regs_user when callchains are asked for, and what was it
-> > doing? Asking for _all_ user regs, right?
+> I suppose we should enable PF capability if its not enabled. Same
+> comment would be applicable for PASID as well.
+
+Operating on a device other than the one the driver owns opens the
+issue of mutual exclusion and races, so would require careful
+scrutiny.  Are PRI/PASID things that could be *always* enabled for the
+PF at enumeration-time, or do we have to wait until a driver claims
+the VF?  If the latter, are there coordination issues between drivers
+of different VFs?
+
+> >     pdev->pri_enabled = 1;
+> >     atomic_inc(&pf->pri_ref_cnt);
+> >   }
 > > 
-> > I.e. what you're saying is that when --callgraph-dwarf is asked for,
-> > then only IP and BP are needed, and we should stop doing that, so that
-> > would be a first patch, if that is the case. I.e. a patch that doesn't
-> > even mention opts->sample_user_regs.
+> >   pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
+> >   if (!pos)
+> >     return -EINVAL;
 > > 
-> > Then, a second patch would fix the opt->sample_user_regs request clash
-> > with --callgraph dwarf, i.e. it would do something like:
+> > > +		pf = pci_physfn(pdev);
+> > > +
+> > > +		/* If VF config does not match with PF, return error */
+> > > +		if (!pf->pri_enabled)
+> > > +			return -EINVAL;
+> > > +
+> > > +		pdev->pri_reqs_alloc = pf->pri_reqs_alloc;
 > > 
-> > 	      if ((opts->sample_regs_user & DWARF_REGS_MASK) != DWARF_REGS_MASK) {
-> > 	      		char * ip = (opts->sample_regs_user & (1ULL << PERF_REG_IP)) ? NULL : "IP",
-> > 	      		     * sp = (opts->sample_regs_user & (1ULL << PERF_REG_SP)) ? NULL : "SP",
-> > 			     * all = (!ip && !sp) ?  "s" : "";
+> > Is there any point in setting vf->pri_reqs_alloc?  I don't think it's
+> > used for anything since pri_reqs_alloc is only used to write the PF
+> > capability, and we only do that for the PF.
 > > 
-> > 			pr_warning("WARNING: specified --user-regs register set doesn't include register%s "
-> > 				   "needed by also specified --call-graph=dwarf, auto adding %s%s%s register%s.\n",
-> > 				   all, ip, all : ", " : "", sp, all);
-> > 		}
+> > > +		pdev->pri_enabled = 1;
+> > > +
+> > > +		/* Increment PF PRI refcount */
 > > 
-> > This if and only if all the registers that are needed to do DWARF
-> > unwinding are just IP and BP, which doesn't look like its true, since
-> > when no --user_regs is set (i.e. opts->user_regs is not set) then we
-> > continue asking for PERF_REGS_MASK...
+> > Superfluous comment, since that's exactly what the code says.  It's
+> > always good when the code is so clear that it doesn't require comments :)
 > > 
-> > Can you check where I'm missing something?
-> 
-> 1.  -g call-graph dwarf,K                         full_regs
-> 2.  --user-regs=user_regs                         user_regs
-> 3.  -g call-graph dwarf,K --user-regs=user_regs	  user_regs + dwarf_regs
-> 
-> The default behavior stays the same for cases 1, 2 above.
-> For case 3 register set becomes the one asked using --user_regs option.
-> If the option value misses IP or SP or the both then they are explicitly
-> added to the option value and a warning message mentioning the exact 
-> added registers is provided.
- 
-> > Jiri DWARF unwind uses just IP and SP? Looking at
-> > tools/perf/util/unwind-libunwind-local.c's access_reg() I don't think
-> > so, right?
- 
-> If you ask me, AFAIK, DWARF unwind rules sometimes can refer additional 
-> general purpose registers for frames boundaries calculation.
-
-:-) So that DWARF_REGS is misleading, should be something like
-DWARF_MINIMAL_REGS, as we may need other registers, so the original code
-was correct, right?
-
-After all if the user asks for both --call-graph dwarf and --user-regs,
-then probably we should require --force? I.e. the message then would be:
-
-"
-WARNING: The use of --call-graph=dwarf may require all the user
-registers, specifying a subset with --user-regs may render DWARF
-unwinding unreliable, please use --force if you're sure that the subset
-specified via --user-regs is enough for your specific use case.
-"
-
-And then plain refuse, if the user _really_ wants it, then we have
---force/-f for those cases.
-
-Does this sound better?
-
-- Arnaldo
+> > > +		atomic_inc(&pf->pri_ref_cnt);
+> > > +
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	if (pdev->is_physfn && !pos)
+> > >  		return -EINVAL;
+> > >  
+> > >  	pci_read_config_word(pdev, pos + PCI_PRI_STATUS, &status);
+> > > @@ -202,7 +229,6 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> > >  	pci_write_config_word(pdev, pos + PCI_PRI_CTRL, control);
+> > >  
+> > >  	pdev->pri_enabled = 1;
+> > > -
+> > >  	return 0;
