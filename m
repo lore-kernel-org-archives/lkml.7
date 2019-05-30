@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3C9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEA9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C2625C35
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B9A25C3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191671;
-	bh=C/y9jVYicF7vOuqIdn6DGLEg4eu3Qi2zsr4WVZjtQSs=;
+	s=default; t=1559191676;
+	bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdpwCWNoKuoNsXsSGD1+w4OgqDnLHgEtoc/uf0bh9XXYctH/SOHspS/XNPu0WvtW+
-	 +lmDPtnCT5/58RLEhoYGiHAsJ7+xo09ouIGWb6x/L9/9cw158A1lgZBS+t8cw9HpbA
-	 XmWu0YbtK8hfH+csTQVOq9YubchZ7JmXuGuwW2As=
+	b=hjI3lJFGD9yzGO+EOV4drGG4t8/BdwOHKiW76UCXTVBVUR31PwHKh88+aEO54q9mI
+	 Yzw5emOncsdpeAqPVgkIXJlwumJFyCI/em4aoaV5hKJUHMO8ZiM/p69hun+qQJDs2V
+	 mCIWXbtCkp+rhGdMVfmzHYYWEU/V6dk+/ZWRmFdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388602AbfE3Erv (ORCPT
+        id S2388746AbfE3Erz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:47:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbfE3DL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:11:27 -0400
+        id S1728545AbfE3DL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:11:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3D2A244EA;
-        Thu, 30 May 2019 03:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E42F24482;
+        Thu, 30 May 2019 03:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185887;
-        bh=C/y9jVYicF7vOuqIdn6DGLEg4eu3Qi2zsr4WVZjtQSs=;
+        s=default; t=1559185885;
+        bh=LTGs/ZQ0ZWor2mCV+mT5jRrLzyYC3NSzLDS7oOfHpEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wn3I3PdsWDlntRMWLifZGkIWdBnkIbFfSjfn0p9AoWNC5HofWCbHjpmXXfLixlnCK
-         P07yJE7AEqGbF1yDowRWoqoz/0YwnVCEWYGqSca/9d11g/JDkJCYChLbe8gctZOWUZ
-         D8vFZ6VlHcscsWcCZSzgsBdWzyucYmZmRMgtC5Co=
+        b=oGMtPZX9LdSvmOoUoXgKD7gSYpotlYmB9xDaepx22Ifg16Dl6IP0OCCghSEBzU0GS
+         WczEfK3dPg7oe/pkeqtGySN2mKrlOpWmB35rGnZdhon+8sLyuDlN1kflMTAfRk2WWq
+         ztbEmBKQothkTcHFrJ+7ffiQST530gdjEv+PvXSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 245/405] net: hns3: add protect when handling mac addr list
-Date:   Wed, 29 May 2019 20:04:03 -0700
-Message-Id: <20190530030553.383157582@linuxfoundation.org>
+Subject: [PATCH 5.1 196/405] PM / devfreq: Fix static checker warning in try_then_request_governor
+Date:   Wed, 29 May 2019 20:03:14 -0700
+Message-Id: <20190530030550.927772449@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,71 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 389775a6605e040dddea21a778a88eaaa57c068d ]
+[ Upstream commit b53b0128052ffd687797d5f4deeb76327e7b5711 ]
 
-It used netdev->uc and netdev->mc list in function
-hns3_recover_hw_addr() and hns3_remove_hw_addr().
-We should add protect for them.
+The patch 23c7b54ca1cd: "PM / devfreq: Fix devfreq_add_device() when
+drivers are built as modules." leads to the following static checker
+warning:
 
-Fixes: f05e21097121 ("net: hns3: Clear mac vlan table entries when unload driver or function reset")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    drivers/devfreq/devfreq.c:1043 governor_store()
+    warn: 'governor' can also be NULL
+
+The reason is that the try_then_request_governor() function returns both
+error pointers and NULL. It should just return error pointers, so fix
+this by returning a ERR_PTR to the error intead of returning NULL.
+
+Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers are built as modules.")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/devfreq/devfreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index d6b488c2de332..c7d310903319f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3774,12 +3774,13 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
- 	struct netdev_hw_addr *ha, *tmp;
- 	int ret = 0;
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 0ae3de76833b7..839621b044f49 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -228,7 +228,7 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
+  * if is not found. This can happen when both drivers (the governor driver
+  * and the driver that call devfreq_add_device) are built as modules.
+  * devfreq_list_lock should be held by the caller. Returns the matched
+- * governor's pointer.
++ * governor's pointer or an error pointer.
+  */
+ static struct devfreq_governor *try_then_request_governor(const char *name)
+ {
+@@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
+ 		/* Restore previous state before return */
+ 		mutex_lock(&devfreq_list_lock);
+ 		if (err)
+-			return NULL;
++			return ERR_PTR(err);
  
-+	netif_addr_lock_bh(ndev);
- 	/* go through and sync uc_addr entries to the device */
- 	list = &ndev->uc;
- 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
- 		ret = hns3_nic_uc_sync(ndev, ha->addr);
- 		if (ret)
--			return ret;
-+			goto out;
+ 		governor = find_devfreq_governor(name);
  	}
- 
- 	/* go through and sync mc_addr entries to the device */
-@@ -3787,9 +3788,11 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
- 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
- 		ret = hns3_nic_mc_sync(ndev, ha->addr);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
-+out:
-+	netif_addr_unlock_bh(ndev);
- 	return ret;
- }
- 
-@@ -3800,6 +3803,7 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
- 
- 	hns3_nic_uc_unsync(netdev, netdev->dev_addr);
- 
-+	netif_addr_lock_bh(netdev);
- 	/* go through and unsync uc_addr entries to the device */
- 	list = &netdev->uc;
- 	list_for_each_entry_safe(ha, tmp, &list->list, list)
-@@ -3810,6 +3814,8 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
- 	list_for_each_entry_safe(ha, tmp, &list->list, list)
- 		if (ha->refcount > 1)
- 			hns3_nic_mc_unsync(netdev, ha->addr);
-+
-+	netif_addr_unlock_bh(netdev);
- }
- 
- static void hns3_clear_tx_ring(struct hns3_enet_ring *ring)
 -- 
 2.20.1
 
