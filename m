@@ -2,106 +2,152 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB5DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA07C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF94C218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C668218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:25:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnOvK8D+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfE3WYZ (ORCPT
+        id S1726668AbfE3WZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:24:25 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23038 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfE3WYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:24:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 May 2019 15:24:24 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 May 2019 15:24:23 -0700
-Date:   Thu, 30 May 2019 15:24:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        William Roberts <bill.c.roberts@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190530222423.GD27551@linux.intel.com>
-References: <20190528202407.GB13158@linux.intel.com>
- <285f279f-b500-27f0-ab42-fb1dbcc5ab18@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F654EB487@ORSMSX116.amr.corp.intel.com>
- <678a37af-797d-7bd5-a406-32548a270e3d@tycho.nsa.gov>
- <CALCETrWXB9fNNDH7gZxPTx05F78Og6K=ZtAr2aA++BDwY09Wbg@mail.gmail.com>
- <c1135352-0b5e-4694-b1a9-105876095877@tycho.nsa.gov>
- <CALCETrWsEXzUC33eJpGCpdMCBO4aYVviZLRD-CLMNaG5Jv-TCA@mail.gmail.com>
- <20190530180110.GB23930@linux.intel.com>
- <CALCETrX2PgUc_jetXHqp85aaS0a0jHB8E7=T1rsW+5vyRgwnUA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654EB8BA@ORSMSX116.amr.corp.intel.com>
+        Thu, 30 May 2019 18:25:45 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43487 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3WZp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 18:25:45 -0400
+Received: by mail-yw1-f68.google.com with SMTP id t5so3302129ywf.10;
+        Thu, 30 May 2019 15:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Kt2e7koKuS/w3st+6pWFlXYytQQLT+iijBY66G3TGIQ=;
+        b=SnOvK8D+8dpl/JHjhGSOn/PI1ZA6KFmskkWxxxQdlclHWjqHzPvtclCjTKeO36GZOk
+         ihwqNfm97yuAToZWuIj0NmC4XoK2WRFV69VbOVUfDRHKnbEheioPoQ9qmBbLxo5RkE7P
+         ia3nHxPpgZEUCunu1GQ1HXOwUd1dKSMjMGiwTQjwRQSPQh+chTyTkBJtmEYGuhzP0cj0
+         iOVE8gfcOErvVpykcJUqnxo16i4XNxAXatTaPEm8VCHg8ipPrl424x+xKOHuRFwCGQtB
+         qlapFWyryZ5rN+EI/cj+vyzzmCrtcU/DyfdkA+du4y8ZK4UgqN6DtNR/wZ/fIob5aoeG
+         jnNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=Kt2e7koKuS/w3st+6pWFlXYytQQLT+iijBY66G3TGIQ=;
+        b=rTkERJhYCaIeP0ezuDkpCbTR1GFCE99yOO3PkpZ8hSL21lzgZFbJnN9bDWmvHfUhBl
+         Lgo0lN6A2AdiPJxfuTjR2wjs4FJQRi84W556HVS494U9mLdf+NQ9uVPJmrOeUbW7VICX
+         cUv+dvpkNx+eBDmmzwoYGJkcNd3IP/Q1K5wDegV+41836BD+oeJ+ui7QOOanc7TAn1EB
+         DMkQsv44uJz/oPmGsvnCBx9AdjCmU5jd3p2mvDqRXeGm9mDdrk36KlAiofxcgV3RfSHu
+         CmbI/Cq3mQZvRCUOYB68ydpiNrzskTg5SrL0YTZoOTaLkV9rJfubqfP9crqm4mfjPrWO
+         dgBg==
+X-Gm-Message-State: APjAAAW6KW7Zrnvb0aw8o6jIMT3t9rvyafSr9AWR8/YyibRC9etIr6iN
+        UBfSaI6ugr/FQIkLfYlnPRYINqISGPj+kRJdbMY=
+X-Google-Smtp-Source: APXvYqxdINa9M9mKr8zLme+nf6O33yXjlqtzYPUvsQPUOfScvf6wA1/YkYHtuXtS+cQaog6bPnLQyU5UY/WjfuBPMX4=
+X-Received: by 2002:a81:59c2:: with SMTP id n185mr3501471ywb.21.1559255144144;
+ Thu, 30 May 2019 15:25:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654EB8BA@ORSMSX116.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190528161440.27172-1-peron.clem@gmail.com> <20190528161440.27172-11-peron.clem@gmail.com>
+ <20190530145550.amalnxmx7kpokykv@core.my.home>
+In-Reply-To: <20190530145550.amalnxmx7kpokykv@core.my.home>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Fri, 31 May 2019 00:25:32 +0200
+Message-ID: <CAJiuCce7nHSktVsDKcR8GLRpD3WrN5yP3Nb_Hbu_Q9NjUQbSMw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/12] arm64: dts: allwinner: h6: Add IR receiver node
+To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 02:48:43PM -0700, Xing, Cedric wrote:
-> So I think the same rationale applies to enclaves. Your original idea of
-> MAXPERM is the policy set forth by system admin and shall *never* change at
-> runtime. If an enclave is dynamically linked and needs to bring in code pages
-> at runtime, the admin needs to enable it by setting, say ENCLAVE__EXECMOD, in
-> the sigstruct file. Then all EAUG'ed pages will receive RWX as MAXPERM. The
-> process would then mprotect() selective pages to be RX but which exact set of
-> pages doesn't concern LSM usually.
+Hi Ondrej,
 
-Because passing RWX means the enclave "requires" EXECMOD even if it never
-actually does a RW->RX transition.  It's not broken per se, but at the
-very least it's decidedly odd.
+On Thu, 30 May 2019 at 16:55, Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>
+> Hello Cl=C3=A9ment,
+>
+> On Tue, May 28, 2019 at 06:14:38PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwinner H6 IR is similar to A31 and can use same driver.
+> >
+> > Add support for it.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index 16c5c3d0fd81..649cbdfe452e 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -647,6 +647,25 @@
+> >                               pins =3D "PL0", "PL1";
+> >                               function =3D "s_i2c";
+> >                       };
+> > +
+> > +                     r_ir_rx_pin: r-ir-rx-pin {
+> > +                             pins =3D "PL9";
+> > +                             function =3D "s_cir_rx";
+> > +                     };
+> > +             };
+> > +
+> > +             r_ir: ir@7040000 {
+> > +                             compatible =3D "allwinner,sun50i-h6-ir",
+> > +                                          "allwinner,sun6i-a31-ir";
+> > +                             reg =3D <0x07040000 0x400>;
+> > +                             interrupts =3D <GIC_SPI 109 IRQ_TYPE_LEVE=
+L_HIGH>;
+> > +                             clocks =3D <&r_ccu CLK_R_APB1_IR>,
+> > +                                      <&r_ccu CLK_IR>;
+> > +                             clock-names =3D "apb", "ir";
+> > +                             resets =3D <&r_ccu RST_R_APB1_IR>;
+> > +                             pinctrl-names =3D "default";
+> > +                             pinctrl-0 =3D <&r_ir_rx_pin>;
+> > +                             status =3D "disabled";
+> >               };
+>
+> Please make a comment here, that this is known broken on some boards and =
+may
+> result IRQ flood if enabled. Otherwise noone will know.
 
-Dynamically detecting the EXECMOD case is not difficult and has the
-advantage of simplifying userspace loaders, e.g. all EAUG pages are tagged
-ALLOW_WRITE and the kernel takes care of the rest.
+I'm planning to send a v4 next week with the IRQ_NONE return as Maxime
+suggested it.
+https://github.com/clementperon/linux/tree/h6_ir_v4
 
-I *think* auditing/learning is also messed up with a MAXPERMS approach, as
-mprotect() would fail (due to MAXPERMS clearing MAY_{READ,WRITE,EXEC})
-before it calls security_file_mprotect().  Hooking mprotect() is the
-obvious workaround, but then it's looking a lot like the new proposals.
+But maybe we could also use the bit 5 of the IRQ status.
 
-In other words, the new proposals are rooted in the MAXPERMS concept, e.g.
-MAXPERM is effectively "I want EXECMOD", which gets distilled down to
-ALLOW_WRITE (or ALLOW_EXEC in Andy's proposal).
+Regards, Clement
+
+>
+> thanks,
+>         o.
+>
+> >               r_i2c: i2c@7081400 {
+> > --
+> > 2.20.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
