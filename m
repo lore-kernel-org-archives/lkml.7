@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C5BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5FFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031FF24AC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E52324AC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187019;
-	bh=V+BBz4ewor3VDGhV2wJZv25VePeUO9pa0pnTOtYQyO8=;
+	s=default; t=1559187021;
+	bh=R1Y/Uxnl9zCkAKdG+RQhuidqwjK17ZPDNJ3eFv/YJNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTKhZ2OGcxiRsJYWK65t0ueKP4YSmKkspwbWIaPU1+bnFFMl/oenEJficroLFRq7/
-	 Oc7a8PWeqAcuZba/tBTpBjk3Zp50HvdWwyTvRgRcl4YdM1+GJy1BiAeOkYIzYOMeDR
-	 9xl5k21DKLgUDuCa5/63ko2nq2vpgLJStLsozHQY=
+	b=rim5v2yYIkVluK6teiLQOgzjQe27xvGHaZpe5Oe4V89JJ+NHuKuOe1DbNzs79DiC2
+	 aPySSrb//AKB+n7pt9E1r9Y2sSu8kUkAsd7DlV+f3v6RlOXWFU50Aiyg+iBxU0W+Z+
+	 hNDhfmo5Yfs3FPRPPgWtoQa1nZdWRIxsYjdTAIX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388178AbfE3DaS (ORCPT
+        id S2388535AbfE3DaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732516AbfE3DVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:20 -0400
+        id S1732527AbfE3DVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 569DF24A03;
+        by mail.kernel.org (Postfix) with ESMTPSA id C36DB2499E;
         Thu, 30 May 2019 03:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186479;
-        bh=V+BBz4ewor3VDGhV2wJZv25VePeUO9pa0pnTOtYQyO8=;
+        bh=R1Y/Uxnl9zCkAKdG+RQhuidqwjK17ZPDNJ3eFv/YJNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e88SioLV11IBmJ6zW1cChHBfa+/jsFgrQUryJFNUaKRjViBtD8DKxGWMIAhaehrgX
-         cppMGuXHZSPLcY9CJML7TAIvovtP2GPwV9gMDvxDMjsTiZfxb+QVY7qIHADnRTPk+9
-         rqjUEQMMBOHXLIDNgum6+xOeAY4xxkeUlGqB0cMo=
+        b=ARmSnt3GBPZd4znfD1cTPpH+auovG+29d+RN08XN9cWfGFeHoqmV3Hkw/KQdgXsob
+         KFKcMaHfX2kH5rmis4xOFWF8j86TwdE5/yD1k3dtwCyIJ49XZ0Xk/CG4LvsIWxiWBt
+         Y3K/jNISJGiHLV6yzgvjeKOFIbGHUg2YF4MWRxKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 114/128] rcutorture: Fix cleanup path for invalid torture_type strings
-Date:   Wed, 29 May 2019 20:07:26 -0700
-Message-Id: <20190530030454.951960906@linuxfoundation.org>
+Subject: [PATCH 4.9 115/128] rcuperf: Fix cleanup path for invalid perf_type strings
+Date:   Wed, 29 May 2019 20:07:27 -0700
+Message-Id: <20190530030455.194275136@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -60,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b813afae7ab6a5e91b4e16cc567331d9c2ae1f04 ]
+[ Upstream commit ad092c027713a68a34168942a5ef422e42e039f4 ]
 
-If the specified rcutorture.torture_type is not in the rcu_torture_init()
-function's torture_ops[] array, rcutorture prints some console messages
-and then invokes rcu_torture_cleanup() to set state so that a future
-torture test can run.  However, rcu_torture_cleanup() also attempts to
-end the test that didn't actually start, and in doing so relies on the
-value of cur_ops, a value that is not particularly relevant in this case.
+If the specified rcuperf.perf_type is not in the rcu_perf_init()
+function's perf_ops[] array, rcuperf prints some console messages and
+then invokes rcu_perf_cleanup() to set state so that a future torture
+test can run.  However, rcu_perf_cleanup() also attempts to end the
+test that didn't actually start, and in doing so relies on the value
+of cur_ops, a value that is not particularly relevant in this case.
 This can result in confusing output or even follow-on failures due to
 attempts to use facilities that have not been properly initialized.
 
-This commit therefore sets the value of cur_ops to NULL in this case
-and inserts a check near the beginning of rcu_torture_cleanup(),
-thus avoiding relying on an irrelevant cur_ops value.
+This commit therefore sets the value of cur_ops to NULL in this case and
+inserts a check near the beginning of rcu_perf_cleanup(), thus avoiding
+relying on an irrelevant cur_ops value.
 
-Reported-by: kernel test robot <rong.a.chen@intel.com>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 5 +++++
+ kernel/rcu/rcuperf.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index bf08fee53dc75..5393bbcf3c1ad 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1595,6 +1595,10 @@ rcu_torture_cleanup(void)
- 			cur_ops->cb_barrier();
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 123ccbd224492..2b8579d5a5445 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -453,6 +453,10 @@ rcu_perf_cleanup(void)
+ 
+ 	if (torture_cleanup_begin())
  		return;
- 	}
 +	if (!cur_ops) {
 +		torture_cleanup_end();
 +		return;
 +	}
  
- 	rcu_torture_barrier_cleanup();
- 	torture_stop_kthread(rcu_torture_stall, stall_task);
-@@ -1730,6 +1734,7 @@ rcu_torture_init(void)
- 			pr_alert(" %s", torture_ops[i]->name);
+ 	if (reader_tasks) {
+ 		for (i = 0; i < nrealreaders; i++)
+@@ -574,6 +578,7 @@ rcu_perf_init(void)
+ 			pr_alert(" %s", perf_ops[i]->name);
  		pr_alert("\n");
  		firsterr = -EINVAL;
 +		cur_ops = NULL;
  		goto unwind;
  	}
- 	if (cur_ops->fqs == NULL && fqs_duration != 0) {
+ 	if (cur_ops->init)
 -- 
 2.20.1
 
