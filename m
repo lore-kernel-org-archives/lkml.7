@@ -5,53 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEECEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8325C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9193250AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925DD250AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189261;
-	bh=TidmviLasrXwEKeg9q8yiiOaA0/c+twSVlsSQWk3Ed4=;
+	s=default; t=1559189264;
+	bh=pM1kv8vnaDOl1N/LUuTf4DaiXw4vOEWZ891Shpbm7lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAIXMyWPv33C82Ui7OS2B6xObbf/jqsebJLpasRs6g4aKFBqaDOQyr8sXP0jJMQMD
-	 YZRj7L+wmohIjdfXGIc9V4Yz3cfoMVhxa0/5veb/tQQKmMVnuFocf3eeT/Zbvvk69z
-	 e03xLkLZzs7tYzrQOyHbfQRmj30DJDBusLFPoSTk=
+	b=AvSHMw+nUqUgUlITBzaO1RXClIfmKSYTy9kC8aMAzVfrNi6z32kxLfFfCBI5hzlmH
+	 S+MvGGBBPsPxJmsUlCxCKKT09oeYWWT+4IonF/amOU4+awPwZgdyBNHM60Rc74o1mO
+	 0meN/m4KsMXj08BTC+Yr6TCDENzGL4/CnD4E9T2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfE3EHk (ORCPT
+        id S1731117AbfE3DR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbfE3DR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729644AbfE3DN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9BE23B30;
-        Thu, 30 May 2019 03:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B1C24547;
+        Thu, 30 May 2019 03:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186247;
-        bh=TidmviLasrXwEKeg9q8yiiOaA0/c+twSVlsSQWk3Ed4=;
+        s=default; t=1559186038;
+        bh=pM1kv8vnaDOl1N/LUuTf4DaiXw4vOEWZ891Shpbm7lE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/wNfpMylY4vPofAH0Cy53/IuaZHDhs9Ks3bz5WKOaWylSXPwUD6WAjogGl6RvgcZ
-         Yj9RcOQM1fWKM6Sy5Dz/kH4XCdaa6h14eVHdcf0dkMVucfF//LcW6yjck2xtAh2LJF
-         I3A3uLrfrn1x1jM526FJ/HfNg39T0K6B4p3oitvU=
+        b=k+PDcT1f6w7gjrhHbSJ1v8DzoTLRCYJNhoqNpCO0/OocAU1KhfYgNs+20RK7NxMFz
+         rLVFRCZl81gqWsLwCbIJv+avdahHoc9l/cgZhlmUH+jF+d79UyFxtas9YdNBCljVPe
+         7FZTznlJ/g7BI7tTfbjw5ONAAa6fiPXa+/s3k8hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 164/276] mmc_spi: add a status check for spi_sync_locked
-Date:   Wed, 29 May 2019 20:05:22 -0700
-Message-Id: <20190530030535.701092438@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 127/346] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
+Date:   Wed, 29 May 2019 20:03:20 -0700
+Message-Id: <20190530030547.546028339@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,34 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 611025983b7976df0183390a63a2166411d177f1 ]
+[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
 
-In case spi_sync_locked fails, the fix reports the error and
-returns the error code upstream.
+In-NMI warnings have been added to vmalloc_fault() via:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
+
+back in the time when our NMI entry code could not cope with nested NMIs.
+
+These days, it's perfectly fine to take a fault in NMI context and we
+don't have to care about the fact that IRET from the fault handler might
+cause NMI nesting.
+
+This warning has already been removed from 32-bit implementation of
+vmalloc_fault() in:
+
+  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+
+but the 64-bit version was omitted.
+
+Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
+
+Reported-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mmc_spi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/mm/fault.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-index 67f6bd24a9d0c..ea254d00541f1 100644
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -819,6 +819,10 @@ mmc_spi_readblock(struct mmc_spi_host *host, struct spi_transfer *t,
- 	}
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 9d5c75f022956..55233dec5ff4a 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -359,8 +359,6 @@ static noinline int vmalloc_fault(unsigned long address)
+ 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
+ 		return -1;
  
- 	status = spi_sync_locked(spi, &host->m);
-+	if (status < 0) {
-+		dev_dbg(&spi->dev, "read error %d\n", status);
-+		return status;
-+	}
- 
- 	if (host->dma_dev) {
- 		dma_sync_single_for_cpu(host->dma_dev,
+-	WARN_ON_ONCE(in_nmi());
+-
+ 	/*
+ 	 * Copy kernel mappings over when needed. This can also
+ 	 * happen within a race in page table update. In the later
 -- 
 2.20.1
 
