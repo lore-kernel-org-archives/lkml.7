@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADEC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54071C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2F3252E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211F4252EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190007;
-	bh=Z9anbQd/siXILZd3R/mi5TSR9HtA3TXq3b/rWwdRsLI=;
+	s=default; t=1559190013;
+	bh=zUokycjIj3e95iE3BsdeuW5rOOv1PjK6A4ulbsLKQZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4yvYVFcds1LxzFA1M2GrRGkZ6AvMmrXCHdbJ967WEUTU1qBu9FwNgDvm46JD1sLm
-	 xz/95qmZqA39DVFiYNeLRfmeRxFElssTiAfJPAq7NXZ+haQk1HFYjYrI7OSKnSNn4h
-	 wnXBbjIhUfwSMxu4Pj+e999k1JBf9qx+I0iz0yTk=
+	b=Z/t1OHNegvo8hfOGKTpZZmuEtUGsBWGqv8JPX5yrUd5BRnwbDNPXDSxKs/NcYs8o4
+	 P0NbuYaX846AlsVd+595e97+kA/4d5/3Sl61VNZeb8MVMuxUIv+pnPb9oAZVTirpMC
+	 5uzP+qS8RVirkZW96rkDmlSGwudhvxt8TaUhXDiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfE3EUH (ORCPT
+        id S1730615AbfE3EUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727599AbfE3DPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730241AbfE3DPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:15:22 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF07D245AF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFD7245BD;
         Thu, 30 May 2019 03:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186121;
-        bh=Z9anbQd/siXILZd3R/mi5TSR9HtA3TXq3b/rWwdRsLI=;
+        bh=zUokycjIj3e95iE3BsdeuW5rOOv1PjK6A4ulbsLKQZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hq/nouIdCVXFXrQQxxqQRs2DjvaL1HKaw/bY7SIKmPUtXKGPKr1STibnDQH+1AOvo
-         PgFdu/Q3MKH35qj1eRQ0bZ4TnVpYZO6TErRJ95EP+IXj3xDQOkKIo/Wl4Q2GHuLJSv
-         YDwo/14AhCfAQmQOUlXec4nq7NVkT7u0LXMXa1Fo=
+        b=AM+CImuicyQSSbk76i8ysGp5u+C//e9LTwdPJ5tBFeJ0B9WQv6o8vlQyq8Th3/RsW
+         y4pnIl/3kow4wa6QrnTa2+io9GoEJe7M9X4XBJ+s2vU6ZOdh09AJCpRrXTOAbGIpAA
+         pktHEiX7pEE5pa+yLpaBicO5isE/4qgxWst240JI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        James Smart <james.smart@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 278/346] scsi: lpfc: avoid uninitialized variable warning
-Date:   Wed, 29 May 2019 20:05:51 -0700
-Message-Id: <20190530030555.013326270@linuxfoundation.org>
+Subject: [PATCH 5.0 277/346] scsi: qla4xxx: avoid freeing unallocated dma memory
+Date:   Wed, 29 May 2019 20:05:50 -0700
+Message-Id: <20190530030554.969402729@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,60 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit faf5a744f4f8d76e7c03912b5cd381ac8045f6ec ]
+[ Upstream commit 608f729c31d4caf52216ea00d20092a80959256d ]
 
-clang -Wuninitialized incorrectly sees a variable being used without
-initialization:
+Clang -Wuninitialized notices that on is_qla40XX we never allocate any DMA
+memory in get_fw_boot_info() but attempt to free it anyway:
 
-drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                lport = (struct lpfc_nvme_lport *)localport->private;
-                                                  ^~~~~~~~~
-drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
-        struct nvme_fc_local_port *localport;
-                                            ^
-                                             = NULL
-1 error generated.
+drivers/scsi/qla4xxx/ql4_os.c:5915:7: error: variable 'buf_dma' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                if (!(val & 0x07)) {
+                    ^~~~~~~~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5985:47: note: uninitialized use occurs here
+        dma_free_coherent(&ha->pdev->dev, size, buf, buf_dma);
+                                                     ^~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5915:3: note: remove the 'if' if its condition is always true
+                if (!(val & 0x07)) {
+                ^~~~~~~~~~~~~~~~~~~
+drivers/scsi/qla4xxx/ql4_os.c:5885:20: note: initialize the variable 'buf_dma' to silence this warning
+        dma_addr_t buf_dma;
+                          ^
+                           = 0
 
-This is clearly in dead code, as the condition leading up to it is always
-false when CONFIG_NVME_FC is disabled, and the variable is always
-initialized when nvme_fc_register_localport() got called successfully.
+Skip the call to dma_free_coherent() here.
 
-Change the preprocessor conditional to the equivalent C construct, which
-makes the code more readable and gets rid of the warning.
-
+Fixes: 2a991c215978 ("[SCSI] qla4xxx: Boot from SAN support for open-iscsi")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: James Smart <james.smart@broadcom.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 8c9f790422288..56df8b510186b 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -2471,15 +2471,15 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
- 	if (!cstat)
- 		return -ENOMEM;
- 
-+	if (!IS_ENABLED(CONFIG_NVME_FC))
-+		return ret;
-+
- 	/* localport is allocated from the stack, but the registration
- 	 * call allocates heap memory as well as the private area.
- 	 */
--#if (IS_ENABLED(CONFIG_NVME_FC))
-+
- 	ret = nvme_fc_register_localport(&nfcp_info, &lpfc_nvme_template,
- 					 &vport->phba->pcidev->dev, &localport);
--#else
--	ret = -ENOMEM;
--#endif
- 	if (!ret) {
- 		lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME | LOG_NVME_DISC,
- 				 "6005 Successfully registered local "
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 80289c885c07b..9edec8e27b7c1 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -5930,7 +5930,7 @@ static int get_fw_boot_info(struct scsi_qla_host *ha, uint16_t ddb_index[])
+ 		val = rd_nvram_byte(ha, sec_addr);
+ 		if (val & BIT_7)
+ 			ddb_index[1] = (val & 0x7f);
+-
++		goto exit_boot_info;
+ 	} else if (is_qla80XX(ha)) {
+ 		buf = dma_alloc_coherent(&ha->pdev->dev, size,
+ 					 &buf_dma, GFP_KERNEL);
 -- 
 2.20.1
 
