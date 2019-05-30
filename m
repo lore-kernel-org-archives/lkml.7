@@ -2,326 +2,553 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAE2C28CC3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C1C28CC0
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF7F253E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5B1253DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfE3JTy (ORCPT
+        id S1727657AbfE3JUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:19:54 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43917 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727463AbfE3JTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:19:49 -0400
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 30 May 2019 12:19:43 +0300
-Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x4U9Jdpa007368;
-        Thu, 30 May 2019 12:19:42 +0300
-From:   Parav Pandit <parav@mellanox.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, kwankhede@nvidia.com, alex.williamson@redhat.com
-Cc:     cjia@nvidia.com, parav@mellanox.com
-Subject: [PATCHv5 1/3] vfio/mdev: Improve the create/remove sequence
-Date:   Thu, 30 May 2019 04:19:26 -0500
-Message-Id: <20190530091928.49724-2-parav@mellanox.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190530091928.49724-1-parav@mellanox.com>
-References: <20190530091928.49724-1-parav@mellanox.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 30 May 2019 05:20:05 -0400
+Received: from mx.socionext.com ([202.248.49.38]:34663 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727557AbfE3JUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:20:03 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 30 May 2019 18:20:00 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 9F85860629;
+        Thu, 30 May 2019 18:20:00 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 30 May 2019 18:20:00 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 3FD4D40370;
+        Thu, 30 May 2019 18:20:00 +0900 (JST)
+Received: from user-VB.e01.socionext.com (unknown [10.213.119.151])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 26C80120C10;
+        Thu, 30 May 2019 18:20:00 +0900 (JST)
+From:   Takao Orito <orito.takao@socionext.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org,
+        jaswinder.singh@linaro.org, sugaya.taichi@socionext.com,
+        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com,
+        orito.takao@socionext.com
+Subject: [PATCH v2 2/2] mmc: sdhci-milbeaut: add Milbeaut SD controller driver
+Date:   Thu, 30 May 2019 18:22:38 +0900
+Message-Id: <1559208158-468-1-git-send-email-orito.takao@socionext.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch addresses below two issues and prepares the code to address
-3rd issue listed below.
+SD Host controller on Milbeaut consists of two controller parts.
+One is core controller F_SDH30, this is similar to sdhci-fujitsu
+controller.
+Another is bridge controller.
+This bridge controller is not compatible with sdhci-fujitsu controller.
+This is special for Milbeaut series. This has some functions.
+For example, reset control, clock enable/select for SDR50/25/12, set
+property of SD physical pins, retuning control, set capabilityies.
 
-1. mdev device is placed on the mdev bus before it is created in the
-vendor driver. Once a device is placed on the mdev bus without creating
-its supporting underlying vendor device, mdev driver's probe() gets triggered.
-However there isn't a stable mdev available to work on.
+This bridge controller requires special procedures at reset or clock
+enablement or change for further tuning of clock.
 
-   create_store()
-     mdev_create_device()
-       device_register()
-          ...
-         vfio_mdev_probe()
-        [...]
-        parent->ops->create()
-          vfio_ap_mdev_create()
-            mdev_set_drvdata(mdev, matrix_mdev);
-            /* Valid pointer set above */
-
-Due to this way of initialization, mdev driver who wants to use the mdev,
-doesn't have a valid mdev to work on.
-
-2. Current creation sequence is,
-   parent->ops_create()
-   groups_register()
-
-Remove sequence is,
-   parent->ops->remove()
-   groups_unregister()
-
-However, remove sequence should be exact mirror of creation sequence.
-Once this is achieved, all users of the mdev will be terminated first
-before removing underlying vendor device.
-(Follow standard linux driver model).
-At that point vendor's remove() ops shouldn't fail because taking the
-device off the bus should terminate any usage.
-
-3. When remove operation fails, mdev sysfs removal attempts to add the
-file back on already removed device. Following call trace [1] is observed.
-
-[1] call trace:
-kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327 sysfs_create_file_ns+0x7f/0x90
-kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
-kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
-kernel: Call Trace:
-kernel: remove_store+0xdc/0x100 [mdev]
-kernel: kernfs_fop_write+0x113/0x1a0
-kernel: vfs_write+0xad/0x1b0
-kernel: ksys_write+0x5a/0xe0
-kernel: do_syscall_64+0x5a/0x210
-kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Therefore, mdev core is improved in following ways.
-
-1. Split the device registration/deregistration sequence so that some
-things can be done between initialization of the device and hooking it
-up to the bus respectively after deregistering it from the bus but
-before giving up our final reference.
-In particular, this means invoking the ->create() and ->remove()
-callbacks in those new windows. This gives the vendor driver an
-initialized mdev device to work with during creation.
-At the same time, a bus driver who wish to bind to mdev driver also
-gets initialized mdev device.
-
-This follows standard Linux kernel bus and device model.
-
-2. During remove flow, first remove the device from the bus. This
-ensures that any bus specific devices are removed.
-Once device is taken off the mdev bus, invoke remove() of mdev
-from the vendor driver.
-
-3. The driver core device model provides way to register and auto
-unregister the device sysfs attribute groups at dev->groups.
-Make use of dev->groups to let core create the groups and eliminate
-code to avoid explicit groups creation and removal.
-
-To ensure, that new sequence is solid, a below stack dump of a
-process is taken who attempts to remove the device while device is in
-use by vfio driver and user application.
-This stack dump validates that vfio driver guards against such device
-removal when device is in use.
-
- cat /proc/21962/stack
-[<0>] vfio_del_group_dev+0x216/0x3c0 [vfio]
-[<0>] mdev_remove+0x21/0x40 [mdev]
-[<0>] device_release_driver_internal+0xe8/0x1b0
-[<0>] bus_remove_device+0xf9/0x170
-[<0>] device_del+0x168/0x350
-[<0>] mdev_device_remove_common+0x1d/0x50 [mdev]
-[<0>] mdev_device_remove+0x8c/0xd0 [mdev]
-[<0>] remove_store+0x71/0x90 [mdev]
-[<0>] kernfs_fop_write+0x113/0x1a0
-[<0>] vfs_write+0xad/0x1b0
-[<0>] ksys_write+0x5a/0xe0
-[<0>] do_syscall_64+0x5a/0x210
-[<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[<0>] 0xffffffffffffffff
-
-This prepares the code to eliminate calling device_create_file() in
-subsequent patch.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Takao Orito <orito.takao@socionext.com>
 ---
- drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
- drivers/vfio/mdev/mdev_private.h |  2 +-
- drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
- 3 files changed, 27 insertions(+), 71 deletions(-)
+ drivers/mmc/host/Kconfig          |  11 ++
+ drivers/mmc/host/Makefile         |   1 +
+ drivers/mmc/host/sdhci-milbeaut.c | 362 ++++++++++++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci_f_sdh30.c  |  26 +--
+ drivers/mmc/host/sdhci_f_sdh30.h  |  32 ++++
+ 5 files changed, 407 insertions(+), 25 deletions(-)
+ create mode 100644 drivers/mmc/host/sdhci-milbeaut.c
+ create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 3cc1a05fde1c..0bef0cae1d4b 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -102,55 +102,10 @@ static void mdev_put_parent(struct mdev_parent *parent)
- 		kref_put(&parent->ref, mdev_release_parent);
- }
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 28fcd8f..9b39111 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -353,6 +353,17 @@ config MMC_SDHCI_F_SDH30
  
--static int mdev_device_create_ops(struct kobject *kobj,
--				  struct mdev_device *mdev)
--{
--	struct mdev_parent *parent = mdev->parent;
--	int ret;
--
--	ret = parent->ops->create(kobj, mdev);
--	if (ret)
--		return ret;
--
--	ret = sysfs_create_groups(&mdev->dev.kobj,
--				  parent->ops->mdev_attr_groups);
--	if (ret)
--		parent->ops->remove(mdev);
--
--	return ret;
--}
--
--/*
-- * mdev_device_remove_ops gets called from sysfs's 'remove' and when parent
-- * device is being unregistered from mdev device framework.
-- * - 'force_remove' is set to 'false' when called from sysfs's 'remove' which
-- *   indicates that if the mdev device is active, used by VMM or userspace
-- *   application, vendor driver could return error then don't remove the device.
-- * - 'force_remove' is set to 'true' when called from mdev_unregister_device()
-- *   which indicate that parent device is being removed from mdev device
-- *   framework so remove mdev device forcefully.
-- */
--static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
--{
--	struct mdev_parent *parent = mdev->parent;
--	int ret;
--
--	/*
--	 * Vendor driver can return error if VMM or userspace application is
--	 * using this mdev device.
--	 */
--	ret = parent->ops->remove(mdev);
--	if (ret && !force_remove)
--		return ret;
--
--	sysfs_remove_groups(&mdev->dev.kobj, parent->ops->mdev_attr_groups);
--	return 0;
--}
--
- static int mdev_device_remove_cb(struct device *dev, void *data)
- {
- 	if (dev_is_mdev(dev))
--		mdev_device_remove(dev, true);
-+		mdev_device_remove(dev);
+ 	  If unsure, say N.
  
- 	return 0;
- }
-@@ -310,41 +265,43 @@ int mdev_device_create(struct kobject *kobj,
- 
- 	mdev->parent = parent;
- 
-+	device_initialize(&mdev->dev);
- 	mdev->dev.parent  = dev;
- 	mdev->dev.bus     = &mdev_bus_type;
- 	mdev->dev.release = mdev_device_release;
- 	dev_set_name(&mdev->dev, "%pUl", uuid);
-+	mdev->dev.groups = parent->ops->mdev_attr_groups;
-+	mdev->type_kobj = kobj;
- 
--	ret = device_register(&mdev->dev);
--	if (ret) {
--		put_device(&mdev->dev);
--		goto mdev_fail;
--	}
-+	ret = parent->ops->create(kobj, mdev);
++config MMC_SDHCI_MILBEAUT
++	tristate "SDHCI support for Socionext Milbeaut Serieas using F_SDH30"
++	depends on MMC_SDHCI_PLTFM
++	depends on OF
++	help
++	  This selects the Secure Digital Host Controller Interface (SDHCI)
++	  Needed by Milbeaut SoC for MMC / SD / SDIO support.
++	  If you have a controller with this interface, say Y or M here.
++
++	  If unsure, say N.
++
+ config MMC_SDHCI_IPROC
+ 	tristate "SDHCI support for the BCM2835 & iProc SD/MMC Controller"
+ 	depends on ARCH_BCM2835 || ARCH_BCM_IPROC || COMPILE_TEST
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index 7357871..db98e8a 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_MMC_SDHCI_PXAV2)	+= sdhci-pxav2.o
+ obj-$(CONFIG_MMC_SDHCI_S3C)	+= sdhci-s3c.o
+ obj-$(CONFIG_MMC_SDHCI_SIRF)   	+= sdhci-sirf.o
+ obj-$(CONFIG_MMC_SDHCI_F_SDH30)	+= sdhci_f_sdh30.o
++obj-$(CONFIG_MMC_SDHCI_MILBEAUT)	+= sdhci-milbeaut.o
+ obj-$(CONFIG_MMC_SDHCI_SPEAR)	+= sdhci-spear.o
+ obj-$(CONFIG_MMC_SDHCI_AM654)	+= sdhci_am654.o
+ obj-$(CONFIG_MMC_WBSD)		+= wbsd.o
+diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
+new file mode 100644
+index 0000000..a1aa21b
+--- /dev/null
++++ b/drivers/mmc/host/sdhci-milbeaut.c
+@@ -0,0 +1,362 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
++ *              Vincent Yang <vincent.yang@tw.fujitsu.com>
++ * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
++ * Copyright (C) 2019 Socionext Inc.
++ *              Takao Orito <orito.takao@socionext.com>
++ */
++
++#include <linux/bits.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/property.h>
++
++#include "sdhci-pltfm.h"
++#include "sdhci_f_sdh30.h"
++
++/* milbeaut bridge controller register */
++#define MLB_SOFT_RESET		0x0200
++#define  MLB_SOFT_RESET_RSTX		BIT(0)
++
++#define MLB_WP_CD_LED_SET	0x0210
++#define  MLB_WP_CD_LED_SET_LED_INV  BIT(2)
++
++#define MLB_CR_SET			0x0220
++#define  MLB_CR_SET_CR_TOCLKUNIT       BIT(24)
++#define  MLB_CR_SET_CR_TOCLKFREQ_SFT   (16)
++#define  MLB_CR_SET_CR_TOCLKFREQ_MASK  (0x3F << MLB_CR_SET_CR_TOCLKFREQ_SFT)
++#define  MLB_CR_SET_CR_BCLKFREQ_SFT    (8)
++#define  MLB_CR_SET_CR_BCLKFREQ_MASK   (0xFF << MLB_CR_SET_CR_BCLKFREQ_SFT)
++#define  MLB_CR_SET_CR_RTUNTIMER_SFT   (4)
++#define  MLB_CR_SET_CR_RTUNTIMER_MASK  (0xF << MLB_CR_SET_CR_RTUNTIMER_SFT)
++
++#define MLB_SD_TOCLK_I_DIV  16
++#define MLB_TOCLKFREQ_UNIT_THRES    16000000
++#define MLB_CAL_TOCLKFREQ_MHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000000)
++#define MLB_CAL_TOCLKFREQ_KHZ(rate) (rate / MLB_SD_TOCLK_I_DIV / 1000)
++#define MLB_TOCLKFREQ_MAX   63
++#define MLB_TOCLKFREQ_MIN    1
++
++#define MLB_SD_BCLK_I_DIV   4
++#define MLB_CAL_BCLKFREQ(rate)  (rate / MLB_SD_BCLK_I_DIV / 1000000)
++#define MLB_BCLKFREQ_MAX        255
++#define MLB_BCLKFREQ_MIN          1
++
++#define MLB_CDR_SET			0x0230
++#define MLB_CDR_SET_CLK2POW16	3
++
++struct f_sdhost_priv {
++	struct clk *clk_iface;
++	struct clk *clk;
++	struct device *dev;
++	bool enable_cmd_dat_delay;
++};
++
++static void sdhci_milbeaut_soft_voltage_switch(struct sdhci_host *host)
++{
++	u32 ctrl = 0;
++
++	usleep_range(2500, 3000);
++	ctrl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
++	ctrl |= F_SDH30_CRES_O_DN;
++	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
++	ctrl |= F_SDH30_MSEL_O_1_8;
++	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
++
++	ctrl &= ~F_SDH30_CRES_O_DN;
++	sdhci_writel(host, ctrl, F_SDH30_IO_CONTROL2);
++	usleep_range(2500, 3000);
++
++	ctrl = sdhci_readl(host, F_SDH30_TUNING_SETTING);
++	ctrl |= F_SDH30_CMD_CHK_DIS;
++	sdhci_writel(host, ctrl, F_SDH30_TUNING_SETTING);
++}
++
++static unsigned int sdhci_milbeaut_get_min_clock(struct sdhci_host *host)
++{
++	return F_SDH30_MIN_CLOCK;
++}
++
++static void sdhci_milbeaut_reset(struct sdhci_host *host, u8 mask)
++{
++	struct f_sdhost_priv *priv = sdhci_priv(host);
++	u16 clk;
++	u32 ctl;
++	ktime_t timeout;
++
++	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++	clk = (clk & ~SDHCI_CLOCK_CARD_EN) | SDHCI_CLOCK_INT_EN;
++	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++	sdhci_reset(host, mask);
++
++	clk |= SDHCI_CLOCK_CARD_EN;
++	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++	timeout = ktime_add_ms(ktime_get(), 10);
++	while (1) {
++		bool timedout = ktime_after(ktime_get(), timeout);
++
++		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++		if (clk & SDHCI_CLOCK_INT_STABLE)
++			break;
++		if (timedout) {
++			pr_err("%s: Internal clock never stabilised.\n",
++				mmc_hostname(host->mmc));
++			sdhci_dumpregs(host);
++			return;
++		}
++		udelay(10);
++	}
++
++	if (priv->enable_cmd_dat_delay) {
++		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
++		ctl |= F_SDH30_CMD_DAT_DELAY;
++		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
++	}
++}
++
++static void sdhci_milbeaut_set_power(struct sdhci_host *host,
++			unsigned char mode, unsigned short vdd)
++{
++	if (!IS_ERR(host->mmc->supply.vmmc)) {
++		struct mmc_host *mmc = host->mmc;
++
++		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
++	}
++	sdhci_set_power_noreg(host, mode, vdd);
++}
++
++static const struct sdhci_ops sdhci_milbeaut_ops = {
++	.voltage_switch = sdhci_milbeaut_soft_voltage_switch,
++	.get_min_clock = sdhci_milbeaut_get_min_clock,
++	.reset = sdhci_milbeaut_reset,
++	.set_clock = sdhci_set_clock,
++	.set_bus_width = sdhci_set_bus_width,
++	.set_uhs_signaling = sdhci_set_uhs_signaling,
++	.set_power = sdhci_milbeaut_set_power,
++};
++
++static void sdhci_milbeaut_bridge_reset(struct sdhci_host *host,
++						int reset_flag)
++{
++	if (reset_flag)
++		sdhci_writel(host, 0, MLB_SOFT_RESET);
++	else
++		sdhci_writel(host, MLB_SOFT_RESET_RSTX, MLB_SOFT_RESET);
++}
++
++static void sdhci_milbeaut_bridge_init(struct sdhci_host *host,
++						int rate)
++{
++	u32 val, clk;
++
++	/* IO_SDIO_CR_SET should be set while reset */
++	val = sdhci_readl(host, MLB_CR_SET);
++	val &= ~(MLB_CR_SET_CR_TOCLKFREQ_MASK | MLB_CR_SET_CR_TOCLKUNIT |
++			MLB_CR_SET_CR_BCLKFREQ_MASK);
++	if (rate >= MLB_TOCLKFREQ_UNIT_THRES) {
++		clk = MLB_CAL_TOCLKFREQ_MHZ(rate);
++		clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
++		val |= MLB_CR_SET_CR_TOCLKUNIT |
++			(clk << MLB_CR_SET_CR_TOCLKFREQ_SFT);
++	} else {
++		clk = MLB_CAL_TOCLKFREQ_KHZ(rate);
++		clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
++		clk = max_t(u32, MLB_TOCLKFREQ_MIN, clk);
++		val |= clk << MLB_CR_SET_CR_TOCLKFREQ_SFT;
++	}
++
++	clk = MLB_CAL_BCLKFREQ(rate);
++	clk = min_t(u32, MLB_BCLKFREQ_MAX, clk);
++	clk = max_t(u32, MLB_BCLKFREQ_MIN, clk);
++	val |=  clk << MLB_CR_SET_CR_BCLKFREQ_SFT;
++	val &= ~MLB_CR_SET_CR_RTUNTIMER_MASK;
++	sdhci_writel(host, val, MLB_CR_SET);
++
++	sdhci_writel(host, MLB_CDR_SET_CLK2POW16, MLB_CDR_SET);
++
++	sdhci_writel(host, MLB_WP_CD_LED_SET_LED_INV, MLB_WP_CD_LED_SET);
++}
++
++static void sdhci_milbeaut_vendor_init(struct sdhci_host *host)
++{
++	struct f_sdhost_priv *priv = sdhci_priv(host);
++	u32 ctl;
++
++	ctl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
++	ctl |= F_SDH30_CRES_O_DN;
++	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
++	ctl &= ~F_SDH30_MSEL_O_1_8;
++	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
++	ctl &= ~F_SDH30_CRES_O_DN;
++	sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
++
++	ctl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
++	ctl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
++	       F_SDH30_AHB_INCR_4;
++	ctl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
++	sdhci_writew(host, ctl, F_SDH30_AHB_CONFIG);
++
++	if (priv->enable_cmd_dat_delay) {
++		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
++		ctl |= F_SDH30_CMD_DAT_DELAY;
++		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
++	}
++}
++
++static const struct of_device_id mlb_dt_ids[] = {
++	{
++		.compatible = "socionext,milbeaut-m10v-sdhci-3.0",
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mlb_dt_ids);
++
++static void sdhci_milbeaut_init(struct sdhci_host *host)
++{
++	struct f_sdhost_priv *priv = sdhci_priv(host);
++	int rate = clk_get_rate(priv->clk);
++	u16 ctl;
++
++	sdhci_milbeaut_bridge_reset(host, 0);
++
++	ctl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++	ctl &= ~(SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN);
++	sdhci_writew(host, ctl, SDHCI_CLOCK_CONTROL);
++
++	sdhci_milbeaut_bridge_reset(host, 1);
++
++	sdhci_milbeaut_bridge_init(host, rate);
++	sdhci_milbeaut_bridge_reset(host, 0);
++
++	sdhci_milbeaut_vendor_init(host);
++}
++
++static int sdhci_milbeaut_probe(struct platform_device *pdev)
++{
++	struct sdhci_host *host;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	int irq, ret = 0;
++	struct f_sdhost_priv *priv;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "%s: no irq specified\n", __func__);
++		return irq;
++	}
++
++	host = sdhci_alloc_host(dev, sizeof(struct f_sdhost_priv));
++	if (IS_ERR(host))
++		return PTR_ERR(host);
++
++	priv = sdhci_priv(host);
++	priv->dev = dev;
++
++	host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
++			   SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
++			   SDHCI_QUIRK_CLOCK_BEFORE_RESET |
++			   SDHCI_QUIRK_DELAY_AFTER_POWER;
++	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
++			SDHCI_QUIRK2_TUNING_WORK_AROUND |
++			SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
++
++	priv->enable_cmd_dat_delay = device_property_read_bool(dev,
++						"fujitsu,cmd-dat-delay-select");
++
++	ret = mmc_of_parse(host->mmc);
 +	if (ret)
-+		goto ops_create_fail;
- 
--	ret = mdev_device_create_ops(kobj, mdev);
-+	ret = device_add(&mdev->dev);
- 	if (ret)
--		goto create_fail;
-+		goto add_fail;
- 
- 	ret = mdev_create_sysfs_files(&mdev->dev, type);
--	if (ret) {
--		mdev_device_remove_ops(mdev, true);
--		goto create_fail;
--	}
++		goto err;
++
++	platform_set_drvdata(pdev, host);
++
++	host->hw_name = "f_sdh30";
++	host->ops = &sdhci_milbeaut_ops;
++	host->irq = irq;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	host->ioaddr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(host->ioaddr)) {
++		ret = PTR_ERR(host->ioaddr);
++		goto err;
++	}
++
++	if (dev_of_node(dev)) {
++		sdhci_get_of_property(pdev);
++
++		priv->clk_iface = devm_clk_get(&pdev->dev, "iface");
++		if (IS_ERR(priv->clk_iface)) {
++			ret = PTR_ERR(priv->clk_iface);
++			goto err;
++		}
++
++		ret = clk_prepare_enable(priv->clk_iface);
++		if (ret)
++			goto err;
++
++		priv->clk = devm_clk_get(&pdev->dev, "core");
++		if (IS_ERR(priv->clk)) {
++			ret = PTR_ERR(priv->clk);
++			goto err_clk;
++		}
++
++		ret = clk_prepare_enable(priv->clk);
++		if (ret)
++			goto err_clk;
++	}
++
++	sdhci_milbeaut_init(host);
++
++	ret = sdhci_add_host(host);
 +	if (ret)
-+		goto sysfs_fail;
++		goto err_add_host;
++
++	return 0;
++
++err_add_host:
++	clk_disable_unprepare(priv->clk);
++err_clk:
++	clk_disable_unprepare(priv->clk_iface);
++err:
++	sdhci_free_host(host);
++	return ret;
++}
++
++static int sdhci_milbeaut_remove(struct platform_device *pdev)
++{
++	struct sdhci_host *host = platform_get_drvdata(pdev);
++	struct f_sdhost_priv *priv = sdhci_priv(host);
++
++	sdhci_remove_host(host, readl(host->ioaddr + SDHCI_INT_STATUS) ==
++			  0xffffffff);
++
++	clk_disable_unprepare(priv->clk_iface);
++	clk_disable_unprepare(priv->clk);
++
++	sdhci_free_host(host);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++static struct platform_driver sdhci_milbeaut_driver = {
++	.driver = {
++		.name = "sdhci-milbeaut",
++		.of_match_table = of_match_ptr(mlb_dt_ids),
++	},
++	.probe	= sdhci_milbeaut_probe,
++	.remove	= sdhci_milbeaut_remove,
++};
++
++module_platform_driver(sdhci_milbeaut_driver);
++
++MODULE_DESCRIPTION("MILBEAUT SD Card Controller driver");
++MODULE_AUTHOR("Takao Orito <orito.takao@socionext.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:sdhci-milbeaut");
+diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+index 485f759..ca4c99a 100644
+--- a/drivers/mmc/host/sdhci_f_sdh30.c
++++ b/drivers/mmc/host/sdhci_f_sdh30.c
+@@ -19,31 +19,7 @@
+ #include <linux/clk.h>
  
--	mdev->type_kobj = kobj;
- 	mdev->active = true;
- 	dev_dbg(&mdev->dev, "MDEV: created\n");
- 
- 	return 0;
- 
--create_fail:
--	device_unregister(&mdev->dev);
-+sysfs_fail:
-+	device_del(&mdev->dev);
-+add_fail:
-+	parent->ops->remove(mdev);
-+ops_create_fail:
-+	put_device(&mdev->dev);
- mdev_fail:
- 	mdev_put_parent(parent);
- 	return ret;
- }
- 
--int mdev_device_remove(struct device *dev, bool force_remove)
-+int mdev_device_remove(struct device *dev)
- {
- 	struct mdev_device *mdev, *tmp;
- 	struct mdev_parent *parent;
-@@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev, bool force_remove)
- 	mutex_unlock(&mdev_list_lock);
- 
- 	type = to_mdev_type(mdev->type_kobj);
-+	mdev_remove_sysfs_files(dev, type);
-+	device_del(&mdev->dev);
- 	parent = mdev->parent;
-+	ret = parent->ops->remove(mdev);
-+	if (ret)
-+		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
- 
--	ret = mdev_device_remove_ops(mdev, force_remove);
--	if (ret) {
--		mdev->active = true;
--		return ret;
--	}
+ #include "sdhci-pltfm.h"
 -
--	mdev_remove_sysfs_files(dev, type);
--	device_unregister(dev);
-+	/* Balances with device_initialize() */
-+	put_device(&mdev->dev);
- 	mdev_put_parent(parent);
+-/* F_SDH30 extended Controller registers */
+-#define F_SDH30_AHB_CONFIG		0x100
+-#define  F_SDH30_AHB_BIGED		0x00000040
+-#define  F_SDH30_BUSLOCK_DMA		0x00000020
+-#define  F_SDH30_BUSLOCK_EN		0x00000010
+-#define  F_SDH30_SIN			0x00000008
+-#define  F_SDH30_AHB_INCR_16		0x00000004
+-#define  F_SDH30_AHB_INCR_8		0x00000002
+-#define  F_SDH30_AHB_INCR_4		0x00000001
+-
+-#define F_SDH30_TUNING_SETTING		0x108
+-#define  F_SDH30_CMD_CHK_DIS		0x00010000
+-
+-#define F_SDH30_IO_CONTROL2		0x114
+-#define  F_SDH30_CRES_O_DN		0x00080000
+-#define  F_SDH30_MSEL_O_1_8		0x00040000
+-
+-#define F_SDH30_ESD_CONTROL		0x124
+-#define  F_SDH30_EMMC_RST		0x00000002
+-#define  F_SDH30_EMMC_HS200		0x01000000
+-
+-#define F_SDH30_CMD_DAT_DELAY		0x200
+-
+-#define F_SDH30_MIN_CLOCK		400000
++#include "sdhci_f_sdh30.h"
  
- 	return 0;
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-index 36cbbdb754de..924ed2274941 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -60,6 +60,6 @@ void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type);
- 
- int  mdev_device_create(struct kobject *kobj,
- 			struct device *dev, const guid_t *uuid);
--int  mdev_device_remove(struct device *dev, bool force_remove);
-+int  mdev_device_remove(struct device *dev);
- 
- #endif /* MDEV_PRIVATE_H */
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index cbf94b8165ea..9f774b91d275 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -236,7 +236,7 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 	if (val && device_remove_file_self(dev, attr)) {
- 		int ret;
- 
--		ret = mdev_device_remove(dev, false);
-+		ret = mdev_device_remove(dev);
- 		if (ret) {
- 			device_create_file(dev, attr);
- 			return ret;
+ struct f_sdhost_priv {
+ 	struct clk *clk_iface;
+diff --git a/drivers/mmc/host/sdhci_f_sdh30.h b/drivers/mmc/host/sdhci_f_sdh30.h
+new file mode 100644
+index 0000000..fc1ad28
+--- /dev/null
++++ b/drivers/mmc/host/sdhci_f_sdh30.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2013 - 2015 Fujitsu Semiconductor, Ltd
++ *              Vincent Yang <vincent.yang@tw.fujitsu.com>
++ * Copyright (C) 2015 Linaro Ltd  Andy Green <andy.green@linaro.org>
++ * Copyright (C) 2019 Socionext Inc.
++ *
++ */
++
++/* F_SDH30 extended Controller registers */
++#define F_SDH30_AHB_CONFIG      0x100
++#define  F_SDH30_AHB_BIGED      BIT(6)
++#define  F_SDH30_BUSLOCK_DMA    BIT(5)
++#define  F_SDH30_BUSLOCK_EN     BIT(4)
++#define  F_SDH30_SIN            BIT(3)
++#define  F_SDH30_AHB_INCR_16    BIT(2)
++#define  F_SDH30_AHB_INCR_8     BIT(1)
++#define  F_SDH30_AHB_INCR_4     BIT(0)
++
++#define F_SDH30_TUNING_SETTING  0x108
++#define  F_SDH30_CMD_CHK_DIS    BIT(16)
++
++#define F_SDH30_IO_CONTROL2     0x114
++#define  F_SDH30_CRES_O_DN      BIT(19)
++#define  F_SDH30_MSEL_O_1_8     BIT(18)
++
++#define F_SDH30_ESD_CONTROL     0x124
++#define	 F_SDH30_EMMC_RST		BIT(1)
++#define  F_SDH30_CMD_DAT_DELAY	BIT(9)
++#define	 F_SDH30_EMMC_HS200		BIT(24)
++
++#define F_SDH30_MIN_CLOCK		400000
 -- 
-2.19.2
+1.9.1
+
 
