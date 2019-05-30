@@ -2,105 +2,90 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F3CC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB47C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0840324434
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:26:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cXbde7oR"
+	by mail.kernel.org (Postfix) with ESMTP id B863224436
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 02:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfE3C0C (ORCPT
+        id S1727377AbfE3C3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 22:26:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58838 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfE3C0C (ORCPT
+        Wed, 29 May 2019 22:29:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:14973 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726483AbfE3C27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 22:26:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2J2nD189689;
-        Thu, 30 May 2019 02:25:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=pde1tJSDf/v1dzfrUCyTZ0Ne/TcdCmJiYYuCRbdaaAQ=;
- b=cXbde7oRdJt6u90rdLxDmer2J5AEPQycaNk0wR0vltLLTu/cLIpqATRvGO/VA+ulx0Qi
- 6E5f9PQtG1P6yFoiaprk3quvn5frTLhbwUn4nRG/Gbtu1Q7Q5lvziZS//oO9euhtHeir
- gD6rVpzc9eP1iaLSlpNQCPr88MFJ2uGWpT1BEowOdur6cH/YuF0iEN++belLZOQHulai
- py5AtydfdfZJNIxO88EVLboP2jVpWPq5xwJmql3v+YamjAklqGgWplCfJFOSCKWBmTYh
- pgf6QPWlw49X7xKYsGOWWPZmo1cHnQIii+zTynTqIGmyWvMufk9YEPjAtZ/isZcP32LU yQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2spw4tnd7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 02:25:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4U2O2uZ032937;
-        Thu, 30 May 2019 02:25:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2sr31vkqjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 May 2019 02:25:54 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4U2PrOk014617;
-        Thu, 30 May 2019 02:25:53 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 29 May 2019 19:25:53 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <megaraidlinux.pdl@broadcom.com>
-Subject: Re: [PATCH -next] scsi: megaraid_sas: remove set but not used variables 'host' and 'wait_time'
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190525124202.8120-1-yuehaibing@huawei.com>
-Date:   Wed, 29 May 2019 22:25:50 -0400
-In-Reply-To: <20190525124202.8120-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Sat, 25 May 2019 20:42:02 +0800")
-Message-ID: <yq15zpsy8y9.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 29 May 2019 22:28:59 -0400
+X-UUID: b975914154764829a05b0c1d75133086-20190530
+X-UUID: b975914154764829a05b0c1d75133086-20190530
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1905035381; Thu, 30 May 2019 10:28:56 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 30 May 2019 10:28:54 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 30 May 2019 10:28:54 +0800
+Message-ID: <1559183334.6868.3.camel@mtksdaap41>
+Subject: Re: [PATCH v2 4/4] drm: mediatek: clear num_pipes when unbind driver
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 30 May 2019 10:28:54 +0800
+In-Reply-To: <20190529102555.251579-5-hsinyi@chromium.org>
+References: <20190529102555.251579-1-hsinyi@chromium.org>
+         <20190529102555.251579-5-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=954
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905300016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9272 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=991 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905300016
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Hsin-Yi:
 
-YueHaibing,
+On Wed, 2019-05-29 at 18:25 +0800, Hsin-Yi Wang wrote:
+> num_pipes is used for mutex created in mtk_drm_crtc_create(). If we
+> don't clear num_pipes count, when rebinding driver, the count will
+> be accumulated. From mtk_disp_mutex_get(), there can only be at most
+> 10 mutex id. Clear this number so it starts from 0 in every rebind.
 
-> Fixes gcc '-Wunused-but-set-variable' warnings:
->
-> drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_suspend:
-> drivers/scsi/megaraid/megaraid_sas_base.c:7269:20: warning: variable host set but not used [-Wunused-but-set-variable]
-> drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_aen_polling:
-> drivers/scsi/megaraid/megaraid_sas_base.c:8397:15: warning: variable wait_time set but not used [-Wunused-but-set-variable]
->
-> 'host' is never used since introduction in
-> commit 31ea7088974c ("[SCSI] megaraid_sas: add hibernation support")
->
-> 'wait_time' is not used since commit
-> 11c71cb4ab7c ("megaraid_sas: Do not allow PCI access during OCR")
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Applied to 5.3/scsi-queue, thanks.
+> 
+> Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 8718d123ccaa..bbfe3a464aea 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -400,6 +400,7 @@ static void mtk_drm_unbind(struct device *dev)
+>  	drm_dev_unregister(private->drm);
+>  	mtk_drm_kms_deinit(private->drm);
+>  	drm_dev_put(private->drm);
+> +	private->num_pipes = 0;
+>  	private->drm = NULL;
+>  }
+>  
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+
