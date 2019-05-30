@@ -2,79 +2,324 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF18C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B89C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E457025897
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6AC25897
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 11:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559217455;
-	bh=6nakkgFOlBb6tykWloF+3IRNTh2N9WxQ6FnBheDM6co=;
+	s=default; t=1559217470;
+	bh=LRK6dGxNSuYKyIerY8KHoArG9Oy9R1nhcJ7jMQWi9+s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A+kzvXBiQ8DA8pyVdV2FWtf9st6630TruVLDIqBiR/Hf3fskhvVFn+7N328cLfCuT
-	 tl2vAAD2lZ0Rft+J5KOVnX5BeGP3MsPViX/dsWS+MDnc6dJIL3Kr2mPT1UXjgJV0hz
-	 2ECfAuYFR3T6//aOrORGa/nO67sBjHS3jnGKM6rQ=
+	b=gdhzHyrvrhDCnsQKuZTh6/AgfUqcYyQkeMa9KHGqz/RCIbRZ1cpmxqKaR85QAzmGl
+	 fd1wBc53R+Hxz+L1NHnZFuwG+c5LTQRT4Fu3l68eu1oFcESnx9FaJVP7oa9sp1WqmE
+	 YHV2HEJ023Zk4elnaPHn5CJYzS2uTB89o+ndKVfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfE3L5e (ORCPT
+        id S1727112AbfE3L5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 07:57:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 07:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfE3L5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 07:57:33 -0400
-Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        id S1727074AbfE3L5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 07:57:48 -0400
+Received: from linux-8ccs (ip5f5adbeb.dynamic.kabel-deutschland.de [95.90.219.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E614B253BD;
-        Thu, 30 May 2019 11:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0EF4253BD;
+        Thu, 30 May 2019 11:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559217453;
-        bh=6nakkgFOlBb6tykWloF+3IRNTh2N9WxQ6FnBheDM6co=;
+        s=default; t=1559217466;
+        bh=LRK6dGxNSuYKyIerY8KHoArG9Oy9R1nhcJ7jMQWi9+s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ItYDNrdsSW5lbjYeWlWir785To5jJK03JenekGpraZ5kt/FrcA9o3UxrSK+8+psBf
-         YKZ4+pHPnRUKVa5EQAcMpP0iHTJ64G+KktH579NY/cyFKCst3C8ZqQ3uhWKtldsf1Q
-         tqJt0PwPwl3o/WRaSKuSDZeEg97vjIu8LcyekWCk=
-Date:   Thu, 30 May 2019 04:57:32 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
-        mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
-        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        linux-edac@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190530115732.GB14088@kroah.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+        b=itNA5pACeRGvhlVcUpUql0ZW/S8BXzT+N+H9lnzQbze3fvmAcC+q8E40A2VbKSRNA
+         uvBeIzN877qadGnH7poBLJScX3ma7NFJkhXWbyUSPi9OOTx787BXKdtGNpCOchv9dM
+         uTv8P/1EI3NL5b9KUHjqosxKRNbOLVF5QPx0eRoc=
+Date:   Thu, 30 May 2019 13:57:41 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] livepatch: Fix ftrace module text permissions race
+Message-ID: <20190530115741.GB16012@linux-8ccs>
+References: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <bb69d4ac34111bbd9cb16180a6fafe471a88d80b.1559156299.git.jpoimboe@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:15:29PM +0300, Hanna Hawa wrote:
-> +static void al_a57_edac_cpumerrsr(void *arg)
-> +{
-> +	struct edac_device_ctl_info *edac_dev =
-> +		(struct edac_device_ctl_info *)arg;
++++ Josh Poimboeuf [29/05/19 14:02 -0500]:
+>It's possible for livepatch and ftrace to be toggling a module's text
+>permissions at the same time, resulting in the following panic:
+>
+>  BUG: unable to handle page fault for address: ffffffffc005b1d9
+>  #PF: supervisor write access in kernel mode
+>  #PF: error_code(0x0003) - permissions violation
+>  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+>  Oops: 0003 [#1] PREEMPT SMP PTI
+>  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+>  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+>  RIP: 0010:apply_relocate_add+0xbe/0x14c
+>  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+>  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+>  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+>  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+>  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+>  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+>  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+>  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+>  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>  Call Trace:
+>   klp_init_object_loaded+0x10f/0x219
+>   ? preempt_latency_start+0x21/0x57
+>   klp_enable_patch+0x662/0x809
+>   ? virt_to_head_page+0x3a/0x3c
+>   ? kfree+0x8c/0x126
+>   patch_init+0x2ed/0x1000 [livepatch_test02]
+>   ? 0xffffffffc0060000
+>   do_one_initcall+0x9f/0x1c5
+>   ? kmem_cache_alloc_trace+0xc4/0xd4
+>   ? do_init_module+0x27/0x210
+>   do_init_module+0x5f/0x210
+>   load_module+0x1c41/0x2290
+>   ? fsnotify_path+0x3b/0x42
+>   ? strstarts+0x2b/0x2b
+>   ? kernel_read+0x58/0x65
+>   __do_sys_finit_module+0x9f/0xc3
+>   ? __do_sys_finit_module+0x9f/0xc3
+>   __x64_sys_finit_module+0x1a/0x1c
+>   do_syscall_64+0x52/0x61
+>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+>The above panic occurs when loading two modules at the same time with
+>ftrace enabled, where at least one of the modules is a livepatch module:
+>
+>CPU0					CPU1
+>klp_enable_patch()
+>  klp_init_object_loaded()
+>    module_disable_ro()
+>    					ftrace_module_enable()
+>					  ftrace_arch_code_modify_post_process()
+>				    	    set_all_modules_text_ro()
+>      klp_write_object_relocations()
+>        apply_relocate_add()
+>	  *patches read-only code* - BOOM
+>
+>A similar race exists when toggling ftrace while loading a livepatch
+>module.
+>
+>Fix it by ensuring that the livepatch and ftrace code patching
+>operations -- and their respective permissions changes -- are protected
+>by the text_mutex.
+>
+>Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+>Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-No need for casting anything here, just assign it.  Doesn't checkpatch
-catch this type of thing these days?  You did run it, right?
+For module.c:
 
-Please fix that up everywhere you do this in the driver.
+Acked-by: Jessica Yu <jeyu@kernel.org>
 
+Thanks!
 
-thanks,
-
-greg k-h
+>---
+> kernel/livepatch/core.c |  6 ++++++
+> kernel/module.c         | 21 ++++++++++++++++++---
+> kernel/trace/ftrace.c   | 10 +++++++++-
+> 3 files changed, 33 insertions(+), 4 deletions(-)
+>
+>diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+>index 2398832947c6..c4ce08f43bd6 100644
+>--- a/kernel/livepatch/core.c
+>+++ b/kernel/livepatch/core.c
+>@@ -18,6 +18,7 @@
+> #include <linux/elf.h>
+> #include <linux/moduleloader.h>
+> #include <linux/completion.h>
+>+#include <linux/memory.h>
+> #include <asm/cacheflush.h>
+> #include "core.h"
+> #include "patch.h"
+>@@ -718,16 +719,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+> 	struct klp_func *func;
+> 	int ret;
+>
+>+	mutex_lock(&text_mutex);
+>+
+> 	module_disable_ro(patch->mod);
+> 	ret = klp_write_object_relocations(patch->mod, obj);
+> 	if (ret) {
+> 		module_enable_ro(patch->mod, true);
+>+		mutex_unlock(&text_mutex);
+> 		return ret;
+> 	}
+>
+> 	arch_klp_init_object_loaded(patch, obj);
+> 	module_enable_ro(patch->mod, true);
+>
+>+	mutex_unlock(&text_mutex);
+>+
+> 	klp_for_each_func(obj, func) {
+> 		ret = klp_find_object_symbol(obj->name, func->old_name,
+> 					     func->old_sympos,
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 6e6712b3aaf5..3c056b56aefa 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -64,6 +64,7 @@
+> #include <linux/bsearch.h>
+> #include <linux/dynamic_debug.h>
+> #include <linux/audit.h>
+>+#include <linux/memory.h>
+> #include <uapi/linux/module.h>
+> #include "module-internal.h"
+>
+>@@ -1943,6 +1944,8 @@ static void frob_writable_data(const struct module_layout *layout,
+> /* livepatching wants to disable read-only so it can frob module. */
+> void module_disable_ro(const struct module *mod)
+> {
+>+	lockdep_assert_held(&text_mutex);
+>+
+> 	if (!rodata_enabled)
+> 		return;
+>
+>@@ -1953,7 +1956,7 @@ void module_disable_ro(const struct module *mod)
+> 	frob_rodata(&mod->init_layout, set_memory_rw);
+> }
+>
+>-void module_enable_ro(const struct module *mod, bool after_init)
+>+static void __module_enable_ro(const struct module *mod, bool after_init)
+> {
+> 	if (!rodata_enabled)
+> 		return;
+>@@ -1974,6 +1977,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
+> 		frob_ro_after_init(&mod->core_layout, set_memory_ro);
+> }
+>
+>+void module_enable_ro(const struct module *mod, bool after_init)
+>+{
+>+	lockdep_assert_held(&text_mutex);
+>+
+>+	__module_enable_ro(mod, after_init);
+>+}
+>+
+> static void module_enable_nx(const struct module *mod)
+> {
+> 	frob_rodata(&mod->core_layout, set_memory_nx);
+>@@ -1988,6 +1998,8 @@ void set_all_modules_text_rw(void)
+> {
+> 	struct module *mod;
+>
+>+	lockdep_assert_held(&text_mutex);
+>+
+> 	if (!rodata_enabled)
+> 		return;
+>
+>@@ -2007,6 +2019,8 @@ void set_all_modules_text_ro(void)
+> {
+> 	struct module *mod;
+>
+>+	lockdep_assert_held(&text_mutex);
+>+
+> 	if (!rodata_enabled)
+> 		return;
+>
+>@@ -2027,6 +2041,7 @@ void set_all_modules_text_ro(void)
+> 	mutex_unlock(&module_mutex);
+> }
+> #else
+>+static void __module_enable_ro(const struct module *mod, bool after_init) { }
+> static void module_enable_nx(const struct module *mod) { }
+> #endif
+>
+>@@ -3519,7 +3534,7 @@ static noinline int do_init_module(struct module *mod)
+> 	/* Switch to core kallsyms now init is done: kallsyms may be walking! */
+> 	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
+> #endif
+>-	module_enable_ro(mod, true);
+>+	__module_enable_ro(mod, true);
+> 	mod_tree_remove_init(mod);
+> 	module_arch_freeing_init(mod);
+> 	mod->init_layout.base = NULL;
+>@@ -3626,7 +3641,7 @@ static int complete_formation(struct module *mod, struct load_info *info)
+> 	/* This relies on module_mutex for list integrity. */
+> 	module_bug_finalize(info->hdr, info->sechdrs, mod);
+>
+>-	module_enable_ro(mod, false);
+>+	__module_enable_ro(mod, false);
+> 	module_enable_nx(mod);
+>
+> 	/* Mark state as coming so strong_try_module_get() ignores us,
+>diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>index a12aff849c04..8259d4ba8b00 100644
+>--- a/kernel/trace/ftrace.c
+>+++ b/kernel/trace/ftrace.c
+>@@ -34,6 +34,7 @@
+> #include <linux/hash.h>
+> #include <linux/rcupdate.h>
+> #include <linux/kprobes.h>
+>+#include <linux/memory.h>
+>
+> #include <trace/events/sched.h>
+>
+>@@ -2610,10 +2611,12 @@ static void ftrace_run_update_code(int command)
+> {
+> 	int ret;
+>
+>+	mutex_lock(&text_mutex);
+>+
+> 	ret = ftrace_arch_code_modify_prepare();
+> 	FTRACE_WARN_ON(ret);
+> 	if (ret)
+>-		return;
+>+		goto out_unlock;
+>
+> 	/*
+> 	 * By default we use stop_machine() to modify the code.
+>@@ -2625,6 +2628,9 @@ static void ftrace_run_update_code(int command)
+>
+> 	ret = ftrace_arch_code_modify_post_process();
+> 	FTRACE_WARN_ON(ret);
+>+
+>+out_unlock:
+>+	mutex_unlock(&text_mutex);
+> }
+>
+> static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+>@@ -5776,6 +5782,7 @@ void ftrace_module_enable(struct module *mod)
+> 	struct ftrace_page *pg;
+>
+> 	mutex_lock(&ftrace_lock);
+>+	mutex_lock(&text_mutex);
+>
+> 	if (ftrace_disabled)
+> 		goto out_unlock;
+>@@ -5837,6 +5844,7 @@ void ftrace_module_enable(struct module *mod)
+> 		ftrace_arch_code_modify_post_process();
+>
+>  out_unlock:
+>+	mutex_unlock(&text_mutex);
+> 	mutex_unlock(&ftrace_lock);
+>
+> 	process_cached_mods(mod->name);
+>-- 
+>2.20.1
+>
