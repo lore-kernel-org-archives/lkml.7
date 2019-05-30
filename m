@@ -2,54 +2,53 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18146C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4A5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD10624D45
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8619224D45
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188697;
-	bh=2wpiB4zzn6wBHIQlOWQviFupKUmKgjTIpgGgSQWBWKQ=;
+	s=default; t=1559188701;
+	bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amM7XH5773vpJEKI9Sz3Yu6y9Rmpk74lJ2O2We61XDOtLaGG2+P1XK0rKrRtE65AG
-	 nXc4i1hBW8siBFhqReIi5V0eE/GqZ2tI8S4aFvs5irdvKIekNsHiFaKgh/ZV04b3CU
-	 jZVOch3DqpZ6SUQXbFjdjQyKLZYTimUuf0LPEvkE=
+	b=dweOxyfPT/4vEoQiloCIdkYIwtjo5bwClOxu0Ek/G2n6tVlhnE2UUVSq6w7L1R9et
+	 3J6i+o0U9fRrx2K7gcFMKtm6x5bcpE92hhjFzCUg574d8eiMJb4uA5Uc9/Jb2JJj4y
+	 Tw5S3YBtlaQwsbTZIksqiR7c0Y/7dr1QmcyljhRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbfE3DSp (ORCPT
+        id S1731679AbfE3DSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbfE3DOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:49 -0400
+        id S1729999AbfE3DOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:48 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E0524502;
-        Thu, 30 May 2019 03:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E849423D83;
+        Thu, 30 May 2019 03:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186089;
-        bh=2wpiB4zzn6wBHIQlOWQviFupKUmKgjTIpgGgSQWBWKQ=;
+        s=default; t=1559186088;
+        bh=RFEM2H8khOyd/ggh69UVrx3KhVVg1WNQLPmT6YZ1J14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3iJ7M2VvwbHGIyDosWIJrPtiXBD0Sielo6firpGLSfPd0UXtQeGLA9fu2iJXT2G4
-         /yIoqlpfDUBcbAnpZRbSGojje5qxiPgJeYrlxHG2lEieSIGpYt7hpwMhdolHI0/RXp
-         hi9V1WHgR/lotAHGl7XvF15c/bu1bPsxePqX/SFo=
+        b=EbezbJ11DUFdW9EKse9HL9wYH4HgNKUiYmIwHzhAM+H0pmYQ9tokbVataoSwnOJ01
+         dbAdpiGYw72f6+udAYzLKb344/g3RM/IIVRmzjlvDR4sY+NxjM9RsiC0x/2inVA+4o
+         RFpPo7Pre5nPF+W33dXYxOAgnWfP1FsDydaaHULI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <Alexandru.Ardelean@analog.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 218/346] iio: common: ssp_sensors: Initialize calculated_time in ssp_common_process_data
-Date:   Wed, 29 May 2019 20:04:51 -0700
-Message-Id: <20190530030552.139410938@linuxfoundation.org>
+Subject: [PATCH 5.0 216/346] iio: ad_sigma_delta: Properly handle SPI bus locking vs CS assertion
+Date:   Wed, 29 May 2019 20:04:49 -0700
+Message-Id: <20190530030552.040282078@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,46 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6f9ca1d3eb74b81f811a87002de2d51640d135b1 ]
+[ Upstream commit df1d80aee963480c5c2938c64ec0ac3e4a0df2e0 ]
 
-When building with -Wsometimes-uninitialized, Clang warns:
+For devices from the SigmaDelta family we need to keep CS low when doing a
+conversion, since the device will use the MISO line as a interrupt to
+indicate that the conversion is complete.
 
-drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: warning: variable
-'calculated_time' is used uninitialized whenever 'if' condition is false
-[-Wsometimes-uninitialized]
+This is why the driver locks the SPI bus and when the SPI bus is locked
+keeps as long as a conversion is going on. The current implementation gets
+one small detail wrong though. CS is only de-asserted after the SPI bus is
+unlocked. This means it is possible for a different SPI device on the same
+bus to send a message which would be wrongfully be addressed to the
+SigmaDelta device as well. Make sure that the last SPI transfer that is
+done while holding the SPI bus lock de-asserts the CS signal.
 
-While it isn't wrong, this will never be a problem because
-iio_push_to_buffers_with_timestamp only uses calculated_time
-on the same condition that it is assigned (when scan_timestamp
-is not zero). While iio_push_to_buffers_with_timestamp is marked
-as inline, Clang does inlining in the optimization stage, which
-happens after the semantic analysis phase (plus inline is merely
-a hint to the compiler).
-
-Fix this by just zero initializing calculated_time.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/394
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <Alexandru.Ardelean@analog.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/common/ssp_sensors/ssp_iio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/ad_sigma_delta.c       | 16 +++++++++++-----
+ include/linux/iio/adc/ad_sigma_delta.h |  1 +
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
-index 645f2e3975db4..e38f704d88b7e 100644
---- a/drivers/iio/common/ssp_sensors/ssp_iio.c
-+++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
-@@ -81,7 +81,7 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
- 			    unsigned int len, int64_t timestamp)
- {
- 	__le32 time;
--	int64_t calculated_time;
-+	int64_t calculated_time = 0;
- 	struct ssp_sensor_data *spd = iio_priv(indio_dev);
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 54d9978b27405..a4310600a8536 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -62,7 +62,7 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
+ 	struct spi_transfer t = {
+ 		.tx_buf		= data,
+ 		.len		= size + 1,
+-		.cs_change	= sigma_delta->bus_locked,
++		.cs_change	= sigma_delta->keep_cs_asserted,
+ 	};
+ 	struct spi_message m;
+ 	int ret;
+@@ -218,6 +218,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
  
- 	if (indio_dev->scan_bytes == 0)
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
+ 
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, mode);
+@@ -235,9 +236,10 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 		ret = 0;
+ 	}
+ out:
++	sigma_delta->keep_cs_asserted = false;
++	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 	sigma_delta->bus_locked = false;
+ 	spi_bus_unlock(sigma_delta->spi->master);
+-	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	return ret;
+ }
+@@ -290,6 +292,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
+ 	reinit_completion(&sigma_delta->completion);
+ 
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_SINGLE);
+@@ -299,9 +302,6 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	ret = wait_for_completion_interruptible_timeout(
+ 			&sigma_delta->completion, HZ);
+ 
+-	sigma_delta->bus_locked = false;
+-	spi_bus_unlock(sigma_delta->spi->master);
+-
+ 	if (ret == 0)
+ 		ret = -EIO;
+ 	if (ret < 0)
+@@ -322,7 +322,10 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
++	sigma_delta->bus_locked = false;
++	spi_bus_unlock(sigma_delta->spi->master);
+ 	mutex_unlock(&indio_dev->mlock);
+ 
+ 	if (ret)
+@@ -359,6 +362,8 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
+ 
+ 	spi_bus_lock(sigma_delta->spi->master);
+ 	sigma_delta->bus_locked = true;
++	sigma_delta->keep_cs_asserted = true;
++
+ 	ret = ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_CONTINUOUS);
+ 	if (ret)
+ 		goto err_unlock;
+@@ -387,6 +392,7 @@ static int ad_sd_buffer_postdisable(struct iio_dev *indio_dev)
+ 		sigma_delta->irq_dis = true;
+ 	}
+ 
++	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
+ 
+ 	sigma_delta->bus_locked = false;
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 7e84351fa2c05..6e9fb1932dde9 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -69,6 +69,7 @@ struct ad_sigma_delta {
+ 	bool			irq_dis;
+ 
+ 	bool			bus_locked;
++	bool			keep_cs_asserted;
+ 
+ 	uint8_t			comm;
+ 
 -- 
 2.20.1
 
