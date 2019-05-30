@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3329FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26ACC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA2A25990
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F3F25977
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191226;
-	bh=D5sRcs3SwtZUPrs/1DaxUqQKn2kN5i+/jrA8gD7B3NM=;
+	s=default; t=1559191234;
+	bh=W73dIoJV3wsmQyuf+rovhCEIpZz+DHLcbBQufK7xTmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9X6+71CfuQJHbLrS83K70oWuo0/KEjpmjiDiaG6edTFasass3XbjUezvUx9eSMQK
-	 RE8v0lySRg6pcKZKtf+4NKn96jcXfmOkZ6zLW0lG4P+jULjdKFcvsOIG5Mm4pTZUBT
-	 hLg2K8hA+ZrHSIlUZhVst6XphtyU3lRIM/JGTbZA=
+	b=nW9eNZCXCBwSG+URjRuuuZcMZCFNxVP51SWVEsbXNHYINuDyW7hqHl+fzuAi14bjg
+	 ew6PCdKFIhkbDIJS8v5Em2AiS1LBGhdCoR4Gw7wOuRQOUIg+djhiYgrfdBNcih7ajk
+	 03F76FDc8LpsPr1h1bgsn57ebsAN0C9PdKlFWFyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388614AbfE3EkZ (ORCPT
+        id S2388680AbfE3Ekd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbfE3DMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:34 -0400
+        id S1727571AbfE3DMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 757AA23F4C;
-        Thu, 30 May 2019 03:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7847823E29;
+        Thu, 30 May 2019 03:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185953;
-        bh=D5sRcs3SwtZUPrs/1DaxUqQKn2kN5i+/jrA8gD7B3NM=;
+        s=default; t=1559185952;
+        bh=W73dIoJV3wsmQyuf+rovhCEIpZz+DHLcbBQufK7xTmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpccSM6bgyMJHEygXDIpMB5XEiQDSISbcnS17RkBvPnGyTj9/WqYVmdY3wTZue5XC
-         AnoMaU3DKPE2nBSW/7agsJSaJz7a1sYKww89U2NXQm93wpL5rqRWe3gTF/eZMPRAIA
-         Y/131qUtuHGk0nNe25612qhBCgCCizlCX/bOxRnM=
+        b=wCo5RTr8mmwhEBy9Yyif02O2GW4swb4ofZn7EuFLQoMiv7tr2VXgrX500COrfbnGY
+         /yP4c+iQov5349kCwj64kc4SheSar42HY8KeNnL03B/wAaZ2UcRlONUpAWQiRm4iYw
+         uhYYGL3/5euqZaAZgywo6wgxwEmuVxmxoAzqACOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
         James Smart <jsmart2021@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 368/405] scsi: lpfc: Resolve inconsistent check of hdwq in lpfc_scsi_cmd_iocb_cmpl
-Date:   Wed, 29 May 2019 20:06:06 -0700
-Message-Id: <20190530030559.343432436@linuxfoundation.org>
+Subject: [PATCH 5.1 366/405] scsi: lpfc: Fix SLI3 commands being issued on SLI4 devices
+Date:   Wed, 29 May 2019 20:06:04 -0700
+Message-Id: <20190530030559.117313753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,40 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ff6bf89717b0dc7b8dd0934d1c065f29069831e7 ]
+[ Upstream commit c95a3b4b0fb8d351e2329a96f87c4fc96a149505 ]
 
-A prior patch which added support for non-uniform allocation of MSIX
-vectors now causes a smatch complaint:
+During debug, it was seen that the driver is issuing commands specific to
+SLI3 on SLI4 devices. Although the adapter correctly rejected the command,
+this should not be done.
 
- drivers/scsi/lpfc/lpfc_scsi.c:3674 lpfc_scsi_cmd_iocb_cmpl()
-   error: we previously assumed 'phba->sli4_hba.hdwq' could be
-          null (see line 3667)
+Revise the code to stop sending these commands on a SLI4 adapter.
 
-Resolve by removing the unnecessary check for a NULL hdwq table.
-
-Fixes 6a828b0f6192: ("scsi: lpfc: Support non-uniform allocation of MSIX vectors to hardware queues")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index a497b2c0cb798..25501d4605ff3 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -3670,7 +3670,7 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
- #ifdef CONFIG_SCSI_LPFC_DEBUG_FS
- 	if (phba->cpucheck_on & LPFC_CHECK_SCSI_IO) {
- 		cpu = smp_processor_id();
--		if (cpu < LPFC_CHECK_CPU_CNT)
-+		if (cpu < LPFC_CHECK_CPU_CNT && phba->sli4_hba.hdwq)
- 			phba->sli4_hba.hdwq[idx].cpucheck_cmpl_io[cpu]++;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index aa4961a2caf81..676f4bf3f33a3 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -932,7 +932,11 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
  	}
- #endif
+ 	lpfc_destroy_vport_work_array(phba, vports);
+-	/* Clean up any firmware default rpi's */
++
++	/* Clean up any SLI3 firmware default rpi's */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		goto skip_unreg_did;
++
+ 	mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mb) {
+ 		lpfc_unreg_did(phba, 0xffff, LPFC_UNREG_ALL_DFLT_RPIS, mb);
+@@ -944,6 +948,7 @@ lpfc_linkdown(struct lpfc_hba *phba)
+ 		}
+ 	}
+ 
++ skip_unreg_did:
+ 	/* Setup myDID for link up if we are in pt2pt mode */
+ 	if (phba->pport->fc_flag & FC_PT2PT) {
+ 		mb = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+@@ -4979,6 +4984,10 @@ lpfc_unreg_default_rpis(struct lpfc_vport *vport)
+ 	LPFC_MBOXQ_t     *mbox;
+ 	int rc;
+ 
++	/* Unreg DID is an SLI3 operation. */
++	if (phba->sli_rev > LPFC_SLI_REV3)
++		return;
++
+ 	mbox = mempool_alloc(phba->mbox_mem_pool, GFP_KERNEL);
+ 	if (mbox) {
+ 		lpfc_unreg_did(phba, vport->vpi, LPFC_UNREG_ALL_DFLT_RPIS,
 -- 
 2.20.1
 
