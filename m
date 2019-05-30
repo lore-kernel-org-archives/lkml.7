@@ -2,376 +2,193 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBACFC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CA1C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7695243D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C154243D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 01:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="B0Gug89I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPrIlAtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfE3BEN (ORCPT
+        id S1727367AbfE3BFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 21:04:13 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:42526 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727211AbfE3BEL (ORCPT
+        Wed, 29 May 2019 21:05:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42100 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbfE3BFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 21:04:11 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4U12osf014901
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:04:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=7XSmOe3GQlyJ48EQBpnuA5PGtxGRmQFUanPna2Qk/Co=;
- b=B0Gug89Im7qprfmnvtm3nqq3slZv4GXCCyCohzelBxeWDi9sBCer3pDTaWRVqwhd1xv3
- mBpf0lOPPguSCWbBEbM3lZyAxhr7XbQg0L3B3949/Y4ibSdEPds6OQi3jaPqOFKX9YeD
- rwSOaii+aFE0eTEI1A1rKzQHQp7KZvJTRZo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ssx3askxp-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2019 18:04:09 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 29 May 2019 18:04:08 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id B46F4129321E9; Wed, 29 May 2019 18:04:03 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <bpf@vger.kernel.org>
-CC:     <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH bpf-next 5/5] bpf: move memory size checks to bpf_map_charge_init()
-Date:   Wed, 29 May 2019 18:03:59 -0700
-Message-ID: <20190530010359.2499670-6-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190530010359.2499670-1-guro@fb.com>
-References: <20190530010359.2499670-1-guro@fb.com>
-X-FB-Internal: Safe
+        Wed, 29 May 2019 21:05:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r22so2776764pfh.9;
+        Wed, 29 May 2019 18:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=beZsP/rjfL8EXcX60xBuuJ47HiagG33HBKhM1gI7z7o=;
+        b=IPrIlAtXr2FDMSjX0/bzIEMw/DD91kRI7Kyd2nGYNcDCqviqF1yxJsKXacq5gSvR4M
+         mBMuI9tFBSVxJtViMOKIdFfjPHDOCjrob7YTUQIobPby9v3cBSKt/FkrhY8i3ptyz54Z
+         SJMLgYl/OVIWGJsq/YfN4ueGa2+iEX3UCeyVg5Jp1Tes3SZMJjw/iPyA/J1TxkwjhnTY
+         XaT1Um7uoW+VB7utBeyzIeMfgNu3aQg57D5D/K+wcsh+k0nZyodje++7T7/JYXBVld/k
+         +lMCKSyD7OuPJ4KapoZjFyaRryz8wNedo4iha6ZtqqF2vAeSqMW0Fi/9+N2OWe/gURNP
+         QiZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=beZsP/rjfL8EXcX60xBuuJ47HiagG33HBKhM1gI7z7o=;
+        b=hrE/F3JFe2VqzBTm+lLMrZKhsGL8RPn1vl4UqE+KKMGVsCogQmknof+LrKEBHhgWDh
+         vZCdQfUBnenr2ur+4WlmjnYQQs7PvGXx61c2+x+5MjdmmpXq2ts45WlVFosexM0bCzvT
+         PzUPxu7X1MDLxjOyz1ccBpMjMDChR+NI9u7wGJUJ8+yOsdSIA8sUVVW4O4AiYny8UFEO
+         YtwgnrZ26ASSFEpBfTrJu8+JuwpFnxB44Da2uXtRzvp/KeKExOF8y5oXgnA7u7FR3XQm
+         JG2WR3DHAjeWXESHTw6zSba/LrMDwpuTzLxdnVVpWRyc4Q0phsOwPtjT2sIA5ycma3jG
+         S4yg==
+X-Gm-Message-State: APjAAAX3Aw+7jjuYWfei6rXEXg5pB0tNu3DusCtCrYDnrp96bl3V3z2m
+        O3LyEwjT3mCrJjh7ypxMP3Q=
+X-Google-Smtp-Source: APXvYqwhXINGpYIe3fien1AMYupfuhGAODKoz3EA3gp4YnMJViJP2gBaJ4YnyeKQZhwk32gigQp88g==
+X-Received: by 2002:a17:90a:bf0d:: with SMTP id c13mr675233pjs.88.1559178311313;
+        Wed, 29 May 2019 18:05:11 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s42sm799092pjc.5.2019.05.29.18.05.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 May 2019 18:05:10 -0700 (PDT)
+Subject: Re: [PATCH 2/2] Docs: hwmon: pmbus: Add PXE1610 driver
+To:     Vijay Khemka <vijaykhemka@fb.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190529223511.4059120-1-vijaykhemka@fb.com>
+ <20190529223511.4059120-2-vijaykhemka@fb.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0a94e784-41a0-4f2d-f9f8-6b365a1e755e@roeck-us.net>
+Date:   Wed, 29 May 2019 18:05:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905300006
-X-FB-Internal: deliver
+In-Reply-To: <20190529223511.4059120-2-vijaykhemka@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most bpf map types doing similar checks and bytes to pages
-conversion during memory allocation and charging.
+On 5/29/19 3:35 PM, Vijay Khemka wrote:
+> Added support for Infenion PXE1610 driver
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>   Documentation/hwmon/pxe1610 | 84 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 84 insertions(+)
+>   create mode 100644 Documentation/hwmon/pxe1610
+> 
+> diff --git a/Documentation/hwmon/pxe1610 b/Documentation/hwmon/pxe1610
+> new file mode 100644
+> index 000000000000..b5c83edf027a
+> --- /dev/null
+> +++ b/Documentation/hwmon/pxe1610
+> @@ -0,0 +1,84 @@
+> +Kernel driver pxe1610
+> +=====================
+> +
+> +Supported chips:
+> +  * Infinion PXE1610
+> +    Prefix: 'pxe1610'
+> +    Addresses scanned: -
+> +    Datasheet: Datasheet is not publicly available.
+> +
+> +  * Infinion PXE1110
+> +    Prefix: 'pxe1110'
+> +    Addresses scanned: -
+> +    Datasheet: Datasheet is not publicly available.
+> +
+> +  * Infinion PXM1310
+> +    Prefix: 'pxm1310'
+> +    Addresses scanned: -
+> +    Datasheet: Datasheet is not publicly available.
+> +
+> +Author: Vijay Khemka <vijaykhemka@fb.com>
+> +
+> +
+> +Description
+> +-----------
+> +
+> +PXE1610 is a Multi-rail/Multiphase Digital Controllers and
+> +it is compliant to Intel VR13 DC-DC converter specifications.
+> +
 
-Let's unify these checks by moving them into bpf_map_charge_init().
+And the others ?
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- include/linux/bpf.h           |  2 +-
- kernel/bpf/arraymap.c         |  8 +-------
- kernel/bpf/cpumap.c           |  5 +----
- kernel/bpf/devmap.c           |  5 +----
- kernel/bpf/hashtab.c          |  7 +------
- kernel/bpf/local_storage.c    |  5 +----
- kernel/bpf/lpm_trie.c         |  7 +------
- kernel/bpf/queue_stack_maps.c |  4 ----
- kernel/bpf/reuseport_array.c  | 10 ++--------
- kernel/bpf/stackmap.c         |  8 +-------
- kernel/bpf/syscall.c          |  9 +++++++--
- kernel/bpf/xskmap.c           |  5 +----
- net/core/bpf_sk_storage.c     |  4 +---
- net/core/sock_map.c           |  8 +-------
- 14 files changed, 20 insertions(+), 67 deletions(-)
+> +
+> +Usage Notes
+> +-----------
+> +
+> +This driver can be enabled with kernel config CONFIG_SENSORS_PXE1610
+> +set to 'y' or 'm'(for module).
+> +
+The above does not really add value.
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 6187203b0414..3997c0038062 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -602,7 +602,7 @@ void bpf_map_put_with_uref(struct bpf_map *map);
- void bpf_map_put(struct bpf_map *map);
- int bpf_map_charge_memlock(struct bpf_map *map, u32 pages);
- void bpf_map_uncharge_memlock(struct bpf_map *map, u32 pages);
--int bpf_map_charge_init(struct bpf_map_memory *mem, u32 pages);
-+int bpf_map_charge_init(struct bpf_map_memory *mem, size_t size);
- void bpf_map_charge_finish(struct bpf_map_memory *mem);
- void bpf_map_charge_move(struct bpf_map_memory *dst,
- 			 struct bpf_map_memory *src);
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index 3552da4407d9..0349cbf23cdb 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -117,14 +117,8 @@ static struct bpf_map *array_map_alloc(union bpf_attr *attr)
- 
- 	/* make sure there is no u32 overflow later in round_up() */
- 	cost = array_size;
--	if (cost >= U32_MAX - PAGE_SIZE)
--		return ERR_PTR(-ENOMEM);
--	if (percpu) {
-+	if (percpu)
- 		cost += (u64)attr->max_entries * elem_size * num_possible_cpus();
--		if (cost >= U32_MAX - PAGE_SIZE)
--			return ERR_PTR(-ENOMEM);
--	}
--	cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
- 
- 	ret = bpf_map_charge_init(&mem, cost);
- 	if (ret < 0)
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index c633c8d68023..b31a71909307 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -106,12 +106,9 @@ static struct bpf_map *cpu_map_alloc(union bpf_attr *attr)
- 	/* make sure page count doesn't overflow */
- 	cost = (u64) cmap->map.max_entries * sizeof(struct bpf_cpu_map_entry *);
- 	cost += cpu_map_bitmap_size(attr) * num_possible_cpus();
--	if (cost >= U32_MAX - PAGE_SIZE)
--		goto free_cmap;
- 
- 	/* Notice returns -EPERM on if map size is larger than memlock limit */
--	ret = bpf_map_charge_init(&cmap->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	ret = bpf_map_charge_init(&cmap->map.memory, cost);
- 	if (ret) {
- 		err = ret;
- 		goto free_cmap;
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 371bd880ed58..5ae7cce5ef16 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -108,12 +108,9 @@ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
- 	/* make sure page count doesn't overflow */
- 	cost = (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev *);
- 	cost += dev_map_bitmap_size(attr) * num_possible_cpus();
--	if (cost >= U32_MAX - PAGE_SIZE)
--		goto free_dtab;
- 
- 	/* if map size is larger than memlock limit, reject it */
--	err = bpf_map_charge_init(&dtab->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	err = bpf_map_charge_init(&dtab->map.memory, cost);
- 	if (err)
- 		goto free_dtab;
- 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index b0bdc7b040ad..d92e05d9979b 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -360,13 +360,8 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
- 	else
- 	       cost += (u64) htab->elem_size * num_possible_cpus();
- 
--	if (cost >= U32_MAX - PAGE_SIZE)
--		/* make sure page count doesn't overflow */
--		goto free_htab;
--
- 	/* if map size is larger than memlock limit, reject it */
--	err = bpf_map_charge_init(&htab->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	err = bpf_map_charge_init(&htab->map.memory, cost);
- 	if (err)
- 		goto free_htab;
- 
-diff --git a/kernel/bpf/local_storage.c b/kernel/bpf/local_storage.c
-index e49bfd4f4f6d..addd6fdceec8 100644
---- a/kernel/bpf/local_storage.c
-+++ b/kernel/bpf/local_storage.c
-@@ -273,7 +273,6 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
- 	int numa_node = bpf_map_attr_numa_node(attr);
- 	struct bpf_cgroup_storage_map *map;
- 	struct bpf_map_memory mem;
--	u32 pages;
- 	int ret;
- 
- 	if (attr->key_size != sizeof(struct bpf_cgroup_storage_key))
-@@ -293,9 +292,7 @@ static struct bpf_map *cgroup_storage_map_alloc(union bpf_attr *attr)
- 		/* max_entries is not used and enforced to be 0 */
- 		return ERR_PTR(-EINVAL);
- 
--	pages = round_up(sizeof(struct bpf_cgroup_storage_map), PAGE_SIZE) >>
--		PAGE_SHIFT;
--	ret = bpf_map_charge_init(&mem, pages);
-+	ret = bpf_map_charge_init(&mem, sizeof(struct bpf_cgroup_storage_map));
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 6345a8d2dcd0..09334f13a8a0 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -573,13 +573,8 @@ static struct bpf_map *trie_alloc(union bpf_attr *attr)
- 	cost_per_node = sizeof(struct lpm_trie_node) +
- 			attr->value_size + trie->data_size;
- 	cost += (u64) attr->max_entries * cost_per_node;
--	if (cost >= U32_MAX - PAGE_SIZE) {
--		ret = -E2BIG;
--		goto out_err;
--	}
- 
--	ret = bpf_map_charge_init(&trie->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	ret = bpf_map_charge_init(&trie->map.memory, cost);
- 	if (ret)
- 		goto out_err;
- 
-diff --git a/kernel/bpf/queue_stack_maps.c b/kernel/bpf/queue_stack_maps.c
-index 224cb0fd8f03..f697647ceb54 100644
---- a/kernel/bpf/queue_stack_maps.c
-+++ b/kernel/bpf/queue_stack_maps.c
-@@ -73,10 +73,6 @@ static struct bpf_map *queue_stack_map_alloc(union bpf_attr *attr)
- 
- 	size = (u64) attr->max_entries + 1;
- 	cost = queue_size = sizeof(*qs) + size * attr->value_size;
--	if (cost >= U32_MAX - PAGE_SIZE)
--		return ERR_PTR(-E2BIG);
--
--	cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
- 
- 	ret = bpf_map_charge_init(&mem, cost);
- 	if (ret < 0)
-diff --git a/kernel/bpf/reuseport_array.c b/kernel/bpf/reuseport_array.c
-index 5c6e25b1b9b1..50c083ba978c 100644
---- a/kernel/bpf/reuseport_array.c
-+++ b/kernel/bpf/reuseport_array.c
-@@ -152,7 +152,7 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
- 	int err, numa_node = bpf_map_attr_numa_node(attr);
- 	struct reuseport_array *array;
- 	struct bpf_map_memory mem;
--	u64 cost, array_size;
-+	u64 array_size;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return ERR_PTR(-EPERM);
-@@ -160,13 +160,7 @@ static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
- 	array_size = sizeof(*array);
- 	array_size += (u64)attr->max_entries * sizeof(struct sock *);
- 
--	/* make sure there is no u32 overflow later in round_up() */
--	cost = array_size;
--	if (cost >= U32_MAX - PAGE_SIZE)
--		return ERR_PTR(-ENOMEM);
--	cost = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
--
--	err = bpf_map_charge_init(&mem, cost);
-+	err = bpf_map_charge_init(&mem, array_size);
- 	if (err)
- 		return ERR_PTR(err);
- 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 8da24ca65d97..3d86072d8e32 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -117,14 +117,8 @@ static struct bpf_map *stack_map_alloc(union bpf_attr *attr)
- 	n_buckets = roundup_pow_of_two(attr->max_entries);
- 
- 	cost = n_buckets * sizeof(struct stack_map_bucket *) + sizeof(*smap);
--	if (cost >= U32_MAX - PAGE_SIZE)
--		return ERR_PTR(-E2BIG);
- 	cost += n_buckets * (value_size + sizeof(struct stack_map_bucket));
--	if (cost >= U32_MAX - PAGE_SIZE)
--		return ERR_PTR(-E2BIG);
--
--	err = bpf_map_charge_init(&mem,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	err = bpf_map_charge_init(&mem, cost);
- 	if (err)
- 		return ERR_PTR(err);
- 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 351cc434c4ad..b3e83712b982 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -205,11 +205,16 @@ static void bpf_uncharge_memlock(struct user_struct *user, u32 pages)
- 		atomic_long_sub(pages, &user->locked_vm);
- }
- 
--int bpf_map_charge_init(struct bpf_map_memory *mem, u32 pages)
-+int bpf_map_charge_init(struct bpf_map_memory *mem, size_t size)
- {
--	struct user_struct *user = get_current_user();
-+	u32 pages = round_up(size, PAGE_SIZE) >> PAGE_SHIFT;
-+	struct user_struct *user;
- 	int ret;
- 
-+	if (size >= U32_MAX - PAGE_SIZE)
-+		return -E2BIG;
-+
-+	user = get_current_user();
- 	ret = bpf_charge_memlock(user, pages);
- 	if (ret) {
- 		free_uid(user);
-diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
-index a329dab7c7a4..22066c28ba61 100644
---- a/kernel/bpf/xskmap.c
-+++ b/kernel/bpf/xskmap.c
-@@ -37,12 +37,9 @@ static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
- 
- 	cost = (u64)m->map.max_entries * sizeof(struct xdp_sock *);
- 	cost += sizeof(struct list_head) * num_possible_cpus();
--	if (cost >= U32_MAX - PAGE_SIZE)
--		goto free_m;
- 
- 	/* Notice returns -EPERM on if map size is larger than memlock limit */
--	err = bpf_map_charge_init(&m->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	err = bpf_map_charge_init(&m->map.memory, cost);
- 	if (err)
- 		goto free_m;
- 
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index 621a0b07ff11..f40e3d35fd9c 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -626,7 +626,6 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
- 	struct bpf_sk_storage_map *smap;
- 	unsigned int i;
- 	u32 nbuckets;
--	u32 pages;
- 	u64 cost;
- 	int ret;
- 
-@@ -638,9 +637,8 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
- 	smap->bucket_log = ilog2(roundup_pow_of_two(num_possible_cpus()));
- 	nbuckets = 1U << smap->bucket_log;
- 	cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
--	pages = round_up(cost, PAGE_SIZE) >> PAGE_SHIFT;
- 
--	ret = bpf_map_charge_init(&smap->map.memory, pages);
-+	ret = bpf_map_charge_init(&smap->map.memory, cost);
- 	if (ret < 0) {
- 		kfree(smap);
- 		return ERR_PTR(ret);
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 1028c922a149..52d4faeee18b 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -44,13 +44,7 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *attr)
- 
- 	/* Make sure page count doesn't overflow. */
- 	cost = (u64) stab->map.max_entries * sizeof(struct sock *);
--	if (cost >= U32_MAX - PAGE_SIZE) {
--		err = -EINVAL;
--		goto free_stab;
--	}
--
--	err = bpf_map_charge_init(&stab->map.memory,
--				  round_up(cost, PAGE_SIZE) >> PAGE_SHIFT);
-+	err = bpf_map_charge_init(&stab->map.memory, cost);
- 	if (err)
- 		goto free_stab;
- 
--- 
-2.20.1
+> +This driver does not probe for PMBus devices. You will have
+> +to instantiate devices explicitly.
+> +
+> +Example: the following commands will load the driver for an PXE1610
+> +at address 0x70 on I2C bus #4:
+> +
+> +# modprobe pxe1610
+> +# echo pxe1610 0x70 > /sys/bus/i2c/devices/i2c-4/new_device
+> +
+> +It can also be instantiated by declaring in device tree if it is
+> +built as a kernel not as a module.
+> +
+
+I assume you mean "built into the kernel".
+Why would devicetree based instantiation not work if the driver is built
+as module ?
+
+> +
+> +Sysfs attributes
+> +----------------
+> +
+> +curr1_label		"iin"
+> +curr1_input		Measured input current
+> +curr1_alarm		Current high alarm
+> +
+> +curr[2-4]_label		"iout[1-3]"
+> +curr[2-4]_input		Measured output current
+> +curr[2-4]_crit		Critical maximum current
+> +curr[2-4]_crit_alarm	Current critical high alarm
+> +
+> +in1_label		"vin"
+> +in1_input		Measured input voltage
+> +in1_crit		Critical maximum input voltage
+> +in1_crit_alarm		Input voltage critical high alarm
+> +
+> +in[2-4]_label		"vout[1-3]"
+> +in[2-4]_input		Measured output voltage
+> +in[2-4]_lcrit		Critical minimum output voltage
+> +in[2-4]_lcrit_alarm	Output voltage critical low alarm
+> +in[2-4]_crit		Critical maximum output voltage
+> +in[2-4]_crit_alarm	Output voltage critical high alarm
+> +
+> +power1_label		"pin"
+> +power1_input		Measured input power
+> +power1_alarm		Input power high alarm
+> +
+> +power[2-4]_label	"pout[1-3]"
+> +power[2-4]_input	Measured output power
+> +
+> +temp[1-3]_input		Measured temperature
+> +temp[1-3]_crit		Critical high temperature
+> +temp[1-3]_crit_alarm	Chip temperature critical high alarm
+> +temp[1-3]_max		Maximum temperature
+> +temp[1-3]_max_alarm	Chip temperature high alarm
+> 
 
