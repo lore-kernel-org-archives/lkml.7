@@ -4,64 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101DEC46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDCFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CFC24481
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046652449A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185899;
-	bh=KjCMQV27xjU5IhmiYZGkiHId6hUNfshwD8PI5w4/XWo=;
+	s=default; t=1559185904;
+	bh=c3ylOG23e2uaO1Qyo4knJrORs0BfMvOcAjDmTCaefMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BIbNhImCy4eabv4HvJ/bUww/4krSVJg0t6tgKtF4TB3zMU/9yol6KdoDNIS75iUR0
-	 qqHe1fKNsuU9aPCwngGR9cmZpOBzuyS/bZH69OwM338dxYlIlcCHAVogoHHe0Moz1y
-	 KO/dF7DHZxcuZMiCrkaXNDS98PVB+C1riVJb8bk4=
+	b=CE5hQHBjhibzE82WZ0YwuKc6Ce4LPfVsUmydOx1zhNmHDRUlQrjy/McLDuCN8TUiK
+	 LnRP9XFc8jeHffFl2+nffZShNsosrAAjANQzFlktHzGJ+73Kfqdm+ukMd7kxuQCnkh
+	 MujRcZublgsv6OTBqcIFLSOoAON72BnrZmyIXXlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfE3DLj (ORCPT
+        id S1728648AbfE3DLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:11:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbfE3DKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:30 -0400
+        id S1728130AbfE3DKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:31 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCC924493;
-        Thu, 30 May 2019 03:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476C7244CB;
+        Thu, 30 May 2019 03:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185829;
-        bh=KjCMQV27xjU5IhmiYZGkiHId6hUNfshwD8PI5w4/XWo=;
+        s=default; t=1559185831;
+        bh=c3ylOG23e2uaO1Qyo4knJrORs0BfMvOcAjDmTCaefMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bEubbx+qEuIgWt0GmBC3rqecrOox6nF2q/3yNdTFaoYYfDnyLfau/0ur+bKD7Xvi8
-         7Lq2NGx/HmmFpHvzG3IkM8olXvnTH0kZ7GvlIhYC3qe98GkH3r23a9L6xwJF2QQmOH
-         mZB6uPKf2DNUCfeUWLcJupeXxo8yjwOOPQgQsEuU=
+        b=yAA1gX0Dnl+OIc9B7PZ15wvWgbCj+JOR634zdPPoQiFVZ/U1H1cGQIwaqlPjgZNUG
+         w7M+Azv60Wpx78QCjC715nU3VUkWpiWDeVi2Vb4LBrXZHzdS8raoyxGdZFgATA1l9/
+         hsQTUocQ3tT8F1K3eB8l0yS4LxXTWUmF0sF/ENXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Nadav Amit <namit@vmware.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
-        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 095/405] x86/modules: Avoid breaking W^X while loading modules
-Date:   Wed, 29 May 2019 20:01:33 -0700
-Message-Id: <20190530030545.826635948@linuxfoundation.org>
+        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 135/405] vfio-ccw: Do not call flush_workqueue while holding the spinlock
+Date:   Wed, 29 May 2019 20:02:13 -0700
+Message-Id: <20190530030547.926029974@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -74,140 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2c65fb3221adc6b73b0549fc7ba892022db9797 ]
+[ Upstream commit cea5dde42a83b5f0a039da672f8686455936b8d8 ]
 
-When modules and BPF filters are loaded, there is a time window in
-which some memory is both writable and executable. An attacker that has
-already found another vulnerability (e.g., a dangling pointer) might be
-able to exploit this behavior to overwrite kernel code. Prevent having
-writable executable PTEs in this stage.
+Currently we call flush_workqueue while holding the subchannel
+spinlock. But flush_workqueue function can go to sleep, so
+do not call the function while holding the spinlock.
 
-In addition, avoiding having W+X mappings can also slightly simplify the
-patching of modules code on initialization (e.g., by alternatives and
-static-key), as would be done in the next patch. This was actually the
-main motivation for this patch.
+Fixes the following bug:
 
-To avoid having W+X mappings, set them initially as RW (NX) and after
-they are set as RO set them as X as well. Setting them as executable is
-done as a separate step to avoid one core in which the old PTE is cached
-(hence writable), and another which sees the updated PTE (executable),
-which would break the W^X protection.
+[  285.203430] BUG: scheduling while atomic: bash/14193/0x00000002
+[  285.203434] INFO: lockdep is turned off.
+....
+[  285.203485] Preemption disabled at:
+[  285.203488] [<000003ff80243e5c>] vfio_ccw_sch_quiesce+0xbc/0x120 [vfio_ccw]
+[  285.203496] CPU: 7 PID: 14193 Comm: bash Tainted: G        W
+....
+[  285.203504] Call Trace:
+[  285.203510] ([<0000000000113772>] show_stack+0x82/0xd0)
+[  285.203514]  [<0000000000b7a102>] dump_stack+0x92/0xd0
+[  285.203518]  [<000000000017b8be>] __schedule_bug+0xde/0xf8
+[  285.203524]  [<0000000000b95b5a>] __schedule+0x7a/0xc38
+[  285.203528]  [<0000000000b9678a>] schedule+0x72/0xb0
+[  285.203533]  [<0000000000b9bfbc>] schedule_timeout+0x34/0x528
+[  285.203538]  [<0000000000b97608>] wait_for_common+0x118/0x1b0
+[  285.203544]  [<0000000000166d6a>] flush_workqueue+0x182/0x548
+[  285.203550]  [<000003ff80243e6e>] vfio_ccw_sch_quiesce+0xce/0x120 [vfio_ccw]
+[  285.203556]  [<000003ff80245278>] vfio_ccw_mdev_reset+0x38/0x70 [vfio_ccw]
+[  285.203562]  [<000003ff802458b0>] vfio_ccw_mdev_remove+0x40/0x78 [vfio_ccw]
+[  285.203567]  [<000003ff801a499c>] mdev_device_remove_ops+0x3c/0x80 [mdev]
+[  285.203573]  [<000003ff801a4d5c>] mdev_device_remove+0xc4/0x130 [mdev]
+[  285.203578]  [<000003ff801a5074>] remove_store+0x6c/0xa8 [mdev]
+[  285.203582]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
+[  285.203588]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
+[  285.203593]  [<00000000003c187c>] vfs_write+0xb4/0x198
+[  285.203597]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
+[  285.203601]  [<0000000000b9e270>] system_call+0xdc/0x2d8
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: https://lkml.kernel.org/r/20190426001143.4983-12-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Message-Id: <626bab8bb2958ae132452e1ddaf1b20882ad5a9d.1554756534.git.alifm@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
- arch/x86/kernel/module.c      |  2 +-
- include/linux/filter.h        |  1 +
- kernel/module.c               |  5 +++++
- 4 files changed, 28 insertions(+), 8 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 9a79c7808f9cc..d7df79fc448cd 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -667,15 +667,29 @@ void __init alternative_instructions(void)
-  * handlers seeing an inconsistent instruction while you patch.
-  */
- void *__init_or_module text_poke_early(void *addr, const void *opcode,
--					      size_t len)
-+				       size_t len)
- {
- 	unsigned long flags;
--	local_irq_save(flags);
--	memcpy(addr, opcode, len);
--	local_irq_restore(flags);
--	sync_core();
--	/* Could also do a CLFLUSH here to speed up CPU recovery; but
--	   that causes hangs on some VIA CPUs. */
-+
-+	if (boot_cpu_has(X86_FEATURE_NX) &&
-+	    is_module_text_address((unsigned long)addr)) {
-+		/*
-+		 * Modules text is marked initially as non-executable, so the
-+		 * code cannot be running and speculative code-fetches are
-+		 * prevented. Just change the code.
-+		 */
-+		memcpy(addr, opcode, len);
-+	} else {
-+		local_irq_save(flags);
-+		memcpy(addr, opcode, len);
-+		local_irq_restore(flags);
-+		sync_core();
-+
-+		/*
-+		 * Could also do a CLFLUSH here to speed up CPU recovery; but
-+		 * that causes hangs on some VIA CPUs.
-+		 */
-+	}
- 	return addr;
- }
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 0b3b9de45c602..64bb121ba5987 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -54,9 +54,9 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
  
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index b052e883dd8cc..cfa3106faee42 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
- 	p = __vmalloc_node_range(size, MODULE_ALIGN,
- 				    MODULES_VADDR + get_module_load_offset(),
- 				    MODULES_END, GFP_KERNEL,
--				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-+				    PAGE_KERNEL, 0, NUMA_NO_NODE,
- 				    __builtin_return_address(0));
- 	if (p && (kasan_module_alloc(p, size) < 0)) {
- 		vfree(p);
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 6074aa064b540..14ec3bdad9a90 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -746,6 +746,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
- static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_memory_ro((unsigned long)hdr, hdr->pages);
-+	set_memory_x((unsigned long)hdr, hdr->pages);
- }
+ 			wait_for_completion_timeout(&completion, 3*HZ);
  
- static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
-diff --git a/kernel/module.c b/kernel/module.c
-index 0b9aa8ab89f08..2b2845ae983ed 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1950,8 +1950,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
- 		return;
+-			spin_lock_irq(sch->lock);
+ 			private->completion = NULL;
+ 			flush_workqueue(vfio_ccw_work_q);
++			spin_lock_irq(sch->lock);
+ 			ret = cio_cancel_halt_clear(sch, &iretry);
+ 		};
  
- 	frob_text(&mod->core_layout, set_memory_ro);
-+	frob_text(&mod->core_layout, set_memory_x);
-+
- 	frob_rodata(&mod->core_layout, set_memory_ro);
-+
- 	frob_text(&mod->init_layout, set_memory_ro);
-+	frob_text(&mod->init_layout, set_memory_x);
-+
- 	frob_rodata(&mod->init_layout, set_memory_ro);
- 
- 	if (after_init)
 -- 
 2.20.1
 
