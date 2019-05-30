@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD867C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC77C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED5F249E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A64249B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186493;
-	bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
+	s=default; t=1559186497;
+	bh=q+KNvMBWqHGJYd5F8Q04+GqU0pdLw8t+lNz1bm5hdgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T1weyYZiu5ku8szqlxApFDxAbAl5B15/Egp7EVHfjp54TTyPzT/zvHfrb/K/OJvCD
-	 LVbLxDbyyl5AwYr1WLN7yH4sp3mb57EP5eSG1C5GbJOMxXXvnjID7QywfDOgJ4Az9f
-	 Q9GKg2W1bY4HVa/ez7DoSjkt04DRmAB/vumA6r3U=
+	b=y+TUH9ccAKqAcg2Fcj0Nnja81NTvOBANeERilyJx5I6wtg4+ElciDvecpge9W+eFB
+	 UBxqUGTO2F2qybcYDjOZrTO0WBZjvCGZXi8U9RpxfgxcoQsSySRb5SnNvBTm2QYwR4
+	 Yd9BAbBfPH4TNOAdcK/cVrX82fJxkt1GSwsWjFCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732591AbfE3DVc (ORCPT
+        id S1732607AbfE3DVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:21:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730669AbfE3DQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729751AbfE3DQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:16:26 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E3E824598;
-        Thu, 30 May 2019 03:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F048245C4;
+        Thu, 30 May 2019 03:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186185;
-        bh=jxFEU4hEZfRWH8xSa6TsEgftBEFtYHFMd2kCHP1i7X8=;
+        s=default; t=1559186186;
+        bh=q+KNvMBWqHGJYd5F8Q04+GqU0pdLw8t+lNz1bm5hdgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQdE251QhUQcGPYzLahh3SO2USTdtnMxeIhyMqyeZFFtNvcFXwyl7+SWN8yKgTX2q
-         C5EwGuU/kxA0lFKKpRAluawyAZhLKc+RWGujUdiJ509ZXUC4zuRLFXfkm1PV77uvDF
-         +481WXRosXEER2+/iUNl6c8PKrLfEzmVuiBB39aM=
+        b=vH7bPHF2MW2S3351h9gNGfg87Ust5fFx1nD6/xSIeUfZnrnckbPCC39qomX6TI9yW
+         kEeWtRmwOgH25Nco21CHEC5bwtWDdHQotCN8WFgASbJYAxXZO5hHzb1QyLFVAr/uau
+         s/U1M/nvOEidjXCitG4xR+gFTP6IDIxhckh1Vsy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/276] bpftool: exclude bash-completion/bpftool from .gitignore pattern
-Date:   Wed, 29 May 2019 20:03:30 -0700
-Message-Id: <20190530030528.333890209@linuxfoundation.org>
+Subject: [PATCH 4.19 054/276] net: ena: gcc 8: fix compilation warning
+Date:   Wed, 29 May 2019 20:03:32 -0700
+Message-Id: <20190530030528.639643512@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -62,55 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a7d006714724de4334c5e3548701b33f7b12ca96 ]
+[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
 
-tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
-intended to ignore the following build artifact:
+GCC 8 contains a number of new warnings as well as enhancements to existing
+checkers. The warning - Wstringop-truncation - warns for calls to bounded
+string manipulation functions such as strncat, strncpy, and stpncpy that
+may either truncate the copied string or leave the destination unchanged.
 
-  tools/bpf/bpftool/bpftool
+In our case the destination string length (32 bytes) is much shorter than
+the source string (64 bytes) which causes this warning to show up. In
+general the destination has to be at least a byte larger than the length
+of the source string with strncpy for this warning not to showup.
 
-However, the .gitignore entry is effective not only for the current
-directory, but also for any sub-directories.
+This can be easily fixed by using strlcpy instead which already does the
+truncation to the string. Documentation for this function can be
+found here:
 
-So, from the point of .gitignore grammar, the following check-in file
-is also considered to be ignored:
+https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
 
-  tools/bpf/bpftool/bash-completion/bpftool
-
-As the manual gitignore(5) says "Files already tracked by Git are not
-affected", this is not a problem as far as Git is concerned.
-
-However, Git is not the only program that parses .gitignore because
-.gitignore is useful to distinguish build artifacts from source files.
-
-For example, tar(1) supports the --exclude-vcs-ignore option. As of
-writing, this option does not work perfectly, but it intends to create
-a tarball excluding files specified by .gitignore.
-
-So, I believe it is better to fix this issue.
-
-You can fix it by prefixing the pattern with a slash; the leading slash
-means the specified pattern is relative to the current directory.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/.gitignore | 2 +-
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
-index 67167e44b7266..8248b8dd89d4b 100644
---- a/tools/bpf/bpftool/.gitignore
-+++ b/tools/bpf/bpftool/.gitignore
-@@ -1,5 +1,5 @@
- *.d
--bpftool
-+/bpftool
- bpftool*.8
- bpf-helpers.*
- FEATURE-DUMP.bpftool
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 1b5f591cf0a23..b5d72815776cb 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2223,7 +2223,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev)
+ 
+ 	host_info->os_type = ENA_ADMIN_OS_LINUX;
+ 	host_info->kernel_ver = LINUX_VERSION_CODE;
+-	strncpy(host_info->kernel_ver_str, utsname()->version,
++	strlcpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+ 	strncpy(host_info->os_dist_str, utsname()->release,
 -- 
 2.20.1
 
