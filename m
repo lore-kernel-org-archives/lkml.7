@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD92C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F3C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0488F25E22
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A15725E1E
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191999;
-	bh=UmEJHAfWIK7VkVI/uteN4bC2ybQ8chuCJEsEv4rU13A=;
+	s=default; t=1559192006;
+	bh=RENOjVEFjiCntOy06c0lzxelXW0npR/E5wJKKONC29g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGwKVqlDkmHINAICToUSNyCSr99PMANqknMMRsEGnuEvliw30Qnmp8hAbIyyFZbl2
-	 DwlAHeCNDD0NOkw4++5FPGASy71Jk5/pyJ7D8WJr8yMjBRtSnYKcEsg/2xhB9G3eL3
-	 xkeJCLhwrSXICpJ2snAPsI9n3DgHmEAGvGZxn0kU=
+	b=J6Ex9adA8ZYmtsWYOkZFjaiGj8ERXcMbjHfgw3jMIBL/WmL/OOglbYRREEtwYoX6U
+	 P+eTHyybic+akVTCINVDSr5wzSJDF7RycrjBgc/sA4quRhtjCdJheWf6GII+augRTa
+	 xvEQf0xcG58gHMMcUVYy3xVtEK6i+dcgWnfTPpwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389070AbfE3ExS (ORCPT
+        id S2389073AbfE3ExZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:53:18 -0400
+        Thu, 30 May 2019 00:53:25 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbfE3DKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:10:39 -0400
+        id S1728171AbfE3DKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:38 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33EAA24476;
-        Thu, 30 May 2019 03:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D9DC2447F;
+        Thu, 30 May 2019 03:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185839;
-        bh=UmEJHAfWIK7VkVI/uteN4bC2ybQ8chuCJEsEv4rU13A=;
+        s=default; t=1559185838;
+        bh=RENOjVEFjiCntOy06c0lzxelXW0npR/E5wJKKONC29g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHCtpbgXPSfoumZgH32U7ahvgv4hzRNyaMYAIiD/3Zh5xZPhqEIj+uC/XXw5F3Tga
-         UKJ2z+tkbkucLqwpbSQNYKv7zwsHkalBT0nXhHifZX7oJfMgP3MN9Id7TVbi6Qv5c5
-         IasyRSkIW9foB7xPUSxTw6cI27l3jg8JSlWJm0ZI=
+        b=RgSBRfdxIKgTs3ahzi5JS3iFK0EZZrBc+4kMZ1XOM5Pjvdyb/Dd2TiXkQ7qCkZaeT
+         fzqIKDobtgkK3XeX5+86oKgiGEn3B7J5wuY7+Edy1H5sOqA+noxhO5q+WE+iE5pDPx
+         lLr6QD47+iFdW5d0jXQm/QfbS++RNaQuhkap8Z7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 154/405] media: ov6650: Move v4l2_clk_get() to ov6650_video_probe() helper
-Date:   Wed, 29 May 2019 20:02:32 -0700
-Message-Id: <20190530030548.941784142@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 152/405] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
+Date:   Wed, 29 May 2019 20:02:30 -0700
+Message-Id: <20190530030548.836708047@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -61,77 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccdd85d518d8b9320ace1d87271f0ba2175f21fa ]
+[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
 
-In preparation for adding asynchronous subdevice support to the driver,
-don't acquire v4l2_clk from the driver .probe() callback as that may
-fail if the clock is provided by a bridge driver which may be not yet
-initialized.  Move the v4l2_clk_get() to ov6650_video_probe() helper
-which is going to be converted to v4l2_subdev_internal_ops.registered()
-callback, executed only when the bridge driver is ready.
+Even if this case shouldn't happen when controller is properly programmed,
+it's still better to avoid dumping a kernel Oops for this.
+As the sequence may happen only for debugging purposes, log the error and
+just finish the tasklet call.
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/dma/at_xdmac.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index f9359b11fa5cb..de7d9790f0542 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -810,9 +810,16 @@ static int ov6650_video_probe(struct i2c_client *client)
- 	u8		pidh, pidl, midh, midl;
- 	int		ret;
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index fe69dccfa0c05..37a2694204351 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1606,7 +1606,11 @@ static void at_xdmac_tasklet(unsigned long data)
+ 					struct at_xdmac_desc,
+ 					xfer_node);
+ 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+-		BUG_ON(!desc->active_xfer);
++		if (!desc->active_xfer) {
++			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
++			spin_unlock_bh(&atchan->lock);
++			return;
++		}
  
-+	priv->clk = v4l2_clk_get(&client->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(&client->dev, "v4l2_clk request err: %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = ov6650_s_power(&priv->subdev, 1);
- 	if (ret < 0)
--		return ret;
-+		goto eclkput;
+ 		txd = &desc->tx_dma_desc;
  
- 	msleep(20);
- 
-@@ -849,6 +856,11 @@ static int ov6650_video_probe(struct i2c_client *client)
- 
- done:
- 	ov6650_s_power(&priv->subdev, 0);
-+	if (!ret)
-+		return 0;
-+eclkput:
-+	v4l2_clk_put(priv->clk);
-+
- 	return ret;
- }
- 
-@@ -991,18 +1003,9 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
- 	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
--	priv->clk = v4l2_clk_get(&client->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		goto eclkget;
--	}
--
- 	ret = ov6650_video_probe(client);
--	if (ret) {
--		v4l2_clk_put(priv->clk);
--eclkget:
-+	if (ret)
- 		v4l2_ctrl_handler_free(&priv->hdl);
--	}
- 
- 	return ret;
- }
 -- 
 2.20.1
 
