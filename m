@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17882C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0552C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E216F25A6D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C688625A93
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191410;
-	bh=R2Pm0lh1S4kcKVJ7TuXWf1uzzXQl8k7TdBH/FmCHNy0=;
+	s=default; t=1559191411;
+	bh=vEOByxn9z6ZCUFQN8HmDmoIcUw5cBKWjZLs5n98wcSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aP2a0ZjTKBblDpcthi8wpWHIrOKl23b9PjVLicrSmheDsf/HP/F2GwpL7luDdiIuu
-	 pXsVDn79T4diZVHrVLbQoX8xnPnZXnhvHt0gYmsIAfqFZjhQ0o/F7TCC5TdZzZiq90
-	 u/REZlLkN6MZPIzo+HqO+1i9/rtpq4ccYHIzDbHk=
+	b=AShP94V8C3qQz0ndqsCXRwGNLxr4T08lEC7daQxLq5uTud8lhgpOlLbpRQiz0PRIG
+	 O8zeJ29fMKfFGuPaC6niuaRHi40phsxn6Tdce+r7E8H3EslYVXfCKEuqFZkWkFQCwB
+	 YnsMpypxqaTapE6f8515lUaunYkLRVskYaVaTsvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388752AbfE3En3 (ORCPT
+        id S2388744AbfE3En0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbfE3DML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728856AbfE3DML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4672324481;
+        by mail.kernel.org (Postfix) with ESMTPSA id AB23A244A0;
         Thu, 30 May 2019 03:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559185930;
-        bh=R2Pm0lh1S4kcKVJ7TuXWf1uzzXQl8k7TdBH/FmCHNy0=;
+        bh=vEOByxn9z6ZCUFQN8HmDmoIcUw5cBKWjZLs5n98wcSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ecwq2rxkjAl2N60yrzwxoJItImbCS7f9UsP/a0XCrpEm4qykwe/uWm4wTVy+yTx0O
-         0dKbku2pWDQTc+Ye4xE1eYo/fw5xEt3tQlxg0hFg/i6OmdvcmuwvBf4HASuhLHI8pF
-         BHcr//NDOTcBcVnv8/Q2z0K16d/0xFrqGtTt+uMg=
+        b=tRkUZZrg0LpRTtkVawNBcul8fKiFMSjpVLYadZwRMcvtD6XN6F0rawqxobkQGczz9
+         aIrhhw3sMw7SMhmaYp8S0rrt2spl4S+yjOQTl6YXMQ7kTCyMpnSBVBjBtmBAUK4iwc
+         Qdawqy1aGxlFpA3q1rm5GWJ26KP5r/Dp37rSKF30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        George Hilliard <thirtythreeforty@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 323/405] net/mlx5e: Fix compilation warning in en_tc.c
-Date:   Wed, 29 May 2019 20:05:21 -0700
-Message-Id: <20190530030557.091826033@linuxfoundation.org>
+Subject: [PATCH 5.1 324/405] staging: mt7621-mmc: Check for nonzero number of scatterlist entries
+Date:   Wed, 29 May 2019 20:05:22 -0700
+Message-Id: <20190530030557.140337596@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,52 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ee576ec1c1c66ec1cd0c4735bb12bc08f675f530 ]
+[ Upstream commit d4223e06b6aed581625f574ad8faa71b6c0fc903 ]
 
-Amazingly a mlx5e_tc function is being called from the eswitch layer,
-which is by itself very terrible! The function was declared locally in
-eswitch_offloads.c so it could be used there, which caused the following
-compilation warning, fix that.
+The buffer descriptor setup loop is correct only if it is setting up at
+least one bd struct.  Besides, there is an error if dma_map_sg() returns
+0, which is possible and must be handled.
 
-drivers/.../mlx5/core/en_tc.c:3242:6: [-Werror=missing-prototypes]
-error: no previous prototype for ‘mlx5e_tc_clean_fdb_peer_flows’
+Additionally, remove the BUG_ON() checking sglen, which is unnecessary
+because we configure DMA with that constraint during init.
 
-Fixes: 04de7dda7394 ("net/mlx5e: Infrastructure for duplicated offloading of TC flows")
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.h          | 3 +++
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 2 --
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/mt7621-mmc/sd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
-index 3f3cd32ae60a2..e0ba59b5296f0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
-@@ -431,6 +431,9 @@ static inline int mlx5_eswitch_index_to_vport_num(struct mlx5_eswitch *esw,
- 	return index;
- }
+diff --git a/drivers/staging/mt7621-mmc/sd.c b/drivers/staging/mt7621-mmc/sd.c
+index 74f0e57ad2f15..38f9ea02ee3a9 100644
+--- a/drivers/staging/mt7621-mmc/sd.c
++++ b/drivers/staging/mt7621-mmc/sd.c
+@@ -596,8 +596,6 @@ static void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
+ 	struct bd *bd;
+ 	u32 j;
  
-+/* TODO: This mlx5e_tc function shouldn't be called by eswitch */
-+void mlx5e_tc_clean_fdb_peer_flows(struct mlx5_eswitch *esw);
-+
- #else  /* CONFIG_MLX5_ESWITCH */
- /* eswitch API stubs */
- static inline int  mlx5_eswitch_init(struct mlx5_core_dev *dev) { return 0; }
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index d2d8da133082c..a97ffd0dbf014 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1521,8 +1521,6 @@ static int mlx5_esw_offloads_pair(struct mlx5_eswitch *esw,
- 	return 0;
- }
- 
--void mlx5e_tc_clean_fdb_peer_flows(struct mlx5_eswitch *esw);
+-	BUG_ON(sglen > MAX_BD_NUM); /* not support currently */
 -
- static void mlx5_esw_offloads_unpair(struct mlx5_eswitch *esw)
- {
- 	mlx5e_tc_clean_fdb_peer_flows(esw);
+ 	gpd = dma->gpd;
+ 	bd  = dma->bd;
+ 
+@@ -692,6 +690,13 @@ static int msdc_do_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 		data->sg_count = dma_map_sg(mmc_dev(mmc), data->sg,
+ 					    data->sg_len,
+ 					    mmc_get_dma_dir(data));
++
++		if (data->sg_count == 0) {
++			dev_err(mmc_dev(host->mmc), "failed to map DMA for transfer\n");
++			data->error = -ENOMEM;
++			goto done;
++		}
++
+ 		msdc_dma_setup(host, &host->dma, data->sg,
+ 			       data->sg_count);
+ 
 -- 
 2.20.1
 
