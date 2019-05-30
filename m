@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF97C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74111C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505EF250C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2F5250C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189280;
-	bh=CLNvXd+bHDw5o9XKvwpl1iSa3ZtiTufxn3+Q/WLnUZE=;
+	s=default; t=1559189284;
+	bh=mHW7ZCmT9QHkUxcJYvWmclZSQBMqlDKvHzeICj7BZSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7DqNsv4iFgOQ7GEdPpUa5fPLrun9gBNwS3AO++/kkKZoGTPs1mefMQAEwxtndcwo
-	 LsXKr9EA7dwS4KsRRRSuNruHjvXaQLZ5Xq1gdMhBIv4OKdjTYCNDB6hZM0oFKhQh3D
-	 bcSAsSH10c8a3XtWahUGWIpWCotq/2h1u5s54RVc=
+	b=2Wyv8ZlBMH+bJKk85FdidyxtRBdl43T7fIJEJsrePSCKF2dneLxsL32jeXQjBjciv
+	 lcSbPywWI6HFzzUd9JA7QZPlKpbir0m8sVqa81jICK6+dmmXS5tdj5tQ5jBxIp/6fx
+	 v1Lb4Pn9kAoTS8YtCC3XTL10JB70bZDIh+flL3xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfE3EH6 (ORCPT
+        id S1727247AbfE3EID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:07:58 -0400
+        Thu, 30 May 2019 00:08:03 -0400
 Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbfE3DRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729640AbfE3DRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:17:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46C4624469;
-        Thu, 30 May 2019 03:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21B6523EED;
+        Thu, 30 May 2019 03:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186244;
-        bh=CLNvXd+bHDw5o9XKvwpl1iSa3ZtiTufxn3+Q/WLnUZE=;
+        s=default; t=1559186243;
+        bh=mHW7ZCmT9QHkUxcJYvWmclZSQBMqlDKvHzeICj7BZSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7whppBHKKiY7S0mOt61/cK3ODGQbxTud6ntwq0EbEUb0BtHTaAJdUZ8SQruvEsYa
-         50FMCuwvclDtTBGh/sIliBazkKZoFRwINTjWS0LH9Mm061FmMS8a4k9WNGn4x7f0Hd
-         53Wjiej4ufLIpFpj9STZLsy9S0deJAfdCMUrVZ4U=
+        b=YHJ6rQBnk3KwvLDtnAhJtyXmicBAyDVp32ZQ9lYf2HnIgwYofzB/zNY1u5iQE+2xV
+         mauUfY1BNCJoLSmLht8cndZgtRm0yxfLka1/SjL3ki4xMC7sKZXEl0q8XBE6VBHPng
+         XqwUjnzdA/A9zK0EKgbnqOqbDR1HmJxN71+jTTwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 158/276] hwmon: (smsc47m1) Use request_muxed_region for Super-IO accesses
-Date:   Wed, 29 May 2019 20:05:16 -0700
-Message-Id: <20190530030535.394945616@linuxfoundation.org>
+Subject: [PATCH 4.19 156/276] perf/x86/intel/cstate: Add Icelake support
+Date:   Wed, 29 May 2019 20:05:14 -0700
+Message-Id: <20190530030535.287594716@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -61,91 +68,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6410408ad2a798c4cc685252c1baa713be0ad69 ]
+[ Upstream commit f08c47d1f86c6dc666c7e659d94bf6d4492aa9d7 ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+Icelake uses the same C-state residency events as Sandy Bridge.
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: jolsa@kernel.org
+Link: https://lkml.kernel.org/r/20190402194509.2832-10-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/smsc47m1.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ arch/x86/events/intel/cstate.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
-index c7b6a425e2c02..5eeac9853d0ae 100644
---- a/drivers/hwmon/smsc47m1.c
-+++ b/drivers/hwmon/smsc47m1.c
-@@ -73,16 +73,21 @@ superio_inb(int reg)
- /* logical device for fans is 0x0A */
- #define superio_select() superio_outb(0x07, 0x0A)
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 56194c571299f..4a650eb3d94a3 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -584,6 +584,8 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
  
--static inline void
-+static inline int
- superio_enter(void)
- {
-+	if (!request_muxed_region(REG, 2, DRVNAME))
-+		return -EBUSY;
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
 +
- 	outb(0x55, REG);
-+	return 0;
- }
- 
- static inline void
- superio_exit(void)
- {
- 	outb(0xAA, REG);
-+	release_region(REG, 2);
- }
- 
- #define SUPERIO_REG_ACT		0x30
-@@ -531,8 +536,12 @@ static int __init smsc47m1_find(struct smsc47m1_sio_data *sio_data)
- {
- 	u8 val;
- 	unsigned short addr;
-+	int err;
-+
-+	err = superio_enter();
-+	if (err)
-+		return err;
- 
--	superio_enter();
- 	val = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
- 
- 	/*
-@@ -608,13 +617,14 @@ static int __init smsc47m1_find(struct smsc47m1_sio_data *sio_data)
- static void smsc47m1_restore(const struct smsc47m1_sio_data *sio_data)
- {
- 	if ((sio_data->activate & 0x01) == 0) {
--		superio_enter();
--		superio_select();
--
--		pr_info("Disabling device\n");
--		superio_outb(SUPERIO_REG_ACT, sio_data->activate);
--
--		superio_exit();
-+		if (!superio_enter()) {
-+			superio_select();
-+			pr_info("Disabling device\n");
-+			superio_outb(SUPERIO_REG_ACT, sio_data->activate);
-+			superio_exit();
-+		} else {
-+			pr_warn("Failed to disable device\n");
-+		}
- 	}
- }
- 
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
 -- 
 2.20.1
 
