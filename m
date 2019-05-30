@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDB0C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9165FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC97124BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6175A24BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559187676;
-	bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
+	s=default; t=1559187684;
+	bh=eLnA3TCUZw3mt9N2WqAhU+mxgcnznVC7qAxRzjMRZv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guajoq8bUT4ZVRReyCbW/NjU9AWcQUAFhIKhgsnXi7QJOUaDwsm80XHAM2EG9Rnuu
-	 NpGLZpldHEB4ASmzO/qKNWG24uqIpEY2OffZfJdkuQjPuIG/iwZM4ZrFTACwT8oy8x
-	 yeOs8oiO0wF3u1zD9F79TGW0zVC9JWDXorYSXAgw=
+	b=AFopaAlttWmbpwe3gUzGU9SAK72eTb3hCphV/NbSpxbpwj4AUSkmCli/MYnbuWCOc
+	 /xnYowWkUgOA9cnEBBlyx1s3jR3XOVrjKdYaukjMgu8rKYNXGrKr+3264ME4IeiIK7
+	 HSyxsigRdbZ53QS+e6FlG9v+SUU+SLBmeerTa+b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbfE3DlL (ORCPT
+        id S1732669AbfE3DlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:41:11 -0400
+        Wed, 29 May 2019 23:41:23 -0400
 Received: from mail.kernel.org ([198.145.29.99]:34356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732533AbfE3DVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:21:22 -0400
+        id S1732526AbfE3DVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:21:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 583C8248FC;
-        Thu, 30 May 2019 03:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28DEB248FC;
+        Thu, 30 May 2019 03:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186482;
-        bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
+        s=default; t=1559186480;
+        bh=eLnA3TCUZw3mt9N2WqAhU+mxgcnznVC7qAxRzjMRZv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1ksj66DqDg6W8YgZPBhFGDcBEllEgkYbbzgdyeYX806DQsl3dT/JqHUOvC1tYI9D
-         GUOyFgBrkNPCr2qe6UxMrmeNczSE9ENWmMOm5FLmSCpHTMlAc/X/oR23L4MfD7rfKo
-         Ul9Ih3zJb5fFqVBCHkHNQdCUEym37mm0jzQ4t2N8=
+        b=xWECkO40a9SGJb880MbdY39kIjo2QJRnVvWRvLBvw2tynECUTs2WHD0V6xMdOjW0U
+         Xxbl3u8R5UhvD7g7acHUgNmxdKNRsKwRlyEGbXMprOPVDaJsT4m9Xlew0iXeVPbhtM
+         xy3Aj5NigvlnZih0REUBIOiHtd6H2rKvLL8dMLrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 120/128] media: go7007: avoid clang frame overflow warning with KASAN
-Date:   Wed, 29 May 2019 20:07:32 -0700
-Message-Id: <20190530030456.105919164@linuxfoundation.org>
+Subject: [PATCH 4.9 116/128] usb: core: Add PM runtime calls to usb_hcd_platform_shutdown
+Date:   Wed, 29 May 2019 20:07:28 -0700
+Message-Id: <20190530030455.379251731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
 References: <20190530030432.977908967@linuxfoundation.org>
@@ -61,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ed713a4a1367aca5c0f2f329579465db00c17995 ]
+[ Upstream commit 8ead7e817224d7832fe51a19783cb8fcadc79467 ]
 
-clang-8 warns about one function here when KASAN is enabled, even
-without the 'asan-stack' option:
+If ohci-platform is runtime suspended, we can currently get an "imprecise
+external abort" on reboot with ohci-platform loaded when PM runtime
+is implemented for the SoC.
 
-drivers/media/usb/go7007/go7007-fw.c:1551:5: warning: stack frame size of 2656 bytes in function
+Let's fix this by adding PM runtime support to usb_hcd_platform_shutdown.
 
-I have reported this issue in the llvm bugzilla, but to make
-it work with the clang-8 release, a small annotation is still
-needed.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=38809
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: fix checkpatch warning]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/go7007/go7007-fw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/go7007/go7007-fw.c b/drivers/media/usb/go7007/go7007-fw.c
-index 60bf5f0644d11..a5efcd4f7b4f5 100644
---- a/drivers/media/usb/go7007/go7007-fw.c
-+++ b/drivers/media/usb/go7007/go7007-fw.c
-@@ -1499,8 +1499,8 @@ static int modet_to_package(struct go7007 *go, __le16 *code, int space)
- 	return cnt;
- }
- 
--static int do_special(struct go7007 *go, u16 type, __le16 *code, int space,
--			int *framelen)
-+static noinline_for_stack int do_special(struct go7007 *go, u16 type,
-+					 __le16 *code, int space, int *framelen)
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index bdb0d7a08ff9b..1dd4c65e9188a 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -3033,6 +3033,9 @@ usb_hcd_platform_shutdown(struct platform_device *dev)
  {
- 	switch (type) {
- 	case SPECIAL_FRM_HEAD:
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+ 
++	/* No need for pm_runtime_put(), we're shutting down */
++	pm_runtime_get_sync(&dev->dev);
++
+ 	if (hcd->driver->shutdown)
+ 		hcd->driver->shutdown(hcd);
+ }
 -- 
 2.20.1
 
