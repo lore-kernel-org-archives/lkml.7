@@ -5,67 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEB3C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64CFC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A2924026
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805C023F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 20:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCOp93MZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni/WNUHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfE3Ure (ORCPT
+        id S1726428AbfE3Uvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 16:47:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:47089 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfE3Ure (ORCPT
+        Thu, 30 May 2019 16:51:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44770 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfE3Uvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 16:47:34 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so1288843pls.13;
-        Thu, 30 May 2019 13:47:34 -0700 (PDT)
+        Thu, 30 May 2019 16:51:47 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c9so1443726pfc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 13:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nFIRytH7aMnjv5Dd67Kdi8+HL3lJPCu+7kfNtuSjMTo=;
-        b=JCOp93MZ2r6mhkO3ypr7kco81GNewMSF8KrRjgKm9SQ7DIf66Ulc3OI8dtkId6ZV1/
-         KYxb/ywJq/HXBc4p/0iEI9OT+zuXphmmdtAzwBQQcCUYOCUZ52JauiK8WvDuB6ji/+ed
-         DUXf8YhD7xF+FPeOEkp7CMmr6QsqH7N7a3r7R7JnfEmO7HD65NwFDB33mRvDgZwmpfxq
-         iU8/6Cb3uj7+QAgV/qbxEztmI/yTxS2FaKsGdlS3bP0vtdsP4oh6DlKMv7ZL8epOI7gA
-         RuweFgwaz4jZs6WfPXWApOttmovw6AXN6OLnfTF8Q20cckzRy9tOHLqMWuy8D8RlRjxb
-         M2VA==
+        bh=4p2pASPNTAfiZ2UGXZOOvTXaN4TIzU1kzFvlDzWyh4w=;
+        b=Ni/WNUHTuyqczU++5ixUXILm5THuCZ0EU475OoqawLzRURm2VKfLiGV+pFUl8Ntrgs
+         blCgw/LresMWuR97rTJ1HS8RCIy6c//cbOAPyd256w6XNodlQnc5hsxLxscadQ/Youo0
+         TGMGSMRCWai2bCsS/iak91jtqyV6sGg2Fvjtrb2tSRqayjNKRzDZpS7DmZg7o60MriLZ
+         xfoHQWgk0OJga2kACCQHlOLyl2mMus3xz7/EFHg0hdjWSPM2Pifo+TCIOSJaAdOsxkNW
+         DNwptNA7+YgW8aSu5mx0aVgBhjc8k7SORjyfEfFZnS4fouDmkbYU0K6S/VcVDm/tTSwe
+         iP7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nFIRytH7aMnjv5Dd67Kdi8+HL3lJPCu+7kfNtuSjMTo=;
-        b=G0FDaAsuUGgZAEfxpM6aKqKfeqlaDRUAoRvbqjyl27Zvq7AKG7l6LR0ZRqHUtSXk7T
-         Ix4RBhI9o5JpZqbqyMonPa/Ne0aqziYA/1iLlhFUIcUWsAVVSTcfalU5B/eEflP466xP
-         ZI5aH1He0yhCtME1En6pDXxLH5FzY/y8WaArqvT16v1J6VyHNbcAJmE+fsLmA7E/63yw
-         qB+5YflUKNSJBeUg/+48mmlHjcVCGfuDgt+uvLYSnRp9OGu2tB5WmMCYGsaC/ihlBUSN
-         5oxIgpYH70DejjaP09kwvnIPTU1XtKlPpAPIAMGQhi2lpaReTTvqqPZm4H5FDyuLkIFz
-         n+iQ==
-X-Gm-Message-State: APjAAAWEoqOXN80WiXNXWu8OH09lGiYgAPInB+3QHU68T1yMJMoEHc63
-        FjjyFusvXdX9pK509NTct4s=
-X-Google-Smtp-Source: APXvYqyHkfDtsyYv8qocg4EROD6AMYRWQSKfYTK6Q/00RxRI16g3FJcKy7i4RETHuFOR3KhyoGjccg==
-X-Received: by 2002:a17:902:6ac4:: with SMTP id i4mr5137585plt.75.1559249253937;
-        Thu, 30 May 2019 13:47:33 -0700 (PDT)
+        bh=4p2pASPNTAfiZ2UGXZOOvTXaN4TIzU1kzFvlDzWyh4w=;
+        b=gkNCrTKJS9c72qUTh7mHV4iNQSt2WdQUVWGBY8p/BH6bb0FmUoRmu3D6Fqms2NOPl7
+         fk9ZLnO8goMOaWON1d59aPUt+E/TLE6yqxLAw0qz8PLt63n4tlC8884Xnz/LjOulFh5s
+         Zq8O0wnllzRABAg+7joUB1i0h2E+Sv4RTuU+nsAwZol6C64dX6G0qu9H3ignjHjQS9Qp
+         WBo1xoZBg0ydvIrMoFSV2B216Ag/wp/3OnsLtcfBybvJYUDlZx/vt6lfqnNkQi7ebfhn
+         bEdh7GiCAJS31EsHEheFe4TgaN73rEFKcgUmV8UEMboPK3Rjs/1E2iDoUvm/zQQ9OjEd
+         A5kQ==
+X-Gm-Message-State: APjAAAUFgYc7wdUJGw37JU3mSyZDxKTw38Yb/peuSGjvhZGl0QzNKz3B
+        tTtcbofPYc/rKIl1i43Gkck=
+X-Google-Smtp-Source: APXvYqwWAiW85Itx+C8XPGlGH9S7NoFM53EicUlr+Frqg8EveM78IKun3DInNU0MYlp3eKgj2OpJcA==
+X-Received: by 2002:a63:d504:: with SMTP id c4mr5381328pgg.20.1559249506701;
+        Thu, 30 May 2019 13:51:46 -0700 (PDT)
 Received: from localhost.localdomain ([47.15.209.13])
-        by smtp.gmail.com with ESMTPSA id f4sm3672409pfn.118.2019.05.30.13.47.29
+        by smtp.gmail.com with ESMTPSA id r185sm3995248pfc.167.2019.05.30.13.51.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2019 13:47:33 -0700 (PDT)
+        Thu, 30 May 2019 13:51:46 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     hans.verkuil@cisco.com, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, code@wizofe.uk, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, olsonse@umich.edu, jkhasdev@gmail.com,
+        giulio.benetti@micronovasrl.com, nishadkamdar@gmail.com,
+        kas.sandesh@gmail.com, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: media: davinci_vpfe: Remove variable vpfe_dev
-Date:   Fri, 31 May 2019 02:17:18 +0530
-Message-Id: <20190530204718.29892-1-nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: comedi: Remove variable runflags
+Date:   Fri, 31 May 2019 02:21:31 +0530
+Message-Id: <20190530205131.29955-1-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,49 +75,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variable vpfe_dev and replace it with its value (since the
-function otherwise uses values directly instead of local variables).
-Issue found with Coccinelle.
+Remove variable runflags and use its value directly. Issue found with
+checkpatch.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/staging/media/davinci_vpfe/vpfe_video.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/staging/comedi/comedi_fops.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/media/davinci_vpfe/vpfe_video.c b/drivers/staging/media/davinci_vpfe/vpfe_video.c
-index 510202a3b091..8927b744b13e 100644
---- a/drivers/staging/media/davinci_vpfe/vpfe_video.c
-+++ b/drivers/staging/media/davinci_vpfe/vpfe_video.c
-@@ -448,7 +448,6 @@ vpfe_video_get_next_buffer(struct vpfe_video_device *video)
- /* schedule the next buffer which is available on dma queue */
- void vpfe_video_schedule_next_buffer(struct vpfe_video_device *video)
- {
--	struct vpfe_device *vpfe_dev = video->vpfe_dev;
- 	unsigned long addr;
+diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+index f6d1287c7b83..b84ee9293903 100644
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -676,16 +676,12 @@ EXPORT_SYMBOL_GPL(comedi_is_subdevice_running);
  
- 	if (list_empty(&video->dma_queue))
-@@ -463,19 +462,18 @@ void vpfe_video_schedule_next_buffer(struct vpfe_video_device *video)
- 	list_del(&video->next_frm->list);
- 	video->next_frm->vb.vb2_buf.state = VB2_BUF_STATE_ACTIVE;
- 	addr = vb2_dma_contig_plane_dma_addr(&video->next_frm->vb.vb2_buf, 0);
--	video->ops->queue(vpfe_dev, addr);
-+	video->ops->queue(video->vpfe_dev, addr);
- 	video->state = VPFE_VIDEO_BUFFER_QUEUED;
+ static bool __comedi_is_subdevice_running(struct comedi_subdevice *s)
+ {
+-	unsigned int runflags = __comedi_get_subdevice_runflags(s);
+-
+-	return comedi_is_runflags_running(runflags);
++	return comedi_is_runflags_running(__comedi_get_subdevice_runflags(s));
  }
  
- /* schedule the buffer for capturing bottom field */
- void vpfe_video_schedule_bottom_field(struct vpfe_video_device *video)
+ bool comedi_can_auto_free_spriv(struct comedi_subdevice *s)
  {
--	struct vpfe_device *vpfe_dev = video->vpfe_dev;
- 	unsigned long addr;
- 
- 	addr = vb2_dma_contig_plane_dma_addr(&video->cur_frm->vb.vb2_buf, 0);
- 	addr += video->field_off;
--	video->ops->queue(vpfe_dev, addr);
-+	video->ops->queue(video->vpfe_dev, addr);
+-	unsigned int runflags = __comedi_get_subdevice_runflags(s);
+-
+-	return runflags & COMEDI_SRF_FREE_SPRIV;
++	return __comedi_get_subdevice_runflags(s) & COMEDI_SRF_FREE_SPRIV;
  }
  
- /* make buffer available for dequeue */
+ /**
 -- 
 2.19.1
 
