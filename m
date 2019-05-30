@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85BBC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D35AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8383C2532C
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2F525331
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190092;
-	bh=9jbZ3tWmo4f+41dvxaWShrVDZE/qIna4Gtth6lY+ooA=;
+	s=default; t=1559190096;
+	bh=euFCMq21m3y1BXTjDRjTUdYs8uNkzhAkYGQVfs6Tq60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iy7Sx/RibnsLMPEfeS9vGPhsSViJixSk4gHfy0ULXxvdMiuDANsuxObnuzUVz57kH
-	 /t/UopTJ407klVYT9W0Ho8QXgZtm1JuWW3P1EBxn1zbQCubD3X5JgqNiiYDykEmQZb
-	 WYwUWHSxiO4epqoc3HeJWU9v0MPi7TvzFmvOWvM4=
+	b=U99mxyl5x6smCZYqKZdq0jhLxfbfurPEvpZ4Bgbhyz/ZiQdcjmxPRU2+bdHh5zpet
+	 H5IuW8kCGPIPzVVm2vrimjjRrZXjqfqge+3YhqDWTMMNmaVCC2GNFKMuTm7vdyDRnB
+	 ETJbmwED81yCJBKHRovoBTQp0PHalHCZHAScknRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbfE3DPN (ORCPT
+        id S1730537AbfE3EVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:15:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbfE3DMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:31 -0400
+        id S1730165AbfE3DPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8219123DE3;
-        Thu, 30 May 2019 03:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09FC7245AF;
+        Thu, 30 May 2019 03:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185950;
-        bh=9jbZ3tWmo4f+41dvxaWShrVDZE/qIna4Gtth6lY+ooA=;
+        s=default; t=1559186113;
+        bh=euFCMq21m3y1BXTjDRjTUdYs8uNkzhAkYGQVfs6Tq60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaQ2FySW4eEjAJx47+4Ff9MUM0xJWoxoEibUamaBVlE+E+vWdOPMaUVzCojx2d+Z8
-         2hCS3zQtMt7YFzOZcEO+ioN4VUJkXKHO632klEwRhuexH/FWLzKqvmLyUyoe9EFEst
-         kmBVNZFcZpcOSz3Ue4oR/WjV2AoSP/D+OsBIzUgQ=
+        b=KX788rLCxJQuk96SaGmxw9ULODbC8idAj47E+wUiQV007bfb04X4pW93na8voetzB
+         zbyTcxmBaBpSWGztMGN4NMP92ot1no6JhoqBC26cgs0LKkd8BD6DIiF1dzpM5gN+Zc
+         UV7Bkkl618csO1esYrFE3s/j5MGT2Lhq4IhlNJ4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 362/405] scsi: lpfc: Fix FDMI manufacturer attribute value
-Date:   Wed, 29 May 2019 20:06:00 -0700
-Message-Id: <20190530030558.922171783@linuxfoundation.org>
+Subject: [PATCH 5.0 263/346] drm: rcar-du: lvds: Set LVEN and LVRES bits together on D3
+Date:   Wed, 29 May 2019 20:05:36 -0700
+Message-Id: <20190530030554.303614499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d67f935b79a76ac9d86dde1a27bdd413feb5d987 ]
+[ Upstream commit 00d082cc4ea6e42ec4fed832a1020231bb1ca150 ]
 
-The FDMI manufacturer value being reported on Linux is inconsistent with
-other OS's.
+On the D3 SoC the LVDS PHY must be enabled in the same register write
+that enables the LVDS output. Skip writing the LVEN bit independently
+on that platform, it will be set by the write that sets LVRES.
 
-Set the value to "Emulex Corporation" for consistency.
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_ct.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rcar-du/rcar_lvds.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index 2e3949c6cd071..2e0ba206c084c 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -2005,8 +2005,11 @@ lpfc_fdmi_hba_attr_manufacturer(struct lpfc_vport *vport,
- 	ae = (struct lpfc_fdmi_attr_entry *)&ad->AttrValue;
- 	memset(ae, 0, 256);
+diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+index 534a128a869d5..ccdfc64e122a8 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
++++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+@@ -427,9 +427,13 @@ static void rcar_lvds_enable(struct drm_bridge *bridge)
+ 	}
  
-+	/* This string MUST be consistent with other FC platforms
-+	 * supported by Broadcom.
-+	 */
- 	strncpy(ae->un.AttrString,
--		"Broadcom Inc.",
-+		"Emulex Corporation",
- 		       sizeof(ae->un.AttrString));
- 	len = strnlen(ae->un.AttrString,
- 			  sizeof(ae->un.AttrString));
+ 	if (lvds->info->quirks & RCAR_LVDS_QUIRK_GEN3_LVEN) {
+-		/* Turn on the LVDS PHY. */
++		/*
++		 * Turn on the LVDS PHY. On D3, the LVEN and LVRES bit must be
++		 * set at the same time, so don't write the register yet.
++		 */
+ 		lvdcr0 |= LVDCR0_LVEN;
+-		rcar_lvds_write(lvds, LVDCR0, lvdcr0);
++		if (!(lvds->info->quirks & RCAR_LVDS_QUIRK_PWD))
++			rcar_lvds_write(lvds, LVDCR0, lvdcr0);
+ 	}
+ 
+ 	if (!(lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)) {
 -- 
 2.20.1
 
