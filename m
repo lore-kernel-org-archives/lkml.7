@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F8FC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B3CC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A028325322
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C706625337
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190115;
-	bh=wro3ECXet6tn1QQSQA7tVVQwH1ZNwKWIcAwt3CH8xJ8=;
+	s=default; t=1559190120;
+	bh=vACxFoaRYP5jpW6GY39AcU0tnRCiSOhoxjkhWlv5gfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oj20N2SorERacmoi/+Efr3jn/p9s4XxpUcArLDnF9OzMbs1d3/A0wFPt000R9InJt
-	 goPOOxac1bdjR/YJKFv4lkmP19eID1T8jYGvNEArNKWGEzfMO6tQDyWnpzU2rBeueU
-	 ZP0bZNTr1AhJINLhcwgh074hExPT6y+dBwhXt5rc=
+	b=IeYuqBWwEhx/IFwh1/85pF3Khq6LhNJNCCDib+EvKuPYrIHnZK9qPSxYzEIb9kx67
+	 IuqT0ZiPIU+NWOnsKPM7hPCxN2vnSN2OSc242ZmPSwCrYXCLZbLmiDcChp3Njo5Pum
+	 ii0FNfJOsEBwYViwSpyfnSRv1/WB5ualD9AzIscA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfE3EVy (ORCPT
+        id S1731819AbfE3EV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:21:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbfE3DPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:12 -0400
+        id S1730148AbfE3DPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:11 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFA4245AC;
-        Thu, 30 May 2019 03:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56DC124598;
+        Thu, 30 May 2019 03:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186111;
-        bh=wro3ECXet6tn1QQSQA7tVVQwH1ZNwKWIcAwt3CH8xJ8=;
+        s=default; t=1559186110;
+        bh=vACxFoaRYP5jpW6GY39AcU0tnRCiSOhoxjkhWlv5gfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rX6gRKosnpnlSe7A7+kfseJn7/mUxi8A4oYs3KtnK/9INvSSOAo0q67kPNDYbFyHr
-         hCt4EOmJhnUYavbriixJSShP1IucPIE/7dLKLR4jSBTqdv/iofq76/Hcyrz507QkU1
-         YsHHIzksWmWNpFk8Tx795wg3menUvzXAA7VP2OW8=
+        b=oYBlAdloHa+UkHc3oh00fQdRiSbtCPVtfrszgFvfsZ1u0YcxoHCo8L2rd8tMACUxL
+         7um2EOsUiUjmdKKfTxkL9WlmloSdfyrfS0vdIMTQHqKl4vy/knoS1viH4RiQOx2ui3
+         H7JZ4ngjSoGvPD0sst6fAlLJ4ZgMdQ3w6jpALmL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 214/346] regulator: core: Avoid potential deadlock on regulator_unregister
-Date:   Wed, 29 May 2019 20:04:47 -0700
-Message-Id: <20190530030551.945104258@linuxfoundation.org>
+Subject: [PATCH 5.0 212/346] samples/bpf: fix build with new clang
+Date:   Wed, 29 May 2019 20:04:45 -0700
+Message-Id: <20190530030551.859624705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,55 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 063773011d33bb36588a90385aa9eb75d13c6d80 ]
+[ Upstream commit 636e78b1cdb40b77a79b143dbd9d94847b360efa ]
 
-Lockdep reports the following issue on my setup:
+clang started to error on invalid asm clobber usage in x86 headers
+and many bpf program samples failed to build with the message:
 
-Possible unsafe locking scenario:
+  CLANG-bpf  /data/users/ast/bpf-next/samples/bpf/xdp_redirect_kern.o
+In file included from /data/users/ast/bpf-next/samples/bpf/xdp_redirect_kern.c:14:
+In file included from ../include/linux/in.h:23:
+In file included from ../include/uapi/linux/in.h:24:
+In file included from ../include/linux/socket.h:8:
+In file included from ../include/linux/uio.h:14:
+In file included from ../include/crypto/hash.h:16:
+In file included from ../include/linux/crypto.h:26:
+In file included from ../include/linux/uaccess.h:5:
+In file included from ../include/linux/sched.h:15:
+In file included from ../include/linux/sem.h:5:
+In file included from ../include/uapi/linux/sem.h:5:
+In file included from ../include/linux/ipc.h:9:
+In file included from ../include/linux/refcount.h:72:
+../arch/x86/include/asm/refcount.h:72:36: error: asm-specifier for input or output variable conflicts with asm clobber list
+                                         r->refs.counter, e, "er", i, "cx");
+                                                                      ^
+../arch/x86/include/asm/refcount.h:86:27: error: asm-specifier for input or output variable conflicts with asm clobber list
+                                         r->refs.counter, e, "cx");
+                                                             ^
+2 errors generated.
 
-CPU0                    CPU1
-----                    ----
-lock((work_completion)(&(&rdev->disable_work)->work));
-                        lock(regulator_list_mutex);
-                        lock((work_completion)(&(&rdev->disable_work)->work));
-lock(regulator_list_mutex);
+Override volatile() to workaround the problem.
 
-The problem is that regulator_unregister takes the
-regulator_list_mutex and then calls flush_work on disable_work. But
-regulator_disable_work calls regulator_lock_dependent which will
-also take the regulator_list_mutex. Resulting in a deadlock if the
-flush_work call actually needs to flush the work.
-
-Fix this issue by moving the flush_work outside of the
-regulator_list_mutex. The list mutex is not used to guard the point at
-which the delayed work is queued, so its use adds no additional safety.
-
-Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ samples/bpf/asm_goto_workaround.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index fb9fe26fd0fa1..218b9331475b7 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5101,10 +5101,11 @@ void regulator_unregister(struct regulator_dev *rdev)
- 		regulator_put(rdev->supply);
- 	}
+diff --git a/samples/bpf/asm_goto_workaround.h b/samples/bpf/asm_goto_workaround.h
+index 5cd7c1d1a5d56..7409722727ca1 100644
+--- a/samples/bpf/asm_goto_workaround.h
++++ b/samples/bpf/asm_goto_workaround.h
+@@ -13,4 +13,5 @@
+ #define asm_volatile_goto(x...) asm volatile("invalid use of asm_volatile_goto")
+ #endif
  
-+	flush_work(&rdev->disable_work.work);
-+
- 	mutex_lock(&regulator_list_mutex);
- 
- 	debugfs_remove_recursive(rdev->debugfs);
--	flush_work(&rdev->disable_work.work);
- 	WARN_ON(rdev->open_count);
- 	regulator_remove_coupling(rdev);
- 	unset_regulator_supplies(rdev);
++#define volatile(x...) volatile("")
+ #endif
 -- 
 2.20.1
 
