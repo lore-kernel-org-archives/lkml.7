@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BC4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60335C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBBB25FE6
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C7E25FF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559192292;
-	bh=WfpdtFgC/0wlYZVLJzAH8OAhUWZ7d9TQnak4/lQ/9aM=;
+	s=default; t=1559192299;
+	bh=i9z4KHR11Up/9y1I6Td8Ei325Q0bHiPkdTRW7D/gym0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXkGUHxr/zGddXhA3wWH098sbuaSCirWq+Ha3TL2moZSwj2xeCcKKxhWTB7NgWyqE
-	 b04NhT1ezsL4hkgtZyPmY+SFdhx6KlUkPnb/K+9mUKZW00YtIzOJsYRLyx+/vdGB1v
-	 jhQNyakCjbfWbJagORauWuCAoKsVaisHk7voB4j0=
+	b=OYPZsTSdIOlxPPcG6bKYV7PEFh1aecwiBAE7AlpwenJl799nKFRb/nLh/0qQKVMtW
+	 SGClhMnIKyW4nonbl1vBYO5Pjy9gi2B2837FXT35guTAhGqIopQhvP8OF05+1gTiTk
+	 H9c0gzPxgfkRFYn06PnesJRw4tftHB3mxbizrb+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387666AbfE3E6L (ORCPT
+        id S1732194AbfE3E6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfE3DJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:51 -0400
+        id S1727803AbfE3DJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:50 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80D424490;
-        Thu, 30 May 2019 03:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BAD424493;
+        Thu, 30 May 2019 03:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185790;
-        bh=WfpdtFgC/0wlYZVLJzAH8OAhUWZ7d9TQnak4/lQ/9aM=;
+        s=default; t=1559185789;
+        bh=i9z4KHR11Up/9y1I6Td8Ei325Q0bHiPkdTRW7D/gym0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrT8gZY/1crP7Q5F+7/EcXHBiUhmw52xNsON1kYUD5mSS6ONLQ4CA7SxQEdXK8nTI
-         1TC/TOOK51NjKJBNOYp4DBq+PDEk3XGVcdMY2h5POnpMeqnh/fNLquGKVqXfUwiuqO
-         IIxK7GdhfvZ0mdYpnu7CmKUMLhg2j6pNmqFUJQEA=
+        b=fMcg61i8bY+ISgjt1I1Pf8fwMeoD3S//RvUE+pLubam/KH114EdWyiYpPJ4+E3kyh
+         CMPJD0HJkmaiRPNpRKBbezQ9MWEIUFbvXf6gFyBvjS3id7U7bA/cj+6UG2Aj9hQpUp
+         beCHAgd3RJ/n066oHEPWfg0/GcZnDiUlqV40JVOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Subject: [PATCH 5.1 062/405] blk-mq: grab .q_usage_counter when queuing request from plug code path
-Date:   Wed, 29 May 2019 20:01:00 -0700
-Message-Id: <20190530030544.078681607@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 060/405] ice: Preserve VLAN Rx stripping settings
+Date:   Wed, 29 May 2019 20:00:58 -0700
+Message-Id: <20190530030543.985405676@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -65,89 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
+[ Upstream commit e80e76db6c5bbc7a8f8512f3dc630a2170745b0b ]
 
-Just like aio/io_uring, we need to grab 2 refcount for queuing one
-request, one is for submission, another is for completion.
+When Tx insertion is set, we are not accounting for the state of Rx
+stripping.  This causes Rx stripping to be enabled any time Tx
+insertion is changed, even when it's supposed to be disabled.
 
-If the request isn't queued from plug code path, the refcount grabbed
-in generic_make_request() serves for submission. In theroy, this
-refcount should have been released after the sumission(async run queue)
-is done. blk_freeze_queue() works with blk_sync_queue() together
-for avoiding race between cleanup queue and IO submission, given async
-run queue activities are canceled because hctx->run_work is scheduled with
-the refcount held, so it is fine to not hold the refcount when
-running the run queue work function for dispatch IO.
-
-However, if request is staggered into plug list, and finally queued
-from plug code path, the refcount in submission side is actually missed.
-And we may start to run queue after queue is removed because the queue's
-kobject refcount isn't guaranteed to be grabbed in flushing plug list
-context, then kernel oops is triggered, see the following race:
-
-blk_mq_flush_plug_list():
-        blk_mq_sched_insert_requests()
-                insert requests to sw queue or scheduler queue
-                blk_mq_run_hw_queue
-
-Because of concurrent run queue, all requests inserted above may be
-completed before calling the above blk_mq_run_hw_queue. Then queue can
-be freed during the above blk_mq_run_hw_queue().
-
-Fixes the issue by grab .q_usage_counter before calling
-blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
-safe because the queue is absolutely alive before inserting request.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq-sched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_lib.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index aa6bc5c026438..c59babca6857a 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 				  struct list_head *list, bool run_queue_async)
- {
- 	struct elevator_queue *e;
-+	struct request_queue *q = hctx->queue;
+diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
+index fa61203bee269..b710545cf7d1a 100644
+--- a/drivers/net/ethernet/intel/ice/ice_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_lib.c
+@@ -1848,6 +1848,10 @@ int ice_vsi_manage_vlan_insertion(struct ice_vsi *vsi)
+ 	 */
+ 	ctxt->info.vlan_flags = ICE_AQ_VSI_VLAN_MODE_ALL;
+ 
++	/* Preserve existing VLAN strip setting */
++	ctxt->info.vlan_flags |= (vsi->info.vlan_flags &
++				  ICE_AQ_VSI_VLAN_EMOD_M);
 +
-+	/*
-+	 * blk_mq_sched_insert_requests() is called from flush plug
-+	 * context only, and hold one usage counter to prevent queue
-+	 * from being released.
-+	 */
-+	percpu_ref_get(&q->q_usage_counter);
+ 	ctxt->info.valid_sections = cpu_to_le16(ICE_AQ_VSI_PROP_VLAN_VALID);
  
- 	e = hctx->queue->elevator;
- 	if (e && e->type->ops.insert_requests)
-@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
- 			blk_mq_try_issue_list_directly(hctx, list);
- 			if (list_empty(list))
--				return;
-+				goto out;
- 		}
- 		blk_mq_insert_requests(hctx, ctx, list);
- 	}
- 
- 	blk_mq_run_hw_queue(hctx, run_queue_async);
-+ out:
-+	percpu_ref_put(&q->q_usage_counter);
- }
- 
- static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
+ 	status = ice_update_vsi(hw, vsi->idx, ctxt, NULL);
 -- 
 2.20.1
 
