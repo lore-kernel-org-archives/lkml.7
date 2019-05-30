@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D7C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21B2C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446E92538E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFE9253A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190238;
-	bh=h6RD0XrIUGUFlXCbqTq82P9JrHx74Vu8RSZ0eccIifc=;
+	s=default; t=1559190245;
+	bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xq148FYD2rrNsENQ32EQV1xwGQnfNgwDWG7Gtf7otvMaKiYR37SmG2rydWroPD9wS
-	 S96fa7vMS6f+QuW6ygy3+RtCzCYfPVtnHXInyzhVO0Hw/UU0PQ+y5t7KmyUFna0Jon
-	 i0RB8LYMe5Hj92ShWhKaXa58Asv4yYDrf9DsNWfE=
+	b=RwGlwbW16SpQQo3szspLbG06xVl19EuY3tBowhydEzCuyPIzD3YdZNl6pI2fBLAFr
+	 JJmQlgnu5tQ3QrdXXgg/UAn9pE0ZkstZEZv+EsCYjVPAYLtVEE8+y45s2A/1HSdNkA
+	 FvY2fdmWFQhs7M7W4PJvdbgX7ZbqBdakL59sCKis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbfE3EX5 (ORCPT
+        id S1732863AbfE3EYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36244 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbfE3DO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729251AbfE3DO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:14:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2113244EF;
-        Thu, 30 May 2019 03:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B94C24555;
+        Thu, 30 May 2019 03:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186096;
-        bh=h6RD0XrIUGUFlXCbqTq82P9JrHx74Vu8RSZ0eccIifc=;
+        s=default; t=1559186097;
+        bh=fNIicfzKqgNknvOL8kafg05oEuWLA66QXO1DUGfYGHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8XPEy37NSE0pEZZhVv41opb7aEbkuY+SgsdoETV6FetRuT/b3bT7WGxuIb0MKHqU
-         KyK851TQZNe2/M7hkDww4Vy4rOOWCQJ29K038jFF55q6QUjdNcWa6LTrql7bXNk2gV
-         ZeqZDud7u7W08bljhBt7OP/dqzEV1r0JB0hD1IuQ=
+        b=nuRTFfMcEbm6G31ZhH5XRtWpLLwSJYunTIr0ymgv9uaqeVCab94KYDK1Tqym7nFPS
+         0LiNUOAJmyKTbueUuqANGvfDYmOfGqum5XUO+Sxr679V+dj3EWC7x/l58oO3hno4V9
+         BZlpcwi1dqU3TmbjsX13fRSxOie5qEjDcTCm80bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Piotr Figiel <p.figiel@camlintechnologies.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 230/346] brcmfmac: fix Oops when bringing up interface during USB disconnect
-Date:   Wed, 29 May 2019 20:05:03 -0700
-Message-Id: <20190530030552.704667466@linuxfoundation.org>
+Subject: [PATCH 5.0 231/346] rtc: xgene: fix possible race condition
+Date:   Wed, 29 May 2019 20:05:04 -0700
+Message-Id: <20190530030552.758686128@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,128 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 24d413a31afaee9bbbf79226052c386b01780ce2 ]
+[ Upstream commit a652e00ee1233e251a337c28e18a1da59224e5ce ]
 
-Fix a race which leads to an Oops with NULL pointer dereference.  The
-dereference is in brcmf_config_dongle() when cfg_to_ndev() attempts to get
-net_device structure of interface with index 0 via if2bss mapping. This
-shouldn't fail because of check for bus being ready in brcmf_netdev_open(),
-but it's not synchronised with USB disconnect and there is a race: after
-the check the bus can be marked down and the mapping for interface 0 may be
-gone.
+The IRQ is requested before the struct rtc is allocated and registered, but
+this struct is used in the IRQ handler. This may lead to a NULL pointer
+dereference.
 
-Solve this by modifying disconnect handling so that the removal of mapping
-of ifidx to brcmf_if structure happens after netdev removal (which is
-synchronous with brcmf_netdev_open() thanks to rtln being locked in
-devinet_ioctl()). This assures brcmf_netdev_open() returns before the
-mapping is removed during disconnect.
+Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
+struct before requesting the IRQ.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000008
-pgd = bcae2612
-[00000008] *pgd=8be73831
-Internal error: Oops: 17 [#1] PREEMPT SMP ARM
-Modules linked in: brcmfmac brcmutil nf_log_ipv4 nf_log_common xt_LOG xt_limit
-iptable_mangle xt_connmark xt_tcpudp xt_conntrack nf_conntrack nf_defrag_ipv6
-nf_defrag_ipv4 iptable_filter ip_tables x_tables usb_f_mass_storage usb_f_rndis
-u_ether usb_serial_simple usbserial cdc_acm smsc95xx usbnet ci_hdrc_imx ci_hdrc
-usbmisc_imx ulpi 8250_exar 8250_pci 8250 8250_base libcomposite configfs
-udc_core [last unloaded: brcmutil]
-CPU: 2 PID: 24478 Comm: ifconfig Not tainted 4.19.23-00078-ga62866d-dirty #115
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-PC is at brcmf_cfg80211_up+0x94/0x29c [brcmfmac]
-LR is at brcmf_cfg80211_up+0x8c/0x29c [brcmfmac]
-pc : [<7f26a91c>]    lr : [<7f26a914>]    psr: a0070013
-sp : eca99d28  ip : 00000000  fp : ee9c6c00
-r10: 00000036  r9 : 00000000  r8 : ece4002c
-r7 : edb5b800  r6 : 00000000  r5 : 80f08448  r4 : edb5b968
-r3 : ffffffff  r2 : 00000000  r1 : 00000002  r0 : 00000000
-Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-Control: 10c5387d  Table: 7ca0c04a  DAC: 00000051
-Process ifconfig (pid: 24478, stack limit = 0xd9e85a0e)
-Stack: (0xeca99d28 to 0xeca9a000)
-9d20:                   00000000 80f873b0 0000000d 80f08448 eca99d68 50d45f32
-9d40: 7f27de94 ece40000 80f08448 80f08448 7f27de94 ece4002c 00000000 00000036
-9d60: ee9c6c00 7f27262c 00001002 50d45f32 ece40000 00000000 80f08448 80772008
-9d80: 00000001 00001043 00001002 ece40000 00000000 50d45f32 ece40000 00000001
-9da0: 80f08448 00001043 00001002 807723d0 00000000 50d45f32 80f08448 eca99e58
-9dc0: 80f87113 50d45f32 80f08448 ece40000 ece40138 00001002 80f08448 00000000
-9de0: 00000000 80772434 edbd5380 eca99e58 edbd5380 80f08448 ee9c6c0c 80805f70
-9e00: 00000000 ede08e00 00008914 ece40000 00000014 ee9c6c0c 600c0013 00001043
-9e20: 0208a8c0 ffffffff 00000000 50d45f32 eca98000 80f08448 7ee9fc38 00008914
-9e40: 80f68e40 00000051 eca98000 00000036 00000003 80808b9c 6e616c77 00000030
-9e60: 00000000 00000000 00001043 0208a8c0 ffffffff 00000000 80f08448 00000000
-9e80: 00000000 816d8b20 600c0013 00000001 ede09320 801763d4 00000000 50d45f32
-9ea0: eca98000 80f08448 7ee9fc38 50d45f32 00008914 80f08448 7ee9fc38 80f68e40
-9ec0: ed531540 8074721c 00000800 00000001 00000000 6e616c77 00000030 00000000
-9ee0: 00000000 00001002 0208a8c0 ffffffff 00000000 50d45f32 80f08448 7ee9fc38
-9f00: ed531560 ec8fc900 80285a6c 80285138 edb910c0 00000000 ecd91008 ede08e00
-9f20: 80f08448 00000000 00000000 816d8b20 600c0013 00000001 ede09320 801763d4
-9f40: 00000000 50d45f32 00021000 edb91118 edb910c0 80f08448 01b29000 edb91118
-9f60: eca99f7c 50d45f32 00021000 ec8fc900 00000003 ec8fc900 00008914 7ee9fc38
-9f80: eca98000 00000036 00000003 80285a6c 00086364 7ee9fe1c 000000c3 00000036
-9fa0: 801011c4 80101000 00086364 7ee9fe1c 00000003 00008914 7ee9fc38 00086364
-9fc0: 00086364 7ee9fe1c 000000c3 00000036 0008630c 7ee9fe1c 7ee9fc38 00000003
-9fe0: 000a42b8 7ee9fbd4 00019914 76e09acc 600c0010 00000003 00000000 00000000
-[<7f26a91c>] (brcmf_cfg80211_up [brcmfmac]) from [<7f27262c>] (brcmf_netdev_open+0x74/0xe8 [brcmfmac])
-[<7f27262c>] (brcmf_netdev_open [brcmfmac]) from [<80772008>] (__dev_open+0xcc/0x150)
-[<80772008>] (__dev_open) from [<807723d0>] (__dev_change_flags+0x168/0x1b4)
-[<807723d0>] (__dev_change_flags) from [<80772434>] (dev_change_flags+0x18/0x48)
-[<80772434>] (dev_change_flags) from [<80805f70>] (devinet_ioctl+0x67c/0x79c)
-[<80805f70>] (devinet_ioctl) from [<80808b9c>] (inet_ioctl+0x210/0x3d4)
-[<80808b9c>] (inet_ioctl) from [<8074721c>] (sock_ioctl+0x350/0x524)
-[<8074721c>] (sock_ioctl) from [<80285138>] (do_vfs_ioctl+0xb0/0x9b0)
-[<80285138>] (do_vfs_ioctl) from [<80285a6c>] (ksys_ioctl+0x34/0x5c)
-[<80285a6c>] (ksys_ioctl) from [<80101000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xeca99fa8 to 0xeca99ff0)
-9fa0:                   00086364 7ee9fe1c 00000003 00008914 7ee9fc38 00086364
-9fc0: 00086364 7ee9fe1c 000000c3 00000036 0008630c 7ee9fe1c 7ee9fc38 00000003
-9fe0: 000a42b8 7ee9fbd4 00019914 76e09acc
-Code: e5970328 eb002021 e1a02006 e3a01002 (e5909008)
----[ end trace 5cbac2333f3ac5df ]---
-
-Signed-off-by: Piotr Figiel <p.figiel@camlintechnologies.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmfmac/core.c    | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-xgene.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-index 09c5f67f4089e..36a04c1144e5d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
-@@ -784,17 +784,17 @@ static void brcmf_del_if(struct brcmf_pub *drvr, s32 bsscfgidx,
- 			 bool rtnl_locked)
- {
- 	struct brcmf_if *ifp;
-+	int ifidx;
+diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
+index 153820876a820..2f741f455c30a 100644
+--- a/drivers/rtc/rtc-xgene.c
++++ b/drivers/rtc/rtc-xgene.c
+@@ -168,6 +168,10 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pdata->csr_base))
+ 		return PTR_ERR(pdata->csr_base);
  
- 	ifp = drvr->iflist[bsscfgidx];
--	drvr->iflist[bsscfgidx] = NULL;
- 	if (!ifp) {
- 		brcmf_err("Null interface, bsscfgidx=%d\n", bsscfgidx);
- 		return;
- 	}
- 	brcmf_dbg(TRACE, "Enter, bsscfgidx=%d, ifidx=%d\n", bsscfgidx,
- 		  ifp->ifidx);
--	if (drvr->if2bss[ifp->ifidx] == bsscfgidx)
--		drvr->if2bss[ifp->ifidx] = BRCMF_BSSIDX_INVALID;
-+	ifidx = ifp->ifidx;
++	pdata->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(pdata->rtc))
++		return PTR_ERR(pdata->rtc);
 +
- 	if (ifp->ndev) {
- 		if (bsscfgidx == 0) {
- 			if (ifp->ndev->netdev_ops == &brcmf_netdev_ops_pri) {
-@@ -822,6 +822,10 @@ static void brcmf_del_if(struct brcmf_pub *drvr, s32 bsscfgidx,
- 		brcmf_p2p_ifp_removed(ifp, rtnl_locked);
- 		kfree(ifp);
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "No IRQ resource\n");
+@@ -198,15 +202,15 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 		return ret;
  	}
+ 
+-	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					 &xgene_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(pdata->rtc)) {
+-		clk_disable_unprepare(pdata->clk);
+-		return PTR_ERR(pdata->rtc);
+-	}
+-
+ 	/* HW does not support update faster than 1 seconds */
+ 	pdata->rtc->uie_unsupported = 1;
++	pdata->rtc->ops = &xgene_rtc_ops;
 +
-+	drvr->iflist[bsscfgidx] = NULL;
-+	if (drvr->if2bss[ifidx] == bsscfgidx)
-+		drvr->if2bss[ifidx] = BRCMF_BSSIDX_INVALID;
++	ret = rtc_register_device(pdata->rtc);
++	if (ret) {
++		clk_disable_unprepare(pdata->clk);
++		return ret;
++	}
+ 
+ 	return 0;
  }
- 
- void brcmf_remove_interface(struct brcmf_if *ifp, bool rtnl_locked)
 -- 
 2.20.1
 
