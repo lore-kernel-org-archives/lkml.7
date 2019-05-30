@@ -2,106 +2,148 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DFDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E875CC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E3A24CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5X6aNH3"
+	by mail.kernel.org (Postfix) with ESMTP id C229124CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559187967;
+	bh=uyi+1lq5vvacIA/VMarduBu1VAQb4Nkn4Nvt7+hkaO8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ak6ndQBf5USSEab9sU/tVNLQ0cQrHt/6nW5vFuE+VGYGU9Of+pdwBVjEXgRXpA7qr
+	 miBo+k+xedn6bjEStZF7YH6+Ee7vQNCVrv1h0swImdvKUWdCvcU+WajByIr9fLXz36
+	 puBE+wbrYNyb8H5Df6cvSIdr4zVRyGW+kd3RBhtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbfE3DqD (ORCPT
+        id S1733013AbfE3Dp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:46:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46736 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732997AbfE3Dp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:45:59 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so215375pls.13;
-        Wed, 29 May 2019 20:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ww+Lpg5UBLlG+2AfGQMM+hVR/fYWxYyw0/ehc0lD/3c=;
-        b=M5X6aNH3nvYZQCJNaixfla2mxM4pqJ10Zre/QPd49XnXoLpGQcSXbIm8Zm5cdhVozs
-         6bCa44Z0R6i2GxkBKxk+4W+OHC3N0+Tqv8OfKGzaRqfvPcgT1Z+am1qFNPKpAzzANvjp
-         sAYzJVkuWL36sdkfJ+jUQnLpXcfNpLduVugBIBPkhbE+1+MTKCPHB+uWkxYZVa9yINFr
-         37Wc1cY+b67xwuXJLEeLkQbIAMg7icUW+bcqAwO0h0Fz+ENu4/3oyVfWq/bkeV9dvAr3
-         UkjJgcvZq5m+djMoEWA66G4LMONofE72UyVA3zto/okuq3vXvqzlCldV2Ms41zdZf6kl
-         iQtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ww+Lpg5UBLlG+2AfGQMM+hVR/fYWxYyw0/ehc0lD/3c=;
-        b=ofi5yxhVir1cq9WHi0KIsshtRNxg5EJUb4uQGr/nKReraDNU8TLgtwWr4uf5CCDDfV
-         j39lXSqJ4JSpxpieqiKwd26PChHd/dV0FFxQas0J3fg5OeZpGenwQAshIRZR1CdVMCqW
-         LyG0+41I1F3jseupaH4CpYIyqrAnbFcF7PklvOHJdlgXT8dylfosM8KPgvdR8C2RtUIz
-         FRlM3ssyfHS0PQf3aPzj/7G1Xccus5mg9Qb6Jn4+FnCqXjmP/DtOAl4BFOGVJoTGuCF/
-         ZYBCSy+N7wYh4yzi46mbIrrkzL/wsvIlkZoYYY6+FyL7ZrjOprDgQ69Y0EniDFnoKbIH
-         pL0A==
-X-Gm-Message-State: APjAAAXL+VIA1xYvBUS6dzxT41P8Hk0j1MnzRgOIdvhJU6KmoE/V/9EK
-        DeL7FqG+RqnM7eqq6mTCnqk=
-X-Google-Smtp-Source: APXvYqyIIykUxao2/xaCmvr45UsU0Y6d/pyZUzuokuqlxonCjFt/gsxsV7y4QtmvbTvtUjoquFCu7Q==
-X-Received: by 2002:a17:902:758b:: with SMTP id j11mr1710553pll.191.1559187958599;
-        Wed, 29 May 2019 20:45:58 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id w6sm754892pge.30.2019.05.29.20.45.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 May 2019 20:45:57 -0700 (PDT)
-Date:   Wed, 29 May 2019 20:45:55 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net, john.stultz@linaro.org, tglx@linutronix.de,
-        sboyd@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
-Message-ID: <20190530034555.wv35efen3igwwzjq@localhost>
-References: <20190528235627.1315-1-olteanv@gmail.com>
- <20190529045207.fzvhuu6d6jf5p65t@localhost>
- <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
+Received: from mail.kernel.org ([198.145.29.99]:59372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732308AbfE3DUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:44 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E6D24949;
+        Thu, 30 May 2019 03:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186443;
+        bh=uyi+1lq5vvacIA/VMarduBu1VAQb4Nkn4Nvt7+hkaO8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MN6f9QSHF0n9+GZ1ZTk1k5W0xyTbsh8K89d5+3xigVE/Zv8eOUp++bs4zIL0jBVsB
+         8ZqhLVHS43o/75h0eMjq44MmnENpjCTlyMcgRjkSUTLTsKnsuHO+YIsPMr8RB1idzU
+         7+WXR8imD52rSTtMNL6SaxZ1wei5RJ8jkfC3Bbjo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 048/128] bcache: add failure check to run_cache_set() for journal replay
+Date:   Wed, 29 May 2019 20:06:20 -0700
+Message-Id: <20190530030443.350479226@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 11:41:22PM +0300, Vladimir Oltean wrote:
-> I'm sorry, then what does this code from raw.c do?
+[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
 
-It is a fallback for HW that doesn't support multicast filtering.
+Currently run_cache_set() has no return value, if there is failure in
+bch_journal_replay(), the caller of run_cache_set() has no idea about
+such failure and just continue to execute following code after
+run_cache_set().  The internal failure is triggered inside
+bch_journal_replay() and being handled in async way. This behavior is
+inefficient, while failure handling inside bch_journal_replay(), cache
+register code is still running to start the cache set. Registering and
+unregistering code running as same time may introduce some rare race
+condition, and make the code to be more hard to be understood.
 
-Care to look a few lines above?  If you did, you would have seen this:
+This patch adds return value to run_cache_set(), and returns -EIO if
+bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
+such failure and stop registering code flow immedidately inside
+register_cache_set().
 
-	memset(&mreq, 0, sizeof(mreq));
-	mreq.mr_ifindex = index;
-	mreq.mr_type = PACKET_MR_MULTICAST;
-	mreq.mr_alen = MAC_LEN;
-	memcpy(mreq.mr_address, addr1, MAC_LEN);
+If journal replay fails, run_cache_set() can report error immediately
+to register_cache_set(). This patch makes the failure handling for
+bch_journal_replay() be in synchronized way, easier to understand and
+debug, and avoid poetential race condition for register-and-unregister
+in same time.
 
-	err1 = setsockopt(fd, SOL_PACKET, option, &mreq, sizeof(mreq));
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/bcache/super.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-> > No.  The root cause is the time stamps delivered by the hardware or
-> > your driver.  That needs to be addressed before going forward.
-> > 
-> 
-> How can I check that the timestamps are valid?
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 362efc8dd16fb..9f2588eaaf5f8 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1561,7 +1561,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	return NULL;
+ }
+ 
+-static void run_cache_set(struct cache_set *c)
++static int run_cache_set(struct cache_set *c)
+ {
+ 	const char *err = "cannot allocate memory";
+ 	struct cached_dev *dc, *t;
+@@ -1653,7 +1653,9 @@ static void run_cache_set(struct cache_set *c)
+ 		if (j->version < BCACHE_JSET_VERSION_UUID)
+ 			__uuid_write(c);
+ 
+-		bch_journal_replay(c, &journal);
++		err = "bcache: replay journal failed";
++		if (bch_journal_replay(c, &journal))
++			goto err;
+ 	} else {
+ 		pr_notice("invalidating existing data");
+ 
+@@ -1721,11 +1723,13 @@ static void run_cache_set(struct cache_set *c)
+ 	flash_devs_run(c);
+ 
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+-	return;
++	return 0;
+ err:
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
++
++	return -EIO;
+ }
+ 
+ static bool can_attach_cache(struct cache *ca, struct cache_set *c)
+@@ -1789,8 +1793,11 @@ static const char *register_cache_set(struct cache *ca)
+ 	ca->set->cache[ca->sb.nr_this_dev] = ca;
+ 	c->cache_by_alloc[c->caches_loaded++] = ca;
+ 
+-	if (c->caches_loaded == c->sb.nr_in_set)
+-		run_cache_set(c);
++	if (c->caches_loaded == c->sb.nr_in_set) {
++		err = "failed to run cache set";
++		if (run_cache_set(c) < 0)
++			goto err;
++	}
+ 
+ 	return NULL;
+ err:
+-- 
+2.20.1
 
-Well, you can see that there is something wrong.  Perhaps you are not
-matching the meta frames to the received packets.  That is one
-possible explanation, but you'll have to figure out what is happening.
 
-Thanks,
-Richard
+
