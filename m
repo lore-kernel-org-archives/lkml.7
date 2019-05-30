@@ -2,53 +2,57 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAD2C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B18C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F77252A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06059252A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189890;
-	bh=VXQLeDfoSz4hky/VbJ78p/pF58lpzAFNQGeTBEj+as0=;
+	s=default; t=1559189896;
+	bh=7RcEOH/HE3JXRnzDunkFCAZCXEfpzCP3ZZnCtC8r6qM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lggN3ZiYV3F3EBDxHxYsXVRlKn+0+azw7dpS6aENgv6QoY4NbkO4pBJdIWTbmq/zb
-	 Ba1QH5ZUj83S7FDwX6NTrCwu2Dw1T7BRmkBJoVFtaKmZR2WldOLrtZyR3yYrj7QnNb
-	 A83u5sJqzEXXnNPVylqbJew/TNTGW7Ysmxm9AQBI=
+	b=bpSd8QiV6PwmOnfnYxT/fGRy8S9rdVbHYaF0LRPswet4KxvgCc8jAT1uXQG78Lv1w
+	 sGya3nygYZlMhUtQEsxCxMrupJh0vypn2xbb1SpUMtNhpYUWBZNVV1toh4wtqSKg31
+	 zfnayybrmG9owXcauq0aiDlSFyrvlRxOAEW/U1BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfE3ESJ (ORCPT
+        id S1729065AbfE3DPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbfE3DPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:36 -0400
+        id S1728313AbfE3DNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:00 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACF3024559;
-        Thu, 30 May 2019 03:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2755824528;
+        Thu, 30 May 2019 03:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186135;
-        bh=VXQLeDfoSz4hky/VbJ78p/pF58lpzAFNQGeTBEj+as0=;
+        s=default; t=1559185979;
+        bh=7RcEOH/HE3JXRnzDunkFCAZCXEfpzCP3ZZnCtC8r6qM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlJFrOpZCJ7cb3pnMSOMBsexeQs8n5xZ+mCu40YdHe/qlGRuR3yDtB4vEWr0Y550a
-         dpsyfHWPGB84cWUyX/SmkBs/Td64kqiG5jT44SMS9ywYG6qlfxTVjpTKU1kH5RAdbT
-         ipKw2XczCxVjDwni/Cyq0RScwLg1g1N7PMcXeCyE=
+        b=qgH4dN+cyhnG91XaDqkAhMX9bFk63Vhy8zPR+9NcBWp+8R7WOK7kFLEalB0k2u4Hg
+         Yz+JBcUErWO83QQJUYMiBoiPaA57WUezNu5BDT0bztqvZun8oNOGVbXyyTQ/ohCVOv
+         z3Nwl/phsiaZi9lgF1sst5v5moZbYgQJvBm/u/6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 301/346] media: staging: davinci_vpfe: disallow building with COMPILE_TEST
-Date:   Wed, 29 May 2019 20:06:14 -0700
-Message-Id: <20190530030556.097103521@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jeff Smits <jeff.smits@intel.com>
+Subject: [PATCH 5.0 013/346] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+Date:   Wed, 29 May 2019 20:01:26 -0700
+Message-Id: <20190530030541.232517654@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,63 +65,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 49dc762cffd8305a861ca649e82dc5533b3e3344 ]
+From: Dan Williams <dan.j.williams@intel.com>
 
-The driver should really call dm365_isif_setup_pinmux() through a callback,
-but uses a hack to include a davinci specific machine header file when
-compile testing instead. This works almost everywhere, but not on the
-ARM omap1 platform, which has another header named mach/mux.h. This
-causes a build failure:
+commit 52f476a323f9efc959be1c890d0cdcf12e1582e0 upstream.
 
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: implicit declaration of function 'davinci_cfg_reg' [-Werror,-Wimplicit-function-declaration]
-        davinci_cfg_reg(DM365_VIN_CAM_WEN);
-        ^
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2028:18: error: use of undeclared identifier 'DM365_VIN_CAM_WEN'
-        davinci_cfg_reg(DM365_VIN_CAM_WEN);
-                        ^
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2029:18: error: use of undeclared identifier 'DM365_VIN_CAM_VD'
-        davinci_cfg_reg(DM365_VIN_CAM_VD);
-                        ^
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2030:18: error: use of undeclared identifier 'DM365_VIN_CAM_HD'
-        davinci_cfg_reg(DM365_VIN_CAM_HD);
-                        ^
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2031:18: error: use of undeclared identifier 'DM365_VIN_YIN4_7_EN'
-        davinci_cfg_reg(DM365_VIN_YIN4_7_EN);
-                        ^
-drivers/staging/media/davinci_vpfe/dm365_isif.c:2032:18: error: use of undeclared identifier 'DM365_VIN_YIN0_3_EN'
-        davinci_cfg_reg(DM365_VIN_YIN0_3_EN);
-                        ^
-7 errors generated.
+Jeff discovered that performance improves from ~375K iops to ~519K iops
+on a simple psync-write fio workload when moving the location of 'struct
+page' from the default PMEM location to DRAM. This result is surprising
+because the expectation is that 'struct page' for dax is only needed for
+third party references to dax mappings. For example, a dax-mapped buffer
+passed to another system call for direct-I/O requires 'struct page' for
+sending the request down the driver stack and pinning the page. There is
+no usage of 'struct page' for first party access to a file via
+read(2)/write(2) and friends.
 
-Exclude omap1 from compile-testing, under the assumption that all others
-still work.
+However, this "no page needed" expectation is violated by
+CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
+copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
+check_heap_object() helper routine assumes the buffer is backed by a
+slab allocator (DRAM) page and applies some checks.  Those checks are
+invalid, dax pages do not originate from the slab, and redundant,
+dax_iomap_actor() has already validated that the I/O is within bounds.
+Specifically that routine validates that the logical file offset is
+within bounds of the file, then it does a sector-to-pfn translation
+which validates that the physical mapping is within bounds of the block
+device.
 
-Fixes: 4907c73deefe ("media: staging: davinci_vpfe: allow building with COMPILE_TEST")
+Bypass additional hardened usercopy overhead and call the 'no check'
+versions of the copy_{to,from}_iter operations directly.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache...")
+Cc: <stable@vger.kernel.org>
+Cc: Jeff Moyer <jmoyer@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Reported-and-tested-by: Jeff Smits <jeff.smits@intel.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/staging/media/davinci_vpfe/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/pmem.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/davinci_vpfe/Kconfig b/drivers/staging/media/davinci_vpfe/Kconfig
-index aea449a8dbf8a..76818cc48ddcb 100644
---- a/drivers/staging/media/davinci_vpfe/Kconfig
-+++ b/drivers/staging/media/davinci_vpfe/Kconfig
-@@ -1,7 +1,7 @@
- config VIDEO_DM365_VPFE
- 	tristate "DM365 VPFE Media Controller Capture Driver"
- 	depends on VIDEO_V4L2
--	depends on (ARCH_DAVINCI_DM365 && !VIDEO_DM365_ISIF) || COMPILE_TEST
-+	depends on (ARCH_DAVINCI_DM365 && !VIDEO_DM365_ISIF) || (COMPILE_TEST && !ARCH_OMAP1)
- 	depends on VIDEO_V4L2_SUBDEV_API
- 	depends on VIDEO_DAVINCI_VPBE_DISPLAY
- 	select VIDEOBUF2_DMA_CONTIG
--- 
-2.20.1
-
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -281,16 +281,22 @@ static long pmem_dax_direct_access(struc
+ 	return __pmem_direct_access(pmem, pgoff, nr_pages, kaddr, pfn);
+ }
+ 
++/*
++ * Use the 'no check' versions of copy_from_iter_flushcache() and
++ * copy_to_iter_mcsafe() to bypass HARDENED_USERCOPY overhead. Bounds
++ * checking, both file offset and device offset, is handled by
++ * dax_iomap_actor()
++ */
+ static size_t pmem_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	return copy_from_iter_flushcache(addr, bytes, i);
++	return _copy_from_iter_flushcache(addr, bytes, i);
+ }
+ 
+ static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i)
+ {
+-	return copy_to_iter_mcsafe(addr, bytes, i);
++	return _copy_to_iter_mcsafe(addr, bytes, i);
+ }
+ 
+ static const struct dax_operations pmem_dax_ops = {
 
 
