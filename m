@@ -2,97 +2,76 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B89BC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FC0C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6282F26255
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XabQyxjy"
+	by mail.kernel.org (Postfix) with ESMTP id 38A48218CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 22:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559253744;
+	bh=ADpd0+yMsDnrTF8OERno5hORW9BHTgfmkRfkI2dhT/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1w7ZvmkTtMeJBVaowO8KCb0bUkxPcsjsvx36OSytdTnObIl/RzsJiI9KtEEVs1J3f
+	 KHr6K896YsLhI6h3leSYVCVgVrnW4VVDCdf3rS1uPhfI6YfSr1J8Uptz8iM9HFbLsR
+	 ox/CpeoMVkbKQ21QQIMSj42DfINu+ohMQkrSQdL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfE3WCR (ORCPT
+        id S1726881AbfE3WCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 18:02:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:47639 "EHLO ozlabs.org"
+        Thu, 30 May 2019 18:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbfE3WCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 18:02:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726576AbfE3WCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 18:02:22 -0400
+Received: from localhost (unknown [207.225.69.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45FM4l06hHz9s3l;
-        Fri, 31 May 2019 08:02:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559253735;
-        bh=kJLoTCjBs/nwP+hdiL4Z0EGzrpWOykBaAOwDzaoToEs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XabQyxjyYhU4FPhHRp526ehMPht8l4ZwJGXrsUAGlvjAp+KmYHLvQEG9+iuMYhkas
-         3lpd2flEOLEW6A5i4E3JLAn7fTi1GKzTS6crd6vv0QKZg5P1vEl7dRcRvZ/w0npjOj
-         2T31FS2Q2y/v6Lg5rNuphnJpyCtwk0WhQLBnMcQOQLDE72aERL0oyWBvM/JitwEqbw
-         vRaEfLV3OqTdYhFD5VhAZCRleQFLfuH8yIa+dU7eUQlRDh3uqUqZhOSIu/lC7m9R39
-         C0B3wtIMVXES6e8hQQqk4I006wdktiasUkUPGN5ozsI8cvvy2KX77/DSVbtsJMCK5H
-         zqm9tFWAS8KWQ==
-Date:   Fri, 31 May 2019 08:02:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
-Message-ID: <20190531080212.234f5149@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 915B626223;
+        Thu, 30 May 2019 21:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559253428;
+        bh=ADpd0+yMsDnrTF8OERno5hORW9BHTgfmkRfkI2dhT/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y9JYJUX9zDkf7Iux+V5B28VTlCSlD5JulFyl06pRUNKxbPaXIKo7eQbUKLehoynbx
+         D2NfiKiB4KBfwACPlcQ3iSaDvdOA0tYZFgW0el44S9dyImNj5PXahXkEmEDKNJgxWf
+         T1wR0WcBiSn7Gp7o8+MOAGFQBRE49Cdh+br0Pub0=
+Date:   Thu, 30 May 2019 14:57:08 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Benjamin Sherman <benjamin@bensherman.io>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: mt7621-dma: sizeof via pointer dereference
+Message-ID: <20190530215708.GA20810@kroah.com>
+References: <20190530214142.cna6mgdhqgxgaczw@valkyrie-prime.rpi>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/xwFiduZFtHNxIq6+IWrFOX8"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530214142.cna6mgdhqgxgaczw@valkyrie-prime.rpi>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xwFiduZFtHNxIq6+IWrFOX8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 30, 2019 at 09:41:43PM +0000, Benjamin Sherman wrote:
+> Pass the size of a struct into kzalloc by pointer dereference.  This
+> complies with the Linux kernel coding style and removes the possibility
+> for a bug when the pointer's type is changed.
+> 
+> Signed-off-by: Benjamin Sherman <benjamin@bensherman.io>
+> ---
+> This is my first patch, so please forgive any seemingly obvious
+> mistakes.  I apologize if this is the incorrect mailing list.
+> ---
+>  drivers/staging/mt7621-dma/mtk-hsdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi all,
+Can you resend and properly cc: the needed developers and mailing list
+that scripts/get_maintainer.pl says to cc:?
 
-In commit
+thanks,
 
-  970c43d17835 ("ASoC: SOF: Intel: hda: use the defined ppcap functions")
-
-Fixes tag
-
-  Fixes: 8a300c8fb17 ("ASoC: SOF: Intel: Add HDA controller for Intel DSP")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xwFiduZFtHNxIq6+IWrFOX8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzwUuQACgkQAVBC80lX
-0GzVRwgAmyt/mf9wP3UCFmKzhD6E1U3i67ofU3ZBR/QMjdZhjrbwy7cA5uaiSIjZ
-u4eQj0C0uzwYfHk7wBhksk4u1Z5Lr4Gvg9lWxd1Q7KR4GUJd5aQoZEeID9lLQ6vI
-Xv20PUr7KhpiCfT5oWfdxx/zQfGUPBcXjJv93ZCq/UifX3TNuK0ALXcT9HwsXr1N
-bRYz85g03PTDtT9hfUQXzQW6To8lZavwvhO3lLPlcYkVereeVEYz40VU6ojlV7zo
-Mp6zs6p/EmTWtNQv0mspARQwY6Td0ehZgam1lxJOOhM4YAqqb25vb3ovcI/deK2O
-fiQKx9Y+snzykRoGCUAzvzxVkfMhFw==
-=hKvK
------END PGP SIGNATURE-----
-
---Sig_/xwFiduZFtHNxIq6+IWrFOX8--
+greg k-h
