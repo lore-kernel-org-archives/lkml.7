@@ -5,56 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A145C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C693AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F13D24D5D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F20C24D4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188158;
-	bh=s6gkeyv+vOhrrTJlNoeVWCKqxkTCnhUdxoSHnP7Ihtc=;
+	s=default; t=1559188161;
+	bh=XTYT+Zjx4efHvomWboiyx+5cbYpMYlvQgDuWNjWDh9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XP/5uWpWmojBYSjogYww5iTuZU76cC9y+hvkh195PI/85a0271eLVC2BmlFY16OQT
-	 5mTnEpgYLzfaihaIiBleYLBhc0KVq8CpVXEOHNPcdONXXmPxblI/LD+e/WKXTdXAhu
-	 SQGTNKIoZ2tT5mUjBm2Lf+S7lo2mYTkRggPSWhjs=
+	b=l3EiXYvecVNb+16nasD1yxpmR/qQNqtNT7PDA4+z7bPI+viFjsjlhukrfeptrAs7Z
+	 FXl8PBh0BHWc065a6qQJlh1WbZGHiOwHF/HVm82e1dJAdnZ8jr3gaNtdvy6wnSJJ1L
+	 6tifK4S4SmYPcTOBcpdvrUDNQY03qCjCb+uJ/Dow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbfE3DtR (ORCPT
+        id S2387638AbfE3DtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbfE3DUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:03 -0400
+        id S1732241AbfE3DUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:33 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B83F24908;
-        Thu, 30 May 2019 03:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1371F24941;
+        Thu, 30 May 2019 03:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186402;
-        bh=s6gkeyv+vOhrrTJlNoeVWCKqxkTCnhUdxoSHnP7Ihtc=;
+        s=default; t=1559186433;
+        bh=XTYT+Zjx4efHvomWboiyx+5cbYpMYlvQgDuWNjWDh9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFiufwXZo73TTSTLIQ7ITixOZf/DI9WxsSaHWpZj94OZmxMw4TUXkZYqsot7XD8yi
-         GtV97Uva1bxsIOrDthu7HyaPoD6n4zXriQfAD8wp8C/sNHJNb8tslPcXBVPjOi7mlG
-         i0pKdK2aKE9AID0ZRtyzpZ7H/MN9klEVd6BEUHeA=
+        b=nUUSunvmkLycvPZLn+4eiGpN0kVzq66nb0GaURUESQS6x/a6bbw0fOeY/7GdHtRa0
+         bkjPoKmBm1vth/LzYQiTr+l6+W+jZZ+d9dWgKnEIqeTz77KN9ndmJRRsi7FRIVPhvG
+         eWT8BzyuoG15N0bfq5jzGHB8s8nYe5ojsU6gTX8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 169/193] x86/mce: Fix machine_check_poll() tests for error types
-Date:   Wed, 29 May 2019 20:07:03 -0700
-Message-Id: <20190530030511.533950292@linuxfoundation.org>
+Subject: [PATCH 4.9 027/128] net: ena: gcc 8: fix compilation warning
+Date:   Wed, 29 May 2019 20:05:59 -0700
+Message-Id: <20190530030439.578007972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030432.977908967@linuxfoundation.org>
+References: <20190530030432.977908967@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,104 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f19501aa07f18268ab14f458b51c1c6b7f72a134 ]
+[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
 
-There has been a lurking "TBD" in the machine check poll routine ever
-since it was first split out from the machine check handler. The
-potential issue is that the poll routine may have just begun a read from
-the STATUS register in a machine check bank when the hardware logs an
-error in that bank and signals a machine check.
+GCC 8 contains a number of new warnings as well as enhancements to existing
+checkers. The warning - Wstringop-truncation - warns for calls to bounded
+string manipulation functions such as strncat, strncpy, and stpncpy that
+may either truncate the copied string or leave the destination unchanged.
 
-That race used to be pretty small back when machine checks were
-broadcast, but the addition of local machine check means that the poll
-code could continue running and clear the error from the bank before the
-local machine check handler on another CPU gets around to reading it.
+In our case the destination string length (32 bytes) is much shorter than
+the source string (64 bytes) which causes this warning to show up. In
+general the destination has to be at least a byte larger than the length
+of the source string with strncpy for this warning not to showup.
 
-Fix the code to be sure to only process errors that need to be processed
-in the poll code, leaving other logged errors alone for the machine
-check handler to find and process.
+This can be easily fixed by using strlcpy instead which already does the
+truncation to the string. Documentation for this function can be
+found here:
 
- [ bp: Massage a bit and flip the "== 0" check to the usual !(..) test. ]
+https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
 
-Fixes: b79109c3bbcf ("x86, mce: separate correct machine check poller and fatal exception handler")
-Fixes: ed7290d0ee8f ("x86, mce: implement new status bits")
-Reported-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20190312170938.GA23035@agluck-desk
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce.c | 44 +++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index 54874e2b1d325..4f3be91f0b0bc 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -701,19 +701,49 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 0c298878bf46f..0780900b37c72 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2116,7 +2116,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev)
  
- 		barrier();
- 		m.status = mce_rdmsrl(msr_ops.status(i));
-+
-+		/* If this entry is not valid, ignore it */
- 		if (!(m.status & MCI_STATUS_VAL))
- 			continue;
- 
- 		/*
--		 * Uncorrected or signalled events are handled by the exception
--		 * handler when it is enabled, so don't process those here.
--		 *
--		 * TBD do the same check for MCI_STATUS_EN here?
-+		 * If we are logging everything (at CPU online) or this
-+		 * is a corrected error, then we must log it.
- 		 */
--		if (!(flags & MCP_UC) &&
--		    (m.status & (mca_cfg.ser ? MCI_STATUS_S : MCI_STATUS_UC)))
--			continue;
-+		if ((flags & MCP_UC) || !(m.status & MCI_STATUS_UC))
-+			goto log_it;
-+
-+		/*
-+		 * Newer Intel systems that support software error
-+		 * recovery need to make additional checks. Other
-+		 * CPUs should skip over uncorrected errors, but log
-+		 * everything else.
-+		 */
-+		if (!mca_cfg.ser) {
-+			if (m.status & MCI_STATUS_UC)
-+				continue;
-+			goto log_it;
-+		}
-+
-+		/* Log "not enabled" (speculative) errors */
-+		if (!(m.status & MCI_STATUS_EN))
-+			goto log_it;
-+
-+		/*
-+		 * Log UCNA (SDM: 15.6.3 "UCR Error Classification")
-+		 * UC == 1 && PCC == 0 && S == 0
-+		 */
-+		if (!(m.status & MCI_STATUS_PCC) && !(m.status & MCI_STATUS_S))
-+			goto log_it;
-+
-+		/*
-+		 * Skip anything else. Presumption is that our read of this
-+		 * bank is racing with a machine check. Leave the log alone
-+		 * for do_machine_check() to deal with it.
-+		 */
-+		continue;
- 
-+log_it:
- 		error_seen = true;
- 
- 		mce_read_aux(&m, i);
+ 	host_info->os_type = ENA_ADMIN_OS_LINUX;
+ 	host_info->kernel_ver = LINUX_VERSION_CODE;
+-	strncpy(host_info->kernel_ver_str, utsname()->version,
++	strlcpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+ 	strncpy(host_info->os_dist_str, utsname()->release,
 -- 
 2.20.1
 
