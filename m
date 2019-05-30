@@ -2,51 +2,52 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF59C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0A3C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE7524EA4
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAAF24E93
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188585;
-	bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
+	s=default; t=1559188593;
+	bh=9PYpEDZLRhbi7YVmJolHM37nqF9o+1KmaP4pr3hYhsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IcXF970AIroF2hkWdVb1LcI1Fu27wPl2j7xhMfeQXWOqPvsJNx1dlpVnGdJp+2iWs
-	 VLtuVh0TT0CHEdy8Rl7AzS2W7q6IS9Ngj7ov8GLYl2t1ngG7LNTMETKys1aY5Jrihz
-	 qn4QPRvFZk6ZZhLC2gqqkFjAkyth3M89TtLKjF7c=
+	b=c0q0ty35tydd6obrypXyveG8YfGqIl5WNpd1pqWsZm0RJ2NjmnNHypAzsItpwjsca
+	 hL7cJDcAQ0Hg2AiSaJMpqssAspFnsSMMUbBJXP7NN5Pg3JhbbProXk8wRBBLEAoYZw
+	 zpo0YjzTwHmAOh782G+OphjLX8lBINYexe8zSI4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbfE3D4Y (ORCPT
+        id S1731894AbfE3D4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbfE3DTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:03 -0400
+        id S1731768AbfE3DS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:59 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E99D324825;
-        Thu, 30 May 2019 03:19:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521A024725;
+        Thu, 30 May 2019 03:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186343;
-        bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
+        s=default; t=1559186339;
+        bh=9PYpEDZLRhbi7YVmJolHM37nqF9o+1KmaP4pr3hYhsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCT6ThUcLY/O7Wiy9VCBatE3lAot4XsEZFKYtVFidZyYvBDQjOxPDhllk4o8Vb4CM
-         TFucl048RUn+PVZEm82Ff9MG6JWW8S1Asx93tcG5chWW3ZKBhmKoeArFz0U6DL8GeS
-         e7QnjjI1unD4TwWXfe+122USdJ+QSHa2bB2P93xA=
+        b=J9fXjb8laeYzeskBEl2nUuGykaqdyLEnW8S+vFOdkAaMo+YgDfQawXWn/CmhQx0o6
+         Tzkr8F411kpDEITyd6cReds84OYFjvmRXZzUZgCSnM8zvVMyp50n/HAKq+Rmy94a97
+         kVn4qN/O32Ry3K7MUHjn8fkHi5VjYAl6/5oEOKmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 026/193] fbdev: fix WARNING in __alloc_pages_nodemask bug
-Date:   Wed, 29 May 2019 20:04:40 -0700
-Message-Id: <20190530030452.640054414@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 063/193] rtc: 88pm860x: prevent use-after-free on device remove
+Date:   Wed, 29 May 2019 20:05:17 -0700
+Message-Id: <20190530030458.251462875@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -59,51 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
 
-commit 8c40292be9169a9cbe19aadd1a6fc60cbd1af82f upstream.
+The device's remove() attempts to shut down the delayed_work scheduled
+on the kernel-global workqueue by calling flush_scheduled_work().
 
-Syzkaller hit 'WARNING in __alloc_pages_nodemask' bug.
+Unfortunately, flush_scheduled_work() does not prevent the delayed_work
+from re-scheduling itself. The delayed_work might run after the device
+has been removed, and touch the already de-allocated info structure.
+This is a potential use-after-free.
 
-WARNING: CPU: 1 PID: 1473 at mm/page_alloc.c:4377
-__alloc_pages_nodemask+0x4da/0x2130
-Kernel panic - not syncing: panic_on_warn set ...
+Fix by calling cancel_delayed_work_sync() during remove(): this ensures
+that the delayed work is properly cancelled, is no longer running, and
+is not able to re-schedule itself.
 
-Call Trace:
- alloc_pages_current+0xb1/0x1e0
- kmalloc_order+0x1f/0x60
- kmalloc_order_trace+0x1d/0x120
- fb_alloc_cmap_gfp+0x85/0x2b0
- fb_set_user_cmap+0xff/0x370
- do_fb_ioctl+0x949/0xa20
- fb_ioctl+0xdd/0x120
- do_vfs_ioctl+0x186/0x1070
- ksys_ioctl+0x89/0xa0
- __x64_sys_ioctl+0x74/0xb0
- do_syscall_64+0xc8/0x550
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This issue was detected with the help of Coccinelle.
 
-This is a warning about order >= MAX_ORDER and the order is from
-userspace ioctl. Add flag __NOWARN to silence this warning.
-
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbcmap.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/rtc/rtc-88pm860x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/core/fbcmap.c
-+++ b/drivers/video/fbdev/core/fbcmap.c
-@@ -94,6 +94,8 @@ int fb_alloc_cmap_gfp(struct fb_cmap *cm
- 	int size = len * sizeof(u16);
- 	int ret = -ENOMEM;
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 19e53b3b8e005..166faae3a59cd 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
+ 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
  
-+	flags |= __GFP_NOWARN;
-+
- 	if (cmap->len != len) {
- 		fb_dealloc_cmap(cmap);
- 		if (!len)
+ #ifdef VRTC_CALIBRATION
+-	flush_scheduled_work();
++	cancel_delayed_work_sync(&info->calib_work);
+ 	/* disable measurement */
+ 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
+ #endif	/* VRTC_CALIBRATION */
+-- 
+2.20.1
+
 
 
