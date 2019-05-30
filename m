@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329BBC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EC0C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B76524D32
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BA124D2F
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188130;
-	bh=ZoOu+9eNxoWTL0myO+IfaODWr5QLt9Z4pCwwIUjUTMk=;
+	s=default; t=1559188135;
+	bh=D57ohe9MJE9ynAZ87YT9Yn/9+tuD5LBAyKgmV/j5pcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHAhKN6tNyFhAgWHQEDa9fJq9HjZ0ldUgWFhQUGgJMGONAbGRBNORJpiZVX0nrKpW
-	 ywNnmjISxWtB72n+G+1QCA6nIdNSXOx9Gel+mf55IbrNDs7ExFEN6R0ae0FoI1u9W0
-	 eLls0+eanKAAAW/PSpMieENILe0O0fLxblyqprdc=
+	b=yaItBkKWfJcNVx75E3dudvkq7UPSkWmhJAjGmn+61tc6hz2leVVrj0xCs26tgfBMx
+	 qO4p7IQzk4p916NHfHnDU6HLItZ5sMz/YFZgljg/FjoQjQqmIlgZSF8VdhJo+oA0qe
+	 57JQ6HLbFhP6tybleYwrUKOh3pQLE9QeWuKc+bWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbfE3Dst (ORCPT
+        id S2387573AbfE3Dsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:48:49 -0400
+        Wed, 29 May 2019 23:48:54 -0400
 Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730508AbfE3DUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:20:18 -0400
+        id S1732143AbfE3DUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:20:17 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CE8424820;
-        Thu, 30 May 2019 03:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C2324913;
+        Thu, 30 May 2019 03:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186418;
-        bh=ZoOu+9eNxoWTL0myO+IfaODWr5QLt9Z4pCwwIUjUTMk=;
+        s=default; t=1559186417;
+        bh=D57ohe9MJE9ynAZ87YT9Yn/9+tuD5LBAyKgmV/j5pcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIDNfw2AvMUP4H6Y7pc+i+CQEiB+r+I25sbctZ6LFSm2msitku/bA/xXD3te2gW23
-         U9uu0wxS8UXxIwqiH9i7TTz9XaP7c2Yok5tBBeI7JLQPHL/MuRaLC06IMBDqWLd2c2
-         hVVxhQw1aJ/SDD5+NXTnvGJLklP1STOZX2pmSvNs=
+        b=sge8uHlRmtsLZrAV7q0Y6V56U8QgS05AZyC62euBSUL83OgqcGnyDkvEyJAfqpKup
+         7UGkiJ3SqC5Hne28rTwNsSnlpI7m2BpEJj8ZCJ2wFvXZIKABGEBuwQcmUU5L9WeDTr
+         k1EoG3DXxlC9LAZUJ/O1ePXxsQU5IR3arHrRp5JM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 193/193] NFS: Fix a double unlock from nfs_match,get_client
-Date:   Wed, 29 May 2019 20:07:27 -0700
-Message-Id: <20190530030513.442571341@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 191/193] drm: Wake up next in drm_read() chain if we are forced to putback the event
+Date:   Wed, 29 May 2019 20:07:25 -0700
+Message-Id: <20190530030513.324164890@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -62,35 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c260121a97a3e4df6536edbc2f26e166eff370ce ]
+[ Upstream commit 60b801999c48b6c1dd04e653a38e2e613664264e ]
 
-Now that nfs_match_client drops the nfs_client_lock, we should be
-careful
-to always return it in the same condition: locked.
+After an event is sent, we try to copy it into the user buffer of the
+first waiter in drm_read() and if the user buffer doesn't have enough
+room we put it back onto the list. However, we didn't wake up any
+subsequent waiter, so that event may sit on the list until either a new
+vblank event is sent or a new waiter appears. Rare, but in the worst
+case may lead to a stuck process.
 
-Fixes: 950a578c6128 ("NFS: make nfs_match_client killable")
-Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Testcase: igt/drm_read/short-buffer-wakeup
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20170804082328.17173-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 65da2c105f434..0c7008fb6d5ab 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -305,9 +305,9 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 			spin_unlock(&nn->nfs_client_lock);
- 			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			spin_lock(&nn->nfs_client_lock);
- 			if (error < 0)
- 				return ERR_PTR(error);
--			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index 03244b3c985d7..3cf07f5063ff6 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -525,6 +525,7 @@ ssize_t drm_read(struct file *filp, char __user *buffer,
+ 				file_priv->event_space -= length;
+ 				list_add(&e->link, &file_priv->event_list);
+ 				spin_unlock_irq(&dev->event_lock);
++				wake_up_interruptible(&file_priv->event_wait);
+ 				break;
+ 			}
  
 -- 
 2.20.1
