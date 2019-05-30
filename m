@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B4C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1A9C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A89259C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7BD259C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191286;
-	bh=gs5R8LLX3qSwO7Dx4y9hcIyLtjyrMZRGY5AoORF1j+A=;
+	s=default; t=1559191290;
+	bh=bh69YsHtzTJbjKtJ69s0EM3tDRjqnXOmqDjMzuLdUnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sez+sOItlJFzoetvIa5AIZ34NE0Az4VdHzAcR82+rQvpTYS9w4WCWwnpLCtfH3odt
-	 vKBqr02N0AcNSXjnQ3EIQL+G5r3mAMrecZY4t1HPMEF/HDl+7zHfe+Ol2qudbUfDNG
-	 S+EcIXZL3IhHt3SqveRNX2/bDxPL/2Q22x1ONmlQ=
+	b=YroduC1pouASpD82hiGmYaatIR2MIrtPRaHzGjWVWV3j3X1rYULJ+OltHApKBMcA5
+	 KQePCMPGRPPWNC/9VIhU3I5hEkH7Qni+9zvHWY+DKMnaz+/weyV6RVS9MED1/qDT3C
+	 YLoeEXAK8oxM/5xIkHPZAHwnqIYzrcZ8EOkizLRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388286AbfE3ElZ (ORCPT
+        id S1729011AbfE3DMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfE3DM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:26 -0400
+        id S1728269AbfE3DKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:10:54 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D787218B6;
-        Thu, 30 May 2019 03:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14DD4244BB;
+        Thu, 30 May 2019 03:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185945;
-        bh=gs5R8LLX3qSwO7Dx4y9hcIyLtjyrMZRGY5AoORF1j+A=;
+        s=default; t=1559185853;
+        bh=bh69YsHtzTJbjKtJ69s0EM3tDRjqnXOmqDjMzuLdUnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4t7o8qid7m68NrTK+l0+tK8hgj4/9a5AFN2PSQ47SzV+QVHJ2e1mG9PNd8cK1MdE
-         FtH5YqI2cW0HSfeSYH8nt1un5lovpiKWlduTMsVbEtr1TK8zpS4fCdVwOgKECOR6pZ
-         FKJBOcQaqCeq2ZV7XJuSoMzI2BgYN4pygipORByY=
+        b=ZgGMGK0BXYB+6g4KoRWGemCOQhQCAief+lJZglUJURJeF3vvG5HTZ/1XXwtlbE072
+         Fd7Qo4KqDwF5Arzf9TcCUScWVgNzPsjCW7KtHSUCN2tTo47OFMhKiJ/BAakWOGSByL
+         ZsUGH4fVNvu0uQ+WhcvE+5Q6ZtQXqi1N7QeXpKws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Claire Chang <tientzu@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 354/405] media: gspca: do not resubmit URBs when streaming has stopped
-Date:   Wed, 29 May 2019 20:05:52 -0700
-Message-Id: <20190530030558.553604000@linuxfoundation.org>
+Subject: [PATCH 5.1 143/405] Bluetooth: hci_qca: Give enough time to ROME controller to bootup.
+Date:   Wed, 29 May 2019 20:02:21 -0700
+Message-Id: <20190530030548.365186139@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,67 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6f8bd59c28f758feea403a70d6c3ef28c50959f ]
+[ Upstream commit 7f09d5a6c33be66a5ca19bf9dd1c2d90c5dfcf0d ]
 
-When streaming is stopped all URBs are killed, but in fill_frame and in
-bulk_irq this results in an attempt to resubmit the killed URB. That is
-not what you want and causes spurious kernel messages.
+This patch enables enough time to ROME controller to bootup
+after we bring the enable pin out of reset.
 
-So check if streaming has stopped before resubmitting.
-
-Also check against gspca_dev->streaming rather than vb2_start_streaming_called()
-since vb2_start_streaming_called() will return true when in stop_streaming,
-but gspca_dev->streaming is set to false when stop_streaming is called.
-
-Fixes: 6992effe5344 ("gspca: Kill all URBs before releasing any of them")
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support").
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Claire Chang <tientzu@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/gspca/gspca.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_qca.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/gspca/gspca.c b/drivers/media/usb/gspca/gspca.c
-index 128935f2a217e..4d7517411cc2d 100644
---- a/drivers/media/usb/gspca/gspca.c
-+++ b/drivers/media/usb/gspca/gspca.c
-@@ -314,6 +314,8 @@ static void fill_frame(struct gspca_dev *gspca_dev,
- 	}
- 
- resubmit:
-+	if (!gspca_dev->streaming)
-+		return;
- 	/* resubmit the URB */
- 	st = usb_submit_urb(urb, GFP_ATOMIC);
- 	if (st < 0)
-@@ -330,7 +332,7 @@ static void isoc_irq(struct urb *urb)
- 	struct gspca_dev *gspca_dev = (struct gspca_dev *) urb->context;
- 
- 	gspca_dbg(gspca_dev, D_PACK, "isoc irq\n");
--	if (!vb2_start_streaming_called(&gspca_dev->queue))
-+	if (!gspca_dev->streaming)
- 		return;
- 	fill_frame(gspca_dev, urb);
- }
-@@ -344,7 +346,7 @@ static void bulk_irq(struct urb *urb)
- 	int st;
- 
- 	gspca_dbg(gspca_dev, D_PACK, "bulk irq\n");
--	if (!vb2_start_streaming_called(&gspca_dev->queue))
-+	if (!gspca_dev->streaming)
- 		return;
- 	switch (urb->status) {
- 	case 0:
-@@ -367,6 +369,8 @@ static void bulk_irq(struct urb *urb)
- 				urb->actual_length);
- 
- resubmit:
-+	if (!gspca_dev->streaming)
-+		return;
- 	/* resubmit the URB */
- 	if (gspca_dev->cam.bulk_nurbs != 0) {
- 		st = usb_submit_urb(urb, GFP_ATOMIC);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 340c3c750b180..d3b467792eb3d 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -508,6 +508,8 @@ static int qca_open(struct hci_uart *hu)
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 		if (qcadev->btsoc_type != QCA_WCN3990) {
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
++			/* Controller needs time to bootup. */
++			msleep(150);
+ 		} else {
+ 			hu->init_speed = qcadev->init_speed;
+ 			hu->oper_speed = qcadev->oper_speed;
 -- 
 2.20.1
 
