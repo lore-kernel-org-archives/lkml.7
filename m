@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC85BC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D61BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A1E25783
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FC72579A
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190887;
-	bh=VBaBHb8eC3MVMoqFn8qJTCXx3lwPrT6NybJ+ftDwyz8=;
+	s=default; t=1559190893;
+	bh=lQbtVCmHeNiHye+IHHus4BzTFkOq5BFDfuzBe+rELwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcJjD5ien+4ZDi5YzqP7BT53i8TSn41AqQdyooQJC7kAfLkRB+XeubRDoA03RytGg
-	 7REzWTknT62FN7OJKxmnTVJ+BTy5EbeNfJYowlDWUqoOQqkXmWoWJrDe/02jZgEYJ/
-	 yl3RqbndkMTr0Eb2Vn+iaMDA2QpXjFU+wsC/5BUI=
+	b=ZA3V8xvAJKHaOMVG4mlajLbsPeMl573ze9j3r3TgiEHKhTTw4sMWKC725p57MW7Ll
+	 FGTRJ+YaLlSvmThLX9UAMVMe8SSc+ch0h8QGERbBYCDDb8mYnCWxPRXfMfVHwMeCSK
+	 nH2/3THxo7+8ZRVM9R48Ef7F7kqbceC4AZaNLZM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbfE3Eeq (ORCPT
+        id S2388233AbfE3Eew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbfE3DNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:22 -0400
+        id S1729398AbfE3DNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:13:18 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC77B23D14;
-        Thu, 30 May 2019 03:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276F3244B0;
+        Thu, 30 May 2019 03:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186001;
-        bh=VBaBHb8eC3MVMoqFn8qJTCXx3lwPrT6NybJ+ftDwyz8=;
+        s=default; t=1559185998;
+        bh=lQbtVCmHeNiHye+IHHus4BzTFkOq5BFDfuzBe+rELwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6V0rz/+4b/XSUi5qr2PjLcF9Yu/TyEllQQ89CdPIdRI6KRYweSYNst9j0lTETiN/
-         10SaF/IvRmJR00w89EEo4cBnr7LnDP6iG3odHCk6ckEHQL0YtHLTNj8+8Dc9scwl00
-         8P1HGJk87dzs1vLfYigAFiTgcYaWqg/1C2vO4iPc=
+        b=padEnDVJorsUPaUijMk16NXxYsBi5BdS5OunFDTfRCABtA3ELRCEBXtLaKmcjEVA/
+         PttuTqPF958HgS27ioeiltk1kfW7be952pQlX+sQyoDVhOo/8cPiVns7fTAQTsT/vi
+         eLOBPqQvSARkm7/ZdS1wLiGt7GYUpmlUVIEdKMk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Abhi Das <adas@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 053/346] ice: Separate if conditions for ice_set_features()
-Date:   Wed, 29 May 2019 20:02:06 -0700
-Message-Id: <20190530030543.622387258@linuxfoundation.org>
+Subject: [PATCH 5.0 046/346] gfs2: fix race between gfs2_freeze_func and unmount
+Date:   Wed, 29 May 2019 20:01:59 -0700
+Message-Id: <20190530030543.215259561@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,49 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8f529ff912073f778e3cd74e87fb69a36499fc2f ]
+[ Upstream commit 8f91821990fd6f170a5dca79697a441181a41b16 ]
 
-Set features can have multiple features turned on|off in a single
-call.  Grouping these all in an if/else means after one condition
-is met, other conditions/features will not be evaluated.  Break
-the if/else statements by feature to ensure all features will be
-handled properly.
+As part of the freeze operation, gfs2_freeze_func() is left blocking
+on a request to hold the sd_freeze_gl in SH. This glock is held in EX
+by the gfs2_freeze() code.
 
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+A subsequent call to gfs2_unfreeze() releases the EXclusively held
+sd_freeze_gl, which allows gfs2_freeze_func() to acquire it in SH and
+resume its operation.
+
+gfs2_unfreeze(), however, doesn't wait for gfs2_freeze_func() to complete.
+If a umount is issued right after unfreeze, it could result in an
+inconsistent filesystem because some journal data (statfs update) isn't
+written out.
+
+Refer to commit 24972557b12c for a more detailed explanation of how
+freeze/unfreeze work.
+
+This patch causes gfs2_unfreeze() to wait for gfs2_freeze_func() to
+complete before returning to the user.
+
+Signed-off-by: Abhi Das <adas@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/gfs2/incore.h | 1 +
+ fs/gfs2/super.c  | 8 +++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 8725569d11f0a..d083979acc22c 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -2490,6 +2490,9 @@ static int ice_set_features(struct net_device *netdev,
- 	struct ice_vsi *vsi = np->vsi;
- 	int ret = 0;
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index e10e0b0a7cd58..e1a33d2881213 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -621,6 +621,7 @@ enum {
+ 	SDF_SKIP_DLM_UNLOCK	= 8,
+ 	SDF_FORCE_AIL_FLUSH     = 9,
+ 	SDF_AIL1_IO_ERROR	= 10,
++	SDF_FS_FROZEN           = 11,
+ };
  
-+	/* Multiple features can be changed in one call so keep features in
-+	 * separate if/else statements to guarantee each feature is checked
-+	 */
- 	if (features & NETIF_F_RXHASH && !(netdev->features & NETIF_F_RXHASH))
- 		ret = ice_vsi_manage_rss_lut(vsi, true);
- 	else if (!(features & NETIF_F_RXHASH) &&
-@@ -2502,8 +2505,9 @@ static int ice_set_features(struct net_device *netdev,
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_RX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_RX))
- 		ret = ice_vsi_manage_vlan_stripping(vsi, false);
--	else if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
--		 !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
-+
-+	if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
-+	    !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
- 		ret = ice_vsi_manage_vlan_insertion(vsi);
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_TX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
+ enum gfs2_freeze_state {
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index ca71163ff7cfd..360206704a14c 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -973,8 +973,7 @@ void gfs2_freeze_func(struct work_struct *work)
+ 	if (error) {
+ 		printk(KERN_INFO "GFS2: couldn't get freeze lock : %d\n", error);
+ 		gfs2_assert_withdraw(sdp, 0);
+-	}
+-	else {
++	} else {
+ 		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
+ 		error = thaw_super(sb);
+ 		if (error) {
+@@ -987,6 +986,8 @@ void gfs2_freeze_func(struct work_struct *work)
+ 		gfs2_glock_dq_uninit(&freeze_gh);
+ 	}
+ 	deactivate_super(sb);
++	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
++	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
+ 	return;
+ }
+ 
+@@ -1029,6 +1030,7 @@ static int gfs2_freeze(struct super_block *sb)
+ 		msleep(1000);
+ 	}
+ 	error = 0;
++	set_bit(SDF_FS_FROZEN, &sdp->sd_flags);
+ out:
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+ 	return error;
+@@ -1053,7 +1055,7 @@ static int gfs2_unfreeze(struct super_block *sb)
+ 
+ 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+-	return 0;
++	return wait_on_bit(&sdp->sd_flags, SDF_FS_FROZEN, TASK_INTERRUPTIBLE);
+ }
+ 
+ /**
 -- 
 2.20.1
 
