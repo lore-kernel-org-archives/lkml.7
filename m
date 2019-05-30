@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1A6C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57D8C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2623224FF0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB06024FFA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188999;
-	bh=s0wBWtgYE318EaqqrCjsUgJ0uwxKN+S1DPkUv/m9A20=;
+	s=default; t=1559189004;
+	bh=PMELHRCeRDIFD+jrxj6PLctkSpayI5PK/9PmQXSfZX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFWu3Dd8Br7zx+BwgO59E7ShZGOoKS7U4TeRglNldeM33eeK6YuKjzlKGzgHZnfhk
-	 WDBgSV1BiDpcMXVGNR3gUgyfZOf5qdlAVmOmYrbJSVAVp0nQ8h4GRZH9wzMqoaHJbD
-	 YD2+Zb+YQNJAo+TxZvMkfQ9TdzMZgDPbF0Q5zvoA=
+	b=uC+iZVl9zZS6tGwKXrIi+bpOdWDv88XN3VUPQtXs1XCw8gsgMkpwKIZgUoMeIv+M/
+	 kyvN+7P06KUDUSlGYUuH55Nr2k7fDq2o27qMlMy8NuXc5a3S+DEGdtxa+azFA7Gq5q
+	 L0OpDmLnTp3ygdg0D/CTdy5W+A4Rev4IhgS7lp2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfE3DR5 (ORCPT
+        id S2388033AbfE3EDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbfE3DOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:17 -0400
+        id S1731348AbfE3DR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:57 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 890A324547;
-        Thu, 30 May 2019 03:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 663272474C;
+        Thu, 30 May 2019 03:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186056;
-        bh=s0wBWtgYE318EaqqrCjsUgJ0uwxKN+S1DPkUv/m9A20=;
+        s=default; t=1559186276;
+        bh=PMELHRCeRDIFD+jrxj6PLctkSpayI5PK/9PmQXSfZX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s9nscrYNBlkoVCxQbmJAm6sOdHp0yNf6KPJZ2gafuUK3OQR8jGk1V412phahyV8IS
-         IF0StEmOet6ceYKkTiqPiAJjLhED5X13DQK56INDrB90x94Vs95nUs0lONSGlU2nng
-         U+dZt100x+70jgpfQFhZW7kPFZz0zjA1LIOperhk=
+        b=NeLYg4bFbnvHLRM3DDd0GYBoaHvCTyWPmoVsHqrXzNOlIX+TZRLFLpUdJcZ8WAbcT
+         3h+WTUhsFo95jWLz9kwgrXVO1KEXK4b3zWpvZmVRl84Y0nMyIH67RZU/oH3YjkbxDn
+         GUDCY6szWP6E0x5AFefKCLXW0livsOIleG143Ogo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>,
-        kbuild test robot <lkp@intel.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 156/346] staging: vc04_services: handle kzalloc failure
-Date:   Wed, 29 May 2019 20:03:49 -0700
-Message-Id: <20190530030549.082533376@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>,
+        Kay Sievers <kay@vrfy.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Sasha Levin <sashal@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 219/276] kobject: Dont trigger kobject_uevent(KOBJ_REMOVE) twice.
+Date:   Wed, 29 May 2019 20:06:17 -0700
+Message-Id: <20190530030538.815031887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,52 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5112277872a56017b777770e2fd4324d4a6c866 ]
+[ Upstream commit c03a0fd0b609e2f5c669c2b7f27c8e1928e9196e ]
 
-The kzalloc here was being used without checking the return - if the
-kzalloc fails return VCHIQ_ERROR. The call-site of
-vchiq_platform_init_state() vchiq_init_state() was not responding
-to an allocation failure so checks for != VCHIQ_SUCCESS
-and pass VCHIQ_ERROR up to vchiq_platform_init() which then
-will fail with -EINVAL.
+syzbot is hitting use-after-free bug in uinput module [1]. This is because
+kobject_uevent(KOBJ_REMOVE) is called again due to commit 0f4dafc0563c6c49
+("Kobject: auto-cleanup on final unref") after memory allocation fault
+injection made kobject_uevent(KOBJ_REMOVE) from device_del() from
+input_unregister_device() fail, while uinput_destroy_device() is expecting
+that kobject_uevent(KOBJ_REMOVE) is not called after device_del() from
+input_unregister_device() completed.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Acked-By: Stefan Wahren <stefan.wahren@i2se.com>
+That commit intended to catch cases where nobody even attempted to send
+"remove" uevents. But there is no guarantee that an event will ultimately
+be sent. We are at the point of no return as far as the rest of the kernel
+is concerned; there are no repeats or do-overs.
+
+Also, it is not clear whether some subsystem depends on that commit.
+If no subsystem depends on that commit, it will be better to remove
+the state_{add,remove}_uevent_sent logic. But we don't want to risk
+a regression (in a patch which will be backported) by trying to remove
+that logic. Therefore, as a first step, let's avoid the use-after-free bug
+by making sure that kobject_uevent(KOBJ_REMOVE) won't be triggered twice.
+
+[1] https://syzkaller.appspot.com/bug?id=8b17c134fe938bbddd75a45afaa9e68af43a362d
+
+Reported-by: syzbot <syzbot+f648cfb7e0b52bf7ae32@syzkaller.appspotmail.com>
+Analyzed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 0f4dafc0563c6c49 ("Kobject: auto-cleanup on final unref")
+Cc: Kay Sievers <kay@vrfy.org>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c | 3 +++
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 2 ++
- 2 files changed, 5 insertions(+)
+ lib/kobject_uevent.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index dd4898861b833..eb1e5dcb0d529 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -209,6 +209,9 @@ vchiq_platform_init_state(struct vchiq_state *state)
- 	struct vchiq_2835_state *platform_state;
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 63d0816ab23b0..7761f32943391 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -464,6 +464,13 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 	int i = 0;
+ 	int retval = 0;
  
- 	state->platform_state = kzalloc(sizeof(*platform_state), GFP_KERNEL);
-+	if (!state->platform_state)
-+		return VCHIQ_ERROR;
++	/*
++	 * Mark "remove" event done regardless of result, for some subsystems
++	 * do not want to re-trigger "remove" event via automatic cleanup.
++	 */
++	if (action == KOBJ_REMOVE)
++		kobj->state_remove_uevent_sent = 1;
 +
- 	platform_state = (struct vchiq_2835_state *)state->platform_state;
+ 	pr_debug("kobject: '%s' (%p): %s\n",
+ 		 kobject_name(kobj), kobj, __func__);
  
- 	platform_state->inited = 1;
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 53f5a1cb4636e..819813e742d8a 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -2239,6 +2239,8 @@ vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero)
- 	local->debug[DEBUG_ENTRIES] = DEBUG_MAX;
+@@ -565,10 +572,6 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
+ 		kobj->state_add_uevent_sent = 1;
+ 		break;
  
- 	status = vchiq_platform_init_state(state);
-+	if (status != VCHIQ_SUCCESS)
-+		return VCHIQ_ERROR;
- 
- 	/*
- 		bring up slot handler thread
+-	case KOBJ_REMOVE:
+-		kobj->state_remove_uevent_sent = 1;
+-		break;
+-
+ 	case KOBJ_UNBIND:
+ 		zap_modalias_env(env);
+ 		break;
 -- 
 2.20.1
 
