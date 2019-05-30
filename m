@@ -2,110 +2,113 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5B9C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CE7C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D9D24CFC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C35224CFC
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YeeHVzkH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5l0F168"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfE3PFG (ORCPT
+        id S1727591AbfE3PGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:05:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36402 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfE3PFF (ORCPT
+        Thu, 30 May 2019 11:06:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46890 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfE3PGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:05:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so5347783ioh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 08:05:05 -0700 (PDT)
+        Thu, 30 May 2019 11:06:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y11so4119376pfm.13;
+        Thu, 30 May 2019 08:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jvt0JcWpyPlkkNAtAO9YUzPTlBiKUJt7TcdxdDpdEuk=;
-        b=YeeHVzkHGt0/TRrPUDvopCGyBPvlJT5jKL5fhU9erhoHrokOiEbeVGuVnHm+Ppnyaa
-         kobKTc3vQXpOK2NOww38wGIYlJIev8bd2vIhC9expYN+5HdY3fqV5CeA3ZvrYkixAEZF
-         x0NPoYFdcuLlPBfVYES7gcPd5QzHcmyzPPB2zXIx6cPo8mUGhC03s6VtLiu2iunOVvs6
-         OJ2MZF0anx/ZNMCCD7cQvbKnfKrYMSWjm60QM96JF6Lt6p+qTTDmfz0DBFM3c3t6rkmf
-         WsDYV52q7WKU/4fnQQMabGYWCYB/JUHj7W8Ek4qloibiPjKDYxwfW2ZAZ65tN/dvwtnZ
-         zyyA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V8q1uSPbWLjulZczFMArxlG+Rc8bRU4dU5fPX9uUB/Y=;
+        b=T5l0F168cAQhA00t3HCVh/oLVOEqrFFeDNjkLFV79a7R2SYZiBYyJtT3G7gZi72hr+
+         uVrLkPwyrtYC9ZPESLwraVIfnhLAp5UertJjpiGrTzYZxnDqVYmShBhFwJDWJwGXtskE
+         IM5B3m9lMGWIXb+B64rHMGv1Eb/zw7105HDQJJTsiTBnoTZw63mPipnSkZULbPManvFp
+         WLxMnGNQGNJj8I786s3SczMjpR719F/MZ1WtW278ktmOPYSt8WRjeZmgcDgvCltFpzfc
+         5Kwf5ZlVFqqyjrBw43a97SWxDlVPNdH/skY8xHmE3Puwyul0+fxdcFeTKNBaP90e9cYn
+         kqkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jvt0JcWpyPlkkNAtAO9YUzPTlBiKUJt7TcdxdDpdEuk=;
-        b=noCX9W0v1EDIJfe5RWvkDJSioyLRiRm6fe5w8+sdEiDGtuojDF+TSHgu7FdQWGJe0u
-         pxGTLcQubdncpu816Ky8WPGcqqePNfAGYaLkPUN2eaI6vk/tQP+q5pzJC+08KOgIjAv7
-         PrRo3122Ax7jYKN+jLkxvJMla/6c6cgiJiGSZM1sg6bnfCV/bJY8oGzkPopFbiKX3CZC
-         xAKYYUtjVjFzn34aEpLV6QMEWbRG4eR5zPegYzu9H/gsmcMa91mqAQgf7PAHw4Pjz7w4
-         VQg8bq9q1yreveeaWP0VQpA8HQy0x7ieWz0EaIWmkEkoYpo096bmtDglXR0dvIlVm1/y
-         QtjA==
-X-Gm-Message-State: APjAAAUZAQeb+y7Xhu01aJdh8SrpJbZ44k3k1I5iAycICB3NrOd1UrOd
-        Pm1agXSjjbh+kyXhaTUb0IhDGVPC1fEoPQeVP1RYBC0bhHlikg==
-X-Google-Smtp-Source: APXvYqzARUXWGq6q8/hYIVYeT219CiA8uTD6iRPTxw6rj46PxQ9tfJpySmwAjxlwp+nKTX+Z1+8Oi64X31H+Yk76o9E=
-X-Received: by 2002:a5d:9d83:: with SMTP id 3mr2768462ion.65.1559228704949;
- Thu, 30 May 2019 08:05:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190529202728.GA35103@gmail.com> <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
- <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
- <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au> <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
- <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com> <20190530143438.d62y3woaogyivqpm@gondor.apana.org.au>
-In-Reply-To: <20190530143438.d62y3woaogyivqpm@gondor.apana.org.au>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 30 May 2019 17:04:51 +0200
-Message-ID: <CAKv+Gu87wkLkZZLfsJwc02yuKpDx7Sa=Nx+1YW8pPE4DoWXGRw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V8q1uSPbWLjulZczFMArxlG+Rc8bRU4dU5fPX9uUB/Y=;
+        b=YReiGOEUwjzn+z7j6HT3ze+f+2WRJe2EXwtH32eD+PUMmULDk6yBO5N0GjyBKDpuym
+         3y47hn7btpndtTTZCWnZZCwpY07/S6D2Nq22PI6IkP8Er9rPeCyngjLzt62slmVfZ3ZE
+         hhfPajSRKbOHER9LKNAwqOiE/LGoxtMUVegCa4COEypyP4msYYLY12vNZrHQ2r7Bqr0h
+         Pr9xmhIhpnCFZ7/LHQf54MuvjzYGynrYS9VjqqMQdsezgOXTf5uJhcmsmszMyVzoOEc6
+         8Czp4tepu3vmcp1Q9HDPkQLatYE0fUHR41X2xBmCRymEvrbVnByufof/TWNI+z5t25FL
+         0h2w==
+X-Gm-Message-State: APjAAAUlWlembyPMXxFyyxg5aG9SSv8hvU1ShDK9EiQjgAaXdZ7EFy7v
+        qOIiL61ZbWZGLHf6AoaO2Lw=
+X-Google-Smtp-Source: APXvYqxJGsULWLIA7X9CQEJRFwoucyFeVDPVZvQBlTXibAyCIe0La5fViUkFQVWus5q6WGH5tq+G8A==
+X-Received: by 2002:a17:90a:e393:: with SMTP id b19mr3922035pjz.119.1559228760241;
+        Thu, 30 May 2019 08:06:00 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id x28sm3733624pfo.78.2019.05.30.08.05.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 30 May 2019 08:05:59 -0700 (PDT)
+Date:   Thu, 30 May 2019 08:05:57 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/5] PTP support for the SJA1105 DSA driver
+Message-ID: <20190530150557.iur7fruhyf5bs3qw@localhost>
+References: <20190528235627.1315-1-olteanv@gmail.com>
+ <20190529045207.fzvhuu6d6jf5p65t@localhost>
+ <dbe0a38f-8b48-06dd-cc2c-676e92ba0e74@gmail.com>
+ <20190530034555.wv35efen3igwwzjq@localhost>
+ <CA+h21hpjsC=ie5G7Gx3EcPpazyxze6X_k+8eC+vw7JBvEO2zNg@mail.gmail.com>
+ <20190530143037.iky5kk3h4ssmec3f@localhost>
+ <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hpp68AEEykxr8bJB=uJ+b0tg881Z7Ao_OfbTAXNxS8WgQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019 at 16:34, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Thu, May 30, 2019 at 04:31:09PM +0200, Ard Biesheuvel wrote:
+On Thu, May 30, 2019 at 05:57:30PM +0300, Vladimir Oltean wrote:
+> On Thu, 30 May 2019 at 17:30, Richard Cochran <richardcochran@gmail.com> wrote:
 > >
-> > This might work:
->
-> Looks good to me.
->
+> > Not necessarily.  If two frames that arrive at nearly the same time
+> > get their timestamps mixed up, that would be enough to break the time
+> > values but without breaking your state machine.
+> >
+> 
+> This doesn't exactly sound like the type of thing I can check for.
 
-Thanks Herbert,
+And that is why it cannot work.
 
-But given your remark regarding CBC being the only algo that has this
-requirement, I wonder if this might be sufficient as well.
+> The RX and TX timestamps *are* monotonically increasing with time for
+> all frames when I'm printing them in the {rx,tx}tstamp callbacks.
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index c0ece44f303b..65b050e3742f 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1844,7 +1844,7 @@ static int skcipher_decrypt(struct skcipher_request *req)
-         * The crypto API expects us to set the IV (req->iv) to the last
-         * ciphertext block.
-         */
--       if (ivsize)
-+       if (ctx->cdata.algtype & OP_ALG_AAI_CBC)
-                scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
-                                         ivsize, ivsize, 0);
+But are the frames received in the same order?  What happens your MAC
+drops a frame?
+ 
+> The driver returns free-running timestamps altered with a timecounter
+> frequency set by adjfine and offset set by adjtime.
 
+That should be correct.
 
-Iulia, Horia?
+Thanks,
+Richard
