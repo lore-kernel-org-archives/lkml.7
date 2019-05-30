@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3204DC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7BA24716
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C9B24741
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186265;
-	bh=TafnwVeoyIB5+u24332Q6fviaSBWjMIlnE3OTxLsJO0=;
+	s=default; t=1559186274;
+	bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLTlx/x1Q+CubmFrqVboZ/P/ILyluwJGNWPpaZzqZGmLOV+o1eLqaX1C5D7DkytUs
-	 bRAGxfvFXMCYXoZF1JOuBzuAuLK9HEv6ysk6OCj/zKWmJRbAv7xBHPVUqDtdnHr/yb
-	 wxnCUizSbhjgGVx7ji9Pu02ZgOsMA1zQGKyeGSWA=
+	b=2H7/v8Ek4nWUsIoc52cOyHRS+djSFDm52QhhFdYwOD7JPcoeRAhGuN/z38V9TTpqy
+	 wt6FHS8hdinsoYQ5BFKQ7imKzsprFmwLBIRyiwO7wq0HRu3kPTVe8IUN5xZFQLTYSQ
+	 Dx014kplNXtXSBHndYum9LYZGBfJtLKSj+hdo3vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbfE3DRo (ORCPT
+        id S1731331AbfE3DRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbfE3DOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:14:07 -0400
+        id S1728728AbfE3DON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:13 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D91DF2455A;
-        Thu, 30 May 2019 03:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D74C24555;
+        Thu, 30 May 2019 03:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186046;
-        bh=TafnwVeoyIB5+u24332Q6fviaSBWjMIlnE3OTxLsJO0=;
+        s=default; t=1559186053;
+        bh=B0H+g/8USRbal6cUg08JsxAQPv2okvZdDnuC5cZMagk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cA1YrXpzJgI/uIggj331RqVWknHjVKBTb9OfKCFadYTHxU4peQuV4TBCR24F3sVnz
-         r3NbAo9/qyzuXo8S3Fsrjpf230hgEpYuc99jKY4sJ+zZfhYnJ1TQ4P3GTa3lWTi1of
-         C0j48NngHphCx0iOB6tAOaBIH78+WRz/VVSesnKY=
+        b=LoaYVJrMyBRiX0D8TBu/f2KO8ugvWb9xGUeFoMBesnqSvHI3XSfbcFvvb7+bHTBnr
+         6YvvJA16Xqe/ISFkuz0yF/8qKj9SHd6ywNvS25PYsm+LvcaqHPQDaBCfC1kjhDeRQ6
+         m0jUIVle/V3P0DqVOselsQGFGwxSszZIeMCxlQWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Shuah Khan <shuah@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 140/346] media: au0828: stop video streaming only when last user stops
-Date:   Wed, 29 May 2019 20:03:33 -0700
-Message-Id: <20190530030548.223868259@linuxfoundation.org>
+        stable@vger.kernel.org, Jon DeVree <nuxi@vault24.org>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 150/346] random: fix CRNG initialization when random.trust_cpu=1
+Date:   Wed, 29 May 2019 20:03:43 -0700
+Message-Id: <20190530030548.777607649@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,67 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
+[ Upstream commit fe6f1a6a8eedc1aa538fee0baa612b6a59639cf8 ]
 
-If the application was streaming from both videoX and vbiX, and streaming
-from videoX was stopped, then the vbi streaming also stopped.
+When the system boots with random.trust_cpu=1 it doesn't initialize the
+per-NUMA CRNGs because it skips the rest of the CRNG startup code. This
+means that the code from 1e7f583af67b ("random: make /dev/urandom scalable
+for silly userspace programs") is not used when random.trust_cpu=1.
 
-The cause being that stop_streaming for video stopped the subdevs as well,
-instead of only doing that if dev->streaming_users reached 0.
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314029] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$6 = (struct crng_state **) 0x0
 
-au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
-at all when dev->streaming_users reached 0.
+After adding the missing call to numa_crng_init() the per-NUMA CRNGs are
+initialized again:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+crash> dmesg | grep random:
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x530 with crng_init=0
+[    0.314031] random: crng done (trusting CPU's manufacturer)
+crash> print crng_node_pool
+$1 = (struct crng_state **) 0xffff9a915f4014a0
+
+The call to invalidate_batched_entropy() was also missing. This is
+important for architectures like PPC and S390 which only have the
+arch_get_random_seed_* functions.
+
+Fixes: 39a8883a2b98 ("random: add a config option to trust the CPU's hwrng")
+Signed-off-by: Jon DeVree <nuxi@vault24.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/char/random.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
-index 7876c897cc1d6..ad2b1b7ecea4d 100644
---- a/drivers/media/usb/au0828/au0828-video.c
-+++ b/drivers/media/usb/au0828/au0828-video.c
-@@ -839,9 +839,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
- 			return rc;
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38c6d1af6d1c0..d4d45ccfeefc0 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -777,6 +777,7 @@ static struct crng_state **crng_node_pool __read_mostly;
+ #endif
+ 
+ static void invalidate_batched_entropy(void);
++static void numa_crng_init(void);
+ 
+ static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
+ static int __init parse_trust_cpu(char *arg)
+@@ -805,7 +806,9 @@ static void crng_initialize(struct crng_state *crng)
  		}
- 
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
-+
- 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
--			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
--						s_stream, 1);
- 			dev->vid_timeout_running = 1;
- 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
- 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
-@@ -861,10 +861,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
- 
- 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
- 
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
--	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
- 	dev->vid_timeout_running = 0;
- 	del_timer_sync(&dev->vid_timeout);
- 
-@@ -893,8 +894,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
- 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
- 		dev->streaming_users);
- 
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
- 	spin_lock_irqsave(&dev->slock, flags);
- 	if (dev->isoc_ctl.vbi_buf != NULL) {
+ 		crng->state[i] ^= rv;
+ 	}
+-	if (trust_cpu && arch_init) {
++	if (trust_cpu && arch_init && crng == &primary_crng) {
++		invalidate_batched_entropy();
++		numa_crng_init();
+ 		crng_init = 2;
+ 		pr_notice("random: crng done (trusting CPU's manufacturer)\n");
+ 	}
 -- 
 2.20.1
 
