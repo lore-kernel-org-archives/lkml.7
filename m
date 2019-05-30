@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EADC28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B5BC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B75124476
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D0424472
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185765;
-	bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+	s=default; t=1559185768;
+	bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIqroUiq38L0jy3eqZPHx9wMsBhiyEqINBfw27Ht3PprD1COeWuzgR1nYm5QtOYM0
-	 AbRLG94ldONeAaNkms2fXmy4NVdeGDIHNkHCYoelHl7UYtavh5Of13SgBgDEx4XZNc
-	 i4ucCUjPTlp79ZfKNC/G1e/IdfRn55Uw8N8KWVA8=
+	b=XROSbjL57hPsInNyjvsH5+TnX80rnLI8fGWnvpyMBBq1y+ohrao/fN3BHy9Ug0Ue/
+	 gfdeLtzR6msi0X0sARNeKvz4OodLvkRNGZisiSR/htZFRnUzx/pLS2SI8XbyQ4Kexr
+	 47H7Pv29Zh6wicyLSZcQnuUTRUy+gD8IeI+ZPNbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfE3DJY (ORCPT
+        id S1727560AbfE3DJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43928 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfE3DJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727536AbfE3DJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:09:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993E92446F;
-        Thu, 30 May 2019 03:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49B6124471;
+        Thu, 30 May 2019 03:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185763;
-        bh=oi8lKQ5r/i49dFb9dykc0Y0t9E2sFOuG489GbRWGmc4=;
+        s=default; t=1559185764;
+        bh=t6bx2D04IYoytuycVZr10En/w9fgx4z/f8hlVwcsreI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZMFazma9DQpnDn6lFP7JdtW0MvVJaJxL0/tBBtlNMe71OTHTe9ZVsAxykfHj5s1B
-         MLWlR5ISZc7Ixm/nAJu9EVnsY8gH3pGb0QYUIvrTsPhU/0+ZXQSGxlQ5YndiH2wBjB
-         uuTrKb3E2OI9NaPPzkGiSwqMk2ZO1rbkUttoeL7Y=
+        b=va1uZtzJJjt9IuJT9jE41sY+AZPYSRT8YYXzNbpfshAYixb/+pWwVAt2YA+es5126
+         0mVUhxfwNaoO7aYAZVK7iXr4M0Lz/vY28FoGqZ7aHPAK5BwSxJxksyyOBqUztHXk+S
+         BB+MDCVX+o1QcgX8iEdc401ibrh80zwXDyCRNTRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 001/405] x86: Hide the int3_emulate_call/jmp functions from UML
-Date:   Wed, 29 May 2019 19:59:59 -0700
-Message-Id: <20190530030540.383776666@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 010/405] crypto: vmx - CTR: always increment IV as quadword
+Date:   Wed, 29 May 2019 20:00:08 -0700
+Message-Id: <20190530030540.936691473@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 693713cbdb3a4bda5a8a678c31f06560bbb14657 upstream.
+commit 009b30ac7444c17fae34c4f435ebce8e8e2b3250 upstream.
 
-User Mode Linux does not have access to the ip or sp fields of the pt_regs,
-and accessing them causes UML to fail to build. Hide the int3_emulate_jmp()
-and int3_emulate_call() instructions from UML, as it doesn't need them
-anyway.
+The kernel self-tests picked up an issue with CTR mode:
+alg: skcipher: p8_aes_ctr encryption test failed (wrong result) on test vector 3, cfg="uneven misaligned splits, may sleep"
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Test vector 3 has an IV of FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD, so
+after 3 increments it should wrap around to 0.
+
+In the aesp8-ppc code from OpenSSL, there are two paths that
+increment IVs: the bulk (8 at a time) path, and the individual
+path which is used when there are fewer than 8 AES blocks to
+process.
+
+In the bulk path, the IV is incremented with vadduqm: "Vector
+Add Unsigned Quadword Modulo", which does 128-bit addition.
+
+In the individual path, however, the IV is incremented with
+vadduwm: "Vector Add Unsigned Word Modulo", which instead
+does 4 32-bit additions. Thus the IV would instead become
+FFFFFFFFFFFFFFFFFFFFFFFF00000000, throwing off the result.
+
+Use vadduqm.
+
+This was probably a typo originally, what with q and w being
+adjacent. It is a pretty narrow edge case: I am really
+impressed by the quality of the kernel self-tests!
+
+Fixes: 5c380d623ed3 ("crypto: vmx - Add support for VMS instructions by ASM")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Acked-by: Nayna Jain <nayna@linux.ibm.com>
+Tested-by: Nayna Jain <nayna@linux.ibm.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/text-patching.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/vmx/aesp8-ppc.pl |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -39,6 +39,7 @@ extern int poke_int3_handler(struct pt_r
- extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
- extern int after_bootmem;
+--- a/drivers/crypto/vmx/aesp8-ppc.pl
++++ b/drivers/crypto/vmx/aesp8-ppc.pl
+@@ -1357,7 +1357,7 @@ Loop_ctr32_enc:
+ 	addi		$idx,$idx,16
+ 	bdnz		Loop_ctr32_enc
  
-+#ifndef CONFIG_UML_X86
- static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->ip = ip;
-@@ -65,6 +66,7 @@ static inline void int3_emulate_call(str
- 	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
- 	int3_emulate_jmp(regs, func);
- }
--#endif
-+#endif /* CONFIG_X86_64 */
-+#endif /* !CONFIG_UML_X86 */
- 
- #endif /* _ASM_X86_TEXT_PATCHING_H */
+-	vadduwm		$ivec,$ivec,$one
++	vadduqm		$ivec,$ivec,$one
+ 	 vmr		$dat,$inptail
+ 	 lvx		$inptail,0,$inp
+ 	 addi		$inp,$inp,16
 
 
