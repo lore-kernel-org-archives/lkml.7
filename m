@@ -2,127 +2,283 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F86C46470
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AFCC28CC2
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C3A25363
+	by mail.kernel.org (Postfix) with ESMTP id AAD3325333
 	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="B4akPKNJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559206033;
+	bh=IdAMB2ha/WV1eB8zu68e6E514zzfgajDxQZpcRba3TQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aNuoV+yl3E21RaZyKWDX9Ql4lTg3QriRBRIotjawtwkqNWMw4387aG2TPPz02NyFN
+	 yDRYyY4RcClI0EDR6RZXaYT2lxMwn+Yag6uhVW9kk6ZWA8ekNwwaWjbZ9miDzutrlc
+	 gZiXR/NEnano0X+nUF+j/d+e5amL2zgnhV9RyJOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfE3IqZ (ORCPT
+        id S1726983AbfE3IrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:46:25 -0400
-Received: from mail-eopbgr70131.outbound.protection.outlook.com ([40.107.7.131]:14004
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726825AbfE3IqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:46:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VcXZaI+pgIljxCPO7ZcOPIhb4AmGtuNb86fpbuG5rv0=;
- b=B4akPKNJjuScq3e28FgewTmrkCgZmU42XYzAofKZdWavWqwskmR2Kr36/hFUx59nmIYrC/HMfMlszTKnw7q2V7GH8J9Kud9tnOL38ToREAsmU4ZhlhjY9FmLffb8STrfEXvUExS6mi6KlkaAC+rxi4z06l9QnF5NSB/YraqLWag=
-Received: from DB7PR02MB4411.eurprd02.prod.outlook.com (20.178.41.22) by
- DB7PR02MB4956.eurprd02.prod.outlook.com (20.178.44.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.22; Thu, 30 May 2019 08:46:03 +0000
-Received: from DB7PR02MB4411.eurprd02.prod.outlook.com
- ([fe80::ce5:7d93:d1e2:5bcf]) by DB7PR02MB4411.eurprd02.prod.outlook.com
- ([fe80::ce5:7d93:d1e2:5bcf%4]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 08:46:03 +0000
-From:   Dalit Ben Zoor <dbenzoor@habana.ai>
-To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] habanalabs: restore unsecured registers default values
-Thread-Topic: [PATCH 3/3] habanalabs: restore unsecured registers default
- values
-Thread-Index: AQHVFsQcnVosbcRxEk6QBd2kKea7Mg==
-Date:   Thu, 30 May 2019 08:46:02 +0000
-Message-ID: <20190530084554.31968-3-dbenzoor@habana.ai>
-References: <20190530084554.31968-1-dbenzoor@habana.ai>
-In-Reply-To: <20190530084554.31968-1-dbenzoor@habana.ai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P191CA0008.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:209:8b::21) To DB7PR02MB4411.eurprd02.prod.outlook.com
- (2603:10a6:10:64::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=dbenzoor@habana.ai; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [31.154.190.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d99c8e87-9700-48f0-308e-08d6e4db3f0d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB7PR02MB4956;
-x-ms-traffictypediagnostic: DB7PR02MB4956:
-x-microsoft-antispam-prvs: <DB7PR02MB49568716E62D0B237CD65D0ADC180@DB7PR02MB4956.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(346002)(39850400004)(366004)(396003)(199004)(189003)(8936002)(50226002)(25786009)(4326008)(14454004)(66446008)(64756008)(66556008)(66476007)(81166006)(81156014)(8676002)(73956011)(66946007)(2501003)(36756003)(68736007)(86362001)(66066001)(6486002)(2351001)(53936002)(74482002)(102836004)(316002)(1361003)(6436002)(5640700003)(6916009)(5660300002)(386003)(6506007)(7736002)(305945005)(476003)(2616005)(99286004)(6116002)(3846002)(11346002)(52116002)(478600001)(446003)(71190400001)(76176011)(26005)(186003)(71200400001)(486006)(6512007)(2906002)(1076003)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:DB7PR02MB4956;H:DB7PR02MB4411.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LIJPJwCgGnw8fZ1xGYhpED6DPFhd9/DffYYOEuNON0SKnXrHoL2hv4sldew5ED8kI5fBfA1fKtLBGoZtUnEiMvevny0xc19PpzbF9af35Oral3QUqQqV5Oxer5Rkr8NgAXlqMES7yL/RZadrLyVXn+W+IL9a5AzJcIhlypQOHKr3wsioTrFXYonOR7IyuhpxjHlWeU9Sp/+hiUcTBHFj3b/O57/Hgfzht1TLHafAjDYar8A3OgTu7I5kYoPwEhXdk3qZ04/FytFoUIXQx84Lysq3tOocmqgG3D5b19DxhpHP1nkflTmz/kEb5zyC27iGrR79r2ccIGLMuumJ5YuV8RkYjWGREsQ5AJAdODLxpTH/5BiCg0O6w7TYeuQlOeEvzghoRluqFEAqUa3a1PVYE5zTuyNutjTjb6kLYkZKB/I=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 30 May 2019 04:47:12 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41921 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbfE3IrM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 04:47:12 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l25so4852849otp.8;
+        Thu, 30 May 2019 01:47:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7wqwILg9bPvbTOZyUBEavR8/uT+INOe/JPe0pE90Xiw=;
+        b=U4BIxpwcXbC2fET4TSrIgPEh+OKBvrPHyaHYVcQ2f3U3qY/O1meLm6Dyr31oJdbHgl
+         P3X9pFQ2n3WSbqBYMksr7uqhKWKMJTGgCMRtOvLlRW6EToDFuxpEky6lH7Vz16sAyPCz
+         DwemZClnWzuNPbR8iBw100VO4pjng4XSzoT9QNMZXdnYSnTMZUZQm2P31OhMykkISm0g
+         3i0GtxtQYddWLSRNDmRjzPRBKlWwHEzvcOuq2RbZZ0oa3+3RN+gy24rEmJCviZ9LucT1
+         eJmk03YK8f/fmtKLcGMMi782iDJ/sA4LqnqbM6AqWuqD5cdSOGq9JZpDHe1Cw4YXhYaH
+         B74g==
+X-Gm-Message-State: APjAAAVntLQ4+n+eQjWglFFBwZEQ5R9AP/G/+NbpUcHw6ZVMMiPi5Xwl
+        JEA/TQ42Roq2LQ5cp60fMjpeNdpQc4sC6VykWgk=
+X-Google-Smtp-Source: APXvYqy2a5FwNSGbZ4sELrERuEN8DCFLbok1lh4NCQ2pi6fUvSnROzG+vZxfFKpNJD7za6/wSUF8PWLlk5MkqyZIGp0=
+X-Received: by 2002:a9d:6e88:: with SMTP id a8mr1610597otr.118.1559206030915;
+ Thu, 30 May 2019 01:47:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: d99c8e87-9700-48f0-308e-08d6e4db3f0d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 08:46:02.9551
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dbenzoor@habana.ai
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR02MB4956
+References: <nycvar.YFH.7.76.1905282326360.1962@cbobk.fhfr.pm> <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1905300007470.1962@cbobk.fhfr.pm>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 May 2019 10:46:59 +0200
+Message-ID: <CAJZ5v0ja5sQ73zMvUtV+w79LC_d+g6UdomL36rV-EpVDxEzbhA@mail.gmail.com>
+Subject: Re: [PATCH v4] x86/power: Fix 'nosmt' vs. hibernation triple fault
+ during resume
+To:     Jiri Kosina <jikos@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dW5zZWN1cmVkIHJlZ2lzdGVycyBjYW4gYmUgY2hhbmdlZCBieSB0aGUgdXNlciwgYW5kIGhlbmNl
-IHNob3VsZCBiZQ0KcmVzdG9yZWQgdG8gdGhlaXIgZGVmYXVsdCB2YWx1ZXMgaW4gY29udGV4dCBz
-d2l0Y2gNCg0KU2lnbmVkLW9mZi1ieTogRGFsaXQgQmVuIFpvb3IgPGRiZW56b29yQGhhYmFuYS5h
-aT4NCi0tLQ0KIGRyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jIHwgMTkgKysrKysr
-KysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0
-aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lh
-LmMgYi9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9nb3lhL2dveWEuYw0KaW5kZXggODc4NTljNTVi
-NGI4Li44MWMxZDU3Njc4M2YgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21pc2MvaGFiYW5hbGFicy9n
-b3lhL2dveWEuYw0KKysrIGIvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZ295YS9nb3lhLmMNCkBA
-IC03ODYsNyArNzg2LDYgQEAgc3RhdGljIHZvaWQgZ295YV9pbml0X2RtYV9jaChzdHJ1Y3QgaGxf
-ZGV2aWNlICpoZGV2LCBpbnQgZG1hX2lkKQ0KIAllbHNlDQogCQlzb2JfYWRkciA9IENGR19CQVNF
-ICsgbW1TWU5DX01OR1JfU09CX09CSl8xMDA3Ow0KIA0KLQlXUkVHMzIobW1ETUFfQ0hfMF9XUl9D
-T01QX0FERFJfTE8gKyByZWdfb2ZmLCBsb3dlcl8zMl9iaXRzKHNvYl9hZGRyKSk7DQogCVdSRUcz
-MihtbURNQV9DSF8wX1dSX0NPTVBfQUREUl9ISSArIHJlZ19vZmYsIHVwcGVyXzMyX2JpdHMoc29i
-X2FkZHIpKTsNCiAJV1JFRzMyKG1tRE1BX0NIXzBfV1JfQ09NUF9XREFUQSArIHJlZ19vZmYsIDB4
-ODAwMDAwMDEpOw0KIH0NCkBAIC00NTYwLDEwICs0NTU5LDEyIEBAIHN0YXRpYyBpbnQgZ295YV9t
-ZW1zZXRfZGV2aWNlX21lbW9yeShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCB1NjQgYWRkciwgdTY0
-IHNpemUsDQogaW50IGdveWFfY29udGV4dF9zd2l0Y2goc3RydWN0IGhsX2RldmljZSAqaGRldiwg
-dTMyIGFzaWQpDQogew0KIAlzdHJ1Y3QgYXNpY19maXhlZF9wcm9wZXJ0aWVzICpwcm9wID0gJmhk
-ZXYtPmFzaWNfcHJvcDsNCi0JdTY0IGFkZHIgPSBwcm9wLT5zcmFtX2Jhc2VfYWRkcmVzczsNCisJ
-dTY0IGFkZHIgPSBwcm9wLT5zcmFtX2Jhc2VfYWRkcmVzcywgc29iX2FkZHI7DQogCXUzMiBzaXpl
-ID0gaGRldi0+cGxkbSA/IDB4MTAwMDAgOiBwcm9wLT5zcmFtX3NpemU7DQogCXU2NCB2YWwgPSAw
-eDc3Nzc3Nzc3Nzc3Nzc3Nzd1bGw7DQotCWludCByYzsNCisJaW50IHJjLCBkbWFfaWQ7DQorCXUz
-MiBjaGFubmVsX29mZiA9IG1tRE1BX0NIXzFfV1JfQ09NUF9BRERSX0xPIC0NCisJCQkJCW1tRE1B
-X0NIXzBfV1JfQ09NUF9BRERSX0xPOw0KIA0KIAlyYyA9IGdveWFfbWVtc2V0X2RldmljZV9tZW1v
-cnkoaGRldiwgYWRkciwgc2l6ZSwgdmFsLCBmYWxzZSk7DQogCWlmIChyYykgew0KQEAgLTQ1NzEs
-NyArNDU3MiwxOSBAQCBpbnQgZ295YV9jb250ZXh0X3N3aXRjaChzdHJ1Y3QgaGxfZGV2aWNlICpo
-ZGV2LCB1MzIgYXNpZCkNCiAJCXJldHVybiByYzsNCiAJfQ0KIA0KKwkvKiB3ZSBuZWVkIHRvIHJl
-c2V0IHJlZ2lzdGVycyB0aGF0IHRoZSB1c2VyIGlzIGFsbG93ZWQgdG8gY2hhbmdlICovDQorCXNv
-Yl9hZGRyID0gQ0ZHX0JBU0UgKyBtbVNZTkNfTU5HUl9TT0JfT0JKXzEwMDc7DQorCVdSRUczMiht
-bURNQV9DSF8wX1dSX0NPTVBfQUREUl9MTywgbG93ZXJfMzJfYml0cyhzb2JfYWRkcikpOw0KKw0K
-Kwlmb3IgKGRtYV9pZCA9IDEgOyBkbWFfaWQgPCBOVU1CRVJfT0ZfRVhUX0hXX1FVRVVFUyA7IGRt
-YV9pZCsrKSB7DQorCQlzb2JfYWRkciA9IENGR19CQVNFICsgbW1TWU5DX01OR1JfU09CX09CSl8x
-MDAwICsNCisJCQkJCQkJKGRtYV9pZCAtIDEpICogNDsNCisJCVdSRUczMihtbURNQV9DSF8wX1dS
-X0NPTVBfQUREUl9MTyArIGNoYW5uZWxfb2ZmICogZG1hX2lkLA0KKwkJCQkJCWxvd2VyXzMyX2Jp
-dHMoc29iX2FkZHIpKTsNCisJfQ0KKw0KIAlXUkVHMzIobW1UUENfUExMX0NMS19STFhfMCwgMHgy
-MDAwMjApOw0KKw0KIAlnb3lhX21tdV9wcmVwYXJlKGhkZXYsIGFzaWQpOw0KIA0KIAlnb3lhX2Ns
-ZWFyX3NtX3JlZ3MoaGRldik7DQotLSANCjIuMTcuMQ0KDQo=
+On Thu, May 30, 2019 at 12:09 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> From: Jiri Kosina <jkosina@suse.cz>
+>
+> As explained in
+>
+>         0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+>
+> we always, no matter what, have to bring up x86 HT siblings during boot at
+> least once in order to avoid first MCE bringing the system to its knees.
+>
+> That means that whenever 'nosmt' is supplied on the kernel command-line,
+> all the HT siblings are as a result sitting in mwait or cpudile after
+> going through the online-offline cycle at least once.
+>
+> This causes a serious issue though when a kernel, which saw 'nosmt' on its
+> commandline, is going to perform resume from hibernation: if the resume
+> from the hibernated image is successful, cr3 is flipped in order to point
+> to the address space of the kernel that is being resumed, which in turn
+> means that all the HT siblings are all of a sudden mwaiting on address
+> which is no longer valid.
+>
+> That results in triple fault shortly after cr3 is switched, and machine
+> reboots.
+>
+> Fix this by always waking up all the SMT siblings before initiating the
+> 'restore from hibernation' process; this guarantees that all the HT
+> siblings will be properly carried over to the resumed kernel waiting in
+> resume_play_dead(), and acted upon accordingly afterwards, based on the
+> target kernel configuration.
+> Symmetricaly, the resumed kernel has to push the SMT siblings to mwait
+> again in case it has SMT disabled; this means it has to online all
+> the siblings when resuming (so that they come out of hlt) and offline
+> them again to let them reach mwait.
+>
+> Cc: stable@vger.kernel.org # v4.19+
+> Debugged-by: Thomas Gleixner <tglx@linutronix.de>
+> Fixes: 0cc3cd21657b ("cpu/hotplug: Boot HT siblings at least once")
+> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+
+LGTM
+
+And I would prefer this one to go in through the PM tree due to the
+hibernate core changes,
+so can I get an ACK from the x86 arch side here, please?
+
+> ---
+>
+> v1 -> v2:
+>         - restructure error handling as suggested by peterz
+>         - add Rafael's ack
+>
+> v2 -> v3:
+>         - added extra online/offline dance for nosmt case during
+>           resume, as we want the siblings to be in mwait, not hlt
+>         - dropped peterz's and Rafael's acks for now due to the above
+>
+> v3 -> v4:
+>         - fix undefined return value from arch_resume_nosmt() in case
+>           it's not overriden by arch
+>
+>  arch/x86/power/cpu.c       | 10 ++++++++++
+>  arch/x86/power/hibernate.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/cpu.h        |  4 ++++
+>  kernel/cpu.c               |  4 ++--
+>  kernel/power/hibernate.c   |  9 +++++++++
+>  5 files changed, 58 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> index a7d966964c6f..513ce09e9950 100644
+> --- a/arch/x86/power/cpu.c
+> +++ b/arch/x86/power/cpu.c
+> @@ -299,7 +299,17 @@ int hibernate_resume_nonboot_cpu_disable(void)
+>          * address in its instruction pointer may not be possible to resolve
+>          * any more at that point (the page tables used by it previously may
+>          * have been overwritten by hibernate image data).
+> +        *
+> +        * First, make sure that we wake up all the potentially disabled SMT
+> +        * threads which have been initially brought up and then put into
+> +        * mwait/cpuidle sleep.
+> +        * Those will be put to proper (not interfering with hibernation
+> +        * resume) sleep afterwards, and the resumed kernel will decide itself
+> +        * what to do with them.
+>          */
+> +       ret = cpuhp_smt_enable();
+> +       if (ret)
+> +               return ret;
+>         smp_ops.play_dead = resume_play_dead;
+>         ret = disable_nonboot_cpus();
+>         smp_ops.play_dead = play_dead;
+> diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+> index 4845b8c7be7f..fc413717a45f 100644
+> --- a/arch/x86/power/hibernate.c
+> +++ b/arch/x86/power/hibernate.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/suspend.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/kdebug.h>
+> +#include <linux/cpu.h>
+>
+>  #include <crypto/hash.h>
+>
+> @@ -245,3 +246,35 @@ int relocate_restore_code(void)
+>         __flush_tlb_all();
+>         return 0;
+>  }
+> +
+> +int arch_resume_nosmt(void)
+> +{
+> +       int ret = 0;
+> +       /*
+> +        * We reached this while coming out of hibernation. This means
+> +        * that SMT siblings are sleeping in hlt, as mwait is not safe
+> +        * against control transition during resume (see comment in
+> +        * hibernate_resume_nonboot_cpu_disable()).
+> +        *
+> +        * If the resumed kernel has SMT disabled, we have to take all the
+> +        * SMT siblings out of hlt, and offline them again so that they
+> +        * end up in mwait proper.
+> +        *
+> +        * Called with hotplug disabled.
+> +        */
+> +       cpu_hotplug_enable();
+> +       if (cpu_smt_control == CPU_SMT_DISABLED ||
+> +                       cpu_smt_control == CPU_SMT_FORCE_DISABLED) {
+> +               enum cpuhp_smt_control old = cpu_smt_control;
+> +
+> +               ret = cpuhp_smt_enable();
+> +               if (ret)
+> +                       goto out;
+> +               ret = cpuhp_smt_disable(old);
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +out:
+> +       cpu_hotplug_disable();
+> +       return ret;
+> +}
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index 3813fe45effd..fcb1386bb0d4 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -201,10 +201,14 @@ enum cpuhp_smt_control {
+>  extern enum cpuhp_smt_control cpu_smt_control;
+>  extern void cpu_smt_disable(bool force);
+>  extern void cpu_smt_check_topology(void);
+> +extern int cpuhp_smt_enable(void);
+> +extern int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval);
+>  #else
+>  # define cpu_smt_control               (CPU_SMT_NOT_IMPLEMENTED)
+>  static inline void cpu_smt_disable(bool force) { }
+>  static inline void cpu_smt_check_topology(void) { }
+> +static inline int cpuhp_smt_enable(void) { return 0; }
+> +static inline int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval) { return 0; }
+>  #endif
+>
+>  /*
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index f2ef10460698..077fde6fb953 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -2061,7 +2061,7 @@ static void cpuhp_online_cpu_device(unsigned int cpu)
+>         kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+>  }
+>
+> -static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+> +int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+>  {
+>         int cpu, ret = 0;
+>
+> @@ -2093,7 +2093,7 @@ static int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+>         return ret;
+>  }
+>
+> -static int cpuhp_smt_enable(void)
+> +int cpuhp_smt_enable(void)
+>  {
+>         int cpu, ret = 0;
+>
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index c8c272df7154..b65635753e8e 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -257,6 +257,11 @@ void swsusp_show_speed(ktime_t start, ktime_t stop,
+>                 (kps % 1000) / 10);
+>  }
+>
+> +__weak int arch_resume_nosmt(void)
+> +{
+> +       return 0;
+> +}
+> +
+>  /**
+>   * create_image - Create a hibernation image.
+>   * @platform_mode: Whether or not to use the platform driver.
+> @@ -324,6 +329,10 @@ static int create_image(int platform_mode)
+>   Enable_cpus:
+>         suspend_enable_secondary_cpus();
+>
+> +       /* Allow architectures to do nosmt-specific post-resume dances */
+> +       if (!in_suspend)
+> +               error = arch_resume_nosmt();
+> +
+>   Platform_finish:
+>         platform_finish(platform_mode);
+>
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
