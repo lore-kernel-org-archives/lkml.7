@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F567C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C59C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5CD25864
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059A42585C
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559191031;
-	bh=7S8j5jW01AHLOPPGPqh/fAXWaXMjStk3Wa2qE0livms=;
+	s=default; t=1559191036;
+	bh=WOOrXOO/ZZElyoOFfQnb966ikiq3jXd6AlTIvyUJrzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1mpMsihJo69pFjNr8MGhwtpb0F1+4H/QvUI0oDjRe4qSdCKk2Ot4blGhq9WJKc7TE
-	 DR6mKlhypzvCQeWpEcZPn/6aqV+sUu1X1oVAcHz5gwjypb+UDOVEQEO0dYsLv1WJuH
-	 Gf0BbqcR5eUsEmt88Vc7O1ASOj0UUIn/D2zseEGg=
+	b=GsOGFJygEBM0EUOzl2kmzk9mSnUzvGZWSJrL8A4ruSh0QrehPuPl8Ws5yEiJR2EwO
+	 tScwKIQHg9j1jFCnuo/gX2AEXxgJpIZi/m0IwMtJlrBNR63GRROZuj69h6ATQmCMxL
+	 KTpbZXB7Zcxw28udXKFfP8mMzhz2PoYnTVssqJvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388406AbfE3EhJ (ORCPT
+        id S2388451AbfE3EhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:37:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfE3DMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729290AbfE3DMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:12:54 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E9C823E29;
-        Thu, 30 May 2019 03:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F90221BE2;
+        Thu, 30 May 2019 03:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185974;
-        bh=7S8j5jW01AHLOPPGPqh/fAXWaXMjStk3Wa2qE0livms=;
+        s=default; t=1559185973;
+        bh=WOOrXOO/ZZElyoOFfQnb966ikiq3jXd6AlTIvyUJrzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V4h95dNuMTHou5ATA184s8Oh2sd6fzGntUn6kJopid7/qFvHQYqpfRFLBat5+xAox
-         kU21Y+NYGQfEr14WJ3rOqqO4EMu8CKciFqrW5UtikvmgEGajdNB9hifDBxkpPFlNIj
-         IZ2oB/bMLB8782W4nqeD948Xi9gdbnhqqUcNjIUw=
+        b=HOkTjFrobELqSifYOK/IqQzaKFMYHiB2f3JfW7X4bCJWV9xYMhDWlwBstdHXd/knQ
+         ZJShaPP7EQoyi7t1wMaSUOBBskWZQvZaruPOTBg+96hDD8VKo+kNHm2vIB2+azACMR
+         gIXfqJgvXhArafn3bV+iheAzLW64iTqvuck4XHng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Steve Twiss <stwiss.opensource@diasemi.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 386/405] regulator: pv88080: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:24 -0700
-Message-Id: <20190530030600.220899537@linuxfoundation.org>
+Subject: [PATCH 5.1 385/405] regulator: da9063: Fix notifier mutex lock warning
+Date:   Wed, 29 May 2019 20:06:23 -0700
+Message-Id: <20190530030600.182478900@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -62,7 +62,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1867af94cfdf37fc70fe67b3d522e78352800196 ]
+[ Upstream commit 29d40b4a5776ec4727c9f0e00a884423dd5e3366 ]
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -73,43 +73,33 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
+Fixes: 69ca3e58d178 ("regulator: da9063: Add Dialog DA9063 voltage regulators support.")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88080-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/da9063-regulator.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index bdddacdbeb996..6279216fb2540 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -345,9 +345,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_VDD_FLT) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 2b0c7a85306ab..d7bdb95b7602e 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -615,9 +615,12 @@ static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ 		if (regl->info->oc_event.reg != DA9063_REG_STATUS_D)
+ 			continue;
  
-@@ -362,9 +364,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_OVER_TEMP) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+-		if (BIT(regl->info->oc_event.lsb) & bits)
++		if (BIT(regl->info->oc_event.lsb) & bits) {
++		        regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++		        regulator_unlock(regl->rdev);
++		}
+ 	}
  
+ 	return IRQ_HANDLED;
 -- 
 2.20.1
 
