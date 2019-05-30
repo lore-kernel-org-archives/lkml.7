@@ -2,163 +2,80 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F98C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7564AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383ED24140
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:27:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpP2jFgt"
+	by mail.kernel.org (Postfix) with ESMTP id 421DE24422
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 15:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559230083;
+	bh=CCpOoHuXTWyDNPaIYnLZU0zy5K1knoOQaj9xMEcwB3k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UAHpjGsrW+hP7hBAtCLrGrQKiYVdx+YCjFqoKca7jC6CpE59ZI/vAbpYi+HfMjHws
+	 2l2v0/6Z7lwoCYGKFwc6CX5QXz/x2Vvt56Z/M9t9Z6gLoDiZWbPRK6SviWLAkh7HOu
+	 JXVbljp95iy0xxobE6+TdfqC4rNBdysLyCjmk4yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfE3P10 (ORCPT
+        id S1727484AbfE3P2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 11:27:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46598 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfE3P1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 11:27:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so2202834pgr.13;
-        Thu, 30 May 2019 08:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/Pn5l7Gl3fvih/5a8ecI7LW5krUKtJRfsuSUzHjs23s=;
-        b=gpP2jFgtCJLEB0MnQDyz47dV/7gnyYt1BYPZpOKP9dg6hZigrNid6HaEfleX8rBhDT
-         2CMbnqRfJSPZU49ILILmeW18onoEXeSLtwwUgj14BpokFfGihmaEgN1O84ORiKN5g7AU
-         rSjVJZGa1KyvV5SoV6BMW7GQJwfsfw+f9xGQZPws4NCbe7OyU5qm2lhndbFGJAASQCJd
-         GONqeXBIkUhBF8bXKRP5HQVoPTcHAXr/Xa7pGfKov1ZrDlzKxpwMOMuNMXNOxvsebNFm
-         WXgy3x4rlvFU//rUsD8CoYwPyg0aLzvgBb5aFcfFgu6FeSFEk/6yr5SzRtXeyZgLbcVs
-         0Mpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/Pn5l7Gl3fvih/5a8ecI7LW5krUKtJRfsuSUzHjs23s=;
-        b=o41NbF4V6onCplPqdHA7MHanCVath9pVyugj2xCZyj9lW2OoFwyx8j714KBPznrE1S
-         1BDmF71mx8ewWdlqaKsmdPWYdoslUlvTkERixluO0bIiweQ6RxfZP0Mk0yCtUJg4UByG
-         NNskUjua2tuNutKKS68xw0BcMHkldoFNLVM0ac6B7WjuwcifWp88mbz0xomfrPfgroSi
-         kmI0TGR0gvR+VUtrBsp6DjKv/CRrQZp30qhE39XlUe+NUNCQud2skX9dRk28F0yl9SQa
-         jlChXxoIhV1Y+qDL1jio6CkssLoWk06a1wFm6UPOw4YLokUs2Z9hlskyQ61sRDZmuY03
-         qWww==
-X-Gm-Message-State: APjAAAW+Ezj3RJNT5ZL2eJx155F0VZGciCORxlw0WNGJ5EdH4ntomAXX
-        fWzR2cNXb9rJzGa3L7+bSdU=
-X-Google-Smtp-Source: APXvYqwJ7xSLFQLOkGndSn8SMMOb04mrm4o41TpHVluzE92VccrJo04wRYcNI3pBU0fXADZ0SYcZAw==
-X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr2443651pjj.13.1559230045287;
-        Thu, 30 May 2019 08:27:25 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id s28sm2750518pgl.88.2019.05.30.08.27.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 30 May 2019 08:27:24 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] ipv6: Prevent overrun when parsing v6 header options
-Date:   Thu, 30 May 2019 23:28:18 +0800
-Message-Id: <1559230098-1543-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 30 May 2019 11:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbfE3P2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 11:28:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CAB24395;
+        Thu, 30 May 2019 15:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559230081;
+        bh=CCpOoHuXTWyDNPaIYnLZU0zy5K1knoOQaj9xMEcwB3k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I/vO2kdq0cqoCpmMY0fMGZf7gcpxuXt6IIzwvsrQg/9c1saYjjD3axBWlDxjnho9N
+         zuSIZDJW7Ug//kGU25EYNbflQ65/PsjWtYPNkYr+VAd3WRVB0TNu0ZHvgMOy9/sJ44
+         lefbwdO25c/LncMsZn/jxZB6PQq5QPC2ZpBB46h8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com, tee-dev@lists.linaro.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v4 0/2] fTPM: firmware TPM running in TEE
+Date:   Thu, 30 May 2019 11:27:56 -0400
+Message-Id: <20190530152758.16628-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fragmentation code tries to parse the header options in order
-to figure out where to insert the fragment option.  Since nexthdr points
-to an invalid option, the calculation of the size of the network header
-can made to be much larger than the linear section of the skb and data
-is read outside of it.
+Changes since v3:
 
-This vulnerability is similar to CVE-2017-9074.
+ - Address comments by Jarkko Sakkinen
+ - Address comments by Igor Opaniuk
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- net/ipv6/mip6.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+Sasha Levin (2):
+  fTPM: firmware TPM running in TEE
+  fTPM: add documentation for ftpm driver
 
-diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
-index 64f0f7b..30ed1c5 100644
---- a/net/ipv6/mip6.c
-+++ b/net/ipv6/mip6.c
-@@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			       u8 **nexthdr)
- {
- 	u16 offset = sizeof(struct ipv6hdr);
--	struct ipv6_opt_hdr *exthdr =
--				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
- 	const unsigned char *nh = skb_network_header(skb);
- 	unsigned int packet_len = skb_tail_pointer(skb) -
- 		skb_network_header(skb);
-@@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 
- 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
- 
--	while (offset + 1 <= packet_len) {
-+	while (offset <= packet_len) {
-+		struct ipv6_opt_hdr *exthdr;
- 
- 		switch (**nexthdr) {
- 		case NEXTHDR_HOP:
-@@ -299,12 +298,15 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			return offset;
- 		}
- 
-+		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
-+			return -EINVAL;
-+
-+		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 		offset += ipv6_optlen(exthdr);
- 		*nexthdr = &exthdr->nexthdr;
--		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 	}
- 
--	return offset;
-+	return -EINVAL;
- }
- 
- static int mip6_destopt_init_state(struct xfrm_state *x)
-@@ -399,8 +401,6 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			     u8 **nexthdr)
- {
- 	u16 offset = sizeof(struct ipv6hdr);
--	struct ipv6_opt_hdr *exthdr =
--				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
- 	const unsigned char *nh = skb_network_header(skb);
- 	unsigned int packet_len = skb_tail_pointer(skb) -
- 		skb_network_header(skb);
-@@ -408,7 +408,8 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 
- 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
- 
--	while (offset + 1 <= packet_len) {
-+	while (offset <= packet_len) {
-+		struct ipv6_opt_hdr *exthdr;
- 
- 		switch (**nexthdr) {
- 		case NEXTHDR_HOP:
-@@ -434,12 +435,15 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			return offset;
- 		}
- 
-+		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
-+			return -EINVAL;
-+
-+		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 		offset += ipv6_optlen(exthdr);
- 		*nexthdr = &exthdr->nexthdr;
--		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 	}
- 
--	return offset;
-+	return -EINVAL;
- }
- 
- static int mip6_rthdr_init_state(struct xfrm_state *x)
+ Documentation/security/tpm/index.rst        |   1 +
+ Documentation/security/tpm/tpm_ftpm_tee.rst |  31 ++
+ drivers/char/tpm/Kconfig                    |   5 +
+ drivers/char/tpm/Makefile                   |   1 +
+ drivers/char/tpm/tpm_ftpm_tee.c             | 380 ++++++++++++++++++++
+ drivers/char/tpm/tpm_ftpm_tee.h             |  40 +++
+ 6 files changed, 458 insertions(+)
+ create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+ create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
+ create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
+
 -- 
-2.7.4
+2.20.1
 
