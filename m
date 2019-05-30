@@ -2,52 +2,51 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A85C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5948C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C96624F1A
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C82424F18
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188753;
-	bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
+	s=default; t=1559188759;
+	bh=nyfPIe0u8n8KIQrrASxE206fImnENFxIy8VAiZmQtcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbYMbv4+ZUAQER/0/D2swOJKNgtTQcWmH8nJoIHDb6YzRvN1il5tdeldQZDJsdu6C
-	 alVUPJ/o6VrFFJVulqpbtv9aw7urLve4iz5SH6GSvFDYD7v8FAwG/EexXQVyjz0OSv
-	 LNScd0TLo4n7/pFF0UojWkicoBlyhsChWM/4YAtE=
+	b=pCwIPaT2TUyvwZQSArhv5D5aSFJqFQ6XEv0JzjPiili1YtXQ2glUamCNohXn3KUw9
+	 BKUBt77PaVsLGqRm8YZEbjtD4zTIJ81hKAV2Vrxbqkjka3SVuGW/H3CYuuFw72Y5ot
+	 7iNuzA42kOS7cJbEqS5fsXTDntg8Kr4N0YWlbunI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387956AbfE3D5H (ORCPT
+        id S1732659AbfE3D7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731736AbfE3DSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:52 -0400
+        id S1730552AbfE3DSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:36 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7B324806;
-        Thu, 30 May 2019 03:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79102471D;
+        Thu, 30 May 2019 03:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186332;
-        bh=w3IVtbtJNkqRBo+VDM/Lw8cnn4ALV8HzJvwSy/aYl6k=;
+        s=default; t=1559186315;
+        bh=nyfPIe0u8n8KIQrrASxE206fImnENFxIy8VAiZmQtcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myJP0LnnJXldYcKqi8FCqnONVTelJGNu6nSigVUTfMf2A0KVPXsnHBBm5lSv2iXn8
-         0x3LjZf7rFpnKrXFtkw9gQLIDIPkM+mV07lmemFt1PU01yLtdY6FQVPXCWDxRizXWY
-         Y+wxYT3DstCDE9Et3sY+i52vv2EIRIrxFnhCs3dA=
+        b=rZ3R7BzRgO59XWEofAyzhKJE6bngPyWE0U9ooxMnUbgyyR7Z7zZAPNjy4BQrTmJUA
+         nwuh2y6iGPps3OuPKSSfzO42G0tBpxmGqvV2GJtHk4c/YhDTmMSAZ7QFYIfgk8SqhT
+         KQSNfov1PkIrLB1+SamRRNf4Mp+MXxis8KTvhUSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 051/193] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
-Date:   Wed, 29 May 2019 20:05:05 -0700
-Message-Id: <20190530030456.765896314@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 020/193] btrfs: sysfs: dont leak memory when failing add fsid
+Date:   Wed, 29 May 2019 20:04:34 -0700
+Message-Id: <20190530030451.543837359@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
 References: <20190530030446.953835040@linuxfoundation.org>
@@ -60,57 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
+From: Tobin C. Harding <tobin@kernel.org>
 
-If "ret_len" is negative then it could lead to a NULL dereference.
+commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
 
-The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
-then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
-brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
-Most of the functions in that call tree check whether the buffer we pass
-is NULL but there are at least a couple places which don't such as
-brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
-from the buffer so it would result in a NULL dereference.
+A failed call to kobject_init_and_add() must be followed by a call to
+kobject_put().  Currently in the error path when adding fs_devices we
+are missing this call.  This could be fixed by calling
+btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
+by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
+Here we choose the second option because it prevents the slightly
+unusual error path handling requirements of kobject from leaking out
+into btrfs functions.
 
-The fix is to change the types so that "ret_len" can't be negative.  (If
-we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
-issue).
+Add a call to kobject_put() in the error path of kobject_add_and_init().
+This causes the release method to be called if kobject_init_and_add()
+fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
+and the error code in this function is already written with the
+assumption that the release method is called during the error path of
+open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
+fail_fsdev_sysfs label).
 
-Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org # v4.4+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/sysfs.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-index 8eff2753abade..d493021f60318 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 	struct brcmf_if *ifp;
- 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
- 	struct sk_buff *reply;
--	int ret, payload, ret_len;
-+	unsigned int payload, ret_len;
- 	void *dcmd_buf = NULL, *wr_pointer;
- 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
-+	int ret;
+--- a/fs/btrfs/sysfs.c
++++ b/fs/btrfs/sysfs.c
+@@ -794,7 +794,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
+ 	fs_devs->fsid_kobj.kset = btrfs_kset;
+ 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
+ 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
+-	return error;
++	if (error) {
++		kobject_put(&fs_devs->fsid_kobj);
++		return error;
++	}
++
++	return 0;
+ }
  
- 	if (len < sizeof(*cmdhdr)) {
- 		brcmf_err("vendor command too short: %d\n", len);
-@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 			brcmf_err("oversize return buffer %d\n", ret_len);
- 			ret_len = BRCMF_DCMD_MAXLEN;
- 		}
--		payload = max(ret_len, len) + 1;
-+		payload = max_t(unsigned int, ret_len, len) + 1;
- 		dcmd_buf = vzalloc(payload);
- 		if (NULL == dcmd_buf)
- 			return -ENOMEM;
--- 
-2.20.1
-
+ int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
 
 
