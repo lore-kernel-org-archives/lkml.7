@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C4CC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C34EC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBB924F70
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564D224F64
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188832;
-	bh=EZBzuhK/Xg9IZDP/FXOwCB5SEoTCStbb2YO/OA05ksU=;
+	s=default; t=1559188840;
+	bh=BqQOaGoHrd8Qb5pIChnRMgyyNk5t7UY4NN7cO91/rhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sps+ucZkZ7ekjXhvVqZZhyLDkAZr76RIJSmqnAtlZOvPReh7zr1vTHqN9zpI1PvMT
-	 BPmZrb1IKn4C/jgaa3UlTaZ3fNzhXwzX1/kdCHvWdzsKmgTkqkeHRf2V4Z5tJPvw6d
-	 ClerTfMeYusrq8xCKSZpp+0nDLx5iJlDoHm9qkVQ=
+	b=SxJONd0kQgEQUSNC7ld/UWVjbK4e6DaYw5Yq6OtiYHVG00d6PotfP4vBULKTBw4r2
+	 /UweJZSU4uInI48wKWz6BGpWDVQnR9S7csCJnXNfIBktyWWb9If9m5vJYfu8sQ++9K
+	 VoM2iB3LufvAHh+xlIAvKGAFuO3hUzz0l1mAsGuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbfE3EAc (ORCPT
+        id S1731660AbfE3EAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50966 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730593AbfE3DSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:18:22 -0400
+        id S1730010AbfE3DSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:18:21 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A3E247AF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5856D2479B;
         Thu, 30 May 2019 03:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186301;
-        bh=EZBzuhK/Xg9IZDP/FXOwCB5SEoTCStbb2YO/OA05ksU=;
+        bh=BqQOaGoHrd8Qb5pIChnRMgyyNk5t7UY4NN7cO91/rhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVJk64uqHDoErSIdN9dyWHMtQxwUenB63MBwaxF2ZhUkkIjbKZipYHdvX9n+LjAzM
-         cSZZMs1R+etnbjwaDgQu1zbnY6uL019t8YjvhgiBG9sHTAac5QCX4CnDQvTn+iGZi4
-         VXMeodLKUPD/ON/Q4Bqribsx4tpX4MlIzCbbyOjk=
+        b=SIwe5Ju7wicvRlKMHlQbJmVyX72lVW2PSgdsO0PEnuxLi7iXf2rWGPMyEC9W+U0s7
+         WgaQ4iaO69vLx8X2gwTslSHZwo4eng3dizR3ZUKD/txD/e5ZrmoEckmtIHh+E+eP6w
+         Q5v8J5fg5LX6VQP8VwJ8dK6H2CKoYL/0g9sRZjrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Trent Piepho <tpiepho@impinj.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 267/276] spi: imx: stop buffer overflow in RX FIFO flush
-Date:   Wed, 29 May 2019 20:07:05 -0700
-Message-Id: <20190530030541.898993692@linuxfoundation.org>
+Subject: [PATCH 4.19 266/276] spi: rspi: Fix sequencer reset during initialization
+Date:   Wed, 29 May 2019 20:07:04 -0700
+Message-Id: <20190530030541.834613754@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
 References: <20190530030523.133519668@linuxfoundation.org>
@@ -64,55 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c842749ea1d32513f9e603c074d60d7aa07cb2ef ]
+[ Upstream commit 26843bb128590edd7eba1ad7ce22e4b9f1066ce3 ]
 
-Commit 71abd29057cb ("spi: imx: Add support for SPI Slave mode") added
-an RX FIFO flush before start of a transfer.  In slave mode, the master
-may have sent more data than expected and this data will still be in the
-RX FIFO at the start of the next transfer, and so needs to be flushed.
+While the sequencer is reset after each SPI message since commit
+880c6d114fd79a69 ("spi: rspi: Add support for Quad and Dual SPI
+Transfers on QSPI"), it was never reset for the first message, thus
+relying on reset state or bootloader settings.
 
-However, the code to do the flush was accidentally saving this data into
-the previous transfer's RX buffer, clobbering the contents of whatever
-followed that buffer.
+Fix this by initializing it explicitly during configuration.
 
-Change it to empty the FIFO and throw away the data.  Every one of the
-RX functions for the different eCSPI versions and modes reads the RX
-FIFO data using the same readl() call, so just use that, rather than
-using the spi_imx->rx function pointer and making sure all the different
-rx functions have a working "throw away" mode.
-
-There is another issue, which affects master mode when switching from
-DMA to PIO.  There can be extra data in the RX FIFO which triggers this
-flush code, causing memory corruption in the same manner.  I don't know
-why this data is unexpectedly in the FIFO.  It's likely there is a
-different bug or erratum responsible for that.  But regardless of that,
-I think this is proper fix the for bug at hand here.
-
-Fixes: 71abd29057cb ("spi: imx: Add support for SPI Slave mode")
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+Fixes: 0b2182ddac4b8837 ("spi: add support for Renesas RSPI")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-rspi.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 08dd3a31a3e5f..5b6f3655c366a 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -1427,7 +1427,7 @@ static int spi_imx_transfer(struct spi_device *spi,
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index b37de1d991d6a..d61120822f026 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -279,7 +279,8 @@ static int rspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets parity, interrupt mask */
+ 	rspi_write8(rspi, 0x00, RSPI_SPCR2);
  
- 	/* flush rxfifo before transfer */
- 	while (spi_imx->devtype_data->rx_available(spi_imx))
--		spi_imx->rx(spi_imx);
-+		readl(spi_imx->base + MXC_CSPIRXDATA);
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
  
- 	if (spi_imx->slave_mode)
- 		return spi_imx_pio_transfer_slave(spi, transfer);
+@@ -323,7 +324,8 @@ static int rspi_rz_set_config_register(struct rspi_data *rspi, int access_size)
+ 	rspi_write8(rspi, 0x00, RSPI_SSLND);
+ 	rspi_write8(rspi, 0x00, RSPI_SPND);
+ 
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi->spcmd |= SPCMD_SPB_8_TO_16(access_size);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+@@ -374,7 +376,8 @@ static int qspi_set_config_register(struct rspi_data *rspi, int access_size)
+ 	/* Sets buffer to allow normal operation */
+ 	rspi_write8(rspi, 0x00, QSPI_SPBFCR);
+ 
+-	/* Sets SPCMD */
++	/* Resets sequencer */
++	rspi_write8(rspi, 0, RSPI_SPSCR);
+ 	rspi_write16(rspi, rspi->spcmd, RSPI_SPCMD0);
+ 
+ 	/* Sets RSPI mode */
 -- 
 2.20.1
 
