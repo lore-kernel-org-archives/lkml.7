@@ -2,98 +2,123 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5516AC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2340C28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B956253AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08BF253B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 09:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfE3JTd (ORCPT
+        id S1727462AbfE3JTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 05:19:33 -0400
-Received: from mx.socionext.com ([202.248.49.38]:34654 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbfE3JTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 05:19:33 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 30 May 2019 18:19:31 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 27D56180D46;
-        Thu, 30 May 2019 18:19:31 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 30 May 2019 18:19:31 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 61F5C1A14E3;
-        Thu, 30 May 2019 18:19:30 +0900 (JST)
-Received: from user-VB.e01.socionext.com (unknown [10.213.119.151])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 40F06120C10;
-        Thu, 30 May 2019 18:19:30 +0900 (JST)
-From:   Takao Orito <orito.takao@socionext.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org,
-        jaswinder.singh@linaro.org, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com,
-        orito.takao@socionext.com
-Subject: [PATCH v2 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD controller
-Date:   Thu, 30 May 2019 18:22:11 +0900
-Message-Id: <1559208131-426-1-git-send-email-orito.takao@socionext.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 30 May 2019 05:19:44 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43897 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727168AbfE3JTn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 05:19:43 -0400
+Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 30 May 2019 12:19:41 +0300
+Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x4U9JdpZ007368;
+        Thu, 30 May 2019 12:19:40 +0300
+From:   Parav Pandit <parav@mellanox.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, kwankhede@nvidia.com, alex.williamson@redhat.com
+Cc:     cjia@nvidia.com, parav@mellanox.com
+Subject: [PATCHv5 0/3] vfio/mdev: Improve vfio/mdev core module
+Date:   Thu, 30 May 2019 04:19:25 -0500
+Message-Id: <20190530091928.49724-1-parav@mellanox.com>
+X-Mailer: git-send-email 2.19.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the device-tree binding documentation for Milbeaut SDHCI driver.
+As we would like to use mdev subsystem for wider use case as
+discussed in [1], [2] apart from an offline discussion.
+This use case is also discussed with wider forum in [4] in track
+'Lightweight NIC HW functions for container offload use cases'.
 
-Signed-off-by: Takao Orito <orito.takao@socionext.com>
+This series is prep-work and improves vfio/mdev module in following ways.
+
+Patch-1 Improves the mdev create/remove sequence to match Linux
+bus, device model
+Patch-2 Avoid recreating remove file on stale device to eliminate
+call trace
+Patch-3 Fix race conditions of create/remove with parent removal.
+This is improved version than using srcu as srcu can take seconds
+to minutes.
+
+This series is tested using
+(a) mtty with VM using vfio_mdev driver for positive tests and device
+removal while device in use by VM using vfio_mdev driver.
+
+(b) mlx5 core driver using RFC patches [3] and internal patches.
+Internal patches are large and cannot be combined with this prep-work
+patches. It will posted once prep-work completes.
+
+[1] https://www.spinics.net/lists/netdev/msg556978.html
+[2] https://lkml.org/lkml/2019/3/7/696
+[3] https://lkml.org/lkml/2019/3/8/819
+[4] https://netdevconf.org/0x13/session.html?workshop-hardware-offload
+
 ---
- .../devicetree/bindings/mmc/sdhci-milbeaut.txt     | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
+Changelog:
+---
+v4->v5:
+ - Addressed comments from Alex Williamson
+ - Added comment around mdev_device_remove_common()
+ - Added lockdep assert to catch any missing lock
+ - Corrected 'system' to 'sequence' in 2nd patch commit log
+ - Refactored mdev_device_remove_cb() to remove unused parent
+ - Added Cornelia's Reviewed-by signature to already reviewed patches 1, 2.
+v3->v4:
+ - Addressed comments from Cornelia for unbalanced mutex_unlock
+ - Correct typo of subsquent to subsequent in patch-1 commit log
+ - Instead of using refcount and completion, using rwsem to synchronize
+   between mdev creation/deletion and parent unregistration
+v2->v3:
+ - Addressed comment from Cornelia
+ - Corrected several errors in commit log, updated commit log
+ - Dropped already merged 7 patches
+v1->v2:
+ - Addressed comments from Alex
+ - Rebased
+ - Inserted the device checking loop in Patch-6 as original code
+ - Added patch 7 to 10
+ - Added fixes for race condition in create/remove with parent removal
+   Patch-10 uses simplified refcount and completion, instead of srcu
+   which might take seconds to minutes on busy system.
+ - Added fix for device create/remove sequence to match
+   Linux device, bus model
+v0->v1:
+ - Dropped device placement on bus sequence patch for this series
+ - Addressed below comments from Alex, Kirti, Maxim.
+ - Added Review-by tag for already reviewed patches.
+ - Dropped incorrect patch of put_device().
+ - Corrected Fixes commit tag for sysfs remove sequence fix
+ - Split last 8th patch to smaller refactor and fixes patch
+ - Following coding style commenting format
+ - Fixed accidental delete of mutex_lock in mdev_unregister_device
+ - Renamed remove helped to mdev_device_remove_common().
+ - Rebased for uuid/guid change
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
-new file mode 100644
-index 0000000..6063116
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-milbeaut.txt
-@@ -0,0 +1,32 @@
-+* SOCIONEXT Milbeaut SDHCI controller
-+
-+This file documents differences between the core properties in mmc.txt
-+and the properties used by the sdhci_milbeaut driver.
-+
-+Required properties:
-+- compatible: "socionext,milbeaut-m10v-sdhci-3.0"
-+- clocks: Must contain an entry for each entry in clock-names. It is a
-+  list of phandles and clock-specifier pairs.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names: Should contain the following two entries:
-+	"iface" - clock used for sdhci interface
-+	"core"  - core clock for sdhci controller
-+- vmmc-supply: a phandle of a fixed GPIO regulator
-+
-+Optional properties:
-+- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
-+  requires the CMD_DAT_DELAY control to be enabled.
-+
-+Example:
-+	sdhci3: mmc@1b010000 {
-+		compatible = "socionext,milbeaut-m10v-sdhci-3.0";
-+		reg = <0x1b010000 0x10000>;
-+		interrupts = <0 265 0x4>;
-+		voltage-ranges = <3300 3300>;
-+		bus-width = <4>;
-+		clocks = <&clk 7>, <&ahb_clk>;
-+		clock-names = "core", "iface";
-+		cap-sdio-irq;
-+		vmmc-supply = <&vcc_sdhci3>;
-+		fujitsu,cmd-dat-delay-select;
-+	};
+Parav Pandit (3):
+  vfio/mdev: Improve the create/remove sequence
+  vfio/mdev: Avoid creating sysfs remove file on stale device removal
+  vfio/mdev: Synchronize device create/remove with parent removal
+
+ drivers/vfio/mdev/mdev_core.c    | 124 ++++++++++++++-----------------
+ drivers/vfio/mdev/mdev_private.h |   4 +-
+ drivers/vfio/mdev/mdev_sysfs.c   |   6 +-
+ 3 files changed, 61 insertions(+), 73 deletions(-)
+
 -- 
-1.9.1
-
+2.19.2
 
