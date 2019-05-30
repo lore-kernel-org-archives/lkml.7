@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35841C28CC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A1FC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C0E24899
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8D6248C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559186373;
-	bh=Zj5rtlTKEDo9wx0Ppc+i/QuIy0p67H/+gPJBTzb4wzY=;
+	s=default; t=1559186382;
+	bh=MlcUk6G72+uvbk4USYC2xUeg1qIwVYA88yJIJcr6nNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1T1fdPO57jnu/I8Jo2uzxTxVFjc8kR1AHbKDKX65X5pY1/lBl1glFopHmMXGSTDTg
-	 BXSAMUI/DhkcsID8KqmDUEh9S0ZHNzJsMWDxzBHaYDtxvFj7GC+Jd7raaQyqB/JgtS
-	 Ke+tkFjkTgKJtFytW4KOSizPoBiD7ih6YZNTW8Qk=
+	b=prGcrTgfzENY38N/q4isvuGv1id1ARw0XK0mxHiu1EhQh0G7aKjJlyUNeO/bT5ZWx
+	 XS2YeC6vpopB9vGevbW36oXZNqqFQ6dvKAK01GdDet0aKExuVM+mHKvxdRlFkJootw
+	 uOofIKk2CLFZZIfLvgLlWwrhvvcF4MZc6wU3OGCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbfE3DTc (ORCPT
+        id S1731119AbfE3DTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730324AbfE3DPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:30 -0400
+        id S1730376AbfE3DPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:35 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 174E524547;
-        Thu, 30 May 2019 03:15:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC7F245A7;
+        Thu, 30 May 2019 03:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186130;
-        bh=Zj5rtlTKEDo9wx0Ppc+i/QuIy0p67H/+gPJBTzb4wzY=;
+        s=default; t=1559186135;
+        bh=MlcUk6G72+uvbk4USYC2xUeg1qIwVYA88yJIJcr6nNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7xsk0rCFsQDX4Q0ySi54wmxgLMlVv5PMaHmTw67CTuBgrVbTkekGosgmEYjwh9NB
-         jhd/qqED9aHFMh+942+SpFpjGuJHb5LNkYZ8RNbgPpD9TvY4RMCxemVk7+kyZTMEw1
-         PfdjVDBX3E5BZDi7HsVqlr8+6jNreD6+Et9s+Xow=
+        b=RToj5ge8iT+Fe056ROxAUho0H/sw1jSR2bw6FEExuAPqWjZHVwYT+GKBkFh9Ijbgx
+         UHuQ53wJXysBM/t6+A6xesMbcZgxQyIsqjrq0mDK7L48pkVAql5Bsp3F/pP2TLWuOb
+         IWPODsiCRzcVMXtZHZFyrPWdXj+Vfqq2dVVmP/us=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Wenjing Liu <Wenjing.Liu@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 292/346] media: v4l2-fwnode: The first default data lane is 0 on C-PHY
-Date:   Wed, 29 May 2019 20:06:05 -0700
-Message-Id: <20190530030555.663573280@linuxfoundation.org>
+Subject: [PATCH 5.0 300/346] drm/amd/display: add pipe lock during stream update
+Date:   Wed, 29 May 2019 20:06:13 -0700
+Message-Id: <20190530030556.048112041@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,43 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fff35d45e16fae125c6000cb87e254cb634ac7fb ]
+[ Upstream commit e6bddf6c67f9a3abf6f1ef75e52bc1cd228dfe4d ]
 
-C-PHY has no clock lanes. Therefore the first data lane is 0 by default.
+[why]
+Stream update will adjust both info packets and stream params,
+need to make sure all things are applied togather.
 
-Fixes: edc6d56c2e7e ("media: v4l: fwnode: Support parsing of CSI-2 C-PHY endpoints")
+[how]
+add pipe lock during stream update
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 9bfedd7596a1a..a398b7885399c 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -225,6 +225,10 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 	if (bus_type == V4L2_MBUS_CSI2_DPHY ||
- 	    bus_type == V4L2_MBUS_CSI2_CPHY || lanes_used ||
- 	    have_clk_lane || (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
-+		/* Only D-PHY has a clock lane. */
-+		unsigned int dfl_data_lane_index =
-+			bus_type == V4L2_MBUS_CSI2_DPHY;
-+
- 		bus->flags = flags;
- 		if (bus_type == V4L2_MBUS_UNKNOWN)
- 			vep->bus_type = V4L2_MBUS_CSI2_DPHY;
-@@ -233,7 +237,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 		if (use_default_lane_mapping) {
- 			bus->clock_lane = 0;
- 			for (i = 0; i < num_data_lanes; i++)
--				bus->data_lanes[i] = 1 + i;
-+				bus->data_lanes[i] = dfl_data_lane_index + i;
- 		} else {
- 			bus->clock_lane = clock_lane;
- 			for (i = 0; i < num_data_lanes; i++)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 68529acba015f..c0db7788c4641 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1511,6 +1511,7 @@ static void commit_planes_do_stream_update(struct dc *dc,
+ 				continue;
+ 
+ 			if (stream_update->dpms_off) {
++				dc->hwss.pipe_control_lock(dc, pipe_ctx, true);
+ 				if (*stream_update->dpms_off) {
+ 					core_link_disable_stream(pipe_ctx, KEEP_ACQUIRED_RESOURCE);
+ 					dc->hwss.optimize_bandwidth(dc, dc->current_state);
+@@ -1518,6 +1519,7 @@ static void commit_planes_do_stream_update(struct dc *dc,
+ 					dc->hwss.prepare_bandwidth(dc, dc->current_state);
+ 					core_link_enable_stream(dc->current_state, pipe_ctx);
+ 				}
++				dc->hwss.pipe_control_lock(dc, pipe_ctx, false);
+ 			}
+ 
+ 			if (stream_update->abm_level && pipe_ctx->stream_res.abm) {
 -- 
 2.20.1
 
