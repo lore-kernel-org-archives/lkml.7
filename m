@@ -2,123 +2,96 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB7EC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87E1C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9334124B8D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94BF24923
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559187551;
+	bh=qktqclC8CUNFS+QMgcn1eVaCPnx95DfSItL9pLqdykw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z8aqzxOvtt5hChywS6FQxDuqC1XArPZQ5e5siJ0t1E/ukQQo3dn660gOUDFjIWX4j
+	 oSBn0842Gu1n3isO8vUtI+/RwAx8hcZSdRtfkJ2qn2wGc7tvlapkaImo65sEdOziNU
+	 VkVFsswXOEB2Biu6nI8HO6iJqlrSSbIpFTCwRG00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbfE3DjB (ORCPT
+        id S1732711AbfE3DWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:39:01 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49725 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732844AbfE3DWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:22:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TT-SMAB_1559186545;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TT-SMAB_1559186545)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 30 May 2019 11:22:26 +0800
-Subject: Re: [RFC PATCH 0/3] Make deferred split shrinker memcg aware
-To:     David Rientjes <rientjes@google.com>
-Cc:     ktkhai@virtuozzo.com, hannes@cmpxchg.org, mhocko@suse.com,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        shakeelb@google.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.DEB.2.21.1905281817090.86034@chino.kir.corp.google.com>
- <2e23bd8c-6120-5a86-9e9e-ab43b02ce150@linux.alibaba.com>
- <alpine.DEB.2.21.1905291402360.242480@chino.kir.corp.google.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <9af25d50-576a-3cc3-20a3-c0c61cf3e494@linux.alibaba.com>
-Date:   Thu, 30 May 2019 11:22:21 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 29 May 2019 23:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730768AbfE3DQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:41 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8DA24615;
+        Thu, 30 May 2019 03:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186201;
+        bh=qktqclC8CUNFS+QMgcn1eVaCPnx95DfSItL9pLqdykw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kb0PPyox63m3JgFC7fTIxJ9ew74TkMoowgDffRuhiPYXEGB8PnQiyEZC9ARFZ3x/S
+         81jNSlMzvaVtNiextlFmDxIc6TuVubtcf5ouueTePJFgWLFXIwNiyeMtoq+H9IqpCW
+         XEA9czTo5JlHsIzIDwHZo4/rjCrZNDaKpMDU8160=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+        Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 037/276] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
+Date:   Wed, 29 May 2019 20:03:15 -0700
+Message-Id: <20190530030526.556157459@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1905291402360.242480@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexander Potapenko <glider@google.com>
 
+commit dad7e270ba712ba1c99cd2d91018af6044447a06 upstream.
 
-On 5/30/19 5:07 AM, David Rientjes wrote:
-> On Wed, 29 May 2019, Yang Shi wrote:
->
->>> Right, we've also encountered this.  I talked to Kirill about it a week or
->>> so ago where the suggestion was to split all compound pages on the
->>> deferred split queues under the presence of even memory pressure.
->>>
->>> That breaks cgroup isolation and perhaps unfairly penalizes workloads that
->>> are running attached to other memcg hierarchies that are not under
->>> pressure because their compound pages are now split as a side effect.
->>> There is a benefit to keeping these compound pages around while not under
->>> memory pressure if all pages are subsequently mapped again.
->> Yes, I do agree. I tried other approaches too, it sounds making deferred split
->> queue per memcg is the optimal one.
->>
-> The approach we went with were to track the actual counts of compound
-> pages on the deferred split queue for each pgdat for each memcg and then
-> invoke the shrinker for memcg reclaim and iterate those not charged to the
-> hierarchy under reclaim.  That's suboptimal and was a stop gap measure
-> under time pressure: it's refreshing to see the optimal method being
-> pursued, thanks!
+syzkaller reported crashes on kfree() called from
+vivid_vid_cap_s_selection(). This looks like a simple typo, as
+dev->bitmap_cap is allocated with vzalloc() throughout the file.
 
-We did the exactly same thing for a temporary hotfix.
+Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
+parts")
 
->
->>> I'm curious if your internal applications team is also asking for
->>> statistics on how much memory can be freed if the deferred split queues
->>> can be shrunk?  We have applications that monitor their own memory usage
->> No, but this reminds me. The THPs on deferred split queue should be accounted
->> into available memory too.
->>
-> Right, and we have also seen this for users of MADV_FREE that have both an
-> increased rss and memcg usage that don't realize that the memory is freed
-> under pressure.  I'm thinking that we need some kind of MemAvailable for
-> memcg hierarchies to be the authoritative source of what can be reclaimed
-> under pressure.
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Reported-by: Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-It sounds useful. We also need know the available memory in memcg scope 
-in our containers.
+---
+ drivers/media/platform/vivid/vivid-vid-cap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
->>> through memcg stats or usage and proactively try to reduce that usage when
->>> it is growing too large.  The deferred split queues have significantly
->>> increased both memcg usage and rss when they've upgraded kernels.
->>>
->>> How are your applications monitoring how much memory from deferred split
->>> queues can be freed on memory pressure?  Any thoughts on providing it as a
->>> memcg stat?
->> I don't think they have such monitor. I saw rss_huge is abormal in memcg stat
->> even after the application is killed by oom, so I realized the deferred split
->> queue may play a role here.
->>
-> Exactly the same in my case :)  We were likely looking at the exact same
-> issue at the same time.
-
-Yes, it seems so. :-)
-
->> The memcg stat doesn't have counters for available memory as global vmstat. It
->> may be better to have such statistics, or extending reclaimable "slab" to
->> shrinkable/reclaimable "memory".
->>
-> Have you considered following how NR_ANON_MAPPED is tracked for each pgdat
-> and using that as an indicator of when the modify a memcg stat to track
-> the amount of memory on a compound page?  I think this would be necessary
-> for userspace to know what their true memory usage is.
-
-No, I haven't. Do you mean minus MADV_FREE and deferred split THP from 
-NR_ANON_MAPPED? It looks they have been decreased from NR_ANON_MAPPED 
-when removing rmap.
+--- a/drivers/media/platform/vivid/vivid-vid-cap.c
++++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+@@ -992,7 +992,7 @@ int vivid_vid_cap_s_selection(struct fil
+ 		v4l2_rect_map_inside(&s->r, &dev->fmt_cap_rect);
+ 		if (dev->bitmap_cap && (compose->width != s->r.width ||
+ 					compose->height != s->r.height)) {
+-			kfree(dev->bitmap_cap);
++			vfree(dev->bitmap_cap);
+ 			dev->bitmap_cap = NULL;
+ 		}
+ 		*compose = s->r;
 
 
