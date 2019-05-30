@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497B4C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF171C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22A022505D
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B597825077
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189170;
-	bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
+	s=default; t=1559189176;
+	bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSqDNWhQgo0NGTDuvM+jd7hrGMpwRk5w+uKTw+/NMUYLzinVWuTPABkFdq/xvdH8V
-	 nR8N9iWlHHnGWMN95VE4Z74XJs5Qxq/lIQsgacO+WHsWVy9Lhc7OuDhdU96G2eZZKB
-	 6cekpfiUMJ/VQhulFY4Y/7SfIE8e2EfW80/EqYUc=
+	b=WfSqHucogyFBuojFU5e3Chejq65fs5QFzRKHleirME6UQxnzSFZj+OeRRSlnATl/0
+	 eW0x7nxHmBWHz2ChQ3XD7CUq2weQtxkRJOjc9HeWbmsKBjLKwy8KiLHL4D5cY/phfe
+	 dmVfw7d9u/+b3/xzJBe76jvz/+SN19WefCBG4uEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfE3EGF (ORCPT
+        id S1731185AbfE3DRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:06:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731189AbfE3DRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:17:38 -0400
+        id S1728760AbfE3DOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:03 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71CA924664;
-        Thu, 30 May 2019 03:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21AB124557;
+        Thu, 30 May 2019 03:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186257;
-        bh=G7/EF0+sycBI1xObFRMuUqqyLtCEWKWSYGWiHh9zcnk=;
+        s=default; t=1559186043;
+        bh=pVWxZxbNvKqIRiN5qwRTrLrmotdfRvBhYgFWEWGfkok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzdOi70N7qV+bUkJ9fEScXJpb9O2jM4Topsvp/AibLKBailRLUHmAVRiyMr2bvJX2
-         /FksVADvZfVkL81fYZ/TORyvEdJSPXuw9bmnGxmD+DmcplqLG5S8T28UwGSwjDVeIC
-         1VcMr84iB9CkECCC9mbULeSykfz9CI7Zr7Opv8aE=
+        b=VmwfPrhgLGujd47vAC2h9li5bz++ZPEm+sOVseiDUyC640ZltbTSugdywWSWL0FaN
+         s3PHL5MPUFnvpJd5qbWI8J6nRQlS2fHab9uqYJA7YpWwWH3ucjeVD0/7YtYtivbIVg
+         iVyFwzGC5AnQs6mSq7C2Ypv0G1Uc/q3JhiaTj0yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 187/276] iio: hmc5843: fix potential NULL pointer dereferences
-Date:   Wed, 29 May 2019 20:05:45 -0700
-Message-Id: <20190530030536.909174655@linuxfoundation.org>
+Subject: [PATCH 5.0 134/346] pinctrl: samsung: fix leaked of_node references
+Date:   Wed, 29 May 2019 20:03:27 -0700
+Message-Id: <20190530030547.903130825@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
-References: <20190530030523.133519668@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,64 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 536cc27deade8f1ec3c1beefa60d5fbe0f6fcb28 ]
+[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
 
-devm_regmap_init_i2c may fail and return NULL. The fix returns
-the error when it fails.
+The call to of_find_compatible_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/magnetometer/hmc5843_i2c.c | 7 ++++++-
- drivers/iio/magnetometer/hmc5843_spi.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/magnetometer/hmc5843_i2c.c b/drivers/iio/magnetometer/hmc5843_i2c.c
-index 3de7f4426ac40..86abba5827a25 100644
---- a/drivers/iio/magnetometer/hmc5843_i2c.c
-+++ b/drivers/iio/magnetometer/hmc5843_i2c.c
-@@ -58,8 +58,13 @@ static const struct regmap_config hmc5843_i2c_regmap_config = {
- static int hmc5843_i2c_probe(struct i2c_client *cli,
- 			     const struct i2c_device_id *id)
- {
-+	struct regmap *regmap = devm_regmap_init_i2c(cli,
-+			&hmc5843_i2c_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&cli->dev,
--			devm_regmap_init_i2c(cli, &hmc5843_i2c_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+index 44c6b753f692a..85ddf49a51885 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+@@ -71,6 +71,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
+ 	}
  
-diff --git a/drivers/iio/magnetometer/hmc5843_spi.c b/drivers/iio/magnetometer/hmc5843_spi.c
-index 535f03a70d630..79b2b707f90e7 100644
---- a/drivers/iio/magnetometer/hmc5843_spi.c
-+++ b/drivers/iio/magnetometer/hmc5843_spi.c
-@@ -58,6 +58,7 @@ static const struct regmap_config hmc5843_spi_regmap_config = {
- static int hmc5843_spi_probe(struct spi_device *spi)
- {
- 	int ret;
-+	struct regmap *regmap;
- 	const struct spi_device_id *id = spi_get_device_id(spi);
- 
- 	spi->mode = SPI_MODE_3;
-@@ -67,8 +68,12 @@ static int hmc5843_spi_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
-+	regmap = devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	return hmc5843_common_probe(&spi->dev,
--			devm_regmap_init_spi(spi, &hmc5843_spi_regmap_config),
-+			regmap,
- 			id->driver_data, id->name);
- }
- 
+ 	clk_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!clk_base) {
+ 		pr_err("%s: failed to map clock registers\n", __func__);
+ 		return ERR_PTR(-EINVAL);
 -- 
 2.20.1
 
