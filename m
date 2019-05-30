@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D5C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829BDC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662F12570E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5128D25743
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190827;
-	bh=vSqXZ0l0ldwE+VmBMCfBQs1BzcztFcN3rc4xlAM8x+o=;
+	s=default; t=1559190835;
+	bh=bSW/zRakr983HeDe9R0FmG/hQdxqR93bcJ1wDX6JWcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vj3uNwRNlUvUCioElvK0UuuPBBRPKqF/Tc0EuO/zNNe+tHSdJnaO+4BH7HiLFNbOo
-	 V3Csk9KbyhYVKJzUs66CPdXb7qAPaXtcEckCStjTb2fDwbdJXQayzt0F4u8IGvmpzY
-	 /f4BMFYmbitIfQ+6e0leNKSmvecOVeV7wiVmd74I=
+	b=N67ybENnk9iZnPYUgfR5/17ms13LMcI/hb/w+Tzj7spGdDSZjDpHT2NRIF0SoeJzr
+	 qG6ExYXm8TAg/SLez3ZNLeP5+AIYcsH5IsvTVxYEsGGjdHoPEpWlLKvDBjMFvR5QUb
+	 kFpqPkZn8DAWkv+L6OjFWkrbnOBAHvBQlGGN9iv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbfE3Edq (ORCPT
+        id S1729853AbfE3Edy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfE3DN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729465AbfE3DN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:13:28 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01E4523D83;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C28124544;
         Thu, 30 May 2019 03:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186008;
-        bh=vSqXZ0l0ldwE+VmBMCfBQs1BzcztFcN3rc4xlAM8x+o=;
+        s=default; t=1559186007;
+        bh=bSW/zRakr983HeDe9R0FmG/hQdxqR93bcJ1wDX6JWcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuDiXvo9+yWvCKUpQ0Yu67qnuBN9oipJwHheBr55B/VanhAPWL41iPbeDalzmMeP9
-         H57iQZYjoKjO6Lq5iKhNxmXyU/pkgfNJ7LWIO1wCAOH6EpQoqJclVAkcHjsX20O3gc
-         BRYgXMkoZdXh92GEsQBeiN+JXaWNRtCzqgRjw37I=
+        b=ccJCcSFlMWwswZRM168gicN8SKln76Fe0HLlmeDexyrfkfre/xkz1qDZ3t8CXrvi9
+         PuztnAm7qU9K1MDdiQ/tMA4/4xPbr8XvkgejzMa3GA82wTSY0kjPdm7vv8JThHUP6D
+         trCEdE4w2mIxE+fN/nJ/nmQzMTcLE+Lz4SyMd9dQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 022/346] btrfs: sysfs: dont leak memory when failing add fsid
-Date:   Wed, 29 May 2019 20:01:35 -0700
-Message-Id: <20190530030541.845364252@linuxfoundation.org>
+Subject: [PATCH 5.0 021/346] btrfs: sysfs: Fix error path kobject memory leak
+Date:   Wed, 29 May 2019 20:01:34 -0700
+Message-Id: <20190530030541.780803446@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -61,24 +61,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tobin C. Harding <tobin@kernel.org>
 
-commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
+commit 450ff8348808a89cc27436771aa05c2b90c0eef1 upstream.
 
-A failed call to kobject_init_and_add() must be followed by a call to
-kobject_put().  Currently in the error path when adding fs_devices we
-are missing this call.  This could be fixed by calling
-btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-Here we choose the second option because it prevents the slightly
-unusual error path handling requirements of kobject from leaking out
-into btrfs functions.
+If a call to kobject_init_and_add() fails we must call kobject_put()
+otherwise we leak memory.
 
-Add a call to kobject_put() in the error path of kobject_add_and_init().
-This causes the release method to be called if kobject_init_and_add()
-fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-and the error code in this function is already written with the
-assumption that the release method is called during the error path of
-open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-fail_fsdev_sysfs label).
+Calling kobject_put() when kobject_init_and_add() fails drops the
+refcount back to 0 and calls the ktype release method (which in turn
+calls the percpu destroy and kfree).
+
+Add call to kobject_put() in the error path of call to
+kobject_init_and_add().
 
 Cc: stable@vger.kernel.org # v4.4+
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -88,24 +81,20 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/sysfs.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -825,7 +825,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
- 	fs_devs->fsid_kobj.kset = btrfs_kset;
- 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
- 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
--	return error;
-+	if (error) {
-+		kobject_put(&fs_devs->fsid_kobj);
-+		return error;
-+	}
-+
-+	return 0;
- }
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -3985,8 +3985,7 @@ static int create_space_info(struct btrf
+ 				    info->space_info_kobj, "%s",
+ 				    alloc_name(space_info->flags));
+ 	if (ret) {
+-		percpu_counter_destroy(&space_info->total_bytes_pinned);
+-		kfree(space_info);
++		kobject_put(&space_info->kobj);
+ 		return ret;
+ 	}
  
- int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
 
 
