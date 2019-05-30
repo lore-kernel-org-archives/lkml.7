@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994DDC072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B1C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7080524651
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC80524E03
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559188404;
-	bh=Ubb5xTQFXzgqC/dG4CE0HeMY8paSJZCVReWkm8znYPg=;
+	s=default; t=1559188407;
+	bh=pGdJXlPA3D7iOZ8ln5P2oeV31hWaclZe70Axgm70Nb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d4Y89oAoYAFLs/d9XScC+UROyt9Rc1m3fFLkKMRV2CAjBYykg563+c5JEWgfCwW4S
-	 kyDZOdCP8fqXz/0+zzKn6DJbAiVwVkB386NQ5DMDZWiK0oKq4+yNz6NBmfrlg5xyuj
-	 zYnSWGwfdukua1eoWfJhUg/R4ZweQB7B7Pazn4Cw=
+	b=IVzCzN2zrE9SWyGWwv+EUkLGvbVz21gWpAemsH4Qe9NXihTn3va5I8ZPbagPXOzsu
+	 jib/DI0VX7+xeTkfmTfdGOQvW3zVWCoAnNM6TgaBBnBLJdwMgbXRVZ+8EWIiuv4w5F
+	 XJwKQqg/LS8aElu7hnJQgt3263naeiqbvqwV9LSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbfE3DxX (ORCPT
+        id S1731915AbfE3DTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731916AbfE3DTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:19:31 -0400
+        id S1728892AbfE3DPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:24 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 528DE24881;
-        Thu, 30 May 2019 03:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B711924557;
+        Thu, 30 May 2019 03:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186370;
-        bh=Ubb5xTQFXzgqC/dG4CE0HeMY8paSJZCVReWkm8znYPg=;
+        s=default; t=1559186123;
+        bh=pGdJXlPA3D7iOZ8ln5P2oeV31hWaclZe70Axgm70Nb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrIxfa/qXB0Gr+5S2vBPwyk1kuAt603Ymnj0dJmh+n+SGd0vwVYUUW73peFoTVX92
-         F5b96kJ+k/PYZefO7Ya87FaNM+FAJeVsAFEYS/G33cN7aKArFrTwf6SdapOLu+Rp28
-         /tb0cKTVxRMuEKUuF5UQ5FYynQ6p1OLrPD+XU1jo=
+        b=sINZ7mRByq0QrY9j1OdaEDqiffee9bHLlDj8qVkIr8T7g7YYRiNr6cD75bcB21NvH
+         oH8wGXy3awrpFPi4msACYBKn34liHBRFiyjgoHHlM5S8HYiKnV1iVh9E6+WXTz1E1s
+         aCQDW06jFVKrofXdgBO99+FF758zvLsnVvBJeMkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/193] mwifiex: prevent an array overflow
-Date:   Wed, 29 May 2019 20:05:24 -0700
-Message-Id: <20190530030459.017144110@linuxfoundation.org>
+Subject: [PATCH 5.0 281/346] batman-adv: allow updating DAT entry timeouts on incoming ARP Replies
+Date:   Wed, 29 May 2019 20:05:54 -0700
+Message-Id: <20190530030555.157536107@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030446.953835040@linuxfoundation.org>
-References: <20190530030446.953835040@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,36 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
+[ Upstream commit 099e6cc1582dc2903fecb898bbeae8f7cf4262c7 ]
 
-The "rate_index" is only used as an index into the phist_data->rx_rate[]
-array in the mwifiex_hist_data_set() function.  That array has
-MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
-debugfs information.  The "rate_index" variable comes from the network
-skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
-it to prevent an array overflow.
+Currently incoming ARP Replies, for example via a DHT-PUT message, do
+not update the timeout for an already existing DAT entry. These ARP
+Replies are dropped instead.
 
-Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This however defeats the purpose of the DHCPACK snooping, for instance.
+Right now, a DAT entry in the DHT will be purged every five minutes,
+likely leading to a mesh-wide ARP Request broadcast after this timeout.
+Which then recreates the entry. The idea of the DHCPACK snooping is to
+be able to update an entry before a timeout happens, to avoid ARP Request
+flooding.
+
+This patch fixes this issue by updating a DAT entry on incoming
+ARP Replies even if a matching DAT entry already exists. While still
+filtering the ARP Reply towards the soft-interface, to avoid duplicate
+messages on the client device side.
+
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/batman-adv/distributed-arp-table.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
-index bfe84e55df776..f1522fb1c1e87 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
-@@ -531,5 +531,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
- 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
- 			      rx_rate - 1 : rx_rate;
+diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
+index b9ffe1826527e..0b8d84ece7db6 100644
+--- a/net/batman-adv/distributed-arp-table.c
++++ b/net/batman-adv/distributed-arp-table.c
+@@ -1398,7 +1398,6 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
+ 			   hw_src, &ip_src, hw_dst, &ip_dst,
+ 			   dat_entry->mac_addr,	&dat_entry->ip);
+ 		dropped = true;
+-		goto out;
+ 	}
  
-+	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
-+		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
+ 	/* Update our internal cache with both the IP addresses the node got
+@@ -1407,6 +1406,9 @@ bool batadv_dat_snoop_incoming_arp_reply(struct batadv_priv *bat_priv,
+ 	batadv_dat_entry_add(bat_priv, ip_src, hw_src, vid);
+ 	batadv_dat_entry_add(bat_priv, ip_dst, hw_dst, vid);
+ 
++	if (dropped)
++		goto out;
 +
- 	return rate_index;
- }
+ 	/* If BLA is enabled, only forward ARP replies if we have claimed the
+ 	 * source of the ARP reply or if no one else of the same backbone has
+ 	 * already claimed that client. This prevents that different gateways
 -- 
 2.20.1
 
