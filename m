@@ -2,112 +2,152 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4535DC28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2562CC28CC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188D925117
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oR8V5EBD"
+	by mail.kernel.org (Postfix) with ESMTP id F0E48251F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 08:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfE3Icq (ORCPT
+        id S1726784AbfE3IjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 04:32:46 -0400
-Received: from mail-eopbgr60089.outbound.protection.outlook.com ([40.107.6.89]:60480
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbfE3Icp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 04:32:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fi54/Wsb2EELtCPVtGgRW8DWCkW3wAB0JnotLKVG+Gs=;
- b=oR8V5EBDtL7fbUySSjtUo+BZWIhQsw1Yjy1MPQf3Qip+d6FWtvSBNKbabIu5eFkb5S1vegNq8zbX51dTnIDICwbH7u78KDT42e9SUm9w4jJZTi9AmN72+H6qF6AmdarXe8E7FEAS5fo0lCvU0ZE1aFCrjCNr+OY2U1FWs3THJUo=
-Received: from VI1PR04MB5214.eurprd04.prod.outlook.com (20.177.51.203) by
- VI1PR04MB3085.eurprd04.prod.outlook.com (10.170.228.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 30 May 2019 08:32:41 +0000
-Received: from VI1PR04MB5214.eurprd04.prod.outlook.com
- ([fe80::5141:a777:e2ca:f736]) by VI1PR04MB5214.eurprd04.prod.outlook.com
- ([fe80::5141:a777:e2ca:f736%3]) with mapi id 15.20.1922.021; Thu, 30 May 2019
- 08:32:41 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 0/3] Add mclk0 clock source for SAI
-Thread-Topic: [PATCH 0/3] Add mclk0 clock source for SAI
-Thread-Index: AQHVFVgpjX4j9HD02UiVNkRH/YGV5aaCuuaAgACe54A=
-Date:   Thu, 30 May 2019 08:32:41 +0000
-Message-ID: <fe755bc76ac7226790a7db6ab025db04fcd6d8d5.camel@nxp.com>
-References: <20190528132034.3908-1-daniel.baluta@nxp.com>
-         <20190529230357.GB17556@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20190529230357.GB17556@Asurada-Nvidia.nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b68ef5d0-529e-4384-ffe3-08d6e4d961d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3085;
-x-ms-traffictypediagnostic: VI1PR04MB3085:
-x-microsoft-antispam-prvs: <VI1PR04MB30851DECD84980EA92A83E5BF9180@VI1PR04MB3085.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00531FAC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(39860400002)(136003)(346002)(189003)(199004)(66066001)(71190400001)(6246003)(6506007)(118296001)(71200400001)(76176011)(25786009)(66946007)(256004)(6916009)(76116006)(102836004)(66476007)(1361003)(316002)(6512007)(99286004)(229853002)(73956011)(44832011)(1411001)(2351001)(68736007)(4744005)(53936002)(186003)(14454004)(2501003)(478600001)(54906003)(6436002)(6486002)(4326008)(2906002)(486006)(2616005)(476003)(36756003)(446003)(11346002)(66446008)(7736002)(1730700003)(5640700003)(66556008)(8676002)(3846002)(6116002)(86362001)(5660300002)(64756008)(81156014)(26005)(305945005)(81166006)(8936002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3085;H:VI1PR04MB5214.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aeMVxTvOmwFeMyJ8V5lJolWb9AmL4hwvVn6eE+NdffmxoDeDcBnsNyvdIvy3HBitSifmbkDCV5hnTSLmikTY9F4hmcoWcsaztbNjk4oEEtw9hWqNDoFVznaDHDmp/qbMpIB0J0DlIbqXDrlsFgftuKx+qi9DrA1lLqt4tYDvbtrGkQROODGnYqUChp2WLk6mt64ROZteqJ+fNQ0zcxiCPrS1iIvCKNtP1819FbLJt3NE2a975tZlzTL/iRcDyQ6eG8wy22OGPCS1ZPN3fEsLbVyUIGj13a0SWqxZrB+U/4wh//e9RN6u3i7VP2Njmo+R81CZRPESkRMLkOH6oRzxgvFH5VVh39umhB9Zrh/QxQ8XFpOXPbbkKzVj05tkb2s+j5H5KtikwrxUeeBK+cG5N3G43hGbMUvKv0s1coWborA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1F4BDF9EB712444AB8F6F83A9950F048@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 30 May 2019 04:39:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726439AbfE3IjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 May 2019 04:39:00 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4U8bas4138555
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:38:59 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sta87mtnc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2019 04:38:59 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Thu, 30 May 2019 09:38:56 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 30 May 2019 09:38:51 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4U8covW52690944
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 May 2019 08:38:50 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 206FD4C044;
+        Thu, 30 May 2019 08:38:50 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 277EC4C050;
+        Thu, 30 May 2019 08:38:47 +0000 (GMT)
+Received: from [9.124.31.34] (unknown [9.124.31.34])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 May 2019 08:38:46 +0000 (GMT)
+Subject: Re: [PATCH] perf: Fix oops when kthread execs user process
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Young Xiao <92siuyang@gmail.com>, linux@armlinux.org.uk,
+        mark.rutland@arm.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kan.liang@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.vnet.ibm.com, mpe@ellerman.id.au,
+        acme@redhat.com, eranian@google.com, fweisbec@gmail.com,
+        jolsa@redhat.com, ravi.bangoria@linux.ibm.com
+References: <1559046689-24091-1-git-send-email-92siuyang@gmail.com>
+ <20190528140103.GT2623@hirez.programming.kicks-ass.net>
+ <20190528153224.GE20758@fuggles.cambridge.arm.com>
+ <20190528173228.GW2623@hirez.programming.kicks-ass.net>
+ <20190529091733.GA4485@fuggles.cambridge.arm.com>
+ <20190529101042.GN2623@hirez.programming.kicks-ass.net>
+ <20190529102022.GC4485@fuggles.cambridge.arm.com>
+ <20190529125557.GU2623@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Thu, 30 May 2019 14:08:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b68ef5d0-529e-4384-ffe3-08d6e4d961d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2019 08:32:41.8687
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: daniel.baluta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3085
+In-Reply-To: <20190529125557.GU2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19053008-0016-0000-0000-00000280EC8C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19053008-0017-0000-0000-000032DE01CA
+Message-Id: <efcd5cf4-3501-f3b6-bf47-145a9ef19a53@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-30_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905300066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTI5IGF0IDE2OjAzIC0wNzAwLCBOaWNvbGluIENoZW4gd3JvdGU6DQo+
-IE9uIFR1ZSwgTWF5IDI4LCAyMDE5IGF0IDAxOjIwOjQ2UE0gKzAwMDAsIERhbmllbCBCYWx1dGEg
-d3JvdGU6DQo+IA0KPiA+IDEpIFNBSSBjbG9jayBzb3VyY2Ugc2VsZWN0IE1VWCBpcyByZWFsbHkg
-cGFydCBvZiB0aGUgaGFyZHdhcmUNCj4gPiAyKSBmbGV4aWJpbGl0eSEgV2UgbGV0IERUIHRlbGwg
-dXMgd2hpY2ggaXMgdGhlIG9wdGlvbiBmb3IgTVVYDQo+ID4gb3B0aW9uIDAuDQo+IA0KPiBJIHRo
-aW5rIHRoZSAiTVVYIiBpcyBwbGF1c2libGUgY29tcGFyaW5nIHRvIHlvdXIgcHJldmlvdXMgdmVy
-c2lvbi4NCj4gQXMgbG9uZyBhcyBEVCBtYWludGFpbmVycyBhY2sgdGhlIERUIGJpbmRpbmcgZG9j
-LCBJIHdvdWxkIGJlIG9rYXkNCj4gdG8gYWNrIHRvby4gSnVzdCBvbmUgY29tbWVudHMgYXQgdGhl
-IGR0cy9kdHNpIGNoYW5nZXMsIEkga25vdyB0aGUNCj4gZHJpdmVyIHdvdWxkIGp1c3Qgd2FybiBv
-bGQgRFRzLCBidXQgaXQgZG9lcyBjaGFuZ2UgdGhlIGJlaGF2aW9yIGF0DQo+IHRoZSBtY2xrX2Ns
-a1swXSBmcm9tIHByZXZpb3VzbHkgYnVzX2NsayB0byBOVUxMIGFmdGVyIHRoaXMgc2VyaWVzLg0K
-DQpUaGFua3MgZm9yIHJldmlldywgd2lsbCBmaXggaW4gdjIuDQo=
+
+
+On 5/29/19 6:25 PM, Peter Zijlstra wrote:
+> On Wed, May 29, 2019 at 11:20:22AM +0100, Will Deacon wrote:
+>> Anyway, you can add my ack to your patch, but I bet we can remove that mm
+>> check :D
+> 
+> I've ended up with the below. Ravi, can you test if that does indeed
+> obsolete your PPC patch?
+
+Checking.
+
+> 
+> ---
+> Subject: perf: Fix perf_sample_regs_user()
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed May 29 14:37:24 CEST 2019
+> 
+> perf_sample_regs_user() uses 'current->mm' to test for the presence of
+> userspace, but this is insufficient, consider use_mm().
+> 
+> A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
+> PF_KTHREAD after it sets the new ->mm but before it drops to userspace
+> for the first time.
+
+This looks correct. I'll give it a try.
+
+> 
+> Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
+> 
+> Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+> Reported-by: Young Xiao <92siuyang@gmail.com>
+> Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Frederic Weisbecker <fweisbec@gmail.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/core.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5923,7 +5923,7 @@ static void perf_sample_regs_user(struct
+>  	if (user_mode(regs)) {
+>  		regs_user->abi = perf_reg_abi(current);
+>  		regs_user->regs = regs;
+> -	} else if (current->mm) {
+> +	} else if (!(current->flags & PF_KTHREAD)) {
+>  		perf_get_regs_user(regs_user, regs, regs_user_copy);
+>  	} else {
+>  		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+> 
+
