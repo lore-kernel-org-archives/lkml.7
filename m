@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF548C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715E5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC66252A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D6B252B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189931;
-	bh=BYFtQfBUzUSraymaH/ctnpl6FrmDvPDOsJF1vVqIk6E=;
+	s=default; t=1559189936;
+	bh=pBp0MadGZ6iq4Rn25Lwz6Ox1cKj7Tsg+bto5JUfxHtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=riPFtld3JKPfGoBH4xDIupZILcum2KCSDAVfg282TRwy9J6+w5nr02da7icu+0GWc
-	 fjbSu2BzJQQTP4pS5JvbfttatuVDjn5neNEXm7CSuLjB2A9lpPvJybEHqdmdd51s3y
-	 HCjBXnw7IYRlaTENqC2WJdLPN2KEZadIuuavk9lM=
+	b=JLf50C2NHjab1xEGUBY1cgVf29+10cJSKvgeFyynJOWouqXMLQy+XnkUqytuT17Xx
+	 WKWmkEy9oNRnmnwIdoo+mgSB8D1D9dyaQ0/nTt3yO4rRWdmd/tLjLZJjYU7RcqS6tX
+	 XH8fnUXXLjHLLf0U92xefJk/Hfy5aAn/ys6njzd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbfE3ESu (ORCPT
+        id S1730309AbfE3DP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbfE3DP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:29 -0400
+        id S1729263AbfE3DMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:12:51 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B5324559;
-        Thu, 30 May 2019 03:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC7E244E8;
+        Thu, 30 May 2019 03:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186129;
-        bh=BYFtQfBUzUSraymaH/ctnpl6FrmDvPDOsJF1vVqIk6E=;
+        s=default; t=1559185971;
+        bh=pBp0MadGZ6iq4Rn25Lwz6Ox1cKj7Tsg+bto5JUfxHtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWisfc/Enoy48vqV03KEtPdP/aLIwcLFx/YHXpMKvrrIiY3Q0NGZ2T3UovtqhPt97
-         uv2NZBDY2MxePKxSN4jRsWp13ZWKF2yO4YB2GY/CRsb7lWxDWOoLHxkcbmSV/2kD9/
-         3ZHBPiilBAWp/6/0CnIBBAEeIlGODmB+VJ/9RGWc=
+        b=nK5dPtAK2GhZMz0I+TaPDw4DsliUuBH3BSXe8SkJf3Sk6QBRMIcG3migqLbCYG1LS
+         kNP9o/QgnfpM9xdIZVNZUyRiwAf5uuWudZ48y11S+pAt0Y0A4JZT/YA37coH5NhCkK
+         cM109w/fB0JU7LbTh6IWbB0svTCcx7Q7WVzo7s/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 290/346] drm/amd/display: Reset alpha state for planes to the correct values
-Date:   Wed, 29 May 2019 20:06:03 -0700
-Message-Id: <20190530030555.570465890@linuxfoundation.org>
+Subject: [PATCH 5.1 402/405] extcon: axp288: Add a depends on ACPI to the Kconfig entry
+Date:   Wed, 29 May 2019 20:06:40 -0700
+Message-Id: <20190530030600.887026935@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
+References: <20190530030540.291644921@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,47 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eec3d5efd16d13984a88396b685ae17462fb6d87 ]
+[ Upstream commit fa3c098c2d52a268f6372fa053932e11f50cecb1 ]
 
-[Why]
-The plane_reset callback is subclassed but hasn't been updated since
-the drm helper got updated to include resetting alpha related state
-(state->alpha and state->pixel_blend_mode). The overlay planes
-exposed by amdgpu_dm were therefore being rendered as invisible by
-default ever since supported was exposed for alpha blending properties
-on overlays.
+As Hans de Goede pointed, using this driver without ACPI
+makes little sense, so add ACPI dependency to Kconfig entry
+to fix a build error while CONFIG_ACPI is not set.
 
-This caused regressions in igt@kms_plane_multiple@atomic-tiling-none
-and igt@kms_plane@plane-position-covered-pipe tests.
+drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
+drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
+    put_device(&adev->dev);
 
-[How]
-Reset the plane state values to their correct values as defined in
-the drm helper.
-
-This fixes the IGT test regression.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/extcon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 84ee777869441..e766dede5b472 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3519,6 +3519,8 @@ static void dm_drm_plane_reset(struct drm_plane *plane)
- 		plane->state = &amdgpu_state->base;
- 		plane->state->plane = plane;
- 		plane->state->rotation = DRM_MODE_ROTATE_0;
-+		plane->state->alpha = DRM_BLEND_ALPHA_OPAQUE;
-+		plane->state->pixel_blend_mode = DRM_MODE_BLEND_PREMULTI;
- 	}
- }
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index 540e8cd16ee6e..db3bcf96b98fb 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -30,7 +30,7 @@ config EXTCON_ARIZONA
  
+ config EXTCON_AXP288
+ 	tristate "X-Power AXP288 EXTCON support"
+-	depends on MFD_AXP20X && USB_SUPPORT && X86
++	depends on MFD_AXP20X && USB_SUPPORT && X86 && ACPI
+ 	select USB_ROLE_SWITCH
+ 	help
+ 	  Say Y here to enable support for USB peripheral detection
 -- 
 2.20.1
 
