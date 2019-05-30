@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDC9C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A657AC072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7410248FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804D4248FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190465;
-	bh=Ubb5xTQFXzgqC/dG4CE0HeMY8paSJZCVReWkm8znYPg=;
+	s=default; t=1559190468;
+	bh=jc8jg/4Suw9jHmZotilKT0dohU7tQI2Is86LcdciVw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RH3+ivztEgTPG+yacWNu8tH/Zk8Mz3ph7RWRF9eVBDod832ndd+5lKLEa4quldiAZ
-	 elTtWpDYqgXV2t0CyPok0rLk0F8xuyjcuY/GWtmJd4qs09tivtXsD10tnjvdhqnm9h
-	 DYVvLwMQMbkqAz+M30qJxoXSD5jKgwVpJuiXSVD0=
+	b=VFDwA77BDH2pQKmEg5WZn4Z4trbtWMsvzSWt6Tgve+RhvwOunsjmy4aU/BDHfytwp
+	 A8m9T/0skKygzYlCdTgmZSwgJH6qsQ5Yo4o2usfEEnAR6CwlT0YsQT84DKlbxn6Gs2
+	 x5657/VeImxGAliITnKzDHZZjMQR7E5nRADO/v8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfE3E1o (ORCPT
+        id S1731848AbfE3E1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33990 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728915AbfE3DOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729814AbfE3DOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 29 May 2019 23:14:20 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC90B24570;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A6BB2456A;
         Thu, 30 May 2019 03:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1559186059;
-        bh=Ubb5xTQFXzgqC/dG4CE0HeMY8paSJZCVReWkm8znYPg=;
+        bh=jc8jg/4Suw9jHmZotilKT0dohU7tQI2Is86LcdciVw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIeXgja5BRdLSotUhuq6sKXzt/ZxRrVzs37A6UKDHS65Vbi/FWv7f++sFf4yaizhw
-         9ZmbcNcyKP0HmQB1rrFgmegKExTFMTrecs0JJOn1HjLHhD8pZYawU0is0cnBL57SjZ
-         VsmEe4SlqpOfZ8csEFZPw5xg0YzK+WXBhJFWVGrs=
+        b=ywni5gzkaZVKvWwmZBLs6mquOPHCTxeMKxe9peohU8SKRHS1qzs9vPQx4Grw8KTo4
+         /w9Pz38nw1466mwx9T2YTm8aLOy+/n4lLHFcKrxshM5ak3YNT7la7FtveEk2vpNTBl
+         frbGJX5NA2c0930x/jrTZJX80ssv5iRQrYg0o0WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 109/346] mwifiex: prevent an array overflow
-Date:   Wed, 29 May 2019 20:03:02 -0700
-Message-Id: <20190530030546.624899424@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
+        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 118/346] bcache: fix failure in journal relplay
+Date:   Wed, 29 May 2019 20:03:11 -0700
+Message-Id: <20190530030547.056864323@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -60,36 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
+[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
 
-The "rate_index" is only used as an index into the phist_data->rx_rate[]
-array in the mwifiex_hist_data_set() function.  That array has
-MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
-debugfs information.  The "rate_index" variable comes from the network
-skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
-it to prevent an array overflow.
+journal replay failed with messages:
+Sep 10 19:10:43 ceph kernel: bcache: error on
+bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
+2057493-2057567 missing! (replaying 2057493-2076601), disabling
+caching
 
-Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The reason is in journal_reclaim(), when discard is enabled, we send
+discard command and reclaim those journal buckets whose seq is old
+than the last_seq_now, but before we write a journal with last_seq_now,
+the machine is restarted, so the journal with the last_seq_now is not
+written to the journal bucket, and the last_seq_wrote in the newest
+journal is old than last_seq_now which we expect to be, so when we doing
+replay, journals from last_seq_wrote to last_seq_now are missing.
+
+It's hard to write a journal immediately after journal_reclaim(),
+and it harmless if those missed journal are caused by discarding
+since those journals are already wrote to btree node. So, if miss
+seqs are started from the beginning journal, we treat it as normal,
+and only print a message to show the miss journal, and point out
+it maybe caused by discarding.
+
+Patch v2 add a judgement condition to ignore the missed journal
+only when discard enabled as Coly suggested.
+
+(Coly Li: rebase the patch with other changes in bch_journal_replay())
+
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Tested-by: Dennis Schridde <devurandom@gmx.net>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
-index bfe84e55df776..f1522fb1c1e87 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
-@@ -531,5 +531,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
- 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
- 			      rx_rate - 1 : rx_rate;
- 
-+	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
-+		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
-+
- 	return rate_index;
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 9e557164209c1..6c94fa0077968 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -317,6 +317,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
+ 	}
  }
+ 
++bool is_discard_enabled(struct cache_set *s)
++{
++	struct cache *ca;
++	unsigned int i;
++
++	for_each_cache(ca, s, i)
++		if (ca->discard)
++			return true;
++
++	return false;
++}
++
+ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ {
+ 	int ret = 0, keys = 0, entries = 0;
+@@ -331,10 +343,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+ 
+ 		if (n != i->j.seq) {
+-			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-			n, i->j.seq - 1, start, end);
+-			ret = -EIO;
+-			goto err;
++			if (n == start && is_discard_enabled(s))
++				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++			else {
++				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++				ret = -EIO;
++				goto err;
++			}
+ 		}
+ 
+ 		for (k = i->j.start;
 -- 
 2.20.1
 
