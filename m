@@ -2,75 +2,112 @@ Return-Path: <SRS0=Dgga=T6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35921C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940D5C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1640024FFB
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B22A24FFB
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559189047;
+	bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Nz2SrF0xdBXGfN2n6Ix9/cQ8h3GLlNLxKHEOJ9B1hJk5+IabsQUSMr/0xbplmY4e4
+	 1dQjzJGUjn6RWDr6U+U0K1BsqGiqsuu/G/DfTFM4Tc/DD07VrVisxlc8lDVeBT9ULU
+	 RdNThKyXtt8GMWzzeexSki9BVqyjvqdTj5TamJWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbfE3ED7 (ORCPT
+        id S2387882AbfE3EEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:03:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6382 "EHLO mga12.intel.com"
+        Thu, 30 May 2019 00:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbfE3EDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 May 2019 00:03:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 May 2019 21:03:54 -0700
-X-ExtLoop1: 1
-Received: from hyungwoo-ubuntu.sc.intel.com ([10.3.62.78])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 May 2019 21:03:54 -0700
-From:   Hyungwoo Yang <hyungwoo.yang@intel.com>
-To:     enric.balletbo@collabora.com
-Cc:     linux-kernel@vger.kernel.org, rushikesh.s.kadam@intel.com,
-        jettrink@chromium.org
-Subject: [PATCH] platform/chrome: fix crash during suspend
-Date:   Wed, 29 May 2019 21:03:54 -0700
-Message-Id: <1559189034-11268-1-git-send-email-hyungwoo.yang@intel.com>
-X-Mailer: git-send-email 1.9.1
+        id S1730466AbfE3DRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:17:53 -0400
+Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61C702472C;
+        Thu, 30 May 2019 03:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559186273;
+        bh=PrASumR4TwpvbI9yKAcKLsEX+QBbVstRS6VbOrnSOUg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C8XGtR+MdrRhP4QOZ305z8w6nLKdcRq+l4jjDo76Zdnmk1sD4C7i4SYhtih0ZLdtv
+         y27FxMC+ItMDvicMDzWChvkaznLACMhP8k2TojG1n8tCJpBiZK6CPFZqbXbeUdMmq6
+         1MbLB0JYVvFjtdPKt62MC7rIpcb5vctlrHTXGTDQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 214/276] ASoC: eukrea-tlv320: fix a leaked reference by adding missing of_node_put
+Date:   Wed, 29 May 2019 20:06:12 -0700
+Message-Id: <20190530030538.511082959@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel crashes during suspend due to wrong conversion in
-suspend and resume functions.
+[ Upstream commit b820d52e7eed7b30b2dfef5f4213a2bc3cbea6f3 ]
 
-Use the proper helper to get ishtp_cl_device instance.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Hyungwoo Yang <hyungwoo.yang@intel.com>
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/eukrea-tlv320.c:121:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+./sound/soc/fsl/eukrea-tlv320.c:127:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 102, but without a correspo    nding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_ishtp.c | 4 ++--
+ sound/soc/fsl/eukrea-tlv320.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index e504d25..430731c 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -707,7 +707,7 @@ static int cros_ec_ishtp_reset(struct ishtp_cl_device *cl_device)
-  */
- static int __maybe_unused cros_ec_ishtp_suspend(struct device *device)
- {
--	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
- 	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
- 	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
+diff --git a/sound/soc/fsl/eukrea-tlv320.c b/sound/soc/fsl/eukrea-tlv320.c
+index 191426a6d9adf..30a3d68b5c033 100644
+--- a/sound/soc/fsl/eukrea-tlv320.c
++++ b/sound/soc/fsl/eukrea-tlv320.c
+@@ -118,13 +118,13 @@ static int eukrea_tlv320_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-int-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
+ 		ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"fsl,mux-ext-port node missing or invalid.\n");
+-			return ret;
++			goto err;
+ 		}
  
-@@ -722,7 +722,7 @@ static int __maybe_unused cros_ec_ishtp_suspend(struct device *device)
-  */
- static int __maybe_unused cros_ec_ishtp_resume(struct device *device)
- {
--	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
- 	struct ishtp_cl	*cros_ish_cl = ishtp_get_drvdata(cl_device);
- 	struct ishtp_cl_data *client_data = ishtp_get_client_data(cros_ish_cl);
- 
+ 		/*
 -- 
-1.9.1
+2.20.1
+
+
 
