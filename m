@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42231C072B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34348C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE2E25253
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F268F25252
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189785;
-	bh=3lTbXb22p+OCIJA6LaKVWBJs3MVAlbaFisWWFyG4ZiM=;
+	s=default; t=1559189792;
+	bh=BJ39WeU6Gz7O+UFcSfdaXtCV0vuqbjEefStskKc/mqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IwHXGrTXig+8yLJ+q9gOFff6A5Eg6T/eLQE/O52a6Ke1oc0O4RvKiNjL2bCu44d6k
-	 e70nhJNgQ5b2xdG38JvCO3wCMi1F/EAuuhjqza+ojYlkv+qJt/MgXXNjjP033T1cx5
-	 GMX02RJbu9XZcQqFz3YFDRVD93eYIS2OWgNjbM0s=
+	b=w7hG4mpxe+46MaZ5xrfJPxalSAeWsvaIfum8f6T67/ic0v3ZenarSHPKFwTyzuKE/
+	 dqKa2+HjZv7Q1cNqe/J6Vo6fQwA2JlR6A9qa/y3w+0oiO/Crgytg7VeOd19u7x1pq7
+	 bj1V6sZsrw7l9z92nkz33Bk9mY0DuRKkP2swIEps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfE3EQT (ORCPT
+        id S1730653AbfE3EQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 May 2019 00:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:16:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730500AbfE3DPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:15:49 -0400
+        id S1729507AbfE3DPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:15:47 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B10AA24559;
-        Thu, 30 May 2019 03:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB82A245C3;
+        Thu, 30 May 2019 03:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186148;
-        bh=3lTbXb22p+OCIJA6LaKVWBJs3MVAlbaFisWWFyG4ZiM=;
+        s=default; t=1559186146;
+        bh=BJ39WeU6Gz7O+UFcSfdaXtCV0vuqbjEefStskKc/mqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGhjhMJYyXRB/oas9vTV3X3M/L9otjAfmZDSdX3eEB93atnPQstEErhbklV8qi41w
-         3STMfOiWreoxXTWXmqhhkrQccs0j3idnmsv9jjbfRk6gswyJVcgYtPYxSerOsQ2Eea
-         OVq/MWPA/9UIqzOrtU5SFNcLow/7P7sQ4lB0s7Bc=
+        b=xxSomah17lXHUBvRvQAx7LYgfEvcgtHctcQiwhdkqYUoLs7Vh+OUTmR1L+l9cRB9w
+         1Nx1Dzc6+831iLFMcxB2a3Hx8a912a392BQgJT3rWokAloONZZB+hofqrfh0oJWj0n
+         f9E2ZsRla5mN0P10C8Hz/mW5dzI0S9EZnXD8govI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
+        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Trent Piepho <tpiepho@impinj.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 331/346] regulator: pv88080: Fix notifier mutex lock warning
-Date:   Wed, 29 May 2019 20:06:44 -0700
-Message-Id: <20190530030557.530006944@linuxfoundation.org>
+Subject: [PATCH 5.0 327/346] spi: imx: stop buffer overflow in RX FIFO flush
+Date:   Wed, 29 May 2019 20:06:40 -0700
+Message-Id: <20190530030557.344692655@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
 References: <20190530030540.363386121@linuxfoundation.org>
@@ -62,54 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1867af94cfdf37fc70fe67b3d522e78352800196 ]
+[ Upstream commit c842749ea1d32513f9e603c074d60d7aa07cb2ef ]
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+Commit 71abd29057cb ("spi: imx: Add support for SPI Slave mode") added
+an RX FIFO flush before start of a transfer.  In slave mode, the master
+may have sent more data than expected and this data will still be in the
+RX FIFO at the start of the next transfer, and so needs to be flushed.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
+However, the code to do the flush was accidentally saving this data into
+the previous transfer's RX buffer, clobbering the contents of whatever
+followed that buffer.
 
-Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Change it to empty the FIFO and throw away the data.  Every one of the
+RX functions for the different eCSPI versions and modes reads the RX
+FIFO data using the same readl() call, so just use that, rather than
+using the spi_imx->rx function pointer and making sure all the different
+rx functions have a working "throw away" mode.
+
+There is another issue, which affects master mode when switching from
+DMA to PIO.  There can be extra data in the RX FIFO which triggers this
+flush code, causing memory corruption in the same manner.  I don't know
+why this data is unexpectedly in the FIFO.  It's likely there is a
+different bug or erratum responsible for that.  But regardless of that,
+I think this is proper fix the for bug at hand here.
+
+Fixes: 71abd29057cb ("spi: imx: Add support for SPI Slave mode")
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Trent Piepho <tpiepho@impinj.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88080-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/spi/spi-imx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index 9a08cb2de501e..d99f1b9fa0756 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -384,9 +384,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_VDD_FLT) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 6ec647bbba772..a81ae29aa68a9 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -1494,7 +1494,7 @@ static int spi_imx_transfer(struct spi_device *spi,
  
-@@ -401,9 +403,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_OVER_TEMP) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+ 	/* flush rxfifo before transfer */
+ 	while (spi_imx->devtype_data->rx_available(spi_imx))
+-		spi_imx->rx(spi_imx);
++		readl(spi_imx->base + MXC_CSPIRXDATA);
  
+ 	if (spi_imx->slave_mode)
+ 		return spi_imx_pio_transfer_slave(spi, transfer);
 -- 
 2.20.1
 
