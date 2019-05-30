@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471E9C28CC2
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96117C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205D225182
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD2525184
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559189512;
-	bh=2RNUE2oqUXk6JbDIODB3geUggqhl72IDzXKXwwzFYTQ=;
+	s=default; t=1559189516;
+	bh=lfa6ubSAXCwwv7XGl9evmSVdGbNoD54IxTwiATEwgto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKCbkbWTxwp+famYybBTRBzPy6qiDIq/HJrir6cY3EqBmucT+9+q5JQFAKsDfIdBY
-	 ENVxM4ouMkTf3es3LWb+9Y7ZrptsiF+St0nFm9bot7TODnGyDD9tNBeCWv4QuKdOUj
-	 9BzUGzrPZXaKPBcq4F75pdLS8k0n5hd5FIZpAFt4=
+	b=kVLhryVC+nxFUln2R7zigkvMcwtb9246/jRWZhe6+AkixETbSrek7ggCSLiHeywEv
+	 wMOSpmsD8V3/ZtunVeJBr5PAy/C0eGxjO9IOnWr05yBGFbXwdkaVjWiihZqW2mHuEt
+	 B2DcmqUALmxBBN/WDl5XYx7lzKWuJwCwmPK08Y3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfE3DQq (ORCPT
+        id S1727310AbfE3ELz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbfE3DNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:13:32 -0400
+        id S1729391AbfE3DQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:16:46 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCA024523;
-        Thu, 30 May 2019 03:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A3F245C1;
+        Thu, 30 May 2019 03:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559186011;
-        bh=2RNUE2oqUXk6JbDIODB3geUggqhl72IDzXKXwwzFYTQ=;
+        s=default; t=1559186205;
+        bh=lfa6ubSAXCwwv7XGl9evmSVdGbNoD54IxTwiATEwgto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjgxJWc0u11dVjvIPsuSSbcUkhHLnMXsLtn23sa8qVSQRJxFoV0SOsDArhralTVVC
-         mTVd74Gq/4K5Lg+Qf3j1y9N+jpVuzp29MY/IL/GpDKbp4UCvE3UzMiVGg5889Wcd9a
-         Ymbg870q8AaFm2/8UYVgXKkF9v9xD1WqHIGxAQow=
+        b=rq21TnSsP3c43jgXnJHt6V/UcsULfeV3SWW8JOKKeoCQ8ZWaUlQSEG9H2W3Cl4bQ/
+         E3JiJKCpIwGL8FK7Gw1mBXpNKOm293czlhj6qZLhIqtJd778s13upThgP0rtc2og3r
+         zzmwL/MTFQdyBiv80xWknCflxJbOKs9v1FWQ7G+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 074/346] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Wed, 29 May 2019 20:02:27 -0700
-Message-Id: <20190530030544.829547280@linuxfoundation.org>
+Subject: [PATCH 4.19 092/276] mac80211/cfg80211: update bss channel on channel switch
+Date:   Wed, 29 May 2019 20:04:10 -0700
+Message-Id: <20190530030531.952544540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
-References: <20190530030540.363386121@linuxfoundation.org>
+In-Reply-To: <20190530030523.133519668@linuxfoundation.org>
+References: <20190530030523.133519668@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,53 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
+[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+FullMAC STAs have no way to update bss channel after CSA channel switch
+completion. As a result, user-space tools may provide inconsistent
+channel info. For instance, consider the following two commands:
+$ sudo iw dev wlan0 link
+$ sudo iw dev wlan0 info
+The latter command gets channel info from the hardware, so most probably
+its output will be correct. However the former command gets channel info
+from scan cache, so its output will contain outdated channel info.
+In fact, current bss channel info will not be updated until the
+next [re-]connect.
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
+Note that mac80211 STAs have a workaround for this, but it requires
+access to internal cfg80211 data, see ieee80211_chswitch_work:
 
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
+	/* XXX: shouldn't really modify cfg80211-owned data! */
+	ifmgd->associated->channel = sdata->csa_chandef.chan;
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This patch suggests to convert mac80211 workaround into cfg80211 behavior
+and to update current bss channel in cfg80211_ch_switch_notify.
+
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/mac80211/mlme.c    | 3 ---
+ net/wireless/nl80211.c | 5 +++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 77abe0ec40431..bd533f68b1dec 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -1031,6 +1031,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 3dbecae4be73c..2ac749c4a6b26 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -1156,9 +1156,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
+ 		goto out;
+ 	}
  
-+		/*
-+		 * We can have a combination of device and data nodes, e.g. with
-+		 * hierarchical _DSD properties. Make sure the adev pointer is
-+		 * restored before going through data nodes, otherwise we will
-+		 * be looking for data_nodes below the last device found instead
-+		 * of the common fwnode shared by device_nodes and data_nodes.
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+-	/* XXX: shouldn't really modify cfg80211-owned data! */
+-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+-
+ 	ifmgd->csa_waiting_bcn = true;
+ 
+ 	ieee80211_sta_reset_beacon_monitor(sdata);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 048e004ed0ee8..c6711ead5e591 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -15441,6 +15441,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
+ 
+ 	wdev->chandef = *chandef;
+ 	wdev->preset_chandef = *chandef;
++
++	if (wdev->iftype == NL80211_IFTYPE_STATION &&
++	    !WARN_ON(!wdev->current_bss))
++		wdev->current_bss->pub.channel = chandef->chan;
++
+ 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
+ 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
+ }
 -- 
 2.20.1
 
