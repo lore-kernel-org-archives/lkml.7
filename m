@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCE7C28CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD06C28CC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02ECD244A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2689B24498
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 03:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559185782;
-	bh=oQi+LBWQl62U/gK8w8KtJLAKDAtJ6dbUAVFw0YbHPF8=;
+	s=default; t=1559185786;
+	bh=zSdNoWLi7DzaPV9mNqnkEQ+YTFMlkL5rHOvndssRU3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qMey5okC8eH4djLMkbaVYOwci3E2lE3N7CQwD3qfn4cPJX8xnkRG05zagW9AXXzt+
-	 BmdT9DKvwyNnJHQ5avRywn+CyclCg6TTCgaRTL4IibPviGeMnwF1FeeHgYJ4PET+SA
-	 Ufbg0KYa3n9Q3YvzRIkpulwgxLtqYtUIoQj6E9q8=
+	b=nfbJKUyHLii4uKql4OtMiCGNDC9zp8uego1gxXm92wxbeoY9VNnUr8Q/j1eWClNYu
+	 QG/ACzVVbE4KGpUklnltuTrv2Q4k9P7UWgHKCGIP8sZvfC3gkFgKWaPXsV6/KlmWHK
+	 UCn+6ri1ACeiroxWSkSiKRCJlJLm8nHHVH+PZY04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfE3DJl (ORCPT
+        id S1727748AbfE3DJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44398 "EHLO mail.kernel.org"
+        Wed, 29 May 2019 23:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbfE3DJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:09:31 -0400
+        id S1727663AbfE3DJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:09:37 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A7A2447E;
-        Thu, 30 May 2019 03:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270462448E;
+        Thu, 30 May 2019 03:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185771;
-        bh=oQi+LBWQl62U/gK8w8KtJLAKDAtJ6dbUAVFw0YbHPF8=;
+        s=default; t=1559185776;
+        bh=zSdNoWLi7DzaPV9mNqnkEQ+YTFMlkL5rHOvndssRU3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3zYsf7aPIoBGk5ryhTDTpxX6YVhCtYfXT0C24acHqWL8HrTqR8Pg37FxkOsvgenT
-         dmWulWdl9loqjQmkzEM4Gp6tAUCO+2kxC6046jQiIktL2UreRTizmMmCkxy4j18Ukb
-         zqjhmxzKwuDEHd1YmPHV9yEu1X/8QSijRJ5d6A48=
+        b=Rzbe8CsGWsSB4j4nT6lUVrruH+HP0DlFZmafJtmll/GOU2lCYiaxJBGWt4hwZJ9TL
+         pu7JsmQHIEyyQAqZaIkQpxTvDWyQEpCAJi6gmOLPMlVaBk9yaXU1UoYibcU24WjRg0
+         hAPG5Kg8Y6TVqQbWrVHsKwOy2FrUfFxnOb4pD7tw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 023/405] btrfs: dont double unlock on error in btrfs_punch_hole
-Date:   Wed, 29 May 2019 20:00:21 -0700
-Message-Id: <20190530030541.801761585@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 031/405] arm64: errata: Add workaround for Cortex-A76 erratum #1463225
+Date:   Wed, 29 May 2019 20:00:29 -0700
+Message-Id: <20190530030542.291832598@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
 References: <20190530030540.291644921@linuxfoundation.org>
@@ -60,40 +60,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 8fca955057b9c58467d1b231e43f19c4cf26ae8c upstream.
+commit 969f5ea627570e91c9d54403287ee3ed657f58fe upstream.
 
-If we have an error writing out a delalloc range in
-btrfs_punch_hole_lock_range we'll unlock the inode and then goto
-out_only_mutex, where we will again unlock the inode.  This is bad,
-don't do this.
+Revisions of the Cortex-A76 CPU prior to r4p0 are affected by an erratum
+that can prevent interrupts from being taken when single-stepping.
 
-Fixes: f27451f22996 ("Btrfs: add support for fallocate's zero range operation")
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This patch implements a software workaround to prevent userspace from
+effectively being able to disable interrupts.
+
+Cc: <stable@vger.kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/btrfs/file.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2546,10 +2546,8 @@ static int btrfs_punch_hole(struct inode
+---
+ Documentation/arm64/silicon-errata.txt |    1 
+ arch/arm64/Kconfig                     |   18 ++++++++++++++++
+ arch/arm64/include/asm/cpucaps.h       |    3 +-
+ arch/arm64/kernel/cpu_errata.c         |   24 +++++++++++++++++++++
+ arch/arm64/kernel/syscall.c            |   31 +++++++++++++++++++++++++++
+ arch/arm64/mm/fault.c                  |   37 +++++++++++++++++++++++++++++++--
+ 6 files changed, 111 insertions(+), 3 deletions(-)
+
+--- a/Documentation/arm64/silicon-errata.txt
++++ b/Documentation/arm64/silicon-errata.txt
+@@ -61,6 +61,7 @@ stable kernels.
+ | ARM            | Cortex-A76      | #1188873        | ARM64_ERRATUM_1188873       |
+ | ARM            | Cortex-A76      | #1165522        | ARM64_ERRATUM_1165522       |
+ | ARM            | Cortex-A76      | #1286807        | ARM64_ERRATUM_1286807       |
++| ARM            | Cortex-A76      | #1463225        | ARM64_ERRATUM_1463225       |
+ | ARM            | MMU-500         | #841119,#826419 | N/A                         |
+ |                |                 |                 |                             |
+ | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375        |
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -517,6 +517,24 @@ config ARM64_ERRATUM_1286807
  
- 	ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
- 					  &cached_state);
--	if (ret) {
--		inode_unlock(inode);
-+	if (ret)
- 		goto out_only_mutex;
--	}
+ 	  If unsure, say Y.
  
- 	path = btrfs_alloc_path();
- 	if (!path) {
++config ARM64_ERRATUM_1463225
++	bool "Cortex-A76: Software Step might prevent interrupt recognition"
++	default y
++	help
++	  This option adds a workaround for Arm Cortex-A76 erratum 1463225.
++
++	  On the affected Cortex-A76 cores (r0p0 to r3p1), software stepping
++	  of a system call instruction (SVC) can prevent recognition of
++	  subsequent interrupts when software stepping is disabled in the
++	  exception handler of the system call and either kernel debugging
++	  is enabled or VHE is in use.
++
++	  Work around the erratum by triggering a dummy step exception
++	  when handling a system call from a task that is being stepped
++	  in a VHE configuration of the kernel.
++
++	  If unsure, say Y.
++
+ config CAVIUM_ERRATUM_22375
+ 	bool "Cavium erratum 22375, 24313"
+ 	default y
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -61,7 +61,8 @@
+ #define ARM64_HAS_GENERIC_AUTH_ARCH		40
+ #define ARM64_HAS_GENERIC_AUTH_IMP_DEF		41
+ #define ARM64_HAS_IRQ_PRIO_MASKING		42
++#define ARM64_WORKAROUND_1463225		43
+ 
+-#define ARM64_NCAPS				43
++#define ARM64_NCAPS				44
+ 
+ #endif /* __ASM_CPUCAPS_H */
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -464,6 +464,22 @@ out_printmsg:
+ }
+ #endif	/* CONFIG_ARM64_SSBD */
+ 
++#ifdef CONFIG_ARM64_ERRATUM_1463225
++DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
++
++static bool
++has_cortex_a76_erratum_1463225(const struct arm64_cpu_capabilities *entry,
++			       int scope)
++{
++	u32 midr = read_cpuid_id();
++	/* Cortex-A76 r0p0 - r3p1 */
++	struct midr_range range = MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1);
++
++	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
++	return is_midr_in_range(midr, &range) && is_kernel_in_hyp_mode();
++}
++#endif
++
+ static void __maybe_unused
+ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
+ {
+@@ -739,6 +755,14 @@ const struct arm64_cpu_capabilities arm6
+ 		ERRATA_MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 2, 0),
+ 	},
+ #endif
++#ifdef CONFIG_ARM64_ERRATUM_1463225
++	{
++		.desc = "ARM erratum 1463225",
++		.capability = ARM64_WORKAROUND_1463225,
++		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
++		.matches = has_cortex_a76_erratum_1463225,
++	},
++#endif
+ 	{
+ 	}
+ };
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -8,6 +8,7 @@
+ #include <linux/syscalls.h>
+ 
+ #include <asm/daifflags.h>
++#include <asm/debug-monitors.h>
+ #include <asm/fpsimd.h>
+ #include <asm/syscall.h>
+ #include <asm/thread_info.h>
+@@ -60,6 +61,35 @@ static inline bool has_syscall_work(unsi
+ int syscall_trace_enter(struct pt_regs *regs);
+ void syscall_trace_exit(struct pt_regs *regs);
+ 
++#ifdef CONFIG_ARM64_ERRATUM_1463225
++DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
++
++static void cortex_a76_erratum_1463225_svc_handler(void)
++{
++	u32 reg, val;
++
++	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
++		return;
++
++	if (!unlikely(this_cpu_has_cap(ARM64_WORKAROUND_1463225)))
++		return;
++
++	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
++	reg = read_sysreg(mdscr_el1);
++	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
++	write_sysreg(val, mdscr_el1);
++	asm volatile("msr daifclr, #8");
++	isb();
++
++	/* We will have taken a single-step exception by this point */
++
++	write_sysreg(reg, mdscr_el1);
++	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 0);
++}
++#else
++static void cortex_a76_erratum_1463225_svc_handler(void) { }
++#endif /* CONFIG_ARM64_ERRATUM_1463225 */
++
+ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
+ 			   const syscall_fn_t syscall_table[])
+ {
+@@ -68,6 +98,7 @@ static void el0_svc_common(struct pt_reg
+ 	regs->orig_x0 = regs->regs[0];
+ 	regs->syscallno = scno;
+ 
++	cortex_a76_erratum_1463225_svc_handler();
+ 	local_daif_restore(DAIF_PROCCTX);
+ 	user_exit();
+ 
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -810,14 +810,47 @@ void __init hook_debug_fault_code(int nr
+ 	debug_fault_info[nr].name	= name;
+ }
+ 
++#ifdef CONFIG_ARM64_ERRATUM_1463225
++DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
++
++static int __exception
++cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
++{
++	if (user_mode(regs))
++		return 0;
++
++	if (!__this_cpu_read(__in_cortex_a76_erratum_1463225_wa))
++		return 0;
++
++	/*
++	 * We've taken a dummy step exception from the kernel to ensure
++	 * that interrupts are re-enabled on the syscall path. Return back
++	 * to cortex_a76_erratum_1463225_svc_handler() with debug exceptions
++	 * masked so that we can safely restore the mdscr and get on with
++	 * handling the syscall.
++	 */
++	regs->pstate |= PSR_D_BIT;
++	return 1;
++}
++#else
++static int __exception
++cortex_a76_erratum_1463225_debug_handler(struct pt_regs *regs)
++{
++	return 0;
++}
++#endif /* CONFIG_ARM64_ERRATUM_1463225 */
++
+ asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+-					      unsigned int esr,
+-					      struct pt_regs *regs)
++					       unsigned int esr,
++					       struct pt_regs *regs)
+ {
+ 	const struct fault_info *inf = esr_to_debug_fault_info(esr);
+ 	unsigned long pc = instruction_pointer(regs);
+ 	int rv;
+ 
++	if (cortex_a76_erratum_1463225_debug_handler(regs))
++		return 0;
++
+ 	/*
+ 	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
+ 	 * already disabled to preserve the last enabled/disabled addresses.
 
 
