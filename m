@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D89EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29548C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0816F2541E
-	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90F925431
+	for <linux-kernel@archiver.kernel.org>; Thu, 30 May 2019 04:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559190337;
-	bh=KcYU3017Pfj0zJ3/1ozBROPqeL6TleTPQN8FGt/U3Lg=;
+	s=default; t=1559190340;
+	bh=QTSWqNh/TKaEoMhg1bw5U+B0F/Z6AW5r4GrHgTxYjS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1wMYZncl9NwxgeZu8tkNEXHqcgGweW/5ZCSD1TyxXO+ZY4vPEA09KT699ybNGLvd
-	 GMu5bCIBXe0jshc9lTusCLJQyhouKx+szuqUic9bFH+UGq0XxeCJJamCtR2hzwxSQU
-	 NNHsVHBjPfXuX6Fz202XxIlU9NubmmicFVomZABg=
+	b=bqKz+FagRcXEzHms02gPHZC7f28Utb3ms/68M/HA1sSRuRfbUD5WZHhCZcfdlvqsm
+	 c0HBZO3RVa7bkWcaLMQtcDjDTWrIdio//EA1xzkoefhtL/jGcY4Lz4UzT6NKJqXOoX
+	 omFe1P4INSK818K/MAQupI++glTF9Uj0tc3QwHkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfE3DOm (ORCPT
+        id S1733107AbfE3EZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 29 May 2019 23:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53606 "EHLO mail.kernel.org"
+        Thu, 30 May 2019 00:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728835AbfE3DMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 29 May 2019 23:12:07 -0400
+        id S1729952AbfE3DOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 29 May 2019 23:14:42 -0400
 Received: from localhost (ip67-88-213-2.z213-88-67.customer.algx.net [67.88.213.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D13124481;
-        Thu, 30 May 2019 03:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3017C24502;
+        Thu, 30 May 2019 03:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559185927;
-        bh=KcYU3017Pfj0zJ3/1ozBROPqeL6TleTPQN8FGt/U3Lg=;
+        s=default; t=1559186082;
+        bh=QTSWqNh/TKaEoMhg1bw5U+B0F/Z6AW5r4GrHgTxYjS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsVRsgXZH+j+yn2XEcnyoZPGSEQK3u8xLJF5lBqWvJ4Gk0icNu+RZwBwO4ayIp19d
-         1XmIkyJ7QkKDA7vGA3SnUNAUBaMGl1HRq7bwEdk0ylg7GykSKV36YgS6k2dlvzStX5
-         hxxsY5erfIrnz7iDjrG1fiuWJhQc9wRZp51FnJdw=
+        b=vyRFpr7nt3DswwMElQLnWqC7Re5KcBQSXEKEznW5IO8PcQtyVKpKf5r/rT/pC1nJz
+         UDNIqnTPJ1ZomwH7VRmxWNr6YHVmgv4cUC+umnFV5gcen+XLW+1+/Pc7WZSKkYuJsx
+         WNe7i0vwsaqfU9tQn5ujgisRg095/FF2YDZ7AK7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 318/405] ice: Prevent unintended multiple chain resets
-Date:   Wed, 29 May 2019 20:05:16 -0700
-Message-Id: <20190530030556.862559289@linuxfoundation.org>
+Subject: [PATCH 5.0 203/346] net: hns3: fix keep_alive_timer not stop problem
+Date:   Wed, 29 May 2019 20:04:36 -0700
+Message-Id: <20190530030551.460736495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190530030540.291644921@linuxfoundation.org>
-References: <20190530030540.291644921@linuxfoundation.org>
+In-Reply-To: <20190530030540.363386121@linuxfoundation.org>
+References: <20190530030540.363386121@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,48 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2ebd4428d93a2f6ce0c813b10a1a43b6a8241fe5 ]
+[ Upstream commit e233516e6a92baeec20aa40fa5b63be6b94f1627 ]
 
-In the current implementation of ice_reset_subtask, if multiple reset
-types are set in the pf->state, the most intrusive one is meant to be
-performed only, but the bits requesting the other types are not being
-cleared. This would lead to another reset being performed the next time
-the service task is scheduled.
+When hclgevf_client_start() fails or VF driver unloaded, there is
+nobody to disable keep_alive_timer.
 
-Change the flow of ice_reset_subtask so that all reset request bits in
-pf->state are cleared, and we still perform the most intrusive of the
-resets requested.
+So this patch fixes them.
 
-Signed-off-by: Dave Ertman <david.m.ertman@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: a6d818e31d08 ("net: hns3: Add vport alive state checking support")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c    | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index ac30288720f71..ba9f88cd138de 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -416,8 +416,14 @@ static void ice_reset_subtask(struct ice_pf *pf)
- 	 * for the reset now), poll for reset done, rebuild and return.
- 	 */
- 	if (test_bit(__ICE_RESET_OICR_RECV, pf->state)) {
--		clear_bit(__ICE_GLOBR_RECV, pf->state);
--		clear_bit(__ICE_CORER_RECV, pf->state);
-+		/* Perform the largest reset requested */
-+		if (test_and_clear_bit(__ICE_CORER_RECV, pf->state))
-+			reset_type = ICE_RESET_CORER;
-+		if (test_and_clear_bit(__ICE_GLOBR_RECV, pf->state))
-+			reset_type = ICE_RESET_GLOBR;
-+		/* return if no valid reset type requested */
-+		if (reset_type == ICE_RESET_INVAL)
-+			return;
- 		if (!test_bit(__ICE_PREPARED_FOR_RESET, pf->state))
- 			ice_prepare_for_reset(pf);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 82103d5fa8159..57f658379b167 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1895,9 +1895,15 @@ static int hclgevf_set_alive(struct hnae3_handle *handle, bool alive)
+ static int hclgevf_client_start(struct hnae3_handle *handle)
+ {
+ 	struct hclgevf_dev *hdev = hclgevf_ae_get_hdev(handle);
++	int ret;
++
++	ret = hclgevf_set_alive(handle, true);
++	if (ret)
++		return ret;
  
+ 	mod_timer(&hdev->keep_alive_timer, jiffies + 2 * HZ);
+-	return hclgevf_set_alive(handle, true);
++
++	return 0;
+ }
+ 
+ static void hclgevf_client_stop(struct hnae3_handle *handle)
+@@ -1939,6 +1945,10 @@ static void hclgevf_state_uninit(struct hclgevf_dev *hdev)
+ {
+ 	set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
+ 
++	if (hdev->keep_alive_timer.function)
++		del_timer_sync(&hdev->keep_alive_timer);
++	if (hdev->keep_alive_task.func)
++		cancel_work_sync(&hdev->keep_alive_task);
+ 	if (hdev->service_timer.function)
+ 		del_timer_sync(&hdev->service_timer);
+ 	if (hdev->service_task.func)
 -- 
 2.20.1
 
